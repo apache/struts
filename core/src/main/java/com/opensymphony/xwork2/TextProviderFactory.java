@@ -28,44 +28,49 @@ import java.util.ResourceBundle;
 public class TextProviderFactory {
 
     private TextProvider textProvider;
+    private LocaleProvider localeProvider;
 
     @Inject
     public void setTextProvider(TextProvider textProvider) {
         this.textProvider = textProvider;
     }
 
-    public TextProvider createInstance(Class clazz, LocaleProvider provider) {
-        TextProvider instance = getTextProvider(clazz, provider);
+    @Inject
+    public void setLocaleProvider(LocaleProvider localeProvider) {
+        this.localeProvider = localeProvider;
+    }
+
+    public TextProvider createInstance(Class clazz) {
+        TextProvider instance = getTextProvider(clazz);
         if (instance instanceof ResourceBundleTextProvider) {
             ((ResourceBundleTextProvider) instance).setClazz(clazz);
-            ((ResourceBundleTextProvider) instance).setLocaleProvider(provider);
+            ((ResourceBundleTextProvider) instance).setLocaleProvider(localeProvider);
         }
         return instance;
     }
 
-    public TextProvider createInstance(ResourceBundle bundle, LocaleProvider provider) {
-        TextProvider instance = getTextProvider(bundle, provider);
+    public TextProvider createInstance(ResourceBundle bundle) {
+        TextProvider instance = getTextProvider(bundle);
         if (instance instanceof ResourceBundleTextProvider) {
             ((ResourceBundleTextProvider) instance).setBundle(bundle);
-            ((ResourceBundleTextProvider) instance).setLocaleProvider(provider);
+            ((ResourceBundleTextProvider) instance).setLocaleProvider(localeProvider);
         }
         return instance;
     }
 
-    protected TextProvider getTextProvider(Class clazz, LocaleProvider provider) {
+    protected TextProvider getTextProvider(Class clazz) {
         if (this.textProvider == null) {
-            return new TextProviderSupport(clazz, provider);
+            return new TextProviderSupport(clazz, localeProvider);
         } else {
             return textProvider;
         }
     }
 
-    private TextProvider getTextProvider(ResourceBundle bundle, LocaleProvider provider) {
+    private TextProvider getTextProvider(ResourceBundle bundle) {
         if (this.textProvider == null) {
-            return new TextProviderSupport(bundle, provider);
-        } else {
-            return textProvider;
+            textProvider = new TextProviderSupport(bundle, localeProvider);
         }
+        return textProvider;
     }
 
 }

@@ -370,15 +370,14 @@ public class TooltipTest extends AbstractUITagTest {
         verify(TooltipTest.class.getResource("tooltip-3.txt"));
     }
 
-    /**
-     * @throws Exception 
-     * 
-     */
     public void setUp() throws Exception {
         super.setUp();
-        initDispatcher(new HashMap<String,String>(){{ 
+
+        initDispatcher(new HashMap<String,String>(){{
             put("configProviders", TestConfigurationProvider.class.getName());
         }});
         createMocks();
+
+
     }
 }

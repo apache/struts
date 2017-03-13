@@ -38,12 +38,14 @@ import java.util.Map;
  */
 public class ExpressionValidatorTest extends XWorkTestCase {
 
+    private TextProviderFactory tpf;
+
     public void testExpressionValidationOfStringLength() throws ValidationException {
         TestBean bean = new TestBean();
         bean.setName("abc");
         ActionContext.getContext().getValueStack().push(bean);
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(bean, "expressionValidation", context);
         assertTrue(context.hasFieldErrors());
 
@@ -55,7 +57,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         assertEquals("Name must be greater than 5 characters, it is currently 'abc'", nameErrors.get(0));
 
         bean.setName("abcdefg");
-        context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(bean, "expressionValidation", context);
         assertFalse(context.hasFieldErrors());
     }
@@ -108,7 +110,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         mock.expect("addActionError", C.ANY_ARGS);
 
         ExpressionValidator ev = new ExpressionValidator();
-        ev.setValidatorContext(new DelegatingValidatorContext(mock.proxy()));
+        ev.setValidatorContext(new DelegatingValidatorContext(mock.proxy(), tpf));
         ev.setExpression("{top}");
         ev.setValueStack(ActionContext.getContext().getValueStack());
         ev.validate("Hello"); // {top} will evaluate to Hello that is not a Boolean
@@ -136,6 +138,8 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         EasyMock.replay(proxy);
 
         ActionContext.getContext().setActionInvocation(invocation);
+
+        tpf = container.inject(TextProviderFactory.class);
     }
 
 }

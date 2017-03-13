@@ -18,6 +18,7 @@ package com.opensymphony.xwork2.validator;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -50,16 +51,19 @@ import java.util.*;
  */
 public class DefaultActionValidatorManager implements ActionValidatorManager {
 
+    private final static Logger LOG = LogManager.getLogger(DefaultActionValidatorManager.class);
+
     /** The file suffix for any validation file. */
     protected static final String VALIDATION_CONFIG_SUFFIX = "-validation.xml";
 
     private final Map<String, List<ValidatorConfig>> validatorCache = Collections.synchronizedMap(new HashMap<String, List<ValidatorConfig>>());
     private final Map<String, List<ValidatorConfig>> validatorFileCache = Collections.synchronizedMap(new HashMap<String, List<ValidatorConfig>>());
-    private final Logger LOG = LogManager.getLogger(DefaultActionValidatorManager.class);
+
     private ValidatorFactory validatorFactory;
     private ValidatorFileParser validatorFileParser;
     private FileManager fileManager;
     private boolean reloadingConfigs;
+    private TextProviderFactory textProviderFactory;
 
     @Inject
     public void setValidatorFileParser(ValidatorFileParser parser) {
@@ -79,6 +83,11 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
     public void setReloadingConfigs(String reloadingConfigs) {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
+    }
+
+    @Inject
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProviderFactory = textProviderFactory;
     }
 
     public synchronized List<Validator> getValidators(Class clazz, String context) {
@@ -118,7 +127,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     }
 
     public void validate(Object object, String context, String method) throws ValidationException {
-        ValidatorContext validatorContext = new DelegatingValidatorContext(object);
+        ValidatorContext validatorContext = new DelegatingValidatorContext(object, textProviderFactory);
         validate(object, context, validatorContext, method);
     }
 

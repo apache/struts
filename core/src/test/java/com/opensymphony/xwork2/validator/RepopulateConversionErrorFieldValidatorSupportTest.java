@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -90,17 +91,19 @@ public class RepopulateConversionErrorFieldValidatorSupportTest extends XWorkTes
 		Map<String, Object> conversionErrors = ActionContext.getContext().getConversionErrors();
 		conversionErrors.put("someFieldName", conversionErrorValue);
 		conversionErrors.put("xxxsomeFieldName", conversionErrorValue);
-		
-		action = new ActionSupport();
+
+		TextProviderFactory tpf = container.inject(TextProviderFactory.class);
+
+		action = container.inject(ActionSupport.class);
 		validator1 = 
 			new InternalRepopulateConversionErrorFieldValidatorSupport();
 		validator1.setFieldName("someFieldName");
-		validator1.setValidatorContext(new DelegatingValidatorContext(action));
+		validator1.setValidatorContext(new DelegatingValidatorContext(action, tpf));
 		
 		validator2 = 
 			new InternalRepopulateConversionErrorFieldValidatorSupport();
 		validator2.setFieldName("someFieldName");
-		validator2.setValidatorContext(new DelegatingValidatorContext(action) {
+		validator2.setValidatorContext(new DelegatingValidatorContext(action, tpf) {
 			@Override
             public String getFullFieldName(String fieldName) {
 				return "xxx"+fieldName;

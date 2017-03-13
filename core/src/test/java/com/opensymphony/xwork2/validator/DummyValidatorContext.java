@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2.validator;
 
+import com.opensymphony.xwork2.TextProviderFactory;
+
 import java.util.*;
 
 
@@ -24,19 +26,15 @@ import java.util.*;
  * @author Mark Woon
  * @author Matthew Payne
  */
-public class GenericValidatorContext extends DelegatingValidatorContext {
+public class DummyValidatorContext extends DelegatingValidatorContext {
 
     private Collection<String> actionErrors;
     private Collection<String> actionMessages;
     private Map<String, List<String>> fieldErrors;
 
 
-    /**
-     * @deprecated Is used only in tests and will be removed
-     */
-    @Deprecated
-    public GenericValidatorContext(Object object) {
-        super(object);
+    public DummyValidatorContext(Object object, TextProviderFactory tpf) {
+        super(object, tpf);
     }
 
     @Override

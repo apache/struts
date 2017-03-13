@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.StringLengthFieldValidator;
@@ -162,7 +163,7 @@ public class StringLengthFieldValidatorTest extends XWorkTestCase {
 		validator = new StringLengthFieldValidator();
 		validator.setFieldName("myField");
 		validator.setMessageKey("error");
-		validator.setValidatorContext(new DelegatingValidatorContext(action));
+		validator.setValidatorContext(new DelegatingValidatorContext(action, container.inject(TextProviderFactory.class)));
 		validator.setMaxLength(5);
 		validator.setMinLength(2);
         validator.setValueStack(valueStack);

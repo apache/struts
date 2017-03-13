@@ -23,6 +23,7 @@ package org.apache.struts.beanvalidation.validation.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.AnnotationUtils;
@@ -55,13 +56,20 @@ import java.util.Set;
 public class BeanValidationInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(BeanValidationInterceptor.class);
+
     protected BeanValidationManager beanValidationManager;
+    protected TextProviderFactory textProviderFactory;
     protected boolean convertToUtf8 = false;
     protected String convertFromEncoding = "ISO-8859-1";
 
     @Inject()
     public void setBeanValidationManager(BeanValidationManager beanValidationManager) {
         this.beanValidationManager = beanValidationManager;
+    }
+
+    @Inject
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProviderFactory = textProviderFactory;
     }
 
     @Inject(value = ValidatorConstants.CONVERT_MESSAGE_TO_UTF8, required = false)
@@ -122,7 +130,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
     @SuppressWarnings("nls")
     private void addBeanValidationErrors(Set<ConstraintViolation<Object>> constraintViolations, Object action) {
         if (constraintViolations != null) {
-            ValidatorContext validatorContext = new DelegatingValidatorContext(action);
+            ValidatorContext validatorContext = new DelegatingValidatorContext(action, textProviderFactory);
             for (ConstraintViolation<Object> constraintViolation : constraintViolations) {
                 String key = constraintViolation.getMessage();
                 String message = key;

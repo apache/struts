@@ -2,6 +2,7 @@ package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
 import com.opensymphony.xwork2.ognl.accessor.HttpParametersPropertyAccessor;
@@ -178,9 +179,12 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(NullHandler.class, Object.class.getName(), InstantiatingNullHandler.class, Scope.SINGLETON)
                 .factory(ActionValidatorManager.class, AnnotationActionValidatorManager.class, Scope.SINGLETON)
                 .factory(ActionValidatorManager.class, "no-annotations", DefaultActionValidatorManager.class, Scope.SINGLETON)
+
+                .factory(TextProviderFactory.class, Scope.SINGLETON)
                 .factory(LocalizedTextUtil.class, LocalizedTextUtil.class, Scope.SINGLETON)
                 .factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON)
                 .factory(TextProvider.class, TextProviderSupport.class, Scope.SINGLETON)
+
                 .factory(LocaleProvider.class, DefaultLocaleProvider.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(CollectionConverter.class, Scope.SINGLETON)

@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
@@ -36,11 +37,13 @@ import java.util.Map;
  */
 public class StringValidatorTest extends XWorkTestCase {
 
+    private TextProviderFactory tpf;
+
     public void testRequiredStringWithNullValue() throws Exception {
         Equidae equidae = new Equidae();
         equidae.setHorse(null);
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(equidae, null, context);
 
         assertTrue(context.hasFieldErrors());
@@ -54,7 +57,7 @@ public class StringValidatorTest extends XWorkTestCase {
         equidae.setHorse("");
         ActionContext.getContext().getValueStack().push(equidae);
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(equidae, null, context);
 
         assertTrue(context.hasFieldErrors());
@@ -66,7 +69,7 @@ public class StringValidatorTest extends XWorkTestCase {
         // trim = false should fail
         equidae.setHorse("  ");
         ActionContext.getContext().getValueStack().push(equidae);
-        context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(equidae, null, context);
 
         assertTrue(context.hasFieldErrors());
@@ -85,7 +88,7 @@ public class StringValidatorTest extends XWorkTestCase {
         equidae.setDonkey("asdf");
         ActionContext.getContext().getValueStack().push(equidae);
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(equidae, null, context);
         assertTrue(context.hasFieldErrors());
 
@@ -109,7 +112,7 @@ public class StringValidatorTest extends XWorkTestCase {
         equidae.setCow("asdf  ");
         equidae.setDonkey("asdf  ");
         ActionContext.getContext().getValueStack().push(equidae);
-        context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(equidae, null, context);
         assertTrue(context.hasFieldErrors());
 
@@ -128,7 +131,7 @@ public class StringValidatorTest extends XWorkTestCase {
         equidae.setCow("asdfasdf");
         equidae.setDonkey("asdfasdf");
         ActionContext.getContext().getValueStack().push(equidae);
-        context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(equidae, null, context);
         assertTrue(context.hasFieldErrors());
 
@@ -143,7 +146,7 @@ public class StringValidatorTest extends XWorkTestCase {
         equidae.setCow("asdfasdf   ");
         equidae.setDonkey("asdfasdf   ");
         ActionContext.getContext().getValueStack().push(equidae);
-        context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(equidae, null, context);
         assertTrue(context.hasFieldErrors());
 
@@ -162,7 +165,7 @@ public class StringValidatorTest extends XWorkTestCase {
         equidae.setCow("asdfasdfasdf");
         equidae.setDonkey("asdfasdfasdf");
         ActionContext.getContext().getValueStack().push(equidae);
-        context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(equidae, null, context);
         assertTrue(context.hasFieldErrors());
 
@@ -213,5 +216,7 @@ public class StringValidatorTest extends XWorkTestCase {
         EasyMock.replay(proxy);
 
         ActionContext.getContext().setActionInvocation(invocation);
+
+        tpf = container.inject(TextProviderFactory.class);
     }
 }

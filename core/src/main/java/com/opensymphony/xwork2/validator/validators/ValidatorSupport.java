@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2.validator.validators;
 
+import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.*;
@@ -45,6 +47,12 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
     private String[] messageParameters;
     protected ValueStack stack;
 
+    protected TextProviderFactory textProviderFactory;
+
+    @Inject
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProviderFactory = textProviderFactory;
+    }
 
     public void setValueStack(ValueStack stack) {
         this.stack = stack;
@@ -76,7 +84,7 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
                 defaultMessage = messageKey;
             }
             if (validatorContext == null) {
-                validatorContext = new DelegatingValidatorContext(object);
+                validatorContext = new DelegatingValidatorContext(object, textProviderFactory);
             }
             List<Object> parsedMessageParameters = null;
             if (messageParameters != null) {

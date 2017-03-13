@@ -56,14 +56,11 @@ public class DelegatingValidatorContext implements ValidatorContext {
      * (validation aware instance and a locale and text provider) are created based on the given action.
      *
      * @param object the object to use for validation (usually an Action).
-     *
-     * @deprecated will be removed, do not use!
      */
-    @Deprecated
-    public DelegatingValidatorContext(Object object) {
+    public DelegatingValidatorContext(Object object, TextProviderFactory textProviderFactory) {
         this.localeProvider = makeLocaleProvider(object);
         this.validationAware = makeValidationAware(object);
-        this.textProvider = makeTextProvider(object, localeProvider);
+        this.textProvider = makeTextProvider(object, textProviderFactory);
     }
 
     /**
@@ -77,7 +74,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
     @Deprecated
     public DelegatingValidatorContext(Class clazz) {
         localeProvider = new ActionContextLocaleProvider();
-        textProvider = new TextProviderFactory().createInstance(clazz, localeProvider);
+        textProvider = new TextProviderFactory().createInstance(clazz);
         validationAware = new LoggingValidationAware(clazz);
     }
 
@@ -199,18 +196,11 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return validationAware.hasFieldErrors();
     }
 
-    public static TextProvider makeTextProvider(Object object, LocaleProvider localeProvider) {
+    public TextProvider makeTextProvider(Object object, TextProviderFactory textProviderFactory) {
         // the object argument passed through here will most probably be an ActionSupport descendant which does
         // implements TextProvider.
         if (object != null && object instanceof DelegatingValidatorContext) {
             return ((DelegatingValidatorContext) object).getTextProvider();
-        } else if (object != null && localeProvider != null && localeProvider instanceof DelegatingValidatorContext) {
-            return new CompositeTextProvider(new TextProvider[]{
-                    new TextProviderFactory().createInstance(object.getClass(), localeProvider),
-                    ((DelegatingValidatorContext)localeProvider).getTextProvider()
-            });
-        } else if (localeProvider != null && localeProvider instanceof DelegatingValidatorContext) {
-            return ((DelegatingValidatorContext)localeProvider).getTextProvider();
         }
 
         if ((object != null) && (object instanceof TextProvider)) {
@@ -219,20 +209,11 @@ public class DelegatingValidatorContext implements ValidatorContext {
             }
             return new CompositeTextProvider(new TextProvider[]{
                     ((TextProvider) object),
-                    new TextProviderSupport(object.getClass(), localeProvider)
-            });
-        } else if (localeProvider != null && localeProvider instanceof TextProvider) {
-            if (localeProvider instanceof CompositeTextProvider) {
-                return (CompositeTextProvider) localeProvider;
-            }
-            return new CompositeTextProvider(new TextProvider[]{
-                    ((TextProvider) localeProvider),
-                    new TextProviderSupport(localeProvider.getClass(), localeProvider)
+                    textProviderFactory.createInstance(object.getClass())
             });
         } else {
-            return new TextProviderFactory().createInstance(
-                    object != null ? object.getClass() : DelegatingValidatorContext.class,
-                    localeProvider);
+            return textProviderFactory.createInstance(
+                    object != null ? object.getClass() : DelegatingValidatorContext.class);
         }
     }
 

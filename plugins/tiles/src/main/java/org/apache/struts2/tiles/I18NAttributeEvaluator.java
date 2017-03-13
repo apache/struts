@@ -52,11 +52,8 @@ public class I18NAttributeEvaluator extends AbstractAttributeEvaluator {
             throw new ConfigurationException("There is no ActionContext for current request!");
         }
 
-        TextProviderFactory tpf = new TextProviderFactory();
-        ctx.getContainer().inject(tpf);
-        LocaleProvider localeProvider = ctx.getContainer().getInstance(LocaleProvider.class);
-
-        TextProvider textProvider = tpf.createInstance(ctx.getActionInvocation().getAction().getClass(), localeProvider);
+        TextProviderFactory tpf = ctx.getContainer().inject(TextProviderFactory.class);
+        TextProvider textProvider = tpf.createInstance(ctx.getActionInvocation().getAction().getClass());
 
         if (textProvider != null) {
             LOG.debug("Trying find text [{}] using TextProvider {}", expression, textProvider);

@@ -130,6 +130,7 @@
     <bean type="com.opensymphony.xwork2.conversion.impl.NumberConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.NumberConverter" scope="singleton"/>
     <bean type="com.opensymphony.xwork2.conversion.impl.StringConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.StringConverter" scope="singleton"/>
 
+    <bean type="com.opensymphony.xwork2.TextProviderFactory" name="struts" class="com.opensymphony.xwork2.TextProviderFactory" scope="prototype" />
     <bean type="com.opensymphony.xwork2.util.LocalizedTextUtil" name="struts" class="com.opensymphony.xwork2.util.LocalizedTextUtil" scope="singleton" />
     <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" scope="prototype" />
     <bean type="com.opensymphony.xwork2.LocaleProvider" name="struts" class="com.opensymphony.xwork2.DefaultLocaleProvider" scope="singleton" />

@@ -23,6 +23,7 @@ package org.apache.struts2.oval.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
@@ -57,11 +58,17 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     protected boolean alwaysInvokeValidate = true;
     protected boolean programmatic = true;
     protected OValValidationManager validationManager;
-    private boolean validateJPAAnnotations;
+    protected boolean validateJPAAnnotations;
+    protected TextProviderFactory textProviderFactory;
 
     @Inject
     public void setValidationManager(OValValidationManager validationManager) {
         this.validationManager = validationManager;
+    }
+
+    @Inject
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProviderFactory = textProviderFactory;
     }
 
     /**
@@ -170,7 +177,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
 
 	private void addValidationErrors(ConstraintViolation[] violations, Object action, ValueStack valueStack, String parentFieldname) {
 		if (violations != null) {
-            ValidatorContext validatorContext = new DelegatingValidatorContext(action);
+            ValidatorContext validatorContext = new DelegatingValidatorContext(action, textProviderFactory);
             for (ConstraintViolation violation : violations) {
                 //translate message
                 String key = violation.getMessage();

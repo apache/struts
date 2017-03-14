@@ -25,14 +25,11 @@ import java.util.Locale;
 
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.LocalizedTextProvider;
-import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 public class DefaultBeanSelectionProviderTest extends XWorkTestCase {

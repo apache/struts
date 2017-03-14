@@ -23,7 +23,7 @@ package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import junit.framework.TestCase;
 import org.apache.struts2.StrutsConstants;
@@ -49,7 +49,7 @@ public class PropertiesConfigurationProviderTest extends TestCase {
         Container container = builder.create(true);
 
         String localeStr = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
-        Locale locale = LocalizedTextUtil.localeFromString(localeStr, Locale.FRANCE);
+        Locale locale = DefaultLocalizedTextProvider.localeFromString(localeStr, Locale.FRANCE);
 
         assertNotNull(locale);
         assertEquals("DE", locale.getCountry());
@@ -68,7 +68,7 @@ public class PropertiesConfigurationProviderTest extends TestCase {
         Container container = builder.create(true);
 
         String localeStr = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
-        Locale locale = LocalizedTextUtil.localeFromString(localeStr, Locale.getDefault());
+        Locale locale = DefaultLocalizedTextProvider.localeFromString(localeStr, Locale.getDefault());
 
         assertNotNull(locale);
         Locale vmLocale = Locale.getDefault();

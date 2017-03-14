@@ -21,7 +21,6 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;

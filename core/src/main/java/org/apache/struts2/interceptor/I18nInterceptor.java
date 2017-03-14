@@ -24,7 +24,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
@@ -163,7 +163,7 @@ public class I18nInterceptor extends AbstractInterceptor {
             } else {
                 String localeStr = requestedLocale.toString();
                 if (localeProvider.isValidLocaleString(localeStr)) {
-                    locale = LocalizedTextUtil.localeFromString(requestedLocale.toString(), null);
+                    locale = DefaultLocalizedTextProvider.localeFromString(requestedLocale.toString(), null);
                 }
             }
             if (locale != null) {

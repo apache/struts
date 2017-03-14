@@ -46,7 +46,6 @@ import org.apache.struts2.views.jsp.ui.TextFieldTag;
 import org.apache.struts2.views.jsp.ui.UpDownSelectTag;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
  * Test case for method findAncestor(Class) in Component and some commons

@@ -30,14 +30,14 @@ import java.util.ResourceBundle;
 
 
 /**
- * Unit test for {@link LocalizedTextUtil}.
+ * Unit test for {@link DefaultLocalizedTextProvider}.
  *
  * @author jcarreira
  * @author tm_jee
  * 
  * @version $Date$ $Id$
  */
-public class LocalizedTextUtilTest extends XWorkTestCase {
+public class DefaultLocalizedTextProviderTest extends XWorkTestCase {
 
     private LocalizedTextProvider localizedTextProvider;
     
@@ -215,16 +215,16 @@ public class LocalizedTextUtilTest extends XWorkTestCase {
         String text = localizedTextProvider.findText(Bar.class, "xw377", ActionContext.getContext().getLocale(), "xw377", null, ActionContext.getContext().getValueStack());
         assertEquals("xw377", text); // should not log
 
-        String text2 = localizedTextProvider.findText(LocalizedTextUtilTest.class, "notinbundle", ActionContext.getContext().getLocale(), "hello", null, ActionContext.getContext().getValueStack());
+        String text2 = localizedTextProvider.findText(DefaultLocalizedTextProviderTest.class, "notinbundle", ActionContext.getContext().getLocale(), "hello", null, ActionContext.getContext().getValueStack());
         assertEquals("hello", text2); // should log WARN
 
-        String text3 = localizedTextProvider.findText(LocalizedTextUtilTest.class, "notinbundle.key", ActionContext.getContext().getLocale(), "notinbundle.key", null, ActionContext.getContext().getValueStack());
+        String text3 = localizedTextProvider.findText(DefaultLocalizedTextProviderTest.class, "notinbundle.key", ActionContext.getContext().getLocale(), "notinbundle.key", null, ActionContext.getContext().getValueStack());
         assertEquals("notinbundle.key", text3); // should log WARN
 
-        String text4 = localizedTextProvider.findText(LocalizedTextUtilTest.class, "xw377", ActionContext.getContext().getLocale(), "hello", null, ActionContext.getContext().getValueStack());
+        String text4 = localizedTextProvider.findText(DefaultLocalizedTextProviderTest.class, "xw377", ActionContext.getContext().getLocale(), "hello", null, ActionContext.getContext().getValueStack());
         assertEquals("xw377", text4); // should not log
 
-        String text5 = localizedTextProvider.findText(LocalizedTextUtilTest.class, "username", ActionContext.getContext().getLocale(), null, null, ActionContext.getContext().getValueStack());
+        String text5 = localizedTextProvider.findText(DefaultLocalizedTextProviderTest.class, "username", ActionContext.getContext().getLocale(), null, null, ActionContext.getContext().getValueStack());
         assertEquals("Santa", text5); // should not log
     }
 

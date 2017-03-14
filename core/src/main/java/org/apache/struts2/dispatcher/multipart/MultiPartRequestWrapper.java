@@ -22,14 +22,12 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 

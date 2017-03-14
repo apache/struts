@@ -21,7 +21,6 @@
 
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import http.utils.multipartrequest.ServletMultipartRequest;
@@ -32,7 +31,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Locale;
 
 
 /**

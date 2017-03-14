@@ -26,8 +26,7 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.sun.net.httpserver.HttpsParameters;
+import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
@@ -397,7 +396,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         String defaultLocale = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
         Locale locale;
         if (defaultLocale != null) {
-            locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
+            locale = DefaultLocalizedTextProvider.localeFromString(defaultLocale, request.getLocale());
         } else {
             locale = request.getLocale();
         }

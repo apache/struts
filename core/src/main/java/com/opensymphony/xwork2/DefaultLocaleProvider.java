@@ -1,6 +1,6 @@
 package com.opensymphony.xwork2;
 
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +26,7 @@ public class DefaultLocaleProvider implements LocaleProvider {
 
     @Override
     public boolean isValidLocaleString(String localeStr) {
-        return isValidLocale(LocalizedTextUtil.localeFromString(localeStr, getLocale()));
+        return isValidLocale(DefaultLocalizedTextProvider.localeFromString(localeStr, getLocale()));
     }
 
     @Override

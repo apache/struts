@@ -31,6 +31,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.StrutsConstants;
 
 import java.beans.PropertyDescriptor;
@@ -88,9 +89,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Rainer Hermanns
  * @author tm_jee
  */
-public class LocalizedTextUtil implements LocalizedTextProvider {
+public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
 
-    private static final Logger LOG = LogManager.getLogger(LocalizedTextUtil.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultLocalizedTextProvider.class);
+
+    public static final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
+    public static final String STRUTS_MESSAGES_BUNDLE = "org/apache/struts2/struts-messages";
 
     private static final String TOMCAT_RESOURCE_ENTRIES_FIELD = "resourceEntries";
 
@@ -105,7 +109,7 @@ public class LocalizedTextUtil implements LocalizedTextProvider {
     private final Set<String> missingBundles = Collections.synchronizedSet(new HashSet<String>());
 
     private final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
-    private final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
+
 
     /**
      * Clears the internal list of resource bundles.
@@ -117,8 +121,10 @@ public class LocalizedTextUtil implements LocalizedTextProvider {
         // no-op
     }
 
-    public LocalizedTextUtil() {
-        addDefaultResourceBundle("org/apache/struts2/struts-messages");
+    public DefaultLocalizedTextProvider() {
+
+        addDefaultResourceBundle(XWORK_MESSAGES_BUNDLE);
+        addDefaultResourceBundle(STRUTS_MESSAGES_BUNDLE);
     }
 
     /**
@@ -137,7 +143,7 @@ public class LocalizedTextUtil implements LocalizedTextProvider {
     }
 
     @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
-    public void setCustomI18NBundles(String bundles) {
+    public void setCustomI18NResources(String bundles) {
         if (bundles != null && bundles.length() > 0) {
             StringTokenizer customBundles = new StringTokenizer(bundles, ", ");
 
@@ -147,7 +153,7 @@ public class LocalizedTextUtil implements LocalizedTextProvider {
                     LOG.trace("Loading global messages from [{}]", name);
                     addDefaultResourceBundle(name);
                 } catch (Exception e) {
-                    LOG.error("Could not find messages file {}.properties. Skipping", name);
+                    LOG.error(new ParameterizedMessage("Could not find messages file {}.properties. Skipping", name), e);
                 }
             }
         }
@@ -169,7 +175,6 @@ public class LocalizedTextUtil implements LocalizedTextProvider {
             List<String> bundles = classLoaderMap.get(ccl.hashCode());
             if (bundles == null) {
                 bundles = new CopyOnWriteArrayList<>();
-                bundles.add(XWORK_MESSAGES_BUNDLE);
                 classLoaderMap.put(ccl.hashCode(), bundles);
             }
             bundles.remove(resourceBundleName);

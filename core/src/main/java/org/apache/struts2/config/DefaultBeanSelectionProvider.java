@@ -53,7 +53,6 @@ import com.opensymphony.xwork2.factory.ResultFactory;
 import com.opensymphony.xwork2.factory.ValidatorFactory;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -73,8 +72,6 @@ import org.apache.struts2.util.ContentTypeMatcher;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.util.UrlHelper;
 import org.apache.struts2.views.velocity.VelocityManager;
-
-import java.util.StringTokenizer;
 
 /**
  * Selects the implementations of key framework extension points, using the loaded

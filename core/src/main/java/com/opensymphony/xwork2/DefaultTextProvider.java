@@ -16,7 +16,7 @@
 package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import java.io.Serializable;
@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
  *
  * @author Jason Carreira jcarreira@gmail.com
  * @author Rainer Hermanns
- * @see LocalizedTextUtil#addDefaultResourceBundle(String)
+ * @see DefaultLocalizedTextProvider#addDefaultResourceBundle(String)
  */
 public class DefaultTextProvider implements TextProvider, Serializable, Unchainable {
 

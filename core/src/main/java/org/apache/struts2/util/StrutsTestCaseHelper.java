@@ -23,7 +23,7 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -47,7 +47,7 @@ public class StrutsTestCaseHelper {
      * @throws Exception in case of any error
      */
     public static void setUp() throws Exception {
-        LocalizedTextUtil.clearDefaultResourceBundles();
+        DefaultLocalizedTextProvider.clearDefaultResourceBundles();
     }
     
     public static Dispatcher initDispatcher(ServletContext ctx, Map<String,String> params) {

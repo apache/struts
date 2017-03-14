@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -121,7 +121,7 @@ public class I18n extends Component {
             ResourceBundle bundle = defaultTextProvider.getTexts(name);
 
             if (bundle == null) {
-                bundle = container.getInstance(LocalizedTextUtil.class).findResourceBundle(name, localeProvider.getLocale());
+                bundle = container.getInstance(DefaultLocalizedTextProvider.class).findResourceBundle(name, localeProvider.getLocale());
             }
 
             if (bundle != null) {

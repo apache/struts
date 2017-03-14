@@ -26,14 +26,13 @@ import com.opensymphony.xwork2.config.*;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
@@ -647,7 +646,7 @@ public class Dispatcher {
 
         Locale locale;
         if (defaultLocale != null) {
-            locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
+            locale = DefaultLocalizedTextProvider.localeFromString(defaultLocale, request.getLocale());
         } else {
             locale = request.getLocale();
         }
@@ -729,7 +728,7 @@ public class Dispatcher {
 
         Locale locale = null;
         if (defaultLocale != null) {
-            locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
+            locale = DefaultLocalizedTextProvider.localeFromString(defaultLocale, request.getLocale());
         }
 
         if (encoding != null) {

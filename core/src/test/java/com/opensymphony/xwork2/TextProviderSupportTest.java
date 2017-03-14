@@ -16,8 +16,6 @@
 
 package com.opensymphony.xwork2;
 
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

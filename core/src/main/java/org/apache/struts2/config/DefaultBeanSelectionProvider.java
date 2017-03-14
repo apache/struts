@@ -333,6 +333,12 @@ import org.apache.struts2.views.velocity.VelocityManager;
  *     <td>singleton</td>
  *     <td>Matches content type of uploaded files (since 2.3.22)</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.LocalizedTextProvider</td>
+ *     <td>struts.localizedTextProvider</td>
+ *     <td>singleton</td>
+ *     <td>Provides access to resource bundles used to localise messages (since 2.5.11)</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->

@@ -972,7 +972,6 @@ public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
      *
      * @deprecated used only in tests
      */
-    @Override
     @Deprecated
     public void reset() {
         // no-op

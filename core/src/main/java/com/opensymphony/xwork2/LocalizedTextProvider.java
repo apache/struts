@@ -47,6 +47,4 @@ public interface LocalizedTextProvider extends Serializable {
 
     void addDefaultResourceBundle(String resourceBundleName);
 
-    @Deprecated
-    void reset();
 }

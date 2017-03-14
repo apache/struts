@@ -15,8 +15,6 @@
  */
 package com.opensymphony.xwork2;
 
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-
 import java.util.*;
 
 /**
@@ -132,8 +130,7 @@ public class DefaultTextProviderTest extends XWorkTestCase {
         ActionContext.setContext(ctx);
         ctx.setLocale(Locale.CANADA);
 
-        LocalizedTextUtil.clearDefaultResourceBundles();
-        LocalizedTextUtil.addDefaultResourceBundle(DefaultTextProviderTest.class.getName());
+        container.getInstance(LocalizedTextProvider.class).addDefaultResourceBundle(DefaultTextProviderTest.class.getName());
 
         tp = container.inject(DefaultTextProvider.class);
     }

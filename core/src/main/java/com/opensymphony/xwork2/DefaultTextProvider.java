@@ -38,14 +38,14 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
 
     private static final Object[] EMPTY_ARGS = new Object[0];
 
-    protected LocalizedTextUtil localizedTextUtil;
+    protected LocalizedTextProvider localizedTextProvider;
 
     public DefaultTextProvider() {
     }
 
     @Inject
-    public void setLocalizedTextUtil(LocalizedTextUtil localizedTextUtil) {
-        this.localizedTextUtil = localizedTextUtil;
+    public void setLocalizedTextUtil(LocalizedTextProvider localizedTextProvider) {
+        this.localizedTextProvider = localizedTextProvider;
     }
 
     public boolean hasKey(String key) {
@@ -53,7 +53,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
     }
 
     public String getText(String key) {
-        return localizedTextUtil.findDefaultText(key, ActionContext.getContext().getLocale());
+        return localizedTextProvider.findDefaultText(key, ActionContext.getContext().getLocale());
     }
 
     public String getText(String key, String defaultValue) {
@@ -72,7 +72,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
             params = EMPTY_ARGS;
         }
 
-        return localizedTextUtil.findDefaultText(key, ActionContext.getContext().getLocale(), params);
+        return localizedTextProvider.findDefaultText(key, ActionContext.getContext().getLocale(), params);
     }
 
     public String getText(String key, String[] args) {
@@ -83,7 +83,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
             params = EMPTY_ARGS;
         }
 
-        return localizedTextUtil.findDefaultText(key, ActionContext.getContext().getLocale(), params);
+        return localizedTextProvider.findDefaultText(key, ActionContext.getContext().getLocale(), params);
     }
 
     public String getText(String key, String defaultValue, List<?> args) {
@@ -144,7 +144,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
     }
 
     public ResourceBundle getTexts(String bundleName) {
-        return localizedTextUtil.findResourceBundle(bundleName, ActionContext.getContext().getLocale());
+        return localizedTextProvider.findResourceBundle(bundleName, ActionContext.getContext().getLocale());
     }
 
     public ResourceBundle getTexts() {

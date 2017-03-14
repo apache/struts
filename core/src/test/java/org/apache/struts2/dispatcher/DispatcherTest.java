@@ -32,7 +32,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -55,14 +55,14 @@ import java.util.Map;
 public class DispatcherTest extends StrutsInternalTestCase {
 
     public void testDefaultResurceBundlePropertyLoaded() throws Exception {
-        LocalizedTextUtil localizedTextUtil = container.inject(LocalizedTextUtil.class);
+        LocalizedTextProvider localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
 
         // some i18n messages from xwork-messages.properties
-        assertEquals(localizedTextUtil.findDefaultText("xwork.error.action.execution", Locale.US),
+        assertEquals(localizedTextProvider.findDefaultText("xwork.error.action.execution", Locale.US),
                 "Error during Action invocation");
 
         // some i18n messages from struts-messages.properties
-        assertEquals(localizedTextUtil.findDefaultText("struts.messages.error.uploading", Locale.US,
+        assertEquals(localizedTextProvider.findDefaultText("struts.messages.error.uploading", Locale.US,
                         new Object[] { "some error messages" }),
                 "Error uploading: some error messages");
     }

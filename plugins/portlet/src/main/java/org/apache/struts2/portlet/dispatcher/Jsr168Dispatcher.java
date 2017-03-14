@@ -235,7 +235,6 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         if (StringUtils.isEmpty(portletNamespace)) {
             portletNamespace = "";
         }
-        LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
 
         container = dispatcherUtils.getContainer();
         actionMapper = container.getInstance(ActionMapper.class);

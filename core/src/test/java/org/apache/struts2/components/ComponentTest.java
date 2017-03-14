@@ -27,6 +27,7 @@ import java.util.Stack;
 
 import javax.servlet.jsp.tagext.TagSupport;
 
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import org.apache.struts2.views.jsp.AbstractTagTest;
 import org.apache.struts2.views.jsp.BeanTag;
 import org.apache.struts2.views.jsp.ElseIfTag;
@@ -439,7 +440,7 @@ public class ComponentTest extends AbstractTagTest {
         t.setPageContext(pageContext);
         t.setName("textFieldName");
 
-        LocalizedTextUtil.addDefaultResourceBundle("org.apache.struts2.components.temp");
+        container.getInstance(LocalizedTextProvider.class).addDefaultResourceBundle("org.apache.struts2.components.temp");
 
         I18nTag tag = new I18nTag();
         tag.setName("org.apache.struts2.components.tempo");

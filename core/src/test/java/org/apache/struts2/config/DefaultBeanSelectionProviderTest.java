@@ -24,31 +24,35 @@ package org.apache.struts2.config;
 import java.util.Locale;
 
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.LocalizedTextProvider;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
-import junit.framework.TestCase;
-
 public class DefaultBeanSelectionProviderTest extends XWorkTestCase {
 
     public void testRegister() {
-        LocalizedTextUtil.clearDefaultResourceBundles();
-        LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
+        LocalizedTextProvider localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
 
-        LocalizedTextUtil localizedTextUtil = container.inject(LocalizedTextUtil.class);
-
-        assertEquals("The form has already been processed or no token was supplied, please try again.", localizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
+        assertEquals("The form has already been processed or no token was supplied, please try again.", localizedTextProvider.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
         
-        LocatableProperties props = new LocatableProperties();
-        props.setProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, "testmessages,testmessages2");
-        props.setProperty(StrutsConstants.STRUTS_LOCALE, "US");
-        
-        new DefaultBeanSelectionProvider().register(new ContainerBuilder(), props);
+        loadConfigurationProviders(new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+                props.setProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, "testmessages,testmessages2");
+                props.setProperty(StrutsConstants.STRUTS_LOCALE, "US");
+            }
+        });
 
-        assertEquals("Replaced message for token tag", localizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
+        localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
+
+        assertEquals("Replaced message for token tag", localizedTextProvider.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
     }
 
 }

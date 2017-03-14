@@ -23,6 +23,7 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
@@ -33,7 +34,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
 import java.beans.PropertyDescriptor;
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -88,29 +88,24 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Rainer Hermanns
  * @author tm_jee
  */
-public class LocalizedTextUtil implements Serializable {
+public class LocalizedTextUtil implements LocalizedTextProvider {
 
     private static final Logger LOG = LogManager.getLogger(LocalizedTextUtil.class);
 
     private static final String TOMCAT_RESOURCE_ENTRIES_FIELD = "resourceEntries";
 
-    private static final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
 
     private boolean reloadBundles = false;
     private boolean devMode = false;
 
-    private static final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
-    private static final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
-    private static final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
-    private static final Set<String> missingBundles = Collections.synchronizedSet(new HashSet<String>());
+    private final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
+    private final Set<String> missingBundles = Collections.synchronizedSet(new HashSet<String>());
 
-    private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
-    private static final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
-
-    static {
-        clearDefaultResourceBundles();
-    }
-
+    private final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
+    private final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
 
     /**
      * Clears the internal list of resource bundles.
@@ -119,13 +114,11 @@ public class LocalizedTextUtil implements Serializable {
      */
     @Deprecated
     public static void clearDefaultResourceBundles() {
-        ClassLoader ccl = getCurrentThreadContextClassLoader();
-        List<String> bundles = new ArrayList<>();
-        classLoaderMap.put(ccl.hashCode(), bundles);
-        bundles.add(0, XWORK_MESSAGES_BUNDLE);
+        // no-op
     }
 
     public LocalizedTextUtil() {
+        addDefaultResourceBundle("org/apache/struts2/struts-messages");
     }
 
     /**
@@ -143,6 +136,23 @@ public class LocalizedTextUtil implements Serializable {
         this.devMode = Boolean.parseBoolean(devMode);
     }
 
+    @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
+    public void setCustomI18NBundles(String bundles) {
+        if (bundles != null && bundles.length() > 0) {
+            StringTokenizer customBundles = new StringTokenizer(bundles, ", ");
+
+            while (customBundles.hasMoreTokens()) {
+                String name = customBundles.nextToken();
+                try {
+                    LOG.trace("Loading global messages from [{}]", name);
+                    addDefaultResourceBundle(name);
+                } catch (Exception e) {
+                    LOG.error("Could not find messages file {}.properties. Skipping", name);
+                }
+            }
+        }
+    }
+
     /**
      * Add's the bundle to the internal list of default bundles.
      * <p>
@@ -151,7 +161,8 @@ public class LocalizedTextUtil implements Serializable {
      *
      * @param resourceBundleName the name of the bundle to add.
      */
-    public static void addDefaultResourceBundle(String resourceBundleName) {
+    @Override
+    public void addDefaultResourceBundle(String resourceBundleName) {
         //make sure this doesn't get added more than once
         final ClassLoader ccl = getCurrentThreadContextClassLoader();
         synchronized (XWORK_MESSAGES_BUNDLE) {
@@ -220,6 +231,7 @@ public class LocalizedTextUtil implements Serializable {
      * @param locale    the locale the message should be for
      * @return a localized message based on the specified key, or null if no localized message can be found for it
      */
+    @Override
     public String findDefaultText(String aTextName, Locale locale) {
         List<String> localList = classLoaderMap.get(Thread.currentThread().getContextClassLoader().hashCode());
 
@@ -253,6 +265,7 @@ public class LocalizedTextUtil implements Serializable {
      * @param params    an array of objects to be substituted into the message text
      * @return A formatted message based on the specified key, or null if no localized message can be found for it
      */
+    @Override
     public String findDefaultText(String aTextName, Locale locale, Object[] params) {
         String defaultText = findDefaultText(aTextName, locale);
         if (defaultText != null) {
@@ -272,6 +285,7 @@ public class LocalizedTextUtil implements Serializable {
      * @param locale      the locale.
      * @return the bundle, <tt>null</tt> if not found.
      */
+    @Override
     public ResourceBundle findResourceBundle(String aBundleName, Locale locale) {
         ClassLoader classLoader = getCurrentThreadContextClassLoader();
         String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
@@ -312,7 +326,7 @@ public class LocalizedTextUtil implements Serializable {
     /**
      * @param classLoader a {@link ClassLoader} to look up the bundle from if none can be found on the current thread's classloader
      */
-    public static void setDelegatedClassLoader(final ClassLoader classLoader) {
+    public void setDelegatedClassLoader(final ClassLoader classLoader) {
         synchronized (bundlesMap) {
             delegatedClassLoaderMap.put(getCurrentThreadContextClassLoader().hashCode(), classLoader);
         }
@@ -321,7 +335,7 @@ public class LocalizedTextUtil implements Serializable {
     /**
      * @param bundleName Removes the bundle from any cached "misses"
      */
-    public static void clearBundle(final String bundleName) {
+    public void clearBundle(final String bundleName) {
         bundlesMap.remove(getCurrentThreadContextClassLoader().hashCode() + bundleName);
     }
 
@@ -349,6 +363,7 @@ public class LocalizedTextUtil implements Serializable {
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      * @see #findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args)
      */
+    @Override
     public String findText(Class aClass, String aTextName, Locale locale) {
         return findText(aClass, aTextName, locale, aTextName, new Object[0]);
     }
@@ -399,6 +414,7 @@ public class LocalizedTextUtil implements Serializable {
      *                       resource bundle
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
+    @Override
     public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args) {
         ValueStack valueStack = ActionContext.getContext().getValueStack();
         return findText(aClass, aTextName, locale, defaultMessage, args, valueStack);
@@ -456,8 +472,9 @@ public class LocalizedTextUtil implements Serializable {
      *                       one in the ActionContext ThreadLocal
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
+    @Override
     public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args,
-                                  ValueStack valueStack) {
+                           ValueStack valueStack) {
         String indexedTextName = null;
         if (aTextName == null) {
         	LOG.warn("Trying to find text with null key!");
@@ -641,6 +658,7 @@ public class LocalizedTextUtil implements Serializable {
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      * @see #findText(java.util.ResourceBundle, String, java.util.Locale, String, Object[])
      */
+    @Override
     public String findText(ResourceBundle bundle, String aTextName, Locale locale) {
         return findText(bundle, aTextName, locale, aTextName, new Object[0]);
     }
@@ -667,6 +685,7 @@ public class LocalizedTextUtil implements Serializable {
      * @param args           arguments for the message formatter.
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
+    @Override
     public String findText(ResourceBundle bundle, String aTextName, Locale locale, String defaultMessage, Object[] args) {
         ValueStack valueStack = ActionContext.getContext().getValueStack();
         return findText(bundle, aTextName, locale, defaultMessage, args, valueStack);
@@ -695,8 +714,9 @@ public class LocalizedTextUtil implements Serializable {
      * @param valueStack     the OGNL value stack.
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
+    @Override
     public String findText(ResourceBundle bundle, String aTextName, Locale locale, String defaultMessage, Object[] args,
-                                  ValueStack valueStack) {
+                           ValueStack valueStack) {
         try {
             reloadBundles(valueStack.getContext());
 
@@ -773,7 +793,7 @@ public class LocalizedTextUtil implements Serializable {
         }
     }
 
-    private static String formatWithNullDetection(MessageFormat mf, Object[] args) {
+    private String formatWithNullDetection(MessageFormat mf, Object[] args) {
         String message = mf.format(args);
         if ("null".equals(message)) {
             return null;
@@ -782,7 +802,7 @@ public class LocalizedTextUtil implements Serializable {
         }
     }
 
-    private static MessageFormat buildMessageFormat(String pattern, Locale locale) {
+    private MessageFormat buildMessageFormat(String pattern, Locale locale) {
         MessageFormatKey key = new MessageFormatKey(pattern, locale);
         MessageFormat format = messageFormats.get(key);
         if (format == null) {
@@ -947,11 +967,10 @@ public class LocalizedTextUtil implements Serializable {
      *
      * @deprecated used only in tests
      */
+    @Override
     @Deprecated
     public void reset() {
-        clearDefaultResourceBundles();
-        bundlesMap.clear();
-        messageFormats.clear();
+        // no-op
     }
 
     static class MessageFormatKey {

@@ -16,7 +16,6 @@
 package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 import java.util.ResourceBundle;
 
@@ -30,7 +29,7 @@ public class TextProviderFactory {
 
     private TextProvider textProvider;
     private LocaleProvider localeProvider;
-    private LocalizedTextUtil localizedTextUtil;
+    private LocalizedTextProvider localizedTextProvider;
 
     @Inject
     public void setTextProvider(TextProvider textProvider) {
@@ -43,8 +42,8 @@ public class TextProviderFactory {
     }
 
     @Inject
-    public void setLocalizedTextUtil(LocalizedTextUtil localizedTextUtil) {
-        this.localizedTextUtil = localizedTextUtil;
+    public void setLocalizedTextUtil(LocalizedTextProvider localizedTextProvider) {
+        this.localizedTextProvider = localizedTextProvider;
     }
 
     public TextProvider createInstance(Class clazz) {
@@ -67,7 +66,7 @@ public class TextProviderFactory {
 
     protected TextProvider getTextProvider(Class clazz) {
         if (this.textProvider == null) {
-            return new TextProviderSupport(clazz, localeProvider, localizedTextUtil);
+            return new TextProviderSupport(clazz, localeProvider, localizedTextProvider);
         } else {
             return textProvider;
         }
@@ -75,7 +74,7 @@ public class TextProviderFactory {
 
     private TextProvider getTextProvider(ResourceBundle bundle) {
         if (this.textProvider == null) {
-            return new TextProviderSupport(bundle, localeProvider, localizedTextUtil);
+            return new TextProviderSupport(bundle, localeProvider, localizedTextProvider);
         }
         return textProvider;
     }

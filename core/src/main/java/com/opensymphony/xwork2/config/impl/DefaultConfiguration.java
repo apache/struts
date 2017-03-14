@@ -245,7 +245,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ReflectionProvider.class, OgnlReflectionProvider.class, Scope.SINGLETON);
         builder.factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON);
 
-        builder.factory(LocalizedTextUtil.class, LocalizedTextUtil.class, Scope.SINGLETON);
+        builder.factory(LocalizedTextProvider.class, LocalizedTextUtil.class, Scope.SINGLETON);
 
         builder.factory(XWorkConverter.class, Scope.SINGLETON);
         builder.factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON);

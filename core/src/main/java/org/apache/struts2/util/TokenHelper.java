@@ -22,6 +22,7 @@
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -188,8 +189,8 @@ public class TokenHelper {
 
         if (!token.equals(sessionToken)) {
             if (LOG.isWarnEnabled()) {
-                LocalizedTextUtil localizedTextUtil = ActionContext.getContext().getContainer().getInstance(LocalizedTextUtil.class);
-                LOG.warn(localizedTextUtil.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
+                LocalizedTextProvider localizedTextProvider = ActionContext.getContext().getContainer().getInstance(LocalizedTextProvider.class);
+                LOG.warn(localizedTextProvider.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
                         token, sessionToken
                 }));
             }

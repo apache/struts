@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +52,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     protected ActionConfig config;
     protected ActionInvocation invocation;
     protected UnknownHandlerManager unknownHandlerManager;
-    protected LocalizedTextUtil localizedTextUtil;
+    protected LocalizedTextProvider localizedTextProvider;
 
     protected String actionName;
     protected String namespace;
@@ -116,8 +115,8 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     }
 
     @Inject
-    public void setLocalizedTextUtil(LocalizedTextUtil localizedTextUtil) {
-        this.localizedTextUtil = localizedTextUtil;
+    public void setLocalizedTextUtil(LocalizedTextProvider localizedTextProvider) {
+        this.localizedTextProvider = localizedTextProvider;
     }
 
     public Object getAction() {
@@ -212,7 +211,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     }
 
     protected String prepareNotAllowedErrorMessage() {
-        return localizedTextUtil.findDefaultText(
+        return localizedTextProvider.findDefaultText(
                 "struts.exception.method-not-allowed",
                 Locale.getDefault(),
                 new String[]{method, actionName}
@@ -221,12 +220,12 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
     protected String getErrorMessage() {
         if ((namespace != null) && (namespace.trim().length() > 0)) {
-            return localizedTextUtil.findDefaultText(
+            return localizedTextProvider.findDefaultText(
                     "xwork.exception.missing-package-action",
                     Locale.getDefault(),
                     new String[]{namespace, actionName});
         } else {
-            return localizedTextUtil.findDefaultText(
+            return localizedTextProvider.findDefaultText(
                     "xwork.exception.missing-action",
                     Locale.getDefault(),
                     new String[]{actionName});

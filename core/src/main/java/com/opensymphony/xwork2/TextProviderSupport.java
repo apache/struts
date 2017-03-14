@@ -16,7 +16,6 @@
 package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.*;
@@ -33,7 +32,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     private Class clazz;
     private LocaleProvider localeProvider;
     private ResourceBundle bundle;
-    private LocalizedTextUtil localizedTextUtil;
+    private LocalizedTextProvider localizedTextProvider;
 
     /**
      * Default constructor
@@ -47,10 +46,10 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param clazz    a clazz to use for reading the resource bundle.
      * @param provider a locale provider.
      */
-    public TextProviderSupport(Class clazz, LocaleProvider provider, LocalizedTextUtil localizedTextUtil) {
+    public TextProviderSupport(Class clazz, LocaleProvider provider, LocalizedTextProvider localizedTextProvider) {
         this.clazz = clazz;
         this.localeProvider = provider;
-        this.localizedTextUtil = localizedTextUtil;
+        this.localizedTextProvider = localizedTextProvider;
     }
 
     /**
@@ -59,10 +58,10 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param bundle   the resource bundle.
      * @param provider a locale provider.
      */
-    public TextProviderSupport(ResourceBundle bundle, LocaleProvider provider, LocalizedTextUtil localizedTextUtil) {
+    public TextProviderSupport(ResourceBundle bundle, LocaleProvider provider, LocalizedTextProvider localizedTextProvider) {
         this.bundle = bundle;
         this.localeProvider = provider;
-        this.localizedTextUtil = localizedTextUtil;
+        this.localizedTextProvider = localizedTextProvider;
     }
 
     /**
@@ -89,8 +88,8 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     }
 
     @Inject
-    public void setLocalizedTextUtil(LocalizedTextUtil localizedTextUtil) {
-        this.localizedTextUtil = localizedTextUtil;
+    public void setLocalizedTextUtil(LocalizedTextProvider localizedTextProvider) {
+        this.localizedTextProvider = localizedTextProvider;
     }
 
     /**
@@ -104,9 +103,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     public boolean hasKey(String key) {
     	String message;
     	if (clazz != null) {
-            message = localizedTextUtil.findText(clazz, key, getLocale(), null, new Object[0] );
+            message = localizedTextProvider.findText(clazz, key, getLocale(), null, new Object[0] );
         } else {
-            message = localizedTextUtil.findText(bundle, key, getLocale(), null, new Object[0]);
+            message = localizedTextProvider.findText(bundle, key, getLocale(), null, new Object[0]);
         }
     	return message != null;
     }
@@ -208,9 +207,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     public String getText(String key, String defaultValue, List<?> args) {
         Object[] argsArray = ((args != null && !args.equals(Collections.emptyList())) ? args.toArray() : null);
         if (clazz != null) {
-            return localizedTextUtil.findText(clazz, key, getLocale(), defaultValue, argsArray);
+            return localizedTextProvider.findText(clazz, key, getLocale(), defaultValue, argsArray);
         } else {
-            return localizedTextUtil.findText(bundle, key, getLocale(), defaultValue, argsArray);
+            return localizedTextProvider.findText(bundle, key, getLocale(), defaultValue, argsArray);
         }
     }
 
@@ -229,9 +228,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      */
     public String getText(String key, String defaultValue, String[] args) {
         if (clazz != null) {
-            return localizedTextUtil.findText(clazz, key, getLocale(), defaultValue, args);
+            return localizedTextProvider.findText(clazz, key, getLocale(), defaultValue, args);
         } else {
-            return localizedTextUtil.findText(bundle, key, getLocale(), defaultValue, args);
+            return localizedTextProvider.findText(bundle, key, getLocale(), defaultValue, args);
         }
     }
 
@@ -259,9 +258,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
             locale = getLocale();
         }
         if (clazz != null) {
-            return localizedTextUtil.findText(clazz, key, locale, defaultValue, argsArray, stack);
+            return localizedTextProvider.findText(clazz, key, locale, defaultValue, argsArray, stack);
         } else {
-            return localizedTextUtil.findText(bundle, key, locale, defaultValue, argsArray, stack);
+            return localizedTextProvider.findText(bundle, key, locale, defaultValue, argsArray, stack);
         }
     }
 
@@ -289,9 +288,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
             locale = getLocale();
         }
         if (clazz != null) {
-            return localizedTextUtil.findText(clazz, key, locale, defaultValue, args, stack);
+            return localizedTextProvider.findText(clazz, key, locale, defaultValue, args, stack);
         } else {
-            return localizedTextUtil.findText(bundle, key, locale, defaultValue, args, stack);
+            return localizedTextProvider.findText(bundle, key, locale, defaultValue, args, stack);
         }
 
     }
@@ -311,7 +310,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @return a resource bundle
      */
     public ResourceBundle getTexts(String aBundleName) {
-        return localizedTextUtil.findResourceBundle(aBundleName, getLocale());
+        return localizedTextProvider.findResourceBundle(aBundleName, getLocale());
     }
 
     /**

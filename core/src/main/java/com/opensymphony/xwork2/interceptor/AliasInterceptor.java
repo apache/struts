@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.Evaluated;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
@@ -94,7 +94,7 @@ public class AliasInterceptor extends AbstractInterceptor {
     protected String aliasesKey = DEFAULT_ALIAS_KEY;
 
     protected ValueStackFactory valueStackFactory;
-    protected LocalizedTextUtil localizedTextUtil;
+    protected LocalizedTextProvider localizedTextProvider;
     protected boolean devMode = false;
 
     @Inject(XWorkConstants.DEV_MODE)
@@ -108,8 +108,8 @@ public class AliasInterceptor extends AbstractInterceptor {
     }
 
     @Inject
-    public void setLocalizedTextUtil(LocalizedTextUtil localizedTextUtil) {
-        this.localizedTextUtil = localizedTextUtil;
+    public void setLocalizedTextUtil(LocalizedTextProvider localizedTextProvider) {
+        this.localizedTextProvider = localizedTextProvider;
     }
 
     /**
@@ -179,7 +179,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                             newStack.setValue(alias, value.get());
                         } catch (RuntimeException e) {
                             if (devMode) {
-                                String developerNotification = localizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
+                                String developerNotification = localizedTextProvider.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                                         "Unexpected Exception caught setting '" + entry.getKey() + "' on '" + action.getClass() + ": " + e.getMessage()
                                 });
                                 LOG.error(developerNotification);

@@ -21,6 +21,7 @@
 
 package org.apache.struts2.config;
 
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -52,11 +53,11 @@ public class SettingsTest extends StrutsInternalTestCase {
     public void testDefaultResourceBundlesLoaded() {
         Settings settings = new DefaultSettings();
 
-        LocalizedTextUtil localizedTextUtil = container.inject(LocalizedTextUtil.class);
+        LocalizedTextProvider localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
 
         assertEquals("testmessages,testmessages2", settings.get(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
-        assertEquals("This is a test message", localizedTextUtil.findDefaultText("default.testmessage", Locale.getDefault()));
-        assertEquals("This is another test message", localizedTextUtil.findDefaultText("default.testmessage2", Locale.getDefault()));
+        assertEquals("This is a test message", localizedTextProvider.findDefaultText("default.testmessage", Locale.getDefault()));
+        assertEquals("This is another test message", localizedTextProvider.findDefaultText("default.testmessage2", Locale.getDefault()));
     }
 
     public void testSetSettings() {

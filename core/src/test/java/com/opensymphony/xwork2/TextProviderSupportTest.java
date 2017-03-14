@@ -111,7 +111,7 @@ public class TextProviderSupportTest extends XWorkTestCase {
         super.setUp();
         rb = ResourceBundle.getBundle(TextProviderSupportTest.class.getName(), Locale.ENGLISH);
 
-        LocalizedTextUtil ltu = container.getInstance(LocalizedTextUtil.class);
+        LocalizedTextProvider ltu = container.getInstance(LocalizedTextProvider.class);
 
         tp = new TextProviderSupport(rb, new LocaleProvider() {
             public Locale getLocale() {

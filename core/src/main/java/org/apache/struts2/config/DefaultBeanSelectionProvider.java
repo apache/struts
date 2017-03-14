@@ -22,6 +22,7 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
@@ -390,7 +391,7 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props, Scope.PROTOTYPE);
         alias(TextProviderFactory.class, StrutsConstants.STRUTS_TEXT_PROVIDER_FACTORY, builder, props, Scope.PROTOTYPE);
         alias(LocaleProvider.class, StrutsConstants.STRUTS_LOCALE_PROVIDER, builder, props);
-        alias(LocalizedTextUtil.class, StrutsConstants.STRUTS_LOCALIZED_TEXT_PROVIDER, builder, props);
+        alias(LocalizedTextProvider.class, StrutsConstants.STRUTS_LOCALIZED_TEXT_PROVIDER, builder, props);
 
         alias(ActionProxyFactory.class, StrutsConstants.STRUTS_ACTIONPROXYFACTORY, builder, props);
         alias(ObjectTypeDeterminer.class, StrutsConstants.STRUTS_OBJECTTYPEDETERMINER, builder, props);
@@ -434,9 +435,6 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         convertIfExist(props, StrutsConstants.STRUTS_ADDITIONAL_ACCEPTED_PATTERNS, XWorkConstants.ADDITIONAL_ACCEPTED_PATTERNS);
         convertIfExist(props, StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS);
         convertIfExist(props, StrutsConstants.STRUTS_OVERRIDE_ACCEPTED_PATTERNS, XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS);
-
-        LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
-        loadCustomResourceBundles(props);
     }
 
     /**
@@ -459,23 +457,6 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
             props.setProperty(XWorkConstants.DEV_MODE, "true");
         } else {
             props.setProperty(XWorkConstants.DEV_MODE, "false");
-        }
-    }
-
-    private void loadCustomResourceBundles(LocatableProperties props) {
-        String bundles = props.getProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES);
-        if (bundles != null && bundles.length() > 0) {
-            StringTokenizer customBundles = new StringTokenizer(bundles, ", ");
-
-            while (customBundles.hasMoreTokens()) {
-                String name = customBundles.nextToken();
-                try {
-              	    LOG.trace("Loading global messages from [{}]", name);
-                    LocalizedTextUtil.addDefaultResourceBundle(name);
-                } catch (Exception e) {
-                    LOG.error("Could not find messages file {}.properties. Skipping", name);
-                }
-            }
         }
     }
 

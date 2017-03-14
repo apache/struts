@@ -115,7 +115,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     }
 
     @Inject
-    public void setLocalizedTextUtil(LocalizedTextProvider localizedTextProvider) {
+    public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
         this.localizedTextProvider = localizedTextProvider;
     }
 

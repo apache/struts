@@ -42,7 +42,7 @@ public class TextProviderFactory {
     }
 
     @Inject
-    public void setLocalizedTextUtil(LocalizedTextProvider localizedTextProvider) {
+    public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
         this.localizedTextProvider = localizedTextProvider;
     }
 

@@ -44,7 +44,7 @@ public class DefaultTextProvider implements TextProvider, Serializable, Unchaina
     }
 
     @Inject
-    public void setLocalizedTextUtil(LocalizedTextProvider localizedTextProvider) {
+    public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
         this.localizedTextProvider = localizedTextProvider;
     }
 

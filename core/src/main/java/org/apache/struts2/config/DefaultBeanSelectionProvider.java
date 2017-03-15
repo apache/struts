@@ -221,7 +221,7 @@ import org.apache.struts2.views.velocity.VelocityManager;
  *     <td>com.opensymphony.xwork2.LocaleProvider</td>
  *     <td>struts.localeProvider</td>
  *     <td>singleton</td>
- *     <td>DEPRECATED! Allows provide custom TextProvider for whole application</td>
+ *     <td>DEPRECATED! Allows provide custom TextProvider for whole application - instead this endpoint use <b>struts.localeProviderFactory</b></td>
  *   </tr>
  *   <tr>
  *     <td>com.opensymphony.xwork2.LocaleProviderFactory</td>

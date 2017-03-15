@@ -19,7 +19,6 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.ValueStack;
-import net.sf.cglib.core.Local;
 
 import java.io.Serializable;
 import java.util.*;

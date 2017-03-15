@@ -67,6 +67,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     /**
      * @param bundle the resource bundle.
      */
+    @Override
     public void setBundle(ResourceBundle bundle) {
         this.bundle = bundle;
     }
@@ -74,17 +75,22 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     /**
      * @param clazz a clazz to use for reading the resource bundle.
      */
+    @Override
     public void setClazz(Class clazz) {
         this.clazz = clazz;
     }
 
-
     /**
      * @param localeProvider a locale provider.
      */
-    @Inject
+    @Override
     public void setLocaleProvider(LocaleProvider localeProvider) {
         this.localeProvider = localeProvider;
+    }
+
+    @Inject
+    public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
+        this.localeProvider = localeProviderFactory.createLocaleProvider();
     }
 
     @Inject

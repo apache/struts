@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 public class TextProviderFactory {
 
     private TextProvider textProvider;
-    private LocaleProvider localeProvider;
+    private LocaleProviderFactory localeProviderFactory;
     private LocalizedTextProvider localizedTextProvider;
 
     @Inject
@@ -37,8 +37,8 @@ public class TextProviderFactory {
     }
 
     @Inject
-    public void setLocaleProvider(LocaleProvider localeProvider) {
-        this.localeProvider = localeProvider;
+    public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
+        this.localeProviderFactory = localeProviderFactory;
     }
 
     @Inject
@@ -50,7 +50,7 @@ public class TextProviderFactory {
         TextProvider instance = getTextProvider(clazz);
         if (instance instanceof ResourceBundleTextProvider) {
             ((ResourceBundleTextProvider) instance).setClazz(clazz);
-            ((ResourceBundleTextProvider) instance).setLocaleProvider(localeProvider);
+            ((ResourceBundleTextProvider) instance).setLocaleProvider(localeProviderFactory.createLocaleProvider());
         }
         return instance;
     }
@@ -59,14 +59,14 @@ public class TextProviderFactory {
         TextProvider instance = getTextProvider(bundle);
         if (instance instanceof ResourceBundleTextProvider) {
             ((ResourceBundleTextProvider) instance).setBundle(bundle);
-            ((ResourceBundleTextProvider) instance).setLocaleProvider(localeProvider);
+            ((ResourceBundleTextProvider) instance).setLocaleProvider(localeProviderFactory.createLocaleProvider());
         }
         return instance;
     }
 
     protected TextProvider getTextProvider(Class clazz) {
         if (this.textProvider == null) {
-            return new TextProviderSupport(clazz, localeProvider, localizedTextProvider);
+            return new TextProviderSupport(clazz, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
         } else {
             return textProvider;
         }
@@ -74,7 +74,7 @@ public class TextProviderFactory {
 
     private TextProvider getTextProvider(ResourceBundle bundle) {
         if (this.textProvider == null) {
-            return new TextProviderSupport(bundle, localeProvider, localizedTextProvider);
+            return new TextProviderSupport(bundle, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
         }
         return textProvider;
     }

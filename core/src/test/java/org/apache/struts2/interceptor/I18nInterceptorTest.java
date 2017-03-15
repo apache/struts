@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.DefaultLocaleProvider;
+import com.opensymphony.xwork2.DefaultLocaleProviderFactory;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import junit.framework.TestCase;
@@ -217,7 +218,7 @@ public class I18nInterceptorTest extends TestCase {
 
     public void setUp() throws Exception {
         interceptor = new I18nInterceptor();
-        interceptor.setLocaleProvider(new DefaultLocaleProvider());
+        interceptor.setLocaleProviderFactory(new DefaultLocaleProviderFactory());
         interceptor.init();
         session = new HashMap();
 

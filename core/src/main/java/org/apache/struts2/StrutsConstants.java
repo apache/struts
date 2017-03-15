@@ -200,7 +200,10 @@ public final class StrutsConstants {
     /** XWork default text provider */
     public static final String STRUTS_XWORKTEXTPROVIDER = "struts.xworkTextProvider";
 
-    /** The {@link com.opensymphony.xwork2.LocaleProvider} implementation class */
+    /**
+     * The {@link com.opensymphony.xwork2.LocaleProvider} implementation class
+     * @deprecated use {@link StrutsConstants#STRUTS_LOCALE_PROVIDER_FACTORY} instead
+     */
     @Deprecated
     public static final String STRUTS_LOCALE_PROVIDER = "struts.localeProvider";
 

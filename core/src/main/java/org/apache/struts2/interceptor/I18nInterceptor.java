@@ -22,6 +22,7 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
@@ -93,8 +94,8 @@ public class I18nInterceptor extends AbstractInterceptor {
     }
 
     @Inject
-    public void setLocaleProvider(LocaleProvider localeProvider) {
-        this.localeProvider = localeProvider;
+    public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
+        this.localeProvider = localeProviderFactory.createLocaleProvider();
     }
 
     @Override

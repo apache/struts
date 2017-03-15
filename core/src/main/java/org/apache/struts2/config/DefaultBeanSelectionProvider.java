@@ -22,6 +22,7 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
@@ -29,7 +30,6 @@ import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.UnknownHandlerManager;
@@ -221,7 +221,13 @@ import org.apache.struts2.views.velocity.VelocityManager;
  *     <td>com.opensymphony.xwork2.LocaleProvider</td>
  *     <td>struts.localeProvider</td>
  *     <td>singleton</td>
- *     <td>Allows provide custom TextProvider for whole application</td>
+ *     <td>DEPRECATED! Allows provide custom TextProvider for whole application</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.LocaleProviderFactory</td>
+ *     <td>struts.localeProviderFactory</td>
+ *     <td>singleton</td>
+ *     <td>Allows provide custom LocaleProvider for whole application</td>
  *   </tr>
  *   <tr>
  *     <td>org.apache.struts2.components.UrlRenderer</td>
@@ -393,7 +399,7 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
 
         alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props, Scope.PROTOTYPE);
         alias(TextProviderFactory.class, StrutsConstants.STRUTS_TEXT_PROVIDER_FACTORY, builder, props, Scope.PROTOTYPE);
-        alias(LocaleProvider.class, StrutsConstants.STRUTS_LOCALE_PROVIDER, builder, props);
+        alias(LocaleProviderFactory.class, StrutsConstants.STRUTS_LOCALE_PROVIDER_FACTORY, builder, props);
         alias(LocalizedTextProvider.class, StrutsConstants.STRUTS_LOCALIZED_TEXT_PROVIDER, builder, props);
 
         alias(ActionProxyFactory.class, StrutsConstants.STRUTS_ACTIONPROXYFACTORY, builder, props);

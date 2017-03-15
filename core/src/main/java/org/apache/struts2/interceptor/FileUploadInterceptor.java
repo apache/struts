@@ -455,7 +455,8 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         if (action instanceof LocaleProvider) {
             localeProvider = (LocaleProvider) action;
         } else {
-            localeProvider = container.getInstance(LocaleProvider.class);
+            LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
+            localeProvider = localeProviderFactory.createLocaleProvider();
         }
         return localeProvider;
     }

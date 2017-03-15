@@ -32,6 +32,7 @@ package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
@@ -349,7 +350,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
             locale = (Locale) context.get(ActionContext.LOCALE);
         }
         if (locale == null) {
-            locale = container.getInstance(LocaleProvider.class).getLocale();
+            LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
+            locale = localeProviderFactory.createLocaleProvider().getLocale();
         }
         return locale;
     }

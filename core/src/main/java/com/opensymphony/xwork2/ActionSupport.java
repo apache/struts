@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.ValueStack;
+import net.sf.cglib.core.Local;
 
 import java.io.Serializable;
 import java.util.*;
@@ -32,6 +33,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
     private final ValidationAwareSupport validationAware = new ValidationAwareSupport();
 
     private transient TextProvider textProvider;
+    private transient LocaleProvider localeProvider;
 
     protected Container container;
 
@@ -61,17 +63,17 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
 
     @Override
     public Locale getLocale() {
-        return container.getInstance(LocaleProvider.class).getLocale();
+        return getLocaleProvider().getLocale();
     }
 
     @Override
     public boolean isValidLocaleString(String localeStr) {
-        return container.getInstance(LocaleProvider.class).isValidLocaleString(localeStr);
+        return getLocaleProvider().isValidLocaleString(localeStr);
     }
 
     @Override
     public boolean isValidLocale(Locale locale) {
-        return container.getInstance(LocaleProvider.class).isValidLocale(locale);
+        return getLocaleProvider().isValidLocale(locale);
     }
 
     public boolean hasKey(String key) {
@@ -272,12 +274,20 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      *
      * @return reference to field with TextProvider
      */
-    private TextProvider getTextProvider() {
+    protected TextProvider getTextProvider() {
         if (textProvider == null) {
             TextProviderFactory tpf = container.inject(TextProviderFactory.class);
             textProvider = tpf.createInstance(getClass());
         }
         return textProvider;
+    }
+
+    protected LocaleProvider getLocaleProvider() {
+        if (localeProvider == null) {
+            LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
+            localeProvider = localeProviderFactory.createLocaleProvider();
+        }
+        return localeProvider;
     }
 
     @Inject

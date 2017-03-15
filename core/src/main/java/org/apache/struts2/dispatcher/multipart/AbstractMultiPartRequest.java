@@ -1,6 +1,7 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,12 +71,9 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         this.maxSize = Long.parseLong(maxSize);
     }
 
-    /**
-     * @param provider Injects the Struts locale provider.
-     */
     @Inject
-    public void setLocaleProvider(LocaleProvider provider) {
-        defaultLocale = provider.getLocale();
+    public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
+        defaultLocale = localeProviderFactory.createLocaleProvider().getLocale();
     }
 
     /**

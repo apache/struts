@@ -2,6 +2,8 @@ package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.DefaultLocaleProviderFactory;
+import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
@@ -186,7 +188,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON)
                 .factory(TextProvider.class, TextProviderSupport.class, Scope.SINGLETON)
 
-                .factory(LocaleProvider.class, DefaultLocaleProvider.class, Scope.SINGLETON)
+                .factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(CollectionConverter.class, Scope.SINGLETON)
                 .factory(ArrayConverter.class, Scope.SINGLETON)

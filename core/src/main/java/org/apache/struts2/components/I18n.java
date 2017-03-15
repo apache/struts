@@ -24,6 +24,7 @@ package org.apache.struts2.components;
 import java.io.Writer;
 import java.util.ResourceBundle;
 
+import com.opensymphony.xwork2.LocaleProviderFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
@@ -109,8 +110,8 @@ public class I18n extends Component {
     }
 
     @Inject
-    public void setLocaleProvider(LocaleProvider localeProvider) {
-        this.localeProvider = localeProvider;
+    public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
+        this.localeProvider = localeProviderFactory.createLocaleProvider();
     }
 
     public boolean start(Writer writer) {

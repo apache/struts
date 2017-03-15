@@ -253,18 +253,30 @@ public class DelegatingValidatorContext implements ValidatorContext {
      * An implementation of LocaleProvider which gets the locale from the action context.
      */
     private static class ActionContextLocaleProvider implements LocaleProvider {
+
+        private LocaleProvider localeProvider;
+
+        private LocaleProvider getLocaleProvider() {
+            if (localeProvider == null) {
+                LocaleProviderFactory localeProviderFactory = ActionContext.getContext().getInstance(LocaleProviderFactory.class);
+                localeProvider = localeProviderFactory.createLocaleProvider();
+            }
+            return localeProvider;
+        }
+
+        @Override
         public Locale getLocale() {
-            return ActionContext.getContext().getInstance(LocaleProvider.class).getLocale();
+            return getLocaleProvider().getLocale();
         }
 
         @Override
         public boolean isValidLocaleString(String localeStr) {
-            return ActionContext.getContext().getInstance(LocaleProvider.class).isValidLocaleString(localeStr);
+            return getLocaleProvider().isValidLocaleString(localeStr);
         }
 
         @Override
         public boolean isValidLocale(Locale locale) {
-            return ActionContext.getContext().getInstance(LocaleProvider.class).isValidLocale(locale);
+            return getLocaleProvider().isValidLocale(locale);
         }
     }
 

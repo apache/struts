@@ -783,9 +783,16 @@ public class Dispatcher {
 
         String content_type = request.getContentType();
         if (content_type != null && content_type.contains("multipart/form-data")) {
-            MultiPartRequest mpr = getMultiPartRequest();
-            LocaleProvider provider = getContainer().getInstance(LocaleProvider.class);
-            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(), provider, disableRequestAttributeValueStackLookup);
+            MultiPartRequest multiPartRequest = getMultiPartRequest();
+            LocaleProviderFactory localeProviderFactory = getContainer().getInstance(LocaleProviderFactory.class);
+
+            request = new MultiPartRequestWrapper(
+                    multiPartRequest,
+                    request,
+                    getSaveDir(),
+                    localeProviderFactory.createLocaleProvider(),
+                    disableRequestAttributeValueStackLookup
+            );
         } else {
             request = new StrutsRequestWrapper(request, disableRequestAttributeValueStackLookup);
         }

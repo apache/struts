@@ -201,7 +201,11 @@ public final class StrutsConstants {
     public static final String STRUTS_XWORKTEXTPROVIDER = "struts.xworkTextProvider";
 
     /** The {@link com.opensymphony.xwork2.LocaleProvider} implementation class */
+    @Deprecated
     public static final String STRUTS_LOCALE_PROVIDER = "struts.localeProvider";
+
+    /** The {@link com.opensymphony.xwork2.LocaleProviderFactory} implementation class */
+    public static final String STRUTS_LOCALE_PROVIDER_FACTORY = "struts.localeProviderFactory";
 
     /** The name of the parameter to create when mapping an id (used by some action mappers) */
 	public static final String STRUTS_ID_PARAMETER_NAME = "struts.mapper.idParameterName";

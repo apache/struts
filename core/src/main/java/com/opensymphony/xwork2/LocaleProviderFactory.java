@@ -23,9 +23,9 @@ package com.opensymphony.xwork2;
 public interface LocaleProviderFactory {
 
     /**
-     * Gets the provided locale.
+     * Create a new instance of {@link LocaleProvider}.
      *
-     * @return the locale.
+     * @return the localeProvider.
      */
     LocaleProvider createLocaleProvider();
 

@@ -14,6 +14,7 @@ public class DefaultLocaleProvider implements LocaleProvider {
 
     private final static Logger LOG = LogManager.getLogger(DefaultLocaleProvider.class);
 
+    @Override
     public Locale getLocale() {
         ActionContext ctx = ActionContext.getContext();
         if (ctx != null) {

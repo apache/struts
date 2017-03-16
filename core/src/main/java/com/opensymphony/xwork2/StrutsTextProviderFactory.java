@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
  * @author Oleg Gorobets
  * @author Rene Gielen
  */
-public class StrutsTextProviderFactory {
+public class StrutsTextProviderFactory implements TextProviderFactory {
 
     private TextProvider textProvider;
     private LocaleProviderFactory localeProviderFactory;
@@ -46,6 +46,7 @@ public class StrutsTextProviderFactory {
         this.localizedTextProvider = localizedTextProvider;
     }
 
+    @Override
     public TextProvider createInstance(Class clazz) {
         TextProvider instance = getTextProvider(clazz);
         if (instance instanceof ResourceBundleTextProvider) {
@@ -55,6 +56,7 @@ public class StrutsTextProviderFactory {
         return instance;
     }
 
+    @Override
     public TextProvider createInstance(ResourceBundle bundle) {
         TextProvider instance = getTextProvider(bundle);
         if (instance instanceof ResourceBundleTextProvider) {

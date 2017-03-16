@@ -1,6 +1,6 @@
 package com.opensymphony.xwork2.validator.validators;
 
-import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -9,11 +9,11 @@ import com.opensymphony.xwork2.validator.ValidatorContext;
 
 public class LongRangeFieldValidatorTest extends XWorkTestCase {
 
-    private StrutsTextProviderFactory tpf;
+    private TextProviderFactory tpf;
 
     public void setUp() throws Exception {
         super.setUp();
-        tpf = container.inject(StrutsTextProviderFactory.class);
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 
     public void testPassValidation() throws Exception {

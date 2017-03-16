@@ -19,7 +19,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class StringValidatorTest extends XWorkTestCase {
 
-    private StrutsTextProviderFactory tpf;
+    private TextProviderFactory tpf;
 
     public void testRequiredStringWithNullValue() throws Exception {
         Equidae equidae = new Equidae();
@@ -217,6 +217,6 @@ public class StringValidatorTest extends XWorkTestCase {
 
         ActionContext.getContext().setActionInvocation(invocation);
 
-        tpf = container.inject(StrutsTextProviderFactory.class);
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 }

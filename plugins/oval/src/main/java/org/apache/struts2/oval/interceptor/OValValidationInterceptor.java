@@ -23,7 +23,7 @@ package org.apache.struts2.oval.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
@@ -59,7 +59,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     protected boolean programmatic = true;
     protected OValValidationManager validationManager;
     protected boolean validateJPAAnnotations;
-    protected StrutsTextProviderFactory textProviderFactory;
+    protected TextProviderFactory textProviderFactory;
 
     @Inject
     public void setValidationManager(OValValidationManager validationManager) {
@@ -67,7 +67,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     }
 
     @Inject
-    public void setTextProviderFactory(StrutsTextProviderFactory textProviderFactory) {
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
         this.textProviderFactory = textProviderFactory;
     }
 

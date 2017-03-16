@@ -16,7 +16,7 @@
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
@@ -37,11 +37,11 @@ import java.util.List;
  */
 public class RegexFieldValidatorTest extends XWorkTestCase {
 
-    private StrutsTextProviderFactory tpf;
+    private TextProviderFactory tpf;
 
     public void setUp() throws Exception {
         super.setUp();
-        tpf = container.inject(StrutsTextProviderFactory.class);
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 
     public void testMatch() throws Exception {

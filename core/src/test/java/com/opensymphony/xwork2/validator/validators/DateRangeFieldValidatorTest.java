@@ -1,7 +1,7 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public class DateRangeFieldValidatorTest extends XWorkTestCase {
 
-    private StrutsTextProviderFactory tpf;
+    private TextProviderFactory tpf;
 
     public void testPassValidation() throws Exception {
         // given
@@ -91,7 +91,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
         ActionContext.getContext().setLocale(new Locale("DE"));
-        tpf = container.inject(StrutsTextProviderFactory.class);
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 
 }

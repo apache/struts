@@ -15,7 +15,7 @@
  */
 package com.opensymphony.xwork2.validator.validators;
 
-import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -37,20 +37,20 @@ import java.util.List;
  */
 public abstract class ValidatorSupport implements Validator, ShortCircuitableValidator {
 
-    protected final Logger log = LogManager.getLogger(this.getClass());
+    private static final Logger LOG = LogManager.getLogger(ValidatorSupport.class);
 
-    protected String defaultMessage = "";
-    protected String messageKey;
     private ValidatorContext validatorContext;
     private boolean shortCircuit;
     private String type;
     private String[] messageParameters;
-    protected ValueStack stack;
 
-    protected StrutsTextProviderFactory textProviderFactory;
+    protected String defaultMessage = "";
+    protected String messageKey;
+    protected ValueStack stack;
+    protected TextProviderFactory textProviderFactory;
 
     @Inject
-    public void setTextProviderFactory(StrutsTextProviderFactory textProviderFactory) {
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
         this.textProviderFactory = textProviderFactory;
     }
 
@@ -97,7 +97,7 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
                         } catch (Exception e) {
                             // if there's an exception in parsing, we'll just treat the expression itself as the
                             // parameter
-                            log.warn("exception while parsing message parameter [{}]", messageParameter, e);
+                            LOG.warn("exception while parsing message parameter [{}]", messageParameter, e);
                             parsedMessageParameters.add(messageParameter);
                         }
                     }

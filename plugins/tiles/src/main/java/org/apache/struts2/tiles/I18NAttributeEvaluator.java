@@ -21,7 +21,7 @@ package org.apache.struts2.tiles;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +48,7 @@ public class I18NAttributeEvaluator extends AbstractAttributeEvaluator {
             throw new ConfigurationException("There is no ActionContext for current request!");
         }
 
-        StrutsTextProviderFactory tpf = ctx.getContainer().inject(StrutsTextProviderFactory.class);
+        TextProviderFactory tpf = ctx.getContainer().getInstance(TextProviderFactory.class);
         TextProvider textProvider = tpf.createInstance(ctx.getActionInvocation().getAction().getClass());
 
         if (textProvider != null) {

@@ -17,7 +17,7 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -92,7 +92,7 @@ public class RepopulateConversionErrorFieldValidatorSupportTest extends XWorkTes
 		conversionErrors.put("someFieldName", conversionErrorValue);
 		conversionErrors.put("xxxsomeFieldName", conversionErrorValue);
 
-		StrutsTextProviderFactory tpf = container.inject(StrutsTextProviderFactory.class);
+		TextProviderFactory tpf = container.inject(TextProviderFactory.class);
 
 		action = container.inject(ActionSupport.class);
 		validator1 = 

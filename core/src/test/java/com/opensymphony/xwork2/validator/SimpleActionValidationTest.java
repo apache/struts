@@ -153,7 +153,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         SimpleAction action = new SimpleAction();
         container.inject(action);
 
-        ValidatorContext validatorContext = new DelegatingValidatorContext(action, container.inject(StrutsTextProviderFactory.class));
+        ValidatorContext validatorContext = new DelegatingValidatorContext(action, container.getInstance(TextProviderFactory.class));
         validator.setValidatorContext(validatorContext);
         validator.validate(this);
         assertTrue(validatorContext.hasActionErrors());

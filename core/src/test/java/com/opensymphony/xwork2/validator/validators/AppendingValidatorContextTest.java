@@ -7,6 +7,7 @@ import java.util.Map;
 import com.opensymphony.xwork2.CompositeTextProvider;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
 import com.opensymphony.xwork2.validator.ValidatorContext;
@@ -28,7 +29,7 @@ public class AppendingValidatorContextTest extends XWorkTestCase {
         super.setUp();
 
         action = container.inject(VisitorValidatorTestAction.class);
-        StrutsTextProviderFactory tpf = container.getInstance(StrutsTextProviderFactory.class);
+        TextProviderFactory tpf = container.getInstance(StrutsTextProviderFactory.class);
         ValidatorContext vc1 = new DelegatingValidatorContext(action, tpf);
 
         VisitorFieldValidator.AppendingValidatorContext vc2 = new AppendingValidatorContext(vc1, createTextProvider(action, vc1), FIRST_NAME, "");

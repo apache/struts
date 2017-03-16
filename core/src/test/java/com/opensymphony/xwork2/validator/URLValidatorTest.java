@@ -16,7 +16,7 @@
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.URLValidator;
@@ -37,7 +37,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	
 	ValueStack stack;
 	ActionContext actionContext;
-	private StrutsTextProviderFactory tpf;
+	private TextProviderFactory tpf;
 
 	public void testAcceptNullValueForMutualExclusionOfValidators() throws Exception {
 		
@@ -205,7 +205,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	    super.setUp();
 		stack = ActionContext.getContext().getValueStack();
 		actionContext = ActionContext.getContext();
-		tpf = container.inject(StrutsTextProviderFactory.class);
+		tpf = container.getInstance(TextProviderFactory.class);
 	}
 	
 	@Override

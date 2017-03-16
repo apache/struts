@@ -15,7 +15,7 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.StrutsTextProviderFactory;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ public class DummyValidatorContext extends DelegatingValidatorContext {
     private Map<String, List<String>> fieldErrors;
 
 
-    public DummyValidatorContext(Object object, TextProviderFactory tpf) {
+    public DummyValidatorContext(Object object, StrutsTextProviderFactory tpf) {
         super(object, tpf);
     }
 

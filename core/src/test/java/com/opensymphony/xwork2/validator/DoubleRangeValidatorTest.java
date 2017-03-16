@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class DoubleRangeValidatorTest extends XWorkTestCase {
     private DoubleRangeFieldValidator val;
-    private TextProviderFactory tpf;
+    private StrutsTextProviderFactory tpf;
 
     public void testRangeValidationWithError() throws Exception {
         //Explicitly set an out-of-range double for DoubleRangeValidatorTest
@@ -237,7 +237,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         val = new DoubleRangeFieldValidator();
         val.setValueStack(ActionContext.getContext().getValueStack());
         ActionContext.getContext().setParameters(HttpParameters.create().build());
-        tpf = container.inject(TextProviderFactory.class);
+        tpf = container.inject(StrutsTextProviderFactory.class);
     }
 
     @Override

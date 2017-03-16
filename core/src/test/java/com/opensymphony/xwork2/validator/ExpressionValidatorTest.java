@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class ExpressionValidatorTest extends XWorkTestCase {
 
-    private TextProviderFactory tpf;
+    private StrutsTextProviderFactory tpf;
 
     public void testExpressionValidationOfStringLength() throws ValidationException {
         TestBean bean = new TestBean();
@@ -139,7 +139,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
 
         ActionContext.getContext().setActionInvocation(invocation);
 
-        tpf = container.inject(TextProviderFactory.class);
+        tpf = container.inject(StrutsTextProviderFactory.class);
     }
 
 }

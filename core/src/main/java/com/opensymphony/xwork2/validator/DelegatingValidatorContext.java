@@ -57,7 +57,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
      *
      * @param object the object to use for validation (usually an Action).
      */
-    public DelegatingValidatorContext(Object object, TextProviderFactory textProviderFactory) {
+    public DelegatingValidatorContext(Object object, StrutsTextProviderFactory textProviderFactory) {
         this.localeProvider = makeLocaleProvider(object);
         this.validationAware = makeValidationAware(object);
         this.textProvider = makeTextProvider(object, textProviderFactory);
@@ -74,7 +74,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
     @Deprecated
     public DelegatingValidatorContext(Class clazz) {
         localeProvider = new ActionContextLocaleProvider();
-        textProvider = new TextProviderFactory().createInstance(clazz);
+        textProvider = new StrutsTextProviderFactory().createInstance(clazz);
         validationAware = new LoggingValidationAware(clazz);
     }
 
@@ -196,7 +196,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return validationAware.hasFieldErrors();
     }
 
-    public TextProvider makeTextProvider(Object object, TextProviderFactory textProviderFactory) {
+    public TextProvider makeTextProvider(Object object, StrutsTextProviderFactory textProviderFactory) {
         // the object argument passed through here will most probably be an ActionSupport descendant which does
         // implements TextProvider.
         if (object != null && object instanceof DelegatingValidatorContext) {

@@ -18,7 +18,7 @@ package com.opensymphony.xwork2.validator;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.StrutsTextProviderFactory;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -63,7 +63,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     private ValidatorFileParser validatorFileParser;
     private FileManager fileManager;
     private boolean reloadingConfigs;
-    private TextProviderFactory textProviderFactory;
+    private StrutsTextProviderFactory textProviderFactory;
 
     @Inject
     public void setValidatorFileParser(ValidatorFileParser parser) {
@@ -86,7 +86,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     }
 
     @Inject
-    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+    public void setTextProviderFactory(StrutsTextProviderFactory textProviderFactory) {
         this.textProviderFactory = textProviderFactory;
     }
 

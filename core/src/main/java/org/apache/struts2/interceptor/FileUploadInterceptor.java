@@ -446,7 +446,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     }
 
     private TextProvider getTextProvider(Object action) {
-        TextProviderFactory tpf = container.inject(TextProviderFactory.class);
+        StrutsTextProviderFactory tpf = container.inject(StrutsTextProviderFactory.class);
         return tpf.createInstance(action.getClass());
     }
 

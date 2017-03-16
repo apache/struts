@@ -20,17 +20,13 @@
 package org.apache.struts2.tiles;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.StrutsTextProviderFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
-import ognl.OgnlException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.tiles.evaluator.AbstractAttributeEvaluator;
-import org.apache.tiles.evaluator.EvaluationException;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletUtil;
 
@@ -52,7 +48,7 @@ public class I18NAttributeEvaluator extends AbstractAttributeEvaluator {
             throw new ConfigurationException("There is no ActionContext for current request!");
         }
 
-        TextProviderFactory tpf = ctx.getContainer().inject(TextProviderFactory.class);
+        StrutsTextProviderFactory tpf = ctx.getContainer().inject(StrutsTextProviderFactory.class);
         TextProvider textProvider = tpf.createInstance(ctx.getActionInvocation().getAction().getClass());
 
         if (textProvider != null) {

@@ -77,7 +77,7 @@ public class CompositeTextProviderTest extends XWorkTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
+        StrutsTextProviderFactory tpf = container.getInstance(StrutsTextProviderFactory.class);
         tpf.setTextProvider(null);
 
         ActionContext.getContext().setLocale(Locale.ENGLISH);

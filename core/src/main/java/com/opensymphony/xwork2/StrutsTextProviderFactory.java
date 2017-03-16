@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
  * @author Oleg Gorobets
  * @author Rene Gielen
  */
-public class TextProviderFactory {
+public class StrutsTextProviderFactory {
 
     private TextProvider textProvider;
     private LocaleProviderFactory localeProviderFactory;

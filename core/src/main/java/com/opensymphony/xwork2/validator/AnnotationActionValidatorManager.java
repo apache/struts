@@ -52,7 +52,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     private ValidatorFileParser validatorFileParser;
     private FileManager fileManager;
     private boolean reloadingConfigs;
-    private TextProviderFactory textProviderFactory;
+    private StrutsTextProviderFactory textProviderFactory;
 
     @Inject
     public void setValidatorFactory(ValidatorFactory fac) {
@@ -75,7 +75,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
     }
 
     @Inject
-    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+    public void setTextProviderFactory(StrutsTextProviderFactory textProviderFactory) {
         this.textProviderFactory = textProviderFactory;
     }
 

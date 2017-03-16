@@ -24,7 +24,7 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.SimpleAnnotationAction;
-import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.StrutsTextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.test.AnnotationDataAware2;
@@ -59,7 +59,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
     protected final String alias = "annotationValidationAlias";
 
     AnnotationActionValidatorManager annotationActionValidatorManager;
-    private TextProviderFactory tpf;
+    private StrutsTextProviderFactory tpf;
 
     @Override protected void setUp() throws Exception {
         super.setUp();
@@ -81,7 +81,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
 
         ActionContext.getContext().setActionInvocation(invocation);
 
-        tpf = container.getInstance(TextProviderFactory.class);
+        tpf = container.getInstance(StrutsTextProviderFactory.class);
     }
 
     @Override protected void tearDown() throws Exception {

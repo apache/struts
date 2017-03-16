@@ -31,7 +31,7 @@ import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.StrutsTextProviderFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
@@ -126,7 +126,7 @@ public class I18n extends Component {
             }
 
             if (bundle != null) {
-                TextProviderFactory tpf = container.inject(TextProviderFactory.class);
+                StrutsTextProviderFactory tpf = container.inject(StrutsTextProviderFactory.class);
                 textProvider = tpf.createInstance(bundle);
                 getStack().push(textProvider);
                 pushed = true;

@@ -17,7 +17,7 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.StrutsTextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.EmailValidator;
@@ -30,7 +30,7 @@ import com.opensymphony.xwork2.validator.validators.EmailValidator;
  */
 public class EmailValidatorTest extends XWorkTestCase {
 
-    private TextProviderFactory tpf;
+    private StrutsTextProviderFactory tpf;
 
     public void testEmailValidity() throws Exception {
         assertTrue(verifyEmailValidity("TmJee@Yahoo.com"));
@@ -162,6 +162,6 @@ public class EmailValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        tpf = container.inject(TextProviderFactory.class);
+        tpf = container.inject(StrutsTextProviderFactory.class);
     }
 }

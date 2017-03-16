@@ -66,7 +66,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
             // WW-1977: Only put errors in the request when code is a 500 error
             if (code == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
                 // WW-4103: Only logs error when application error occurred, not Struts error
-                LOG.error("Exception occurred during processing request: {}", e, e.getMessage());
+                LOG.error("Exception occurred during processing request: {}", e.getMessage(), e);
                 // send a http error response to use the servlet defined error handler
                 // make the exception available to the web.xml defined error page
                 request.setAttribute("javax.servlet.error.exception", e);
@@ -83,7 +83,7 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
     }
 
     protected void handleErrorInDevMode(HttpServletResponse response, int code, Exception e) {
-        LOG.debug("Exception occurred during processing request: {}", e, e.getMessage());
+        LOG.debug("Exception occurred during processing request: {}", e.getMessage(), e);
         try {
             List<Throwable> chain = new ArrayList<>();
             Throwable cur = e;

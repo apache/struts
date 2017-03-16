@@ -424,7 +424,7 @@ public class Form extends ClosingUIBean {
         if (visitorFieldName == null) {
             return null;
         }
-        String methodName = "get" + org.apache.commons.lang.StringUtils.capitalize(visitorFieldName);
+        String methodName = "get" + StringUtils.capitalize(visitorFieldName);
         try {
             Method method = actionClass.getMethod(methodName, new Class[0]);
             return method.getReturnType();

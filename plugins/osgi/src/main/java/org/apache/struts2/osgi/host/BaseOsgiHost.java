@@ -25,7 +25,7 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.main.AutoProcessor;
 import org.apache.felix.shell.ShellService;
 import org.apache.struts2.ServletActionContext;
@@ -146,7 +146,7 @@ public abstract class BaseOsgiHost implements OsgiHost {
                     if (runLevelDirs != null && runLevelDirs.length > 0) {
                         //add all the dirs to the list
                         for (String runLevel : runLevelDirs) {
-                            dirs.put(runLevel, StringUtils.chomp(dir,  "/") + "/" + runLevel);
+                            dirs.put(runLevel, StringUtils.removeEnd(dir,  "/") + "/" + runLevel);
                         }
                     } else {
                         LOG.debug("No run level directories found under the [{}] directory", dir);
@@ -258,7 +258,7 @@ public abstract class BaseOsgiHost implements OsgiHost {
         //make a string with the exported packages and add it to the system properties
         if (!exportedPackages.isEmpty()) {
             String systemPackages = (String) configProps.get(Constants.FRAMEWORK_SYSTEMPACKAGES);
-            systemPackages = StringUtils.chomp(systemPackages, ",") + "," + StringUtils.join(exportedPackages, ",");
+            systemPackages = StringUtils.removeEnd(systemPackages, ",") + "," + StringUtils.join(exportedPackages, ",");
             configProps.put(Constants.FRAMEWORK_SYSTEMPACKAGES, systemPackages);
         }
     }

@@ -59,7 +59,7 @@ public class I18nInterceptor extends AbstractInterceptor {
     protected String requestCookieParameterName = DEFAULT_COOKIE_PARAMETER;
     protected Storage storage = Storage.SESSION;
 
-    protected LocaleProvider localeProvider;
+    protected LocaleProviderFactory localeProviderFactory;
 
     // Request-Only = None
     protected enum Storage { COOKIE, SESSION, NONE }
@@ -95,7 +95,7 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     @Inject
     public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
-        this.localeProvider = localeProviderFactory.createLocaleProvider();
+        this.localeProviderFactory = localeProviderFactory;
     }
 
     @Override
@@ -157,6 +157,8 @@ public class I18nInterceptor extends AbstractInterceptor {
      * @return the Locale
      */
     protected Locale getLocaleFromParam(Object requestedLocale) {
+        LocaleProvider localeProvider = localeProviderFactory.createLocaleProvider();
+
         Locale locale = null;
         if (requestedLocale != null) {
             if (requestedLocale instanceof Locale) {

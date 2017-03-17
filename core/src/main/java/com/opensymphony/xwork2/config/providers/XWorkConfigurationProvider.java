@@ -5,6 +5,7 @@ import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.DefaultLocaleProviderFactory;
 import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.StrutsTextProviderFactory;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
 import com.opensymphony.xwork2.ognl.accessor.HttpParametersPropertyAccessor;
@@ -19,7 +20,6 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.TextProviderSupport;
 import com.opensymphony.xwork2.UnknownHandlerManager;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
@@ -181,12 +181,11 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ActionValidatorManager.class, AnnotationActionValidatorManager.class, Scope.SINGLETON)
                 .factory(ActionValidatorManager.class, "no-annotations", DefaultActionValidatorManager.class, Scope.SINGLETON)
 
-                .factory(StrutsTextProviderFactory.class, Scope.SINGLETON)
-                .factory(LocalizedTextProvider.class, DefaultLocalizedTextProvider.class, Scope.SINGLETON)
                 .factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON)
-                .factory(TextProvider.class, TextProviderSupport.class, Scope.SINGLETON)
-
+                .factory(LocalizedTextProvider.class, DefaultLocalizedTextProvider.class, Scope.SINGLETON)
+                .factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON)
                 .factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON)
+
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(CollectionConverter.class, Scope.SINGLETON)
                 .factory(ArrayConverter.class, Scope.SINGLETON)

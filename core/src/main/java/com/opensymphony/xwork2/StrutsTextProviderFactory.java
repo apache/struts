@@ -27,14 +27,8 @@ import java.util.ResourceBundle;
  */
 public class StrutsTextProviderFactory implements TextProviderFactory {
 
-    private TextProvider textProvider;
     private LocaleProviderFactory localeProviderFactory;
     private LocalizedTextProvider localizedTextProvider;
-
-    @Inject
-    public void setTextProvider(TextProvider textProvider) {
-        this.textProvider = textProvider;
-    }
 
     @Inject
     public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
@@ -67,18 +61,11 @@ public class StrutsTextProviderFactory implements TextProviderFactory {
     }
 
     protected TextProvider getTextProvider(Class clazz) {
-        if (this.textProvider == null) {
-            return new TextProviderSupport(clazz, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
-        } else {
-            return textProvider;
-        }
+        return new TextProviderSupport(clazz, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
     }
 
     private TextProvider getTextProvider(ResourceBundle bundle) {
-        if (this.textProvider == null) {
-            return new TextProviderSupport(bundle, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
-        }
-        return textProvider;
+        return new TextProviderSupport(bundle, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
     }
 
 }

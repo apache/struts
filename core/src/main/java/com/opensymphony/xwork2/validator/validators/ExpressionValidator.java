@@ -16,6 +16,8 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -44,6 +46,8 @@ import com.opensymphony.xwork2.validator.ValidationException;
  */
 public class ExpressionValidator extends ValidatorSupport {
 
+    private static final Logger LOG = LogManager.getLogger(ExpressionValidator.class);
+
     private String expression;
 
     public void setExpression(String expression) {
@@ -69,11 +73,11 @@ public class ExpressionValidator extends ValidatorSupport {
         if ((obj != null) && (obj instanceof Boolean)) {
             answer = (Boolean) obj;
         } else {
-            log.warn("Got result of [{}] when trying to get Boolean.", obj);
+            LOG.warn("Got result of [{}] when trying to get Boolean.", obj);
         }
 
         if (!answer) {
-            log.debug("Validation failed on expression [{}] with validated object [{}]", expression, object);
+            LOG.debug("Validation failed on expression [{}] with validated object [{}]", expression, object);
             addActionError(object);
         }
     }

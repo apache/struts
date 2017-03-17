@@ -1,6 +1,8 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -28,6 +30,8 @@ import com.opensymphony.xwork2.validator.ValidationException;
  * @author Matt Raible
  */
 public class ConditionalVisitorFieldValidator extends VisitorFieldValidator {
+
+    private static final Logger LOG = LogManager.getLogger(ConditionalVisitorFieldValidator.class);
 
     private String expression;
 
@@ -75,7 +79,7 @@ public class ConditionalVisitorFieldValidator extends VisitorFieldValidator {
         if ((obj != null) && (obj instanceof Boolean)) {
             answer = (Boolean) obj;
         } else {
-            log.warn("Got result of {} when trying to get Boolean.", obj);
+            LOG.warn("Got result of {} when trying to get Boolean.", obj);
         }
 
         return answer;

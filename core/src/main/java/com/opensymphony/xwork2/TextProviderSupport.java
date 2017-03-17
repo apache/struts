@@ -29,16 +29,10 @@ import java.util.*;
  */
 public class TextProviderSupport implements ResourceBundleTextProvider {
 
-    private Class clazz;
-    private LocaleProvider localeProvider;
-    private ResourceBundle bundle;
-    private LocalizedTextProvider localizedTextProvider;
-
-    /**
-     * Default constructor
-     */
-    public TextProviderSupport() {
-    }
+    protected Class clazz;
+    protected LocaleProvider localeProvider;
+    protected ResourceBundle bundle;
+    protected LocalizedTextProvider localizedTextProvider;
 
     /**
      * Constructor.

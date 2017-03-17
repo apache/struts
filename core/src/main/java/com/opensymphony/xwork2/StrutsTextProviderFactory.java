@@ -24,8 +24,8 @@ import java.util.ResourceBundle;
  */
 public class StrutsTextProviderFactory implements TextProviderFactory {
 
-    private LocaleProviderFactory localeProviderFactory;
-    private LocalizedTextProvider localizedTextProvider;
+    protected LocaleProviderFactory localeProviderFactory;
+    protected LocalizedTextProvider localizedTextProvider;
 
     @Inject
     public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {

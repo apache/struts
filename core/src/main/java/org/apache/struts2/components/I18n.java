@@ -90,28 +90,35 @@ public class I18n extends Component {
 
     protected boolean pushed;
     protected String name;
-    protected Container container;
+
+    private LocalizedTextProvider localizedTextProvider;
     private TextProvider textProvider;
     private TextProvider defaultTextProvider;
-    private LocaleProvider localeProvider;
+    private LocaleProviderFactory localeProviderFactory;
+    private TextProviderFactory textProviderFactory;
 
     public I18n(ValueStack stack) {
         super(stack);
     }
-    
-    @Inject
-    public void setContainer(Container container) {
-        this.container = container;
-    }
 
     @Inject
+    public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
+        this.localizedTextProvider = localizedTextProvider;
+    }
+
+    @Inject("system")
     public void setTextProvider(TextProvider textProvider) {
         this.defaultTextProvider = textProvider;
     }
 
     @Inject
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProviderFactory = textProviderFactory;
+    }
+
+    @Inject
     public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
-        this.localeProvider = localeProviderFactory.createLocaleProvider();
+        this.localeProviderFactory = localeProviderFactory;
     }
 
     public boolean start(Writer writer) {
@@ -122,12 +129,12 @@ public class I18n extends Component {
             ResourceBundle bundle = defaultTextProvider.getTexts(name);
 
             if (bundle == null) {
-                bundle = container.getInstance(LocalizedTextProvider.class).findResourceBundle(name, localeProvider.getLocale());
+                LocaleProvider localeProvider = localeProviderFactory.createLocaleProvider();
+                bundle = localizedTextProvider.findResourceBundle(name, localeProvider.getLocale());
             }
 
             if (bundle != null) {
-                TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
-                textProvider = tpf.createInstance(bundle);
+                textProvider = textProviderFactory.createInstance(bundle);
                 getStack().push(textProvider);
                 pushed = true;
             }

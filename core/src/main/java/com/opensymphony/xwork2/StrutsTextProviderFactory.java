@@ -61,7 +61,7 @@ public class StrutsTextProviderFactory implements TextProviderFactory {
         return new TextProviderSupport(clazz, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
     }
 
-    private TextProvider getTextProvider(ResourceBundle bundle) {
+    protected TextProvider getTextProvider(ResourceBundle bundle) {
         return new TextProviderSupport(bundle, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
     }
 

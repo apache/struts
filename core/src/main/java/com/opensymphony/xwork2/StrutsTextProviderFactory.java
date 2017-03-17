@@ -21,9 +21,6 @@ import java.util.ResourceBundle;
 
 /**
  * This factory enables users to provide and correctly initialize a custom TextProvider.
- *
- * @author Oleg Gorobets
- * @author Rene Gielen
  */
 public class StrutsTextProviderFactory implements TextProviderFactory {
 

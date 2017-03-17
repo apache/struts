@@ -92,7 +92,7 @@ public class RepopulateConversionErrorFieldValidatorSupportTest extends XWorkTes
 		conversionErrors.put("someFieldName", conversionErrorValue);
 		conversionErrors.put("xxxsomeFieldName", conversionErrorValue);
 
-		TextProviderFactory tpf = container.inject(TextProviderFactory.class);
+		TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
 
 		action = container.inject(ActionSupport.class);
 		validator1 = 

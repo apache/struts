@@ -51,14 +51,14 @@ public class AnnotationWorkflowInterceptorTest extends XWorkTestCase {
         ActionProxy proxy = actionProxyFactory.createActionProxy("", ANNOTATED_ACTION, null, null);
         assertEquals(Action.SUCCESS, proxy.execute());
         AnnotatedAction action = (AnnotatedAction)proxy.getInvocation().getAction();
-        assertEquals("baseBefore-before-execute-beforeResult-after", action.log);
+        assertEquals("interfaceBefore-baseBefore-basePrivateBefore-before-execute-beforeResult-basePrivateBeforeResult-interfaceBeforeResult-after-basePrivateAfter-interfaceAfter", action.log);
     }
 
     public void testInterceptsShortcircuitedAction() throws Exception {
         ActionProxy proxy = actionProxyFactory.createActionProxy("", SHORTCIRCUITED_ACTION, null, null);
         assertEquals("shortcircuit", proxy.execute());
         ShortcircuitedAction action = (ShortcircuitedAction)proxy.getInvocation().getAction();
-        assertEquals("baseBefore-before", action.log);
+        assertEquals("interfaceBefore-baseBefore-basePrivateBefore-before-basePrivateBeforeResult-interfaceBeforeResult", action.log);
     }
 
     private class MockConfigurationProvider implements ConfigurationProvider {

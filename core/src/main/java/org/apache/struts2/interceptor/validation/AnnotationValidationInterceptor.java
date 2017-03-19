@@ -49,24 +49,8 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
         if (action != null) {
             Method method = getActionMethod(action.getClass(), invocation.getProxy().getMethod());
 
-            Collection<Method> annotatedMethods = AnnotationUtils.getAnnotatedMethods(action.getClass(), SkipValidation.class);
-            if (annotatedMethods.contains(method)) {
+            if (null != AnnotationUtils.findAnnotation(method, SkipValidation.class)) {
                 return invocation.invoke();
-            }
-
-            LOG.debug("Check if method overrides an annotated method");
-            Class clazz = action.getClass().getSuperclass();
-            while (clazz != null) {
-                annotatedMethods = AnnotationUtils.getAnnotatedMethods(clazz, SkipValidation.class);
-                if (annotatedMethods != null) {
-                    for (Method annotatedMethod : annotatedMethods) {
-                        if (annotatedMethod.getName().equals(method.getName())
-                                && Arrays.equals(annotatedMethod.getParameterTypes(), method.getParameterTypes())
-                                && Arrays.equals(annotatedMethod.getExceptionTypes(), method.getExceptionTypes()))
-                            return invocation.invoke();
-                    }
-                }
-                clazz = clazz.getSuperclass();
             }
         }
 

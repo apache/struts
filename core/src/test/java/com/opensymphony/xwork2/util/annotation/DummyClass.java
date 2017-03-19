@@ -13,4 +13,8 @@ public class DummyClass implements DummyInterface {
 	@Override
 	public void interfaceMethodWithAnnotation() {
 	}
+
+	@MyAnnotation2
+    private void privateMethodWithAnnotation() {
+    }
 }

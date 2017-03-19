@@ -1,6 +1,7 @@
 /*
  * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
+ * Copyright 2002-2014 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,6 +26,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,12 +40,24 @@ import java.util.regex.Pattern;
  * @author Rainer Hermanns
  * @author Zsolt Szasz, zsolt at lorecraft dot com
  * @author Dan Oxlade, dan d0t oxlade at gmail d0t c0m
+ * @author Rob Harrop
+ * @author Juergen Hoeller
+ * @author Sam Brannen
+ * @author Mark Fisher
+ * @author Chris Beams
+ * @author Phillip Webb
  * @version $Id$
  */
 public class AnnotationUtils {
 
     private static final Pattern SETTER_PATTERN = Pattern.compile("set([A-Z][A-Za-z0-9]*)$");
     private static final Pattern GETTER_PATTERN = Pattern.compile("(get|is|has)([A-Z][A-Za-z0-9]*)$");
+
+    private static final Map<AnnotationCacheKey, Annotation> findAnnotationCache =
+            new ConcurrentHashMap<AnnotationCacheKey, Annotation>(256);
+
+    private static final Map<Class<?>, Boolean> annotatedInterfaceCache =
+            new ConcurrentHashMap<Class<?>, Boolean>(256);
 
     /**
      * Adds all fields with the specified Annotation of class clazz and its superclasses to allFields
@@ -117,23 +132,24 @@ public class AnnotationUtils {
      * @return A {@link Collection}&lt;{@link AnnotatedElement}&gt; containing all of the
      * method {@link AnnotatedElement}s matching the specified {@link Annotation}s
      */
-    public static Collection<Method> getAnnotatedMethods(Class clazz, Class<? extends Annotation>... annotation) {
-        Collection<Method> toReturn = new HashSet<>();
+    public static Collection<Method> getAnnotatedMethods(Class clazz, final Class<? extends Annotation>... annotation) {
+        final Collection<Method> toReturn = new HashSet<>();
 
-        for (Method m : clazz.getMethods()) {
-            boolean found = false;
-            for (Class<? extends Annotation> c : annotation) {
-                if (null != findAnnotation(m, c)) {
-                    found = true;
-                    break;
+        ReflectionUtils.doWithMethods(clazz, new ReflectionUtils.MethodCallback() {
+            @Override
+            public void doWith(Method method) throws IllegalArgumentException {
+                if (ArrayUtils.isEmpty(annotation) && ArrayUtils.isNotEmpty(method.getAnnotations())) {
+                    toReturn.add(method);
+                    return;
+                }
+                for (Class<? extends Annotation> c : annotation) {
+                    if (null != findAnnotation(method, c)) {
+                        toReturn.add(method);
+                        break;
+                    }
                 }
             }
-            if (found) {
-                toReturn.add(m);
-            } else if (ArrayUtils.isEmpty(annotation) && ArrayUtils.isNotEmpty(m.getAnnotations())) {
-                toReturn.add(m);
-            }
-        }
+        });
 
         return toReturn;
     }
@@ -150,24 +166,31 @@ public class AnnotationUtils {
      * @return the annotation found, or {@code null} if none
      */
     public static <A extends Annotation> A findAnnotation(Method method, Class<A> annotationType) {
-        A result = getAnnotation(method, annotationType);
-        Class<?> clazz = method.getDeclaringClass();
+        AnnotationCacheKey cacheKey = new AnnotationCacheKey(method, annotationType);
+        A result = (A) findAnnotationCache.get(cacheKey);
         if (result == null) {
-            result = searchOnInterfaces(method, annotationType, clazz.getInterfaces());
-        }
-        while (result == null) {
-            clazz = clazz.getSuperclass();
-            if (clazz == null || clazz.equals(Object.class)) {
-                break;
-            }
-            try {
-                Method equivalentMethod = clazz.getDeclaredMethod(method.getName(), method.getParameterTypes());
-                result = getAnnotation(equivalentMethod, annotationType);
-            } catch (NoSuchMethodException ex) {
-                // No equivalent method found
-            }
+            result = getAnnotation(method, annotationType);
+            Class<?> clazz = method.getDeclaringClass();
             if (result == null) {
                 result = searchOnInterfaces(method, annotationType, clazz.getInterfaces());
+            }
+            while (result == null) {
+                clazz = clazz.getSuperclass();
+                if (clazz == null || clazz.equals(Object.class)) {
+                    break;
+                }
+                try {
+                    Method equivalentMethod = clazz.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                    result = getAnnotation(equivalentMethod, annotationType);
+                } catch (NoSuchMethodException ex) {
+                    // No equivalent method found
+                }
+                if (result == null) {
+                    result = searchOnInterfaces(method, annotationType, clazz.getInterfaces());
+                }
+            }
+            if (result != null) {
+                findAnnotationCache.put(cacheKey, result);
             }
         }
         return result;
@@ -219,6 +242,10 @@ public class AnnotationUtils {
     }
 
     private static boolean isInterfaceWithAnnotatedMethods(Class<?> iface) {
+        Boolean flag = annotatedInterfaceCache.get(iface);
+        if (flag != null) {
+            return flag;
+        }
         boolean found = false;
         for (Method ifcMethod : iface.getMethods()) {
             try {
@@ -230,6 +257,7 @@ public class AnnotationUtils {
                 // Assuming nested Class values not resolvable within annotation attributes...
             }
         }
+        annotatedInterfaceCache.put(iface, found);
         return found;
     }
 
@@ -267,20 +295,61 @@ public class AnnotationUtils {
      * @return The annotation or null.
      */
     public static <T extends Annotation> T findAnnotation(Class<?> clazz, Class<T> annotationClass) {
-        T ann = clazz.getAnnotation(annotationClass);
-        while (ann == null && clazz != null) {
+        AnnotationCacheKey cacheKey = new AnnotationCacheKey(clazz, annotationClass);
+        T ann = (T) findAnnotationCache.get(cacheKey);
+        if (ann == null) {
             ann = clazz.getAnnotation(annotationClass);
-            if (ann == null) {
-                ann = clazz.getPackage().getAnnotation(annotationClass);
-            }
-            if (ann == null) {
-                clazz = clazz.getSuperclass();
-                if (clazz != null) {
-                    ann = clazz.getAnnotation(annotationClass);
+            while (ann == null && clazz != null) {
+                ann = clazz.getAnnotation(annotationClass);
+                if (ann == null) {
+                    ann = clazz.getPackage().getAnnotation(annotationClass);
                 }
+                if (ann == null) {
+                    clazz = clazz.getSuperclass();
+                    if (clazz != null) {
+                        ann = clazz.getAnnotation(annotationClass);
+                    }
+                }
+            }
+            if (ann != null) {
+                findAnnotationCache.put(cacheKey, ann);
             }
         }
 
         return ann;
+    }
+
+
+    /**
+     * Cache key for the AnnotatedElement cache.
+     */
+    private static class AnnotationCacheKey {
+
+        private final AnnotatedElement element;
+
+        private final Class<? extends Annotation> annotationType;
+
+        public AnnotationCacheKey(AnnotatedElement element, Class<? extends Annotation> annotationType) {
+            this.element = element;
+            this.annotationType = annotationType;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof AnnotationCacheKey)) {
+                return false;
+            }
+            AnnotationCacheKey otherKey = (AnnotationCacheKey) other;
+            return (this.element.equals(otherKey.element) &&
+                    this.annotationType.equals(otherKey.annotationType));
+        }
+
+        @Override
+        public int hashCode() {
+            return (this.element.hashCode() * 29 + this.annotationType.hashCode());
+        }
     }
 }

@@ -99,9 +99,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
             LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
         }
 
-        Collection<Method> annotatedMethods = AnnotationUtils.getAnnotatedMethods(action.getClass(), SkipValidation.class);
-
-        if (!annotatedMethods.contains(getActionMethod(action.getClass(), methodName))) {
+        if (null == AnnotationUtils.findAnnotation(getActionMethod(action.getClass(), methodName), SkipValidation.class)) {
             // performing bean validation on action
             performBeanValidation(action, validator);
         }

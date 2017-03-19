@@ -26,7 +26,7 @@ import org.apache.struts.beanvalidation.models.Person;
 
 import javax.validation.Valid;
 
-public class ModelDrivenAction extends ActionSupport implements ModelDriven<Person> {
+public class ModelDrivenAction extends ActionSupport implements ModelDriven<Person>, ModelDrivenActionInterface {
 
     @Valid
     private Person model = new Person();
@@ -35,4 +35,8 @@ public class ModelDrivenAction extends ActionSupport implements ModelDriven<Pers
         return model;
     }
 
+    @Override
+    public String skipMeByInterface() {
+        return SUCCESS;
+    }
 }

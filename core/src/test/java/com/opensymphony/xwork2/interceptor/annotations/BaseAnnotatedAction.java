@@ -19,7 +19,7 @@ package com.opensymphony.xwork2.interceptor.annotations;
  * @author Zsolt Szasz, zsolt at lorecraft dot com
  * @author Rainer Hermanns
  */
-public class BaseAnnotatedAction {
+public class BaseAnnotatedAction implements InterfaceAnnotatedAction {
 
 	protected String log = "";
 	
@@ -28,5 +28,37 @@ public class BaseAnnotatedAction {
 		log = log + "baseBefore-";
 		return null;
 	}
+
+    @Override
+    public String interfaceBefore() {
+        log = log + "interfaceBefore-";
+        return null;
+    }
+
+    @Override
+    public void interfaceBeforeResult() {
+        log = log + "-interfaceBeforeResult";
+    }
+
+    @Override
+    public void interfaceAfter() {
+        log = log + "-interfaceAfter";
+    }
+
+    @Before(priority=6)
+    private String basePrivateBefore() {
+        log = log + "basePrivateBefore-";
+        return null;
+    }
+
+    @BeforeResult(priority=4)
+    private void basePrivateBeforeResult() {
+        log = log + "-basePrivateBeforeResult";
+    }
+
+    @After(priority=4)
+    private void basePrivateAfter() {
+        log = log + "-basePrivateAfter";
+    }
 
 }

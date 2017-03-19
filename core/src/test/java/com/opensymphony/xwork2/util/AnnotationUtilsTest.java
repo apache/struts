@@ -43,14 +43,15 @@ public class AnnotationUtilsTest extends TestCase {
     public void testGetAnnotatedMethodsIncludingSuperclassAndInterface() throws Exception {
 
         Collection<? extends AnnotatedElement> ans = AnnotationUtils.getAnnotatedMethods(DummyClassExt.class, Deprecated.class, MyAnnotation.class, MyAnnotation2.class, MyAnnotationI.class);
-        assertEquals(3, ans.size());
+        assertEquals(5, ans.size());
     }
 
     @SuppressWarnings("unchecked")
-    public void testGetAnnotedMethodsWithoutAnnotationArgs() throws Exception {
+    public void testGetAnnotatedMethodsWithoutAnnotationArgs() throws Exception {
         Collection<? extends AnnotatedElement> ans = AnnotationUtils.getAnnotatedMethods(DummyClass.class);
-        assertTrue(ans.size() == 1);
-        assertEquals(ans.iterator().next(), DummyClass.class.getMethod("methodWithAnnotation"));
+        assertTrue(ans.size() == 2);
+        assertTrue(ans.contains(DummyClass.class.getMethod("methodWithAnnotation")));
+        assertTrue(ans.contains(DummyClass.class.getDeclaredMethod("privateMethodWithAnnotation")));
     }
 
     @SuppressWarnings("unchecked")
@@ -65,10 +66,10 @@ public class AnnotationUtilsTest extends TestCase {
         assertEquals(1, ans.size());
 
         ans = AnnotationUtils.getAnnotatedMethods(DummyClass.class, MyAnnotation.class, MyAnnotation2.class);
-        assertEquals(1, ans.size());
+        assertEquals(2, ans.size());
 
         ans = AnnotationUtils.getAnnotatedMethods(DummyClassExt.class, MyAnnotation.class, MyAnnotation2.class);
-        assertEquals(2, ans.size());
+        assertEquals(4, ans.size());
     }
 
     public void testFindAnnotationOnClass() {

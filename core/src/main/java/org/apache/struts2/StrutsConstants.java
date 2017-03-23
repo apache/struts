@@ -139,6 +139,8 @@ public final class StrutsConstants {
      */
     public static final String STRUTS_MULTIPART_PARSER = "struts.multipart.parser";
 
+    public static final String STRUTS_MULTIPART_VALIDATION_REGEX = "struts.multipart.validationRegex";
+
     /** How Spring should autowire.  Valid values are 'name', 'type', 'auto', and 'constructor' */
     public static final String STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE = "struts.objectFactory.spring.autoWire";
 

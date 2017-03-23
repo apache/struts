@@ -66,6 +66,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Pattern;
 
 /**
  * A utility class the actual dispatcher delegates most of its tasks to. Each instance
@@ -80,6 +81,13 @@ public class Dispatcher {
      * Provide a logging instance.
      */
     private static final Logger LOG = LogManager.getLogger(Dispatcher.class);
+
+    /**
+     * {@link HttpServletRequest#getMethod()}
+     */
+    public static final String REQUEST_POST_METHOD = "POST";
+
+    public static final String MULTIPART_FORM_DATA_REGEX = "^multipart\\/form-data(; boundary=[a-zA-Z0-9]{1,70})?";
 
     /**
      * Provide a thread local instance.
@@ -120,6 +128,11 @@ public class Dispatcher {
      * Stores the value of {@link StrutsConstants#STRUTS_MULTIPART_PARSER} setting
      */
     private String multipartHandlerName;
+
+    /**
+     * A regular expression used to validate if request is a multipart/form-data request
+     */
+    private Pattern multipartValidationPattern = Pattern.compile(MULTIPART_FORM_DATA_REGEX);
 
     /**
      * Provide list of default configuration files.
@@ -262,6 +275,11 @@ public class Dispatcher {
     @Inject(StrutsConstants.STRUTS_MULTIPART_PARSER)
     public void setMultipartHandler(String val) {
         multipartHandlerName = val;
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_VALIDATION_REGEX, required = false)
+    public void setMultipartValidationRegex(String multipartValidationRegex) {
+        this.multipartValidationPattern = Pattern.compile(multipartValidationRegex);
     }
 
     @Inject
@@ -781,8 +799,7 @@ public class Dispatcher {
             return request;
         }
 
-        String content_type = request.getContentType();
-        if (content_type != null && content_type.contains("multipart/form-data")) {
+        if (isMultipartRequest(request)) {
             MultiPartRequest multiPartRequest = getMultiPartRequest();
             LocaleProviderFactory localeProviderFactory = getContainer().getInstance(LocaleProviderFactory.class);
 
@@ -798,6 +815,23 @@ public class Dispatcher {
         }
 
         return request;
+    }
+
+    /**
+     * Checks if request is a multipart request (a file upload request)
+     *
+     * @param request current servlet request
+     * @return true if it is a multipart request
+     *
+     * @since 2.5.11
+     */
+    protected boolean isMultipartRequest(HttpServletRequest request) {
+        String httpMethod = request.getMethod();
+        String contentType = request.getContentType();
+
+        return REQUEST_POST_METHOD.equalsIgnoreCase(httpMethod) &&
+                contentType != null &&
+                multipartValidationPattern.matcher(contentType.toLowerCase(Locale.ENGLISH)).matches();
     }
 
     /**

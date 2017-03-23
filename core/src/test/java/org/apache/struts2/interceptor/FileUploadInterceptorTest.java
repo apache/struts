@@ -229,6 +229,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         req.setCharacterEncoding("text/html");
         req.setContentType("text/xml"); // not a multipart contentype
+        req.setMethod("post");
         req.addHeader("Content-type", "multipart/form-data");
 
         MyFileupAction action = container.inject(MyFileupAction.class);
@@ -249,6 +250,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
 
         req.setCharacterEncoding("text/html");
+        req.setMethod("post");
         req.addHeader("Content-type", "multipart/form-data");
         req.setContent(null); // there is no content
 
@@ -269,6 +271,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     public void testSuccessUploadOfATextFileMultipartRequest() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setCharacterEncoding("text/html");
+        req.setMethod("post");
         req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
@@ -374,6 +377,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     public void testMultipartRequestLocalizedError() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setCharacterEncoding("text/html");
+        req.setMethod("post");
         req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload

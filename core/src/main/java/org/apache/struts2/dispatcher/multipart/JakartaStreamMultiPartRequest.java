@@ -30,12 +30,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     /**
      * Map between file fields and file data.
      */
-    private Map<String, List<FileInfo>> fileInfos = new HashMap<>();
+    protected Map<String, List<FileInfo>> fileInfos = new HashMap<>();
 
     /**
      * Map between non-file fields and values.
      */
-    private Map<String, List<String>> parameters = new HashMap<>();
+    protected Map<String, List<String>> parameters = new HashMap<>();
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
@@ -180,7 +180,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param saveDir location of the save dir
      * @throws Exception
      */
-    private void processUpload(HttpServletRequest request, String saveDir) throws Exception {
+    protected void processUpload(HttpServletRequest request, String saveDir) throws Exception {
 
         // Sanity check that the request is a multi-part/form-data request.
         if (ServletFileUpload.isMultipartContent(request)) {
@@ -233,7 +233,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param request the servlet request
      * @return true if request size is permitted
      */
-    private boolean isRequestSizePermitted(HttpServletRequest request) {
+    protected boolean isRequestSizePermitted(HttpServletRequest request) {
         // if maxSize is specified as -1, there is no sanity check and it's
         // safe to return true for any request, delegating the failure
         // checks later in the upload process.
@@ -248,7 +248,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param request the servlet request
      * @return the request content length.
      */
-    private long getRequestSize(HttpServletRequest request) {
+    protected long getRequestSize(HttpServletRequest request) {
         long requestSize = 0;
         if (request != null) {
             requestSize = request.getContentLength();
@@ -263,7 +263,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param fileName file name
      * @param request the servlet request
      */
-    private void addFileSkippedError(String fileName, HttpServletRequest request) {
+    protected void addFileSkippedError(String fileName, HttpServletRequest request) {
         String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
         FileSizeLimitExceededException exception = new FileUploadBase.FileSizeLimitExceededException(exceptionMessage, getRequestSize(request), maxSize);
         LocalizedMessage message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), maxSize});
@@ -277,7 +277,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      *
      * @param itemStream file item stream
      */
-    private void processFileItemStreamAsFormField(FileItemStream itemStream) {
+    protected void processFileItemStreamAsFormField(FileItemStream itemStream) {
         String fieldName = itemStream.getFieldName();
         try {
             List<String> values;
@@ -300,7 +300,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param itemStream file item stream
      * @param location location
      */
-    private void processFileItemStreamAsFileField(FileItemStream itemStream, String location) {
+    protected void processFileItemStreamAsFileField(FileItemStream itemStream, String location) {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (itemStream.getName() == null || itemStream.getName().trim().length() < 1) {
             LOG.debug("No file has been uploaded for the field: {}", itemStream.getFieldName());
@@ -334,7 +334,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @return temporary file based on the given filename and location
      * @throws IOException in case of IO errors
      */
-    private File createTemporaryFile(String fileName, String location) throws IOException {
+    protected File createTemporaryFile(String fileName, String location) throws IOException {
         String name = fileName
                 .substring(fileName.lastIndexOf('/') + 1)
                 .substring(fileName.lastIndexOf('\\') + 1);
@@ -364,7 +364,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @return true if stream was successfully
      * @throws IOException in case of IO errors
      */
-    private boolean streamFileToDisk(FileItemStream itemStream, File file) throws IOException {
+    protected boolean streamFileToDisk(FileItemStream itemStream, File file) throws IOException {
         boolean result = false;
         try (InputStream input = itemStream.openStream();
                 OutputStream output = new BufferedOutputStream(new FileOutputStream(file), bufferSize)) {
@@ -386,7 +386,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param itemStream file item stream
      * @param file the file
      */
-    private void createFileInfoFromItemStream(FileItemStream itemStream, File file) {
+    protected void createFileInfoFromItemStream(FileItemStream itemStream, File file) {
         // gather attributes from file upload stream.
         String fileName = itemStream.getName();
         String fieldName = itemStream.getFieldName();
@@ -403,27 +403,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     /**
-     * @param fileName file name
-     * @return the canonical name based on the supplied filename
-     */
-    private String getCanonicalName(String fileName) {
-        int forwardSlash = fileName.lastIndexOf("/");
-        int backwardSlash = fileName.lastIndexOf("\\");
-        if (forwardSlash != -1 && forwardSlash > backwardSlash) {
-            fileName = fileName.substring(forwardSlash + 1, fileName.length());
-        } else {
-            fileName = fileName.substring(backwardSlash + 1, fileName.length());
-        }
-        return fileName;
-    }
-
-    /**
      * Internal data structure used to store a reference to information needed
      * to later pass post processing data to the <code>FileUploadInterceptor</code>.
      *
      * @since 7.0.0
      */
-    private static class FileInfo implements Serializable {
+     public static class FileInfo implements Serializable {
 
         private static final long serialVersionUID = 1083158552766906037L;
 

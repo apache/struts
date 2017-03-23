@@ -90,27 +90,35 @@ public class OgnlUtil {
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_CLASSES, required = false)
     public void setExcludedClasses(String commaDelimitedClasses) {
-        Set<String> classes = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
-        for (String className : classes) {
+        Set<String> classNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
+        Set<Class<?>> classes = new HashSet<>();
+
+        for (String className : classNames) {
             try {
-                excludedClasses.add(Class.forName(className));
+                classes.add(Class.forName(className));
             } catch (ClassNotFoundException e) {
                 throw new ConfigurationException("Cannot load excluded class: " + className, e);
             }
         }
+
+        excludedClasses = Collections.unmodifiableSet(classes);
     }
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
     public void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
+        Set<Pattern> packageNamePatterns = new HashSet<>();
+
         for (String pattern : packagePatterns) {
-            excludedPackageNamePatterns.add(Pattern.compile(pattern));
+            packageNamePatterns.add(Pattern.compile(pattern));
         }
+
+        excludedPackageNamePatterns = Collections.unmodifiableSet(packageNamePatterns);
     }
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAMES, required = false)
     public void setExcludedPackageNames(String commaDelimitedPackageNames) {
-        excludedPackageNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
+        excludedPackageNames = Collections.unmodifiableSet(TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames));
     }
 
     public Set<Class<?>> getExcludedClasses() {

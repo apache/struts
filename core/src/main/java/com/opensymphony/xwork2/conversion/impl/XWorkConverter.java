@@ -173,8 +173,7 @@ public class XWorkConverter extends DefaultTypeConverter {
 
     @Inject
     public void setConversionPropertiesProcessor(ConversionPropertiesProcessor propertiesProcessor) {
-        // note: this file is deprecated
-        propertiesProcessor.process("xwork-default-conversion.properties");
+        propertiesProcessor.processRequired("struts-default-conversion.properties");
         propertiesProcessor.process("xwork-conversion.properties");
     }
 

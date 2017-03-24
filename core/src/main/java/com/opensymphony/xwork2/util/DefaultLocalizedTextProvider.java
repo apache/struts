@@ -44,50 +44,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-
 /**
- * Provides support for localization in XWork.
- *
- * <!-- START SNIPPET: searchorder -->
- * <p>Resource bundles are searched in the following order:</p>
- *
- * <ol>
- * <li>ActionClass.properties</li>
- * <li>Interface.properties (every interface and sub-interface)</li>
- * <li>BaseClass.properties (all the way to Object.properties)</li>
- * <li>ModelDriven's model (if implements ModelDriven), for the model object repeat from 1</li>
- * <li>package.properties (of the directory where class is located and every parent directory all the way to the root directory)</li>
- * <li>search up the i18n message key hierarchy itself</li>
- * <li>global resource properties</li>
- * </ol>
- *
- * <!-- END SNIPPET: searchorder -->
- *
- * <!-- START SNIPPET: packagenote -->
- * <p>To clarify #5, while traversing the package hierarchy, Struts 2 will look for a file package.properties:</p>
- * com/<br>
- * &nbsp; acme/<br>
- * &nbsp; &nbsp; package.properties<br>
- * &nbsp; &nbsp; actions/<br>
- * &nbsp; &nbsp; &nbsp; package.properties<br>
- * &nbsp; &nbsp; &nbsp; FooAction.java<br>
- * &nbsp; &nbsp; &nbsp; FooAction.properties<br>
- * <p>
- * If FooAction.properties does not exist, com/acme/action/package.properties will be searched for, if
- * not found com/acme/package.properties, if not found com/package.properties, etc.
- * </p>
- * <!-- END SNIPPET: packagenote -->
- *
- * <!-- START SNIPPET: globalresource -->
- * <p>
- * A global resource bundle could be specified programmatically, as well as the locale.
- * </p>
- * <!-- END SNIPPET: globalresource -->
- *
- * @author Jason Carreira
- * @author Mark Woon
- * @author Rainer Hermanns
- * @author tm_jee
+ * Provides support for localization in the framework, it can be used to read only default bundles,
+ * or it can search the class hierarchy to find proper bundles.
  */
 public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
 
@@ -109,7 +68,6 @@ public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
     private final Set<String> missingBundles = Collections.synchronizedSet(new HashSet<String>());
 
     private final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
-
 
     /**
      * Clears the internal list of resource bundles.

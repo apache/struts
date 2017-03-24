@@ -205,7 +205,7 @@ public class URLValidatorTest extends XWorkTestCase {
 	    super.setUp();
 		stack = ActionContext.getContext().getValueStack();
 		actionContext = ActionContext.getContext();
-		tpf = container.inject(TextProviderFactory.class);
+		tpf = container.getInstance(TextProviderFactory.class);
 	}
 	
 	@Override

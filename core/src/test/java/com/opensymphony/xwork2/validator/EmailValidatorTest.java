@@ -162,6 +162,6 @@ public class EmailValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        tpf = container.inject(TextProviderFactory.class);
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 }

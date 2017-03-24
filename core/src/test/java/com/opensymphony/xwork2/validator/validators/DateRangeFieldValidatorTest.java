@@ -91,7 +91,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
         ActionContext.getContext().setLocale(new Locale("DE"));
-        tpf = container.inject(TextProviderFactory.class);
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 
 }

@@ -74,7 +74,7 @@ public class DelegatingValidatorContext implements ValidatorContext {
     @Deprecated
     public DelegatingValidatorContext(Class clazz) {
         localeProvider = new ActionContextLocaleProvider();
-        textProvider = new TextProviderFactory().createInstance(clazz);
+        textProvider = new StrutsTextProviderFactory().createInstance(clazz);
         validationAware = new LoggingValidationAware(clazz);
     }
 

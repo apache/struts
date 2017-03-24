@@ -16,6 +16,8 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -55,6 +57,8 @@ import com.opensymphony.xwork2.validator.ValidationException;
  */
 public class FieldExpressionValidator extends FieldValidatorSupport {
 
+    private static final Logger LOG = LogManager.getLogger(FieldExpressionValidator.class);
+
     private String expression;
 
     public void setExpression(String expression) {
@@ -82,10 +86,10 @@ public class FieldExpressionValidator extends FieldValidatorSupport {
         if ((obj != null) && (obj instanceof Boolean)) {
             answer = (Boolean) obj;
         } else {
-            log.warn("Got result of {} when trying to get Boolean.", obj);
+            LOG.warn("Got result of {} when trying to get Boolean.", obj);
         }
 
-        if (!answer.booleanValue()) {
+        if (!answer) {
             addFieldError(fieldName, object);
         }
     }

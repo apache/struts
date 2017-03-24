@@ -78,7 +78,6 @@ public class CompositeTextProviderTest extends XWorkTestCase {
         super.setUp();
 
         TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
-        tpf.setTextProvider(null);
 
         ActionContext.getContext().setLocale(Locale.ENGLISH);
 

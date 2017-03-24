@@ -13,7 +13,7 @@ public class IntRangeFieldValidatorTest extends XWorkTestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        tpf = container.inject(TextProviderFactory.class);
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 
     public void testPassValidation() throws Exception {

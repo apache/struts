@@ -245,8 +245,6 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ReflectionProvider.class, OgnlReflectionProvider.class, Scope.SINGLETON);
         builder.factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON);
 
-        builder.factory(LocalizedTextProvider.class, DefaultLocalizedTextProvider.class, Scope.SINGLETON);
-
         builder.factory(XWorkConverter.class, Scope.SINGLETON);
         builder.factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON);
         builder.factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON);
@@ -261,10 +259,13 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(TypeConverter.class, XWorkConstants.NUMBER_CONVERTER,  NumberConverter.class, Scope.SINGLETON);
         builder.factory(TypeConverter.class, XWorkConstants.STRING_CONVERTER, StringConverter.class, Scope.SINGLETON);
 
-        builder.factory(TextParser.class, OgnlTextParser.class, Scope.SINGLETON);
         builder.factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON);
-        builder.factory(TextProvider.class, TextProviderSupport.class, Scope.SINGLETON);
+
+        builder.factory(LocalizedTextProvider.class, DefaultLocalizedTextProvider.class, Scope.SINGLETON);
+        builder.factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON);
         builder.factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON);
+
+        builder.factory(TextParser.class, OgnlTextParser.class, Scope.SINGLETON);
 
         builder.factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON);
         builder.factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON);

@@ -237,7 +237,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         val = new DoubleRangeFieldValidator();
         val.setValueStack(ActionContext.getContext().getValueStack());
         ActionContext.getContext().setParameters(HttpParameters.create().build());
-        tpf = container.inject(TextProviderFactory.class);
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 
     @Override

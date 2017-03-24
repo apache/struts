@@ -53,7 +53,7 @@ public class ConversionErrorFieldValidatorTest extends XWorkTestCase {
         validator = new ConversionErrorFieldValidator();
         validationAware = new ValidationAwareSupport();
 
-        DelegatingValidatorContext validatorContext = new DelegatingValidatorContext(validationAware, container.inject(TextProviderFactory.class));
+        DelegatingValidatorContext validatorContext = new DelegatingValidatorContext(validationAware, container.getInstance(TextProviderFactory.class));
         stack.push(validatorContext);
         validator.setValidatorContext(validatorContext);
         validator.setFieldName("foo");

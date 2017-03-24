@@ -217,6 +217,6 @@ public class StringValidatorTest extends XWorkTestCase {
 
         ActionContext.getContext().setActionInvocation(invocation);
 
-        tpf = container.inject(TextProviderFactory.class);
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 }

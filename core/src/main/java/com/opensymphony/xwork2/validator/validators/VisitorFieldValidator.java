@@ -24,6 +24,8 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.ValidatorContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -85,6 +87,8 @@ import java.util.List;
  */
 public class VisitorFieldValidator extends FieldValidatorSupport {
 
+    private static final Logger LOG = LogManager.getLogger(VisitorFieldValidator.class);
+
     private String context;
     private boolean appendPrefix = true;
     private ActionValidatorManager actionValidatorManager;
@@ -125,7 +129,7 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
         String fieldName = getFieldName();
         Object value = this.getFieldValue(fieldName, object);
         if (value == null) {
-            log.warn("The visited object is null, VisitorValidator will not be able to handle validation properly. Please make sure the visited object is not null for VisitorValidator to function properly");
+            LOG.warn("The visited object is null, VisitorValidator will not be able to handle validation properly. Please make sure the visited object is not null for VisitorValidator to function properly");
             return;
         }
         ValueStack stack = ActionContext.getContext().getValueStack();

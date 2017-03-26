@@ -20,7 +20,7 @@ import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.AnnotationUtils;
-import com.opensymphony.xwork2.util.ReflectionUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -123,8 +123,7 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
                 }
             });
             for (Method m : methods) {
-                ReflectionUtils.makeAccessible(m);
-                final String resultCode = (String) ReflectionUtils.invokeMethod(m, action);
+                final String resultCode = (String) MethodUtils.invokeMethod(action, true, m.getName());
                 if (resultCode != null) {
                     // shortcircuit execution
                     return resultCode;
@@ -146,8 +145,7 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
                 }
             });
             for (Method m : methods) {
-                ReflectionUtils.makeAccessible(m);
-                ReflectionUtils.invokeMethod(m, action);
+                MethodUtils.invokeMethod(action, true, m.getName());
             }
         }
 
@@ -183,8 +181,7 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
             });
             for (Method m : methods) {
                 try {
-                    ReflectionUtils.makeAccessible(m);
-                    ReflectionUtils.invokeMethod(m, action);
+                    MethodUtils.invokeMethod(action, true, m.getName());
                 } catch (Exception e) {
                     throw new XWorkException(e);
                 }

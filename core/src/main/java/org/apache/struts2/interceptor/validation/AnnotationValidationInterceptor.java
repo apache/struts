@@ -23,17 +23,12 @@ package org.apache.struts2.interceptor.validation;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Extends the xwork validation interceptor to also check for a @SkipValidation

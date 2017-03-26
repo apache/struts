@@ -39,7 +39,6 @@ import org.apache.struts2.interceptor.validation.SkipValidation;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Set;
 
 /**

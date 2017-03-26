@@ -119,6 +119,7 @@ public class AnnotationUtils {
      * method {@link AnnotatedElement}s matching the specified {@link Annotation}s
      * @deprecated Will be removed after release of <a href="https://github.com/apache/commons-lang/pull/261">LANG-1317</a>
      */
+    @Deprecated
     public static Collection<Method> getAnnotatedMethods(Class clazz, Class<? extends Annotation>... annotation) {
         List<Class<?>> allSuperclasses = ClassUtils.getAllSuperclasses(clazz);
         allSuperclasses.add(0, clazz);
@@ -171,6 +172,7 @@ public class AnnotationUtils {
      * @return an Annotation (possibly null).
      * @deprecated Will be removed after release of <a href="https://github.com/apache/commons-lang/pull/261">LANG-1317</a>
      */
+    @Deprecated
     public static <A extends Annotation> A findAnnotation(final Method method, final Class<A> annotationCls) {
         A annotation = method.getAnnotation(annotationCls);
 

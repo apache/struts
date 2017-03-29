@@ -23,17 +23,12 @@ package org.apache.struts2.interceptor.validation;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * Extends the xwork validation interceptor to also check for a @SkipValidation
@@ -49,24 +44,8 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
         if (action != null) {
             Method method = getActionMethod(action.getClass(), invocation.getProxy().getMethod());
 
-            Collection<Method> annotatedMethods = AnnotationUtils.getAnnotatedMethods(action.getClass(), SkipValidation.class);
-            if (annotatedMethods.contains(method)) {
+            if (null != AnnotationUtils.findAnnotation(method, SkipValidation.class)) {
                 return invocation.invoke();
-            }
-
-            LOG.debug("Check if method overrides an annotated method");
-            Class clazz = action.getClass().getSuperclass();
-            while (clazz != null) {
-                annotatedMethods = AnnotationUtils.getAnnotatedMethods(clazz, SkipValidation.class);
-                if (annotatedMethods != null) {
-                    for (Method annotatedMethod : annotatedMethods) {
-                        if (annotatedMethod.getName().equals(method.getName())
-                                && Arrays.equals(annotatedMethod.getParameterTypes(), method.getParameterTypes())
-                                && Arrays.equals(annotatedMethod.getExceptionTypes(), method.getExceptionTypes()))
-                            return invocation.invoke();
-                    }
-                }
-                clazz = clazz.getSuperclass();
             }
         }
 

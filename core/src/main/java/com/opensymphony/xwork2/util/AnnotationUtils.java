@@ -16,14 +16,15 @@
 package com.opensymphony.xwork2.util;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,121 +117,101 @@ public class AnnotationUtils {
      * @param annotation the {@link Annotation}s to find
      * @return A {@link Collection}&lt;{@link AnnotatedElement}&gt; containing all of the
      * method {@link AnnotatedElement}s matching the specified {@link Annotation}s
+     * @deprecated Will be removed after release of <a href="https://github.com/apache/commons-lang/pull/261">LANG-1317</a>
      */
+    @Deprecated
     public static Collection<Method> getAnnotatedMethods(Class clazz, Class<? extends Annotation>... annotation) {
-        Collection<Method> toReturn = new HashSet<>();
-
-        for (Method m : clazz.getMethods()) {
-            boolean found = false;
-            for (Class<? extends Annotation> c : annotation) {
-                if (null != findAnnotation(m, c)) {
-                    found = true;
-                    break;
+        List<Class<?>> allSuperclasses = ClassUtils.getAllSuperclasses(clazz);
+        allSuperclasses.add(0, clazz);
+        int sci = 0;
+        List<Class<?>> allInterfaces = ClassUtils.getAllInterfaces(clazz);
+        int ifi = 0;
+        final List<Method> annotatedMethods = new ArrayList<>();
+        while (ifi < allInterfaces.size() ||
+                sci < allSuperclasses.size()) {
+            Class<?> acls;
+            if (ifi >= allInterfaces.size()) {
+                acls = allSuperclasses.get(sci++);
+            }
+            else if (sci >= allSuperclasses.size()) {
+                acls = allInterfaces.get(ifi++);
+            }
+            else if (sci <= ifi) {
+                acls = allSuperclasses.get(sci++);
+            }
+            else {
+                acls = allInterfaces.get(ifi++);
+            }
+            final Method[] allMethods = acls.getDeclaredMethods();
+            for (final Method method : allMethods) {
+                if (ArrayUtils.isEmpty(annotation) && ArrayUtils.isNotEmpty(method.getAnnotations())) {
+                    annotatedMethods.add(method);
+                    continue;
+                }
+                for (Class<? extends Annotation> c : annotation) {
+                    if (method.getAnnotation(c) != null) {
+                        annotatedMethods.add(method);
+                    }
                 }
             }
-            if (found) {
-                toReturn.add(m);
-            } else if (ArrayUtils.isEmpty(annotation) && ArrayUtils.isNotEmpty(m.getAnnotations())) {
-                toReturn.add(m);
-            }
         }
 
-        return toReturn;
+        return annotatedMethods;
     }
 
     /**
-     * Find a single {@link Annotation} of {@code annotationType} from the supplied
-     * {@link Method}, traversing its super methods (i.e., from superclasses and
-     * interfaces) if no annotation can be found on the given method itself.
-     * <p>Annotations on methods are not inherited by default, so we need to handle
-     * this explicitly.
-     *
-     * @param method         the method to look for annotations on
-     * @param annotationType the annotation type to look for
-     * @return the annotation found, or {@code null} if none
+     * <p>BFS to find the annotation object that is present on the given method or any equivalent method in
+     * super classes and interfaces, with the given annotation type. Returns null if the annotation type was not present
+     * on any of them.</p>
+     * @param <A>
+     *            the annotation type
+     * @param method
+     *            the {@link Method} to query
+     * @param annotationCls
+     *            the {@link Annotation} to check if is present on the method
+     * @return an Annotation (possibly null).
+     * @deprecated Will be removed after release of <a href="https://github.com/apache/commons-lang/pull/261">LANG-1317</a>
      */
-    public static <A extends Annotation> A findAnnotation(Method method, Class<A> annotationType) {
-        A result = getAnnotation(method, annotationType);
-        Class<?> clazz = method.getDeclaringClass();
-        if (result == null) {
-            result = searchOnInterfaces(method, annotationType, clazz.getInterfaces());
-        }
-        while (result == null) {
-            clazz = clazz.getSuperclass();
-            if (clazz == null || clazz.equals(Object.class)) {
-                break;
-            }
-            try {
-                Method equivalentMethod = clazz.getDeclaredMethod(method.getName(), method.getParameterTypes());
-                result = getAnnotation(equivalentMethod, annotationType);
-            } catch (NoSuchMethodException ex) {
-                // No equivalent method found
-            }
-            if (result == null) {
-                result = searchOnInterfaces(method, annotationType, clazz.getInterfaces());
-            }
-        }
-        return result;
-    }
+    @Deprecated
+    public static <A extends Annotation> A findAnnotation(final Method method, final Class<A> annotationCls) {
+        A annotation = method.getAnnotation(annotationCls);
 
-    /**
-     * Get a single {@link Annotation} of {@code annotationType} from the supplied
-     * Method, Constructor or Field. Meta-annotations will be searched if the annotation
-     * is not declared locally on the supplied element.
-     *
-     * @param annotatedElement the Method, Constructor or Field from which to get the annotation
-     * @param annotationType   the annotation type to look for, both locally and as a meta-annotation
-     * @return the matching annotation, or {@code null} if none found
-     */
-    public static <T extends Annotation> T getAnnotation(AnnotatedElement annotatedElement, Class<T> annotationType) {
-        try {
-            T ann = annotatedElement.getAnnotation(annotationType);
-            if (ann == null) {
-                for (Annotation metaAnn : annotatedElement.getAnnotations()) {
-                    ann = metaAnn.annotationType().getAnnotation(annotationType);
-                    if (ann != null) {
+        if(annotation == null) {
+            Class<?> mcls = method.getDeclaringClass();
+            List<Class<?>> allSuperclasses = ClassUtils.getAllSuperclasses(mcls);
+            int sci = 0;
+            List<Class<?>> allInterfaces = ClassUtils.getAllInterfaces(mcls);
+            int ifi = 0;
+            while (ifi < allInterfaces.size() ||
+                    sci < allSuperclasses.size()) {
+                Class<?> acls;
+                if(ifi >= allInterfaces.size()) {
+                    acls = allSuperclasses.get(sci++);
+                }
+                else if(sci >= allSuperclasses.size()) {
+                    acls = allInterfaces.get(ifi++);
+                }
+                else if(ifi <= sci) {
+                    acls = allInterfaces.get(ifi++);
+                }
+                else {
+                    acls = allSuperclasses.get(sci++);
+                }
+                Method equivalentMethod = null;
+                try {
+                    equivalentMethod = acls.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                } catch (NoSuchMethodException e) {
+                    // If not found, just keep on breadth first search
+                }
+                if(equivalentMethod != null) {
+                    annotation = equivalentMethod.getAnnotation(annotationCls);
+                    if(annotation != null) {
                         break;
                     }
                 }
             }
-            return ann;
-        } catch (Exception ex) {
-            // Assuming nested Class values not resolvable within annotation attributes...
-            return null;
-        }
-    }
-
-    private static <A extends Annotation> A searchOnInterfaces(Method method, Class<A> annotationType, Class<?>... ifcs) {
-        A annotation = null;
-        for (Class<?> iface : ifcs) {
-            if (isInterfaceWithAnnotatedMethods(iface)) {
-                try {
-                    Method equivalentMethod = iface.getMethod(method.getName(), method.getParameterTypes());
-                    annotation = getAnnotation(equivalentMethod, annotationType);
-                } catch (NoSuchMethodException ex) {
-                    // Skip this interface - it doesn't have the method...
-                }
-                if (annotation != null) {
-                    break;
-                }
-            }
         }
         return annotation;
-    }
-
-    private static boolean isInterfaceWithAnnotatedMethods(Class<?> iface) {
-        boolean found = false;
-        for (Method ifcMethod : iface.getMethods()) {
-            try {
-                if (ifcMethod.getAnnotations().length > 0) {
-                    found = true;
-                    break;
-                }
-            } catch (Exception ex) {
-                // Assuming nested Class values not resolvable within annotation attributes...
-            }
-        }
-        return found;
     }
 
     /**

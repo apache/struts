@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.AnnotationUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -117,12 +118,12 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
                 public int compare(Method method1, Method method2) {
-                    return comparePriorities(method1.getAnnotation(Before.class).priority(),
-                                method2.getAnnotation(Before.class).priority());
+                    return comparePriorities(AnnotationUtils.findAnnotation(method1, Before.class).priority(),
+                            AnnotationUtils.findAnnotation(method2, Before.class).priority());
                 }
             });
             for (Method m : methods) {
-                final String resultCode = (String) m.invoke(action, (Object[]) null);
+                final String resultCode = (String) MethodUtils.invokeMethod(action, true, m.getName());
                 if (resultCode != null) {
                     // shortcircuit execution
                     return resultCode;
@@ -139,12 +140,12 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
                 public int compare(Method method1, Method method2) {
-                    return comparePriorities(method1.getAnnotation(After.class).priority(),
-                                method2.getAnnotation(After.class).priority());
+                    return comparePriorities(AnnotationUtils.findAnnotation(method1, After.class).priority(),
+                            AnnotationUtils.findAnnotation(method2, After.class).priority());
                 }
             });
             for (Method m : methods) {
-                m.invoke(action, (Object[]) null);
+                MethodUtils.invokeMethod(action, true, m.getName());
             }
         }
 
@@ -174,13 +175,13 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
                 public int compare(Method method1, Method method2) {
-                    return comparePriorities(method1.getAnnotation(BeforeResult.class).priority(),
-                                method2.getAnnotation(BeforeResult.class).priority());
+                    return comparePriorities(AnnotationUtils.findAnnotation(method1, BeforeResult.class).priority(),
+                            AnnotationUtils.findAnnotation(method2, BeforeResult.class).priority());
                 }
             });
             for (Method m : methods) {
                 try {
-                    m.invoke(action, (Object[]) null);
+                    MethodUtils.invokeMethod(action, true, m.getName());
                 } catch (Exception e) {
                     throw new XWorkException(e);
                 }

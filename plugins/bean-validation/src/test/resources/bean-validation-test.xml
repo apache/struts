@@ -26,6 +26,11 @@
             <interceptor-ref name="beanValidation"/>
             <result type="void"/>
         </action>
+        <action name="modelDrivenActionSkipValidationByInterface" class="org.apache.struts.beanvalidation.actions.ModelDrivenAction"
+            method="skipMeByInterface">
+            <interceptor-ref name="beanValidation"/>
+            <result type="void"/>
+        </action>
         <action name="fieldAction" class="org.apache.struts.beanvalidation.actions.FieldAction">
             <interceptor-ref name="beanValidation"/>
             <result type="void"/>

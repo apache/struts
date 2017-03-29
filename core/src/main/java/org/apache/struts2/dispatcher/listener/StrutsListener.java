@@ -42,7 +42,6 @@ public class StrutsListener implements ServletContextListener {
         Dispatcher dispatcher = null;
         try {
             ListenerHostConfig config = new ListenerHostConfig(sce.getServletContext());
-            init.initLogging(config);
             dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 

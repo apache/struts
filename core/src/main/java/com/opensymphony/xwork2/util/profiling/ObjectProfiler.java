@@ -33,7 +33,9 @@ import java.lang.reflect.Proxy;
 
 /**
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
+ * @deprecated will be dropped with next major release (2.6)
  */
+@Deprecated
 public class ObjectProfiler {
 
     /**
@@ -135,6 +137,10 @@ public class ObjectProfiler {
 
 }
 
+/**
+ * @deprecated will be dropped with next major release (2.6)
+ */
+@Deprecated
 class TimerInvocationHandler implements InvocationHandler {
     protected Object target;
 

@@ -266,7 +266,10 @@ import org.apache.logging.log4j.Logger;
  * </p>
  *
  * <!-- END SNIPPET: profileLogFile -->
+ *
+ * @deprecated will be dropped with next major release (2.6)
  */
+@Deprecated
 public class UtilTimerStack {
 
     // A reference to the current ProfilingTimerBean

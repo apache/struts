@@ -35,7 +35,10 @@ import java.util.List;
  * @author <a href="mailto:mike@atlassian.com">Mike Cannon-Brookes</a>
  * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
  * @version $Date$ $Id$
+ *
+ * @deprecated will be dropped with next major release (2.6)
  */
+@Deprecated
 public class ProfilingTimerBean implements java.io.Serializable {
 
     private static final long serialVersionUID = -6180672043920208784L;

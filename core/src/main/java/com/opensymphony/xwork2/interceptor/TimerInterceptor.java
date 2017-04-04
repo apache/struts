@@ -91,7 +91,10 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Jason Carreira
  * @author Claus Ibsen
+ *
+ * @deprecated will be dropped with next major release (2.6)
  */
+@Deprecated
 public class TimerInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(TimerInterceptor.class);

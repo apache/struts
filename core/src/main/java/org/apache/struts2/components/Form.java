@@ -276,6 +276,15 @@ public class Form extends ClosingUIBean {
 
         String formActionValue = findString(action);
         ActionMapping mapping = actionMapper.getMappingFromActionName(formActionValue);
+
+        if (mapping == null) {
+            mapping =  actionMapper.getMappingFromActionName((String) getParameters().get("actionName"));
+        }
+
+        if (mapping == null) {
+            return Collections.EMPTY_LIST;
+        }
+
         String actionName = mapping.getName();
 
         String methodName = null;

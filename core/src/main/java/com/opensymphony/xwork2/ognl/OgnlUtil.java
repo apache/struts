@@ -49,6 +49,7 @@ import java.util.regex.Pattern;
 public class OgnlUtil {
 
     private static final Logger LOG = LogManager.getLogger(OgnlUtil.class);
+
     private ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<>();
     private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
     private TypeConverter defaultConverter;
@@ -57,9 +58,9 @@ public class OgnlUtil {
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
 
-    private Set<Class<?>> excludedClasses = new HashSet<>();
-    private Set<Pattern> excludedPackageNamePatterns = new HashSet<>();
-    private Set<String> excludedPackageNames = new HashSet<>();
+    private Set<Class<?>> excludedClasses = Collections.emptySet();
+    private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
+    private Set<String> excludedPackageNames = Collections.emptySet();
 
     private Container container;
     private boolean allowStaticMethodAccess;

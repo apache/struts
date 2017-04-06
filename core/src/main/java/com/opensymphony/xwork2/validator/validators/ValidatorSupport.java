@@ -39,6 +39,8 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
 
     private static final Logger LOG = LogManager.getLogger(ValidatorSupport.class);
 
+    public static final String EMPTY_STRING = "";
+
     private ValidatorContext validatorContext;
     private boolean shortCircuit;
     private String type;

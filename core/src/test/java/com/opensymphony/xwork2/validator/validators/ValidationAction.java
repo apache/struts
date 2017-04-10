@@ -1,6 +1,7 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import java.util.Date;
+import java.util.List;
 
 public class ValidationAction {
 
@@ -12,6 +13,7 @@ public class ValidationAction {
     private Short shortRange;
     private Short shortMinValue;
     private Short shortMaxValue;
+    private List<Short> shorts;
 
     private Long longRange;
     private Long longMinValue;
@@ -141,5 +143,13 @@ public class ValidationAction {
 
     public void setInts(Integer[] ints) {
         this.ints = ints;
+    }
+
+    public List<Short> getShorts() {
+        return shorts;
+    }
+
+    public void setShorts(List<Short> shorts) {
+        this.shorts = shorts;
     }
 }

@@ -1,6 +1,11 @@
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.ValidationAwareSupport;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
@@ -8,6 +13,9 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import org.apache.struts2.dispatcher.HttpParameters;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +27,8 @@ import java.util.Map;
  * @author Claus Ibsen
  * @version $Id$
  */
-public class DoubleRangeValidatorTest extends XWorkTestCase {
+public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
+
     private DoubleRangeFieldValidator val;
     private TextProviderFactory tpf;
 
@@ -176,7 +185,7 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
         val.setMinInclusive(9.95d);
         val.validate(null);
-        assertTrue(!context.hasErrors()); // should pass as null value passed in
+        assertFalse(context.hasErrors()); // should pass as null value passed in
     }
 
     public void testRangeValidationWithExpressionsFail() throws Exception {
@@ -204,11 +213,25 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         ActionSupport action = new ActionSupport() {
 
-            public Double getMinInclusiveValue() {return 10d;}
-            public Double getMaxInclusiveValue() {return 11d;}
-            public Double getMinExclusiveValue() {return 13d;}
-            public Double getMaxExclusiveValue() {return 14d;}
-            public Double getPrice() {return 15d;}
+            public Double getMinInclusiveValue() {
+                return 10d;
+            }
+
+            public Double getMaxInclusiveValue() {
+                return 11d;
+            }
+
+            public Double getMinExclusiveValue() {
+                return 13d;
+            }
+
+            public Double getMaxExclusiveValue() {
+                return 14d;
+            }
+
+            public Double getPrice() {
+                return 15d;
+            }
         };
 
         stack.push(action);
@@ -228,12 +251,54 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         assertTrue(action.getFieldErrors().get("price").size() == 1);
     }
 
+    public void testArrayOfDoubles() throws Exception {
+        val.setMinInclusive(10d);
+        val.setMaxInclusive(14d);
+
+        val.setFieldName("doubleArray");
+        val.setDefaultMessage("Value ${currentValue} not in scope!");
+
+        MyTestProduct object = new MyTestProduct();
+        object.setDoubleArray(new Double[]{11d, 15d});
+
+        DummyValidatorContext context = new DummyValidatorContext(object, tpf);
+        val.setValidatorContext(context);
+
+        val.validate(object);
+
+        assertTrue(context.hasFieldErrors());
+        assertEquals(1, context.getFieldErrors().size());
+        assertEquals(1, context.getFieldErrors().get("doubleArray").size());
+        assertEquals("Value 15.0 not in scope!", context.getFieldErrors().get("doubleArray").get(0));
+    }
+
+    public void testCollectionOfDoubles() throws Exception {
+        val.setMinInclusive(10d);
+        val.setMaxInclusive(14d);
+
+        val.setFieldName("doubleCollection");
+        val.setDefaultMessage("Value ${currentValue} not in scope!");
+
+        MyTestProduct object = new MyTestProduct();
+        object.setDoubleCollection(Arrays.asList(11d, 15d));
+
+        DummyValidatorContext context = new DummyValidatorContext(object, tpf);
+        val.setValidatorContext(context);
+
+        val.validate(object);
+
+        assertTrue(context.hasFieldErrors());
+        assertEquals(1, context.getFieldErrors().size());
+        assertEquals(1, context.getFieldErrors().get("doubleCollection").size());
+        assertEquals("Value 15.0 not in scope!", context.getFieldErrors().get("doubleCollection").get(0));
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-default.xml");
         container.inject(provider);
-        loadConfigurationProviders(provider,  new MockConfigurationProvider());
+        loadConfigurationProviders(provider, new MockConfigurationProvider());
         val = new DoubleRangeFieldValidator();
         val.setValueStack(ActionContext.getContext().getValueStack());
         ActionContext.getContext().setParameters(HttpParameters.create().build());
@@ -250,6 +315,9 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
         private double price;
         private Double volume;
         private String name;
+
+        private Double[] doubleArray;
+        private Collection<Double> doubleCollection;
 
         public double getPrice() {
             return price;
@@ -273,6 +341,22 @@ public class DoubleRangeValidatorTest extends XWorkTestCase {
 
         public void setVolume(Double volume) {
             this.volume = volume;
+        }
+
+        public Double[] getDoubleArray() {
+            return doubleArray;
+        }
+
+        public void setDoubleArray(Double[] doubleArray) {
+            this.doubleArray = doubleArray;
+        }
+
+        public Collection<Double> getDoubleCollection() {
+            return doubleCollection;
+        }
+
+        public void setDoubleCollection(Collection<Double> doubleCollection) {
+            this.doubleCollection = doubleCollection;
         }
     }
 

@@ -7,6 +7,7 @@ public class ValidationAction {
     private Integer intRange;
     private Integer intMinValue;
     private Integer intMaxValue;
+    private Integer[] ints;
 
     private Short shortRange;
     private Short shortMinValue;
@@ -132,5 +133,13 @@ public class ValidationAction {
 
     public String getStringValue() {
         return stringValue;
+    }
+
+    public Integer[] getInts() {
+        return ints;
+    }
+
+    public void setInts(Integer[] ints) {
+        this.ints = ints;
     }
 }

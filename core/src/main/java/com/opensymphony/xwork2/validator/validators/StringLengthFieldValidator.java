@@ -17,6 +17,11 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Collection;
+import java.util.Objects;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -84,6 +89,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class StringLengthFieldValidator extends FieldValidatorSupport {
 
+    private static final Logger LOG = LogManager.getLogger(StringLengthFieldValidator.class);
+
     private boolean trim = true;
     private int maxLength = -1;
     private int minLength = -1;
@@ -138,17 +145,37 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
     }
 
     public void validate(Object object) throws ValidationException {
-        String fieldName = getFieldName();
-        String val = (String) getFieldValue(fieldName, object);
+        Object fieldValue = getFieldValue(fieldName, object);
 
-        if (StringUtils.isEmpty(val)) {
-            // use a required validator for these
+        if (fieldValue == null) {
+            LOG.debug("Value for field {} is null, use a required validator", getFieldName());
+        } else if (fieldValue.getClass().isArray()) {
+            Object[] values = (Object[]) fieldValue;
+            for (Object value : values) {
+                validateValue(object, value);
+            }
+        } else if (Collection.class.isAssignableFrom(fieldValue.getClass())) {
+            Collection values = (Collection) fieldValue;
+            for (Object value : values) {
+                validateValue(object, value);
+            }
+        } else {
+            validateValue(object, fieldValue);
+        }
+    }
+
+    protected void validateValue(Object object, Object value) {
+        String stringValue = Objects.toString(value, "");
+
+        if (StringUtils.isEmpty(stringValue)) {
+            LOG.debug("Value is empty, use a required validator");
             return;
         }
+
         if (isTrim()) {
-            val = val.trim();
-            if (val.length() <= 0) {
-                // use a required validator
+            stringValue = stringValue.trim();
+            if (StringUtils.isEmpty(stringValue)) {
+                LOG.debug("Value is empty, use a required validator");
                 return;
             }
         }
@@ -156,9 +183,9 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
         int minLengthToUse = getMinLength();
         int maxLengthToUse = getMaxLength();
 
-        if ((minLengthToUse > -1) && (val.length() < minLengthToUse)) {
+        if ((minLengthToUse > -1) && (stringValue.length() < minLengthToUse)) {
             addFieldError(fieldName, object);
-        } else if ((maxLengthToUse > -1) && (val.length() > maxLengthToUse)) {
+        } else if ((maxLengthToUse > -1) && (stringValue.length() > maxLengthToUse)) {
             addFieldError(fieldName, object);
         }
     }

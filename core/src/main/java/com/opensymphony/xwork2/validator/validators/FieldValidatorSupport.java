@@ -25,9 +25,9 @@ import com.opensymphony.xwork2.validator.FieldValidator;
  */
 public abstract class FieldValidatorSupport extends ValidatorSupport implements FieldValidator {
 
-    private String fieldName;
-    private String type;
-    private Object currentValue;
+    protected String fieldName;
+    protected String type;
+    protected Object currentValue;
 
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;

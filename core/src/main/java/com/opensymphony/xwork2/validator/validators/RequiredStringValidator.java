@@ -17,6 +17,7 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 
+import java.util.Collection;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -85,21 +86,46 @@ public class RequiredStringValidator extends FieldValidatorSupport {
     }
 
     public void validate(Object object) throws ValidationException {
-        String fieldName = getFieldName();
-        Object value = this.getFieldValue(fieldName, object);
+        Object fieldValue = this.getFieldValue(getFieldName(), object);
 
-        if (!(value instanceof String)) {
-            addFieldError(fieldName, object);
+        if (fieldValue == null) {
+            addFieldError(getFieldName(), object);
+            return;
+        }
+
+        if (fieldValue.getClass().isArray()) {
+            Object[] values = (Object[]) fieldValue;
+            for (Object value : values) {
+                validateValue(object, value);
+            }
+        } else if (Collection.class.isAssignableFrom(fieldValue.getClass())) {
+            Collection values = (Collection) fieldValue;
+            for (Object value : values) {
+                validateValue(object, value);
+            }
         } else {
-            String s = (String) value;
+            validateValue(object, fieldValue);
+        }
+    }
+
+    protected void validateValue(Object object, Object fieldValue) {
+        if (fieldValue == null) {
+            addFieldError(getFieldName(), object);
+            return;
+        }
+
+        if (fieldValue instanceof String) {
+            String stingValue = (String) fieldValue;
 
             if (trim) {
-                s = s.trim();
+                stingValue = stingValue.trim();
             }
 
-            if (s.length() == 0) {
-                addFieldError(fieldName, object);
+            if (stingValue.length() == 0) {
+                addFieldError(getFieldName(), object);
             }
+        } else {
+            addFieldError(getFieldName(), object);
         }
     }
 

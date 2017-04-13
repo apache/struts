@@ -23,6 +23,7 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
@@ -128,8 +129,8 @@ public class TokenInterceptor extends MethodFilterInterceptor {
     private TextProvider textProvider;
 
     @Inject
-    public void setTextProvider(TextProvider textProvider) {
-        this.textProvider = textProvider;
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProvider = textProviderFactory.createInstance(getClass());
     }
 
     /**

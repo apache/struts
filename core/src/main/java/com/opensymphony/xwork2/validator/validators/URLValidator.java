@@ -69,9 +69,7 @@ public class URLValidator extends FieldValidatorSupport {
     public void validate(Object object) throws ValidationException {
         Object value = getFieldValue(fieldName, object);
 
-        // if there is no value - don't do comparison
-        // if a value is required, a required validator should be added to the field
-        String stringValue = Objects.toString(value, "").trim();
+        String stringValue = Objects.toString(value, EMPTY_STRING).trim();
         if (stringValue.length() == 0) {
             LOG.debug("Value for field {} is empty, won't ba validated, please use a required validator", fieldName);
             return;
@@ -96,7 +94,7 @@ public class URLValidator extends FieldValidatorSupport {
     }
 
     protected void validateValue(Object object, Object value) {
-        String stringValue = Objects.toString(value, "").trim();
+        String stringValue = Objects.toString(value, EMPTY_STRING).trim();
         if (stringValue.length() == 0) {
             LOG.debug("Value for field {} is empty, won't ba validated, please use a required validator", fieldName);
             return;

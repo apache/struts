@@ -95,9 +95,9 @@ public class RegexFieldValidator extends FieldValidatorSupport {
     private String regex;
     private String regexExpression;
     private Boolean caseSensitive = true;
-    private String caseSensitiveExpression = "";
+    private String caseSensitiveExpression = EMPTY_STRING;
     private Boolean trim = true;
-    private String trimExpression = "";
+    private String trimExpression = EMPTY_STRING;
 
     public void validate(Object object) throws ValidationException {
         String fieldName = getFieldName();
@@ -108,32 +108,30 @@ public class RegexFieldValidator extends FieldValidatorSupport {
         LOG.debug("Defined regexp as [{}]", regexToUse);
 
         if (value == null || regexToUse == null) {
+            LOG.debug("Either value is empty (please use a required validator) or regex is empty");
             return;
-        }
-
-        if (value instanceof String) {
-            validateFieldValue(object, fieldName, (String) value, regexToUse);
         }
 
         if (value.getClass().isArray()) {
             Object[] values = (Object[]) value;
             for (Object objValue: values) {
-                validateFieldValue(object, fieldName, Objects.toString(objValue, EMPTY_STRING), regexToUse);
+                validateFieldValue(object, Objects.toString(objValue, EMPTY_STRING), regexToUse);
             }
-        }
-
-        if (Collection.class.isAssignableFrom(value.getClass())) {
-            Collection<Object> values = (Collection<Object>) value;
+        } else if (Collection.class.isAssignableFrom(value.getClass())) {
+            Collection values = (Collection) value;
             for (Object objValue : values) {
-                validateFieldValue(object, fieldName, Objects.toString(objValue, EMPTY_STRING), regexToUse);
+                validateFieldValue(object, Objects.toString(objValue, EMPTY_STRING), regexToUse);
             }
+        } else {
+           validateFieldValue(object, Objects.toString(value, EMPTY_STRING), regexToUse);
         }
     }
 
-    protected void validateFieldValue(Object object, String fieldName, String value, String regexToUse) {
+    protected void validateFieldValue(Object object, String value, String regexToUse) {
         // string must not be empty
         String str = value.trim();
         if (str.length() == 0) {
+            LOG.debug("Value is empty, please use a required validator");
             return;
         }
 

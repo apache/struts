@@ -183,10 +183,15 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
         int minLengthToUse = getMinLength();
         int maxLengthToUse = getMaxLength();
 
-        if ((minLengthToUse > -1) && (stringValue.length() < minLengthToUse)) {
-            addFieldError(fieldName, object);
-        } else if ((maxLengthToUse > -1) && (stringValue.length() > maxLengthToUse)) {
-            addFieldError(fieldName, object);
+        try {
+            setCurrentValue(stringValue);
+            if ((minLengthToUse > -1) && (stringValue.length() < minLengthToUse)) {
+                addFieldError(fieldName, object);
+            } else if ((maxLengthToUse > -1) && (stringValue.length() > maxLengthToUse)) {
+                addFieldError(fieldName, object);
+            }
+        } finally {
+            setCurrentValue(null);
         }
     }
 

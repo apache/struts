@@ -32,15 +32,15 @@ import java.util.Collection;
  *
  * <!-- START SNIPPET: parameters -->
  * <ul>
- * <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
- * <li>minInclusive - the minimum inclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
- * <li>maxInclusive - the maximum inclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
- * <li>minExclusive - the minimum exclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
- * <li>maxExclusive - the maximum exclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
- * <li>minInclusiveExpression - the minimum inclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
- * <li>maxInclusiveExpression - the maximum inclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
- * <li>minExclusiveExpression - the minimum exclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
- * <li>maxExclusiveExpression - the maximum exclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
+ *     <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
+ *     <li>minInclusive - the minimum inclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
+ *     <li>maxInclusive - the maximum inclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
+ *     <li>minExclusive - the minimum exclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
+ *     <li>maxExclusive - the maximum exclusive value in FloatValue format specified by Java language (if none is specified, it will not be checked) </li>
+ *     <li>minInclusiveExpression - the minimum inclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
+ *     <li>maxInclusiveExpression - the maximum inclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
+ *     <li>minExclusiveExpression - the minimum exclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
+ *     <li>maxExclusiveExpression - the maximum exclusive value specified as a OGNL expression (if none is specified, it will not be checked) </li>
  * </ul>
  *
  * You can specify either minInclusive, maxInclusive, minExclusive and maxExclusive or minInclusiveExpression, maxInclusiveExpression,

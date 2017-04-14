@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.validator.FieldValidator;
  * You can access fieldName and its currentValue in a message using expression, e.g.
  * "Wrong value ${currentValue} for ${fieldName}"
  */
-public abstract class FieldValidatorSupport extends ValidatorSupport implements FieldValidator {
+abstract class FieldValidatorSupport extends ValidatorSupport implements FieldValidator {
 
     protected String fieldName;
     protected String type;
@@ -51,7 +51,7 @@ public abstract class FieldValidatorSupport extends ValidatorSupport implements 
         return currentValue;
     }
 
-    public void setCurrentValue(Object currentValue) {
+    void setCurrentValue(Object currentValue) {
         this.currentValue = currentValue;
     }
 }

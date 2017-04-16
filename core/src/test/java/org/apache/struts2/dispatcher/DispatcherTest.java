@@ -257,7 +257,17 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mockContainer.verify();
         mockConfiguration.verify();
     }
-    
+
+    public void testMultipartSupportEnabledByDefault() throws Exception {
+        HttpServletRequest req = new MockHttpServletRequest();
+        HttpServletResponse res = new MockHttpServletResponse();
+
+        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+        du.prepare(req, res);
+
+        assertTrue(du.isMultipartSupportEnabled(req));
+    }
+
     class InternalConfigurationManager extends ConfigurationManager {
     	public boolean destroyConfiguration = false;
 

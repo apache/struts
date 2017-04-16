@@ -139,6 +139,11 @@ public final class StrutsConstants {
      */
     public static final String STRUTS_MULTIPART_PARSER = "struts.multipart.parser";
 
+    /**
+     * A global switch to disable support for multipart requests
+     */
+    public static final String STRUTS_MULTIPART_ENABLED = "struts.multipart.enabled";
+
     public static final String STRUTS_MULTIPART_VALIDATION_REGEX = "struts.multipart.validationRegex";
 
     /** How Spring should autowire.  Valid values are 'name', 'type', 'auto', and 'constructor' */

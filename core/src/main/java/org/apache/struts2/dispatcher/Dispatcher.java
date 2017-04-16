@@ -130,6 +130,11 @@ public class Dispatcher {
     private String multipartHandlerName;
 
     /**
+     * Stores the value of {@link StrutsConstants#STRUTS_MULTIPART_ENABLED}
+     */
+    private boolean multipartSupportEnabled = true;
+
+    /**
      * A regular expression used to validate if request is a multipart/form-data request
      */
     private Pattern multipartValidationPattern = Pattern.compile(MULTIPART_FORM_DATA_REGEX);
@@ -275,6 +280,11 @@ public class Dispatcher {
     @Inject(StrutsConstants.STRUTS_MULTIPART_PARSER)
     public void setMultipartHandler(String val) {
         multipartHandlerName = val;
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_ENABLED, required = false)
+    public void setMultipartSupportEnabled(String multipartSupportEnabled) {
+        this.multipartSupportEnabled = Boolean.parseBoolean(multipartSupportEnabled);
     }
 
     @Inject(value = StrutsConstants.STRUTS_MULTIPART_VALIDATION_REGEX, required = false)
@@ -799,7 +809,7 @@ public class Dispatcher {
             return request;
         }
 
-        if (isMultipartRequest(request)) {
+        if (isMultipartSupportEnabled(request) && isMultipartRequest(request)) {
             MultiPartRequest multiPartRequest = getMultiPartRequest();
             LocaleProviderFactory localeProviderFactory = getContainer().getInstance(LocaleProviderFactory.class);
 
@@ -815,6 +825,18 @@ public class Dispatcher {
         }
 
         return request;
+    }
+
+    /**
+     * Checks if support to parse multipart requests is enabled
+     * 
+     * @param request current servlet request
+     * @return false if disabled
+     *
+     * @since 2.5.11
+     */
+    protected boolean isMultipartSupportEnabled(HttpServletRequest request) {
+        return multipartSupportEnabled;
     }
 
     /**

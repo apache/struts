@@ -505,9 +505,9 @@
             </dependency>
 
             <dependency>
-                <groupId>opensymphony</groupId>
+                <groupId>org.sitemesh</groupId>
                 <artifactId>sitemesh</artifactId>
-                <version>2.4.2</version>
+                <version>3.0.1</version>
             </dependency>
 
             <!-- Velocity -->

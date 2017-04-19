@@ -119,8 +119,6 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
         Pattern pattern = WildcardUtil.compileWildcardPattern(path);
         Map<String, URL> matches = finder.getResourcesMap("");
 
-        LOG.trace("Found resources {} matching pattern {}", matches, path);
-
         for (String resource : matches.keySet()) {
             if (pattern.matcher(resource).matches()) {
                 URL url = matches.get(resource);

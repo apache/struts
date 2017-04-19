@@ -37,10 +37,7 @@ public class StrutsApplicationResource extends PostfixedApplicationResource {
 
     @Override
     public InputStream getInputStream() throws IOException {
-        if (new File(url.getPath()).exists()) {
-            return url.openStream();
-        }
-        return null;
+        return url.openStream();
     }
 
     @Override

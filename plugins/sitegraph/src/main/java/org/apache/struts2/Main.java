@@ -44,7 +44,9 @@ import java.util.List;
  * <p>You can access the help information for these tools by simply running the jar without any arguments.</p>
  *
  * <!-- END SNIPPET: javadoc -->
+ * @deprecated
  */
+@Deprecated
 public class Main {
     public static void main(String[] args) {
         if (args.length == 0) {

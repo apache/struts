@@ -16,11 +16,17 @@
 
 package com.opensymphony.xwork2.validator.validators;
 
+import com.opensymphony.xwork2.ObjectFactory;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,9 +95,9 @@ public class RegexFieldValidator extends FieldValidatorSupport {
     private String regex;
     private String regexExpression;
     private Boolean caseSensitive = true;
-    private String caseSensitiveExpression = "";
+    private String caseSensitiveExpression = EMPTY_STRING;
     private Boolean trim = true;
-    private String trimExpression = "";
+    private String trimExpression = EMPTY_STRING;
 
     public void validate(Object object) throws ValidationException {
         String fieldName = getFieldName();
@@ -102,17 +108,30 @@ public class RegexFieldValidator extends FieldValidatorSupport {
         LOG.debug("Defined regexp as [{}]", regexToUse);
 
         if (value == null || regexToUse == null) {
+            LOG.debug("Either value is empty (please use a required validator) or regex is empty");
             return;
         }
 
-        // XW-375 - must be a string
-        if (!(value instanceof String)) {
-            return;
+        if (value.getClass().isArray()) {
+            Object[] values = (Object[]) value;
+            for (Object objValue: values) {
+                validateFieldValue(object, Objects.toString(objValue, EMPTY_STRING), regexToUse);
+            }
+        } else if (Collection.class.isAssignableFrom(value.getClass())) {
+            Collection values = (Collection) value;
+            for (Object objValue : values) {
+                validateFieldValue(object, Objects.toString(objValue, EMPTY_STRING), regexToUse);
+            }
+        } else {
+           validateFieldValue(object, Objects.toString(value, EMPTY_STRING), regexToUse);
         }
+    }
 
+    protected void validateFieldValue(Object object, String value, String regexToUse) {
         // string must not be empty
-        String str = ((String) value).trim();
+        String str = value.trim();
         if (str.length() == 0) {
+            LOG.debug("Value is empty, please use a required validator");
             return;
         }
 
@@ -124,12 +143,12 @@ public class RegexFieldValidator extends FieldValidatorSupport {
             pattern = Pattern.compile(regexToUse, Pattern.CASE_INSENSITIVE);
         }
 
-        String compare = (String) value;
-        if ( isTrimed() ) {
+        String compare = value;
+        if (isTrimed()) {
             compare = compare.trim();
         }
-        Matcher matcher = pattern.matcher( compare );
 
+        Matcher matcher = pattern.matcher(compare);
         if (!matcher.matches()) {
             addFieldError(fieldName, object);
         }

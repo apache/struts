@@ -1,16 +1,20 @@
 package com.opensymphony.xwork2.validator.validators;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public class ValidationAction {
 
     private Integer intRange;
     private Integer intMinValue;
     private Integer intMaxValue;
+    private Integer[] ints;
 
     private Short shortRange;
     private Short shortMinValue;
     private Short shortMaxValue;
+    private List<Short> shorts;
 
     private Long longRange;
     private Long longMinValue;
@@ -19,8 +23,11 @@ public class ValidationAction {
     private Date dateRange;
     private Date dateMinValue;
     private Date dateMaxValue;
+
     private String dateFormat;
     private String stringValue;
+    private String[] strings;
+    private Collection<String> stringCollection;
 
     public Integer getIntRange() {
         return intRange;
@@ -132,5 +139,37 @@ public class ValidationAction {
 
     public String getStringValue() {
         return stringValue;
+    }
+
+    public Integer[] getInts() {
+        return ints;
+    }
+
+    public void setInts(Integer[] ints) {
+        this.ints = ints;
+    }
+
+    public List<Short> getShorts() {
+        return shorts;
+    }
+
+    public void setShorts(List<Short> shorts) {
+        this.shorts = shorts;
+    }
+
+    public String[] getStrings() {
+        return strings;
+    }
+
+    public void setStrings(String[] strings) {
+        this.strings = strings;
+    }
+
+    public Collection<String> getStringCollection() {
+        return stringCollection;
+    }
+
+    public void setStringCollection(Collection<String> stringCollection) {
+        this.stringCollection = stringCollection;
     }
 }

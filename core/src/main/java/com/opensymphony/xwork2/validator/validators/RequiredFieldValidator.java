@@ -17,6 +17,9 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 
+import java.lang.reflect.Array;
+import java.util.Collection;
+
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -62,6 +65,10 @@ public class RequiredFieldValidator extends FieldValidatorSupport {
         Object value = this.getFieldValue(fieldName, object);
 
         if (value == null) {
+            addFieldError(fieldName, object);
+        } else if (value.getClass().isArray() && Array.getLength(value) == 0) {
+            addFieldError(fieldName, object);
+        } else if (Collection.class.isAssignableFrom(value.getClass()) && ((Collection) value).size() == 0) {
             addFieldError(fieldName, object);
         }
     }

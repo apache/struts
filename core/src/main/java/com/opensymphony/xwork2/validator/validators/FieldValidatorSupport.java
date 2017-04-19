@@ -17,16 +17,17 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.FieldValidator;
 
-
 /**
  * Base class for field validators.
  *
- * @author Jason Carreira
+ * You can access fieldName and its currentValue in a message using expression, e.g.
+ * "Wrong value ${currentValue} for ${fieldName}"
  */
 public abstract class FieldValidatorSupport extends ValidatorSupport implements FieldValidator {
 
-    private String fieldName;
-    private String type;
+    protected String fieldName;
+    protected String type;
+    protected Object currentValue;
 
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
@@ -44,5 +45,13 @@ public abstract class FieldValidatorSupport extends ValidatorSupport implements 
     @Override
     public String getValidatorType() {
         return type;
+    }
+
+    public Object getCurrentValue() {
+        return currentValue;
+    }
+
+    void setCurrentValue(Object currentValue) {
+        this.currentValue = currentValue;
     }
 }

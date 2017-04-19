@@ -21,6 +21,8 @@ import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -183,9 +185,61 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
         assertFalse(validator.getValidatorContext().hasFieldErrors());
     }
 
+    public void testArrayOfStringField() throws Exception {
+        MyTestPerson testPerson = new MyTestPerson();
+        testPerson.setFriends(new String[]{"Alice", "Matt"});
+
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        ActionContext.getContext().setValueStack(stack);
+
+        RegexFieldValidator validator = new RegexFieldValidator();
+        validator.setRegex("A([a-zA-Z]*)");
+        validator.setValidatorContext(new DummyValidatorContext(new Object(), tpf));
+        validator.setFieldName("friends");
+        validator.setValueStack(ActionContext.getContext().getValueStack());
+        validator.setDefaultMessage("Only names starting with A are allowed!");
+
+        validator.validate(testPerson);
+
+        assertTrue(validator.getValidatorContext().hasErrors());
+        assertFalse(validator.getValidatorContext().hasActionErrors());
+        assertFalse(validator.getValidatorContext().hasActionMessages());
+        assertTrue(validator.getValidatorContext().hasFieldErrors());
+        assertEquals(1, validator.getValidatorContext().getFieldErrors().size());
+        assertEquals(1, validator.getValidatorContext().getFieldErrors().get("friends").size());
+        assertEquals("Only names starting with A are allowed!", validator.getValidatorContext().getFieldErrors().get("friends").get(0));
+    }
+
+    public void testListOfStringField() throws Exception {
+        MyTestPerson testPerson = new MyTestPerson();
+        testPerson.setCars(Arrays.asList("Audi", "BMW"));
+
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        ActionContext.getContext().setValueStack(stack);
+
+        RegexFieldValidator validator = new RegexFieldValidator();
+        validator.setRegex("A([a-zA-Z]*)");
+        validator.setValidatorContext(new DummyValidatorContext(new Object(), tpf));
+        validator.setFieldName("cars");
+        validator.setValueStack(ActionContext.getContext().getValueStack());
+        validator.setDefaultMessage("Only cars starting with A are allowed!");
+
+        validator.validate(testPerson);
+
+        assertTrue(validator.getValidatorContext().hasErrors());
+        assertFalse(validator.getValidatorContext().hasActionErrors());
+        assertFalse(validator.getValidatorContext().hasActionMessages());
+        assertTrue(validator.getValidatorContext().hasFieldErrors());
+        assertEquals(1, validator.getValidatorContext().getFieldErrors().size());
+        assertEquals(1, validator.getValidatorContext().getFieldErrors().get("cars").size());
+        assertEquals("Only cars starting with A are allowed!", validator.getValidatorContext().getFieldErrors().get("cars").get(0));
+    }
+
     private class MyTestPerson {
         private String username;
         private int age;
+        private String[] friends;
+        private List cars;
 
         public String getUsername() {
             return username;
@@ -201,6 +255,22 @@ public class RegexFieldValidatorTest extends XWorkTestCase {
 
         public void setAge(int age) {
             this.age = age;
+        }
+
+        public String[] getFriends() {
+            return friends;
+        }
+
+        public void setFriends(String[] friends) {
+            this.friends = friends;
+        }
+
+        public List getCars() {
+            return cars;
+        }
+
+        public void setCars(List cars) {
+            this.cars = cars;
         }
     }
 

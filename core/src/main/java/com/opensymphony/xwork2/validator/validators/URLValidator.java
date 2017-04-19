@@ -20,6 +20,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -65,19 +67,46 @@ public class URLValidator extends FieldValidatorSupport {
     private Pattern urlPattern = Pattern.compile(DEFAULT_URL_REGEX, Pattern.CASE_INSENSITIVE);
 
     public void validate(Object object) throws ValidationException {
-        String fieldName = getFieldName();
-        Object value = this.getFieldValue(fieldName, object);
+        Object value = getFieldValue(fieldName, object);
 
-        // if there is no value - don't do comparison
-        // if a value is required, a required validator should be added to the field
-        if (value == null || value.toString().length() == 0) {
+        String stringValue = Objects.toString(value, EMPTY_STRING).trim();
+        if (stringValue.length() == 0) {
+            LOG.debug("Value for field {} is empty, won't ba validated, please use a required validator", fieldName);
             return;
         }
 
-        String stringValue = String.valueOf(value).trim();
+        if (value.getClass().isArray()) {
+            Object[] values = (Object[]) value;
+            for (Object objValue : values) {
+                LOG.debug("Validating element of array: {}", objValue);
+                validateValue(object, objValue);
+            }
+        } else if (Collection.class.isAssignableFrom(value.getClass())) {
+            Collection values = (Collection) value;
+            for (Object objValue : values) {
+                LOG.debug("Validating element of collection: {}", objValue);
+                validateValue(object, objValue);
+            }
+        } else {
+            LOG.debug("Validating field: {}", value);
+            validateValue(object, value);
+        }
+    }
 
-        if (!(value.getClass().equals(String.class)) || !getUrlPattern().matcher(stringValue).matches()) {
-            addFieldError(fieldName, object);
+    protected void validateValue(Object object, Object value) {
+        String stringValue = Objects.toString(value, EMPTY_STRING).trim();
+        if (stringValue.length() == 0) {
+            LOG.debug("Value for field {} is empty, won't ba validated, please use a required validator", fieldName);
+            return;
+        }
+
+        try {
+            setCurrentValue(value);
+            if (!(value.getClass().equals(String.class)) || !getUrlPattern().matcher(stringValue).matches()) {
+                addFieldError(fieldName, object);
+            }
+        } finally {
+            setCurrentValue(null);
         }
     }
 

@@ -148,9 +148,14 @@ public class RegexFieldValidator extends FieldValidatorSupport {
             compare = compare.trim();
         }
 
-        Matcher matcher = pattern.matcher(compare);
-        if (!matcher.matches()) {
-            addFieldError(fieldName, object);
+        try {
+            setCurrentValue(compare);
+            Matcher matcher = pattern.matcher(compare);
+            if (!matcher.matches()) {
+                addFieldError(fieldName, object);
+            }
+        } finally {
+            setCurrentValue(null);
         }
     }
 

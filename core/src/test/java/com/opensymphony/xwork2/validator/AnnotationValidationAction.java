@@ -3,6 +3,7 @@ package com.opensymphony.xwork2.validator;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.validator.annotations.ConditionalVisitorFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ConversionErrorFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.CreditCardValidator;
 import com.opensymphony.xwork2.validator.annotations.CustomValidator;
 import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
@@ -44,6 +45,8 @@ public class AnnotationValidationAction extends ActionSupport {
             fieldName = "foo", key = "double.key", message = "Foo is out of range!", shortCircuit = true,
             messageParams = {"one", "two", "three"})
     @EmailValidator(message = "Foo isn't a valid e-mail!", fieldName = "foo", key = "email.key",
+            messageParams = {"one", "two", "three"}, shortCircuit = true)
+    @CreditCardValidator(message = "Foo isn't a valid credit card!", fieldName = "foo", key = "creditCard.key",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @ExpressionValidator(expression = "true", message = "Is not true!", key = "expression.key",
             messageParams = {"one", "two", "three"}, shortCircuit = true)

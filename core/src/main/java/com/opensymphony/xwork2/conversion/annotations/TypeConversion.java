@@ -15,6 +15,8 @@
  */
 package com.opensymphony.xwork2.conversion.annotations;
 
+import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -175,8 +177,19 @@ public @interface TypeConversion {
      * Note: This can not be used with ConversionRule.KEY_PROPERTY!
      *
      * @return class of the TypeConverter to be used as converter
+     * @deprecated user {@link #converterClass()} instead
      */
+    @Deprecated
     String converter() default "";
+
+    /**
+     * The class of the TypeConverter to be used as converter.
+     *
+     * Note: This can not be used with ConversionRule.KEY_PROPERTY!
+     *
+     * @return class of the TypeConverter to be used as converter
+     */
+    Class<?> converterClass() default XWorkBasicConverter.class;
 
     /**
      * If used with ConversionRule.KEY_PROPERTY specify a value here!

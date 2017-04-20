@@ -79,9 +79,15 @@ import java.lang.annotation.Target;
  * </tr>
  * <tr>
  * <td>converter</td>
- * <td>either this or value</td>
+ * <td>DEPRECATED: either this or value</td>
  * <td>&nbsp;</td>
  * <td>The class name of the TypeConverter to be used as converter.</td>
+ * </tr>
+ * <tr>
+ * <td>converterClass</td>
+ * <td>either this or value</td>
+ * <td>&nbsp;</td>
+ * <td>The class of the TypeConverter to be used as converter. XWorkBasicConverter by default.</td>
  * </tr>
  * <tr>
  * <td>value</td>
@@ -108,27 +114,27 @@ import java.lang.annotation.Target;
  *
  *   private HashMap keyValues = null;
  *
- *   &#64;TypeConversion(type = ConversionType.APPLICATION, converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+ *   &#64;TypeConversion(type = ConversionType.APPLICATION)
  *   public void setConvertInt( String convertInt ) {
  *       this.convertInt = convertInt;
  *   }
  *
- *   &#64;TypeConversion(converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+ *   &#64;TypeConversion(converterClass = XWorkBasicConverter.class)
  *   public void setConvertDouble( String convertDouble ) {
  *       this.convertDouble = convertDouble;
  *   }
  *
- *   &#64;TypeConversion(rule = ConversionRule.COLLECTION, converter = "java.util.String")
+ *   &#64;TypeConversion(rule = ConversionRule.COLLECTION, converterClass = String.class)
  *   public void setUsers( List users ) {
  *       this.users = users;
  *   }
  *
- *   &#64;TypeConversion(rule = ConversionRule.MAP, converter = "java.math.BigInteger")
+ *   &#64;TypeConversion(rule = ConversionRule.MAP, converterClass = BigInteger.class)
  *   public void setKeyValues( HashMap keyValues ) {
  *       this.keyValues = keyValues;
  *   }
  *
- *   &#64;TypeConversion(type = ConversionType.APPLICATION, property = "java.util.Date", converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+ *   &#64;TypeConversion(type = ConversionType.APPLICATION, property = "java.util.Date", converterClass = XWorkBasicConverter.class)
  *   public String execute() throws Exception {
  *       return SUCCESS;
  *   }

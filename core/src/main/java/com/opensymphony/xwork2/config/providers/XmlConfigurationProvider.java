@@ -432,6 +432,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     protected void addAction(Element actionElement, PackageConfig.Builder packageContext) throws ConfigurationException {
         String name = actionElement.getAttribute("name");
         String className = actionElement.getAttribute("class");
+        String beanName = StringUtils.trimToNull(actionElement.getAttribute("bean"));
         //methodName should be null if it's not set
         String methodName = StringUtils.trimToNull(actionElement.getAttribute("method"));
         Location location = DomHelper.getLocationObject(actionElement);
@@ -471,6 +472,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         Set<String> allowedMethods = buildAllowedMethods(actionElement, packageContext);
 
         ActionConfig actionConfig = new ActionConfig.Builder(packageContext.getName(), name, className)
+                .beanName(beanName)
                 .methodName(methodName)
                 .addResultConfigs(results)
                 .addInterceptors(interceptorList)

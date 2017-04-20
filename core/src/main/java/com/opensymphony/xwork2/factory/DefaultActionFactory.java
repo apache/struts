@@ -19,7 +19,11 @@ public class DefaultActionFactory implements ActionFactory {
     }
 
     public Object buildAction(String actionName, String namespace, ActionConfig config, Map<String, Object> extraContext) throws Exception {
-        return objectFactory.buildBean(config.getClassName(), extraContext);
+        String beanName = config.getBeanName();
+        if(null == beanName) {
+            beanName = config.getClassName();
+        }
+        return objectFactory.buildBean(beanName, extraContext);
     }
 
 }

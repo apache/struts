@@ -99,4 +99,11 @@ public @interface Action {
      * @return The class name for the action.
      */
     String className() default DEFAULT_VALUE;
+
+    /**
+     * Allows actions to specify bean name.
+     *
+     * @return The bean name for the action.
+     */
+    String beanName() default DEFAULT_VALUE;
 }

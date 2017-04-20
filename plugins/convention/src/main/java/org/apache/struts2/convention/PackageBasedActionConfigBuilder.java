@@ -916,15 +916,20 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     protected void createActionConfig(PackageConfig.Builder pkgCfg, Class<?> actionClass, String actionName,
                                       String actionMethod, Action annotation, Set<String> allowedMethods) {
     	String className = actionClass.getName();
+        String beanName = null;
         if (annotation != null) {
             actionName = annotation.value() != null && annotation.value().equals(Action.DEFAULT_VALUE) ? actionName : annotation.value();
             actionName = StringUtils.contains(actionName, "/") && !slashesInActionNames ? StringUtils.substringAfterLast(actionName, "/") : actionName;
             if(!Action.DEFAULT_VALUE.equals(annotation.className())){
             	className = annotation.className();
             }
+            if(!Action.DEFAULT_VALUE.equals(annotation.beanName())){
+                beanName = StringUtils.trimToNull(annotation.beanName());
+            }
         }
 
         ActionConfig.Builder actionConfig = new ActionConfig.Builder(pkgCfg.getName(), actionName, className);
+        actionConfig.beanName(beanName);
         actionConfig.methodName(actionMethod);
 
         if (pkgCfg.isStrictMethodInvocation()) {

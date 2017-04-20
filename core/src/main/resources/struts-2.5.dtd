@@ -98,6 +98,7 @@
 <!ATTLIST action
     name CDATA #REQUIRED
     class CDATA #IMPLIED
+    bean CDATA #IMPLIED
     method CDATA #IMPLIED
     converter CDATA #IMPLIED
 >

@@ -22,6 +22,10 @@
         }
         sourceUrl += "&className=" + inv.getProxy().getConfig().getClassName();
 
+        String beanName = inv.getProxy().getConfig().getBeanName();
+        if(null != beanName)
+            sourceUrl += "&beanName=" + beanName;
+
         if (inv.getResult() != null && inv.getResult() instanceof StrutsResultSupport) {
             sourceUrl += "&page=" + mapping.getNamespace() + "/" + ((StrutsResultSupport) inv.getResult()).getLastFinalLocation();
         }

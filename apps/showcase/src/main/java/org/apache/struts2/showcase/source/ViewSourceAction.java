@@ -43,6 +43,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 
 	private String page;
 	private String className;
+	private String beanName;
 	private String config;
 
 	private List pageLines;
@@ -110,6 +111,15 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 	}
 
 	/**
+	 * @param beanName the beanName to set
+	 */
+	public void setBeanName(String beanName) {
+		if (beanName != null && beanName.trim().length() > 0) {
+			this.beanName = beanName;
+		}
+	}
+
+	/**
 	 * @param config the config to set
 	 */
 	public void setConfig(String config) {
@@ -161,6 +171,13 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 	 */
 	public String getClassName() {
 		return className;
+	}
+
+	/**
+	 * @return the beanName
+	 */
+	public String getBeanName() {
+		return beanName;
 	}
 
 	/**

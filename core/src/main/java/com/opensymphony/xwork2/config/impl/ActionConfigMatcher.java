@@ -112,6 +112,7 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
         }
 
         return new ActionConfig.Builder(pkgName, orig.getName(), className)
+                .beanName(orig.getBeanName())
                 .methodName(methodName)
                 .addParams(params)
                 .addResultConfigs(results)

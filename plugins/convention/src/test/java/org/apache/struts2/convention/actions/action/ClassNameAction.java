@@ -29,7 +29,7 @@ import org.apache.struts2.convention.annotation.Action;
  */
 public class ClassNameAction {
 
-    @Action(value = "action3", className = "someClassName")
+    @Action(value = "action3", className = "someClassName", beanName = "someBeanName")
     public String run1() {
         return null;
     }

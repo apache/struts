@@ -122,6 +122,19 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
         assertEquals(SimpleAction.class, action.getClass());
     }
 
+    public void testObtainActionBySpringNameKeepConfigClass() throws Exception {
+        sac.registerSingleton("simple-action-kcc", SimpleAction.class, new MutablePropertyValues());
+        SimpleAction bean = (SimpleAction) sac.getBean("simple-action-kcc");
+
+        ActionConfig actionConfig = new ActionConfig.Builder("fs", "jim", SimpleAction.class.getName())
+                .beanName("simple-action-kcc")
+                .build();
+        Object action = objectFactory.buildAction("", "", actionConfig, null);
+
+        assertEquals(SimpleAction.class, action.getClass());
+        assertEquals(bean, action);
+    }
+
     public void testObtainInterceptorBySpringName() throws Exception {
         sac.registerSingleton("timer-interceptor", TimerInterceptor.class, new MutablePropertyValues());
 
@@ -220,6 +233,25 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
 
         ActionConfig actionConfig = new ActionConfig.Builder("jim", "bob", "simple-action").build();
         SimpleAction simpleAction = (SimpleAction) objectFactory.buildBean(actionConfig.getClassName(), null);
+        objectFactory.autoWireBean(simpleAction);
+        assertEquals(simpleAction.getBean(), bean);
+    }
+
+    public void testSetAutowireStrategyKeepConfigClass() throws Exception {
+        assertEquals(objectFactory.getAutowireStrategy(), AutowireCapableBeanFactory.AUTOWIRE_BY_NAME);
+
+        objectFactory.setAutowireStrategy(AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE);
+
+        sac.getBeanFactory().registerSingleton("bean", new TestBean());
+        TestBean bean = (TestBean) sac.getBean("bean");
+
+        sac.registerPrototype("simple-action", SimpleAction.class, new MutablePropertyValues());
+
+        ActionConfig actionConfig = new ActionConfig.Builder("jim", "bob", SimpleAction.class.getName())
+                .beanName("simple-action")
+                .build();
+        SimpleAction simpleAction = (SimpleAction) objectFactory.buildAction("", "", actionConfig,
+                null);
         objectFactory.autoWireBean(simpleAction);
         assertEquals(simpleAction.getBean(), bean);
     }

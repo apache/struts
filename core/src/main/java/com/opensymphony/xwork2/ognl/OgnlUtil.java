@@ -450,9 +450,37 @@ public class OgnlUtil {
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
      */
     public void copy(final Object from, final Object to, final Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions) {
+        copy(from, to, context, exclusions, inclusions, null);
+    }
+
+    /**
+     * Copies the properties in the object "from" and sets them in the object "to"
+     * only setting properties defined in the given "editable" class (or interface)
+     * using specified type converter, or {@link com.opensymphony.xwork2.conversion.impl.XWorkConverter} if none
+     * is specified.
+     *
+     * @param from       the source object
+     * @param to         the target object
+     * @param context    the action context we're running under
+     * @param exclusions collection of method names to excluded from copying ( can be null)
+     * @param inclusions collection of method names to included copying  (can be null)
+     *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
+     * @param editable the class (or interface) to restrict property setting to
+     */
+    public void copy(final Object from, final Object to, final Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions, Class<?> editable) {
         if (from == null || to == null) {
             LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
             return;
+        }
+
+        Class<?> toClass = to.getClass();
+        if (editable != null) {
+            if (!editable.isInstance(to)) {
+                LOG.warn("Target class [" + to.getClass().getName() +
+                        "] not assignable to Editable class [" + editable.getName() + "]");
+                return;
+            }
+            toClass = editable;
         }
 
         TypeConverter converter = getTypeConverterFromContext(context);
@@ -466,7 +494,7 @@ public class OgnlUtil {
 
         try {
             fromPds = getPropertyDescriptors(from);
-            toPds = getPropertyDescriptors(to);
+            toPds = getPropertyDescriptors(toClass);
         } catch (IntrospectionException e) {
             LOG.error("An error occurred", e);
             return;

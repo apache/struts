@@ -82,12 +82,12 @@ public class AnnotationUser implements AnnotationUserMarker {
     }
 
     @KeyProperty( value = "name")
-    @TypeConversion( converter = "java.lang.String", rule = ConversionRule.COLLECTION)
+    @TypeConversion(converterClass = String.class, rule = ConversionRule.COLLECTION)
     public List getList() {
         return list;
     }
 
-    @TypeConversion( converter = "java.lang.String", rule = ConversionRule.MAP)
+    @TypeConversion(converterClass = String.class, rule = ConversionRule.MAP)
     public void setMap(Map m) {
         map = m;
     }

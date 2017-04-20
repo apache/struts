@@ -11,10 +11,10 @@ import java.util.List;
 	conversions={
 		@TypeConversion(type=ConversionType.APPLICATION,
 						key="com.opensymphony.xwork2.test.annotations.Address",
-						converter="com.opensymphony.xwork2.test.annotations.AddressTypeConverter"),
+						converterClass=AddressTypeConverter.class),
 		@TypeConversion(type=ConversionType.APPLICATION,
 						key="com.opensymphony.xwork2.test.annotations.Person",
-						converter="com.opensymphony.xwork2.test.annotations.PersonTypeConverter")})
+						converterClass=PersonTypeConverter.class)})
 public class PersonAction {
 	List<Person> users;
 	private List<Address> address;

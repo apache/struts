@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
 import com.opensymphony.xwork2.conversion.annotations.ConversionType;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class ConversionTestAction implements Action {
         return convertInt;
     }
 
-    @TypeConversion(type = ConversionType.APPLICATION, converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+    @TypeConversion(type = ConversionType.APPLICATION)
     public void setConvertInt( String convertInt ) {
         this.convertInt = convertInt;
     }
@@ -67,7 +68,7 @@ public class ConversionTestAction implements Action {
         return users;
     }
 
-    @TypeConversion(rule = ConversionRule.COLLECTION, converter = "java.lang.String")
+    @TypeConversion(rule = ConversionRule.COLLECTION, converterClass = String.class)
     public void setUsers( List users ) {
         this.users = users;
     }
@@ -76,7 +77,7 @@ public class ConversionTestAction implements Action {
         return keyValues;
     }
 
-    @TypeConversion(rule = ConversionRule.MAP, converter = "java.math.BigInteger")
+    @TypeConversion(rule = ConversionRule.MAP, converterClass = BigInteger.class)
     public void setKeyValues( HashMap keyValues ) {
         this.keyValues = keyValues;
     }
@@ -90,7 +91,7 @@ public class ConversionTestAction implements Action {
      *                   Application level exceptions should be handled by returning
      *                   an error value, such as Action.ERROR.
      */
-    @TypeConversion(type = ConversionType.APPLICATION, key = "java.util.Date", converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+    @TypeConversion(type = ConversionType.APPLICATION, key = "java.util.Date")
     public String execute() throws Exception {
         return SUCCESS;
     }

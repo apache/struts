@@ -487,9 +487,9 @@ public class XWorkConverter extends DefaultTypeConverter {
                     }
                     if (LOG.isDebugEnabled()) {
                         if (StringUtils.isEmpty(tc.key())) {
-                            LOG.debug("WARNING! key of @TypeConversion [{}] applied to [{}] is empty!", tc.converter(), clazz.getName());
+                            LOG.debug("WARNING! key of @TypeConversion [{}/{}] applied to [{}] is empty!", tc.converter(), tc.converterClass(), clazz.getName());
                         } else {
-                            LOG.debug("TypeConversion [{}] with key: [{}]", tc.converter(), tc.key());
+                            LOG.debug("TypeConversion [{}/{}] with key: [{}]", tc.converter(), tc.converterClass(), tc.key());
                         }
                     }
                     annotationProcessor.process(mapping, tc, tc.key());

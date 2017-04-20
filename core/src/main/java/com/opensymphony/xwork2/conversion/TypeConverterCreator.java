@@ -14,4 +14,13 @@ public interface TypeConverterCreator {
      */
     TypeConverter createTypeConverter(String className) throws Exception;
 
+    /**
+     * Creates {@link TypeConverter} from given class
+     *
+     * @param clazz convert class
+     * @return instance of {@link TypeConverter}
+     * @throws Exception when cannot create/cast to {@link TypeConverter}
+     */
+    TypeConverter createTypeConverter(Class<?> clazz) throws Exception;
+
 }

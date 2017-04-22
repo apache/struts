@@ -50,9 +50,7 @@ public class AnnotatedCat {
         this.kittens = kittens;
     }
 
-    @TypeConversion(
-            key = "kittens", converter = "com.opensymphony.xwork2.util.Cat"
-    )
+    @TypeConversion(key = "kittens", converterClass = Cat.class)
     public List getKittens() {
         return kittens;
     }

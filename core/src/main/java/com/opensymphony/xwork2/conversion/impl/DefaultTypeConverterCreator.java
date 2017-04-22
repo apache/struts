@@ -19,8 +19,16 @@ public class DefaultTypeConverterCreator implements TypeConverterCreator {
     }
 
     public TypeConverter createTypeConverter(String className) throws Exception {
-        // type converters are used across users
         Object obj = objectFactory.buildBean(className, null);
+        return getTypeConverter(obj);
+    }
+
+    public TypeConverter createTypeConverter(Class<?> clazz) throws Exception {
+        Object obj = objectFactory.buildBean(clazz, null);
+        return getTypeConverter(obj);
+    }
+
+    protected TypeConverter getTypeConverter(Object obj) {
         if (obj instanceof TypeConverter) {
             return (TypeConverter) obj;
 

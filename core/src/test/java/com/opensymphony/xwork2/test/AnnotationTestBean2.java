@@ -18,6 +18,7 @@ package com.opensymphony.xwork2.test;
 import com.opensymphony.xwork2.AnnotatedTestBean;
 import com.opensymphony.xwork2.conversion.annotations.Conversion;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
+import com.opensymphony.xwork2.conversion.impl.FooBarConverter;
 import com.opensymphony.xwork2.util.Bar;
 import com.opensymphony.xwork2.util.Cat;
 
@@ -56,9 +57,7 @@ public class AnnotationTestBean2 extends AnnotatedTestBean implements Annotation
         return cat;
     }
 
-    @TypeConversion(
-            key = "cat", converter = "com.opensymphony.xwork2.conversion.impl.FooBarConverter"
-    )
+    @TypeConversion(key = "cat", converterClass = FooBarConverter.class)
     public void setCat(Cat cat) {
         this.cat = cat;
     }

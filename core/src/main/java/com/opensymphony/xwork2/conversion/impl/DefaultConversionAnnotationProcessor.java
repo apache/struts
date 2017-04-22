@@ -8,6 +8,7 @@ import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
 import com.opensymphony.xwork2.conversion.annotations.ConversionType;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,28 +35,43 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
     }
 
     public void process(Map<String, Object> mapping, TypeConversion tc, String key) {
-        LOG.debug("TypeConversion [{}] with key: [{}]", tc.converter(), key);
+        LOG.debug("TypeConversion [{}/{}] with key: [{}]", tc.converter(), tc.converterClass(), key);
         if (key == null) {
             return;
         }
         try {
             if (tc.type() == ConversionType.APPLICATION) {
-                converterHolder.addDefaultMapping(key, converterCreator.createTypeConverter(tc.converter()));
+                if (StringUtils.isNoneEmpty(tc.converter())) {
+                    converterHolder.addDefaultMapping(key, converterCreator.createTypeConverter(tc.converter()));
+                } else {
+                    converterHolder.addDefaultMapping(key, converterCreator.createTypeConverter(tc.converterClass()));
+                }
             } else {
                 if (tc.rule() == ConversionRule.KEY_PROPERTY || tc.rule() == ConversionRule.CREATE_IF_NULL) {
                     mapping.put(key, tc.value());
                 }
                 //for properties of classes
                 else if (tc.rule() != ConversionRule.ELEMENT || tc.rule() == ConversionRule.KEY || tc.rule() == ConversionRule.COLLECTION) {
-                    mapping.put(key, converterCreator.createTypeConverter(tc.converter()));
+                    if (StringUtils.isNoneEmpty(tc.converter())) {
+                        mapping.put(key, converterCreator.createTypeConverter(tc.converter()));
+                    } else {
+                        mapping.put(key, converterCreator.createTypeConverter(tc.converterClass()));
+                    }
                 }
                 //for keys of Maps
                 else if (tc.rule() == ConversionRule.KEY) {
-                    Class converterClass = Thread.currentThread().getContextClassLoader().loadClass(tc.converter());
+                    Class<?> converterClass;
+                    if (StringUtils.isNoneEmpty(tc.converter())) {
+                        converterClass = Thread.currentThread().getContextClassLoader().loadClass(tc.converter());
+                        //check if the converter is a type converter if it is one
+                        //then just put it in the map as is. Otherwise
+                        //put a value in for the type converter of the class
+                    } else {
+                        converterClass = tc.converterClass();
+                    }
+
                     LOG.debug("Converter class: [{}]", converterClass);
-                    //check if the converter is a type converter if it is one
-                    //then just put it in the map as is. Otherwise
-                    //put a value in for the type converter of the class
+
                     if (converterClass.isAssignableFrom(TypeConverter.class)) {
                         mapping.put(key, converterCreator.createTypeConverter(tc.converter()));
                     } else {
@@ -65,7 +81,11 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
                 }
                 //elements(values) of maps / lists
                 else {
-                    mapping.put(key, Thread.currentThread().getContextClassLoader().loadClass(tc.converter()));
+                    if (StringUtils.isNoneEmpty(tc.converter())) {
+                        mapping.put(key, Thread.currentThread().getContextClassLoader().loadClass(tc.converter()));
+                    } else {
+                        mapping.put(key, tc.converterClass());
+                    }
                 }
             }
         } catch (Exception e) {

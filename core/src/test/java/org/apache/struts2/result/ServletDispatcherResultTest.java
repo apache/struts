@@ -33,6 +33,7 @@ import ognl.Ognl;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
@@ -148,6 +149,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
 
         assertTrue(mockActionInvocation.getInvocationContext().getParameters().contains("bar"));
         assertEquals("1", mockActionInvocation.getInvocationContext().getParameters().get("bar").getValue());
+        assertEquals("1", ((HttpParameters) mockActionInvocation.getInvocationContext().getContextMap().get("parameters")).get("bar").getValue());
         dispatcherMock.verify();
         requestMock.verify();
         dispatcherMock.verify();

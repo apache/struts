@@ -35,9 +35,9 @@
     function validateForm_doubleValidationAction() {
         var getFieldValue = function(field) {
             var type = field.type ? field.type : field[0].type;
-            if(type == 'select-one' || type == 'select-multiple') {
-                return (field.selectedIndex == -1 ? "" : field.options[field.selectedIndex].value);
-            } else if(type == 'checkbox' || type == 'radio') {
+            if(type === 'select-one' || type === 'select-multiple') {
+                return (field.selectedIndex === -1 ? "" : field.options[field.selectedIndex].value);
+            } else if(type === 'checkbox' || type === 'radio') {
                 if(!field.length) {
                     field=[field];
                 }
@@ -61,7 +61,7 @@
             field = form.elements['myUpDownSelectTag'];
             var error = "bar must be between 6000.1 and 10000.1.";
             var fieldValue = getFieldValue(field);
-            if(continueValidation && fieldValue != null) {
+            if(continueValidation && fieldValue !== null) {
                 var value = parseFloat(fieldValue);
                 if(value < 6000.1 || value > 10000.1 || false || false) {
                     addError(field, error);

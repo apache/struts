@@ -167,6 +167,8 @@ public @interface Validations {
 
     EmailValidator[] emails() default {};
 
+    CreditCardValidator[] creditCards() default {};
+
     FieldExpressionValidator[] fieldExpressions() default {};
 
     IntRangeFieldValidator[] intRangeFields() default {};

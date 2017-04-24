@@ -17,6 +17,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.validators.ConditionalVisitorFieldValidator;
 import com.opensymphony.xwork2.validator.validators.ConversionErrorFieldValidator;
+import com.opensymphony.xwork2.validator.validators.CreditCardValidator;
 import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.EmailValidator;
@@ -50,7 +51,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 16);
+        assertEquals(validators.size(), 17);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -89,6 +90,8 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateDoubleRangeFieldValidator((DoubleRangeFieldValidator) validator);
         } else if (validator.getValidatorType().equals("email")) {
             validateEmailValidator((EmailValidator) validator);
+        } else if (validator.getValidatorType().equals("creditcard")) {
+            validateCreditCardValidator((CreditCardValidator) validator);
         } else if (validator.getValidatorType().equals("expression")) {
             validateExpressionValidator((ExpressionValidator) validator);
         } else if (validator.getValidatorType().equals("fieldexpression")) {
@@ -197,6 +200,17 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         assertEquals(EmailValidator.EMAIL_ADDRESS_PATTERN, validator.getRegex());
         assertEquals("Foo isn't a valid e-mail!", validator.getDefaultMessage());
         assertEquals("email.key", validator.getMessageKey());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(false, validator.isCaseSensitive());
+        assertEquals(true, validator.isTrimed());
+    }
+
+    private void validateCreditCardValidator(CreditCardValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals(CreditCardValidator.CREDIT_CARD_PATTERN, validator.getRegex());
+        assertEquals("Foo isn't a valid credit card!", validator.getDefaultMessage());
+        assertEquals("creditCard.key", validator.getMessageKey());
         assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
         assertEquals(true, validator.isShortCircuit());
         assertEquals(false, validator.isCaseSensitive());

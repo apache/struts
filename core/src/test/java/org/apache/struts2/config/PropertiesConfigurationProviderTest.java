@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import junit.framework.TestCase;
+import org.apache.commons.lang3.LocaleUtils;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.Locale;
@@ -41,7 +42,7 @@ public class PropertiesConfigurationProviderTest extends TestCase {
 
         ContainerBuilder builder = new ContainerBuilder();
         builder.constant("foo", "bar");
-        builder.constant("struts.locale", "DE_de");
+        builder.constant("struts.locale", "de_DE");
 
         PropertiesConfigurationProvider prov = new PropertiesConfigurationProvider();
         prov.register(builder, new LocatableProperties());
@@ -49,7 +50,7 @@ public class PropertiesConfigurationProviderTest extends TestCase {
         Container container = builder.create(true);
 
         String localeStr = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
-        Locale locale = DefaultLocalizedTextProvider.localeFromString(localeStr, Locale.FRANCE);
+        Locale locale = LocaleUtils.toLocale(localeStr);
 
         assertNotNull(locale);
         assertEquals("DE", locale.getCountry());
@@ -68,11 +69,8 @@ public class PropertiesConfigurationProviderTest extends TestCase {
         Container container = builder.create(true);
 
         String localeStr = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
-        Locale locale = DefaultLocalizedTextProvider.localeFromString(localeStr, Locale.getDefault());
 
-        assertNotNull(locale);
-        Locale vmLocale = Locale.getDefault();
-        assertEquals(locale, vmLocale);
+        assertNull(localeStr);
     }
 
     public void testDefaultSettings() throws Exception {

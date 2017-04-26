@@ -152,7 +152,10 @@ public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
      * @param localeStr     The locale String to parse.
      * @param defaultLocale The locale to use if localeStr is <tt>null</tt>.
      * @return requested Locale
+     *
+     * @deprecated please use {@link org.apache.commons.lang3.LocaleUtils#toLocale(String)}
      */
+    @Deprecated
     public static Locale localeFromString(String localeStr, Locale defaultLocale) {
         if ((localeStr == null) || (localeStr.trim().length() == 0) || ("_".equals(localeStr))) {
             if (defaultLocale != null) {

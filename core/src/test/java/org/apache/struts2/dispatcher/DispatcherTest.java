@@ -102,7 +102,6 @@ public class DispatcherTest extends StrutsInternalTestCase {
         Mock mock = new Mock(HttpServletRequest.class);
         mock.expectAndReturn("getCharacterEncoding", "utf-8");
         mock.expectAndReturn("getHeader", "X-Requested-With", "");
-        mock.expectAndReturn("getLocale", Locale.getDefault());
         mock.expectAndReturn("getCharacterEncoding", "utf-8");
         HttpServletRequest req = (HttpServletRequest) mock.proxy();
         HttpServletResponse res = new MockHttpServletResponse();

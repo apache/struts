@@ -39,10 +39,12 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
+import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -672,14 +674,7 @@ public class Dispatcher {
         extraContext.put(ActionContext.SESSION, sessionMap);
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
-        Locale locale;
-        if (defaultLocale != null) {
-            locale = DefaultLocalizedTextProvider.localeFromString(defaultLocale, request.getLocale());
-        } else {
-            locale = request.getLocale();
-        }
-
-        extraContext.put(ActionContext.LOCALE, locale);
+        extraContext.put(ActionContext.LOCALE, getLocale(request));
 
         extraContext.put(StrutsStatics.HTTP_REQUEST, request);
         extraContext.put(StrutsStatics.HTTP_RESPONSE, response);
@@ -695,6 +690,22 @@ public class Dispatcher {
         extraContext.put("attr", attrMap);
 
         return extraContext;
+    }
+
+    protected Locale getLocale(HttpServletRequest request) {
+        Locale locale;
+        if (defaultLocale != null) {
+            try {
+                locale = LocaleUtils.toLocale(defaultLocale);
+            } catch (IllegalArgumentException e) {
+                LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, defaulting to request locale [{}]",
+                                defaultLocale, request.getLocale()), e);
+                locale = request.getLocale();
+            }
+        } else {
+            locale = request.getLocale();
+        }
+        return locale;
     }
 
     /**
@@ -754,10 +765,7 @@ public class Dispatcher {
             encoding = "UTF-8";
         }
 
-        Locale locale = null;
-        if (defaultLocale != null) {
-            locale = DefaultLocalizedTextProvider.localeFromString(defaultLocale, request.getLocale());
-        }
+        Locale locale = getLocale(request);
 
         if (encoding != null) {
             applyEncoding(request, encoding);

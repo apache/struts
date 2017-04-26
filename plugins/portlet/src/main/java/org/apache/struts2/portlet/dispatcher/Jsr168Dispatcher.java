@@ -26,10 +26,11 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
+import org.apache.commons.lang3.LocaleUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
@@ -393,14 +394,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         extraContext.put(ActionContext.SESSION, sessionMap);
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
-        String defaultLocale = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
-        Locale locale;
-        if (defaultLocale != null) {
-            locale = DefaultLocalizedTextProvider.localeFromString(defaultLocale, request.getLocale());
-        } else {
-            locale = request.getLocale();
-        }
-        extraContext.put(ActionContext.LOCALE, locale);
+        extraContext.put(ActionContext.LOCALE, getLocale(request));
 
         extraContext.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, getPortletContext());
         extraContext.put(REQUEST, request);
@@ -422,6 +416,23 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         extraContext.put("attr", attrMap);
 
         return extraContext;
+    }
+
+    protected Locale getLocale(PortletRequest request) {
+        String defaultLocale = container.getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
+        Locale locale;
+        if (defaultLocale != null) {
+            try {
+                locale = LocaleUtils.toLocale(defaultLocale);
+            } catch (IllegalArgumentException e) {
+                LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, defaulting to request locale [{}]",
+                        defaultLocale, request.getLocale()), e);
+                locale = request.getLocale();
+            }
+        } else {
+            locale = request.getLocale();
+        }
+        return locale;
     }
 
     /**

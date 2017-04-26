@@ -20,11 +20,12 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
+abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     private static final Logger LOG = LogManager.getLogger(AbstractLocalizedTextProvider.class);
 
@@ -302,6 +303,26 @@ public abstract class AbstractLocalizedTextProvider implements LocalizedTextProv
     }
 
     /**
+     * Determines if we found the text in the bundles.
+     *
+     * @param result the result so far
+     * @return <tt>true</tt> if we could <b>not</b> find the text, <tt>false</tt> if the text was found (=success).
+     */
+    protected boolean unableToFindTextForKey(GetDefaultMessageReturnArg result) {
+        if (result == null || result.message == null) {
+            return true;
+        }
+
+        // did we find it in the bundle, then no problem?
+        if (result.foundInBundle) {
+            return false;
+        }
+
+        // not found in bundle
+        return true;
+    }
+
+    /**
      * Creates a key to used for lookup/storing in the bundle misses cache.
      *
      * @param prefix      the prefix for the returning String - it is supposed to be the ClassLoader hash code.
@@ -311,6 +332,128 @@ public abstract class AbstractLocalizedTextProvider implements LocalizedTextProv
      */
     private String createMissesKey(String prefix, String aBundleName, Locale locale) {
         return prefix + aBundleName + "_" + locale.toString();
+    }
+
+    /**
+     * @return the default message.
+     */
+    protected GetDefaultMessageReturnArg getDefaultMessage(String key, Locale locale, ValueStack valueStack, Object[] args,
+                                                                String defaultMessage) {
+        GetDefaultMessageReturnArg result = null;
+        boolean found = true;
+
+        if (key != null) {
+            String message = findDefaultText(key, locale);
+
+            if (message == null) {
+                message = defaultMessage;
+                found = false; // not found in bundles
+            }
+
+            // defaultMessage may be null
+            if (message != null) {
+                MessageFormat mf = buildMessageFormat(TextParseUtil.translateVariables(message, valueStack), locale);
+
+                String msg = formatWithNullDetection(mf, args);
+                result = new GetDefaultMessageReturnArg(msg, found);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * @return the message from the named resource bundle.
+     */
+    protected String getMessage(String bundleName, Locale locale, String key, ValueStack valueStack, Object[] args) {
+        ResourceBundle bundle = findResourceBundle(bundleName, locale);
+        if (bundle == null) {
+            return null;
+        }
+        if (valueStack != null)
+            reloadBundles(valueStack.getContext());
+        try {
+        	String message = bundle.getString(key);
+        	if (valueStack != null)
+        		message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
+            MessageFormat mf = buildMessageFormat(message, locale);
+            return formatWithNullDetection(mf, args);
+        } catch (MissingResourceException e) {
+            if (devMode) {
+                LOG.warn("Missing key [{}] in bundle [{}]!", key, bundleName);
+            } else {
+                LOG.debug("Missing key [{}] in bundle [{}]!", key, bundleName);
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Traverse up class hierarchy looking for message.  Looks at class, then implemented interface,
+     * before going up hierarchy.
+     *
+     * @return the message
+     */
+    protected String findMessage(Class clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
+                                      ValueStack valueStack) {
+        if (checked == null) {
+            checked = new TreeSet<>();
+        } else if (checked.contains(clazz.getName())) {
+            return null;
+        }
+
+        // look in properties of this class
+        String msg = getMessage(clazz.getName(), locale, key, valueStack, args);
+
+        if (msg != null) {
+            return msg;
+        }
+
+        if (indexedKey != null) {
+            msg = getMessage(clazz.getName(), locale, indexedKey, valueStack, args);
+
+            if (msg != null) {
+                return msg;
+            }
+        }
+
+        // look in properties of implemented interfaces
+        Class[] interfaces = clazz.getInterfaces();
+
+        for (Class anInterface : interfaces) {
+            msg = getMessage(anInterface.getName(), locale, key, valueStack, args);
+
+            if (msg != null) {
+                return msg;
+            }
+
+            if (indexedKey != null) {
+                msg = getMessage(anInterface.getName(), locale, indexedKey, valueStack, args);
+
+                if (msg != null) {
+                    return msg;
+                }
+            }
+        }
+
+        // traverse up hierarchy
+        if (clazz.isInterface()) {
+            interfaces = clazz.getInterfaces();
+
+            for (Class anInterface : interfaces) {
+                msg = findMessage(anInterface, key, indexedKey, locale, args, checked, valueStack);
+
+                if (msg != null) {
+                    return msg;
+                }
+            }
+        } else {
+            if (!clazz.equals(Object.class) && !clazz.isPrimitive()) {
+                return findMessage(clazz.getSuperclass(), key, indexedKey, locale, args, checked, valueStack);
+            }
+        }
+
+        return null;
     }
 
     static class MessageFormatKey {

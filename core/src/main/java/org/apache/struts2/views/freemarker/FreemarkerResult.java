@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -48,57 +46,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
 
-
 /**
- * <!-- START SNIPPET: description -->
- *
  * Renders a view using the Freemarker template engine.
- * <p>
- * The FreemarkarManager class configures the template loaders so that the
- * template location can be either
- * </p>
- *
- * <ul>
- *
- * <li>relative to the web root folder. eg <code>/WEB-INF/views/home.ftl</code>
- * </li>
- *
- * <li>a classpath resuorce. eg <code>/com/company/web/views/home.ftl</code></li>
- *
- * </ul>
- *
- * <!-- END SNIPPET: description -->
- *
- * <b>This result type takes the following parameters:</b>
- *
- * <!-- START SNIPPET: params -->
- *
- * <ul>
- *
- * <li><b>location (default)</b> - the location of the template to process.</li>
- *
- * <li><b>parse</b> - true by default. If set to false, the location param will
- * not be parsed for Ognl expressions.</li>
- *
- * <li><b>contentType</b> - defaults to "text/html" unless specified.</li>
- * 
- * <li><b>writeIfCompleted</b> - false by default, write to stream only if there isn't any error 
- * processing the template. Setting template_exception_handler=rethrow in freemarker.properties
- * will have the same effect.</li>
- *
- * </ul>
- *
- * <!-- END SNIPPET: params -->
- *
- * <b>Example:</b>
- *
- * <pre>
- * <!-- START SNIPPET: example -->
- *
- * &lt;result name="success" type="freemarker"&gt;foo.ftl&lt;/result&gt;
- *
- * <!-- END SNIPPET: example -->
- * </pre>
  */
 public class FreemarkerResult extends StrutsResultSupport {
 

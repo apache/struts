@@ -238,6 +238,12 @@
             <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor" />
             <interceptor name="annotationWorkflow" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
             <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor" />
+            <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor" />
+
+            <!-- Empty stack - performs no operations -->
+            <interceptor-stack name="emptyStack">
+                <interceptor-ref name="noop"/>
+            </interceptor-stack>
 
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">

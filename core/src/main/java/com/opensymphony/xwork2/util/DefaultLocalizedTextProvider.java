@@ -592,7 +592,7 @@ public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
      * @param result the result so far
      * @return <tt>true</tt> if we could <b>not</b> find the text, <tt>false</tt> if the text was found (=success).
      */
-    private static boolean unableToFindTextForKey(GetDefaultMessageReturnArg result) {
+    private boolean unableToFindTextForKey(GetDefaultMessageReturnArg result) {
         if (result == null || result.message == null) {
             return true;
         }
@@ -887,7 +887,7 @@ public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
     }
 
 
-    private static void clearTomcatCache() {
+    private void clearTomcatCache() {
         ClassLoader loader = getCurrentThreadContextClassLoader();
         // no need for compilation here.
         Class cl = loader.getClass();
@@ -913,7 +913,7 @@ public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
     }
 
 
-    private static void clearMap(Class cl, Object obj, String name)
+    private void clearMap(Class cl, Object obj, String name)
             throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
         Field field = cl.getDeclaredField(name);

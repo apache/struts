@@ -48,9 +48,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Provides support for localization in the framework, it can be used to read only default bundles,
  * or it can search the class hierarchy to find proper bundles.
  */
-public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
+public class StrutsLocalizedTextProvider implements LocalizedTextProvider {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultLocalizedTextProvider.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsLocalizedTextProvider.class);
 
     public static final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
     public static final String STRUTS_MESSAGES_BUNDLE = "org/apache/struts2/struts-messages";
@@ -79,7 +79,7 @@ public class DefaultLocalizedTextProvider implements LocalizedTextProvider {
         // no-op
     }
 
-    public DefaultLocalizedTextProvider() {
+    public StrutsLocalizedTextProvider() {
 
         addDefaultResourceBundle(XWORK_MESSAGES_BUNDLE);
         addDefaultResourceBundle(STRUTS_MESSAGES_BUNDLE);

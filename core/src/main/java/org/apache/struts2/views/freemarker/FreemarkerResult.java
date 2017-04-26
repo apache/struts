@@ -112,6 +112,8 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected FreemarkerManager freemarkerManager;
     private Writer writer;
     private boolean writeIfCompleted = false;
+    private String useBufferedWriter;
+
     /*
      * Struts results are constructed for each result execution
      *
@@ -194,11 +196,18 @@ public class FreemarkerResult extends StrutsResultSupport {
         // Give subclasses a chance to hook into preprocessing
         if (preTemplateProcess(template, model)) {
             try {
+                final boolean willUseBufferedWriter;
+                if (useBufferedWriter != null) {
+                    willUseBufferedWriter = Boolean.parseBoolean(useBufferedWriter);
+                } else {
+                    willUseBufferedWriter = isWriteIfCompleted() || template.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER;
+                }
+
                 // Process the template
                 Writer writer = getWriter();
-                if (isWriteIfCompleted() || configuration.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER) {
+                if (willUseBufferedWriter){
                     CharArrayWriter parentCharArrayWriter = (CharArrayWriter) req.getAttribute(PARENT_TEMPLATE_WRITER);
-                    boolean isTopTemplate = false;
+                    boolean isTopTemplate;
                     if (isTopTemplate = (parentCharArrayWriter == null)) {
                         //this is the top template
                         parentCharArrayWriter = new CharArrayWriter();
@@ -213,18 +222,13 @@ public class FreemarkerResult extends StrutsResultSupport {
                             parentCharArrayWriter.flush();
                             parentCharArrayWriter.writeTo(writer);
                         }
-                    } catch (TemplateException e) {
+                    } catch (TemplateException | IOException e) {
                         if (LOG.isErrorEnabled()) {
                             LOG.error("Error processing Freemarker result!", e);
                         }
                         throw e;
-                    } catch (IOException e) {
-                        if (LOG.isErrorEnabled()){
-                            LOG.error("Error processing Freemarker result!", e);
-                        }
-                        throw e;
                     } finally {
-                        if (isTopTemplate && parentCharArrayWriter != null) {
+                        if (isTopTemplate) {
                             req.removeAttribute(PARENT_TEMPLATE_WRITER);
                             parentCharArrayWriter.close();
                         }

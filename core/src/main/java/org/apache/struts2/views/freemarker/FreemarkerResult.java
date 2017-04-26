@@ -147,7 +147,7 @@ public class FreemarkerResult extends StrutsResultSupport {
             try {
                 final boolean willUseBufferedWriter;
                 if (useBufferedWriter != null) {
-                    willUseBufferedWriter = Boolean.parseBoolean(useBufferedWriter);
+                    willUseBufferedWriter = isUseBufferedWriter();
                 } else {
                     willUseBufferedWriter = isWriteIfCompleted() || template.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER;
                 }
@@ -369,5 +369,16 @@ public class FreemarkerResult extends StrutsResultSupport {
      */
     public void setWriteIfCompleted(boolean writeIfCompleted) {
         this.writeIfCompleted = writeIfCompleted;
+    }
+
+    public boolean isUseBufferedWriter() {
+        return useBufferedWriter != null && Boolean.parseBoolean(useBufferedWriter);
+    }
+
+    /**
+     * @param useBufferedWriter template is processed and flushed according to freemarker library policies
+     */
+    public void setUseBufferedWriter(String useBufferedWriter) {
+        this.useBufferedWriter = useBufferedWriter;
     }
 }

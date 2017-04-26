@@ -23,51 +23,31 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.StrutsConstants;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 /**
  * Provides support for localization in the framework, it can be used to read only default bundles,
  * or it can search the class hierarchy to find proper bundles.
  */
-public class StrutsLocalizedTextProvider implements LocalizedTextProvider {
+public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
     private static final Logger LOG = LogManager.getLogger(StrutsLocalizedTextProvider.class);
-
-    public static final String XWORK_MESSAGES_BUNDLE = "com/opensymphony/xwork2/xwork-messages";
-    public static final String STRUTS_MESSAGES_BUNDLE = "org/apache/struts2/struts-messages";
-
-    private static final String TOMCAT_RESOURCE_ENTRIES_FIELD = "resourceEntries";
-
-    private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
-
-    private boolean reloadBundles = false;
-    private boolean devMode = false;
-
-    private final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
-    private final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
-    private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
-    private final Set<String> missingBundles = Collections.synchronizedSet(new HashSet<String>());
-
-    private final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextUtil.reloaded";
 
     /**
      * Clears the internal list of resource bundles.
@@ -80,24 +60,8 @@ public class StrutsLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     public StrutsLocalizedTextProvider() {
-
         addDefaultResourceBundle(XWORK_MESSAGES_BUNDLE);
         addDefaultResourceBundle(STRUTS_MESSAGES_BUNDLE);
-    }
-
-    /**
-     * Should resorce bundles be reloaded.
-     *
-     * @param reloadBundles reload bundles?
-     */
-    @Inject(value = StrutsConstants.STRUTS_I18N_RELOAD, required = false)
-    public void setReloadBundles(String reloadBundles) {
-        this.reloadBundles = Boolean.parseBoolean(reloadBundles);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_DEVMODE, required = false)
-    public void setDevMode(String devMode) {
-        this.devMode = Boolean.parseBoolean(devMode);
     }
 
     @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
@@ -114,33 +78,6 @@ public class StrutsLocalizedTextProvider implements LocalizedTextProvider {
                     LOG.error(new ParameterizedMessage("Could not find messages file {}.properties. Skipping", name), e);
                 }
             }
-        }
-    }
-
-    /**
-     * Add's the bundle to the internal list of default bundles.
-     * <p>
-     * If the bundle already exists in the list it will be readded.
-     * </p>
-     *
-     * @param resourceBundleName the name of the bundle to add.
-     */
-    @Override
-    public void addDefaultResourceBundle(String resourceBundleName) {
-        //make sure this doesn't get added more than once
-        final ClassLoader ccl = getCurrentThreadContextClassLoader();
-        synchronized (XWORK_MESSAGES_BUNDLE) {
-            List<String> bundles = classLoaderMap.get(ccl.hashCode());
-            if (bundles == null) {
-                bundles = new CopyOnWriteArrayList<>();
-                classLoaderMap.put(ccl.hashCode(), bundles);
-            }
-            bundles.remove(resourceBundleName);
-            bundles.add(0, resourceBundleName);
-        }
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Added default resource bundle '{}' to default resource bundles for the following classloader '{}'", resourceBundleName, ccl.toString());
         }
     }
 
@@ -187,135 +124,6 @@ public class StrutsLocalizedTextProvider implements LocalizedTextProvider {
 
         localeStr = localeStr.substring(index + 1);
         return new Locale(language, country, localeStr);
-    }
-
-    /**
-     * Returns a localized message for the specified key, aTextName.  Neither the key nor the
-     * message is evaluated.
-     *
-     * @param aTextName the message key
-     * @param locale    the locale the message should be for
-     * @return a localized message based on the specified key, or null if no localized message can be found for it
-     */
-    @Override
-    public String findDefaultText(String aTextName, Locale locale) {
-        List<String> localList = classLoaderMap.get(Thread.currentThread().getContextClassLoader().hashCode());
-
-        for (String bundleName : localList) {
-            ResourceBundle bundle = findResourceBundle(bundleName, locale);
-            if (bundle != null) {
-                reloadBundles();
-                try {
-                    return bundle.getString(aTextName);
-                } catch (MissingResourceException e) {
-                	// will be logged when not found in any bundle
-                }
-            }
-        }
-
-        if (devMode) {
-            LOG.warn("Missing key [{}] in bundles [{}]!", aTextName, localList);
-        } else {
-            LOG.debug("Missing key [{}] in bundles [{}]!", aTextName, localList);
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns a localized message for the specified key, aTextName, substituting variables from the
-     * array of params into the message.  Neither the key nor the message is evaluated.
-     *
-     * @param aTextName the message key
-     * @param locale    the locale the message should be for
-     * @param params    an array of objects to be substituted into the message text
-     * @return A formatted message based on the specified key, or null if no localized message can be found for it
-     */
-    @Override
-    public String findDefaultText(String aTextName, Locale locale, Object[] params) {
-        String defaultText = findDefaultText(aTextName, locale);
-        if (defaultText != null) {
-            MessageFormat mf = buildMessageFormat(defaultText, locale);
-            return formatWithNullDetection(mf, params);
-        }
-        return null;
-    }
-
-    /**
-     * Finds the given resource bundle by it's name.
-     * <p>
-     * Will use <code>Thread.currentThread().getContextClassLoader()</code> as the classloader.
-     * </p>
-     *
-     * @param aBundleName the name of the bundle (usually it's FQN classname).
-     * @param locale      the locale.
-     * @return the bundle, <tt>null</tt> if not found.
-     */
-    @Override
-    public ResourceBundle findResourceBundle(String aBundleName, Locale locale) {
-        ClassLoader classLoader = getCurrentThreadContextClassLoader();
-        String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
-
-        if (missingBundles.contains(key)) {
-            return null;
-        }
-
-        ResourceBundle bundle = null;
-        try {
-            if (bundlesMap.containsKey(key)) {
-                bundle = bundlesMap.get(key);
-            } else {
-                bundle = ResourceBundle.getBundle(aBundleName, locale, classLoader);
-                bundlesMap.putIfAbsent(key, bundle);
-            }
-        } catch (MissingResourceException ex) {
-            if (delegatedClassLoaderMap.containsKey(classLoader.hashCode())) {
-                try {
-                    if (bundlesMap.containsKey(key)) {
-                        bundle = bundlesMap.get(key);
-                    } else {
-                        bundle = ResourceBundle.getBundle(aBundleName, locale, delegatedClassLoaderMap.get(classLoader.hashCode()));
-                        bundlesMap.putIfAbsent(key, bundle);
-                    }
-                } catch (MissingResourceException e) {
-                    LOG.debug("Missing resource bundle [{}]!", aBundleName, e);
-                    missingBundles.add(key);
-                }
-            } else {
-                LOG.debug("Missing resource bundle [{}]!", aBundleName);
-                missingBundles.add(key);
-            }
-        }
-        return bundle;
-    }
-
-    /**
-     * @param classLoader a {@link ClassLoader} to look up the bundle from if none can be found on the current thread's classloader
-     */
-    public void setDelegatedClassLoader(final ClassLoader classLoader) {
-        synchronized (bundlesMap) {
-            delegatedClassLoaderMap.put(getCurrentThreadContextClassLoader().hashCode(), classLoader);
-        }
-    }
-
-    /**
-     * @param bundleName Removes the bundle from any cached "misses"
-     */
-    public void clearBundle(final String bundleName) {
-        bundlesMap.remove(getCurrentThreadContextClassLoader().hashCode() + bundleName);
-    }
-
-
-    /**
-     * Creates a key to used for lookup/storing in the bundle misses cache.
-     *
-     * @param prefix      the prefix for the returning String - it is supposed to be the ClassLoader hash code.
-     * @param aBundleName the name of the bundle (usually it's FQN classname).
-     * @param locale      the locale.
-     * @return the key to use for lookup/storing in the bundle misses cache.
-     */
-    private String createMissesKey(String prefix, String aBundleName, Locale locale) {
-        return prefix + aBundleName + "_" + locale.toString();
     }
 
     /**
@@ -759,28 +567,6 @@ public class StrutsLocalizedTextProvider implements LocalizedTextProvider {
         }
     }
 
-    private String formatWithNullDetection(MessageFormat mf, Object[] args) {
-        String message = mf.format(args);
-        if ("null".equals(message)) {
-            return null;
-        } else {
-            return message;
-        }
-    }
-
-    private MessageFormat buildMessageFormat(String pattern, Locale locale) {
-        MessageFormatKey key = new MessageFormatKey(pattern, locale);
-        MessageFormat format = messageFormats.get(key);
-        if (format == null) {
-            format = new MessageFormat(pattern);
-            format.setLocale(locale);
-            format.applyPattern(pattern);
-            messageFormats.put(key, format);
-        }
-
-        return format;
-    }
-
     /**
      * Traverse up class hierarchy looking for message.  Looks at class, then implemented interface,
      * before going up hierarchy.
@@ -790,7 +576,7 @@ public class StrutsLocalizedTextProvider implements LocalizedTextProvider {
     private String findMessage(Class clazz, String key, String indexedKey, Locale locale, Object[] args, Set<String> checked,
                                       ValueStack valueStack) {
         if (checked == null) {
-            checked = new TreeSet<String>();
+            checked = new TreeSet<>();
         } else if (checked.contains(clazz.getName())) {
             return null;
         }
@@ -849,85 +635,6 @@ public class StrutsLocalizedTextProvider implements LocalizedTextProvider {
         return null;
     }
 
-    private void reloadBundles() {
-        reloadBundles(ActionContext.getContext() != null ? ActionContext.getContext().getContextMap() : null);
-    }
-
-    private void reloadBundles(Map<String, Object> context) {
-        if (reloadBundles) {
-            try {
-                Boolean reloaded;
-                if (context != null) {
-                    reloaded = (Boolean) ObjectUtils.defaultIfNull(context.get(RELOADED), Boolean.FALSE);
-                }else {
-                    reloaded = Boolean.FALSE;
-                }
-                if (!reloaded) {
-                    bundlesMap.clear();
-                    try {
-                        clearMap(ResourceBundle.class, null, "cacheList");
-                    } catch (NoSuchFieldException e) {
-                        // happens in IBM JVM, that has a different ResourceBundle impl
-                        // it has a 'cache' member
-                        clearMap(ResourceBundle.class, null, "cache");
-                    }
-
-                    // now, for the true and utter hack, if we're running in tomcat, clear
-                    // it's class loader resource cache as well.
-                    clearTomcatCache();
-                    if(context!=null) {
-                        context.put(RELOADED, true);
-                    }
-                    LOG.debug("Resource bundles reloaded");
-                }
-            } catch (Exception e) {
-                LOG.error("Could not reload resource bundles", e);
-            }
-        }
-    }
-
-
-    private void clearTomcatCache() {
-        ClassLoader loader = getCurrentThreadContextClassLoader();
-        // no need for compilation here.
-        Class cl = loader.getClass();
-
-        try {
-            if ("org.apache.catalina.loader.WebappClassLoader".equals(cl.getName())) {
-                clearMap(cl, loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
-            } else {
-                LOG.debug("Class loader {} is not tomcat loader.", cl.getName());
-            }
-        } catch (NoSuchFieldException nsfe) {
-            if ("org.apache.catalina.loader.WebappClassLoaderBase".equals(cl.getSuperclass().getName())) {
-                LOG.debug("Base class {} doesn't contain '{}' field, trying with parent!", cl.getName(), TOMCAT_RESOURCE_ENTRIES_FIELD, nsfe);
-                try {
-                    clearMap(cl.getSuperclass(), loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
-                } catch (Exception e) {
-                    LOG.warn("Couldn't clear tomcat cache using {}", cl.getSuperclass().getName(), e);
-                }
-            }
-        } catch (Exception e) {
-      	    LOG.warn("Couldn't clear tomcat cache", cl.getName(), e);
-        }
-    }
-
-
-    private void clearMap(Class cl, Object obj, String name)
-            throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-
-        Field field = cl.getDeclaredField(name);
-        field.setAccessible(true);
-
-        Object cache = field.get(obj);
-
-        synchronized (cache) {
-            Class ccl = cache.getClass();
-            Method clearMethod = ccl.getMethod("clear");
-            clearMethod.invoke(cache);
-        }
-    }
-
     /**
      * Clears all the internal lists.
      *
@@ -936,65 +643,6 @@ public class StrutsLocalizedTextProvider implements LocalizedTextProvider {
     @Deprecated
     public void reset() {
         // no-op
-    }
-
-    static class MessageFormatKey {
-        String pattern;
-        Locale locale;
-
-        MessageFormatKey(String pattern, Locale locale) {
-            this.pattern = pattern;
-            this.locale = locale;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof MessageFormatKey)) return false;
-
-            final MessageFormatKey messageFormatKey = (MessageFormatKey) o;
-
-            if (locale != null ? !locale.equals(messageFormatKey.locale) : messageFormatKey.locale != null)
-                return false;
-            if (pattern != null ? !pattern.equals(messageFormatKey.pattern) : messageFormatKey.pattern != null)
-                return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result;
-            result = (pattern != null ? pattern.hashCode() : 0);
-            result = 29 * result + (locale != null ? locale.hashCode() : 0);
-            return result;
-        }
-    }
-
-    private static ClassLoader getCurrentThreadContextClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
-    }
-
-    static class GetDefaultMessageReturnArg {
-        String message;
-        boolean foundInBundle;
-
-        public GetDefaultMessageReturnArg(String message, boolean foundInBundle) {
-            this.message = message;
-            this.foundInBundle = foundInBundle;
-        }
-    }
-
-    private static class EmptyResourceBundle extends ResourceBundle {
-        @Override
-        public Enumeration<String> getKeys() {
-            return null; // dummy
-        }
-
-        @Override
-        protected Object handleGetObject(String key) {
-            return null; // dummy
-        }
     }
 
 }

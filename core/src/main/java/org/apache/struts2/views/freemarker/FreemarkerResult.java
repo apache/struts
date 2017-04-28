@@ -60,7 +60,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected ObjectWrapper wrapper;
     protected FreemarkerManager freemarkerManager;
     private Writer writer;
-    private Boolean useBufferedWriter = null;
+    private boolean useBufferedWriter = false;
 
     /*
      * Struts results are constructed for each result execution
@@ -352,13 +352,13 @@ public class FreemarkerResult extends StrutsResultSupport {
     }
 
     public boolean isUseBufferedWriter() {
-        return useBufferedWriter != null && useBufferedWriter;
+        return useBufferedWriter;
     }
 
     /**
      * @param useBufferedWriter template is processed and flushed according to freemarker library policies
      */
-    public void setUseBufferedWriter(Boolean useBufferedWriter) {
+    public void setUseBufferedWriter(boolean useBufferedWriter) {
         this.useBufferedWriter = useBufferedWriter;
     }
 }

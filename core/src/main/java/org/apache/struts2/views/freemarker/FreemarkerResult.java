@@ -60,7 +60,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected ObjectWrapper wrapper;
     protected FreemarkerManager freemarkerManager;
     private Writer writer;
-    private Boolean useBufferedWriter = null;
+    private Boolean writeIfCompleted = null;
 
     /*
      * Struts results are constructed for each result execution
@@ -145,8 +145,8 @@ public class FreemarkerResult extends StrutsResultSupport {
         if (preTemplateProcess(template, model)) {
             try {
                 final boolean willUseBufferedWriter;
-                if (useBufferedWriter != null) {
-                    willUseBufferedWriter = isUseBufferedWriter();
+                if (writeIfCompleted != null) {
+                    willUseBufferedWriter = isWriteIfCompleted();
                 } else {
                     willUseBufferedWriter = template.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER;
                 }
@@ -356,14 +356,14 @@ public class FreemarkerResult extends StrutsResultSupport {
         return (Boolean) ObjectUtils.defaultIfNull(attribute, Boolean.FALSE);
     }
 
-    public boolean isUseBufferedWriter() {
-        return useBufferedWriter != null && useBufferedWriter;
+    public boolean isWriteIfCompleted() {
+        return writeIfCompleted != null && writeIfCompleted;
     }
 
     /**
-     * @param useBufferedWriter template is processed and flushed according to freemarker library policies
+     * @param writeIfCompleted template is processed and flushed according to freemarker library policies
      */
-    public void setUseBufferedWriter(Boolean useBufferedWriter) {
-        this.useBufferedWriter = useBufferedWriter;
+    public void setWriteIfCompleted(Boolean writeIfCompleted) {
+        this.writeIfCompleted = writeIfCompleted;
     }
 }

@@ -22,32 +22,20 @@
 package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
-import freemarker.template.Configuration;
-import freemarker.template.TemplateExceptionHandler;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
-import org.easymock.EasyMock;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.util.HashMap;
 
 import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
 
@@ -70,7 +58,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         FreemarkerResult result = new FreemarkerResult();
         result.setLocation("someFreeMarkerFile.ftl");
         result.setFreemarkerManager(mgr);
-        result.setUseBufferedWriter(true);
+        result.setWriteIfCompleted(true);
 
         try {
             result.execute(invocation);

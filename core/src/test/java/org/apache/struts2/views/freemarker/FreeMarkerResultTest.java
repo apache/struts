@@ -70,7 +70,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         FreemarkerResult result = new FreemarkerResult();
         result.setLocation("someFreeMarkerFile.ftl");
         result.setFreemarkerManager(mgr);
-        result.setWriteIfCompleted(true);
+        result.setUseBufferedWriter(true);
 
         try {
             result.execute(invocation);

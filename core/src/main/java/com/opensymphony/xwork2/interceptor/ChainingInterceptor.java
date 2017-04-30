@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.Unchainable;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.spring.SpringUtils;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -161,7 +162,11 @@ public class ChainingInterceptor extends AbstractInterceptor {
         Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
         for (Object object : list) {
             if (shouldCopy(object)) {
-                reflectionProvider.copy(object, invocation.getAction(), ctxMap, prepareExcludes(), includes);
+                Object action = invocation.getAction();
+                if(SpringUtils.isAopProxy(action)) {
+                    action = SpringUtils.getUltimateTargetObject(action);
+                }
+                reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes);
             }
         }
     }

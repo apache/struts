@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-          http://www.springframework.org/schema/beans/spring-beans.xsd">
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<bean id="simple-action" class="com.opensymphony.xwork2.SimpleAction" scope="prototype"/>
 
@@ -40,4 +43,25 @@
     <bean id="springResult" class="com.opensymphony.xwork2.spring.SpringResult" init-method="initialize">
 		<property name="stringParameter" value="my string"/>
 	</bean>
+
+    <bean id="pointcutted-test-bean" class="com.opensymphony.xwork2.TestBean">
+        <property name="name"><value>WW-4105</value></property>
+        <property name="count"><value>1</value></property>
+    </bean>
+    <bean id="pointcutted-test-sub-bean" class="com.opensymphony.xwork2.TestSubBean">
+        <property name="issueId"><value>WW-4105</value></property>
+    </bean>
+    <bean id="aspected-test-sub-bean" class="com.opensymphony.xwork2.TestSubBean" />
+    <aop:config>
+        <aop:aspect id="myAspect" ref="aspected-test-sub-bean">
+            <aop:pointcut id="testBeanGetName"
+                expression="execution(String com.opensymphony.xwork2.TestBean.getName()) and bean(pointcutted-test-bean)" />
+            <aop:after-returning pointcut-ref="testBeanGetName"
+                method="setIssueId" returning="issueId" />
+            <aop:pointcut id="testSubBeanGetIssueId"
+                expression="execution(String com.opensymphony.xwork2.TestSubBean.getIssueId()) and bean(pointcutted-test-sub-bean)" />
+            <aop:after-returning pointcut-ref="testSubBeanGetIssueId"
+                method="setName" returning="name" />
+        </aop:aspect>
+    </aop:config>
 </beans>

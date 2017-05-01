@@ -29,36 +29,13 @@ public class JBossFileManager extends DefaultFileManager {
     private static final String JBOSS5_VFSMEMORY = "vfsmemory";
     private static final String JBOSS5_VFSFILE = "vfsfile";
 
-    private static final String VFS_JBOSS7 = "org.jboss.vfs.VirtualFile";
-    private static final String VFS_JBOSS5 = "org.jboss.virtual.VirtualFile";
-
     @Override
     public boolean support() {
-        boolean supports = isJBoss7() || isJBoss5();
+        boolean supports = JBossFileManagerSupportUtil.isSupported();
         if (supports) {
             LOG.debug("JBoss server detected, Struts 2 will use [{}] to support file system operations!", JBossFileManager.class.getSimpleName());
         }
         return supports;
-    }
-
-    private boolean isJBoss5() {
-        try {
-            Class.forName(VFS_JBOSS5);
-            return true;
-        } catch (ClassNotFoundException e) {
-            LOG.debug("Cannot load [{}] class, not a JBoss 5!", VFS_JBOSS5);
-            return false;
-        }
-    }
-
-    private boolean isJBoss7() {
-        try {
-            Class.forName(VFS_JBOSS7);
-            return true;
-        } catch (ClassNotFoundException e) {
-            LOG.debug("Cannot load [{}] class, not a JBoss 7!", VFS_JBOSS7);
-            return false;
-        }
     }
 
     @Override
@@ -207,6 +184,36 @@ public class JBossFileManager extends DefaultFileManager {
     private void addIfAbsent(List<URL> urls, URL fileUrl) {
         if (!urls.contains(fileUrl)) {
             urls.add(fileUrl);
+        }
+    }
+
+    public static class JBossFileManagerSupportUtil {
+        private static final Logger LOG = LogManager.getLogger(JBossFileManager.class);
+        private static final String VFS_JBOSS7 = "org.jboss.vfs.VirtualFile";
+        private static final String VFS_JBOSS5 = "org.jboss.virtual.VirtualFile";
+
+        public static boolean isSupported() {
+            return isJBoss7() || isJBoss5();
+        }
+
+        private static boolean isJBoss5() {
+            try {
+                Class.forName(VFS_JBOSS5);
+                return true;
+            } catch (ClassNotFoundException e) {
+                LOG.debug("Cannot load [{}] class, not a JBoss 5!", VFS_JBOSS5);
+                return false;
+            }
+        }
+
+        private static boolean isJBoss7() {
+            try {
+                Class.forName(VFS_JBOSS7);
+                return true;
+            } catch (ClassNotFoundException e) {
+                LOG.debug("Cannot load [{}] class, not a JBoss 7!", VFS_JBOSS7);
+                return false;
+            }
         }
     }
 

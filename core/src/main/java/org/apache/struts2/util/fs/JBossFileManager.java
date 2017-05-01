@@ -188,7 +188,6 @@ public class JBossFileManager extends DefaultFileManager {
     }
 
     public static class JBossFileManagerSupportUtil {
-        private static final Logger LOG = LogManager.getLogger(JBossFileManager.class);
         private static final String VFS_JBOSS7 = "org.jboss.vfs.VirtualFile";
         private static final String VFS_JBOSS5 = "org.jboss.virtual.VirtualFile";
 

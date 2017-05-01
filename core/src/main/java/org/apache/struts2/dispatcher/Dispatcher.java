@@ -378,7 +378,7 @@ public class Dispatcher {
             configurationManager.addContainerProvider(new FileManagerProvider(fileManagerClass, fileManagerClass.getSimpleName()));
         } else {
             // add any other Struts 2 provided implementations of FileManager
-            if (JBossFileManager.JBossFileManagerSupportUtil.isSupported()) {
+            if (JBossFileManager.isSupported()) {
                 configurationManager.addContainerProvider(new FileManagerProvider(JBossFileManager.class, "jboss"));
             }
         }

@@ -125,7 +125,7 @@ END SNIPPET: supported-validators
                 errors = true;
                 <#if validator.shortCircuit>continueValidation = false;</#if>
             }
-            <#elseif validator.validatorType = "int" || validator.validatorType = "short">
+            <#elseif validator.validatorType = "int" || validator.validatorType = "short" || validator.validatorType = "long">
             if (continueValidation && fieldValue !== null) {
                 if (<#if validator.min??>parseInt(fieldValue) <
                      ${validator.min?c}<#else>false</#if> ||

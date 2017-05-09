@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.validator.validators.EmailValidator;
 import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.LongRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
@@ -51,7 +52,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 17);
+        assertEquals(validators.size(), 18);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -98,6 +99,8 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateFieldExpressionValidator((FieldExpressionValidator) validator);
         } else if (validator.getValidatorType().equals("int")) {
             validateIntRangeFieldValidator((IntRangeFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("long")) {
+            validateLongRangeFieldValidator((LongRangeFieldValidator) validator);
         } else if (validator.getValidatorType().equals("required")) {
             validateRequiredFieldValidator((RequiredFieldValidator) validator);
         } else if (validator.getValidatorType().equals("requiredstring")) {
@@ -176,6 +179,16 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         assertEquals(true, validator.isShortCircuit());
         assertEquals(Integer.valueOf(10), validator.getMax());
         assertEquals(Integer.valueOf(1), validator.getMin());
+    }
+
+    private void validateLongRangeFieldValidator(LongRangeFieldValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("int.key", validator.getMessageKey());
+        assertEquals("Foo is out of range!", validator.getDefaultMessage());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(Long.valueOf(10), validator.getMax());
+        assertEquals(Long.valueOf(1), validator.getMin());
     }
 
     private void validateFieldExpressionValidator(FieldExpressionValidator validator) {

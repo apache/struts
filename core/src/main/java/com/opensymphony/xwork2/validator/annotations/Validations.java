@@ -129,6 +129,8 @@ import java.lang.annotation.Target;
  *                   {&#64;StringLengthFieldValidator(type = ValidatorType.SIMPLE, trim = true, minLength="10" , maxLength = "12", fieldName = "needstringlength", message = "You must enter a stringlength.")},
  *           intRangeFields =
  *                   { &#64;IntRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = "intfield", min = "6", max = "10", message = "bar must be between ${min} and ${max}, current value is ${bar}.")},
+ *           longRangeFields =
+ *                   { &#64;LongRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = "intfield", min = "6", max = "10", message = "bar must be between ${min} and ${max}, current value is ${bar}.")},
  *           shortRangeFields =
  *                   { &#64;ShortRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = "shortfield", min = "1", max = "128", message = "bar must be between ${min} and ${max}, current value is ${bar}.")},
  *           dateRangeFields =
@@ -172,6 +174,8 @@ public @interface Validations {
     FieldExpressionValidator[] fieldExpressions() default {};
 
     IntRangeFieldValidator[] intRangeFields() default {};
+
+    LongRangeFieldValidator[] longRangeFields() default {};
 
     RequiredFieldValidator[] requiredFields() default {};
 

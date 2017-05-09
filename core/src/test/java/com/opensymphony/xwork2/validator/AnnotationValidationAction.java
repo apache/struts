@@ -11,6 +11,7 @@ import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.LongRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
@@ -53,6 +54,8 @@ public class AnnotationValidationAction extends ActionSupport {
     @FieldExpressionValidator(expression = "true", fieldName = "foo", key = "fieldexpression.key", message = "It is not true!",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @IntRangeFieldValidator(fieldName = "foo", key = "int.key", message = "Foo is out of range!", max = "10", min = "1",
+            messageParams = {"one", "two", "three"}, shortCircuit = true)
+    @LongRangeFieldValidator(fieldName = "foo", key = "int.key", message = "Foo is out of range!", max = "10", min = "1",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @RequiredFieldValidator(fieldName = "foo", key = "required.key", message = "Foo is required!",
             messageParams = {"one", "two", "three"}, shortCircuit = true)

@@ -6,6 +6,8 @@
     <validator name="required" class="com.opensymphony.xwork2.validator.validators.RequiredFieldValidator"/>
     <validator name="requiredstring" class="com.opensymphony.xwork2.validator.validators.RequiredStringValidator"/>
     <validator name="int" class="com.opensymphony.xwork2.validator.validators.IntRangeFieldValidator"/>
+    <validator name="long" class="com.opensymphony.xwork2.validator.validators.LongRangeFieldValidator"/>
+    <validator name="short" class="com.opensymphony.xwork2.validator.validators.ShortRangeFieldValidator"/>
     <validator name="double" class="com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator"/>
     <validator name="date" class="com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator"/>
     <validator name="expression" class="com.opensymphony.xwork2.validator.validators.ExpressionValidator"/>

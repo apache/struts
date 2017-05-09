@@ -146,6 +146,14 @@ public class AnnotationValidationConfigurationBuilder {
                         result.add(temp);
                     }
                 }
+                // Process LongRangeFieldValidator
+                else if (a instanceof LongRangeFieldValidator) {
+                    LongRangeFieldValidator v = (LongRangeFieldValidator) a;
+                    ValidatorConfig temp = processLongRangeFieldValidatorAnnotation(v, fieldName, methodName);
+                    if (temp != null) {
+                        result.add(temp);
+                    }
+                }
                 // Process ShortRangeFieldValidator
                 else if (a instanceof ShortRangeFieldValidator) {
                     ShortRangeFieldValidator v = (ShortRangeFieldValidator) a;
@@ -293,6 +301,15 @@ public class AnnotationValidationConfigurationBuilder {
         if (irfv != null) {
             for (IntRangeFieldValidator v : irfv) {
                 ValidatorConfig temp = processIntRangeFieldValidatorAnnotation(v, fieldName, methodName);
+                if (temp != null) {
+                    result.add(temp);
+                }
+            }
+        }
+        LongRangeFieldValidator[] lrfv = validations.longRangeFields();
+        if (irfv != null) {
+            for (LongRangeFieldValidator v : lrfv) {
+                ValidatorConfig temp = processLongRangeFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
                     result.add(temp);
                 }
@@ -639,6 +656,41 @@ public class AnnotationValidationConfigurationBuilder {
 
     private ValidatorConfig processIntRangeFieldValidatorAnnotation(IntRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "int";
+
+        Map<String, Object> params = new HashMap<>();
+
+        if (fieldName != null) {
+            params.put("fieldName", fieldName);
+        } else if (StringUtils.isNotEmpty(v.fieldName())) {
+            params.put("fieldName", v.fieldName());
+        }
+
+        if (v.min() != null && v.min().length() > 0) {
+            params.put("min", v.min());
+        }
+        if (v.max() != null && v.max().length() > 0) {
+            params.put("max", v.max());
+        }
+        if (StringUtils.isNotEmpty(v.maxExpression())) {
+            params.put("maxExpression", v.maxExpression());
+        }
+        if (StringUtils.isNotEmpty(v.minExpression())) {
+            params.put("minExpression", v.minExpression());
+        }
+
+        validatorFactory.lookupRegisteredValidatorType(validatorType);
+        return new ValidatorConfig.Builder(validatorType)
+                .addParams(params)
+                .addParam("methodName", methodName)
+                .shortCircuit(v.shortCircuit())
+                .defaultMessage(v.message())
+                .messageKey(v.key())
+                .messageParams(v.messageParams())
+                .build();
+    }
+
+    private ValidatorConfig processLongRangeFieldValidatorAnnotation(LongRangeFieldValidator v, String fieldName, String methodName) {
+        String validatorType = "long";
 
         Map<String, Object> params = new HashMap<>();
 

@@ -144,16 +144,16 @@ public class FreemarkerResult extends StrutsResultSupport {
         // Give subclasses a chance to hook into preprocessing
         if (preTemplateProcess(template, model)) {
             try {
-                final boolean willUseBufferedWriter;
+                final boolean willWriteIfCompleted;
                 if (writeIfCompleted != null) {
-                    willUseBufferedWriter = isWriteIfCompleted();
+                    willWriteIfCompleted = isWriteIfCompleted();
                 } else {
-                    willUseBufferedWriter = template.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER;
+                    willWriteIfCompleted = template.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER;
                 }
 
                 // Process the template
                 Writer writer = getWriter();
-                if (willUseBufferedWriter){
+                if (willWriteIfCompleted){
                     CharArrayWriter parentCharArrayWriter = (CharArrayWriter) req.getAttribute(PARENT_TEMPLATE_WRITER);
                     boolean isTopTemplate;
                     if (isTopTemplate = (parentCharArrayWriter == null)) {

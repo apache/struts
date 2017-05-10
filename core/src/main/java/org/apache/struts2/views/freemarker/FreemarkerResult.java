@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -48,57 +46,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
 
-
 /**
- * <!-- START SNIPPET: description -->
- *
  * Renders a view using the Freemarker template engine.
- * <p>
- * The FreemarkarManager class configures the template loaders so that the
- * template location can be either
- * </p>
- *
- * <ul>
- *
- * <li>relative to the web root folder. eg <code>/WEB-INF/views/home.ftl</code>
- * </li>
- *
- * <li>a classpath resuorce. eg <code>/com/company/web/views/home.ftl</code></li>
- *
- * </ul>
- *
- * <!-- END SNIPPET: description -->
- *
- * <b>This result type takes the following parameters:</b>
- *
- * <!-- START SNIPPET: params -->
- *
- * <ul>
- *
- * <li><b>location (default)</b> - the location of the template to process.</li>
- *
- * <li><b>parse</b> - true by default. If set to false, the location param will
- * not be parsed for Ognl expressions.</li>
- *
- * <li><b>contentType</b> - defaults to "text/html" unless specified.</li>
- * 
- * <li><b>writeIfCompleted</b> - false by default, write to stream only if there isn't any error 
- * processing the template. Setting template_exception_handler=rethrow in freemarker.properties
- * will have the same effect.</li>
- *
- * </ul>
- *
- * <!-- END SNIPPET: params -->
- *
- * <b>Example:</b>
- *
- * <pre>
- * <!-- START SNIPPET: example -->
- *
- * &lt;result name="success" type="freemarker"&gt;foo.ftl&lt;/result&gt;
- *
- * <!-- END SNIPPET: example -->
- * </pre>
  */
 public class FreemarkerResult extends StrutsResultSupport {
 
@@ -111,7 +60,8 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected ObjectWrapper wrapper;
     protected FreemarkerManager freemarkerManager;
     private Writer writer;
-    private boolean writeIfCompleted = false;
+    private Boolean writeIfCompleted = null;
+
     /*
      * Struts results are constructed for each result execution
      *
@@ -194,11 +144,18 @@ public class FreemarkerResult extends StrutsResultSupport {
         // Give subclasses a chance to hook into preprocessing
         if (preTemplateProcess(template, model)) {
             try {
+                final boolean willWriteIfCompleted;
+                if (writeIfCompleted != null) {
+                    willWriteIfCompleted = isWriteIfCompleted();
+                } else {
+                    willWriteIfCompleted = template.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER;
+                }
+
                 // Process the template
                 Writer writer = getWriter();
-                if (isWriteIfCompleted() || configuration.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER) {
+                if (willWriteIfCompleted){
                     CharArrayWriter parentCharArrayWriter = (CharArrayWriter) req.getAttribute(PARENT_TEMPLATE_WRITER);
-                    boolean isTopTemplate = false;
+                    boolean isTopTemplate;
                     if (isTopTemplate = (parentCharArrayWriter == null)) {
                         //this is the top template
                         parentCharArrayWriter = new CharArrayWriter();
@@ -213,18 +170,13 @@ public class FreemarkerResult extends StrutsResultSupport {
                             parentCharArrayWriter.flush();
                             parentCharArrayWriter.writeTo(writer);
                         }
-                    } catch (TemplateException e) {
+                    } catch (TemplateException | IOException e) {
                         if (LOG.isErrorEnabled()) {
                             LOG.error("Error processing Freemarker result!", e);
                         }
                         throw e;
-                    } catch (IOException e) {
-                        if (LOG.isErrorEnabled()){
-                            LOG.error("Error processing Freemarker result!", e);
-                        }
-                        throw e;
                     } finally {
-                        if (isTopTemplate && parentCharArrayWriter != null) {
+                        if (isTopTemplate) {
                             req.removeAttribute(PARENT_TEMPLATE_WRITER);
                             parentCharArrayWriter.close();
                         }
@@ -404,17 +356,14 @@ public class FreemarkerResult extends StrutsResultSupport {
         return (Boolean) ObjectUtils.defaultIfNull(attribute, Boolean.FALSE);
     }
 
-    /**
-     * @return true write to the stream only when template processing completed successfully (false by default)
-     */
     public boolean isWriteIfCompleted() {
-        return writeIfCompleted;
+        return writeIfCompleted != null && writeIfCompleted;
     }
 
     /**
-     * @param writeIfCompleted Writes to the stream only when template processing completed successfully
+     * @param writeIfCompleted template is processed and flushed according to freemarker library policies
      */
-    public void setWriteIfCompleted(boolean writeIfCompleted) {
+    public void setWriteIfCompleted(Boolean writeIfCompleted) {
         this.writeIfCompleted = writeIfCompleted;
     }
 }

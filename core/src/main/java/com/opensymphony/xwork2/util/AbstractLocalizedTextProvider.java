@@ -148,6 +148,55 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         return null;
     }
 
+
+    /**
+     * <p>
+     * Finds a localized text message for the given key, aTextName, in the specified resource
+     * bundle.
+     * </p>
+     *
+     * <p>
+     * If a message is found, it will also be interpolated.  Anything within <code>${...}</code>
+     * will be treated as an OGNL expression and evaluated as such.
+     * </p>
+     *
+     * <p>
+     * If a message is <b>not</b> found a WARN log will be logged.
+     * </p>
+     *
+     * @param bundle         the bundle
+     * @param aTextName      the key
+     * @param locale         the locale
+     * @param defaultMessage the default message to use if no message was found in the bundle
+     * @param args           arguments for the message formatter.
+     * @param valueStack     the OGNL value stack.
+     * @return the localized text, or null if none can be found and no defaultMessage is provided
+     */
+    @Override
+    public String findText(ResourceBundle bundle, String aTextName, Locale locale, String defaultMessage, Object[] args,
+                           ValueStack valueStack) {
+        try {
+            reloadBundles(valueStack.getContext());
+
+            String message = TextParseUtil.translateVariables(bundle.getString(aTextName), valueStack);
+            MessageFormat mf = buildMessageFormat(message, locale);
+
+            return formatWithNullDetection(mf, args);
+        } catch (MissingResourceException ex) {
+            if (devMode) {
+                LOG.warn("Missing key [{}] in bundle [{}]!", aTextName, bundle);
+            } else {
+                LOG.debug("Missing key [{}] in bundle [{}]!", aTextName, bundle);
+            }
+        }
+
+        GetDefaultMessageReturnArg result = getDefaultMessage(aTextName, locale, valueStack, args, defaultMessage);
+        if (unableToFindTextForKey(result)) {
+            LOG.warn("Unable to find text for key '{}' in ResourceBundles for locale '{}'", aTextName, locale);
+        }
+        return result != null ? result.message : null;
+    }
+
     /**
      * @param classLoader a {@link ClassLoader} to look up the bundle from if none can be found on the current thread's classloader
      */
@@ -319,6 +368,16 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             }
         }
         return bundle;
+    }
+    
+    /**
+     * Clears all the internal lists.
+     *
+     * @deprecated used only in tests
+     */
+    @Deprecated
+    public void reset() {
+        // no-op
     }
 
     /**

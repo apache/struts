@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Field;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -75,6 +77,23 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     protected ClassLoader getCurrentThreadContextClassLoader() {
         return Thread.currentThread().getContextClassLoader();
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
+    public void setCustomI18NResources(String bundles) {
+        if (bundles != null && bundles.length() > 0) {
+            StringTokenizer customBundles = new StringTokenizer(bundles, ", ");
+
+            while (customBundles.hasMoreTokens()) {
+                String name = customBundles.nextToken();
+                try {
+                    LOG.trace("Loading global messages from [{}]", name);
+                    addDefaultResourceBundle(name);
+                } catch (Exception e) {
+                    LOG.error(new ParameterizedMessage("Could not find messages file {}.properties. Skipping", name), e);
+                }
+            }
+        }
     }
 
     /**

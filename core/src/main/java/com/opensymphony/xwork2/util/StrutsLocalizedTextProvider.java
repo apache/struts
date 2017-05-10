@@ -25,19 +25,15 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.ParameterizedMessage;
-import org.apache.struts2.StrutsConstants;
 
 import java.beans.PropertyDescriptor;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.StringTokenizer;
 
 /**
  * Provides support for localization in the framework, it can be used to read only default bundles,
@@ -60,23 +56,6 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
     public StrutsLocalizedTextProvider() {
         addDefaultResourceBundle(XWORK_MESSAGES_BUNDLE);
         addDefaultResourceBundle(STRUTS_MESSAGES_BUNDLE);
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, required = false)
-    public void setCustomI18NResources(String bundles) {
-        if (bundles != null && bundles.length() > 0) {
-            StringTokenizer customBundles = new StringTokenizer(bundles, ", ");
-
-            while (customBundles.hasMoreTokens()) {
-                String name = customBundles.nextToken();
-                try {
-                    LOG.trace("Loading global messages from [{}]", name);
-                    addDefaultResourceBundle(name);
-                } catch (Exception e) {
-                    LOG.error(new ParameterizedMessage("Could not find messages file {}.properties. Skipping", name), e);
-                }
-            }
-        }
     }
 
     /**

@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.spring;
+package com.opensymphony.xwork2.util;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import java.lang.reflect.Proxy;
 
 /**
- * <code>SpringUtils</code>
+ * <code>ProxyUtil</code>
  * <p>
- * Various utility methods dealing with spring framework
+ * Various utility methods dealing with proxies
  * </p>
  *
  */
-public class SpringUtils {
+public class ProxyUtil {
+    private static final String SPRING_ADVISED_CLASS_NAME = "org.springframework.aop.framework.Advised";
+    private static final String SPRING_SPRINGPROXY_CLASS_NAME = "org.springframework.aop.SpringProxy";
+
     /**
      * Get the ultimate <em>target</em> object of the supplied {@code candidate}
      * object, unwrapping not only a top-level proxy but also any number of
@@ -40,13 +42,12 @@ public class SpringUtils {
      * @return the target object or the {@code candidate} (never {@code null})
      * @throws IllegalStateException if an error occurs while unwrapping a proxy
      */
-    public static <T> T getUltimateTargetObject(Object candidate) {
+    public static <T> T getSpringUltimateTargetObject(Object candidate) {
         try {
-            if (isAopProxy(candidate) &&
-                    implementsInterface(candidate.getClass(), "org.springframework.aop.framework.Advised")) {
+            if (isSpringAopProxy(candidate) && implementsInterface(candidate.getClass(), SPRING_ADVISED_CLASS_NAME)) {
                 Object targetSource = MethodUtils.invokeMethod(candidate, "getTargetSource");
                 Object target = MethodUtils.invokeMethod(targetSource, "getTarget");
-                return getUltimateTargetObject(target);
+                return getSpringUltimateTargetObject(target);
             }
         }
         catch (Throwable ex) {
@@ -59,10 +60,10 @@ public class SpringUtils {
      * Check whether the given object is a Spring proxy.
      * @param object the object to check
      */
-    public static boolean isAopProxy(Object object) {
+    public static boolean isSpringAopProxy(Object object) {
         Class<?> clazz = object.getClass();
-        return (implementsInterface(clazz, "org.springframework.aop.SpringProxy") &&
-                (Proxy.isProxyClass(clazz) || isCglibProxyClass(clazz)));
+        return (implementsInterface(clazz, SPRING_SPRINGPROXY_CLASS_NAME) && (Proxy.isProxyClass(clazz)
+                || isCglibProxyClass(clazz)));
     }
 
     /**
@@ -80,7 +81,7 @@ public class SpringUtils {
      */
     private static boolean implementsInterface(Class<?> clazz, String ifaceClassName) {
         try {
-            Class ifaceClass = ClassLoaderUtil.loadClass(ifaceClassName, SpringUtils.class);
+            Class ifaceClass = ClassLoaderUtil.loadClass(ifaceClassName, ProxyUtil.class);
             return ifaceClass.isAssignableFrom(clazz);
         } catch (ClassNotFoundException e) {
             return false;

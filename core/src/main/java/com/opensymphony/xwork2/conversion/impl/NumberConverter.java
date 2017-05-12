@@ -1,21 +1,15 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.XWorkException;
-import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.ParameterizedMessage;
 
 import java.lang.reflect.Member;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.ParsePosition;
-import java.util.Formatter;
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,7 +34,7 @@ public class NumberConverter extends DefaultTypeConverter {
                 return convertedValue;
             } else {
                 String stringValue = (String) value;
-                if (!toType.isPrimitive() && (stringValue == null || stringValue.length() == 0)) {
+                if (!toType.isPrimitive() && stringValue.isEmpty()) {
                     return null;
                 }
                 NumberFormat numFormat = NumberFormat.getInstance(getLocale(context));
@@ -182,7 +176,7 @@ public class NumberConverter extends DefaultTypeConverter {
             return true;
         }
 
-        return ((Comparable)bigValue).compareTo(lowerBound) >= 0 && ((Comparable)bigValue).compareTo(upperBound) <= 0;
+        return ((Comparable) bigValue).compareTo(lowerBound) >= 0 && ((Comparable) bigValue).compareTo(upperBound) <= 0;
     }
 
     private boolean isIntegerType(Class type) {

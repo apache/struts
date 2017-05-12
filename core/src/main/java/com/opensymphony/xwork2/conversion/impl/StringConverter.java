@@ -2,58 +2,47 @@ package com.opensymphony.xwork2.conversion.impl;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Member;
 import java.text.DateFormat;
+import java.text.Format;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class StringConverter extends DefaultTypeConverter {
 
     @Override
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
-        String result = null;
+        String result;
 
-        if (value instanceof int[]) {
-            int[] x = (int[]) value;
-            List<Integer> intArray = new ArrayList<>(x.length);
+        if (value.getClass().isArray()) {
+            int length = Array.getLength(value);
+            List<String> converted = new ArrayList<>(length);
 
-            for (int aX : x) {
-                intArray.add(Integer.valueOf(aX));
+            for (int i = 0; i < length; i++) {
+                Object o = Array.get(value, i);
+                converted.add(convertToString(getLocale(context), o));
             }
 
-            result = StringUtils.join(intArray, ", ");
-        } else if (value instanceof long[]) {
-            long[] x = (long[]) value;
-            List<Long> longArray = new ArrayList<>(x.length);
+            result = StringUtils.join(converted, ", ");
+        } else if(value.getClass().isAssignableFrom(Collection.class)) {
+            Collection<?> colValue = (Collection) value;
+            List<String> converted = new ArrayList<>(colValue.hashCode());
 
-            for (long aX : x) {
-                longArray.add(Long.valueOf(aX));
+            for (Object o : colValue) {
+                converted.add(convertToString(getLocale(context), o));
             }
 
-            result = StringUtils.join(longArray, ", ");
-        } else if (value instanceof double[]) {
-            double[] x = (double[]) value;
-            List<Double> doubleArray = new ArrayList<>(x.length);
-
-            for (double aX : x) {
-                doubleArray.add(new Double(aX));
-            }
-
-            result = StringUtils.join(doubleArray, ", ");
-        } else if (value instanceof boolean[]) {
-            boolean[] x = (boolean[]) value;
-            List<Boolean> booleanArray = new ArrayList<>(x.length);
-
-            for (boolean aX : x) {
-                booleanArray.add(new Boolean(aX));
-            }
-
-            result = StringUtils.join(booleanArray, ", ");
+            result = StringUtils.join(converted, ", ");
         } else if (value instanceof Date) {
-            DateFormat df = null;
+            DateFormat df;
             if (value instanceof java.sql.Time) {
                 df = DateFormat.getTimeInstance(DateFormat.MEDIUM, getLocale(context));
             } else if (value instanceof java.sql.Timestamp) {
@@ -65,9 +54,19 @@ public class StringConverter extends DefaultTypeConverter {
                 df = DateFormat.getDateInstance(DateFormat.SHORT, getLocale(context));
             }
             result = df.format(value);
-        } else if (value instanceof String[]) {
-            result = StringUtils.join((String[]) value, ", ");
+        } else {
+            result = convertToString(getLocale(context), value);
         }
+
         return result;
+    }
+
+    protected String convertToString(Locale locale, Object value) {
+        if (value.getClass().isAssignableFrom(Number.class)) {
+            NumberFormat format = NumberFormat.getNumberInstance(locale);
+            return format.format(value);
+        } else {
+            return String.valueOf(value);
+        }
     }
 }

@@ -57,6 +57,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
      * This is temporary solution, after validating can be removed
      * @since 2.3.18
      */
+    @Deprecated
     private boolean enableAopSupport = false;
 
     @Inject(value="applicationContextPath",required=false)

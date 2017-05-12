@@ -159,6 +159,7 @@ public final class StrutsConstants {
     public static final String STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE = "struts.objectFactory.spring.useClassCache";
 
     /** Uses different logic to construct beans, see https://issues.apache.org/jira/browse/WW-4110 */
+    @Deprecated
     public static final String STRUTS_OBJECTFACTORY_SPRING_ENABLE_AOP_SUPPORT = "struts.objectFactory.spring.enableAopSupport";
 
     /** Whether or not XSLT templates should not be cached */

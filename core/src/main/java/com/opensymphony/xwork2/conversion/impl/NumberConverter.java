@@ -1,20 +1,31 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.XWorkException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 
 import java.lang.reflect.Member;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.ParsePosition;
+import java.util.Formatter;
+import java.util.Locale;
 import java.util.Map;
 
 public class NumberConverter extends DefaultTypeConverter {
 
+    private static final Logger LOG = LogManager.getLogger(NumberConverter.class);
+
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (value instanceof String) {
             if (toType == BigDecimal.class) {
-                return new BigDecimal((String) value);
+                return convertToBigDecimal(context, value);
             } else if (toType == BigInteger.class) {
                 return new BigInteger((String) value);
             } else if (toType.isPrimitive()) {
@@ -57,6 +68,33 @@ public class NumberConverter extends DefaultTypeConverter {
 
         // pass it through DefaultTypeConverter
         return super.convertValue(context, value, toType);
+    }
+
+    protected Object convertToBigDecimal(Map<String, Object> context, Object value) {
+        Locale locale = getLocale(context);
+        String strValue = String.valueOf(value);
+
+        NumberFormat format = NumberFormat.getNumberInstance(locale);
+        format.setGroupingUsed(true);
+        if (format instanceof DecimalFormat) {
+            ((DecimalFormat) format).setParseBigDecimal(true);
+            char separator = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
+
+            // this is a hack as \160 isn't the same as " " (an empty space)
+            if (separator == 160) {
+                strValue = strValue.replaceAll(" ", "");
+            } else {
+                strValue = strValue.replaceAll(String.valueOf(separator), "");
+            }
+        }
+
+        try {
+            LOG.info("Trying parse value {} with locale {}", strValue, locale);
+            return format.parse(strValue);
+        } catch (ParseException e) {
+            LOG.warn(new ParameterizedMessage("Cannot convert value {} to BigDecimal, trying with default converter", value, e));
+            return super.convertValue(context, value, BigDecimal.class);
+        }
     }
 
     protected boolean isInRange(Number value, String stringValue, Class toType) {

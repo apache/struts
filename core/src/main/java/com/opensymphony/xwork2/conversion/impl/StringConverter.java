@@ -4,9 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;
+import java.math.BigDecimal;
 import java.text.DateFormat;
-import java.text.Format;
-import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,11 +61,16 @@ public class StringConverter extends DefaultTypeConverter {
     }
 
     protected String convertToString(Locale locale, Object value) {
-        if (value.getClass().isAssignableFrom(Number.class)) {
+        if (Number.class.isInstance(value)) {
             NumberFormat format = NumberFormat.getNumberInstance(locale);
+            format.setGroupingUsed(false);
+            if (Double.class.isInstance(value) || BigDecimal.class.isInstance(value)) {
+                format.setMinimumFractionDigits(1);
+            }
             return format.format(value);
         } else {
             return String.valueOf(value);
         }
     }
+
 }

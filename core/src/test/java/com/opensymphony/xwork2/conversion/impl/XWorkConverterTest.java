@@ -519,30 +519,30 @@ public class XWorkConverterTest extends XWorkTestCase {
     }
 
     public void testStringToPrimitiveDouble() {
-        assertEquals(new Double(123), converter.convertValue(context, null, null, null, "123", double.class));
+        assertEquals(123d, converter.convertValue(context, null, null, null, "123", double.class));
         context.put(ActionContext.LOCALE, Locale.US);
-        assertEquals(new Double(123.12), converter.convertValue(context, null, null, null, "123.12", double.class));
+        assertEquals(123.12, converter.convertValue(context, null, null, null, "123.12", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,23", double.class));
-        assertEquals(new Double(1.234), converter.convertValue(context, null, null, null, "1.234", double.class));
+        assertEquals(1234d, converter.convertValue(context, null, null, null, "1,234", double.class));
+        assertEquals(1234.12, converter.convertValue(context, null, null, null, "1,234.12", double.class));
+        assertEquals(123d, converter.convertValue(context, null, null, null, "1,23", double.class));
+        assertEquals(1.234, converter.convertValue(context, null, null, null, "1.234", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", double.class));
 
         context.put(ActionContext.LOCALE, Locale.GERMANY);
-        assertEquals(new Double(123.12), converter.convertValue(context, null, null, null, "123.12", double.class));
+        assertEquals(12312d, converter.convertValue(context, null, null, null, "123.12", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234", double.class));
+        assertEquals(1.234, converter.convertValue(context, null, null, null, "1,234", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,23", double.class));
-        assertEquals(new Double(1.234), converter.convertValue(context, null, null, null, "1.234", double.class));
-        assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", double.class));
+        assertEquals(1.23, converter.convertValue(context, null, null, null, "1,23", double.class));
+        assertEquals(1234d, converter.convertValue(context, null, null, null, "1.234", double.class));
+        assertEquals(1234.12, converter.convertValue(context, null, null, null, "1.234,12", double.class));
     }
 
     public void testStringToDouble() {
-        assertEquals(new Double(123), converter.convertValue(context, null, null, null, "123", Double.class));
+        assertEquals(123d, converter.convertValue(context, null, null, null, "123", Double.class));
         context.put(ActionContext.LOCALE, Locale.US);
         assertEquals(new Double(123.12), converter.convertValue(context, null, null, null, "123.12", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Double.class));

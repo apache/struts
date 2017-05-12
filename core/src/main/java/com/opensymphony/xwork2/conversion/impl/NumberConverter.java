@@ -1,6 +1,7 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
@@ -28,6 +29,8 @@ public class NumberConverter extends DefaultTypeConverter {
                 return convertToBigDecimal(context, value);
             } else if (toType == BigInteger.class) {
                 return new BigInteger((String) value);
+            } else if (toType == Double.class || toType == double.class) {
+                return convertToDouble(context, value);
             } else if (toType.isPrimitive()) {
                 Object convertedValue = super.convertValue(context, value, toType);
                 String stringValue = (String) value;
@@ -74,27 +77,65 @@ public class NumberConverter extends DefaultTypeConverter {
         Locale locale = getLocale(context);
         String strValue = String.valueOf(value);
 
-        NumberFormat format = NumberFormat.getNumberInstance(locale);
-        format.setGroupingUsed(true);
+        NumberFormat format = getNumberFormat(locale);
         if (format instanceof DecimalFormat) {
             ((DecimalFormat) format).setParseBigDecimal(true);
             char separator = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
-
-            // this is a hack as \160 isn't the same as " " (an empty space)
-            if (separator == 160) {
-                strValue = strValue.replaceAll(" ", "");
-            } else {
-                strValue = strValue.replaceAll(String.valueOf(separator), "");
-            }
+            strValue = normalize(strValue, separator);
         }
 
-        try {
-            LOG.info("Trying parse value {} with locale {}", strValue, locale);
-            return format.parse(strValue);
-        } catch (ParseException e) {
-            LOG.warn(new ParameterizedMessage("Cannot convert value {} to BigDecimal, trying with default converter", value, e));
-            return super.convertValue(context, value, BigDecimal.class);
+        LOG.debug("Trying to convert a value {} with locale {} to BigDecimal", strValue, locale);
+        ParsePosition parsePosition = new ParsePosition(0);
+        Number number = format.parse(strValue, parsePosition);
+
+        if (parsePosition.getIndex() != strValue.length()) {
+            throw new XWorkException("Unparseable number: \"" + strValue + "\" at position " + parsePosition.getIndex());
         }
+
+        return number;
+    }
+
+    protected Object convertToDouble(Map<String, Object> context, Object value) {
+        Locale locale = getLocale(context);
+        String strValue = String.valueOf(value);
+
+        NumberFormat format = getNumberFormat(locale);
+        if (format instanceof DecimalFormat) {
+            char separator = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
+            strValue = normalize(strValue, separator);
+        }
+
+        LOG.debug("Trying to convert a value {} with locale {} to Double", strValue, locale);
+        ParsePosition parsePosition = new ParsePosition(0);
+        Number number = format.parse(strValue, parsePosition);
+
+        if (parsePosition.getIndex() != strValue.length()) {
+            throw new XWorkException("Unparseable number: \"" + strValue + "\" at position " + parsePosition.getIndex());
+        }
+
+        if (!isInRange(number, strValue, Double.class)) {
+            throw new XWorkException("Overflow or underflow converting: \"" + strValue + "\" into class " + number.getClass().getName());
+        }
+
+        if (number != null) {
+            return number.doubleValue();
+        }
+
+        return null;
+    }
+
+    protected NumberFormat getNumberFormat(Locale locale) {
+        NumberFormat format = NumberFormat.getNumberInstance(locale);
+        format.setGroupingUsed(true);
+        return format;
+    }
+
+    protected String normalize(String strValue, char separator) {
+        // this is a hack as \160 isn't the same as " " (an empty space)
+        if (separator == 160) {
+            strValue = strValue.replaceAll(" ", String.valueOf(separator));
+        }
+        return strValue;
     }
 
     protected boolean isInRange(Number value, String stringValue, Class toType) {

@@ -19,21 +19,24 @@ public class NumberConverter extends DefaultTypeConverter {
 
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (value instanceof String) {
+            String stringValue = String.valueOf(value);
+
             if (toType == BigDecimal.class) {
-                return convertToBigDecimal(context, value);
+                return convertToBigDecimal(context, stringValue);
             } else if (toType == BigInteger.class) {
-                return new BigInteger((String) value);
+                return new BigInteger(stringValue);
             } else if (toType == Double.class || toType == double.class) {
-                return convertToDouble(context, value);
+                return convertToDouble(context, stringValue);
+            } else if (toType == Float.class || toType == float.class) {
+                return convertToFloat(context, stringValue);
             } else if (toType.isPrimitive()) {
                 Object convertedValue = super.convertValue(context, value, toType);
-                String stringValue = (String) value;
+
                 if (!isInRange((Number) convertedValue, stringValue, toType))
                     throw new XWorkException("Overflow or underflow casting: \"" + stringValue + "\" into class " + convertedValue.getClass().getName());
 
                 return convertedValue;
             } else {
-                String stringValue = (String) value;
                 if (!toType.isPrimitive() && stringValue.isEmpty()) {
                     return null;
                 }
@@ -67,52 +70,78 @@ public class NumberConverter extends DefaultTypeConverter {
         return super.convertValue(context, value, toType);
     }
 
-    protected Object convertToBigDecimal(Map<String, Object> context, Object value) {
+    protected Object convertToBigDecimal(Map<String, Object> context, String stringValue) {
         Locale locale = getLocale(context);
-        String strValue = String.valueOf(value);
 
         NumberFormat format = getNumberFormat(locale);
         if (format instanceof DecimalFormat) {
             ((DecimalFormat) format).setParseBigDecimal(true);
             char separator = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
-            strValue = normalize(strValue, separator);
+            stringValue = normalize(stringValue, separator);
         }
 
-        LOG.debug("Trying to convert a value {} with locale {} to BigDecimal", strValue, locale);
+        LOG.debug("Trying to convert a value {} with locale {} to BigDecimal", stringValue, locale);
         ParsePosition parsePosition = new ParsePosition(0);
-        Number number = format.parse(strValue, parsePosition);
+        Number number = format.parse(stringValue, parsePosition);
 
-        if (parsePosition.getIndex() != strValue.length()) {
-            throw new XWorkException("Unparseable number: \"" + strValue + "\" at position " + parsePosition.getIndex());
+        if (parsePosition.getIndex() != stringValue.length()) {
+            throw new XWorkException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
         }
 
         return number;
     }
 
-    protected Object convertToDouble(Map<String, Object> context, Object value) {
+    protected Object convertToDouble(Map<String, Object> context, String stringValue) {
         Locale locale = getLocale(context);
-        String strValue = String.valueOf(value);
 
         NumberFormat format = getNumberFormat(locale);
         if (format instanceof DecimalFormat) {
             char separator = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
-            strValue = normalize(strValue, separator);
+            stringValue = normalize(stringValue, separator);
         }
 
-        LOG.debug("Trying to convert a value {} with locale {} to Double", strValue, locale);
+        LOG.debug("Trying to convert a value {} with locale {} to Double", stringValue, locale);
         ParsePosition parsePosition = new ParsePosition(0);
-        Number number = format.parse(strValue, parsePosition);
+        Number number = format.parse(stringValue, parsePosition);
 
-        if (parsePosition.getIndex() != strValue.length()) {
-            throw new XWorkException("Unparseable number: \"" + strValue + "\" at position " + parsePosition.getIndex());
+        if (parsePosition.getIndex() != stringValue.length()) {
+            throw new XWorkException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
         }
 
-        if (!isInRange(number, strValue, Double.class)) {
-            throw new XWorkException("Overflow or underflow converting: \"" + strValue + "\" into class " + number.getClass().getName());
+        if (!isInRange(number, stringValue, Double.class)) {
+            throw new XWorkException("Overflow or underflow converting: \"" + stringValue + "\" into class " + number.getClass().getName());
         }
 
         if (number != null) {
             return number.doubleValue();
+        }
+
+        return null;
+    }
+
+    protected Object convertToFloat(Map<String, Object> context, String stringValue) {
+        Locale locale = getLocale(context);
+
+        NumberFormat format = getNumberFormat(locale);
+        if (format instanceof DecimalFormat) {
+            char separator = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
+            stringValue = normalize(stringValue, separator);
+        }
+
+        LOG.debug("Trying to convert a value {} with locale {} to Float", stringValue, locale);
+        ParsePosition parsePosition = new ParsePosition(0);
+        Number number = format.parse(stringValue, parsePosition);
+
+        if (parsePosition.getIndex() != stringValue.length()) {
+            throw new XWorkException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
+        }
+
+        if (!isInRange(number, stringValue, Float.class)) {
+            throw new XWorkException("Overflow or underflow converting: \"" + stringValue + "\" into class " + number.getClass().getName());
+        }
+
+        if (number != null) {
+            return number.floatValue();
         }
 
         return null;

@@ -32,7 +32,8 @@
 					</pre>
 				</div>
 				<div class="tab-pane" id="java">
-					<h3><s:property default="Unknown or unavailable Action class" value="className"/></h3>
+					<h3><s:property default="Unknown or unavailable Action class" value="className"/>
+						<s:if test="%{beanName != null}">@<s:property value="beanName"/></s:if></h3>
 					<pre class="prettyprint lang-java linenums">
 						<s:iterator value="classLines" status="row">
 <s:property/></s:iterator>

@@ -5,19 +5,23 @@
 
 <struts>
 	<package name="hangman" extends="struts-default" namespace="/hangman">
-		<action name="hangmanAjax" class="startHangmanAction">
+		<action name="hangmanAjax" class="org.apache.struts2.showcase.hangman.StartHangmanAction"
+				bean="startHangmanAction">
 			<result type="freemarker">/WEB-INF/hangman/hangmanAjax.ftl</result>
 		</action>
-		<action name="hangmanNonAjax" class="startHangmanAction">
+		<action name="hangmanNonAjax" class="org.apache.struts2.showcase.hangman.StartHangmanAction"
+				bean="startHangmanAction">
 			<result type="freemarker">/WEB-INF/hangman/hangmanNonAjax.ftl</result>
 		</action>
 		<action name="test">
 			<result type="freemarker">/hangman/test.ftl</result>
 		</action>
-		<action name="guessCharacter" class="guessCharacterAction">
+		<action name="guessCharacter" class="org.apache.struts2.showcase.hangman.GuessCharacterAction"
+				bean="guessCharacterAction">
 			<result type="freemarker">/WEB-INF/hangman/blank.ftl</result>
 		</action>
-		<action name="guessCharacterNonAjax" class="guessCharacterAction">
+		<action name="guessCharacterNonAjax" class="org.apache.struts2.showcase.hangman.GuessCharacterAction"
+				bean="guessCharacterAction">
 			<result type="freemarker">/WEB-INF/hangman/hangmanNonAjax.ftl</result>
 		</action>
 	</package>
@@ -28,16 +32,20 @@
 		<action name="blank">
 			<result type="freemarker">/WEB-INF/hangman/blank.ftl</result>
 		</action>
-		<action name="updateVocabCharacters" class="getUpdatedHangmanAction">
+		<action name="updateVocabCharacters" class="org.apache.struts2.showcase.hangman.GetUpdatedHangmanAction"
+				bean="getUpdatedHangmanAction">
 			<result type="freemarker">/WEB-INF/hangman/updateVocabCharacters.ftl</result>
 		</action>
-		<action name="updateCharacterAvailable" class="getUpdatedHangmanAction">
+		<action name="updateCharacterAvailable" class="org.apache.struts2.showcase.hangman.GetUpdatedHangmanAction"
+				bean="getUpdatedHangmanAction">
 			<result type="freemarker">/WEB-INF/hangman/updateCharacterAvailable.ftl</result>
 		</action>
-		<action name="updateScaffold" class="getUpdatedHangmanAction">
+		<action name="updateScaffold" class="org.apache.struts2.showcase.hangman.GetUpdatedHangmanAction"
+				bean="getUpdatedHangmanAction">
 			<result type="freemarker">/WEB-INF/hangman/updateScaffold.ftl</result>
 		</action>
-		<action name="updateGuessLeft" class="getUpdatedHangmanAction">
+		<action name="updateGuessLeft" class="org.apache.struts2.showcase.hangman.GetUpdatedHangmanAction"
+				bean="getUpdatedHangmanAction">
 			<result type="freemarker">/WEB-INF/hangman/updateGuessLeft.ftl</result>
 		</action>
 	</package>

@@ -15,10 +15,8 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
-import com.opensymphony.xwork2.ActionChainResult;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.Unchainable;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.TextParseUtil;
@@ -126,6 +124,8 @@ public class ChainingInterceptor extends AbstractInterceptor {
     protected Collection<String> includes;
     protected ReflectionProvider reflectionProvider;
 
+    private ObjectFactory objectFactory;
+
     @Inject
     public void setReflectionProvider(ReflectionProvider prov) {
         this.reflectionProvider = prov;
@@ -146,6 +146,11 @@ public class ChainingInterceptor extends AbstractInterceptor {
         this.copyMessages = "true".equalsIgnoreCase(copyMessages);
     }
 
+    @Inject
+    public void setObjectFactory(ObjectFactory factory) {
+        this.objectFactory = factory;
+    }
+
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         ValueStack stack = invocation.getStack();
@@ -158,10 +163,39 @@ public class ChainingInterceptor extends AbstractInterceptor {
 
     private void copyStack(ActionInvocation invocation, CompoundRoot root) {
         List list = prepareList(root);
-        Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
-        for (Object object : list) {
-            if (shouldCopy(object)) {
-                reflectionProvider.copy(object, invocation.getAction(), ctxMap, prepareExcludes(), includes);
+        int i = 0;
+        while (i < list.size()) {
+            if (!shouldCopy(list.get(i))) {
+                list.remove(i);
+            }
+            else {
+                i++;
+            }
+        }
+        if (i > 0) {
+            Class editableClass = null;
+            Object action = invocation.getAction();
+            ActionConfig config = invocation.getProxy().getConfig();
+            String className = config.getClassName();
+            String beanName = config.getBeanName();
+            String runtimeClassName = action.getClass().getName();
+            if (!runtimeClassName.equals(className)) {
+                //only setting properties defined in the given config class e.g. to skip proxy properties (WW-4105)
+                try {
+                    editableClass = objectFactory.getClassInstance(className);
+                    if (null == beanName && !editableClass.getName().equals(className)) {
+                        LOG.warn("Runtime action class [{}] is not same as config time action class [{}]. It is strongly " +
+                                "recommended to use attribute `bean` for config [{}].", runtimeClassName, className, config);
+                    }
+                } catch (ClassNotFoundException e) {
+                    //warn and continue without any property setting restriction
+                    LOG.warn("No property setting restriction applied due to [" + className + "] class not found for config "
+                            + config, e);
+                }
+            }
+            Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
+            for (Object object : list) {
+                reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, editableClass);
             }
         }
     }

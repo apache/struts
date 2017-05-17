@@ -17,6 +17,8 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.*;
@@ -31,6 +33,8 @@ public class ChainingInterceptorTest extends XWorkTestCase {
 
     ActionInvocation invocation;
     ChainingInterceptor interceptor;
+    MockActionProxy mockActionProxy;
+    ActionConfig actionConfig;
     Mock mockInvocation;
     ValueStack stack;
 
@@ -148,11 +152,18 @@ public class ChainingInterceptorTest extends XWorkTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         stack = ActionContext.getContext().getValueStack();
+
+        mockActionProxy = new MockActionProxy();
+        actionConfig = new ActionConfig.Builder("", "", "")
+                .build();
+        mockActionProxy.setConfig(actionConfig);
+
         mockInvocation = new Mock(ActionInvocation.class);
         mockInvocation.expectAndReturn("getStack", stack);
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
         mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(new HashMap<String, Object>()));
         mockInvocation.expectAndReturn("getResult", new ActionChainResult());
+        mockInvocation.expectAndReturn("getProxy", mockActionProxy);
         invocation = (ActionInvocation) mockInvocation.proxy();
         interceptor = new ChainingInterceptor();
         container.inject(interceptor);

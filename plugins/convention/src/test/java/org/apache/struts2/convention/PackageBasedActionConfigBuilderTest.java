@@ -374,7 +374,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         verifyActionConfig(pkgConfig, "action1", ActionNameAction.class, "run1", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action2", ActionNameAction.class, "run2", pkgConfig.getName());
         verifyMissingActionConfig(pkgConfig, "foo", DontFindMeAction.class, "foo", pkgConfig.getName());
-        verifyActionConfig(pkgConfig, "action3", "someClassName", "run1", pkgConfig.getName());
+        verifyActionConfig(pkgConfig, "action3", "someClassName", "someBeanName", "run1", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "actions1", ActionNamesAction.class, "run", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "actions2", ActionNamesAction.class, "run", pkgConfig.getName());
         verifyActionConfig(pkgConfig, "action", SingleActionNameAction.class, "run", pkgConfig.getName());
@@ -661,10 +661,12 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         assertNull(ac);
     }
 
-    private void verifyActionConfig(PackageConfig pkgConfig, String actionName, String actionClass, String methodName, String packageName) {
+    private void verifyActionConfig(PackageConfig pkgConfig, String actionName, String actionClass, String actionBean,
+                                    String methodName, String packageName) {
         ActionConfig ac = pkgConfig.getAllActionConfigs().get(actionName);
         assertNotNull(ac);
         assertEquals(actionClass, ac.getClassName());
+        assertEquals(actionBean, ac.getBeanName());
         assertEquals(methodName, ac.getMethodName());
         assertEquals(packageName, ac.getPackageName());
     }

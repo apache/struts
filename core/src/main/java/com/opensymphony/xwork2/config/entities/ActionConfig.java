@@ -50,6 +50,7 @@ public class ActionConfig extends Located implements Serializable {
     protected Map<String, ResultConfig> results;
     protected List<ExceptionMappingConfig> exceptionMappings;
     protected String className;
+    protected String beanName;
     protected String methodName;
     protected String packageName;
     protected String name;
@@ -74,6 +75,7 @@ public class ActionConfig extends Located implements Serializable {
     protected ActionConfig(ActionConfig orig) {
         this.name = orig.name;
         this.className = orig.className;
+        this.beanName = orig.beanName;
         this.methodName = orig.methodName;
         this.packageName = orig.packageName;
         this.params = new LinkedHashMap<>(orig.params);
@@ -90,6 +92,10 @@ public class ActionConfig extends Located implements Serializable {
 
     public String getClassName() {
         return className;
+    }
+
+    public String getBeanName() {
+        return beanName;
     }
 
     public List<ExceptionMappingConfig> getExceptionMappings() {
@@ -151,6 +157,10 @@ public class ActionConfig extends Located implements Serializable {
             return false;
         }
 
+        if ((beanName != null) ? (!beanName.equals(actionConfig.beanName)) : (actionConfig.beanName != null)) {
+            return false;
+        }
+
         if ((name != null) ? (!name.equals(actionConfig.name)) : (actionConfig.name != null)) {
             return false;
         }
@@ -186,6 +196,7 @@ public class ActionConfig extends Located implements Serializable {
         result = 31 * result + (results != null ? results.hashCode() : 0);
         result = 31 * result + (exceptionMappings != null ? exceptionMappings.hashCode() : 0);
         result = 31 * result + (className != null ? className.hashCode() : 0);
+        result = 31 * result + (beanName != null ? beanName.hashCode() : 0);
         result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
         result = 31 * result + (packageName != null ? packageName.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
@@ -198,6 +209,9 @@ public class ActionConfig extends Located implements Serializable {
         sb.append("{ActionConfig ");
         sb.append(name).append(" (");
         sb.append(className);
+        if (beanName != null) {
+            sb.append("@").append(beanName);
+        }
         if (methodName != null) {
             sb.append(".").append(methodName).append("()");
         }
@@ -241,6 +255,11 @@ public class ActionConfig extends Located implements Serializable {
 
         public Builder className(String name) {
             target.className = name;
+            return this;
+        }
+
+        public Builder beanName(String name) {
+            target.beanName = name;
             return this;
         }
 

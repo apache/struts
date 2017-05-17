@@ -1,4 +1,4 @@
-<!DOCTYPE xwork PUBLIC "-//Apache Struts//XWork 2.0//EN" "http://struts.apache.org/dtds/xwork-2.0.dtd">
+<!DOCTYPE xwork PUBLIC "-//Apache Struts//XWork 2.5//EN" "http://struts.apache.org/dtds/xwork-2.5.dtd">
 <xwork>
 	<bean type="com.opensymphony.xwork2.ObjectFactory" class="com.opensymphony.xwork2.spring.SpringObjectFactory" />
 	<constant name="applicationContextPath" value="com/opensymphony/xwork2/spring/actionContext-spring.xml" />
@@ -6,7 +6,14 @@
         <result-types>
             <result-type name="null" class="com.opensymphony.xwork2.mock.MockResult" default="true"/>
             <result-type name="springResult" class="springResult" />
+            <result-type name="chain"
+                class="com.opensymphony.xwork2.ActionChainResult" />
         </result-types>
+
+        <interceptors>
+            <interceptor name="chain"
+                class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"></interceptor>
+        </interceptors>
 
 		<action name="simpleAction" class="simple-action"/>
 
@@ -19,5 +26,17 @@
         <action name="simpleActionSpringResult" class="simple-action">
 			<result name="error" type="springResult"/>
 		</action>
+
+        <action name="chainedAOPedTestBeanAction" class="com.opensymphony.xwork2.TestBean"
+                bean="pointcutted-test-bean" method="getName">
+            <result name="WW-4105" type="chain">
+                <param name="actionName">chaintoAOPedTestSubBeanAction</param>
+            </result>
+        </action>
+        <action name="chaintoAOPedTestSubBeanAction" class="com.opensymphony.xwork2.TestSubBean"
+                bean="pointcutted-test-sub-bean" method="getIssueId">
+            <interceptor-ref name="chain" />
+            <result name="WW-4105" type="null" />
+        </action>
     </package>
 </xwork>

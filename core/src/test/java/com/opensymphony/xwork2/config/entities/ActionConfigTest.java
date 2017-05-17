@@ -25,12 +25,13 @@ public class ActionConfigTest extends XWorkTestCase {
 
     public void testToString() {
         ActionConfig cfg = new ActionConfig.Builder("", "bob", "foo.Bar")
+                .beanName("bean")
                 .methodName("execute")
                 .location(new LocationImpl(null, "foo/xwork.xml", 10, 12))
                 .build();
 
         assertTrue("Wrong toString(): "+cfg.toString(), 
-            "{ActionConfig bob (foo.Bar.execute()) - foo/xwork.xml:10:12 - allowedMethods=[LiteralAllowedMethod{allowedMethod='execute'}]}".equals(cfg.toString()));
+            "{ActionConfig bob (foo.Bar@bean.execute()) - foo/xwork.xml:10:12 - allowedMethods=[LiteralAllowedMethod{allowedMethod='execute'}]}".equals(cfg.toString()));
     }
     
     public void testToStringWithNoMethod() {

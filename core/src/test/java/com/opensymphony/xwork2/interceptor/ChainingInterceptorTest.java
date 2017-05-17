@@ -143,6 +143,26 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         interceptor.intercept(invocation);
     }
 
+    public void testEditablePropertiesChained() throws Exception {
+        TestSubBean subbean = new TestSubBean();
+        TestSubBeanAction action = new TestSubBeanAction();
+        mockInvocation.matchAndReturn("getAction", action);
+        subbean.setBirth(new Date());
+        subbean.setName("foo");
+        subbean.setCount(1);
+        subbean.setIssueId("WW-4105");
+        stack.push(subbean);
+        stack.push(action);
+
+        interceptor.setEditableClass(TestBean.class.getName());
+        interceptor.intercept(invocation);
+        interceptor.setEditableClass(null);
+        assertEquals(subbean.getBirth(), action.getBirth());
+        assertEquals(subbean.getName(), action.getName());
+        assertEquals(subbean.getCount(), action.getCount());
+        assertNull(action.getIssueId());
+    }
+
 
     @Override
     protected void setUp() throws Exception {
@@ -160,6 +180,13 @@ public class ChainingInterceptorTest extends XWorkTestCase {
 
 
     private class TestBeanAction extends TestBean implements Action {
+        public String execute() throws Exception {
+            return SUCCESS;
+        }
+    }
+
+
+    private class TestSubBeanAction extends TestSubBean implements Action {
         public String execute() throws Exception {
             return SUCCESS;
         }

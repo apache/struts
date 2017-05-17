@@ -41,6 +41,8 @@ public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
 
     static String CHAINED_ACTION = "chainedAction";
     static String CHAINTO_ACTION = "chaintoAction";
+    static String CHAINED_SUB_ACTION = "chainedSubAction";
+    static String CHAINTO_SUB_ACTION = "chaintoSubAction";
     ObjectFactory objectFactory;
 
     public void testTwoExcludesPropertiesChained() throws Exception {
@@ -50,6 +52,17 @@ public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
         chainedAction.setBar(1);
         chainedAction.setFoo(1);
         chainedAction.setBlah("WW-4528");
+        proxy.execute();
+    }
+
+    public void testEditablePropertiesChained() throws Exception {
+        assertNotNull(objectFactory);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", CHAINED_SUB_ACTION, null, null);
+        TestSubBean chainedSubAction = (TestSubBean) proxy.getAction();
+        chainedSubAction.setBirth(new Date());
+        chainedSubAction.setName("foo");
+        chainedSubAction.setCount(1);
+        chainedSubAction.setIssueId("WW-4105");
         proxy.execute();
     }
 
@@ -90,6 +103,9 @@ public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
             HashMap<String, String> interceptorParams = new HashMap<>();
             interceptorParams.put("excludes", "blah,bar");
 
+            HashMap<String, String> interceptorEditableClassParams = new HashMap<>();
+            interceptorEditableClassParams.put("editableClass", TestBean.class.getName());
+
             HashMap successParams1 = new HashMap();
             successParams1.put("propertyName", "baz");
             successParams1.put("expectedValue", 1);
@@ -97,6 +113,10 @@ public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
             HashMap successParams2 = new HashMap();
             successParams2.put("propertyName", "blah");
             successParams2.put("expectedValue", null);
+
+            HashMap editableClassSuccessParams = new HashMap();
+            editableClassSuccessParams.put("propertyName", "issueId");
+            editableClassSuccessParams.put("expectedValue", null);
 
             InterceptorConfig chainingInterceptorConfig =  new InterceptorConfig.Builder("chainStack", ChainingInterceptor.class.getName()).build();
             PackageConfig packageConfig = new PackageConfig.Builder("default")
@@ -107,6 +127,13 @@ public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
                             .addInterceptors(Collections.singletonList(new InterceptorMapping("chainStack", objectFactory.buildInterceptor(chainingInterceptorConfig, interceptorParams))))
                             .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, TestResult.class.getName()).addParams(successParams1).build())
                             .addResultConfig(new ResultConfig.Builder(Action.ERROR, TestResult.class.getName()).addParams(successParams2).build())
+                            .build())
+                    .addActionConfig(CHAINED_SUB_ACTION, new ActionConfig.Builder("defaultPackage", CHAINED_SUB_ACTION, TestSubBean.class.getName()).methodName("getName")
+                            .addResultConfig(new ResultConfig.Builder("foo", ActionChainResult.class.getName()).addParam("actionName", CHAINTO_SUB_ACTION).build())
+                            .build())
+                    .addActionConfig(CHAINTO_SUB_ACTION, new ActionConfig.Builder("defaultPackage", CHAINTO_SUB_ACTION, TestSubBean.class.getName()).methodName("getName")
+                            .addInterceptors(Collections.singletonList(new InterceptorMapping("chainStack", objectFactory.buildInterceptor(chainingInterceptorConfig, interceptorEditableClassParams))))
+                            .addResultConfig(new ResultConfig.Builder("foo", TestResult.class.getName()).addParams(editableClassSuccessParams).build())
                             .build())
                     .build();
             config.addPackageConfig("defaultPackage", packageConfig);

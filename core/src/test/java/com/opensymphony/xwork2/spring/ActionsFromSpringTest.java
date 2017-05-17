@@ -77,4 +77,20 @@ public class ActionsFromSpringTest extends XWorkTestCase {
     	        assertTrue(springResult.isInitialize());
     	        assertNotNull(springResult.getStringParameter());
     }
+
+    public void testChainingAOPedActions() throws Exception {
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "chainedAOPedTestBeanAction", null, null);
+
+        proxy.execute();              
+
+        TestSubBean chaintoAOPedAction = (TestSubBean) appContext.getBean("pointcutted-test-sub-bean");
+        TestSubBean aspectState = (TestSubBean) appContext.getBean("aspected-test-sub-bean");
+
+        assertEquals(1, chaintoAOPedAction.getCount()); //check if chain
+        assertEquals("WW-4105", chaintoAOPedAction.getName());
+        assertNotNull(aspectState.getIssueId());   //and AOP
+        assertNotNull(aspectState.getName());
+        assertEquals(aspectState.getName(), aspectState.getIssueId());
+        assertEquals("WW-4105", aspectState.getIssueId());   //work together without any problem
+    }
 }

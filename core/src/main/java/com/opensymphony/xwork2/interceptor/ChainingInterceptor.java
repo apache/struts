@@ -125,6 +125,8 @@ public class ChainingInterceptor extends AbstractInterceptor {
 
     protected Collection<String> includes;
     protected ReflectionProvider reflectionProvider;
+    
+    protected String editableClass;
 
     @Inject
     public void setReflectionProvider(ReflectionProvider prov) {
@@ -161,7 +163,18 @@ public class ChainingInterceptor extends AbstractInterceptor {
         Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
         for (Object object : list) {
             if (shouldCopy(object)) {
-                reflectionProvider.copy(object, invocation.getAction(), ctxMap, prepareExcludes(), includes);
+                Object action = invocation.getAction();
+                Class <?> editable = null;
+                if (null != editableClass && !action.getClass().getName().equals(editableClass)) {
+                    //only setting properties defined in the given editable class e.g. to skip proxy properties (WW-4105)
+                    try {
+                        editable = Class.forName(editableClass);
+                    } catch (ClassNotFoundException e) {
+                        //warn and continue without any property restriction
+                        LOG.warn("Restrict property setting failed: " + editableClass + " class not found", e);
+                    }
+                }            		
+                reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, editable);
             }
         }
     }
@@ -257,4 +270,22 @@ public class ChainingInterceptor extends AbstractInterceptor {
         this.includes = includes;
     }
 
+    /**
+     * Sets the class (or interface) to restrict property setting
+     * i.e. only setting properties defined in the given "editable" class (or interface).
+     *
+     * @param editableClass the class (or interface) fully qualified name
+     */
+    public void setEditableClass(String editableClass) {
+        this.editableClass = editableClass;
+    }
+
+    /**
+     * Gets the class (or interface) which restricts property setting
+     *
+     * @return the class (or interface) fully qualified name
+     */
+    public String getEditableClass() {
+        return editableClass;
+    }
 }

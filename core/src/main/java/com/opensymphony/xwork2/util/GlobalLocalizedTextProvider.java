@@ -26,20 +26,18 @@ import com.opensymphony.xwork2.ModelDriven;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
  * Provides support for localization in the framework, it can be used to read only default bundles,
  * or it can search the class hierarchy to find proper bundles.
  */
-public class DefaultLocalizedTextProvider extends AbstractLocalizedTextProvider {
+public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultLocalizedTextProvider.class);
+    private static final Logger LOG = LogManager.getLogger(GlobalLocalizedTextProvider.class);
 
-    public DefaultLocalizedTextProvider() {
+    public GlobalLocalizedTextProvider() {
         addDefaultResourceBundle(XWORK_MESSAGES_BUNDLE);
         addDefaultResourceBundle(STRUTS_MESSAGES_BUNDLE);
     }

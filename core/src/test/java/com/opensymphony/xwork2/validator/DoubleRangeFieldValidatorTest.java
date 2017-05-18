@@ -36,7 +36,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         //Explicitly set an out-of-range double for DoubleRangeValidatorTest
         Map<String, Object> context = new HashMap<>();
         HashMap<String, Object> params = new HashMap<>();
-        params.put("percentage", 100.0123d);
+        params.put("percentage", 100.12);
         context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context);
@@ -50,8 +50,8 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         assertEquals(1, errorMessages.size());
 
         String errorMessage = errorMessages.get(0);
-        assertNotNull("Expecting: percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
-        assertEquals("percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
+        assertNotNull("Expecting: percentage must be between 0.1 and 10.1, current value is 100.12.", errorMessage);
+        assertEquals("percentage must be between 0.1 and 10.1, current value is 100.12.", errorMessage);
     }
 
     public void testRangeValidationNoError() throws Exception {
@@ -192,7 +192,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         //Explicitly set an out-of-range double for DoubleRangeValidatorTest
         Map<String, Object> context = new HashMap<>();
         HashMap<String, Object> params = new HashMap<>();
-        params.put("percentage", 100.0123d);
+        params.put("percentage", 100.12);
         context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.EXPRESSION_VALIDATION_ACTION, null, context);
@@ -205,8 +205,8 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         assertEquals(1, errorMessages.size());
 
         String errorMessage = errorMessages.get(0);
-        assertNotNull("Expecting: percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
-        assertEquals("percentage must be between 0.1 and 10.1, current value is 100.0123.", errorMessage);
+        assertNotNull("Expecting: percentage must be between 0.1 and 10.1, current value is 100.12.", errorMessage);
+        assertEquals("percentage must be between 0.1 and 10.1, current value is 100.12.", errorMessage);
     }
 
     public void testExpressionParams() throws Exception {

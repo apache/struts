@@ -72,7 +72,7 @@ import com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.LocalizedTextProvider;
-import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
+import com.opensymphony.xwork2.util.StrutsLocalizedTextProvider;
 import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParser;
@@ -182,7 +182,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ActionValidatorManager.class, "no-annotations", DefaultActionValidatorManager.class, Scope.SINGLETON)
 
                 .factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON)
-                .factory(LocalizedTextProvider.class, DefaultLocalizedTextProvider.class, Scope.SINGLETON)
+                .factory(LocalizedTextProvider.class, StrutsLocalizedTextProvider.class, Scope.SINGLETON)
                 .factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON)
                 .factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON)
 

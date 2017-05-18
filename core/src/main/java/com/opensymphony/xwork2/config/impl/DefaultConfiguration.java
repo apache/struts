@@ -261,7 +261,7 @@ public class DefaultConfiguration implements Configuration {
 
         builder.factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON);
 
-        builder.factory(LocalizedTextProvider.class, DefaultLocalizedTextProvider.class, Scope.SINGLETON);
+        builder.factory(LocalizedTextProvider.class, StrutsLocalizedTextProvider.class, Scope.SINGLETON);
         builder.factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON);
         builder.factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON);
 

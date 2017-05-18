@@ -23,7 +23,6 @@ package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.util.DefaultLocalizedTextProvider;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.LocaleUtils;

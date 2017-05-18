@@ -22,10 +22,14 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.util.reflection.ReflectionProviderFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.beans.PropertyDescriptor;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -35,13 +39,67 @@ import java.util.ResourceBundle;
  * Provides support for localization in the framework, it can be used to read only default bundles,
  * or it can search the class hierarchy to find proper bundles.
  */
-public class DefaultLocalizedTextProvider extends AbstractLocalizedTextProvider {
+public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultLocalizedTextProvider.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsLocalizedTextProvider.class);
 
-    public DefaultLocalizedTextProvider() {
+    /**
+     * Clears the internal list of resource bundles.
+     *
+     * @deprecated used only in tests
+     */
+    @Deprecated
+    public static void clearDefaultResourceBundles() {
+        // no-op
+    }
+
+    public StrutsLocalizedTextProvider() {
         addDefaultResourceBundle(XWORK_MESSAGES_BUNDLE);
         addDefaultResourceBundle(STRUTS_MESSAGES_BUNDLE);
+    }
+
+    /**
+     * Builds a {@link java.util.Locale} from a String of the form en_US_foo into a Locale
+     * with language "en", country "US" and variant "foo". This will parse the output of
+     * {@link java.util.Locale#toString()}.
+     *
+     * @param localeStr     The locale String to parse.
+     * @param defaultLocale The locale to use if localeStr is <tt>null</tt>.
+     * @return requested Locale
+     * @deprecated please use {@link org.apache.commons.lang3.LocaleUtils#toLocale(String)}
+     */
+    @Deprecated
+    public static Locale localeFromString(String localeStr, Locale defaultLocale) {
+        if ((localeStr == null) || (localeStr.trim().length() == 0) || ("_".equals(localeStr))) {
+            if (defaultLocale != null) {
+                return defaultLocale;
+            }
+            return Locale.getDefault();
+        }
+
+        int index = localeStr.indexOf('_');
+        if (index < 0) {
+            return new Locale(localeStr);
+        }
+
+        String language = localeStr.substring(0, index);
+        if (index == localeStr.length()) {
+            return new Locale(language);
+        }
+
+        localeStr = localeStr.substring(index + 1);
+        index = localeStr.indexOf('_');
+        if (index < 0) {
+            return new Locale(language, localeStr);
+        }
+
+        String country = localeStr.substring(0, index);
+        if (index == localeStr.length()) {
+            return new Locale(language, country);
+        }
+
+        localeStr = localeStr.substring(index + 1);
+        return new Locale(language, country, localeStr);
     }
 
     /**
@@ -164,7 +222,8 @@ public class DefaultLocalizedTextProvider extends AbstractLocalizedTextProvider 
      * @return the localized text, or null if none can be found and no defaultMessage is provided
      */
     @Override
-    public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args, ValueStack valueStack) {
+    public String findText(Class aClass, String aTextName, Locale locale, String defaultMessage, Object[] args,
+                           ValueStack valueStack) {
         String indexedTextName = null;
         if (aTextName == null) {
             LOG.warn("Trying to find text with null key!");
@@ -181,6 +240,107 @@ public class DefaultLocalizedTextProvider extends AbstractLocalizedTextProvider 
                 String a = indexedTextName.substring(0, i);
                 String b = indexedTextName.substring(j);
                 indexedTextName = a + "[*" + b;
+            }
+        }
+
+        // search up class hierarchy
+        String msg = findMessage(aClass, aTextName, indexedTextName, locale, args, null, valueStack);
+
+        if (msg != null) {
+            return msg;
+        }
+
+        if (ModelDriven.class.isAssignableFrom(aClass)) {
+            ActionContext context = ActionContext.getContext();
+            // search up model's class hierarchy
+            ActionInvocation actionInvocation = context.getActionInvocation();
+
+            // ActionInvocation may be null if we're being run from a Sitemesh filter, so we won't get model texts if this is null
+            if (actionInvocation != null) {
+                Object action = actionInvocation.getAction();
+                if (action instanceof ModelDriven) {
+                    Object model = ((ModelDriven) action).getModel();
+                    if (model != null) {
+                        msg = findMessage(model.getClass(), aTextName, indexedTextName, locale, args, null, valueStack);
+                        if (msg != null) {
+                            return msg;
+                        }
+                    }
+                }
+            }
+        }
+
+        // nothing still? alright, search the package hierarchy now
+        for (Class clazz = aClass;
+             (clazz != null) && !clazz.equals(Object.class);
+             clazz = clazz.getSuperclass()) {
+
+            String basePackageName = clazz.getName();
+            while (basePackageName.lastIndexOf('.') != -1) {
+                basePackageName = basePackageName.substring(0, basePackageName.lastIndexOf('.'));
+                String packageName = basePackageName + ".package";
+                msg = getMessage(packageName, locale, aTextName, valueStack, args);
+
+                if (msg != null) {
+                    return msg;
+                }
+
+                if (indexedTextName != null) {
+                    msg = getMessage(packageName, locale, indexedTextName, valueStack, args);
+
+                    if (msg != null) {
+                        return msg;
+                    }
+                }
+            }
+        }
+
+        // see if it's a child property
+        int idx = aTextName.indexOf(".");
+
+        if (idx != -1) {
+            String newKey = null;
+            String prop = null;
+
+            if (aTextName.startsWith(XWorkConverter.CONVERSION_ERROR_PROPERTY_PREFIX)) {
+                idx = aTextName.indexOf(".", XWorkConverter.CONVERSION_ERROR_PROPERTY_PREFIX.length());
+
+                if (idx != -1) {
+                    prop = aTextName.substring(XWorkConverter.CONVERSION_ERROR_PROPERTY_PREFIX.length(), idx);
+                    newKey = XWorkConverter.CONVERSION_ERROR_PROPERTY_PREFIX + aTextName.substring(idx + 1);
+                }
+            } else {
+                prop = aTextName.substring(0, idx);
+                newKey = aTextName.substring(idx + 1);
+            }
+
+            if (prop != null) {
+                Object obj = valueStack.findValue(prop);
+                try {
+                    Object actionObj = ReflectionProviderFactory.getInstance().getRealTarget(prop, valueStack.getContext(), valueStack.getRoot());
+                    if (actionObj != null) {
+                        PropertyDescriptor propertyDescriptor = ReflectionProviderFactory.getInstance().getPropertyDescriptor(actionObj.getClass(), prop);
+
+                        if (propertyDescriptor != null) {
+                            Class clazz = propertyDescriptor.getPropertyType();
+
+                            if (clazz != null) {
+                                if (obj != null) {
+                                    valueStack.push(obj);
+                                }
+                                msg = findText(clazz, newKey, locale, null, args);
+                                if (obj != null) {
+                                    valueStack.pop();
+                                }
+                                if (msg != null) {
+                                    return msg;
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    LOG.debug("unable to find property {}", prop, e);
+                }
             }
         }
 
@@ -224,7 +384,7 @@ public class DefaultLocalizedTextProvider extends AbstractLocalizedTextProvider 
      * @param aTextName text name
      * @param locale    the locale
      * @return the localized text, or null if none can be found and no defaultMessage is provided
-     * @see #findText(ResourceBundle, String, Locale, String, Object[])
+     * @see #findText(java.util.ResourceBundle, String, java.util.Locale, String, Object[])
      */
     @Override
     public String findText(ResourceBundle bundle, String aTextName, Locale locale) {

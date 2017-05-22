@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.oval.interceptor;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ModelDriven;
@@ -26,13 +27,12 @@ import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
-import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.util.ValueStack;
 import net.sf.oval.exception.ExpressionEvaluationException;
 import net.sf.oval.expression.ExpressionLanguage;
 import net.sf.oval.expression.ExpressionLanguageOGNLImpl;
-import ognl.*;
+import ognl.Ognl;
+import ognl.OgnlException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
@@ -50,7 +50,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /*
  This interceptor provides validation using the OVal validation framework
@@ -69,6 +68,10 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
 
     private ExpressionLanguage ognlExpressionLanguage;
 
+    public OValValidationInterceptor() {
+        ognlExpressionLanguage = new ExpressionLanguageOGNL();
+    }
+
     @Inject
     public void setValidationManager(OValValidationManager validationManager) {
         this.validationManager = validationManager;
@@ -85,16 +88,6 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     @Inject(value = "struts.oval.validateJPAAnnotations")
     public void setValidateJPAAnnotations(String validateJPAAnnotations) {
         this.validateJPAAnnotations = Boolean.parseBoolean(validateJPAAnnotations);
-    }
-
-    @Inject
-    public void setOgnlUtil(OgnlUtil ognlUtil) {
-        SecurityMemberAccess securityMemberAccess = new SecurityMemberAccess(false);
-        securityMemberAccess.setExcludedClasses(ognlUtil.getExcludedClasses());
-        securityMemberAccess.setExcludedPackageNamePatterns(ognlUtil.getExcludedPackageNamePatterns());
-        securityMemberAccess.setExcludedPackageNames(ognlUtil.getExcludedPackageNames());
-
-        ognlExpressionLanguage = new ExpressionLanguageOGNL(securityMemberAccess);
     }
 
     /**
@@ -312,22 +305,10 @@ class ExpressionLanguageOGNL extends ExpressionLanguageOGNLImpl {
 
     private static final Logger LOG = LogManager.getLogger(ExpressionLanguageOGNL.class);
 
-    private MemberAccess memberAccess;
-
-    public ExpressionLanguageOGNL(MemberAccess memberAccess) {
-        this.memberAccess = memberAccess;
-    }
-
     public Object evaluate(final String expression, final Map<String, ? > values) throws ExpressionEvaluationException {
         try {
-            final OgnlContext ctx = (OgnlContext) Ognl.createDefaultContext(null, memberAccess);
-
-            for (final Map.Entry<String, ?> entry : values.entrySet()) {
-                ctx.put(entry.getKey(), entry.getValue());
-            }
-
             LOG.debug("Evaluating OGNL expression: {1}", expression);
-            return Ognl.getValue(expression, ctx, ctx);
+            return Ognl.getValue(expression, ActionContext.getContext().getContextMap(), values);
         } catch (final OgnlException ex) {
             throw new ExpressionEvaluationException("Evaluating script with OGNL failed.", ex);
         }

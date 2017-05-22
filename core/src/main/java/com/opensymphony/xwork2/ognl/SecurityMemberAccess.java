@@ -19,11 +19,13 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.util.ProxyUtil;
-import ognl.DefaultMemberAccess;
+import ognl.MemberAccess;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.*;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +36,7 @@ import java.util.regex.Pattern;
  * Allows access decisions to be made on the basis of whether a member is static or not.
  * Also blocks or allows access to properties.
  */
-public class SecurityMemberAccess extends DefaultMemberAccess {
+public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
@@ -47,12 +49,33 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     private boolean disallowProxyMemberAccess;
 
     public SecurityMemberAccess(boolean method) {
-        super(false);
         allowStaticMethodAccess = method;
     }
 
     public boolean getAllowStaticMethodAccess() {
         return allowStaticMethodAccess;
+    }
+
+    @Override
+    public Object setup(Map context, Object target, Member member, String propertyName) {
+        Object result = null;
+
+        if (isAccessible(context, target, member, propertyName)) {
+            AccessibleObject accessible = (AccessibleObject) member;
+
+            if (!accessible.isAccessible()) {
+                result = Boolean.TRUE;
+                accessible.setAccessible(true);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void restore(Map context, Object target, Member member, String propertyName, Object state) {
+        if (state != null) {
+            ((AccessibleObject) member).setAccessible((Boolean) state);
+        }
     }
 
     @Override
@@ -105,8 +128,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
         }
 
-        // Now check for standard scope rules
-        return super.isAccessible(context, target, member, propertyName) && isAcceptableProperty(propertyName);
+        return Modifier.isPublic(member.getModifiers()) && isAcceptableProperty(propertyName);
     }
 
     protected boolean checkStaticMethodAccess(Member member) {
@@ -132,7 +154,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         if (targetPackage == null || memberPackage == null) {
             LOG.warn("The use of the default (unnamed) package is discouraged!");
         }
-        
+
         final String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
         final String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
 
@@ -142,7 +164,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             }
         }
 
-        for (String packageName: excludedPackageNames) {
+        for (String packageName : excludedPackageNames) {
             if (targetPackageName.startsWith(packageName) || targetPackageName.equals(packageName)
                     || memberPackageName.startsWith(packageName) || memberPackageName.equals(packageName)) {
                 return true;

@@ -34,6 +34,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import ognl.Ognl;
 
 import org.apache.struts2.ServletActionContext;
@@ -342,7 +343,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         ActionConfig actionConfig = new ActionConfig.Builder("", "", "")
                 .addResultConfigs(results).build();
 
-        ActionContext ac = new ActionContext(Ognl.createDefaultContext(null));
+        ActionContext ac = new ActionContext(Ognl.createDefaultContext(null, new SecurityMemberAccess(false)));
         ac.put(ServletActionContext.HTTP_REQUEST, requestMock.proxy());
         ac.put(ServletActionContext.HTTP_RESPONSE, responseMock.proxy());
         MockActionInvocation ai = new MockActionInvocation();

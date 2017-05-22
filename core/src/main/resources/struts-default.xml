@@ -49,7 +49,6 @@
                 ognl.ClassResolver,
                 ognl.TypeConverter,
                 ognl.MemberAccess,
-                ognl.DefaultMemberAccess,
                 com.opensymphony.xwork2.ognl.SecurityMemberAccess,
                 com.opensymphony.xwork2.ActionContext" />
 

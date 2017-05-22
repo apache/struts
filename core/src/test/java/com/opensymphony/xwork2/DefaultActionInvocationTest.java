@@ -105,11 +105,8 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testInvokingExistingExecuteMethod() throws Exception {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
-            public ValueStack getStack() {
-                return new StubValueStack();
-            }
-        };
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        container.inject(dai);
 
         SimpleAction action = new SimpleAction() {
             @Override
@@ -120,6 +117,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         MockActionProxy proxy = new MockActionProxy();
         proxy.setMethod("execute");
 
+        dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
         dai.ognlUtil = new OgnlUtil();
 
@@ -132,11 +130,8 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testInvokingMissingMethod() throws Exception {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
-            public ValueStack getStack() {
-                return new StubValueStack();
-            }
-        };
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        container.inject(dai);
 
         SimpleAction action = new SimpleAction() {
             @Override
@@ -154,6 +149,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
             }
         };
 
+        dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
         dai.ognlUtil = new OgnlUtil();
         dai.unknownHandlerManager = uhm;
@@ -173,11 +169,8 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testInvokingExistingMethodThatThrowsException() throws Exception {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
-            public ValueStack getStack() {
-                return new StubValueStack();
-            }
-        };
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        container.inject(dai);
 
         SimpleAction action = new SimpleAction() {
             @Override
@@ -188,6 +181,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         MockActionProxy proxy = new MockActionProxy();
         proxy.setMethod("execute");
 
+        dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
         dai.ognlUtil = new OgnlUtil();
 
@@ -206,11 +200,8 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testUnknownHandlerManagerThatThrowsException() throws Exception {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
-            public ValueStack getStack() {
-                return new StubValueStack();
-            }
-        };
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        container.inject(dai);
 
         UnknownHandlerManager uhm = new DefaultUnknownHandlerManager() {
             @Override
@@ -227,6 +218,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         MockActionProxy proxy = new MockActionProxy();
         proxy.setMethod("notExists");
 
+        dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
         dai.ognlUtil = new OgnlUtil();
         dai.unknownHandlerManager = uhm;
@@ -247,11 +239,8 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testUnknownHandlerManagerThatReturnsNull() throws Exception {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
-            public ValueStack getStack() {
-                return new StubValueStack();
-            }
-        };
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        container.inject(dai);
 
         UnknownHandlerManager uhm = new DefaultUnknownHandlerManager() {
             @Override
@@ -268,6 +257,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         MockActionProxy proxy = new MockActionProxy();
         proxy.setMethod("notExists");
 
+        dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
         dai.ognlUtil = new OgnlUtil();
         dai.unknownHandlerManager = uhm;
@@ -287,11 +277,8 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testUnknownHandlerManagerThatReturnsSuccess() throws Exception {
         // given
-        DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {
-            public ValueStack getStack() {
-                return new StubValueStack();
-            }
-        };
+        DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
+        container.inject(dai);
 
         UnknownHandlerManager uhm = new DefaultUnknownHandlerManager() {
             @Override
@@ -308,6 +295,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         MockActionProxy proxy = new MockActionProxy();
         proxy.setMethod("notExists");
 
+        dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
         dai.ognlUtil = new OgnlUtil();
         dai.unknownHandlerManager = uhm;

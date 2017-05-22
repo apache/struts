@@ -677,7 +677,7 @@ public class OgnlUtil {
         memberAccess.setExcludedPackageNames(excludedPackageNames);
         memberAccess.setDisallowProxyMemberAccess(disallowProxyMemberAccess);
 
-        return Ognl.createDefaultContext(root, resolver, defaultConverter, memberAccess);
+        return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);
     }
 
     private interface OgnlTask<T> {

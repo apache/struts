@@ -18,8 +18,10 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
+import ognl.OgnlContext;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.io.Serializable;
@@ -184,6 +186,10 @@ public class ActionContext implements Serializable {
      * @return the context map.
      */
     public Map<String, Object> getContextMap() {
+        Map<String, Object> context = getContext().context;
+        if (context instanceof OgnlContext) {
+            ((OgnlContext) context).put(TypeConverter.TYPE_CONVERTER_CONTEXT_KEY, ((OgnlContext) context).getTypeConverter());
+        }
         return context;
     }
 

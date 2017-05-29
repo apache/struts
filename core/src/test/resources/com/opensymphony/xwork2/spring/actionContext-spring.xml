@@ -51,17 +51,25 @@
     <bean id="pointcutted-test-sub-bean" class="com.opensymphony.xwork2.TestSubBean">
         <property name="issueId"><value>WW-4105</value></property>
     </bean>
-    <bean id="aspected-test-sub-bean" class="com.opensymphony.xwork2.TestSubBean" />
+    <bean id="test-aspect" class="com.opensymphony.xwork2.spring.TestAspect" />
     <aop:config>
-        <aop:aspect id="myAspect" ref="aspected-test-sub-bean">
+        <aop:aspect id="myAspect" ref="test-aspect">
             <aop:pointcut id="testBeanGetName"
                 expression="execution(String com.opensymphony.xwork2.TestBean.getName()) and bean(pointcutted-test-bean)" />
             <aop:after-returning pointcut-ref="testBeanGetName"
-                method="setIssueId" returning="issueId" />
+                method="setName" returning="name" />
+            <aop:pointcut id="testBeanGetCount"
+                expression="execution(int com.opensymphony.xwork2.TestBean.getCount()) and bean(pointcutted-test-bean)" />
+            <aop:after-returning pointcut-ref="testBeanGetCount"
+                method="setCount" returning="count" />
             <aop:pointcut id="testSubBeanGetIssueId"
                 expression="execution(String com.opensymphony.xwork2.TestSubBean.getIssueId()) and bean(pointcutted-test-sub-bean)" />
             <aop:after-returning pointcut-ref="testSubBeanGetIssueId"
-                method="setName" returning="name" />
+                method="setIssueId" returning="issueId" />
+            <aop:pointcut id="testBeanSetCount"
+                expression="execution(void com.opensymphony.xwork2.TestBean.setCount(int)) and args(count2) and bean(pointcutted-test-sub-bean)" />
+            <aop:before pointcut-ref="testBeanSetCount"
+                method="setCount2" arg-names="count2"/>
         </aop:aspect>
     </aop:config>
 </beans>

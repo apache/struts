@@ -53,33 +53,33 @@ public class SpringProxyUtilTest extends XWorkTestCase {
         Object pointcuttedTestSubBean = appContext.getBean("pointcutted-test-sub-bean");
         assertTrue(ProxyUtil.isSpringAopProxy(pointcuttedTestSubBean));
 
-        Object aspectedTestSubBean = appContext.getBean("aspected-test-sub-bean");
-        assertFalse(ProxyUtil.isSpringAopProxy(aspectedTestSubBean));
+        Object testAspect = appContext.getBean("test-aspect");
+        assertFalse(ProxyUtil.isSpringAopProxy(testAspect));
     }
 
-    public void testGetSpringUltimateTargetObject() throws Exception {
+    public void testSpringUltimateTargetClass() throws Exception {
         Object simpleAction = appContext.getBean("simple-action");
-        Object simpleActionUltimateTargetObject = ProxyUtil.getSpringUltimateTargetObject(simpleAction);
-        assertEquals(simpleAction, simpleActionUltimateTargetObject);
+        Class<?> simpleActionUltimateTargetClass = ProxyUtil.springUltimateTargetClass(simpleAction);
+        assertEquals(SimpleAction.class, simpleActionUltimateTargetClass);
 
         Object proxiedAction = appContext.getBean("proxied-action");
-        Object proxiedActionUltimateTargetObject = ProxyUtil.getSpringUltimateTargetObject(proxiedAction);
-        assertEquals(SimpleAction.class, proxiedActionUltimateTargetObject.getClass());
+        Class<?> proxiedActionUltimateTargetClass = ProxyUtil.springUltimateTargetClass(proxiedAction);
+        assertEquals(SimpleAction.class, proxiedActionUltimateTargetClass);
 
         Object autoProxiedAction = appContext.getBean("auto-proxied-action");
-        Object autoProxiedActionUltimateTargetObject = ProxyUtil.getSpringUltimateTargetObject(autoProxiedAction);
-        assertEquals(SimpleAction.class, autoProxiedActionUltimateTargetObject.getClass());
+        Class<?> autoProxiedActionUltimateTargetClass = ProxyUtil.springUltimateTargetClass(autoProxiedAction);
+        assertEquals(SimpleAction.class, autoProxiedActionUltimateTargetClass);
 
         Object pointcuttedTestBean = appContext.getBean("pointcutted-test-bean");
-        Object pointcuttedTestBeanUltimateTargetObject = ProxyUtil.getSpringUltimateTargetObject(pointcuttedTestBean);
-        assertEquals(TestBean.class, pointcuttedTestBeanUltimateTargetObject.getClass());
+        Class<?> pointcuttedTestBeanUltimateTargetClass = ProxyUtil.springUltimateTargetClass(pointcuttedTestBean);
+        assertEquals(TestBean.class, pointcuttedTestBeanUltimateTargetClass);
 
         Object pointcuttedTestSubBean = appContext.getBean("pointcutted-test-sub-bean");
-        Object pointcuttedTestSubBeanUltimateTargetObject = ProxyUtil.getSpringUltimateTargetObject(pointcuttedTestSubBean);
-        assertEquals(TestSubBean.class, pointcuttedTestSubBeanUltimateTargetObject.getClass());
+        Class<?> pointcuttedTestSubBeanUltimateTargetClass = ProxyUtil.springUltimateTargetClass(pointcuttedTestSubBean);
+        assertEquals(TestSubBean.class, pointcuttedTestSubBeanUltimateTargetClass);
 
-        Object aspectedTestSubBean = appContext.getBean("aspected-test-sub-bean");
-        Object aspectedTestSubBeanUltimateTargetObject = ProxyUtil.getSpringUltimateTargetObject(aspectedTestSubBean);
-        assertEquals(aspectedTestSubBean, aspectedTestSubBeanUltimateTargetObject);
+        Object testAspect = appContext.getBean("test-aspect");
+        Class<?> testAspectUltimateTargetClass = ProxyUtil.springUltimateTargetClass(testAspect);
+        assertEquals(TestAspect.class, testAspectUltimateTargetClass);
     }
 }

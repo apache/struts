@@ -70,7 +70,12 @@ public class OgnlReflectionProvider implements ReflectionProvider {
 
     public void copy(Object from, Object to, Map<String, Object> context,
             Collection<String> exclusions, Collection<String> inclusions) {
-        ognlUtil.copy(from, to, context, exclusions, inclusions);
+        copy(from, to, context, exclusions, inclusions, null);
+    }
+
+    public void copy(Object from, Object to, Map<String, Object> context,
+                     Collection<String> exclusions, Collection<String> inclusions, Class<?> editable) {
+        ognlUtil.copy(from, to, context, exclusions, inclusions, editable);
     }
 
     public Object getRealTarget(String property, Map<String, Object> context, Object root)

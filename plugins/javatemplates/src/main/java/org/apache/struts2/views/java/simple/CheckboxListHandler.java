@@ -84,22 +84,22 @@ public class CheckboxListHandler extends AbstractTagHandler implements TagGenera
                     characters(itemValueStr);
                 super.end("label");
 
-                // Hidden input section
-                a = new Attributes();
-                a.add("type", "hidden")
-                        .add("id",
-                                "__multiselect_"
-                                        + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
-                        .add("name",
-                                "__multiselect_"
-                                        + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
-                        .add("value", "").addIfTrue("disabled", disabled);
-                start("input", a);
-                end("input");
-
                 stack.pop();
                 cnt++;
             }
+
+            // Hidden input section
+            Attributes a = new Attributes();
+            a.add("type", "hidden")
+                    .add("id",
+                            "__multiselect_"
+                                    + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
+                    .add("name",
+                            "__multiselect_"
+                                    + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
+                    .add("value", "").addIfTrue("disabled", disabled);
+            start("input", a);
+            end("input");
         }
     }
 

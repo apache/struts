@@ -52,7 +52,6 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
         Dispatcher dispatcher = null;
         try {
             FilterHostConfig config = new FilterHostConfig(filterConfig);
-            init.initLogging(config);
             dispatcher = init.initDispatcher(config);
 
             prepare = new PrepareOperations(dispatcher);

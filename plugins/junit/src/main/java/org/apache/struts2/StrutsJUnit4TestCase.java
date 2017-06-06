@@ -29,8 +29,6 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.annotations.After;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -53,7 +51,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.*;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -68,35 +65,6 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
     protected Dispatcher dispatcher;
 
     protected DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-
-    static {
-        ConsoleHandler handler = new ConsoleHandler();
-        final SimpleDateFormat df = new SimpleDateFormat("mm:ss.SSS");
-        Formatter formatter = new Formatter() {
-            @Override
-            public String format(LogRecord record) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(record.getLevel());
-                sb.append(':');
-                for (int x = 9 - record.getLevel().toString().length(); x > 0; x--) {
-                    sb.append(' ');
-                }
-                sb.append('[');
-                sb.append(df.format(new Date(record.getMillis())));
-                sb.append("] ");
-                sb.append(formatMessage(record));
-                sb.append('\n');
-                return sb.toString();
-            }
-        };
-        handler.setFormatter(formatter);
-        Logger logger = Logger.getLogger("");
-        if (logger.getHandlers().length > 0)
-            logger.removeHandler(logger.getHandlers()[0]);
-        logger.addHandler(handler);
-        logger.setLevel(Level.WARNING);
-        LoggerFactory.setLoggerFactory(new JdkLoggerFactory());
-    }
 
     /**
      * gets an object from the stack after an action is executed

@@ -32,16 +32,11 @@ public class JBossFileManager extends DefaultFileManager {
     private static final String VFS_JBOSS7 = "org.jboss.vfs.VirtualFile";
     private static final String VFS_JBOSS5 = "org.jboss.virtual.VirtualFile";
 
-    @Override
-    public boolean support() {
-        boolean supports = isJBoss7() || isJBoss5();
-        if (supports) {
-            LOG.debug("JBoss server detected, Struts 2 will use [{}] to support file system operations!", JBossFileManager.class.getSimpleName());
-        }
-        return supports;
+    public static boolean isSupported() {
+        return isJBoss7() || isJBoss5();
     }
 
-    private boolean isJBoss5() {
+    private static boolean isJBoss5() {
         try {
             Class.forName(VFS_JBOSS5);
             return true;
@@ -51,7 +46,7 @@ public class JBossFileManager extends DefaultFileManager {
         }
     }
 
-    private boolean isJBoss7() {
+    private static boolean isJBoss7() {
         try {
             Class.forName(VFS_JBOSS7);
             return true;
@@ -59,6 +54,15 @@ public class JBossFileManager extends DefaultFileManager {
             LOG.debug("Cannot load [{}] class, not a JBoss 7!", VFS_JBOSS7);
             return false;
         }
+    }
+
+    @Override
+    public boolean support() {
+        boolean supports = isSupported();
+        if (supports) {
+            LOG.debug("JBoss server detected, Struts 2 will use [{}] to support file system operations!", JBossFileManager.class.getSimpleName());
+        }
+        return supports;
     }
 
     @Override

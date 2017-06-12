@@ -21,6 +21,8 @@ package com.opensymphony.xwork2.validator;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.StubTextProvider;
+import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
@@ -44,7 +46,7 @@ import java.util.Map;
 public class SimpleActionValidationTest extends XWorkTestCase {
 
     public void testAliasValidation() {
-        HashMap<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("baz", "10");
 
         //valid values
@@ -52,8 +54,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         params.put("date", "12/23/2002");
         params.put("percentage", "1.23456789");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+            .withParameters(HttpParameters.create(params).build())
+            .bind()
+            .getContextMap();
 
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
@@ -62,11 +66,11 @@ public class SimpleActionValidationTest extends XWorkTestCase {
             ValidationAware validationAware = (ValidationAware) proxy.getAction();
             assertFalse(validationAware.hasFieldErrors());
 
-            // put in an out-of-range value to see if the old validators still work
-            ActionContext.of(new HashMap<>()).bind();
-
             params.put("bar", "42");
-            extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+            extraContext = ActionContext.of(new HashMap<>())
+                .withParameters(HttpParameters.create(params).build())
+                .bind()
+                .getContextMap();
 
             proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ALIAS_NAME, null, extraContext);
             proxy.execute();

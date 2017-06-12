@@ -1,6 +1,9 @@
 package com.opensymphony.xwork2.conversion.impl;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
@@ -48,7 +51,28 @@ public class DateConverter extends DefaultTypeConverter {
                 }
             } else if (java.util.Date.class == toType) {
                 Date check;
-                DateFormat[] dfs = getDateFormats(locale);
+
+
+                // Add the user provided date format if any
+                final TextProvider tp = findProviderInStack((ValueStack) context.get(ActionContext.VALUE_STACK));
+                SimpleDateFormat globalDateFormat = null;
+
+                if (tp != null) {
+                    String globalFormat = tp.getText(org.apache.struts2.components.Date.DATETAG_PROPERTY);
+
+                    // if tp.getText can not find the property then the
+                    // returned string is the same as input =
+                    // DATETAG_PROPERTY
+                    if (globalFormat != null
+                        && !org.apache.struts2.components.Date.DATETAG_PROPERTY.equals(globalFormat)) {
+                        globalDateFormat = new SimpleDateFormat(globalFormat, locale);
+                    }
+                }
+
+                DateFormat[] dfs = getDateFormats(globalDateFormat, locale);
+
+
+
                 for (DateFormat df1 : dfs) {
                     try {
                         check = df1.parse(sa);
@@ -84,7 +108,13 @@ public class DateConverter extends DefaultTypeConverter {
         return result;
     }
 
-    private DateFormat[] getDateFormats(Locale locale) {
+    /**
+     * Retrieves the list of date formats to be used when converting dates
+     * @param df the user defined, global date format (see {@link org.apache.struts2.components.Date#DATETAG_PROPERTY}
+     * @param locale the current locale of the action
+     * @return a list of DateFormat to be used for date conversion
+     */
+    private DateFormat[] getDateFormats(DateFormat df, Locale locale) {
         DateFormat dt1 = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, locale);
         DateFormat dt2 = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, locale);
         DateFormat dt3 = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
@@ -96,7 +126,24 @@ public class DateConverter extends DefaultTypeConverter {
         DateFormat rfc3339         = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         DateFormat rfc3339dateOnly = new SimpleDateFormat("yyyy-MM-dd");
 
-        return new DateFormat[]{dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly};
+        final DateFormat[] dateFormats;
+
+        if (df == null) {
+            dateFormats = new DateFormat[]{dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly};
+        } else {
+            dateFormats = new DateFormat[]{df, dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly};
+        }
+
+        return dateFormats;
+    }
+
+    private TextProvider findProviderInStack(ValueStack stack) {
+        for (Object o : stack.getRoot()) {
+            if (o instanceof TextProvider) {
+                return (TextProvider) o;
+            }
+        }
+        return null;
     }
 
 }

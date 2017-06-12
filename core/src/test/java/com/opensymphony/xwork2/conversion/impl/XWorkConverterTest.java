@@ -26,6 +26,8 @@ import com.opensymphony.xwork2.util.FurColor;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
+import ognl.TypeConverter;
+import org.apache.struts2.components.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -36,7 +38,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+import java.util.Date;
+import java.util.Set;
 
 /**
  * @author $Author$
@@ -116,6 +119,29 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         Date dateRfc3339DateOnly = (Date) converter.convertValue(context, null, null, null, "2001-01-10", Date.class);
         assertEquals(date, dateRfc3339DateOnly);
+    }
+
+    public void testDateConversionWithDefault() throws ParseException {
+        Map<String, String> lookupMap = new HashMap<>();
+        TextProvider tp = new StubTextProvider(lookupMap);
+        StubValueStack valueStack = new StubValueStack();
+        valueStack.push(tp);
+        context.put(ActionContext.VALUE_STACK, valueStack);
+
+        String dateToFormat = "2017---06--15";
+        Object unparseableDate = converter.convertValue(context, null, null, null, dateToFormat, Date.class);
+        assertEquals(unparseableDate, com.opensymphony.xwork2.conversion.TypeConverter.NO_CONVERSION_POSSIBLE);
+
+        lookupMap.put(org.apache.struts2.components.Date.DATETAG_PROPERTY, "yyyy---MM--dd");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy---MM--dd");
+        Date expectedDate = format.parse(dateToFormat);
+        Object parseableDate = converter.convertValue(context, null, null, null, dateToFormat, Date.class);
+        assertEquals(expectedDate, parseableDate);
+
+        Object standardDate = converter.convertValue(context, null, null, null, "2017-06-15", Date.class);
+        assertEquals(expectedDate, standardDate);
+
     }
 
     public void testFieldErrorMessageAddedForComplexProperty() {

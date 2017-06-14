@@ -17,8 +17,6 @@ package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.util.ProxyUtil;
 import ognl.DefaultMemberAccess;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -87,7 +85,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
         }
 
-        if (isProxyAccess(target, member)) {
+        if (ProxyUtil.isProxyMember(member, target)) {
             LOG.warn("Access to proxy [{}] is blocked!", member);
             return false;
         }
@@ -105,23 +103,6 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
         // Now check for standard scope rules
         return super.isAccessible(context, target, member, propertyName) && isAcceptableProperty(propertyName);
-    }
-
-    protected boolean isProxyAccess(Object target, Member member) {
-        if (!ProxyUtil.isProxy(target))
-            return false;
-        Class<?> clazz = ProxyUtil.ultimateTargetClass(target);
-        if (member instanceof Method) {
-            return null == MethodUtils.getMatchingMethod(clazz, member.getName(), ((Method) member).getParameterTypes());
-        }
-        if (member instanceof Field) {
-            return null == FieldUtils.getField(clazz, member.getName(), true);
-        }
-        if (member instanceof Constructor) {
-            return false;
-        }
-
-        return true;
     }
 
     protected boolean checkStaticMethodAccess(Member member) {

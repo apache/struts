@@ -15,9 +15,11 @@
  */
 package com.opensymphony.xwork2.util;
 
+import org.apache.commons.lang3.reflect.ConstructorUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 
 /**
  * <code>ProxyUtil</code>
@@ -61,6 +63,18 @@ public class ProxyUtil {
     }
 
     /**
+     * Check whether the given member is a proxy member of a proxy object.
+     * @param member the member to check
+     * @param object the object to check
+     */
+    public static boolean isProxyMember(Member member, Object object) {
+        if (!isProxy(object))
+            return false;
+
+        return isSpringProxyMember(member);
+    }
+
+    /**
      * Determine the ultimate target class of the given spring bean instance, traversing
      * not only a top-level spring proxy but any number of nested spring proxies as well &mdash;
      * as long as possible without side effects, that is, just for singleton targets.
@@ -93,6 +107,27 @@ public class ProxyUtil {
         Class<?> clazz = object.getClass();
         return (implementsInterface(clazz, SPRING_SPRINGPROXY_CLASS_NAME) && (Proxy.isProxyClass(clazz)
                 || isCglibProxyClass(clazz)));
+    }
+
+    /**
+     * Check whether the given member is a member of a spring proxy.
+     * @param member the member to check
+     */
+    private static boolean isSpringProxyMember(Member member) {
+        try {
+            Class<?> clazz = ClassLoaderUtil.loadClass(SPRING_ADVISED_CLASS_NAME, ProxyUtil.class);
+            if (hasMember(clazz, member))
+                return true;
+            clazz = ClassLoaderUtil.loadClass(SPRING_TARGETCLASSAWARE_CLASS_NAME, ProxyUtil.class);
+            if (hasMember(clazz, member))
+                return true;
+            clazz = ClassLoaderUtil.loadClass(SPRING_SPRINGPROXY_CLASS_NAME, ProxyUtil.class);
+            if (hasMember(clazz, member))
+                return true;
+        } catch (ClassNotFoundException ignored) {
+        }
+
+        return false;
     }
 
     /**
@@ -135,5 +170,24 @@ public class ProxyUtil {
         } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+    /**
+     * Check whether the given class has a given member.
+     * @param clazz the class to check
+     * @param member the member to check
+     */
+    private static boolean hasMember(Class<?> clazz, Member member) {
+        if (member instanceof Method) {
+            return null != MethodUtils.getMatchingMethod(clazz, member.getName(), ((Method) member).getParameterTypes());
+        }
+        if (member instanceof Field) {
+            return null != FieldUtils.getField(clazz, member.getName(), true);
+        }
+        if (member instanceof Constructor) {
+            return null != ConstructorUtils.getMatchingAccessibleConstructor(clazz, ((Constructor) member).getParameterTypes());
+        }
+
+        return false;
     }
 }

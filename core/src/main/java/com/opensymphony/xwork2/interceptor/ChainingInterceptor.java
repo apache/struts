@@ -164,8 +164,8 @@ public class ChainingInterceptor extends AbstractInterceptor {
             if (shouldCopy(object)) {
                 Object action = invocation.getAction();
                 Class<?> editable = null;
-                if(ProxyUtil.isSpringAopProxy(action)) {
-                    editable = ProxyUtil.springUltimateTargetClass(action);
+                if(ProxyUtil.isProxy(action)) {
+                    editable = ProxyUtil.ultimateTargetClass(action);
                 }
                 reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, editable);
             }

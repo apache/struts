@@ -108,9 +108,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     }
 
     protected boolean isProxyAccess(Object target, Member member) {
-        if (!ProxyUtil.isSpringAopProxy(target))
+        if (!ProxyUtil.isProxy(target))
             return false;
-        Class<?> clazz = ProxyUtil.springUltimateTargetClass(target);
+        Class<?> clazz = ProxyUtil.ultimateTargetClass(target);
         if (member instanceof Method) {
             return null == MethodUtils.getMatchingMethod(clazz, member.getName(), ((Method) member).getParameterTypes());
         }

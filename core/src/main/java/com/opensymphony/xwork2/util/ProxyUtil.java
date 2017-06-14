@@ -33,6 +33,34 @@ public class ProxyUtil {
     private static final String SPRING_TARGETCLASSAWARE_CLASS_NAME = "org.springframework.aop.TargetClassAware";
 
     /**
+     * Determine the ultimate target class of the given instance, traversing
+     * not only a top-level proxy but any number of nested proxies as well &mdash;
+     * as long as possible without side effects.
+     * @param candidate the instance to check (might be a proxy)
+     * @return the ultimate target class (or the plain class of the given
+     * object as fallback; never {@code null})
+     */
+    public static Class<?> ultimateTargetClass(Object candidate) {
+        Class<?> result = null;
+        if (isSpringAopProxy(candidate))
+            result = springUltimateTargetClass(candidate);
+
+        if (result == null) {
+            result = candidate.getClass();
+        }
+
+        return result;
+    }
+
+    /**
+     * Check whether the given object is a proxy.
+     * @param object the object to check
+     */
+    public static boolean isProxy(Object object) {
+        return isSpringAopProxy(object);
+    }
+
+    /**
      * Determine the ultimate target class of the given spring bean instance, traversing
      * not only a top-level spring proxy but any number of nested spring proxies as well &mdash;
      * as long as possible without side effects, that is, just for singleton targets.
@@ -40,7 +68,7 @@ public class ProxyUtil {
      * @return the ultimate target class (or the plain class of the given
      * object as fallback; never {@code null})
      */
-    public static Class<?> springUltimateTargetClass(Object candidate) {
+    private static Class<?> springUltimateTargetClass(Object candidate) {
         Object current = candidate;
         Class<?> result = null;
         while (null != current && implementsInterface(current.getClass(), SPRING_TARGETCLASSAWARE_CLASS_NAME)) {
@@ -61,7 +89,7 @@ public class ProxyUtil {
      * Check whether the given object is a Spring proxy.
      * @param object the object to check
      */
-    public static boolean isSpringAopProxy(Object object) {
+    private static boolean isSpringAopProxy(Object object) {
         Class<?> clazz = object.getClass();
         return (implementsInterface(clazz, SPRING_SPRINGPROXY_CLASS_NAME) && (Proxy.isProxyClass(clazz)
                 || isCglibProxyClass(clazz)));

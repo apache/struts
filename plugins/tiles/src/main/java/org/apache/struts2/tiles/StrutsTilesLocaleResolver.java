@@ -20,7 +20,6 @@
 package org.apache.struts2.tiles;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import org.apache.logging.log4j.LogManager;

@@ -54,14 +54,14 @@ public class StrutsTilesAnnotationProcessor {
      * @return {@link TilesDefinition}
      */
     public TilesDefinition findAnnotation(Object action, String tileName) {
-        Class<? extends Object> clazz = action.getClass();
+        Class<?> clazz = action.getClass();
         TilesDefinition tilesDefinition = clazz.getAnnotation(TilesDefinition.class);
         TilesDefinitions tilesDefinitions = clazz.getAnnotation(TilesDefinitions.class);
 
         if (tilesDefinition == null && tilesDefinitions != null) {
             if (!StringUtils.isEmpty(tileName)) {
                 for (TilesDefinition i : tilesDefinitions.value()) {
-                    if (i.name() != null && i.name().equals(tileName)) {
+                    if (i.name().equals(tileName)) {
                         tilesDefinition = i;
                         break;
                     }

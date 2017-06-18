@@ -52,6 +52,7 @@ import org.apache.tiles.ognl.PropertyAccessorDelegateFactory;
 import org.apache.tiles.ognl.ScopePropertyAccessor;
 import org.apache.tiles.ognl.TilesApplicationContextNestedObjectExtractor;
 import org.apache.tiles.ognl.TilesContextPropertyAccessorDelegateFactory;
+import org.apache.tiles.preparer.factory.PreparerFactory;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
 import org.apache.tiles.request.Request;
@@ -202,6 +203,11 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         }
 
         return filteredResources;
+    }
+
+    @Override
+    protected PreparerFactory createPreparerFactory(ApplicationContext applicationContext) {
+        return new StrutsPreparerFactory();
     }
 
     protected Set<String> getTilesDefinitions(Map<String, String> params) {

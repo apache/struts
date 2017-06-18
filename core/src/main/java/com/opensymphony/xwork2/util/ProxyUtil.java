@@ -20,6 +20,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import java.lang.reflect.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <code>ProxyUtil</code>
@@ -33,6 +35,11 @@ public class ProxyUtil {
     private static final String SPRING_SPRINGPROXY_CLASS_NAME = "org.springframework.aop.SpringProxy";
     private static final String SPRING_SINGLETONTARGETSOURCE_CLASS_NAME = "org.springframework.aop.target.SingletonTargetSource";
     private static final String SPRING_TARGETCLASSAWARE_CLASS_NAME = "org.springframework.aop.TargetClassAware";
+
+    private static final Map<Class<?>, Boolean> isProxyCache =
+            new ConcurrentHashMap<>(256);
+    private static final Map<Member, Boolean> isProxyMemberCache =
+            new ConcurrentHashMap<>(256);
 
     /**
      * Determine the ultimate target class of the given instance, traversing
@@ -59,7 +66,16 @@ public class ProxyUtil {
      * @param object the object to check
      */
     public static boolean isProxy(Object object) {
-        return isSpringAopProxy(object);
+        Class<?> clazz = object.getClass();
+        Boolean flag = isProxyCache.get(clazz);
+        if (flag != null) {
+            return flag;
+        }
+
+        boolean isProxy = isSpringAopProxy(object);
+
+        isProxyCache.put(clazz, isProxy);
+        return isProxy;
     }
 
     /**
@@ -71,7 +87,15 @@ public class ProxyUtil {
         if (!isProxy(object))
             return false;
 
-        return isSpringProxyMember(member);
+        Boolean flag = isProxyMemberCache.get(member);
+        if (flag != null) {
+            return flag;
+        }
+
+        boolean isProxyMember = isSpringProxyMember(member);
+
+        isProxyMemberCache.put(member, isProxyMember);
+        return isProxyMember;
     }
 
     /**

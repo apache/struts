@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.inject.util;
  * 
  * @author crazybob@google.com (Bob Lee)
  */
+@Deprecated
 public class Strings {
 
   /**
@@ -43,6 +44,7 @@ public class Strings {
    *     converted to uppercase
    * @throws NullPointerException if <tt>s</tt> is null
    */
+  @Deprecated
   public static String capitalize(String s) {
     if (s.length() == 0)
       return s;

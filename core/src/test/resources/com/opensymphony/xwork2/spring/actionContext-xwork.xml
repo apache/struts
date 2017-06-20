@@ -12,7 +12,9 @@
 
         <interceptors>
             <interceptor name="chain"
-                class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"></interceptor>
+                class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
+            <interceptor name="params"
+                class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
         </interceptors>
 
 		<action name="simpleAction" class="simple-action"/>
@@ -36,7 +38,9 @@
         <action name="chaintoAOPedTestSubBeanAction" class="pointcutted-test-sub-bean"
             method="getIssueId">
             <interceptor-ref name="chain" />
+            <interceptor-ref name="params" />
             <result name="WW-4105" type="null" />
+            <result name="S2-047" type="null" />
         </action>
     </package>
 </xwork>

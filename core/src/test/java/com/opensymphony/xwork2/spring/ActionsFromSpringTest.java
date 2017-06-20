@@ -5,7 +5,12 @@ package com.opensymphony.xwork2.spring;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.springframework.context.ApplicationContext;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Test loading actions from the Spring Application Context.
@@ -99,5 +104,27 @@ public class ActionsFromSpringTest extends XWorkTestCase {
         TestSubBean chaintoAOPedAction = (TestSubBean) appContext.getBean("pointcutted-test-sub-bean");
         assertEquals(1, chaintoAOPedAction.getCount());
         assertEquals("WW-4105", chaintoAOPedAction.getName());
+    }
+
+    public void testProxiedActionIsNotAccessible() throws Exception {
+        // given
+        Map<String, Object> params = new HashMap<>();
+        params.put("exposeProxy", "true");
+        params.put("issueId", "S2-047");
+
+        HashMap<String, Object> extraContext = new HashMap<>();
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null,
+                "chaintoAOPedTestSubBeanAction", null, extraContext);
+
+        // when
+        proxy.execute();
+        Object action = proxy.getAction();
+
+        //then
+        assertEquals("S2-047", ((TestSubBean) action).getIssueId());
+        assertFalse("proxied action is accessible!",
+                (boolean) MethodUtils.invokeMethod(action, "isExposeProxy"));
     }
 }

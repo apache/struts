@@ -15,12 +15,12 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.util.ProxyUtil;
 import ognl.DefaultMemberAccess;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Member;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -82,6 +82,11 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", member);
+            return false;
+        }
+
+        if (ProxyUtil.isProxyMember(member, target)) {
+            LOG.warn("Access to proxy [{}] is blocked!", member);
             return false;
         }
 

@@ -7,6 +7,7 @@ public class TestAspect {
 	private int count;
 	private String name;
 	private int count2;
+    private boolean exposeProxy;
 
 	String getIssueId() {
 		return issueId;
@@ -43,4 +44,8 @@ public class TestAspect {
 		log = log + "setCount2(" + count2 + ")-";
 		this.count2 = count2;
 	}
+
+    public void setExposeProxy(boolean exposeProxy) {
+        this.exposeProxy = exposeProxy;
+    }
 }

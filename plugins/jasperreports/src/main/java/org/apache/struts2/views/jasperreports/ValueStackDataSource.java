@@ -97,7 +97,7 @@ public class ValueStackDataSource implements JRRewindableDataSource {
         Object value = valueStack.findValue(expression);
         LOG.debug("Field [{}] = [{}]", field.getName(), value);
 
-        if (!wrapField && MakeIterator.isIterable(value) && !field.getValueClass().isInstance(value)) {
+        if (!wrapField && MakeIterator.isIterable(value) && field.getValueClass().isInstance(value)) {
             return value;
         } else if (MakeIterator.isIterable(value)) {
             // wrap value with ValueStackDataSource if not already wrapped

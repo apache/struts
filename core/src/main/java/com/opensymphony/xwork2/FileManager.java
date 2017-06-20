@@ -13,7 +13,7 @@ public interface FileManager {
     /**
      * Enables configs reloading when config file changed
      *
-     * @param reloadingConfigs {@link XWorkConstants#RELOAD_XML_CONFIGURATION}
+     * @param reloadingConfigs {@link org.apache.struts2.StrutsConstants#STRUTS_CONFIGURATION_XML_RELOAD}
      */
     void setReloadingConfigs(boolean reloadingConfigs);
 

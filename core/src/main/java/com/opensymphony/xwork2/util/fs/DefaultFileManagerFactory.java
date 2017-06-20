@@ -2,11 +2,11 @@ package com.opensymphony.xwork2.util.fs;
 
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +19,7 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
     private static final Logger LOG = LogManager.getLogger(DefaultFileManagerFactory.class);
 
     private boolean reloadingConfigs;
+    private FileManagerHolder fileManagerHolder;
     private FileManager systemFileManager;
     private Container container;
 
@@ -32,20 +33,27 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
         this.container = container;
     }
 
-    @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
+    @Inject(value = StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, required = false)
     public void setReloadingConfigs(String reloadingConfigs) {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
     }
 
     public FileManager getFileManager() {
+        if (fileManagerHolder != null) {
+            return fileManagerHolder.getFileManager();
+        }
+
         FileManager fileManager = lookupFileManager();
         if (fileManager != null) {
             LOG.debug("Using FileManager implementation [{}]", fileManager.getClass().getSimpleName());
             fileManager.setReloadingConfigs(reloadingConfigs);
+            fileManagerHolder = new FileManagerHolder(fileManager);
             return fileManager;
         }
+
         LOG.debug("Using default implementation of FileManager provided under name [system]: {}", systemFileManager.getClass().getSimpleName());
         systemFileManager.setReloadingConfigs(reloadingConfigs);
+        fileManagerHolder = new FileManagerHolder(systemFileManager);
         return systemFileManager;
     }
 
@@ -75,6 +83,19 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
             }
         }
         return null;
+    }
+
+    private static class FileManagerHolder {
+
+        private final FileManager fileManager;
+
+        public FileManagerHolder(FileManager fileManager) {
+            this.fileManager = fileManager;
+        }
+
+        public FileManager getFileManager() {
+            return fileManager;
+        }
     }
 
 }

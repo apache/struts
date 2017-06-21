@@ -23,8 +23,8 @@ package org.apache.struts2.interceptor.validation;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,7 +44,7 @@ public class AnnotationValidationInterceptor extends ValidationInterceptor {
         if (action != null) {
             Method method = getActionMethod(action.getClass(), invocation.getProxy().getMethod());
 
-            if (null != AnnotationUtils.findAnnotation(method, SkipValidation.class)) {
+            if (null != MethodUtils.getAnnotation(method, SkipValidation.class, true, true)) {
                 return invocation.invoke();
             }
         }

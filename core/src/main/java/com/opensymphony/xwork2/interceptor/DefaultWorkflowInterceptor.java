@@ -22,8 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.opensymphony.xwork2.util.AnnotationUtils;
-import java.lang.reflect.Method;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -208,7 +206,8 @@ public class DefaultWorkflowInterceptor extends MethodFilterInterceptor {
      */
     protected String processInputConfig(final Object action, final String method, final String currentResultName) throws Exception {
         String resultName = currentResultName;
-        InputConfig annotation = AnnotationUtils.findAnnotation(action.getClass().getMethod(method, EMPTY_CLASS_ARRAY), InputConfig.class);
+        InputConfig annotation = MethodUtils.getAnnotation(action.getClass().getMethod(method, EMPTY_CLASS_ARRAY),
+                InputConfig.class ,true,true);
         if (annotation != null) {
             if (StringUtils.isNotEmpty(annotation.methodName())) {
                 resultName = (String) MethodUtils.invokeMethod(action, true, annotation.methodName());

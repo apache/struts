@@ -325,4 +325,6 @@ public final class StrutsConstants {
     public static final String STRUTS_TEXT_PROVIDER_FACTORY = "struts.textProviderFactory";
 
     public static final String STRUTS_LOCALIZED_TEXT_PROVIDER = "struts.localizedTextProvider";
+
+    public static final String STRUTS_DISALLOW_PROXY_MEMBER_ACCESS = "struts.disallowProxyMemberAccess";
 }

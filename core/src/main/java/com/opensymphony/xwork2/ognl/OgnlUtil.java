@@ -28,6 +28,7 @@ import ognl.*;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -64,6 +65,7 @@ public class OgnlUtil {
 
     private Container container;
     private boolean allowStaticMethodAccess;
+    private boolean disallowProxyMemberAccess;
 
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
@@ -142,6 +144,15 @@ public class OgnlUtil {
     @Inject(value = XWorkConstants.ALLOW_STATIC_METHOD_ACCESS, required = false)
     public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
         this.allowStaticMethodAccess = Boolean.parseBoolean(allowStaticMethodAccess);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
+    public void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
+        this.disallowProxyMemberAccess = Boolean.parseBoolean(disallowProxyMemberAccess);
+    }
+
+    public boolean isDisallowProxyMemberAccess() {
+        return disallowProxyMemberAccess;
     }
 
     /**
@@ -679,6 +690,7 @@ public class OgnlUtil {
         memberAccess.setExcludedClasses(excludedClasses);
         memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
         memberAccess.setExcludedPackageNames(excludedPackageNames);
+        memberAccess.setDisallowProxyMemberAccess(disallowProxyMemberAccess);
 
         return Ognl.createDefaultContext(root, resolver, defaultConverter, memberAccess);
     }

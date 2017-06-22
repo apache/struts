@@ -19,7 +19,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.AnnotationUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import java.lang.reflect.Method;
@@ -113,13 +112,15 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
     public String intercept(ActionInvocation invocation) throws Exception {
         final Object action = invocation.getAction();
         invocation.addPreResultListener(this);
-        List<Method> methods = new ArrayList<>(AnnotationUtils.getAnnotatedMethods(action.getClass(), Before.class));
+        List<Method> methods = new ArrayList<>(MethodUtils.getMethodsListWithAnnotation(action.getClass(), Before.class,
+                true, true));
         if (methods.size() > 0) {
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
                 public int compare(Method method1, Method method2) {
-                    return comparePriorities(AnnotationUtils.findAnnotation(method1, Before.class).priority(),
-                            AnnotationUtils.findAnnotation(method2, Before.class).priority());
+                    return comparePriorities(MethodUtils.getAnnotation(method1, Before.class, true,
+                            true).priority(), MethodUtils.getAnnotation(method2, Before.class, true,
+                            true).priority());
                 }
             });
             for (Method m : methods) {
@@ -134,14 +135,16 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
         String invocationResult = invocation.invoke();
 
         // invoke any @After methods
-        methods = new ArrayList<Method>(AnnotationUtils.getAnnotatedMethods(action.getClass(), After.class));
+        methods = new ArrayList<Method>(MethodUtils.getMethodsListWithAnnotation(action.getClass(), After.class,
+                true, true));
 
         if (methods.size() > 0) {
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
                 public int compare(Method method1, Method method2) {
-                    return comparePriorities(AnnotationUtils.findAnnotation(method1, After.class).priority(),
-                            AnnotationUtils.findAnnotation(method2, After.class).priority());
+                    return comparePriorities(MethodUtils.getAnnotation(method1, After.class, true,
+                            true).priority(), MethodUtils.getAnnotation(method2, After.class, true,
+                            true).priority());
                 }
             });
             for (Method m : methods) {
@@ -169,14 +172,16 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
      */
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         Object action = invocation.getAction();
-        List<Method> methods = new ArrayList<Method>(AnnotationUtils.getAnnotatedMethods(action.getClass(), BeforeResult.class));
+        List<Method> methods = new ArrayList<Method>(MethodUtils.getMethodsListWithAnnotation(action.getClass(),
+                BeforeResult.class, true, true));
 
         if (methods.size() > 0) {
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
                 public int compare(Method method1, Method method2) {
-                    return comparePriorities(AnnotationUtils.findAnnotation(method1, BeforeResult.class).priority(),
-                            AnnotationUtils.findAnnotation(method2, BeforeResult.class).priority());
+                    return comparePriorities(MethodUtils.getAnnotation(method1, BeforeResult.class, true,
+                            true).priority(), MethodUtils.getAnnotation(method2, BeforeResult.class,
+                            true, true).priority());
                 }
             });
             for (Method m : methods) {

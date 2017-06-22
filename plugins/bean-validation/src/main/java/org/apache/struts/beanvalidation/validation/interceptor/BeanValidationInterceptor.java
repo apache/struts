@@ -26,10 +26,10 @@ import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -98,7 +98,8 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
             LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
         }
 
-        if (null == AnnotationUtils.findAnnotation(getActionMethod(action.getClass(), methodName), SkipValidation.class)) {
+        if (null == MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), SkipValidation.class,
+                true, true)) {
             // performing bean validation on action
             performBeanValidation(action, validator);
         }

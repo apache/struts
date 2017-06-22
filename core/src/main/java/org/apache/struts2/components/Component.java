@@ -22,10 +22,10 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -543,7 +543,8 @@ public class Component {
         Class clz = getClass();
         Collection<String> standardAttributes = standardAttributesMap.get(clz);
         if (standardAttributes == null) {
-            Collection<Method> methods = AnnotationUtils.getAnnotatedMethods(clz, StrutsTagAttribute.class);
+            Collection<Method> methods = MethodUtils.getMethodsListWithAnnotation(clz, StrutsTagAttribute.class,
+                    true, true);
             standardAttributes = new HashSet<>(methods.size());
             for(Method m : methods) {
                 standardAttributes.add(StringUtils.uncapitalize(m.getName().substring(3)));

@@ -36,7 +36,8 @@ public class SaveGangsterAction extends Action {
 		// Some code to save the gangster to the db as necessary
 		GangsterForm gform = (GangsterForm) form;
 		ActionMessages messages = new ActionMessages();
-		messages.add("msg", new ActionMessage("Gangster " + gform.getName() + " added successfully"));
+		System.out.println(gform.getName());
+		messages.add("msg", new ActionMessage("struts1.gangsterAdded", gform.getName()));
 		addMessages(request, messages);
 
 		return mapping.findForward("success");

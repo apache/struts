@@ -8,6 +8,11 @@
             <result-type name="springResult" class="springResult" />
         </result-types>
 
+        <interceptors>
+            <interceptor name="params"
+                         class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
+        </interceptors>
+
 		<action name="simpleAction" class="simple-action"/>
 
         <action name="dependencyAction" class="dependency-action"/>
@@ -19,5 +24,10 @@
         <action name="simpleActionSpringResult" class="simple-action">
 			<result name="error" type="springResult"/>
 		</action>
+
+        <action name="paramsAwareProxiedAction" class="proxied-action">
+            <interceptor-ref name="params" />
+            <result name="input" type="null"/>
+        </action>
     </package>
 </xwork>

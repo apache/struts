@@ -5,7 +5,11 @@ package com.opensymphony.xwork2.spring;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.context.ApplicationContext;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Test loading actions from the Spring Application Context.
@@ -76,5 +80,27 @@ public class ActionsFromSpringTest extends XWorkTestCase {
     	        SpringResult springResult = (SpringResult) proxy.getInvocation().getResult();
     	        assertTrue(springResult.isInitialize());
     	        assertNotNull(springResult.getStringParameter());
+    }
+
+    public void testProxiedActionIsNotAccessible() throws Exception {
+        // given
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("exposeProxy", "true");
+        params.put("blah", "S2-047");
+
+        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        extraContext.put(ActionContext.PARAMETERS, params);
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null,
+                "paramsAwareProxiedAction", null, extraContext);
+
+        // when
+        proxy.execute();
+        Object action = proxy.getAction();
+
+        //then
+        assertEquals("S2-047", ((SimpleAction) action).getBlah());
+        assertFalse("proxied action is accessible!",
+                (Boolean) MethodUtils.invokeMethod(action, "isExposeProxy"));
     }
 }

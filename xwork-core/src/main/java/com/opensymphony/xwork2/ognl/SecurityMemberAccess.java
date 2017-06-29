@@ -15,6 +15,7 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.util.ProxyUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import ognl.DefaultMemberAccess;
@@ -90,6 +91,11 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("Declaring class of member type [#0] is excluded!", member);
             }
+            return false;
+        }
+
+        if (ProxyUtil.isProxyMember(member, target)) {
+            LOG.warn("Access to proxy [#0] is blocked!", member);
             return false;
         }
 

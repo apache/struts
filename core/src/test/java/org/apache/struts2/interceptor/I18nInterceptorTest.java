@@ -23,7 +23,6 @@ package org.apache.struts2.interceptor;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.DefaultLocaleProviderFactory;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
@@ -99,6 +98,26 @@ public class I18nInterceptorTest extends TestCase {
         Locale denmark = new Locale("da");
         assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
         assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
+    public void testEmptyLocale() throws Exception {
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "");
+        interceptor.intercept(mai);
+
+        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
+
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(Locale.getDefault(), session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
+    public void testNotExistingLocale() throws Exception {
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "ble");
+        interceptor.intercept(mai);
+
+        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
+
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(Locale.getDefault(), session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
     }
 
     public void testWithVariant() throws Exception {

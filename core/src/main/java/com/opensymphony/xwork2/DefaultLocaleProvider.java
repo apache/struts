@@ -16,11 +16,11 @@
 package com.opensymphony.xwork2;
 
 import org.apache.commons.lang3.LocaleUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -45,15 +45,15 @@ public class DefaultLocaleProvider implements LocaleProvider {
     public boolean isValidLocaleString(String localeStr) {
         Locale locale = null;
         try {
-            locale = LocaleUtils.toLocale(localeStr);
+            locale = LocaleUtils.toLocale(StringUtils.trimToNull(localeStr));
         } catch (IllegalArgumentException e) {
-            LOG.warn(new ParameterizedMessage("Cannot convert [{}] to proper locale", localeStr, e));
+            LOG.warn(new ParameterizedMessage("Cannot convert [{}] to proper locale", localeStr), e);
         }
         return isValidLocale(locale);
     }
 
     @Override
     public boolean isValidLocale(Locale locale) {
-        return locale != null && Arrays.asList(Locale.getAvailableLocales()).contains(locale);
+        return LocaleUtils.isAvailableLocale(locale);
     }
 }

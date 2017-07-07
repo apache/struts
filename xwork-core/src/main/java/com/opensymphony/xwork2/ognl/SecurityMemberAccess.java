@@ -42,6 +42,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     private Set<Class<?>> excludedClasses = Collections.emptySet();
     private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
     private Set<String> excludedPackageNames = Collections.emptySet();
+    private boolean disallowProxyMemberAccess;
 
     public SecurityMemberAccess(boolean method) {
         super(false);
@@ -94,7 +95,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
         }
 
-        if (ProxyUtil.isProxyMember(member, target)) {
+        if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
             LOG.warn("Access to proxy [#0] is blocked!", member);
             return false;
         }
@@ -221,5 +222,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     public void setExcludedPackageNames(Set<String> excludedPackageNames) {
         this.excludedPackageNames = excludedPackageNames;
+    }
+
+    public void setDisallowProxyMemberAccess(boolean disallowProxyMemberAccess) {
+        this.disallowProxyMemberAccess = disallowProxyMemberAccess;
     }
 }

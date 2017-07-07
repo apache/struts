@@ -2,6 +2,7 @@
 <xwork>
 	<bean type="com.opensymphony.xwork2.ObjectFactory" class="com.opensymphony.xwork2.spring.SpringObjectFactory" />
 	<constant name="applicationContextPath" value="com/opensymphony/xwork2/spring/actionContext-spring.xml" />
+    <constant name="xwork.disallowProxyMemberAccess" value="true" />
     <package name="default">
         <result-types>
             <result-type name="null" class="com.opensymphony.xwork2.mock.MockResult" default="true"/>

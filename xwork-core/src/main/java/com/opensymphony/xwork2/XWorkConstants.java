@@ -28,4 +28,5 @@ public final class XWorkConstants {
     public static final String OVERRIDE_EXCLUDED_PATTERNS = "overrideExcludedPatterns";
     public static final String OVERRIDE_ACCEPTED_PATTERNS = "overrideAcceptedPatterns";
 
+    public static final String XWORK_DISALLOW_PROXY_MEMBER_ACCESS = "xwork.disallowProxyMemberAccess";
 }

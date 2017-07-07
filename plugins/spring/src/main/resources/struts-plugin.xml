@@ -34,6 +34,7 @@
     <constant name="struts.class.reloading.watchList" value="" />
     <constant name="struts.class.reloading.acceptClasses" value="" />
     <constant name="struts.class.reloading.reloadConfig" value="false" />
+    <constant name="xwork.disallowProxyMemberAccess" value="true" />
 
     <package name="spring-default">
         <interceptors>

@@ -72,6 +72,7 @@ public class OgnlUtil {
 
     private Container container;
     private boolean allowStaticMethodAccess;
+    private boolean disallowProxyMemberAccess;
 
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
@@ -142,6 +143,15 @@ public class OgnlUtil {
     @Inject(value = XWorkConstants.ALLOW_STATIC_METHOD_ACCESS, required = false)
     public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
         this.allowStaticMethodAccess = Boolean.parseBoolean(allowStaticMethodAccess);
+    }
+
+    @Inject(value = XWorkConstants.XWORK_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
+    public void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
+        this.disallowProxyMemberAccess = Boolean.parseBoolean(disallowProxyMemberAccess);
+    }
+
+    public boolean isDisallowProxyMemberAccess() {
+        return disallowProxyMemberAccess;
     }
 
     /**
@@ -654,6 +664,7 @@ public class OgnlUtil {
         memberAccess.setExcludedClasses(excludedClasses);
         memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
         memberAccess.setExcludedPackageNames(excludedPackageNames);
+        memberAccess.setDisallowProxyMemberAccess(disallowProxyMemberAccess);
 
         return Ognl.createDefaultContext(root, resolver, defaultConverter, memberAccess);
     }

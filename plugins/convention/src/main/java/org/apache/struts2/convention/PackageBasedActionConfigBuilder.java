@@ -75,7 +75,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private String packageLocatorsBasePackage;
     private boolean disableActionScanning = false;
     private boolean disablePackageLocatorsScanning = false;
-    private String actionSuffix = "Action";
+    private Set<String> actionSuffix = Collections.singleton("Action");
     private boolean checkImplementsAction = true;
     private boolean mapAllMatches = false;
     private Set<String> loadedFileUrls = new HashSet<>();
@@ -227,7 +227,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     @Inject(value = "struts.convention.action.suffix", required = false)
     public void setActionSuffix(String actionSuffix) {
         if (StringUtils.isNotBlank(actionSuffix)) {
-            this.actionSuffix = actionSuffix;
+            this.actionSuffix = TextParseUtil.commaDelimitedStringToSet(actionSuffix);
         }
     }
 
@@ -615,7 +615,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 // such as com.opensymphony.xwork2.ActionSupport.  We repeat the
                 // package filter here to filter out such results.
                 boolean inPackage = includeClassNameInActionScan(classInfo.getName());
-                boolean nameMatches = classInfo.getName().endsWith(actionSuffix);
+                boolean nameMatches = matchesSuffix(classInfo.getName());
 
                 try {
                     return inPackage && (nameMatches || (checkImplementsAction && com.opensymphony.xwork2.Action.class.isAssignableFrom(classInfo.get())));
@@ -623,6 +623,15 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                     LOG.error("Unable to load class [{}]", classInfo.getName(), ex);
                     return false;
                 }
+            }
+
+            private boolean matchesSuffix(String name) {
+                for (String suffix : actionSuffix) {
+                    if (name.endsWith(suffix)) {
+                        return true;
+                    }
+                }
+                return false;
             }
         };
     }

@@ -21,7 +21,7 @@
 package org.apache.struts2.convention;
 
 /**
- * Constants used to extend the COnvention plugin
+ * Constants used to extend the Convention plugin
  */
 public class ConventionConstants {
     public static final String CONVENTION_ACTION_CONFIG_BUILDER = "struts.convention.actionConfigBuilder";

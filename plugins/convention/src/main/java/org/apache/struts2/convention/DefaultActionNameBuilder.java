@@ -21,6 +21,8 @@
 package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <p>
@@ -32,6 +34,8 @@ import com.opensymphony.xwork2.inject.Inject;
  * </p>
  */
 public class DefaultActionNameBuilder extends AbstractActionNameBuilder {
+
+    private static final Logger LOG = LogManager.getLogger(DefaultActionNameBuilder.class);
 
     private boolean lowerCase;
 
@@ -47,17 +51,15 @@ public class DefaultActionNameBuilder extends AbstractActionNameBuilder {
 
         checkActionName(actionName);
 
-        // Truncate Action suffix if found
+        LOG.trace("Truncate Action suffix if found");
         actionName = truncateSuffixIfMatches(actionName);
 
-        // Force initial letter of action to lowercase, if desired
+        LOG.trace("Force initial letter of action to lowercase, if desired");
         if ((lowerCase) && (actionName.length() > 1)) {
             int lowerPos = actionName.lastIndexOf('/') + 1;
-            StringBuilder sb = new StringBuilder();
-            sb.append(actionName.substring(0, lowerPos));
-            sb.append(Character.toLowerCase(actionName.charAt(lowerPos)));
-            sb.append(actionName.substring(lowerPos + 1));
-            actionName = sb.toString();
+            actionName = actionName.substring(0, lowerPos) +
+                    Character.toLowerCase(actionName.charAt(lowerPos)) +
+                    actionName.substring(lowerPos + 1);
         }
 
         return actionName;

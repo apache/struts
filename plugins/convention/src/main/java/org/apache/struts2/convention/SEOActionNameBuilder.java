@@ -53,10 +53,10 @@ public class SEOActionNameBuilder extends AbstractActionNameBuilder {
 
         checkActionName(actionName);
 
-        // Truncate Action suffix if found
+        LOG.trace("Truncate Action suffix if found");
         actionName = truncateSuffixIfMatches(actionName);
 
-        // Convert to underscores
+        LOG.trace("Convert to underscores");
         char[] ca = actionName.toCharArray();
         StringBuilder build = new StringBuilder("" + ca[0]);
         boolean lower = true;

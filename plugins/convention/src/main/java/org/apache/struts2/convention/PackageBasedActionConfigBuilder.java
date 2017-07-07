@@ -108,8 +108,8 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      */
     @Inject
     public PackageBasedActionConfigBuilder(Configuration configuration, Container container, ObjectFactory objectFactory,
-                                           @Inject("struts.convention.redirect.to.slash") String redirectToSlash,
-                                           @Inject("struts.convention.default.parent.package") String defaultParentPackage) {
+                                           @Inject(ConventionConstants.CONVENTION_REDIRECT_TO_SLASH) String redirectToSlash,
+                                           @Inject(ConventionConstants.CONVENTION_DEFAULT_PARENT_PACKAGE) String defaultParentPackage) {
 
         // Validate that the parameters are okay
         this.configuration = configuration;
@@ -135,7 +135,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param reload Reload configuration when classes change. Defaults to "false" and should not be used
      * in production.
      */
-    @Inject("struts.convention.classes.reload")
+    @Inject(ConventionConstants.CONVENTION_CLASSES_RELOAD)
     public void setReload(String reload) {
         this.reload = BooleanUtils.toBoolean(reload);
     }
@@ -149,7 +149,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * @param exclude Exclude URLs found by the parent class loader. Defaults to "true", set to true for JBoss
      */
-    @Inject("struts.convention.exclude.parentClassLoader")
+    @Inject(ConventionConstants.CONVENTION_EXCLUDE_PARENT_CLASS_LOADER)
     public void setExcludeParentClassLoader(String exclude) {
         this.excludeParentClassLoader = BooleanUtils.toBoolean(exclude);
     }
@@ -158,7 +158,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param alwaysMapExecute  If this constant is true, and there is an "execute" method(not annotated), a mapping will be added
      * pointing to it, even if there are other mapping in the class
      */
-    @Inject("struts.convention.action.alwaysMapExecute")
+    @Inject(ConventionConstants.CONVENTION_ACTION_ALWAYS_MAP_EXECUTE)
     public void setAlwaysMapExecute(String alwaysMapExecute) {
         this.alwaysMapExecute = BooleanUtils.toBoolean(alwaysMapExecute);
     }
@@ -167,7 +167,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * File URLs whose protocol are in these list will be processed as jars containing classes
      * @param fileProtocols Comma separated list of file protocols that will be considered as jar files and scanned
      */
-    @Inject("struts.convention.action.fileProtocols")
+    @Inject(ConventionConstants.CONVENTION_ACTION_FILE_PROTOCOLS)
     public void setFileProtocols(String fileProtocols) {
         if (StringUtils.isNotBlank(fileProtocols)) {
             this.fileProtocols = TextParseUtil.commaDelimitedStringToSet(fileProtocols);
@@ -177,7 +177,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * @param disableActionScanning Disable scanning for actions
      */
-    @Inject(value = "struts.convention.action.disableScanning", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_ACTION_DISABLE_SCANNING, required = false)
     public void setDisableActionScanning(String disableActionScanning) {
         this.disableActionScanning = BooleanUtils.toBoolean(disableActionScanning);
     }
@@ -185,7 +185,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * @param includeJars Comma separated list of regular expressions of jars to be included.
      */
-    @Inject(value = "struts.convention.action.includeJars", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_ACTION_INCLUDE_JARS, required = false)
     public void setIncludeJars(String includeJars) {
         if (StringUtils.isNotEmpty(includeJars)) {
             this.includeJars = includeJars.split("\\s*[,]\\s*");
@@ -195,7 +195,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * @param disablePackageLocatorsScanning If set to true, only the named packages will be scanned
      */
-    @Inject(value = "struts.convention.package.locators.disable", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_PACKAGE_LOCATORS_DISABLE, required = false)
     public void setDisablePackageLocatorsScanning(String disablePackageLocatorsScanning) {
         this.disablePackageLocatorsScanning = BooleanUtils.toBoolean(disablePackageLocatorsScanning);
     }
@@ -204,7 +204,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param actionPackages (Optional) An optional list of action packages that this should create
      *                       configuration for.
      */
-    @Inject(value = "struts.convention.action.packages", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_ACTION_PACKAGES, required = false)
     public void setActionPackages(String actionPackages) {
         if (StringUtils.isNotBlank(actionPackages)) {
             this.actionPackages = actionPackages.split("\\s*[,]\\s*");
@@ -215,7 +215,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param checkImplementsAction (Optional) Map classes that implement com.opensymphony.xwork2.Action
      *                       as actions
      */
-    @Inject(value = "struts.convention.action.checkImplementsAction", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_ACTION_CHECK_IMPLEMENTS_ACTION, required = false)
     public void setCheckImplementsAction(String checkImplementsAction) {
         this.checkImplementsAction = BooleanUtils.toBoolean(checkImplementsAction);
     }
@@ -224,7 +224,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param actionSuffix (Optional) Classes that end with these value will be mapped as actions
      *                     (defaults to "Action")
      */
-    @Inject(value = "struts.convention.action.suffix", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_ACTION_SUFFIX, required = false)
     public void setActionSuffix(String actionSuffix) {
         if (StringUtils.isNotBlank(actionSuffix)) {
             this.actionSuffix = TextParseUtil.commaDelimitedStringToSet(actionSuffix);
@@ -235,7 +235,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param excludePackages (Optional) A  list of packages that should be skipped when building
      *                        configuration.
      */
-    @Inject(value = "struts.convention.exclude.packages", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_EXCLUDE_PACKAGES, required = false)
     public void setExcludePackages(String excludePackages) {
         if (StringUtils.isNotBlank(excludePackages)) {
             this.excludePackages = excludePackages.split("\\s*[,]\\s*");
@@ -245,7 +245,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     /**
      * @param packageLocators (Optional) A list of names used to find action packages.
      */
-    @Inject(value = "struts.convention.package.locators", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_PACKAGE_LOCATORS, required = false)
     public void setPackageLocators(String packageLocators) {
         this.packageLocators = packageLocators.split("\\s*[,]\\s*");
     }
@@ -254,7 +254,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param packageLocatorsBasePackage (Optional) If set, only packages that start with this
      *                                   name will be scanned for actions.
      */
-    @Inject(value = "struts.convention.package.locators.basePackage", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_PACKAGE_LOCATORS_BASE_PACKAGE, required = false)
     public void setPackageLocatorsBase(String packageLocatorsBasePackage) {
         this.packageLocatorsBasePackage = packageLocatorsBasePackage;
     }
@@ -264,7 +264,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      *                      even if they don't have a default method. The mapping from
      *                      the url to the action will be delegated the action mapper.
      */
-    @Inject(value = "struts.convention.action.mapAllMatches", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_ACTION_MAP_ALL_MATCHES, required = false)
     public void setMapAllMatches(String mapAllMatches) {
         this.mapAllMatches = BooleanUtils.toBoolean(mapAllMatches);
     }
@@ -273,7 +273,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * @param eagerLoading (Optional) If set, found action classes will be instantiated by the ObjectFactory to accelerate future use
      *                      setting it up can clash with Spring managed beans
      */
-    @Inject(value = "struts.convention.action.eagerLoading", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_ACTION_EAGER_LOADING, required = false)
     public void setEagerLoading(String eagerLoading) {
         this.eagerLoading = BooleanUtils.toBoolean(eagerLoading);
     }

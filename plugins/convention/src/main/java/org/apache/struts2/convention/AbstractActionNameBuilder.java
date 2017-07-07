@@ -15,7 +15,7 @@ public abstract class AbstractActionNameBuilder implements ActionNameBuilder {
      * @param   actionSuffix (Optional) Classes that end with these value will be mapped as actions
      *          (defaults to "Action")
      */
-    @Inject(value = "struts.convention.action.suffix", required = false)
+    @Inject(value = ConventionConstants.CONVENTION_ACTION_SUFFIX, required = false)
     public void setActionSuffix(String actionSuffix) {
         if (StringUtils.isNotBlank(actionSuffix)) {
             this.actionSuffix = TextParseUtil.commaDelimitedStringToSet(actionSuffix);

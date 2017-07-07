@@ -53,7 +53,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
-    @Inject("struts.convention.classes.reload")
+    @Inject(ConventionConstants.CONVENTION_CLASSES_RELOAD)
     public void setReload(String reload) {
         this.reload = BooleanUtils.toBoolean(reload);
     }

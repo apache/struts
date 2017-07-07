@@ -21,9 +21,13 @@
 package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * <p>
@@ -35,7 +39,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class SEOActionNameBuilder implements ActionNameBuilder {
     private static final Logger LOG = LogManager.getLogger(SEOActionNameBuilder.class);
-    private String actionSuffix = "Action";
+    private Set<String> actionSuffix = Collections.singleton("Action");
     private boolean lowerCase;
     private String separator;
 
@@ -53,20 +57,17 @@ public class SEOActionNameBuilder implements ActionNameBuilder {
     @Inject(value = "struts.convention.action.suffix", required = false)
     public void setActionSuffix(String actionSuffix) {
         if (StringUtils.isNotBlank(actionSuffix)) {
-            this.actionSuffix = actionSuffix;
+            this.actionSuffix = TextParseUtil.commaDelimitedStringToSet(actionSuffix);
         }
     }
 
     public String build(String className) {
         String actionName = className;
-        
-        if (actionName.equals(actionSuffix))
-            throw new IllegalStateException("The action name cannot be the same as the action suffix [" + actionSuffix + "]");
+
+        checkActionName(actionName);
 
         // Truncate Action suffix if found
-        if (actionName.endsWith(actionSuffix)) {
-            actionName = actionName.substring(0, actionName.length() - actionSuffix.length());
-        }
+        actionName = truncateSuffixIfMatches(actionName);
 
         // Convert to underscores
         char[] ca = actionName.toCharArray();
@@ -93,4 +94,23 @@ public class SEOActionNameBuilder implements ActionNameBuilder {
 
         return actionName;
     }
+
+    void checkActionName(String actionName) {
+        for (String suffix : actionSuffix) {
+            if (actionName.equals(suffix)) {
+                throw new IllegalStateException("The action name cannot be the same as the action suffix [" + suffix + "]");
+            }
+        }
+    }
+
+    private String truncateSuffixIfMatches(String name) {
+        String actionName = name;
+        for (String suffix : actionSuffix) {
+            if (actionName.endsWith(suffix)) {
+                actionName = actionName.substring(0, actionName.length() - suffix.length());
+            }
+        }
+        return actionName;
+    }
+
 }

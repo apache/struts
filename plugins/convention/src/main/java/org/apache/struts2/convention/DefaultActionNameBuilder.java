@@ -21,7 +21,11 @@
 package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * <p>
@@ -33,7 +37,7 @@ import org.apache.commons.lang3.StringUtils;
  * </p>
  */
 public class DefaultActionNameBuilder implements ActionNameBuilder {
-    private String actionSuffix = "Action";
+    private Set<String> actionSuffix = Collections.singleton("Action");
     private boolean lowerCase;
 
     @Inject
@@ -48,7 +52,7 @@ public class DefaultActionNameBuilder implements ActionNameBuilder {
     @Inject(value = "struts.convention.action.suffix", required = false)
     public void setActionSuffix(String actionSuffix) {
         if (StringUtils.isNotBlank(actionSuffix)) {
-            this.actionSuffix = actionSuffix;
+            this.actionSuffix = TextParseUtil.commaDelimitedStringToSet(actionSuffix);
         }
     }
 
@@ -56,9 +60,7 @@ public class DefaultActionNameBuilder implements ActionNameBuilder {
         String actionName = className;
 
         // Truncate Action suffix if found
-        if (actionName.endsWith(actionSuffix)) {
-            actionName = actionName.substring(0, actionName.length() - actionSuffix.length());
-        }
+        actionName = truncateSuffixIfMatches(actionName);
 
         // Force initial letter of action to lowercase, if desired
         if ((lowerCase) && (actionName.length() > 1)) {
@@ -70,6 +72,16 @@ public class DefaultActionNameBuilder implements ActionNameBuilder {
             actionName = sb.toString();
         }
 
+        return actionName;
+    }
+
+    private String truncateSuffixIfMatches(String name) {
+        String actionName = name;
+        for (String suffix : actionSuffix) {
+            if (actionName.endsWith(suffix)) {
+                actionName = actionName.substring(0, actionName.length() - suffix.length());
+            }
+        }
         return actionName;
     }
 }

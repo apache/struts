@@ -29,4 +29,6 @@ public class ConventionConstants {
     public static final String CONVENTION_RESULT_MAP_BUILDER = "struts.convention.resultMapBuilder";
     public static final String CONVENTION_INTERCEPTOR_MAP_BUILDER = "struts.convention.interceptorMapBuilder";
     public static final String CONVENTION_CONVENTIONS_SERVICE = "struts.convention.conventionsService";
+    public static final String CONVENTION_ACTION_NAME_LOWERCASE = "struts.convention.action.name.lowercase";
+    public static final String CONVENTION_ACTION_NAME_SEPARATOR = "struts.convention.action.name.separator";
 }

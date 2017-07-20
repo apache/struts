@@ -271,6 +271,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             logEntry.append(String.valueOf(name));
             logEntry.append(" => ");
             logEntry.append(parameters.get(name).getValue());
+            logEntry.append(" ");
         }
 
         return logEntry.toString();

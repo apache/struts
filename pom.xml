@@ -701,7 +701,7 @@
             </dependency>
             <!-- it's a dependency of Velocity defined here to override the transitive one -->
             <dependency>
-                <groupId>org.apache.commons</groupId>
+                <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>3.2.2</version>
             </dependency>

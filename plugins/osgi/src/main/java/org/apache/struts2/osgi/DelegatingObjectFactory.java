@@ -36,6 +36,11 @@ public class DelegatingObjectFactory extends ObjectFactory implements ObjectFact
     private OsgiConfigurationProvider osgiConfigurationProvider;
 
     @Inject
+    public DelegatingObjectFactory(Container container) {
+        super(container);
+    }
+
+    @Inject
     public void setDelegateObjectFactory(@Inject Container container,
                                          @Inject("struts.objectFactory.delegate") String delegate) {
         if (delegate == null) {

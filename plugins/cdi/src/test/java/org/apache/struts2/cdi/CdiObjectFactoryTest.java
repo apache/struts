@@ -27,19 +27,19 @@ public class CdiObjectFactoryTest {
 
     @Test
     public void testFindBeanManager() throws Exception {
-        assertNotNull(new CdiObjectFactory().findBeanManager());
+        assertNotNull(new CdiObjectFactory(null).findBeanManager());
     }
 
     @Test
     public void testGetBean() throws Exception {
-        final CdiObjectFactory cdiObjectFactory = new CdiObjectFactory();
+        final CdiObjectFactory cdiObjectFactory = new CdiObjectFactory(null);
         FooConsumer fooConsumer = (FooConsumer) cdiObjectFactory.buildBean(FooConsumer.class.getCanonicalName(), null, false);
         assertNotNull(fooConsumer);
         assertNotNull(fooConsumer.fooService);
     }
 
     @Test public void testGetInjectionTarget() throws Exception {
-        final CdiObjectFactory cdiObjectFactory = new CdiObjectFactory();
+        final CdiObjectFactory cdiObjectFactory = new CdiObjectFactory(null);
         final InjectionTarget<?> injectionTarget = cdiObjectFactory.getInjectionTarget(FooConsumer.class);
         assertNotNull(injectionTarget);
         assertTrue(cdiObjectFactory.injectionTargetCache.containsKey(FooConsumer.class));

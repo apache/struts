@@ -106,7 +106,7 @@ public class ActionAutowiringInterceptor extends AbstractInterceptor implements 
                 LOG.warn("ApplicationContext could not be found.  Action classes will not be autowired.");
             } else {
                 setApplicationContext(applicationContext);
-                factory = new SpringObjectFactory();
+                factory = new SpringObjectFactory(ActionContext.getContext().getContainer());
                 factory.setApplicationContext(getApplicationContext());
                 if (autowireStrategy != null) {
                     factory.setAutowireStrategy(autowireStrategy);

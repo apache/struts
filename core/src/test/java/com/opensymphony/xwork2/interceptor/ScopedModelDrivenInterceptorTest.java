@@ -36,7 +36,7 @@ public class ScopedModelDrivenInterceptorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
         inter = new ScopedModelDrivenInterceptor();
-        inter.setObjectFactory(new ProxyObjectFactory());
+        inter.setObjectFactory(new ProxyObjectFactory(container));
     }
 
     public void testResolveModel() throws Exception {

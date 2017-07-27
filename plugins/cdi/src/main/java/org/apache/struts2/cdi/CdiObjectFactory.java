@@ -20,6 +20,7 @@
 package org.apache.struts2.cdi;
 
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -73,8 +74,9 @@ public class CdiObjectFactory extends ObjectFactory {
 
     Map<Class<?>, InjectionTarget<?>> injectionTargetCache = new ConcurrentHashMap<Class<?>, InjectionTarget<?>>();
 
-    public CdiObjectFactory() {
-        super();
+    @Inject
+    public CdiObjectFactory(Container container) {
+        super(container);
         LOG.info("Initializing Struts2 CDI integration...");
         this.beanManager = findBeanManager();
         if (beanManager != null) {

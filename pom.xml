@@ -470,11 +470,6 @@
                 <artifactId>struts2-osgi-demo-bundle</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-java8-support-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.freemarker</groupId>

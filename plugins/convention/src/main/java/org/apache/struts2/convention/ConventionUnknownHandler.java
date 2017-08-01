@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -94,9 +92,9 @@ public class ConventionUnknownHandler implements UnknownHandler {
     @Inject
     public ConventionUnknownHandler(Configuration configuration, ObjectFactory objectFactory,
                                     ServletContext servletContext, Container container,
-                                    @Inject("struts.convention.default.parent.package") String defaultParentPackageName,
-                                    @Inject("struts.convention.redirect.to.slash") String redirectToSlash,
-                                    @Inject("struts.convention.action.name.separator") String nameSeparator) {
+                                    @Inject(ConventionConstants.CONVENTION_DEFAULT_PARENT_PACKAGE) String defaultParentPackageName,
+                                    @Inject(ConventionConstants.CONVENTION_REDIRECT_TO_SLASH) String redirectToSlash,
+                                    @Inject(ConventionConstants.CONVENTION_ACTION_NAME_SEPARATOR) String nameSeparator) {
         this.configuration = configuration;
         this.objectFactory = objectFactory;
         this.servletContext = servletContext;

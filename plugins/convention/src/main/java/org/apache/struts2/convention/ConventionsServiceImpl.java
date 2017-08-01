@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -49,7 +47,7 @@ public class ConventionsServiceImpl implements ConventionsService {
      *          the constant name of <strong>struts.convention.result.path</strong>.
      */
     @Inject
-    public ConventionsServiceImpl(@Inject("struts.convention.result.path") String resultPath) {
+    public ConventionsServiceImpl(@Inject(ConventionConstants.CONVENTION_RESULT_PATH) String resultPath) {
         this.resultPath = resultPath;
     }
 

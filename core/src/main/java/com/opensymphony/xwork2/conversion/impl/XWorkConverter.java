@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.conversion.*;
 import com.opensymphony.xwork2.conversion.annotations.Conversion;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.PostInit;
 import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.StringUtils;
@@ -128,7 +129,7 @@ import java.util.regex.Pattern;
  * @version $Date$ $Id$
  * @see XWorkBasicConverter
  */
-public class XWorkConverter extends DefaultTypeConverter {
+public class XWorkConverter extends DefaultTypeConverter implements PostInit {
 
     private static final Logger LOG = LogManager.getLogger(XWorkConverter.class);
 
@@ -152,6 +153,7 @@ public class XWorkConverter extends DefaultTypeConverter {
     private ConversionAnnotationProcessor annotationProcessor;
 
     private TypeConverterHolder converterHolder;
+    private ConversionPropertiesProcessor propertiesProcessor;
 
     protected XWorkConverter() {
     }
@@ -173,8 +175,7 @@ public class XWorkConverter extends DefaultTypeConverter {
 
     @Inject
     public void setConversionPropertiesProcessor(ConversionPropertiesProcessor propertiesProcessor) {
-        propertiesProcessor.processRequired("struts-default-conversion.properties");
-        propertiesProcessor.process("xwork-conversion.properties");
+        this.propertiesProcessor = propertiesProcessor;
     }
 
     @Inject
@@ -190,6 +191,12 @@ public class XWorkConverter extends DefaultTypeConverter {
     @Inject
     public void setTypeConverterHolder(TypeConverterHolder converterHolder) {
         this.converterHolder = converterHolder;
+    }
+
+    @Override
+    public void init() {
+        propertiesProcessor.processRequired("struts-default-conversion.properties");
+        propertiesProcessor.process("xwork-conversion.properties");
     }
 
     public static String getConversionErrorMessage(String propertyName, ValueStack stack) {

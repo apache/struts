@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class StringConverter extends DefaultTypeConverter {
 
@@ -69,7 +70,7 @@ public class StringConverter extends DefaultTypeConverter {
             }
             return format.format(value);
         } else {
-            return String.valueOf(value);
+            return Objects.toString(value, null);
         }
     }
 

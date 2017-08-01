@@ -505,6 +505,11 @@ class ContainerImpl implements Container {
         callInContext(new ContextualCallable<Void>() {
             public Void call(InternalContext context) {
                 inject(o, context);
+
+                if (o instanceof PostInit) {
+                    ((PostInit) o).init();
+                }
+
                 return null;
             }
         });
@@ -513,7 +518,13 @@ class ContainerImpl implements Container {
     public <T> T inject(final Class<T> implementation) {
         return callInContext(new ContextualCallable<T>() {
             public T call(InternalContext context) {
-                return inject(implementation, context);
+                T o = inject(implementation, context);
+
+                if (o instanceof PostInit) {
+                    ((PostInit) o).init();
+                }
+
+                return o;
             }
         });
     }
@@ -521,7 +532,13 @@ class ContainerImpl implements Container {
     public <T> T getInstance(final Class<T> type, final String name) {
         return callInContext(new ContextualCallable<T>() {
             public T call(InternalContext context) {
-                return getInstance(type, name, context);
+                T o = getInstance(type, name, context);
+
+                if (o instanceof PostInit) {
+                    ((PostInit) o).init();
+                }
+
+                return o;
             }
         });
     }
@@ -529,7 +546,13 @@ class ContainerImpl implements Container {
     public <T> T getInstance(final Class<T> type) {
         return callInContext(new ContextualCallable<T>() {
             public T call(InternalContext context) {
-                return getInstance(type, context);
+                T o = getInstance(type, context);
+
+                if (o instanceof PostInit) {
+                    ((PostInit) o).init();
+                }
+
+                return o;
             }
         });
     }

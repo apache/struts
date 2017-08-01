@@ -160,6 +160,32 @@ public class URLValidatorTest extends XWorkTestCase {
 
         assertTrue(pattern.matcher("http://netsol-underconstruction-page-monitor-1.com/__media__/js/netsoltrademark.php?d=www.le-soutien-scolaire.fr%2Favis-et-test-comparatifs-des-robots-multifonctions%2F").matches());
         assertTrue(UrlValidator.getInstance().isValid("http://netsol-underconstruction-page-monitor-1.com/__media__/js/netsoltrademark.php?d=www.le-soutien-scolaire.fr%2Favis-et-test-comparatifs-des-robots-multifonctions%2F"));
+
+        //this will cause test to hang indefinitely using JDK 1.8.0_121, Struts 2.5.10.1 and JUnit 4.5
+        assertTrue(pattern.matcher("http://www.javaroad.jp/news/redirect.jsp?link=http://www.forum-course-de-cote.com/que-penser-dune-trottinette-electrique/").matches());
+        assertTrue(UrlValidator.getInstance().isValid("http://www.javaroad.jp/news/redirect.jsp?link=http://www.forum-course-de-cote.com/que-penser-dune-trottinette-electrique/"));
+
+        //this will cause test to hang indefinitely using JDK 1.8.0_121, Struts 2.5.10.1 and JUnit 4.5
+        assertTrue(pattern.matcher("http://wargame.ch/wc/acw/sub/aotm/guestbook/index.php?page3D183EClearwater20Roofing20Contractors3C/a3E3Ekaldu20non20msg3C/a3E").matches());
+        assertTrue(UrlValidator.getInstance().isValid("http://wargame.ch/wc/acw/sub/aotm/guestbook/index.php?page3D183EClearwater20Roofing20Contractors3C/a3E3Ekaldu20non20msg3C/a3E"));
+    }
+
+    public void testLongRunningValidations() throws Exception {
+        URLValidator validator = new URLValidator();
+
+        Pattern pattern = Pattern.compile(validator.getUrlRegex(), Pattern.CASE_INSENSITIVE);
+
+        long time = System.currentTimeMillis();
+        assertFalse(pattern.matcher("ftp://aaaaaaaaaaaaaaaaaaaaaaaa|").matches());
+        assertTrue("Validation did not complete in half a second", System.currentTimeMillis() - time < 500);
+
+        time = System.currentTimeMillis();
+        assertFalse(pattern.matcher("ftp://bbbbbbbbbbbbbbbbbbbbbbbb}").matches());
+        assertTrue("Validation did not complete in half a second", System.currentTimeMillis() - time < 500);
+
+        time = System.currentTimeMillis();
+        assertFalse(pattern.matcher("ftp://cccccccccccccccccccccccc{").matches());
+        assertTrue("Validation did not complete in half a second", System.currentTimeMillis() - time < 500);
     }
 
     public void testValidUrlCaseInsensitive() throws Exception {

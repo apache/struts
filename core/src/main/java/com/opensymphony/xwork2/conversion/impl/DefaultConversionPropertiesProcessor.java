@@ -21,6 +21,7 @@ import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.TypeConverterCreator;
 import com.opensymphony.xwork2.conversion.TypeConverterHolder;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.PostInit;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +32,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-public class DefaultConversionPropertiesProcessor implements ConversionPropertiesProcessor {
+public class DefaultConversionPropertiesProcessor implements ConversionPropertiesProcessor, PostInit {
 
     private static final Logger LOG = LogManager.getLogger(DefaultConversionPropertiesProcessor.class);
 
@@ -46,6 +47,13 @@ public class DefaultConversionPropertiesProcessor implements ConversionPropertie
     @Inject
     public void setTypeConverterHolder(TypeConverterHolder converterHolder) {
         this.converterHolder = converterHolder;
+    }
+
+    @Override
+    public void init() {
+        LOG.debug("Initialising beans after instantiation...");
+        processRequired("struts-default-conversion.properties");
+        process("xwork-conversion.properties");
     }
 
     public void process(String propsName) {

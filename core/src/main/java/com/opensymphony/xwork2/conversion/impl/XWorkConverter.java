@@ -129,7 +129,7 @@ import java.util.regex.Pattern;
  * @version $Date$ $Id$
  * @see XWorkBasicConverter
  */
-public class XWorkConverter extends DefaultTypeConverter implements PostInit {
+public class XWorkConverter extends DefaultTypeConverter {
 
     private static final Logger LOG = LogManager.getLogger(XWorkConverter.class);
 
@@ -153,7 +153,6 @@ public class XWorkConverter extends DefaultTypeConverter implements PostInit {
     private ConversionAnnotationProcessor annotationProcessor;
 
     private TypeConverterHolder converterHolder;
-    private ConversionPropertiesProcessor propertiesProcessor;
 
     protected XWorkConverter() {
     }
@@ -174,11 +173,6 @@ public class XWorkConverter extends DefaultTypeConverter implements PostInit {
     }
 
     @Inject
-    public void setConversionPropertiesProcessor(ConversionPropertiesProcessor propertiesProcessor) {
-        this.propertiesProcessor = propertiesProcessor;
-    }
-
-    @Inject
     public void setConversionFileProcessor(ConversionFileProcessor fileProcessor) {
         this.fileProcessor = fileProcessor;
     }
@@ -191,13 +185,6 @@ public class XWorkConverter extends DefaultTypeConverter implements PostInit {
     @Inject
     public void setTypeConverterHolder(TypeConverterHolder converterHolder) {
         this.converterHolder = converterHolder;
-    }
-
-    @Override
-    public void init() {
-        LOG.debug("Initialising beans after instantiation...");
-        propertiesProcessor.processRequired("struts-default-conversion.properties");
-        propertiesProcessor.process("xwork-conversion.properties");
     }
 
     public static String getConversionErrorMessage(String propertyName, ValueStack stack) {

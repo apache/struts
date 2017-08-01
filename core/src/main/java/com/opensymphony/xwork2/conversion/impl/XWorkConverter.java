@@ -195,6 +195,7 @@ public class XWorkConverter extends DefaultTypeConverter implements PostInit {
 
     @Override
     public void init() {
+        LOG.debug("Initialising beans after instantiation...");
         propertiesProcessor.processRequired("struts-default-conversion.properties");
         propertiesProcessor.process("xwork-conversion.properties");
     }

@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.rest.handler;
 
+import com.opensymphony.xwork2.ActionInvocation;
+
 import java.io.Writer;
 import java.io.IOException;
 import java.io.Reader;
@@ -35,21 +37,25 @@ import java.io.Reader;
  * {@link http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4}
  *
  */
-public class MultipartFormDataHandler implements ContentTypeHandler {
+public class MultipartFormDataHandler extends AbstractContentTypeHandler {
 
     public static final String CONTENT_TYPE = "multipart/form-data";
 
-    public String fromObject(Object obj, String resultCode, Writer out) throws IOException {
+    public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {
         throw new IOException("Conversion from Object to '"+getContentType()+"' is not supported");
     }
 
-    /** No transformation is required as the framework handles this data */
-    public void toObject(Reader in, Object target) {
+    /**
+     * No transformation is required as the framework handles this data
+     *
+     * @param in The input stream, usually the body of the request
+     * @param target The target, usually the action class
+     */
+    public void toObject(ActionInvocation invocation, Reader in, Object target) {
     }
 
     /**
-     * The extension is not used by this handler
-     * @return
+     * @return The extension is not used by this handler
      */
     public String getExtension() {
         return null;

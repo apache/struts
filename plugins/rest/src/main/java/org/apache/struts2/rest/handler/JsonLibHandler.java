@@ -26,6 +26,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Collection;
 
+import com.opensymphony.xwork2.ActionInvocation;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -37,12 +38,12 @@ import com.opensymphony.xwork2.inject.Inject;
 /**
  * Handles JSON content using json-lib
  */
-public class JsonLibHandler implements ContentTypeHandler {
+public class JsonLibHandler extends AbstractContentTypeHandler {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
     private String defaultEncoding = "ISO-8859-1";
 
-    public void toObject(Reader in, Object target) throws IOException {
+    public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
         StringBuilder sb = new StringBuilder();
         char[] buffer = new char[1024];
         int len = 0;
@@ -63,7 +64,7 @@ public class JsonLibHandler implements ContentTypeHandler {
         }
     }
 
-    public String fromObject(Object obj, String resultCode, Writer stream) throws IOException {
+    public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
         if (obj != null) {
             if (isArray(obj)) {
                 JSONArray jsonArray = JSONArray.fromObject(obj);

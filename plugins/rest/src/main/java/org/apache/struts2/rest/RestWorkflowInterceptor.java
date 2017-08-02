@@ -221,7 +221,7 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
             	
             	errors.put("actionErrors", validationAwareAction.getActionErrors());
             	errors.put("fieldErrors", validationAwareAction.getFieldErrors());
-            	return manager.handleResult(invocation.getProxy().getConfig(), info, errors);
+            	return manager.handleResult(invocation, info, errors);
             }
         }
 

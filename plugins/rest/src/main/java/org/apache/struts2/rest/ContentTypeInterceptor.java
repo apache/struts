@@ -57,7 +57,7 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
         if (request.getContentLength() > 0) {
             InputStream is = request.getInputStream();
             InputStreamReader reader = new InputStreamReader(is);
-            handler.toObject(reader, target);
+            handler.toObject(invocation, reader, target);
         }
         return invocation.invoke();
     }

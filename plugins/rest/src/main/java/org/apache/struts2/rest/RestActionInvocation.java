@@ -224,7 +224,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
         if (handler != null && !(handler instanceof HtmlHandler)) {
 
             // Specific representation (json, xml...)
-            resultCode = handlerSelector.handleResult(this.getProxy().getConfig(), httpHeaders, target);
+            resultCode = handlerSelector.handleResult(this, httpHeaders, target);
         } else {
             // Normal struts execution (html o other struts result)
             findResult();

@@ -44,7 +44,6 @@ public class RestWorkflowInterceptorTest extends TestCase {
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         Mock mockActionProxy = new Mock(ActionProxy.class);
         mockActionProxy.expectAndReturn("getConfig", null);
-        mockActionInvocation.expectAndReturn("getProxy", mockActionProxy.proxy());
         mockActionInvocation.expectAndReturn("getAction", action);
         Mock mockContentTypeHandlerManager = new Mock(ContentTypeHandlerManager.class);
         mockContentTypeHandlerManager.expectAndReturn("handleResult", new AnyConstraintMatcher() {

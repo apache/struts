@@ -1,8 +1,10 @@
 package org.apache.struts2.rest;
 
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope;
+import org.apache.struts2.rest.handler.AbstractContentTypeHandler;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -113,13 +115,13 @@ class DummyContainer implements Container {
     private ContentTypeHandler handler;
 
     DummyContainer(final String contentType, final String extension) {
-        handler = new ContentTypeHandler() {
+        handler = new AbstractContentTypeHandler() {
 
-            public void toObject(Reader in, Object target) throws IOException {
+            public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
 
             }
 
-            public String fromObject(Object obj, String resultCode, Writer stream) throws IOException {
+            public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
                 return null;
             }
 

@@ -24,10 +24,14 @@ package org.apache.struts2.rest;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
 import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.rest.handler.AbstractContentTypeHandler;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 import org.apache.struts2.rest.handler.FormUrlEncodedHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -49,6 +53,7 @@ public class ContentTypeHandlerManagerTest extends TestCase {
     private DefaultContentTypeHandlerManager mgr;
     private MockHttpServletResponse mockResponse;
     private MockHttpServletRequest mockRequest;
+    private MockActionInvocation invocation;
 
     @Override
     public void setUp() {
@@ -59,6 +64,9 @@ public class ContentTypeHandlerManagerTest extends TestCase {
         ActionContext.setContext(new ActionContext(new HashMap()));
         ServletActionContext.setRequest(mockRequest);
         ServletActionContext.setResponse(mockResponse);
+
+        invocation = new MockActionInvocation();
+        invocation.setProxy(new MockActionProxy());
     }
 
     @Override
@@ -71,9 +79,9 @@ public class ContentTypeHandlerManagerTest extends TestCase {
     public void testHandleResultOK() throws IOException {
 
         String obj = "mystring";
-        ContentTypeHandler handler = new ContentTypeHandler() {
-            public void toObject(Reader in, Object target) {}
-            public String fromObject(Object obj, String resultCode, Writer stream) throws IOException {
+        ContentTypeHandler handler = new AbstractContentTypeHandler() {
+            public void toObject(ActionInvocation invocation, Reader in, Object target) {}
+            public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
                 stream.write(obj.toString());
                 return resultCode;
             }
@@ -82,7 +90,11 @@ public class ContentTypeHandlerManagerTest extends TestCase {
         };
         mgr.handlersByExtension.put("xml", handler);
         mgr.setDefaultExtension("xml");
-        mgr.handleResult(new ActionConfig.Builder("", "", "").build(), new DefaultHttpHeaders().withStatus(SC_OK), obj);
+        ActionConfig actionConfig = new ActionConfig.Builder("", "", "").build();
+        MockActionProxy proxy = new MockActionProxy();
+        proxy.setConfig(actionConfig);
+        invocation.setProxy(proxy);
+        mgr.handleResult(invocation, new DefaultHttpHeaders().withStatus(SC_OK), obj);
 
         assertEquals(obj.getBytes().length, mockResponse.getContentLength());
     }
@@ -92,7 +104,7 @@ public class ContentTypeHandlerManagerTest extends TestCase {
         Mock mockHandlerXml = new Mock(ContentTypeHandler.class);
         mockHandlerXml.matchAndReturn("getExtension", "xml");
         mgr.handlersByExtension.put("xml", (ContentTypeHandler) mockHandlerXml.proxy());
-        mgr.handleResult(null, new DefaultHttpHeaders().withStatus(SC_NOT_MODIFIED), new Object());
+        mgr.handleResult(invocation, new DefaultHttpHeaders().withStatus(SC_NOT_MODIFIED), new Object());
 
         assertEquals(0, mockResponse.getContentLength());
     }

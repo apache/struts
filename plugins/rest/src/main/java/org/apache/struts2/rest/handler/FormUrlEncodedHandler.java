@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.rest.handler;
 
+import com.opensymphony.xwork2.ActionInvocation;
+
 import java.io.Writer;
 import java.io.IOException;
 import java.io.Reader;
@@ -34,11 +36,11 @@ import java.io.Reader;
  * @see <a href="http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4">http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4</a>
  *
  */
-public class FormUrlEncodedHandler implements ContentTypeHandler {
+public class FormUrlEncodedHandler extends  AbstractContentTypeHandler {
 
     public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
 
-    public String fromObject(Object obj, String resultCode, Writer out) throws IOException {
+    public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {
         throw new IOException("Conversion from Object to '"+getContentType()+"' is not supported");
     }
 
@@ -48,7 +50,7 @@ public class FormUrlEncodedHandler implements ContentTypeHandler {
      * @param in The input stream, usually the body of the request
      * @param target The target, usually the action class
      */
-    public void toObject(Reader in, Object target) {
+    public void toObject(ActionInvocation invocation, Reader in, Object target) {
     }
 
     /**

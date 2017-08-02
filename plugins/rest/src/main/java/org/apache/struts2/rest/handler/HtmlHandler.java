@@ -21,6 +21,8 @@
 
 package org.apache.struts2.rest.handler;
 
+import com.opensymphony.xwork2.ActionInvocation;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -28,13 +30,13 @@ import java.io.Writer;
 /**
  * Handles HTML content, usually just a simple passthrough to the framework
  */
-public class HtmlHandler implements ContentTypeHandler {
+public class HtmlHandler extends AbstractContentTypeHandler {
 
-    public String fromObject(Object obj, String resultCode, Writer out) throws IOException {
+    public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {
         return resultCode;
     }
 
-    public void toObject(Reader in, Object target) {
+    public void toObject(ActionInvocation invocation, Reader in, Object target) {
     }
 
     public String getExtension() {

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,40 +19,26 @@
 
 package org.apache.struts2.rest.handler;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.thoughtworks.xstream.XStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
-/**
- * Handles XML content
- */
-public class XStreamHandler extends AbstractContentTypeHandler {
+abstract public class AbstractContentTypeHandler implements ContentTypeHandler {
 
-    public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {
-        if (obj != null) {
-            XStream xstream = createXStream();
-            xstream.toXML(obj, out);
-        }
+    private static final Logger LOG = LogManager.getLogger(AbstractContentTypeHandler.class);
+
+    @Override
+    public void toObject(Reader in, Object target) throws IOException {
+        LOG.warn("This method is deprecated!");
+    }
+
+    @Override
+    public String fromObject(Object obj, String resultCode, Writer stream) throws IOException {
+        LOG.warn("This method is deprecated!");
         return null;
     }
 
-    public void toObject(ActionInvocation invocation, Reader in, Object target) {
-        XStream xstream = createXStream();
-        xstream.fromXML(in, target);
-    }
-    
-    protected XStream createXStream() {
-        return new XStream();
-    }
-
-    public String getContentType() {
-        return "application/xml";
-    }
-
-    public String getExtension() {
-        return "xml";
-    }
 }

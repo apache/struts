@@ -21,6 +21,7 @@
 
 package org.apache.struts2.rest.handler;
 
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 import junit.framework.TestCase;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class JacksonLibHandlerTest extends TestCase {
 
         StringWriter writer = new StringWriter();
         JacksonLibHandler handler = new JacksonLibHandler();
-        handler.fromObject(contact, "success", writer);
+        handler.fromObject(new MockActionInvocation(), contact, "success", writer);
         String data = writer.toString();
         assertTrue(data.startsWith("{"));
         assertTrue(data.contains("\"age\":44"));
@@ -50,7 +51,7 @@ public class JacksonLibHandlerTest extends TestCase {
 
         StringWriter writer = new StringWriter();
         JacksonLibHandler handler = new JacksonLibHandler();
-        handler.fromObject(Arrays.asList(contact), "success", writer);
+        handler.fromObject(new MockActionInvocation(), Arrays.asList(contact), "success", writer);
 
         String data = writer.toString();
         assertTrue(data.startsWith("[{"));
@@ -65,7 +66,7 @@ public class JacksonLibHandlerTest extends TestCase {
         Contact target = new Contact();
         StringReader reader = new StringReader("{\"age\":44,\"important\":true,\"name\":\"bob\"}");
         JacksonLibHandler handler = new JacksonLibHandler();
-        handler.toObject(reader, target);
+        handler.toObject(new MockActionInvocation(), reader, target);
         assertEquals(contact, target);
     }
 
@@ -78,7 +79,7 @@ public class JacksonLibHandlerTest extends TestCase {
         List<Contact> target = new ArrayList<Contact>();
         StringReader reader = new StringReader("[{\"age\":44,\"important\":true,\"name\":\"bob\"},{\"age\":33,\"important\":false,\"name\":\"john\"}]");
         JacksonLibHandler handler = new JacksonLibHandler();
-        handler.toObject(reader, target);
+        handler.toObject(new MockActionInvocation(), reader, target);
         assertEquals(source.size(), target.size());
     }
 

@@ -26,6 +26,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Arrays;
 
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 import junit.framework.TestCase;
 
 public class JsonLibHandlerTest extends TestCase {
@@ -35,7 +36,7 @@ public class JsonLibHandlerTest extends TestCase {
 
         StringWriter writer = new StringWriter();
         JsonLibHandler handler = new JsonLibHandler();
-        handler.fromObject(contact, "success", writer);
+        handler.fromObject(new MockActionInvocation(), contact, "success", writer);
         String data = writer.toString();
         assertTrue(data.startsWith("{"));
         assertTrue(data.contains("\"age\":44"));
@@ -48,7 +49,7 @@ public class JsonLibHandlerTest extends TestCase {
 
         StringWriter writer = new StringWriter();
         JsonLibHandler handler = new JsonLibHandler();
-        handler.fromObject(Arrays.asList(contact), "success", writer);
+        handler.fromObject(new MockActionInvocation(), Arrays.asList(contact), "success", writer);
 
         String data = writer.toString();
         assertTrue(data.startsWith("[{"));
@@ -63,7 +64,7 @@ public class JsonLibHandlerTest extends TestCase {
         Contact target = new Contact();
         StringReader reader = new StringReader("{\"age\":44,\"important\":true,\"name\":\"bob\"}");
         JsonLibHandler handler = new JsonLibHandler();
-        handler.toObject(reader, target);
+        handler.toObject(new MockActionInvocation(), reader, target);
 
         assertEquals(contact, target);
     }

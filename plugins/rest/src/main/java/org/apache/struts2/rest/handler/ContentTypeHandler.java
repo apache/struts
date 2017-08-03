@@ -21,6 +21,8 @@
 
 package org.apache.struts2.rest.handler;
 
+import com.opensymphony.xwork2.ActionInvocation;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -35,9 +37,14 @@ public interface ContentTypeHandler {
      * @param in The input stream, usually the body of the request
      * @param target The target, usually the action class
      * @throws IOException If unable to write to the output stream
+     *
+     * @deprecated use version which requires {@link ActionInvocation}
      */
+    @Deprecated
     void toObject(Reader in, Object target) throws IOException;
-    
+
+    void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException;
+
     /**
      * Writes content to the stream
      * 
@@ -46,9 +53,14 @@ public interface ContentTypeHandler {
      * @param stream The output stream, usually the response
      * @return The new result code
      * @throws IOException If unable to write to the output stream
+     *
+     * @deprecated use version which requires {@link ActionInvocation}
      */
+    @Deprecated
     String fromObject(Object obj, String resultCode, Writer stream) throws IOException;
-    
+
+    String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException;
+
     /**
      * Gets the content type for this handler
      * 

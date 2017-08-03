@@ -24,6 +24,7 @@ package org.apache.struts2.rest.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
 
@@ -34,19 +35,19 @@ import java.io.Writer;
 /**
  * Handles JSON content using jackson-lib
  */
-public class JacksonLibHandler implements ContentTypeHandler {
+public class JacksonLibHandler extends AbstractContentTypeHandler {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
     private String defaultEncoding = "ISO-8859-1";
     private ObjectMapper mapper = new ObjectMapper();
 
-    public void toObject(Reader in, Object target) throws IOException {
+    public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
         mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         ObjectReader or = mapper.readerForUpdating(target);
         or.readValue(in);
     }
 
-    public String fromObject(Object obj, String resultCode, Writer stream) throws IOException {
+    public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
         mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         mapper.writeValue(stream, obj);
         return null;

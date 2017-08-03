@@ -49,7 +49,7 @@ public class ObjectFactory implements Serializable {
     private static final Logger LOG = LogManager.getLogger(ObjectFactory.class);
 
     private transient ClassLoader ccl;
-    private Container container;
+    private final Container container;
 
     private ActionFactory actionFactory;
     private ResultFactory resultFactory;
@@ -58,14 +58,14 @@ public class ObjectFactory implements Serializable {
     private ConverterFactory converterFactory;
     private UnknownHandlerFactory unknownHandlerFactory;
 
+    @Inject
+    public ObjectFactory(Container container) {
+        this.container = container;
+    }
+
     @Inject(value="objectFactory.classloader", required=false)
     public void setClassLoader(ClassLoader cl) {
         this.ccl = cl;
-    }
-    
-    @Inject
-    public void setContainer(Container container) {
-        this.container = container;
     }
 
     @Inject

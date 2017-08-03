@@ -71,7 +71,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject(StrutsConstants.STRUTS_DEVMODE) String devMode,
             @Inject Container container) {
           
-        super();
+        super(container);
         boolean useClassCache = BooleanUtils.toBoolean(useClassCacheStr);
         LOG.info("Initializing Struts-Spring integration...");
 

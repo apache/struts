@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.spring;
 
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
@@ -70,6 +71,11 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     @Inject(value = "enableAopSupport", required = false)
     public void setEnableAopSupport(String enableAopSupport) {
         this.enableAopSupport = BooleanUtils.toBoolean(enableAopSupport);
+    }
+
+    @Inject
+    public SpringObjectFactory(Container container) {
+        super(container);
     }
 
     /**

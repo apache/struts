@@ -5,10 +5,18 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+
 /**
  * ObjectFactory that returns a FooProxy in the buildBean if the clazz is FooAction 
  */
 public class ProxyObjectFactory extends ObjectFactory {
+
+    @Inject
+    public ProxyObjectFactory(Container container) {
+        super(container);
+    }
 
     /**
      * It returns an instance of the bean except if the class is FooAction. 

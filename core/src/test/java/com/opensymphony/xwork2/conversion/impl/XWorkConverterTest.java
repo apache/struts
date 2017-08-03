@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.User;
@@ -699,6 +700,7 @@ public class XWorkConverterTest extends XWorkTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
+        container.getInstance(ConversionPropertiesProcessor.class); // to init converters
         converter = container.getInstance(XWorkConverter.class);
 
         ActionContext ac = ActionContext.getContext();

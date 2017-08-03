@@ -54,6 +54,18 @@ public class ContainerImplTest extends TestCase {
         }
     }
 
+    public void testPostInit() throws Exception {
+
+        PostInitCheck postInitCheck = new PostInitCheck();
+
+        try {
+            c.inject(postInitCheck);
+            assertTrue(postInitCheck.initialised);
+        } catch (DependencyException expected) {
+            fail("No exception expected!");
+        }
+    }
+
     /**
      * Inject values into field under SecurityManager
      */
@@ -114,6 +126,20 @@ public class ContainerImplTest extends TestCase {
             return name;
         }
 
+    }
+
+    class PostInitCheck implements PostInit {
+
+        boolean initialised = false;
+
+        @Override
+        public void init() {
+            initialised = true;
+        }
+
+        public boolean isInitialised() {
+            return initialised;
+        }
     }
 
 }

@@ -20,6 +20,7 @@ import com.opensymphony.xwork2.conversion.*;
 import com.opensymphony.xwork2.conversion.annotations.Conversion;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.PostInit;
 import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.StringUtils;
@@ -169,12 +170,6 @@ public class XWorkConverter extends DefaultTypeConverter {
     @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
     public void setReloadingConfigs(String reloadingConfigs) {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
-    }
-
-    @Inject
-    public void setConversionPropertiesProcessor(ConversionPropertiesProcessor propertiesProcessor) {
-        propertiesProcessor.processRequired("struts-default-conversion.properties");
-        propertiesProcessor.process("xwork-conversion.properties");
     }
 
     @Inject

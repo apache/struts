@@ -191,6 +191,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             // Interface with Commons FileUpload API
             // Using the Streaming API
             ServletFileUpload servletFileUpload = new ServletFileUpload();
+            if (maxSizeProvided) {
+                servletFileUpload.setSizeMax(maxSize);
+            }
             FileItemIterator i = servletFileUpload.getItemIterator(request);
 
             // Iterate the file items

@@ -168,6 +168,19 @@ public class URLValidatorTest extends XWorkTestCase {
         //this will cause test to hang indefinitely using JDK 1.8.0_121, Struts 2.5.10.1 and JUnit 4.5
         assertTrue(pattern.matcher("http://wargame.ch/wc/acw/sub/aotm/guestbook/index.php?page3D183EClearwater20Roofing20Contractors3C/a3E3Ekaldu20non20msg3C/a3E").matches());
         assertTrue(UrlValidator.getInstance().isValid("http://wargame.ch/wc/acw/sub/aotm/guestbook/index.php?page3D183EClearwater20Roofing20Contractors3C/a3E3Ekaldu20non20msg3C/a3E"));
+
+        assertTrue(pattern.matcher("http://253.254.255.1").matches());
+        assertTrue(UrlValidator.getInstance().isValid("http://253.254.255.1"));
+
+        assertTrue(pattern.matcher("http://253.254.255.12").matches());
+        assertTrue(UrlValidator.getInstance().isValid("http://253.254.255.12"));
+
+        assertTrue(pattern.matcher("http://1.2.3.100").matches());
+        assertTrue(UrlValidator.getInstance().isValid("http://1.2.3.100"));
+
+        assertTrue(pattern.matcher("http://1.2.3.255").matches());
+        assertTrue(UrlValidator.getInstance().isValid("http://1.2.3.255"));
+
     }
 
     public void testLongRunningValidations() throws Exception {

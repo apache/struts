@@ -314,7 +314,9 @@ public class FreemarkerManager {
      * @throws TemplateException in case of errors during creating the configuration
      */
     protected Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
-        Configuration configuration = new Configuration(Configuration.VERSION_2_3_0);
+        Version incompatibleImprovements = getFreemarkerVersion(servletContext);
+
+        Configuration configuration = new Configuration(incompatibleImprovements);
 
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 
@@ -338,6 +340,17 @@ public class FreemarkerManager {
         configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
 
         return configuration;
+    }
+
+    protected Version getFreemarkerVersion(ServletContext servletContext) {
+        Version incompatibleImprovements = Configuration.VERSION_2_3_0;
+
+        String incompatibleImprovementsParam = servletContext.getInitParameter("freemarker." + Configuration.INCOMPATIBLE_IMPROVEMENTS_KEY_SNAKE_CASE);
+        if (incompatibleImprovementsParam != null) {
+            incompatibleImprovements = new Version(incompatibleImprovementsParam);
+        }
+
+        return incompatibleImprovements;
     }
 
 
@@ -396,7 +409,8 @@ public class FreemarkerManager {
     }
 
     protected ObjectWrapper createObjectWrapper(ServletContext servletContext) {
-        StrutsBeanWrapper wrapper = new StrutsBeanWrapper(altMapWrapper);
+        Version incompatibleImprovements = getFreemarkerVersion(servletContext);
+        StrutsBeanWrapper wrapper = new StrutsBeanWrapper(altMapWrapper, incompatibleImprovements);
         wrapper.setUseCache(cacheBeanWrapper);
         return wrapper;
     }

@@ -33,6 +33,7 @@ import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
+import freemarker.template.Version;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -53,7 +54,8 @@ import freemarker.template.TemplateModel;
 public class StrutsBeanWrapper extends BeansWrapper {
     private boolean altMapWrapper;
 
-    public StrutsBeanWrapper(boolean altMapWrapper) {
+    public StrutsBeanWrapper(boolean altMapWrapper, Version incompatibleImprovements) {
+        super(incompatibleImprovements);
         this.altMapWrapper = altMapWrapper;
     }
 

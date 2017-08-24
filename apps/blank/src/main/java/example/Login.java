@@ -25,7 +25,6 @@ import org.apache.struts2.interceptor.validation.SkipValidation;
 
 public class Login extends ExampleSupport {
 
-    @Override
     public String execute() throws Exception {
         return SUCCESS;
     }

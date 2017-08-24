@@ -19,8 +19,8 @@
 
 package org.apache.struts2.rest.handler;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -28,14 +28,12 @@ import java.io.Writer;
 
 abstract public class AbstractContentTypeHandler implements ContentTypeHandler {
 
-    private static final Logger LOG = LogManager.getLogger(AbstractContentTypeHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractContentTypeHandler.class);
 
-    @Override
     public void toObject(Reader in, Object target) throws IOException {
         LOG.warn("This method is deprecated!");
     }
 
-    @Override
     public String fromObject(Object obj, String resultCode, Writer stream) throws IOException {
         LOG.warn("This method is deprecated!");
         return null;

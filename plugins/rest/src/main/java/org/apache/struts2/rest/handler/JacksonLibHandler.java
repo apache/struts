@@ -21,9 +21,9 @@
 
 package org.apache.struts2.rest.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectReader;
+import org.codehaus.jackson.map.SerializationConfig.Feature;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
@@ -42,13 +42,13 @@ public class JacksonLibHandler extends AbstractContentTypeHandler {
     private ObjectMapper mapper = new ObjectMapper();
 
     public void toObject(ActionInvocation invocation, Reader in, Object target) throws IOException {
-        mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+        mapper.configure(Feature.WRITE_NULL_MAP_VALUES, false);
         ObjectReader or = mapper.readerForUpdating(target);
         or.readValue(in);
     }
 
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer stream) throws IOException {
-        mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+        mapper.configure(Feature.WRITE_NULL_MAP_VALUES, false);
         mapper.writeValue(stream, obj);
         return null;
     }

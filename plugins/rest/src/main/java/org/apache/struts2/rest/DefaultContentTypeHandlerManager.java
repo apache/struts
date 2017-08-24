@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 
@@ -44,7 +44,7 @@ import java.util.Set;
  */
 public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManager {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultContentTypeHandlerManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultContentTypeHandlerManager.class);
 
     /** ContentTypeHandlers keyed by the extension */
     Map<String, ContentTypeHandler> handlersByExtension = new HashMap<String, ContentTypeHandler>();
@@ -158,7 +158,6 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
         return handler;
     }
 
-    @Override
     public String handleResult(ActionConfig actionConfig, Object methodResult, Object target) throws IOException {
         LOG.warn("This method is deprecated!");
         return readResultCode(methodResult);

@@ -23,6 +23,8 @@ package org.apache.struts2.rest.handler;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
 import com.thoughtworks.xstream.security.ExplicitTypePermission;
@@ -30,8 +32,6 @@ import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.NullPermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import com.thoughtworks.xstream.security.TypePermission;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -46,7 +46,7 @@ import java.util.Set;
  */
 public class XStreamHandler extends AbstractContentTypeHandler {
 
-    private static final Logger LOG = LogManager.getLogger(XStreamHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XStreamHandler.class);
 
     public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {
         if (obj != null) {
@@ -125,7 +125,6 @@ public class XStreamHandler extends AbstractContentTypeHandler {
 
         private static final TypePermission COLLECTIONS = new CollectionTypePermission();
 
-        @Override
         public boolean allows(Class type) {
             return type != null && type.isInterface() &&
                     (Collection.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type));

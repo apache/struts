@@ -34,6 +34,7 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
+import freemarker.core.TemplateClassResolver;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
@@ -343,6 +344,9 @@ public class FreemarkerManager {
         }
         configuration.setLocalizedLookup(false);
         configuration.setWhitespaceStripping(true);
+
+        LOG.debug("Sets NewBuiltinClassResolver to TemplateClassResolver.SAFER_RESOLVER");
+        configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
 
         return configuration;
     }

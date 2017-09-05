@@ -36,6 +36,7 @@
     <constant name="struts.class.reloading.reloadConfig" value="false" />
 
     <constant name="struts.disallowProxyMemberAccess" value="true" />
+    <constant name="struts.json.result.excludeProxyProperties" value="true" />
 
     <package name="spring-default">
         <interceptors>

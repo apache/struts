@@ -110,19 +110,13 @@ public class DefaultUrlHelper implements UrlHelper {
             if (scheme != null) {
                 // If switching schemes, use the configured port for the particular scheme.
                 if (!scheme.equals(reqScheme)) {
-                    if ((HTTP_PROTOCOL.equals(scheme) && (httpPort != DEFAULT_HTTP_PORT)) || (HTTPS_PROTOCOL.equals(scheme) && httpsPort != DEFAULT_HTTPS_PORT)) {
-                        link.append(":");
-                        link.append(HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
-                    }
+                    appendPort(link, scheme, HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
                 // Else use the port from the current request.
                 } else {
-                    int reqPort = request.getServerPort();
-
-                    if ((scheme.equals(HTTP_PROTOCOL) && (reqPort != DEFAULT_HTTP_PORT)) || (scheme.equals(HTTPS_PROTOCOL) && reqPort != DEFAULT_HTTPS_PORT)) {
-                        link.append(":");
-                        link.append(reqPort);
-                    }
+                    appendPort(link, scheme, request.getServerPort());
                 }
+            } else {
+                appendPort(link, reqScheme, request.getServerPort());
             }
         } else if ((scheme != null) && !scheme.equals(request.getScheme())) {
             changedScheme = true;
@@ -130,11 +124,7 @@ public class DefaultUrlHelper implements UrlHelper {
             link.append("://");
             link.append(request.getServerName());
 
-            if ((scheme.equals(HTTP_PROTOCOL) && (httpPort != DEFAULT_HTTP_PORT)) || (HTTPS_PROTOCOL.equals(scheme) && httpsPort != DEFAULT_HTTPS_PORT))
-            {
-                link.append(":");
-                link.append(HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
-            }
+            appendPort(link, scheme, HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
         }
 
         if (action != null) {
@@ -199,6 +189,13 @@ public class DefaultUrlHelper implements UrlHelper {
         }
 
         return result;
+    }
+
+    private void appendPort(StringBuilder link, String scheme, int port) {
+        if ((HTTP_PROTOCOL.equals(scheme) && port != DEFAULT_HTTP_PORT) || (HTTPS_PROTOCOL.equals(scheme) && port != DEFAULT_HTTPS_PORT)) {
+            link.append(":");
+            link.append(port);
+        }
     }
 
     public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator) {

@@ -138,6 +138,29 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
         mockHttpServletRequest.expectAndReturn("getContextPath",
             "/contextPath");
+        mockHttpServletRequest.expectAndReturn("getServerPort", 80);
+
+        Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
+        mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl,
+            expectedUrl);
+
+        String result = urlHelper.buildUrl("/path1/path2/myAction.action",
+                (HttpServletRequest) mockHttpServletRequest.proxy(),
+                (HttpServletResponse) mockHttpServletResponse.proxy(), null,
+                null, true, true, true);
+        assertEquals(expectedUrl, result);
+        mockHttpServletRequest.verify();
+    }
+
+    public void testForceAddNullSchemeHostAndPort2() throws Exception {
+        String expectedUrl = "http://localhost:8080/contextPath/path1/path2/myAction.action";
+
+        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
+        mockHttpServletRequest.expectAndReturn("getScheme", "http");
+        mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
+        mockHttpServletRequest.expectAndReturn("getContextPath",
+            "/contextPath");
+        mockHttpServletRequest.expectAndReturn("getServerPort", 8080);
 
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl,

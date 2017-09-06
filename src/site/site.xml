@@ -47,20 +47,6 @@
             <item name="Apache Struts" href="http://struts.apache.org/"/>
         </menu>
 
-        <menu name="Documentation">
-            <item name="Getting Started" href="../docs/home.html"/>
-            <item name="Tutorials" href="../docs/tutorials.html"/>
-            <item name="FAQs" href="../docs/faqs.html"/>
-            <item name="Guides" href="../docs/guides.html"/>
-        </menu>
-
-        <menu name="Reference">
-            <item name="Struts Core API" href="struts2-core/apidocs/index.html"/>
-            <item name="Plugin APIs" href="plugins.html"/>
-            <item name="Tag Reference" href="../docs/tag-reference.html"/>
-            <item name="Plugin Registry" href="http://cwiki.apache.org/S2PLUGINS/home.html"/>
-        </menu>
-
         <menu ref="reports"/>
         <menu ref="modules"/>
 

@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.json;
 
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ProxyUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.json.annotations.JSON;
@@ -75,6 +77,12 @@ public class JSONWriter {
     private boolean enumAsBean = ENUM_AS_BEAN_DEFAULT;
     private boolean excludeNullProperties;
     private boolean cacheBeanInfo = true;
+    private boolean excludeProxyProperties = false;
+
+    @Inject(value = JSONConstants.RESULT_EXCLUDE_PROXY_PROPERTIES, required = false)
+    public void setExcludeProxyProperties(String excludeProxyProperties) {
+        this.excludeProxyProperties = Boolean.parseBoolean(excludeProxyProperties);
+    }
 
     /**
      * @param object Object to be serialized into JSON
@@ -101,6 +109,7 @@ public class JSONWriter {
                         Collection<Pattern> includeProperties, boolean excludeNullProperties) throws JSONException {
         this.excludeNullProperties = excludeNullProperties;
         this.buf.setLength(0);
+        this.stack.clear();
         this.root = object;
         this.exprStack = "";
         this.buildExpr = ((excludeProperties != null) && !excludeProperties.isEmpty())
@@ -210,7 +219,7 @@ public class JSONWriter {
         BeanInfo info;
 
         try {
-            Class clazz = object.getClass();
+            Class clazz = excludeProxyProperties ? ProxyUtil.ultimateTargetClass(object) : object.getClass();
 
             info = ((object == this.root) && this.ignoreHierarchy)
                     ? getBeanInfoIgnoreHierarchy(clazz)

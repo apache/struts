@@ -41,6 +41,7 @@ import java.util.zip.GZIPOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,7 +59,14 @@ public class JSONUtil {
     public static final boolean CACHE_BEAN_INFO_DEFAULT = true;
     
     private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
-          
+
+    private static JSONWriter writer = new JSONWriter();
+
+    @Inject
+    public static void setWriter(JSONWriter writer) {
+        JSONUtil.writer = writer;
+    }
+
     /**
      * Serializes an object into JSON.
      *
@@ -70,7 +78,6 @@ public class JSONUtil {
      * @throws JSONException in case of error during serialize
      */
     public static String serialize(Object object, boolean cacheBeanInfo) throws JSONException {
-        JSONWriter writer = new JSONWriter();
         writer.setCacheBeanInfo(cacheBeanInfo);
         return writer.write(object);
     }
@@ -124,7 +131,6 @@ public class JSONUtil {
             Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean excludeNullProperties,
             boolean cacheBeanInfo)
             throws JSONException {
-        JSONWriter writer = new JSONWriter();
         writer.setIgnoreHierarchy(ignoreHierarchy);
         writer.setCacheBeanInfo(cacheBeanInfo);
         return writer.write(object, excludeProperties, includeProperties, excludeNullProperties);
@@ -186,7 +192,6 @@ public class JSONUtil {
     public static String serialize(Object object, Collection<Pattern> excludeProperties,
                                    Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean enumAsBean,
                                    boolean excludeNullProperties, String defaultDateFormat, boolean cacheBeanInfo) throws JSONException {
-        JSONWriter writer = new JSONWriter();
         writer.setIgnoreHierarchy(ignoreHierarchy);
         writer.setEnumAsBean(enumAsBean);
         writer.setDateFormatter(defaultDateFormat);

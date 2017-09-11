@@ -41,6 +41,7 @@ import java.util.zip.GZIPOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -63,8 +64,8 @@ public class JSONUtil {
     private static JSONWriter writer = new DefaultJSONWriter();
 
     @Inject
-    public static void setWriter(JSONWriter writer) {
-        JSONUtil.writer = writer;
+    public static void setContainer(Container container) {
+        JSONUtil.writer = container.getInstance(JSONWriter.class, container.getInstance(String.class, JSONConstants.JSON_WRITER));
     }
 
     /**

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class JSONWriterTest extends StrutsTestCase{
+public class DefaultJSONWriterTest extends StrutsTestCase{
     @Test
     public void testWrite() throws Exception {
         Bean bean1=new Bean();
@@ -27,10 +27,10 @@ public class JSONWriterTest extends StrutsTestCase{
         bean1.setEnumField(AnEnum.ValueA);
         bean1.setEnumBean(AnEnumBean.Two);
 
-        JSONWriter jsonWriter = new JSONWriter();
+        JSONWriter jsonWriter = new DefaultJSONWriter();
         jsonWriter.setEnumAsBean(false);
         String json = jsonWriter.write(bean1);
-        TestUtils.assertEquals(JSONWriter.class.getResource("jsonwriter-write-bean-01.txt"), json);
+        TestUtils.assertEquals(DefaultJSONWriter.class.getResource("jsonwriter-write-bean-01.txt"), json);
     }
 
     @Test
@@ -52,11 +52,11 @@ public class JSONWriterTest extends StrutsTestCase{
         m.put("c", "z");
         bean1.setMap(m);
 
-        JSONWriter jsonWriter = new JSONWriter();
+        JSONWriter jsonWriter = new DefaultJSONWriter();
         jsonWriter.setEnumAsBean(false);
         jsonWriter.setIgnoreHierarchy(false);
         String json = jsonWriter.write(bean1, null, null, true);
-        TestUtils.assertEquals(JSONWriter.class.getResource("jsonwriter-write-bean-03.txt"), json);
+        TestUtils.assertEquals(DefaultJSONWriter.class.getResource("jsonwriter-write-bean-03.txt"), json);
     }
 
     private class BeanWithMap extends Bean{
@@ -85,11 +85,11 @@ public class JSONWriterTest extends StrutsTestCase{
         bean1.setEnumBean(AnEnumBean.Two);
         bean1.setUrl(new URL("http://www.google.com"));
 
-        JSONWriter jsonWriter = new JSONWriter();
+        JSONWriter jsonWriter = new DefaultJSONWriter();
         jsonWriter.setEnumAsBean(false);
         jsonWriter.setIgnoreHierarchy(false);
         String json = jsonWriter.write(bean1);
-        TestUtils.assertEquals(JSONWriter.class.getResource("jsonwriter-write-bean-02.txt"), json);
+        TestUtils.assertEquals(DefaultJSONWriter.class.getResource("jsonwriter-write-bean-02.txt"), json);
     }
 
     @Test
@@ -108,11 +108,11 @@ public class JSONWriterTest extends StrutsTestCase{
         errors.add("Field is required");
         bean1.setErrors(errors);
 
-        JSONWriter jsonWriter = new JSONWriter();
+        JSONWriter jsonWriter = new DefaultJSONWriter();
         jsonWriter.setEnumAsBean(false);
         jsonWriter.setIgnoreHierarchy(false);
         String json = jsonWriter.write(bean1);
-        TestUtils.assertEquals(JSONWriter.class.getResource("jsonwriter-write-bean-04.txt"), json);
+        TestUtils.assertEquals(DefaultJSONWriter.class.getResource("jsonwriter-write-bean-04.txt"), json);
     }
 
     private class BeanWithList extends Bean {
@@ -147,7 +147,7 @@ public class JSONWriterTest extends StrutsTestCase{
         SingleDateBean dateBean = new SingleDateBean();
         dateBean.setDate(sdf.parse("2012-12-23 10:10:10 GMT"));
 
-        JSONWriter jsonWriter = new JSONWriter();
+        JSONWriter jsonWriter = new DefaultJSONWriter();
         jsonWriter.setEnumAsBean(false);
 
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
@@ -162,7 +162,7 @@ public class JSONWriterTest extends StrutsTestCase{
         SingleDateBean dateBean = new SingleDateBean();
         dateBean.setDate(sdf.parse("2012-12-23 10:10:10 GMT"));
 
-        JSONWriter jsonWriter = new JSONWriter();
+        JSONWriter jsonWriter = new DefaultJSONWriter();
         jsonWriter.setEnumAsBean(false);
         jsonWriter.setDateFormatter("MM-dd-yyyy");
         String json = jsonWriter.write(dateBean);

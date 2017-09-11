@@ -71,7 +71,7 @@ public class JSONResultTest extends StrutsTestCase {
     public void testJSONWriterEndlessLoopOnExludedProperties() throws JSONException {
         Pattern all = Pattern.compile(".*");
 
-        JSONWriter writer = new JSONWriter();
+        JSONWriter writer = new DefaultJSONWriter();
         writer.write(Arrays.asList("a", "b"), Arrays.asList(all), null, false);
     }
 

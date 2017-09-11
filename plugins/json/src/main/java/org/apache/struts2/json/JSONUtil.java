@@ -60,7 +60,7 @@ public class JSONUtil {
     
     private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
 
-    private static JSONWriter writer = new JSONWriter();
+    private static JSONWriter writer = new DefaultJSONWriter();
 
     @Inject
     public static void setWriter(JSONWriter writer) {

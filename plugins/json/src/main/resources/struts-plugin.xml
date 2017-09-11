@@ -5,7 +5,7 @@
 	"http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-    <bean class="org.apache.struts2.json.JSONWriter"/>
+    <bean type="org.apache.struts2.json.JSONWriter" name="default" class="org.apache.struts2.json.DefaultJSONWriter"/>
     <bean class="org.apache.struts2.json.JSONUtil" static="true"/>
 
     <package name="json-default" extends="struts-default">

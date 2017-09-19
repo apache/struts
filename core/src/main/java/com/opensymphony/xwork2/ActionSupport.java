@@ -279,8 +279,8 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      * @return reference to field with TextProvider
      */
     protected TextProvider getTextProvider() {
-        checkContainer();
         if (textProvider == null) {
+            Container container = getContainer();
             TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
             textProvider = tpf.createInstance(getClass());
         }
@@ -288,8 +288,8 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
     }
 
     protected LocaleProvider getLocaleProvider() {
-        checkContainer();
         if (localeProvider == null) {
+            Container container = getContainer();
             LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
             localeProvider = localeProviderFactory.createLocaleProvider();
         }
@@ -299,7 +299,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
     /**
      * TODO: This a temporary solution, maybe we should consider stop injecting container into beans
      */
-    private void checkContainer() {
+    protected Container getContainer() {
         if (container == null) {
             container = ActionContext.getContext().getContainer();
             if (container != null) {
@@ -313,6 +313,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
                 LOG.warn("Container is null, action was created out of ActionContext scope?!?");
             }
         }
+        return container;
     }
 
     @Inject

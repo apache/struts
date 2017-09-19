@@ -19,6 +19,9 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.io.Serializable;
 import java.util.*;
@@ -28,6 +31,8 @@ import java.util.*;
  * See the documentation for all the interfaces this class implements for more detailed information.
  */
 public class ActionSupport implements Action, Validateable, ValidationAware, TextProvider, LocaleProvider, Serializable {
+
+    private static final Logger LOG = LogManager.getLogger(ActionSupport.class);
 
     private final ValidationAwareSupport validationAware = new ValidationAwareSupport();
 
@@ -274,6 +279,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      * @return reference to field with TextProvider
      */
     protected TextProvider getTextProvider() {
+        checkContainer();
         if (textProvider == null) {
             TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
             textProvider = tpf.createInstance(getClass());
@@ -282,11 +288,31 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
     }
 
     protected LocaleProvider getLocaleProvider() {
+        checkContainer();
         if (localeProvider == null) {
             LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
             localeProvider = localeProviderFactory.createLocaleProvider();
         }
         return localeProvider;
+    }
+
+    /**
+     * TODO: This a temporary solution, maybe we should consider stop injecting container into beans
+     */
+    private void checkContainer() {
+        if (container == null) {
+            container = ActionContext.getContext().getContainer();
+            if (container != null) {
+                boolean devMode = Boolean.parseBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_DEVMODE));
+                if (devMode) {
+                    LOG.warn("Container is null, action was created manually? Fallback to ActionContext");
+                } else {
+                    LOG.debug("Container is null, action was created manually? Fallback to ActionContext");
+                }
+            } else {
+                LOG.warn("Container is null, action was created out of ActionContext scope?!?");
+            }
+        }
     }
 
     @Inject

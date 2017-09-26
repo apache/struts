@@ -23,7 +23,6 @@ package org.apache.struts2.osgi;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import org.osgi.framework.ServiceReference;
 
@@ -39,9 +38,7 @@ public class SpringOsgiObjectFactory extends ObjectFactory {
 
     private BundleAccessor bundleAccessor;
 
-    @Inject
-    public SpringOsgiObjectFactory(Container container) {
-        super(container);
+    public SpringOsgiObjectFactory() {
     }
 
     public Object buildBean(String className, Map<String, Object> extraContext, boolean injectInternal) throws Exception {

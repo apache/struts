@@ -230,7 +230,8 @@ public class DispatcherTest extends StrutsInternalTestCase {
         String reloadConfigs = container.getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
                 reloadConfigs);
-        final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory((Container) mockContainer.proxy());
+        final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
+        destroyedObjectFactory.setContainer((Container) mockContainer.proxy());
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), destroyedObjectFactory);
 
         mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
@@ -261,7 +262,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         packageConfigs.put("test", packageConfig);
 
         Mock mockContainer = new Mock(Container.class);
-        mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory((Container) mockContainer.proxy()));
+        mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory());
         String reloadConfigs = container.getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
                 reloadConfigs);
@@ -316,8 +317,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
     public static class InnerDestroyableObjectFactory extends ObjectFactory implements ObjectFactoryDestroyable {
         public boolean destroyed = false;
 
-        public InnerDestroyableObjectFactory(Container container) {
-            super(container);
+        public InnerDestroyableObjectFactory() {
         }
 
         public void destroy() {

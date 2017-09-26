@@ -49,8 +49,8 @@ public class ObjectFactory implements Serializable {
     private static final Logger LOG = LogManager.getLogger(ObjectFactory.class);
 
     private transient ClassLoader ccl;
-    private final Container container;
 
+    private Container container;
     private ActionFactory actionFactory;
     private ResultFactory resultFactory;
     private InterceptorFactory interceptorFactory;
@@ -58,8 +58,11 @@ public class ObjectFactory implements Serializable {
     private ConverterFactory converterFactory;
     private UnknownHandlerFactory unknownHandlerFactory;
 
+    public ObjectFactory() {
+    }
+
     @Inject
-    public ObjectFactory(Container container) {
+    public void setContainer(Container container) {
         this.container = container;
     }
 

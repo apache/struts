@@ -35,9 +35,7 @@ public class DelegatingObjectFactory extends ObjectFactory implements ObjectFact
     private BundleAccessor bundleResourceLoader;
     private OsgiConfigurationProvider osgiConfigurationProvider;
 
-    @Inject
-    public DelegatingObjectFactory(Container container) {
-        super(container);
+    public DelegatingObjectFactory() {
     }
 
     @Inject

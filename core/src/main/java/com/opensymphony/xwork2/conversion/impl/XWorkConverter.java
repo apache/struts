@@ -172,12 +172,6 @@ public class XWorkConverter extends DefaultTypeConverter {
     }
 
     @Inject
-    public void setConversionPropertiesProcessor(ConversionPropertiesProcessor propertiesProcessor) {
-        propertiesProcessor.processRequired("struts-default-conversion.properties");
-        propertiesProcessor.process("xwork-conversion.properties");
-    }
-
-    @Inject
     public void setConversionFileProcessor(ConversionFileProcessor fileProcessor) {
         this.fileProcessor = fileProcessor;
     }

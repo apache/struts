@@ -15,10 +15,12 @@
  */
 package com.opensymphony.xwork2.conversion;
 
+import com.opensymphony.xwork2.inject.Initializable;
+
 /**
  * Used to read converters from Properties file
  */
-public interface ConversionPropertiesProcessor {
+public interface ConversionPropertiesProcessor extends Initializable {
 
     /**
      * Process given property to load converters as not required (Properties file doesn't have to exist)

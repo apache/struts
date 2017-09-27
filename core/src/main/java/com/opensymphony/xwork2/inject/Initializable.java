@@ -24,6 +24,9 @@ package com.opensymphony.xwork2.inject;
  */
 public interface Initializable {
 
+    /**
+     * Use this method to initialise your bean, the whole dependency graph was already built
+     */
     void init();
 
 }

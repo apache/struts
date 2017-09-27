@@ -90,32 +90,25 @@ public final class ContainerBuilder {
         final InternalFactory<? extends T> scopedFactory = scope.scopeFactory(key.getType(), key.getName(), factory);
         factories.put(key, scopedFactory);
         if (scope == Scope.SINGLETON) {
-            singletonFactories.add(new InternalFactory<T>() {
-                public T create(InternalContext context) {
-                    try {
-                        context.setExternalContext(ExternalContext.newInstance(null, key, context.getContainerImpl()));
-                        return scopedFactory.create(context);
-                    } finally {
-                        context.setExternalContext(null);
-                    }
-                }
-            });
+            singletonFactories.add(createCallableFactory(key, scopedFactory));
         }
         if (Initializable.class.isAssignableFrom(key.getType())) {
-            initializableFactories.add(
-                    new InternalFactory<T>() {
-                        public T create(InternalContext context) {
-                            try {
-                                context.setExternalContext(ExternalContext.newInstance(null, key, context.getContainerImpl()));
-                                return scopedFactory.create(context);
-                            } finally {
-                                context.setExternalContext(null);
-                            }
-                        }
-                    }
-            );
+            initializableFactories.add(createCallableFactory(key, scopedFactory));
         }
         return this;
+    }
+
+    private <T> InternalFactory<T> createCallableFactory(final Key<T> key, final InternalFactory<? extends T> scopedFactory) {
+        return new InternalFactory<T>() {
+            public T create(InternalContext context) {
+                try {
+                    context.setExternalContext(ExternalContext.newInstance(null, key, context.getContainerImpl()));
+                    return scopedFactory.create(context);
+                } finally {
+                    context.setExternalContext(null);
+                }
+            }
+        };
     }
 
     /**

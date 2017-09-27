@@ -21,6 +21,8 @@ package com.opensymphony.xwork2.inject;
  * after the internal DI mechanism will be created.
  *
  * It should be only used internally!
+ *
+ * @since Struts 2.5.14
  */
 public interface Initializable {
 

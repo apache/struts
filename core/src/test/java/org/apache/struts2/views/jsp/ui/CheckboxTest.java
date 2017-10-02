@@ -197,4 +197,23 @@ public class CheckboxTest extends AbstractUITagTest {
 
         verify(CheckboxTag.class.getResource("Checkbox-6.txt"));
     }
+
+    public void testRequiredValue() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("true");
+
+        CheckboxTag tag = new CheckboxTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setFieldValue("baz");
+        tag.setRequiredValue("false");
+        tag.setTitle("mytitle");
+        tag.setDisabled("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(CheckboxTag.class.getResource("Checkbox-7.txt"));
+    }
 }

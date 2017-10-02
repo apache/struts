@@ -1,0 +1,8 @@
+<tr>
+	<td class="tdCheckboxLabel">
+	</td>
+    <td class="tdCheckboxInput">
+		<input type="checkbox" name="foo" value="baz" checked="checked" disabled="disabled" id="foo" title="mytitle" />
+		<label for="foo" class="checkboxLabel">mylabel</label>
+    </td>
+</tr>

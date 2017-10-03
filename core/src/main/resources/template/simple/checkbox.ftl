@@ -41,7 +41,7 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 />
-<#if (parameters.requiredValue?boolean)!true>
+<#if (parameters.submitUnchecked?boolean)!true>
 <input type="hidden" id="__checkbox_${parameters.id?html}" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>

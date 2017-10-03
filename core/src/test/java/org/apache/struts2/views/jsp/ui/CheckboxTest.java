@@ -198,7 +198,7 @@ public class CheckboxTest extends AbstractUITagTest {
         verify(CheckboxTag.class.getResource("Checkbox-6.txt"));
     }
 
-    public void testRequiredValue() throws Exception {
+    public void testSubmitUnchecked() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("true");
 
@@ -207,7 +207,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setLabel("mylabel");
         tag.setName("foo");
         tag.setFieldValue("baz");
-        tag.setRequiredValue("false");
+        tag.setSubmitUnchecked("false");
         tag.setTitle("mytitle");
         tag.setDisabled("true");
 

@@ -38,7 +38,7 @@ public class CheckboxTag extends AbstractUITag {
     private static final long serialVersionUID = -350752809266337636L;
 
     protected String fieldValue;
-    protected String requiredValue;
+    protected String submitUnchecked;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Checkbox(stack, req, res);
@@ -48,14 +48,14 @@ public class CheckboxTag extends AbstractUITag {
         super.populateParams();
 
         ((Checkbox) component).setFieldValue(fieldValue);
-        ((Checkbox) component).setRequiredValue(requiredValue);
+        ((Checkbox) component).setSubmitUnchecked(submitUnchecked);
     }
 
     public void setFieldValue(String aValue) {
         this.fieldValue = aValue;
     }
 
-    public void setRequiredValue(String aValue) {
-        this.requiredValue = aValue;
+    public void setSubmitUnchecked(String aValue) {
+        this.submitUnchecked = aValue;
     }
 }

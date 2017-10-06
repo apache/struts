@@ -48,6 +48,13 @@ public class DefaultConversionPropertiesProcessor implements ConversionPropertie
         this.converterHolder = converterHolder;
     }
 
+    @Override
+    public void init() {
+        LOG.debug("Processing default conversion properties files");
+        processRequired("struts-default-conversion.properties");
+        process("xwork-conversion.properties");
+    }
+
     public void process(String propsName) {
         loadConversionProperties(propsName, false);
     }

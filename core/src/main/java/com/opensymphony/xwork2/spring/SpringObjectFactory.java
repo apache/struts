@@ -61,6 +61,9 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     @Deprecated
     private boolean enableAopSupport = false;
 
+    public SpringObjectFactory() {
+    }
+
     @Inject(value="applicationContextPath",required=false)
     public void setApplicationContextPath(String ctx) {
         if (ctx != null) {
@@ -71,11 +74,6 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
     @Inject(value = "enableAopSupport", required = false)
     public void setEnableAopSupport(String enableAopSupport) {
         this.enableAopSupport = BooleanUtils.toBoolean(enableAopSupport);
-    }
-
-    @Inject
-    public SpringObjectFactory(Container container) {
-        super(container);
     }
 
     /**

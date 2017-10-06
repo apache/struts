@@ -338,7 +338,8 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         configuration.addPackageConfig("class-level", classLevelParentPkg);
 
         ActionNameBuilder actionNameBuilder = new SEOActionNameBuilder("true", "-");
-        ObjectFactory of = new ObjectFactory(mockContainer);
+        ObjectFactory of = new ObjectFactory();
+        of.setContainer(mockContainer);
         DefaultInterceptorMapBuilder interceptorBuilder = new DefaultInterceptorMapBuilder();
         interceptorBuilder.setConfiguration(configuration);
 
@@ -780,7 +781,9 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
                 }
                 T obj;
                 if (type == ObjectFactory.class) {
-                    obj = type.getConstructor(Container.class).newInstance(this);
+                    obj = type.getConstructor().newInstance();
+                    ((ObjectFactory)obj).setContainer(this);
+
                     OgnlReflectionProvider rp = new OgnlReflectionProvider() {
 
                         @Override

@@ -23,9 +23,6 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +38,7 @@ public class SpringProxyableObjectFactory extends SpringObjectFactory {
 
     private List<String> skipBeanNames = new ArrayList<>();
 
-    @Inject
-    public SpringProxyableObjectFactory(Container container) {
-        super(container);
+    public SpringProxyableObjectFactory() {
     }
 
     @Override

@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.conversion;
 
-import com.opensymphony.xwork2.inject.Initializable;
+package com.opensymphony.xwork2.inject;
 
 /**
- * Used to read converters from Properties file
+ * Beans marked with this interface will be always initialised
+ * after the internal DI mechanism will be created.
+ *
+ * It should be only used internally!
+ *
+ * @since Struts 2.5.14
  */
-public interface ConversionPropertiesProcessor extends Initializable {
+public interface Initializable {
 
     /**
-     * Process given property to load converters as not required (Properties file doesn't have to exist)
-     *
-     * @param propsName Properties file name
+     * Use this method to initialise your bean, the whole dependency graph was already built
      */
-    void process(String propsName);
-
-    /**
-     * Process given property to load converters as required (Properties file must exist)
-     *
-     * @param propsName Properties file name
-     */
-    void processRequired(String propsName);
+    void init();
 
 }

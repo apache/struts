@@ -28,7 +28,6 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.logging.log4j.Logger;
@@ -81,9 +80,7 @@ public class PlexusObjectFactory extends ObjectFactory {
     private PlexusContainer base;
     private ReflectionProvider reflectionProvider;
 
-    @Inject
-    public PlexusObjectFactory(Container container) {
-        super(container);
+    public PlexusObjectFactory() {
     }
 
     @Inject

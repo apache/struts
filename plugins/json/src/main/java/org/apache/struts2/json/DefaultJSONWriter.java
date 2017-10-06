@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -40,7 +38,14 @@ import java.text.CharacterIterator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
@@ -72,7 +77,7 @@ public class DefaultJSONWriter implements JSONWriter {
     private boolean enumAsBean = ENUM_AS_BEAN_DEFAULT;
     private boolean excludeNullProperties;
     private boolean cacheBeanInfo = true;
-    private boolean excludeProxyProperties = false;
+    private boolean excludeProxyProperties;
 
     @Inject(value = JSONConstants.RESULT_EXCLUDE_PROXY_PROPERTIES, required = false)
     public void setExcludeProxyProperties(String excludeProxyProperties) {

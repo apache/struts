@@ -100,7 +100,6 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
 
-        // TODO lukaszlenart: remove expectedJDK15 and if() after switching to Java 1.6
         String expectedJDK17 =
                 "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
                         + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"

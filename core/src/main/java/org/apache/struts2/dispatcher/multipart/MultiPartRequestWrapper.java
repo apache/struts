@@ -47,7 +47,7 @@ import java.util.*;
  *
  * <p>
  * The files are uploaded when the object is instantiated. If there are any errors they are logged using
- * {@link #addError(String)}. An action handling a multipart form should first check {@link #hasErrors()}
+ * {@link #addError(LocalizedMessage)}. An action handling a multipart form should first check {@link #hasErrors()}
  * before doing any other processing.
  * </p>
  *

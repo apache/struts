@@ -102,6 +102,7 @@ public class JSONResult implements Result {
     private String wrapPrefix;
     private String wrapSuffix;
     private boolean devMode = false;
+    private JSONUtil jsonUtil;
     
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setDefaultEncoding(String val) {
@@ -112,7 +113,12 @@ public class JSONResult implements Result {
     public void setDevMode(String val) {
     	this.devMode = BooleanUtils.toBoolean(val);
     }
-    
+
+    @Inject
+    public void setJsonUtil(JSONUtil jsonUtil) {
+        this.jsonUtil = jsonUtil;
+    }
+
     /**
      * Gets a list of regular expressions of properties to exclude from the JSON
      * output.
@@ -219,7 +225,7 @@ public class JSONResult implements Result {
     }
 
     protected String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
-        String json = JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
+        String json = jsonUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
                                          enumAsBean, excludeNullProperties, defaultDateFormat, cacheBeanInfo);
         json = addCallbackIfApplicable(request, json);
         return json;

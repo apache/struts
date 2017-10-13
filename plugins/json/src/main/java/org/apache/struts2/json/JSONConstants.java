@@ -25,5 +25,6 @@ package org.apache.struts2.json;
  */
 public class JSONConstants {
 
+    public static final String JSON_WRITER = "struts.json.writer";
     public static final String RESULT_EXCLUDE_PROXY_PROPERTIES = "struts.json.result.excludeProxyProperties";
 }

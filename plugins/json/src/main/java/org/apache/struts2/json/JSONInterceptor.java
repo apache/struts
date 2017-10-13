@@ -73,6 +73,13 @@ public class JSONInterceptor extends AbstractInterceptor {
     private String jsonContentType = "application/json";
     private String jsonRpcContentType = "application/json-rpc";
 
+    private JSONUtil jsonUtil;
+
+    @Inject
+    public void setJsonUtil(JSONUtil jsonUtil) {
+        this.jsonUtil = jsonUtil;
+    }
+
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
@@ -170,7 +177,7 @@ public class JSONInterceptor extends AbstractInterceptor {
                 result = rpcResponse;
             }
 
-            String json = JSONUtil.serialize(result, excludeProperties, getIncludeProperties(),
+            String json = jsonUtil.serialize(result, excludeProperties, getIncludeProperties(),
                     ignoreHierarchy, excludeNullProperties);
             json = addCallbackIfApplicable(request, json);
             boolean writeGzip = enableGZIP && JSONUtil.isGzipInRequest(request);

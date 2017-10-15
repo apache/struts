@@ -26,7 +26,7 @@ public class JarEntryRevisionTest extends XWorkTestCase {
     private void createJarFile(long time) throws Exception {
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-        FileOutputStream fos = new FileOutputStream("target/testNeedsReloading.jar", false);
+        FileOutputStream fos = new FileOutputStream("target/JarEntryRevisionTest_testNeedsReloading.jar", false);
         JarOutputStream target = new JarOutputStream(fos, manifest);
         target.putNextEntry(new ZipEntry("com/opensymphony/xwork2/util/fs/"));
         ZipEntry entry = new ZipEntry("com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class");
@@ -44,7 +44,7 @@ public class JarEntryRevisionTest extends XWorkTestCase {
         long now = System.currentTimeMillis();
 
         createJarFile(now);
-        URL url = new URL("jar:file:target/testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class");
+        URL url = new URL("jar:file:target/JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class");
         Revision entry = JarEntryRevision.build(url, fileManager);
         assertFalse(entry.needsReloading());
 

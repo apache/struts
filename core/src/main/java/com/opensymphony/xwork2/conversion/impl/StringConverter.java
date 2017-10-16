@@ -67,12 +67,15 @@ public class StringConverter extends DefaultTypeConverter {
             format.setGroupingUsed(false);
             if (BigDecimal.class.isInstance(value) || Double.class.isInstance(value) || Float.class.isInstance(value)) {
                 format.setMinimumFractionDigits(1);
-                if (BigDecimal.class.isInstance(value))
+                if (BigDecimal.class.isInstance(value)) {
                     format.setMaximumFractionDigits(Integer.MAX_VALUE);
-                else if (Double.class.isInstance(value))
+                }
+                else if (Double.class.isInstance(value)) {
                     format.setMaximumFractionDigits(15);
-                else if (Float.class.isInstance(value))
+                }
+                else if (Float.class.isInstance(value)) {
                     format.setMaximumFractionDigits(7);
+                }
             }
             return format.format(value);
         } else {

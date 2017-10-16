@@ -17,10 +17,10 @@ public class StringConverterTest extends StrutsInternalTestCase {
         context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
 
         // when
-        Object value = converter.convertValue(context, null, null, null, 234, null);
+        Object value = converter.convertValue(context, null, null, null, Integer.MIN_VALUE, null);
 
         // then
-        assertEquals("234", value);
+        assertEquals("" + Integer.MIN_VALUE, value);
     }
 
     public void testDoubleToStringConversionPL() throws Exception {
@@ -29,11 +29,36 @@ public class StringConverterTest extends StrutsInternalTestCase {
         Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
 
-        // when
-        Object value = converter.convertValue(context, null, null, null, 234.12, null);
+        // when has max fraction digits
+        Object value = converter.convertValue(context, null, null, null, Math.PI, null);
 
-        // then
-        assertEquals("234,12", value);
+        // then does not lose fraction digits
+        assertEquals("3,141592653589793", value);
+
+        // when has max integer digits
+        value = converter.convertValue(context, null, null, null, Double.MAX_VALUE, null);
+
+        // then does not lose integer digits
+        assertEquals(String.format("%.0f", Double.MAX_VALUE), value);
+    }
+
+    public void testFloatToStringConversionPL() throws Exception {
+        // given
+        StringConverter converter = new StringConverter();
+        Map<String, Object> context = new HashMap<>();
+        context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
+
+        // when has max fraction digits
+        Object value = converter.convertValue(context, null, null, null, ((Double)Math.PI).floatValue(), null);
+
+        // then does not lose fraction digits
+        assertEquals("3,1415927", value);
+
+        // when has max integer digits
+        value = converter.convertValue(context, null, null, null, Float.MAX_VALUE, null);
+
+        // then does not lose integer digits
+        assertEquals(String.format("%.0f", Float.MAX_VALUE), value);
     }
 
     public void testBigDecimalToStringConversionPL() throws Exception {
@@ -42,11 +67,12 @@ public class StringConverterTest extends StrutsInternalTestCase {
         Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
 
-        // when
-        Object value = converter.convertValue(context, null, null, null, BigDecimal.valueOf(234.12), null);
+        // when a bit bigger than double (310 integer and 17 fraction digits)
+        BigDecimal bd = new BigDecimal(String.format("%.0f", Double.MAX_VALUE) + "1.00000000000000001");
+        Object value = converter.convertValue(context, null, null, null, bd, null);
 
-        // then
-        assertEquals("234,12", value);
+        // then does not lose integer and fraction digits
+        assertEquals(String.format("%.0f", Double.MAX_VALUE) + "1,00000000000000001", value);
     }
 
     public void testStringArrayToStringConversion() {

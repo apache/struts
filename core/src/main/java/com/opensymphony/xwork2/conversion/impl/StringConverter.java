@@ -65,12 +65,15 @@ public class StringConverter extends DefaultTypeConverter {
         if (Number.class.isInstance(value)) {
             NumberFormat format = NumberFormat.getNumberInstance(locale);
             format.setGroupingUsed(false);
-            if (BigDecimal.class.isInstance(value))
-                format.setMaximumFractionDigits(Integer.MAX_VALUE);
-            else if (Double.class.isInstance(value))
-                format.setMaximumFractionDigits(15);
-            else if (Float.class.isInstance(value))
-                format.setMaximumFractionDigits(7);
+            if (BigDecimal.class.isInstance(value) || Double.class.isInstance(value) || Float.class.isInstance(value)) {
+                format.setMinimumFractionDigits(1);
+                if (BigDecimal.class.isInstance(value))
+                    format.setMaximumFractionDigits(Integer.MAX_VALUE);
+                else if (Double.class.isInstance(value))
+                    format.setMaximumFractionDigits(15);
+                else if (Float.class.isInstance(value))
+                    format.setMaximumFractionDigits(7);
+            }
             return format.format(value);
         } else {
             return Objects.toString(value, null);

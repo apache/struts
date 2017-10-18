@@ -71,10 +71,10 @@ public class StringConverter extends DefaultTypeConverter {
                     format.setMaximumFractionDigits(Integer.MAX_VALUE);
                 }
                 else if (Double.class.isInstance(value)) {
-                    format.setMaximumFractionDigits(15);
+                    format.setMaximumFractionDigits(325);   //double MIN_VALUE
                 }
                 else if (Float.class.isInstance(value)) {
-                    format.setMaximumFractionDigits(7);
+                    format.setMaximumFractionDigits(60);    //float MIN_VALUE
                 }
             }
             return format.format(value);

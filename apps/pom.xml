@@ -36,6 +36,13 @@
         <module>rest-showcase</module>
     </modules>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven.site.skip>true</maven.site.skip>
+        <maven.site.deploy.skip>true</maven.site.deploy.skip>
+    </properties>
+
     <build>
         <plugins>
             <!-- Include source code under WEB-INF/src/java -->
@@ -78,14 +85,6 @@
                     <warSourceExcludes>WEB-INF/classes/LICENSE.txt,WEB-INF/classes/NOTICE.txt</warSourceExcludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                    <skipDeploy>true</skipDeploy>
-                    <generateReports>false</generateReports>
-                </configuration>
-            </plugin>
         </plugins>
 
         <finalName>${project.artifactId}</finalName>
@@ -107,7 +106,4 @@
         </dependency>
     </dependencies>
 
-    <properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 </project>

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.util;
 
 import java.util.Vector;
 
-
 /**
  * A bean that helps implement a tabbed pane
  *
+ * FIXME: use it remove
  */
 public class TabbedPane {
 

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.xslt;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,9 +25,6 @@ import org.w3c.dom.Node;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- */
 public class ArrayAdapter extends AbstractAdapterElement {
 
     private Logger log = LogManager.getLogger(this.getClass());

@@ -100,7 +100,7 @@
                 <version>2.19.1</version>
                 <configuration>
                     <additionalClasspathElements>
-                        <element>target/test-classes/jsps.jar</element>
+                        <element>${project.build.testOutputDirectory}/jsps.jar</element>
                     </additionalClasspathElements>
                 </configuration>
             </plugin>

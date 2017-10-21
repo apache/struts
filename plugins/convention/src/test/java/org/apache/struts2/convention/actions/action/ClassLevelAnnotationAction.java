@@ -1,6 +1,4 @@
 /*
- * $Id: ActionNamesAction.java 655902 2008-05-13 15:15:12Z bpontarelli $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

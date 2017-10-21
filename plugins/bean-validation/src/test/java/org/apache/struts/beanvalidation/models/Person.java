@@ -1,14 +1,4 @@
-package org.apache.struts.beanvalidation.models;
-
-import org.hibernate.validator.constraints.Email;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -26,6 +16,13 @@ import javax.validation.constraints.Size;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.struts.beanvalidation.models;
+
+import org.hibernate.validator.constraints.Email;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class Person {
 

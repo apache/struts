@@ -235,10 +235,8 @@
                             <include>src/**</include>
                         </includes>
                         <excludes>
-                            <exclude>src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
                             <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
-                            <exclude>src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
-                            <exclude>src/site/resources/tags/**</exclude>
+                            <exclude>src/site/resources/tags/**/*.html</exclude>
                             <exclude>src/main/resources/*LICENSE.txt</exclude>
                             <exclude>src/test/resources/**/*.txt</exclude>
                             <exclude>src/main/webapp/**/*.css</exclude>
@@ -246,6 +244,10 @@
                             <exclude>src/main/webapp/**/*.js</exclude>
                             <exclude>src/main/webapp/**/*.svg</exclude>
                             <exclude>src/main/webapp/**/*.txt</exclude>
+                            <exclude>src/main/resources/**/sitegraph-usage.txt</exclude>
+                            <exclude>src/main/resources/static/css/**/*.css</exclude>
+                            <exclude>src/main/resources/static/js/**/*.js</exclude>
+                            <exclude>src/main/resources/docs.cfg</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
@@ -353,6 +355,7 @@
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
+                <version>0.12</version>
             </plugin>
         </plugins>
     </reporting>

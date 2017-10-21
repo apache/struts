@@ -106,7 +106,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         result.setLocation("org/apache/struts2/simple0.jsp");
         result.execute(null);
 
-        assertEquals("hello", response.getContentAsString());
+        assertEquals("hello", response.getContentAsString().trim());
     }
 
     //ok i give up..i don't know why this doesn't work from maven
@@ -122,14 +122,14 @@ public class EmbeddedJSPResultTest extends TestCase {
         result.setLocation("org/apache/struts2/el.jsp");
         result.execute(null);
 
-        assertEquals("somethingelseText", response.getContentAsString());
+        assertEquals("somethingelseText", response.getContentAsString().trim());
     }
 
     public void testAbsolutePath() throws Exception {
         result.setLocation("/org/apache/struts2/simple0.jsp");
         result.execute(null);
 
-        assertEquals("hello", response.getContentAsString());
+        assertEquals("hello", response.getContentAsString().trim());
     }
 
     public void testTag0() throws Exception {

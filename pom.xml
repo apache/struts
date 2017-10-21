@@ -356,6 +356,7 @@
                         <exclude>src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
                         <exclude>src/site/resources/tags/**</exclude>
                         <exclude>src/main/resources/*LICENSE.txt</exclude>
+                        <exclude>src/test/resources/com/opensymphony/xwork2/somefile.txt</exclude>
                     </excludes>
                 </configuration>
             </plugin>

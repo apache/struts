@@ -57,7 +57,7 @@ public class StaticContentLoaderTest extends TestCase {
 
     public void testValidRersources() throws IOException {
         contentLoader.findStaticResource("/struts/resource.css", req, res);
-        assertEquals("heya!", res.getContentAsString());
+        assertTrue(res.getContentAsString().contains("heya!"));
     }
 
     public void testInvalidRersources1() throws IOException {

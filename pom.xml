@@ -128,43 +128,6 @@
                 <module>assembly</module>
             </modules>
         </profile>
-<!--
-        TODO: A lot of files is missing the license header :(
-        <profile>
-            <id>apache-release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.rat</groupId>
-                        <artifactId>apache-rat-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <configuration>
-                                    <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
-                                    <useIdeaDefaultExcludes>true</useIdeaDefaultExcludes>
-                                    <useDefaultExcludes>true</useDefaultExcludes>
-                                    <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
-                                    <licenseMatchers>
-                                        <classNames>
-                                            <className>org.apache.rat.analysis.license.ApacheSoftwareLicense20</className>
-                                        </classNames>
-                                    </licenseMatchers>
-                                    <includes>
-                                        <include>pom.xml</include>
-                                        <include>src/**</include>
-                                    </includes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
--->
         <profile>
             <id>jdk8</id>
             <activation>
@@ -254,6 +217,33 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <configuration>
+                        <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
+                        <useIdeaDefaultExcludes>true</useIdeaDefaultExcludes>
+                        <useDefaultExcludes>true</useDefaultExcludes>
+                        <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
+                        <licenseMatchers>
+                            <classNames>
+                                <className>org.apache.rat.analysis.license.ApacheSoftwareLicense20</className>
+                            </classNames>
+                        </licenseMatchers>
+                        <includes>
+                            <include>pom.xml</include>
+                            <include>src/**</include>
+                        </includes>
+                        <excludes>
+                            <exclude>src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
+                            <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
+                            <exclude>src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
+                            <exclude>src/site/resources/tags/**</exclude>
+                            <exclude>src/main/resources/*LICENSE.txt</exclude>
+                            <exclude>src/test/resources/com/opensymphony/xwork2/somefile.txt</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -313,6 +303,19 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
 
         <defaultGoal>install</defaultGoal>
@@ -345,20 +348,6 @@
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>pom.xml</include>
-                        <include>src/**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
-                        <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
-                        <exclude>src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
-                        <exclude>src/site/resources/tags/**</exclude>
-                        <exclude>src/main/resources/*LICENSE.txt</exclude>
-                        <exclude>src/test/resources/com/opensymphony/xwork2/somefile.txt</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </reporting>

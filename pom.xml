@@ -240,7 +240,12 @@
                             <exclude>src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
                             <exclude>src/site/resources/tags/**</exclude>
                             <exclude>src/main/resources/*LICENSE.txt</exclude>
-                            <exclude>src/test/resources/com/opensymphony/xwork2/somefile.txt</exclude>
+                            <exclude>src/test/resources/**/*.txt</exclude>
+                            <exclude>src/main/webapp/**/*.css</exclude>
+                            <exclude>src/main/webapp/**/*.map</exclude>
+                            <exclude>src/main/webapp/**/*.js</exclude>
+                            <exclude>src/main/webapp/**/*.svg</exclude>
+                            <exclude>src/main/webapp/**/*.txt</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

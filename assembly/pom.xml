@@ -75,33 +75,29 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>cwiki-docs</id>
+                        <id>docs</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
-                                <mkdir dir="${project.build.directory}/cwiki/" />
+                            <target>
+                                <mkdir dir="${project.build.directory}/docs/" />
                                 <exec executable="wget">
                                     <arg value="-erobots=off" />
                                     <arg value="-nH" />
-                                    <arg value="--cut-dirs=3" />
+                                    <arg value="-x" />
                                     <arg value="-nv" />
                                     <arg value="-E" />
                                     <arg value="-L" />
-                                    <arg value="-l 0" />
                                     <arg value="-np" />
-                                    <arg value="--directory-prefix=${project.build.directory}/cwiki" />
+                                    <arg value="--directory-prefix=${project.build.directory}/docs" />
                                     <arg value="--no-check-certificate" />
                                     <arg value="-r" />
-                                    <arg value="http://struts.apache.org/docs/" />
+                                    <arg value="-i" />
+                                    <arg value="src/main/resources/docs-urls.txt" />
                                 </exec>
-                                <delete>
-                                    <fileset dir="${project.build.directory}/cwiki/" includes="**/index.*" />
-                                </delete>
-                                <copy file="${project.build.directory}/cwiki/home.html" tofile="${project.build.directory}/cwiki/index.html" />
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

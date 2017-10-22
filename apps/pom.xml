@@ -51,14 +51,14 @@
                         <id>copy-sources</id>
                         <phase>process-sources</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy todir="${project.build.directory}/${project.artifactId}/WEB-INF/src/java" failonerror="false">
                                     <fileset dir="${basedir}/src/main/java" />
                                 </copy>
                                 <copy todir="${project.build.directory}/${project.artifactId}/WEB-INF/src/java" failonerror="false">
                                     <fileset dir="${basedir}/src/main/resources" />
                                 </copy>
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>

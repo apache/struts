@@ -30,7 +30,6 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.LocalizedTextProvider;
-import org.apache.commons.io.Charsets;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -41,7 +40,6 @@ import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;

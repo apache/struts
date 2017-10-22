@@ -1,6 +1,4 @@
 /*
- * $Id: Jsr168DispatcherTest.java 602665 2007-12-09 12:11:25Z mrdon $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

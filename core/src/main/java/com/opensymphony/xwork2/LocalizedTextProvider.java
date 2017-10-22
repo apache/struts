@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.util.ValueStack;

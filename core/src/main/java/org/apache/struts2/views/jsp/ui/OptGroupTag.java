@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +27,6 @@ import org.apache.struts2.views.jsp.ComponentTagSupport;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-/**
- *
- */
 public class OptGroupTag extends ComponentTagSupport {
 
     private static final long serialVersionUID = 7367401003498678762L;

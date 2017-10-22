@@ -1,6 +1,4 @@
 /*
- * $Id: PortletUrlTagTest.java 609901 2008-01-08 08:18:23Z nilsga $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

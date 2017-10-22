@@ -1,7 +1,4 @@
-/**
- * Adapts a SiteMesh 2 Freemarker {@link com.opensymphony.module.sitemesh.Decorator} to a
- * SiteMesh 3 {@link com.opensymphony.sitemesh.Decorator}.
- *
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +15,6 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- * @since SiteMesh 2
  */
 package org.apache.struts2.sitemesh;
 
@@ -42,7 +38,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * Adapts a SiteMesh 2 Freemarker {@link com.opensymphony.module.sitemesh.Decorator} to a
+ * SiteMesh 3 {@link com.opensymphony.sitemesh.Decorator}.
  * Extends OldDecorator2NewStrutsDecorator to add Struts functionality  for Freemarker
+ * @since SiteMesh 2
  */
 public class OldDecorator2NewStrutsFreemarkerDecorator extends OldDecorator2NewStrutsDecorator {
     private static final Logger LOG = LogManager.getLogger(OldDecorator2NewStrutsFreemarkerDecorator.class);

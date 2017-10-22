@@ -1,6 +1,4 @@
 /*
- * $Id: PortletActionContext.java 564279 2007-08-09 17:00:49Z nilsga $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -45,7 +43,6 @@ import static org.apache.struts2.portlet.PortletConstants.PORTLET_CONFIG;
 import static org.apache.struts2.portlet.PortletConstants.PORTLET_NAMESPACE;
 import static org.apache.struts2.portlet.PortletConstants.REQUEST;
 import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
-
 
 /**
  * PortletActionContext. ActionContext thread local for the portlet environment.

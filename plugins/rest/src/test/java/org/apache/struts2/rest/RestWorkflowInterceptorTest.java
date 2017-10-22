@@ -1,6 +1,4 @@
 /*
- * $Id: RestWorkflowInterceptor.java 666756 2008-06-11 18:11:00Z hermanns $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

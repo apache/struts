@@ -1,10 +1,4 @@
-/**
- * <p>This is a SiteMesh Velocity view servlet.</p>
- *
- * <p>It overrides the SiteMesh servlet to rely on the
- * Velocity Manager in Struts instead of creating it's
- * own manager</p>
- *
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

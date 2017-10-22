@@ -1,6 +1,4 @@
 /*
- * $Id: Jsr168Dispatcher.java 759140 2009-03-27 13:51:52Z nilsga $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.portlet.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,12 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.location.Locatable;
-
 
 /**
  * A generic runtime exception that optionally contains Location information

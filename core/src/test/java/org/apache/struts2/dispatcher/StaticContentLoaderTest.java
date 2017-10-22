@@ -1,6 +1,4 @@
 /*
- * $Id: ServletDispatchedTestAssertInterceptor.java 651946 2008-04-27 13:41:38Z apetrelli $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -59,7 +57,7 @@ public class StaticContentLoaderTest extends TestCase {
 
     public void testValidRersources() throws IOException {
         contentLoader.findStaticResource("/struts/resource.css", req, res);
-        assertEquals("heya!", res.getContentAsString());
+        assertTrue(res.getContentAsString().contains("color: red;"));
     }
 
     public void testInvalidRersources1() throws IOException {

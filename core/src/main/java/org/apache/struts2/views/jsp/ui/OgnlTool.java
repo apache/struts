@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import ognl.Ognl;
@@ -27,8 +24,8 @@ import ognl.OgnlException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 
-
 /**
+ * FIXME: remove?
  */
 public class OgnlTool {
 
@@ -42,9 +39,6 @@ public class OgnlTool {
         this.ognlUtil = ognlUtil;
     }
     
-    
-
-
     public Object findValue(String expr, Object context) {
         try {
             return Ognl.getValue(ognlUtil.compile(expr), context);

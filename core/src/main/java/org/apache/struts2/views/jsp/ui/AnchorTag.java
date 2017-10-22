@@ -26,6 +26,9 @@ import org.apache.struts2.components.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @see Anchor
+ */
 public class AnchorTag extends AbstractClosingTag {
 
     private static final long serialVersionUID = -1034616578492431113L;

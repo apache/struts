@@ -19,7 +19,7 @@
  * under the License.
  */
 -->
-<project name="Struts 2">
+<project name="Apache Struts">
     <skin>
         <groupId>org.apache.maven.skins</groupId>
         <artifactId>maven-fluido-skin</artifactId>

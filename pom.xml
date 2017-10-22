@@ -392,6 +392,9 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
+                <configuration>
+                    <name>Dependency Check</name>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>

@@ -101,7 +101,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
         assertEquals("required", cfg.getType());
         assertEquals("foo", cfg.getParams().get("fieldName"));
         assertEquals("You must enter a value for foo.", cfg.getDefaultMessage());
-        assertEquals(24, cfg.getLocation().getLineNumber());
+        assertEquals(25, cfg.getLocation().getLineNumber());
 
         cfg = (ValidatorConfig) configs.get(3);
         assertEquals("required", cfg.getType());
@@ -124,7 +124,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileName3);
         } catch (XWorkException ex) {
-            assertTrue("Wrong line number", 23 == ex.getLocation().getLineNumber());
+            assertTrue("Wrong line number", 24 == ex.getLocation().getLineNumber());
             pass = true;
         }
         assertTrue("Validation file should have thrown exception", pass);
@@ -137,7 +137,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileName4);
         } catch (XWorkException ex) {
-            assertTrue("Wrong line number: " + ex.getLocation(), 33 == ex.getLocation().getLineNumber());
+            assertTrue("Wrong line number: " + ex.getLocation(), 34 == ex.getLocation().getLineNumber());
             pass = true;
         }
         assertTrue("Validation file should have thrown exception", pass);
@@ -163,7 +163,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileName5);
         } catch (XWorkException ex) {
-            assertTrue("Wrong line number", 23 == ex.getLocation().getLineNumber());
+            assertTrue("Wrong line number", 24 == ex.getLocation().getLineNumber());
             pass = true;
         }
         assertTrue("Validation file should have thrown exception", pass);

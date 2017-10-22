@@ -1,4 +1,4 @@
-<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,6 +19,7 @@
  * under the License.
  */
 -->
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
 <validators>
     <field name="name">
         <field-validator type="requiredstring">

@@ -248,6 +248,7 @@
                             <exclude>src/main/resources/static/css/**/*.css</exclude>
                             <exclude>src/main/resources/static/js/**/*.js</exclude>
                             <exclude>src/main/resources/docs.cfg</exclude>
+                            <exclude>src/main/webapp/fonts/**/*</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

@@ -72,13 +72,6 @@
         </notifiers>
     </ciManagement>
 
-    <distributionManagement>
-        <site>
-            <id>apache-site</id>
-            <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/struts/content/release/2.3.x/</url>
-        </site>
-    </distributionManagement>
-
     <modules>
         <module>bom</module>
         <module>core</module>
@@ -104,7 +97,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <currentVersion>${project.version}</currentVersion>
         <struts2.springPlatformVersion>4.1.9.RELEASE</struts2.springPlatformVersion>
         <ognl.version>3.1.15</ognl.version>
         <asm.version>5.2</asm.version>

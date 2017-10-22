@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.LocalizedTextProvider;
+import org.apache.commons.io.Charsets;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -40,6 +41,7 @@ import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
@@ -289,6 +291,36 @@ public class DispatcherTest extends StrutsInternalTestCase {
         du.prepare(req, res);
 
         assertTrue(du.isMultipartSupportEnabled(req));
+    }
+
+    public void testIsMultipartRequest() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        HttpServletResponse res = new MockHttpServletResponse();
+
+        req.setMethod("POST");
+        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+        du.prepare(req, res);
+
+        req.setContentType("multipart/form-data");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=UTF-8");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=ISO-8859-1");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=Windows-1250");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=US-ASCII");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=UTF-16LE");
+        assertTrue(du.isMultipartRequest(req));
     }
 
     class InternalConfigurationManager extends ConfigurationManager {

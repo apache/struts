@@ -291,6 +291,36 @@ public class DispatcherTest extends StrutsInternalTestCase {
         assertTrue(du.isMultipartSupportEnabled(req));
     }
 
+    public void testIsMultipartRequest() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        HttpServletResponse res = new MockHttpServletResponse();
+
+        req.setMethod("POST");
+        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+        du.prepare(req, res);
+
+        req.setContentType("multipart/form-data");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=UTF-8");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=ISO-8859-1");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=Windows-1250");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=US-ASCII");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=UTF-16LE");
+        assertTrue(du.isMultipartRequest(req));
+    }
+
     class InternalConfigurationManager extends ConfigurationManager {
     	public boolean destroyConfiguration = false;
 

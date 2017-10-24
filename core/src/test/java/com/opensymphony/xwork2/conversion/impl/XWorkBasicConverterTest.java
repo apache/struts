@@ -49,7 +49,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testDateConversionWithInvalidValue() throws Exception {
         try {
-            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "asdsd", Date.class);
+            basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "asdsd", Date.class);
             fail("XWorkException expected - conversion error occurred");
         } catch (XWorkException e) {
             // we MUST get this exception as this is a conversion error
@@ -129,37 +129,33 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         assertNull(convertedObject);
     }
 
-    /* the code below has been disabled as it causes sideffects in Strtus2 (XW-512)
     public void testXW490ConvertStringToDouble() throws Exception {
         Locale locale = new Locale("DA"); // let's use a not common locale such as Denmark
 
-        Map ctx = new HashMap();
-        ctx.put(ActionContext.LOCALE, locale);
+        Map<String, Object> context = new HashMap<>();
+        context.put(ActionContext.LOCALE, locale);
 
-        XWorkBasicConverter conv = new XWorkBasicConverter();
         // decimal seperator is , in Denmark so we should write 123,99 as input
-        Double value = (Double) conv.convertValue(ctx, null, null, null, "123,99", Double.class);
+        Double value = (Double) basicConverter.convertValue(context, null, null, null, "123,99", Double.class);
         assertNotNull(value);
 
         // output is as expected a real double value converted using Denmark as locale
-        assertEquals(123.99d, value.doubleValue(), 0.001d);
+        assertEquals(123.99d, value, 0.001d);
     }
 
     public void testXW49ConvertDoubleToString() throws Exception {
         Locale locale = new Locale("DA"); // let's use a not common locale such as Denmark
 
-        Map ctx = new HashMap();
-        ctx.put(ActionContext.LOCALE, locale);
+        Map<String, Object> context = new HashMap<>();
+        context.put(ActionContext.LOCALE, locale);
 
-        XWorkBasicConverter conv = new XWorkBasicConverter();
         // decimal seperator is , in Denmark so we should write 123,99 as input
-        String value = (String) conv.convertValue(ctx, null, null, null, new Double("123.99"), String.class);
+        String value = (String) basicConverter.convertValue(context, null, null, null, new Double("123.99"), String.class);
         assertNotNull(value);
 
         // output should be formatted according to Danish locale using , as decimal seperator
         assertEquals("123,99", value);
     }    
-    */
 
     public void testDoubleValues() {
         NumberConverter numberConverter = new NumberConverter();
@@ -204,32 +200,32 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
         value = (Float) basicConverter.convertValue("1.46464989", Float.class);
         assertNotNull(value);
-        assertEquals(Float.valueOf(1.46464989f), value);
+        assertEquals(1.46464989f, value);
     }
 
     public void testNegativeFloatValue() throws Exception {
         Object convertedObject = basicConverter.convertValue("-94.1231233", Float.class);
         assertTrue(convertedObject instanceof Float);
-        assertEquals(-94.1231233f, ((Float) convertedObject).floatValue(), 0.0001);
+        assertEquals(-94.1231233f, (Float) convertedObject, 0.0001);
     }
 
     public void testPositiveFloatValue() throws Exception {
         Object convertedObject = basicConverter.convertValue("94.1231233", Float.class);
         assertTrue(convertedObject instanceof Float);
-        assertEquals(94.1231233f, ((Float) convertedObject).floatValue(), 0.0001);
+        assertEquals(94.1231233f, (Float) convertedObject, 0.0001);
     }
 
 
     public void testNegativeDoubleValue() throws Exception {
         Object convertedObject = basicConverter.convertValue("-94.1231233", Double.class);
         assertTrue(convertedObject instanceof Double);
-        assertEquals(-94.1231233d, ((Double) convertedObject).doubleValue(), 0.0001);
+        assertEquals(-94.1231233d, (Double) convertedObject, 0.0001);
     }
 
     public void testPositiveDoubleValue() throws Exception {
         Object convertedObject = basicConverter.convertValue("94.1231233", Double.class);
         assertTrue(convertedObject instanceof Double);
-        assertEquals(94.1231233d, ((Double) convertedObject).doubleValue(), 0.0001);
+        assertEquals(94.1231233d, (Double) convertedObject, 0.0001);
     }
 
     public void testNestedEnumValue() throws Exception {
@@ -238,10 +234,8 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         assertEquals(ParentClass.NestedEnum.TEST, convertedObject);
     }
 
-
     public void testConvert() {
         Map<String, Object> context = new HashMap<>();
-        Person o = new Person();
         String s = "names";
         Object value = new Person[0];
         Class toType = String.class;
@@ -256,6 +250,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        super.tearDown();
         ActionContext.setContext(null);
     }
 

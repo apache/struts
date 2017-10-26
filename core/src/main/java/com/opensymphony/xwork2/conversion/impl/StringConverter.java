@@ -66,7 +66,6 @@ public class StringConverter extends DefaultTypeConverter {
             NumberFormat format = NumberFormat.getNumberInstance(locale);
             format.setGroupingUsed(false);
             if (BigDecimal.class.isInstance(value) || Double.class.isInstance(value) || Float.class.isInstance(value)) {
-                format.setMinimumFractionDigits(1);
                 format.setMaximumFractionDigits(Integer.MAX_VALUE);
             }
             return format.format(value);

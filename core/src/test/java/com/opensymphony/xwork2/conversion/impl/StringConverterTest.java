@@ -40,7 +40,7 @@ public class StringConverterTest extends StrutsInternalTestCase {
         value = converter.convertValue(context, null, null, null, Double.MAX_VALUE, null);
 
         // then does not lose integer digits
-        assertEquals("17976931348623157" + StringUtils.repeat('0', 292) + ",0", value);
+        assertEquals("17976931348623157" + StringUtils.repeat('0', 292), value);
     }
 
     public void testFloatToStringConversionPL() throws Exception {
@@ -59,7 +59,7 @@ public class StringConverterTest extends StrutsInternalTestCase {
         value = converter.convertValue(context, null, null, null, Float.MAX_VALUE, null);
 
         // then does not lose integer digits
-        assertEquals("34028234663852886" + StringUtils.repeat('0', 22) + ",0", value);
+        assertEquals("34028234663852886" + StringUtils.repeat('0', 22), value);
     }
 
     public void testBigDecimalToStringConversionPL() throws Exception {

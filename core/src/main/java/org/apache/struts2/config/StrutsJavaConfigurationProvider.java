@@ -128,7 +128,7 @@ public class StrutsJavaConfigurationProvider implements ConfigurationProvider {
                             .getLocation(loadedBeans.get(beanConf.getType().getName() + beanConf.getName()));
                     if (throwExceptionOnDuplicateBeans) {
                         throw new ConfigurationException("Bean type " + beanConf.getType() + " with the name "
-                                + beanConf.getName() + " has already been loaded by " + loc);
+                                + beanConf.getName() + " has already been loaded by " + loc, javaConfig);
                     }
                 }
 

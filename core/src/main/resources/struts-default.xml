@@ -221,7 +221,8 @@
             <interceptor name="modelDriven" class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"/>
             <interceptor name="scopedModelDriven" class="com.opensymphony.xwork2.interceptor.ScopedModelDrivenInterceptor"/>
             <interceptor name="params" class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
-            <interceptor name="actionMappingParams" class="org.apache.struts2.interceptor.ActionMappingParametersInteceptor"/>
+            <interceptor name="paramRemover" class="com.opensymphony.xwork2.interceptor.ParameterRemoverInterceptor"/>
+            <interceptor name="actionMappingParams" class="org.apache.struts2.interceptor.ActionMappingParametersInterceptor"/>
             <interceptor name="prepare" class="com.opensymphony.xwork2.interceptor.PrepareInterceptor"/>
             <interceptor name="staticParams" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>
             <interceptor name="scope" class="org.apache.struts2.interceptor.ScopeInterceptor"/>
@@ -237,6 +238,7 @@
             <interceptor name="profiling" class="org.apache.struts2.interceptor.ProfilingActivationInterceptor" />
             <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor" />
             <interceptor name="annotationWorkflow" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
+            <interceptor name="annotationParameterFilter" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationParameterFilterInterceptor" />
             <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor" />
             <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor" />
 

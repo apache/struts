@@ -71,7 +71,7 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  * </pre>
  */
-public class ActionMappingParametersInteceptor extends ParametersInterceptor {
+public class ActionMappingParametersInterceptor extends ParametersInterceptor {
 
     /**
      * @param ac The action context

@@ -41,6 +41,12 @@ public class StringConverterTest extends StrutsInternalTestCase {
 
         // then does not lose integer digits
         assertEquals("17976931348623157" + StringUtils.repeat('0', 292), value);
+
+        // when cannot be represented exactly with a finite binary number
+        value = converter.convertValue(context, null, null, null, 0.1d, null);
+
+        // then produce the shortest decimal representation that can unambiguously identify the true value of the floating-point number
+        assertEquals("0,1", value);
     }
 
     public void testFloatToStringConversionPL() throws Exception {
@@ -53,13 +59,19 @@ public class StringConverterTest extends StrutsInternalTestCase {
         Object value = converter.convertValue(context, null, null, null, Float.MIN_VALUE, null);
 
         // then does not lose fraction digits
-        assertEquals("0," + StringUtils.repeat('0', 44) + "1401298464324817", value);
+        assertEquals("0," + StringUtils.repeat('0', 44) + "14", value);
 
         // when has max integer digits
         value = converter.convertValue(context, null, null, null, Float.MAX_VALUE, null);
 
         // then does not lose integer digits
-        assertEquals("34028234663852886" + StringUtils.repeat('0', 22), value);
+        assertEquals("34028235" + StringUtils.repeat('0', 31), value);
+
+        // when cannot be represented exactly with a finite binary number
+        value = converter.convertValue(context, null, null, null, 0.1f, null);
+
+        // then produce the shortest decimal representation that can unambiguously identify the true value of the floating-point number
+        assertEquals("0,1", value);
     }
 
     public void testBigDecimalToStringConversionPL() throws Exception {

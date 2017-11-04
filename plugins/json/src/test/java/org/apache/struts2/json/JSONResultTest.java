@@ -35,8 +35,11 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -150,6 +153,43 @@ public class JSONResultTest extends StrutsTestCase {
 
         String normalizedActual = TestUtils.normalize(smd, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("nulls-1.txt"));
+        assertEquals(normalizedExpected, normalizedActual);
+    }
+
+    public void testNotTraverseOrIncludeProxyInfo() throws Exception {
+        JSONResult result = new JSONResult();
+        JSONUtil jsonUtil = new JSONUtil();
+        JSONWriter writer = new DefaultJSONWriter();
+        jsonUtil.setWriter(writer);
+        result.setJsonUtil(jsonUtil);
+        ProxyFactory factory = new ProxyFactory(new TestAction2());
+        factory.addAdvice(new MethodInterceptor() {
+            @Override
+            public Object invoke(MethodInvocation invocation) throws Throwable {
+                // fail on any traverse except TestAction2.getName()
+                if (!TestAction2.class.getMethod("getName").equals(invocation.getMethod())) {
+                    throw new Throwable(invocation.getMethod() + " should not traversed!");
+                }
+                return invocation.proceed();
+            }
+        });
+        Object proxiedAction = factory.getProxy();
+        stack.push(proxiedAction);
+
+        this.invocation.setAction(proxiedAction);
+        try {
+            result.execute(this.invocation);
+            fail("An exception expected via proxy info traverse because writer.excludeProxyProperties is false!");
+        } catch (Exception ignored) {
+        }
+
+        writer.setExcludeProxyProperties(true);
+        result.execute(this.invocation);
+
+        String out = response.getContentAsString();
+
+        String normalizedActual = TestUtils.normalize(out, true);
+        String normalizedExpected = "{\"name\":\"name\"}";
         assertEquals(normalizedExpected, normalizedActual);
     }
 

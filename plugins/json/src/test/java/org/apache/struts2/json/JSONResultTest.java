@@ -162,34 +162,29 @@ public class JSONResultTest extends StrutsTestCase {
         JSONWriter writer = new DefaultJSONWriter();
         jsonUtil.setWriter(writer);
         result.setJsonUtil(jsonUtil);
-        ProxyFactory factory = new ProxyFactory(new TestAction2());
-        factory.addAdvice(new MethodInterceptor() {
-            @Override
-            public Object invoke(MethodInvocation invocation) throws Throwable {
-                // fail on any traverse except TestAction2.getName()
-                if (!TestAction2.class.getMethod("getName").equals(invocation.getMethod())) {
-                    throw new Throwable(invocation.getMethod() + " should not traversed!");
-                }
-                return invocation.proceed();
-            }
-        });
-        Object proxiedAction = factory.getProxy();
+        Object proxiedAction = new ProxyFactory(new TestAction2()).getProxy();
         stack.push(proxiedAction);
 
         this.invocation.setAction(proxiedAction);
         try {
             result.execute(this.invocation);
-            fail("An exception expected via proxy info traverse because writer.excludeProxyProperties is false!");
         } catch (Exception ignored) {
         }
-
-        writer.setExcludeProxyProperties(true);
-        result.execute(this.invocation);
 
         String out = response.getContentAsString();
 
         String normalizedActual = TestUtils.normalize(out, true);
         String normalizedExpected = "{\"name\":\"name\"}";
+        assertNotSame(normalizedExpected, normalizedActual);
+        response.setCommitted(false);
+        response.reset();
+
+        writer.setExcludeProxyProperties(true);
+        result.execute(this.invocation);
+
+        out = response.getContentAsString();
+
+        normalizedActual = TestUtils.normalize(out, true);
         assertEquals(normalizedExpected, normalizedActual);
     }
 

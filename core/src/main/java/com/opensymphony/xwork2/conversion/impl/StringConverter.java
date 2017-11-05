@@ -67,6 +67,7 @@ public class StringConverter extends DefaultTypeConverter {
             format.setGroupingUsed(false);
             if (BigDecimal.class.isInstance(value) || Double.class.isInstance(value) || Float.class.isInstance(value)) {
                 format.setMaximumFractionDigits(Integer.MAX_VALUE);
+                // TODO: delete this if statement when jdk fixed java.text.NumberFormat.format's behavior with Float
                 if (Float.class.isInstance(value)) {
                     value = Double.valueOf(value.toString());
                 }

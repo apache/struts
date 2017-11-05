@@ -35,8 +35,11 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -150,6 +153,38 @@ public class JSONResultTest extends StrutsTestCase {
 
         String normalizedActual = TestUtils.normalize(smd, true);
         String normalizedExpected = TestUtils.normalize(JSONResultTest.class.getResource("nulls-1.txt"));
+        assertEquals(normalizedExpected, normalizedActual);
+    }
+
+    public void testNotTraverseOrIncludeProxyInfo() throws Exception {
+        JSONResult result = new JSONResult();
+        JSONUtil jsonUtil = new JSONUtil();
+        JSONWriter writer = new DefaultJSONWriter();
+        jsonUtil.setWriter(writer);
+        result.setJsonUtil(jsonUtil);
+        Object proxiedAction = new ProxyFactory(new TestAction2()).getProxy();
+        stack.push(proxiedAction);
+
+        this.invocation.setAction(proxiedAction);
+        try {
+            result.execute(this.invocation);
+        } catch (Exception ignored) {
+        }
+
+        String out = response.getContentAsString();
+
+        String normalizedActual = TestUtils.normalize(out, true);
+        String normalizedExpected = "{\"name\":\"name\"}";
+        assertNotSame(normalizedExpected, normalizedActual);
+        response.setCommitted(false);
+        response.reset();
+
+        writer.setExcludeProxyProperties(true);
+        result.execute(this.invocation);
+
+        out = response.getContentAsString();
+
+        normalizedActual = TestUtils.normalize(out, true);
         assertEquals(normalizedExpected, normalizedActual);
     }
 

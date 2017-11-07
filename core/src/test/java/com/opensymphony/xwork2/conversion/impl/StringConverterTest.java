@@ -68,10 +68,14 @@ public class StringConverterTest extends StrutsInternalTestCase {
         assertEquals("34028235" + StringUtils.repeat('0', 31), value);
 
         // when cannot be represented exactly with a finite binary number
-        value = converter.convertValue(context, null, null, null, 0.1f, null);
+        Object f1 = 0.1f;
+        Object f2 = f1; // save the Object's current reference to test if following call will change it
+        value = converter.convertValue(context, null, null, null, f1, null);
 
         // then produce the shortest decimal representation that can unambiguously identify the true value of the floating-point number
         assertEquals("0,1", value);
+        // and does not change the input parameter, f1
+        assertTrue("should not change the input parameter, value", f1 == f2);
     }
 
     public void testBigDecimalToStringConversionPL() throws Exception {

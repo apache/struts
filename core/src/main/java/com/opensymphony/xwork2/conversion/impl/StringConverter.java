@@ -65,14 +65,15 @@ public class StringConverter extends DefaultTypeConverter {
         if (Number.class.isInstance(value)) {
             NumberFormat format = NumberFormat.getNumberInstance(locale);
             format.setGroupingUsed(false);
+            // TODO: delete this variable and corresponding if statement when jdk fixed java.text.NumberFormat.format's behavior with Float
+            Object fixedValue = value;
             if (BigDecimal.class.isInstance(value) || Double.class.isInstance(value) || Float.class.isInstance(value)) {
                 format.setMaximumFractionDigits(Integer.MAX_VALUE);
-                // TODO: delete this if statement when jdk fixed java.text.NumberFormat.format's behavior with Float
                 if (Float.class.isInstance(value)) {
-                    value = Double.valueOf(value.toString());
+                    fixedValue = Double.valueOf(value.toString());
                 }
             }
-            return format.format(value);
+            return format.format(fixedValue);
         } else {
             return Objects.toString(value, null);
         }

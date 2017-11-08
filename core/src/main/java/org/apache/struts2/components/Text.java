@@ -19,6 +19,7 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,6 +59,10 @@ import java.util.List;
  *
  * <ul>
  *      <li>name* (String) - the i18n message key</li>
+ *      <li>escapeHtml (Boolean) - Escape HTML. Defaults to false</li>
+ *      <li>escapeJavaScript (Boolean) - Escape JavaScript. Defaults to false</li>
+ *      <li>escapeXml (Boolean) - Escape XML. Defaults to false</li>
+ *      <li>escapeCsv (Boolean) - Escape CSV. Defaults to false</li>
  * </ul>
  *
  * <!-- END SNIPPET: params -->
@@ -119,6 +124,10 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
     protected String actualName;
     protected String name;
     protected String searchStack;
+    private boolean escapeHtml = false;
+    private boolean escapeJavaScript = false;
+    private boolean escapeXml = false;
+    private boolean escapeCsv = false;
 
     public Text(ValueStack stack) {
         super(stack);
@@ -132,6 +141,26 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
     @StrutsTagAttribute(description="Search the stack if property is not found on resources", type = "Boolean", defaultValue = "false")
     public void setSearchValueStack(String searchStack) {
         this.searchStack = searchStack;
+    }
+
+    @StrutsTagAttribute(description="Whether to escape HTML", type="Boolean", defaultValue="false")
+    public void setEscapeHtml(boolean escape) {
+        this.escapeHtml = escape;
+    }
+    
+    @StrutsTagAttribute(description="Whether to escape Javascript", type="Boolean", defaultValue="false")
+    public void setEscapeJavaScript(boolean escapeJavaScript) {
+        this.escapeJavaScript = escapeJavaScript;
+    }
+
+    @StrutsTagAttribute(description="Whether to escape XML", type="Boolean", defaultValue="false")
+    public void setEscapeXml(boolean escapeXml) {
+        this.escapeXml = escapeXml;
+    }
+
+    @StrutsTagAttribute(description="Whether to escape CSV (useful to escape a value for a column)", type="Boolean", defaultValue="false")
+    public void setEscapeCsv(boolean escapeCsv) {
+        this.escapeCsv = escapeCsv;
     }
 
     public boolean usesBody() {
@@ -161,7 +190,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         if (msg != null) {
             try {
                 if (getVar() == null) {
-                    writer.write(msg);
+                    writer.write(prepare(msg));
                 } else {
                     putInContext(msg);
                 }
@@ -183,5 +212,23 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         }
 
         values.add(value);
+    }
+
+    private String prepare(String value) {
+        String result = value;
+        if (escapeHtml) {
+            result = StringEscapeUtils.escapeHtml4(result);
+        }
+        if (escapeJavaScript) {
+            result = StringEscapeUtils.escapeEcmaScript(result);
+        }
+        if (escapeXml) {
+            result = StringEscapeUtils.escapeXml(result);
+        }
+        if (escapeCsv) {
+            result = StringEscapeUtils.escapeCsv(result);
+        }
+
+        return result;
     }
 }

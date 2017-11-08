@@ -35,7 +35,7 @@ public class PropertyTag extends ComponentTagSupport {
 
     private String defaultValue;
     private String value;
-    private boolean escapeHtml = false;
+    private boolean escapeHtml = true;
     private boolean escapeJavaScript = false;
     private boolean escapeXml = false;
     private boolean escapeCsv = false;

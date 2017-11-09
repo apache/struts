@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.conversion.impl;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.SimpleFooAction;
 import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -66,11 +67,13 @@ public class NumberConverterTest extends XWorkTestCase {
         Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
 
-        // when
-        Object value = converter.convertValue(context, null, null, null, "1234,4567", BigDecimal.class);
+        // when a bit bigger than double
+        String aBitBiggerThanDouble = "17976931348623157" + StringUtils.repeat('0', 291) + "1,"
+                + StringUtils.repeat('0', 324) + "49";
+        Object value = converter.convertValue(context, null, null, null, aBitBiggerThanDouble, BigDecimal.class);
 
-        // then
-        assertEquals(BigDecimal.valueOf(1234.4567), value);
+        // then does not lose integer and fraction digits
+        assertEquals(new BigDecimal(aBitBiggerThanDouble.substring(0, 309) + "." + aBitBiggerThanDouble.substring(310)), value);
     }
 
     public void testStringToBigDecimalConversionWithDotsPL() throws Exception {
@@ -105,11 +108,19 @@ public class NumberConverterTest extends XWorkTestCase {
         Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
 
-        // when
-        Object value = converter.convertValue(context, null, null, null, "1234,4567", Double.class);
+        // when has max fraction digits
+        Object value = converter.convertValue(context, null, null, null,
+                "0," + StringUtils.repeat('0', 323) + "49", Double.class);
 
-        // then
-        assertEquals(1234.4567, value);
+        // then does not lose fraction digits
+        assertEquals(Double.MIN_VALUE, value);
+
+        // when has max integer digits
+        value = converter.convertValue(context, null, null, null,
+                "17976931348623157" + StringUtils.repeat('0', 292) + ",0", Double.class);
+
+        // then does not lose integer digits
+        assertEquals(Double.MAX_VALUE, value);
     }
 
     public void testStringToDoubleConversionWithDotsPL() throws Exception {
@@ -131,11 +142,19 @@ public class NumberConverterTest extends XWorkTestCase {
         Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
 
-        // when
-        Object value = converter.convertValue(context, null, null, null, "1234,4567", Float.class);
+        // when has max fraction digits
+        Object value = converter.convertValue(context, null, null, null,
+                "0," + StringUtils.repeat('0', 44) + "1401298464324817", Float.class);
 
-        // then
-        assertEquals(1234.4567F, value);
+        // then does not lose fraction digits
+        assertEquals(Float.MIN_VALUE, value);
+
+        // when has max integer digits
+        value = converter.convertValue(context, null, null, null,
+                "34028234663852886" + StringUtils.repeat('0', 22) + ",0", Float.class);
+
+        // then does not lose integer digits
+        assertEquals(Float.MAX_VALUE, value);
     }
 
     public void testStringToFloatConversionWithDotsPL() throws Exception {

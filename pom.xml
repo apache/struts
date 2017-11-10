@@ -106,6 +106,9 @@
 
         <!-- Site generation -->
         <fluido-skin.version>1.6</fluido-skin.version>
+
+        <!-- Sonar -->
+        <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
     </properties>
 
     <profiles>

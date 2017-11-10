@@ -61,7 +61,7 @@
 
     <ciManagement>
         <system>Jenkins</system>
-        <url>builds.apache.org/view/S-Z/view/Struts/</url>
+        <url>https://builds.apache.org/view/S-Z/view/Struts/</url>
         <notifiers>
             <notifier>
                 <type>mail</type>

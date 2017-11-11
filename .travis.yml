@@ -9,4 +9,4 @@ install: true
 script: mvn test -DskipAssembly
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report -Ptravis-coveralls -DskipAssembly
+  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -Ptravis-coveralls -DskipAssembly

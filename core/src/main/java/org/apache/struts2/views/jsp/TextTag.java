@@ -34,7 +34,6 @@ public class TextTag extends ContextBeanTag {
     private static final long serialVersionUID = -3075088084198264581L;
 
     protected String name;
-    protected String searchValueStack;
     private boolean escapeHtml = false;
     private boolean escapeJavaScript = false;
     private boolean escapeXml = false;
@@ -49,7 +48,6 @@ public class TextTag extends ContextBeanTag {
 
         Text text = (Text) component;
         text.setName(name);
-        text.setSearchValueStack(searchValueStack);
         text.setEscapeHtml(escapeHtml);
         text.setEscapeJavaScript(escapeJavaScript);
         text.setEscapeXml(escapeXml);
@@ -58,10 +56,6 @@ public class TextTag extends ContextBeanTag {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setSearchValueStack(String searchStack) {
-        this.searchValueStack = searchStack;
     }
 
     public void setEscapeHtml(boolean escapeHtml) {

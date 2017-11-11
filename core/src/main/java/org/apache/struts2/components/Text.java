@@ -123,6 +123,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
     protected List<Object> values = Collections.emptyList();
     protected String actualName;
     protected String name;
+    @Deprecated
     protected String searchStack;
     private boolean escapeHtml = false;
     private boolean escapeJavaScript = false;
@@ -138,6 +139,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         this.name = name;
     }
 
+    @Deprecated
     @StrutsTagAttribute(description="Search the stack if property is not found on resources", type = "Boolean", defaultValue = "false")
     public void setSearchValueStack(String searchStack) {
         this.searchStack = searchStack;

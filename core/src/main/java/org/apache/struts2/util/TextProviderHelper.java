@@ -62,7 +62,10 @@ public class TextProviderHelper {
      * @param searchStack     search stack for the key
      *
      * @return the message if found, otherwise the defaultMessage
+     *
+     * @deprecated The stack should never be searched for the key. Use the version without the searchStack boolean instead.
      */
+    @Deprecated
     public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack, boolean searchStack) {
         String msg = null;
         TextProvider tp = null;

@@ -34,6 +34,7 @@ public class TextTag extends ContextBeanTag {
     private static final long serialVersionUID = -3075088084198264581L;
 
     protected String name;
+    @Deprecated
     protected String searchValueStack;
     private boolean escapeHtml = false;
     private boolean escapeJavaScript = false;
@@ -60,6 +61,7 @@ public class TextTag extends ContextBeanTag {
         this.name = name;
     }
 
+    @Deprecated
     public void setSearchValueStack(String searchStack) {
         this.searchValueStack = searchStack;
     }

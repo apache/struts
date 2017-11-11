@@ -7,3 +7,6 @@ jdk:
 
 install: true
 script: mvn test -DskipAssembly
+
+after_success:
+  - mvn clean cobertura:cobertura coveralls:report -Ptravis-coveralls -DskipAssembly

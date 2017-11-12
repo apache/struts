@@ -66,6 +66,10 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
             @Override
             public void register(ContainerBuilder builder,
                     LocatableProperties props) throws ConfigurationException {
+
+                // No registered beans during initialization; They will be registered in each test, runtime.
+                props.setProperty("applicationContextPath", "com/opensymphony/xwork2/spring/emptyContext-spring.xml");
+
                 builder.factory(ObjectFactory.class, SpringObjectFactory.class);
             }
             

@@ -419,8 +419,8 @@ public class DefaultConfiguration implements Configuration {
             this.namespaceActionConfigMatchers = new LinkedHashMap<>();
             this.namespaceMatcher = new NamespaceMatcher(matcher, namespaceActionConfigs.keySet());
 
-            for (String ns : namespaceActionConfigs.keySet()) {
-                namespaceActionConfigMatchers.put(ns, new ActionConfigMatcher(matcher, namespaceActionConfigs.get(ns), true));
+            for (Map.Entry<String, Map<String, ActionConfig>> entry : namespaceActionConfigs.entrySet()) {
+                namespaceActionConfigMatchers.put(entry.getKey(), new ActionConfigMatcher(matcher, entry.getValue(), true));
             }
         }
 
@@ -496,11 +496,11 @@ public class DefaultConfiguration implements Configuration {
         public String toString() {
             StringBuilder buff = new StringBuilder("RuntimeConfiguration - actions are\n");
 
-            for (String namespace : namespaceActionConfigs.keySet()) {
-                Map<String, ActionConfig> actionConfigs = namespaceActionConfigs.get(namespace);
+            for (Map.Entry<String, Map<String, ActionConfig>> entry : namespaceActionConfigs.entrySet()) {
+                Map<String, ActionConfig> actionConfigs = entry.getValue();
 
                 for (String s : actionConfigs.keySet()) {
-                    buff.append(namespace).append("/").append(s).append("\n");
+                    buff.append(entry.getKey()).append("/").append(s).append("\n");
                 }
             }
 

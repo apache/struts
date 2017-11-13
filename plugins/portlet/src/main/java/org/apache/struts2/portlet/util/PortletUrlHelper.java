@@ -278,8 +278,9 @@ public class PortletUrlHelper {
         Map<String, String[]> result = null;
         if (params != null) {
             result = new LinkedHashMap<String, String[]>(params.size());
-            for ( String key : params.keySet() ) {
-                Object val = params.get(key);
+            for (Map.Entry<String, Object> entry : params.entrySet() ) {
+                String key = entry.getKey();
+                Object val = entry.getValue();
                 if (val instanceof String[]) {
                     result.put(key, (String[]) val);
                 } else {

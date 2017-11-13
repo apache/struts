@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
 
 /**
  * Write tags as XHTML
@@ -53,11 +54,11 @@ public class XHTMLTagSerializer implements TagSerializer {
         writer.write("<");
         writer.write(name);
         if (attrs != null) {
-            for (String key : attrs.keySet()) {
+            for (Map.Entry<String, String> entry : attrs.entrySet()) {
                 writer.write(" ");
-                writer.write(key);
+                writer.write(entry.getKey());
                 writer.write("=\"");
-                writer.write(attrs.get(key));
+                writer.write(entry.getValue());
                 writer.write("\"");
             }
         }

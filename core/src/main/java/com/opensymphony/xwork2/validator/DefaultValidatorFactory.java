@@ -55,6 +55,10 @@ public class DefaultValidatorFactory implements ValidatorFactory {
     public DefaultValidatorFactory(@Inject ObjectFactory objectFactory, @Inject ValidatorFileParser parser) {
         this.objectFactory = objectFactory;
         this.validatorFileParser = parser;
+    }
+
+    @Override
+    public void init() {
         parseValidators();
     }
 

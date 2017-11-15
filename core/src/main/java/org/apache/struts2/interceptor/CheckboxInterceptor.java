@@ -26,7 +26,9 @@ import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -60,12 +62,14 @@ public class CheckboxInterceptor extends AbstractInterceptor {
         HttpParameters parameters = ai.getInvocationContext().getParameters();
         Map<String, Parameter> extraParams = new HashMap<>();
 
-        for (String name : parameters.keySet()) {
+        Set<String> checkboxParameters = new HashSet<>();
+        for (Map.Entry<String, Parameter> parameter : parameters.entrySet()) {
+            String name = parameter.getKey();
             if (name.startsWith("__checkbox_")) {
                 String checkboxName = name.substring("__checkbox_".length());
 
-                Parameter value = parameters.get(name);
-                parameters = parameters.remove(name);
+                Parameter value = parameter.getValue();
+		checkboxParameters.add(name);
                 if (value.isMultiple()) {
               	    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: {}", name);
                     continue;
@@ -78,7 +82,7 @@ public class CheckboxInterceptor extends AbstractInterceptor {
                 }
             }
         }
-
+	parameters.remove(checkboxParameters);
 
         ai.getInvocationContext().getParameters().appendAll(extraParams);
 

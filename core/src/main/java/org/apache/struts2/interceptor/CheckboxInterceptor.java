@@ -69,9 +69,9 @@ public class CheckboxInterceptor extends AbstractInterceptor {
                 String checkboxName = name.substring("__checkbox_".length());
 
                 Parameter value = parameter.getValue();
-		checkboxParameters.add(name);
+                checkboxParameters.add(name);
                 if (value.isMultiple()) {
-              	    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: {}", name);
+                    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: {}", name);
                     continue;
                 }
 
@@ -82,7 +82,7 @@ public class CheckboxInterceptor extends AbstractInterceptor {
                 }
             }
         }
-	parameters.remove(checkboxParameters);
+        parameters.remove(checkboxParameters);
 
         ai.getInvocationContext().getParameters().appendAll(extraParams);
 

@@ -98,7 +98,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <struts2.springPlatformVersion>4.1.9.RELEASE</struts2.springPlatformVersion>
-        <ognl.version>3.2.3</ognl.version>
+        <ognl.version>3.2.4</ognl.version>
         <asm.version>5.2</asm.version>
         <tiles.version>3.0.7</tiles.version>
         <tiles-request.version>1.0.6</tiles-request.version>

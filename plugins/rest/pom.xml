@@ -44,6 +44,7 @@
             <groupId>net.sf.json-lib</groupId>
             <artifactId>json-lib</artifactId>
             <classifier>jdk15</classifier>
+            <optional>true</optional>
         </dependency>
 
         <dependency>

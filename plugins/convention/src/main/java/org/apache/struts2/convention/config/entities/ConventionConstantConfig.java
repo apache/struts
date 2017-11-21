@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.convention.config.entities;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -60,7 +59,7 @@ public class ConventionConstantConfig extends ConstantConfig {
 
     @Override
     public Map<String, String> getAllAsStringsMap() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = super.getAllAsStringsMap();
 
         map.put(ConventionConstants.CONVENTION_ACTION_CONFIG_BUILDER, beanConfToString(conventionActionConfigBuilder));
         map.put(ConventionConstants.CONVENTION_ACTION_NAME_BUILDER, beanConfToString(conventionActionNameBuilder));

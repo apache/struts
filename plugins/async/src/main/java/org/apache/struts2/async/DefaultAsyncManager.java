@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Implements {@link AsyncManager} to add support for invoke async actions via Servlet 3's API.
  *
- * @since 2.5.14
+ * @since 2.6
  */
 public class DefaultAsyncManager implements AsyncManager, AsyncListener {
     private static final Logger LOG = LogManager.getLogger(DefaultAsyncManager.class);

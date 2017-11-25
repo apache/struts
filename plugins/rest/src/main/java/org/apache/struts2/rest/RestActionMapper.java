@@ -130,52 +130,52 @@ public class RestActionMapper extends DefaultActionMapper {
         this.idParameterName = idParameterName;
     }
 
-    @Inject(required=false,value="struts.mapper.indexMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_INDEX_METHOD_NAME)
     public void setIndexMethodName(String indexMethodName) {
         this.indexMethodName = indexMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.getMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_GET_METHOD_NAME)
     public void setGetMethodName(String getMethodName) {
         this.getMethodName = getMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.postMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_POST_METHOD_NAME)
     public void setPostMethodName(String postMethodName) {
         this.postMethodName = postMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.editMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_EDIT_METHOD_NAME)
     public void setEditMethodName(String editMethodName) {
         this.editMethodName = editMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.newMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_NEW_METHOD_NAME)
     public void setNewMethodName(String newMethodName) {
         this.newMethodName = newMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.deleteMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_DELETE_METHOD_NAME)
     public void setDeleteMethodName(String deleteMethodName) {
         this.deleteMethodName = deleteMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.putMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_PUT_METHOD_NAME)
     public void setPutMethodName(String putMethodName) {
         this.putMethodName = putMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.optionsMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_OPTIONS_METHOD_NAME)
     public void setOptionsMethodName(String optionsMethodName) {
         this.optionsMethodName = optionsMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.postContinueMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_POST_CONTINUE_METHOD_NAME)
     public void setPostContinueMethodName(String postContinueMethodName) {
         this.postContinueMethodName = postContinueMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.putContinueMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_PUT_CONTINUE_METHOD_NAME)
     public void setPutContinueMethodName(String putContinueMethodName) {
         this.putContinueMethodName = putContinueMethodName;
     }

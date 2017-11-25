@@ -50,7 +50,7 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
 
     private String defaultExtension;
 
-    @Inject("struts.rest.defaultExtension")
+    @Inject(RestConstants.REST_DEFAULT_EXTENSION)
     public void setDefaultExtension(String name) {
         this.defaultExtension = name;
     }

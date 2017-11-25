@@ -20,7 +20,9 @@ package org.apache.struts2.dispatcher;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -30,8 +32,12 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.LocalizedTextProvider;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -319,6 +325,30 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=UTF-16LE");
         assertTrue(du.isMultipartRequest(req));
+    }
+
+    public void testServiceActionResumePreviousProxy() throws Exception {
+        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+
+        MockActionInvocation mai = new MockActionInvocation();
+        ActionContext.getContext().setActionInvocation(mai);
+
+        MockActionProxy actionProxy = new MockActionProxy();
+        actionProxy.setInvocation(mai);
+        mai.setProxy(actionProxy);
+
+        mai.setStack(new StubValueStack());
+
+        HttpServletRequest req = new MockHttpServletRequest();
+        req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, mai.getStack());
+
+        assertFalse(actionProxy.isExecutedCalled());
+
+        du.setDevMode("false");
+        du.setHandleException("false");
+        du.serviceAction(req, null, new ActionMapping());
+
+        assertTrue("should execute previous proxy", actionProxy.isExecutedCalled());
     }
 
     class InternalConfigurationManager extends ConfigurationManager {

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.servlet3.async;
+package org.apache.struts2.async;
 
 import com.opensymphony.xwork2.AsyncManager;
 import org.apache.logging.log4j.LogManager;
@@ -37,8 +37,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @since 2.5.14
  */
-public class Servlet3AsyncManager implements AsyncManager, AsyncListener {
-    private static final Logger LOG = LogManager.getLogger(Servlet3AsyncManager.class);
+public class DefaultAsyncManager implements AsyncManager, AsyncListener {
+    private static final Logger LOG = LogManager.getLogger(DefaultAsyncManager.class);
     private static final AtomicInteger threadCount = new AtomicInteger(0);
 
     private AsyncContext asyncContext;

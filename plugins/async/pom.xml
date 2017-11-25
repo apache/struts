@@ -27,8 +27,8 @@
         <version>2.5.14-SNAPSHOT</version>
     </parent>
 
-    <artifactId>struts2-servlet3-plugin</artifactId>
-    <name>Struts 2 Servlet3 Plugin</name>
+    <artifactId>struts2-async-plugin</artifactId>
+    <name>Struts 2 Async Plugin</name>
     <packaging>jar</packaging>
 
     <properties>

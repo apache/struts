@@ -25,5 +25,5 @@
 
 <struts>
     <bean type="com.opensymphony.xwork2.AsyncManager" name="default"
-          class="org.apache.struts2.servlet3.async.Servlet3AsyncManager" scope="prototype" />
+          class="org.apache.struts2.async.DefaultAsyncManager" scope="prototype" />
 </struts>

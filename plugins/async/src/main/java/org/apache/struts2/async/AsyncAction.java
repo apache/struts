@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.servlet3.async;
+package org.apache.struts2.async;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;

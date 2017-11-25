@@ -56,7 +56,7 @@
         <module>spring</module>
         <module>testng</module>
         <module>tiles</module>
-        <module>servlet3</module>
+        <module>async</module>
     </modules>
 
     <dependencies>

@@ -207,6 +207,18 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>update-impact</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.updateimpact</groupId>
+                        <artifactId>updateimpact-maven-plugin</artifactId>
+                        <version>1.0.10</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <build>

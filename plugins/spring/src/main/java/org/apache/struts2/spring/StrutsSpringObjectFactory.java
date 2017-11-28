@@ -94,9 +94,9 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             return;
         }
         
-        String watchList = container.getInstance(String.class, "struts.class.reloading.watchList");
-        String acceptClasses = container.getInstance(String.class, "struts.class.reloading.acceptClasses");
-        String reloadConfig = container.getInstance(String.class, "struts.class.reloading.reloadConfig");
+        String watchList = container.getInstance(String.class, SpringConstants.SPRING_CLASS_RELOADING_WATCH_LIST);
+        String acceptClasses = container.getInstance(String.class, SpringConstants.SPRING_CLASS_RELOADING_ACCEPT_CLASSES);
+        String reloadConfig = container.getInstance(String.class, SpringConstants.SPRING_CLASS_RELOADING_RELOAD_CONFIG);
 
         if ("true".equals(devMode)
                 && StringUtils.isNotBlank(watchList)

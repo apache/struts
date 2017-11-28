@@ -311,7 +311,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.0.2</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>

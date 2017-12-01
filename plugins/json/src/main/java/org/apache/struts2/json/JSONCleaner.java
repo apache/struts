@@ -101,8 +101,7 @@ public abstract class JSONCleaner {
         boolean allow = !isDefaultBlock();
 
         if (includesExcludesMap != null) {
-            for (String currRule : includesExcludesMap.keySet()) {
-                Filter f = includesExcludesMap.get(currRule);
+            for (Filter f : includesExcludesMap.values()) {
                 if (f.pattern.matcher(ognl).matches()) {
                     allow = f.allow;
                 }

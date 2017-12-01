@@ -412,8 +412,8 @@ public class XWorkConverter extends DefaultTypeConverter {
                     Object converter = mapping.get(property);
                     if (converter == null && LOG.isDebugEnabled()) {
                         LOG.debug("Converter is null for property [{}]. Mapping size [{}]:", property, mapping.size());
-                        for (String next : mapping.keySet()) {
-                            LOG.debug("{}:{}", next, mapping.get(next));
+                        for (Map.Entry<String, Object> entry : mapping.entrySet()) {
+                            LOG.debug("{}:{}", entry.getKey(), entry.getValue());
                         }
                     }
                     return converter;

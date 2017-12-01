@@ -59,8 +59,8 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
             Map<String, ActionConfig> configs,
             boolean looseMatch) {
         super(patternMatcher);
-        for (String name : configs.keySet()) {
-            addPattern(name, configs.get(name), looseMatch);
+        for (Map.Entry<String, ActionConfig> entry : configs.entrySet()) {
+            addPattern(entry.getKey(), entry.getValue(), looseMatch);
         }
     }
 

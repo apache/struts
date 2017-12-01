@@ -60,8 +60,8 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     public void cleanUp() {
         LOG.debug("Performing File Upload temporary storage cleanup.");
-        for (String fieldName : fileInfos.keySet()) {
-            for (FileInfo fileInfo : fileInfos.get(fieldName)) {
+        for (List<FileInfo> fileInfoList : fileInfos.values()) {
+            for (FileInfo fileInfo : fileInfoList) {
                 File file = fileInfo.getFile();
                 LOG.debug("Deleting file '{}'.", file.getName());
                 if (!file.delete()) {

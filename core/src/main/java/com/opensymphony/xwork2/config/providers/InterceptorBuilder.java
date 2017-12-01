@@ -130,8 +130,8 @@ public class InterceptorBuilder {
          *  interceptorStack1 -> [interceptor1.param1 -> someValue, interceptor1.param2 -> anotherValue]
          *
          */
-        for (String key : refParams.keySet()) {
-            String value = refParams.get(key);
+        for (Map.Entry<String, String> entry : refParams.entrySet()) {
+            String key = entry.getKey();
 
             try {
                 String name = key.substring(0, key.indexOf('.'));
@@ -144,7 +144,7 @@ public class InterceptorBuilder {
                     map = new LinkedHashMap<>();
                 }
 
-                map.put(key, value);
+                map.put(key, entry.getValue());
                 params.put(name, map);
 
             } catch (Exception e) {
@@ -154,9 +154,9 @@ public class InterceptorBuilder {
 
         result = new ArrayList<>(stackConfig.getInterceptors());
 
-        for (String key : params.keySet()) {
-
-            Map<String, String> map = params.get(key);
+        for (Map.Entry<String, Map<String, String>> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Map<String, String> map = entry.getValue();
 
 
             Object interceptorCfgObj = interceptorLocator.getInterceptorConfig(key);

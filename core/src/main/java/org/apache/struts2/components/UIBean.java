@@ -1241,9 +1241,11 @@ public abstract class UIBean extends Component {
     }
 
 	public void setDynamicAttributes(Map<String, Object> tagDynamicAttributes) {
-        for (String key : tagDynamicAttributes.keySet()) {
+        for (Map.Entry<String, Object> entry : tagDynamicAttributes.entrySet()) {
+            String key = entry.getKey();
+
             if (!isValidTagAttribute(key)) {
-                dynamicAttributes.put(key, tagDynamicAttributes.get(key));
+                dynamicAttributes.put(key, entry.getValue());
             }
         }
     }

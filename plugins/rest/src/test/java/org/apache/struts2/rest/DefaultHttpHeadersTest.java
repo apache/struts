@@ -30,19 +30,28 @@ import java.util.TimeZone;
 import static javax.servlet.http.HttpServletResponse.*;
 
 public class DefaultHttpHeadersTest extends TestCase {
+
+    private static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
+    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+
     private MockHttpServletResponse mockResponse;
     private MockHttpServletRequest mockRequest;
+    private SimpleDateFormat dateFormat;
 
     @Override
     public void setUp() {
         mockResponse = new MockHttpServletResponse();
         mockRequest = new MockHttpServletRequest();
+
+        dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+        dateFormat.setTimeZone(GMT);
     }
 
     @Override
     public void tearDown() {
         mockRequest = null;
         mockRequest = null;
+        dateFormat = null;
     }
 
     public void testApply() {
@@ -59,7 +68,7 @@ public class DefaultHttpHeadersTest extends TestCase {
         assertEquals(SC_CREATED, mockResponse.getStatus());
         assertEquals("http://localhost/foo/bar/44.xhtml", mockResponse.getHeader("Location"));
         assertEquals("asdf", mockResponse.getHeader("ETag"));
-        assertEquals(String.valueOf(now.getTime()), mockResponse.getHeader("Last-Modified"));
+        assertEquals(dateFormat.format(now), mockResponse.getHeader("Last-Modified"));
 
     }
 

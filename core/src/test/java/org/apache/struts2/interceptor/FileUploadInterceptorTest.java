@@ -224,10 +224,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     public void testInvalidContentTypeMultipartRequest() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
 
-        req.setCharacterEncoding("text/html");
-        req.setContentType("text/xml"); // not a multipart contentype
+        req.setContentType("multipart/form-data"); // not a multipart contentype
         req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data");
 
         MyFileupAction action = container.inject(MyFileupAction.class);
         MockActionInvocation mai = new MockActionInvocation();

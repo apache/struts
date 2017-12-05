@@ -35,8 +35,9 @@ import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -512,8 +513,18 @@ public class DefaultActionInvocation implements ActionInvocation {
 
         if(that.getInvocationContext() != null && that.getInvocationContext().getContextMap() != null) {
             Map<String, Object> thatContextMap = that.getInvocationContext().getContextMap();
-            thatContextMap.remove(ServletActionContext.HTTP_REQUEST);
-            thatContextMap.remove(ServletActionContext.HTTP_RESPONSE);
+            List<String> keysToRemove = new ArrayList<>();
+            for (Map.Entry<String, Object> entry : thatContextMap.entrySet()) {
+                Object entryValue = entry.getValue();
+                // WW-4873 Remove Servlet Request and Response as they are not intended to being serializable
+                if (entryValue instanceof ServletRequest ||
+                        entryValue instanceof ServletResponse) {
+                    keysToRemove.add(entry.getKey());
+                }
+            }
+            for (String keyToRemove : keysToRemove) {
+                thatContextMap.remove(keyToRemove);
+            }
         }
 
         return that;
@@ -527,6 +538,22 @@ public class DefaultActionInvocation implements ActionInvocation {
      */
     public ActionInvocation deserialize(ActionContext actionContext) {
         DefaultActionInvocation that = this;
+
+        if(that.getInvocationContext() != null && that.getInvocationContext().getContextMap() != null) {
+            Map<String, Object> thatContextMap = that.getInvocationContext().getContextMap();
+            Map<String, Object> acContextMap = actionContext.getContextMap();
+            for (Map.Entry<String, Object> entry : acContextMap.entrySet()) {
+                Object entryValue = entry.getValue();
+                String entryKey = entry.getKey();
+                // WW-4873 Restore Servlet Request and Response
+                if ((entryValue instanceof ServletRequest ||
+                        entryValue instanceof ServletResponse) &&
+                        !thatContextMap.containsKey(entryKey)) {
+                    thatContextMap.put(entryKey, entryValue);
+                }
+            }
+        }
+
         that.container = actionContext.getContainer();
         return that;
     }

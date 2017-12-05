@@ -35,6 +35,7 @@ import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -508,6 +509,13 @@ public class DefaultActionInvocation implements ActionInvocation {
     public ActionInvocation serialize() {
         DefaultActionInvocation that = this;
         that.container = null;
+
+        if(that.getInvocationContext() != null && that.getInvocationContext().getContextMap() != null) {
+            Map<String, Object> thatContextMap = that.getInvocationContext().getContextMap();
+            thatContextMap.remove(ServletActionContext.HTTP_REQUEST);
+            thatContextMap.remove(ServletActionContext.HTTP_RESPONSE);
+        }
+
         return that;
     }
 

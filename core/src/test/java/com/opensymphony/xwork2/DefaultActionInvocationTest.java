@@ -25,16 +25,19 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockContainer;
 import com.opensymphony.xwork2.mock.MockInterceptor;
-import com.opensymphony.xwork2.mock.MockLazyInterceptor;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -77,8 +80,13 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testSerialization() throws Exception {
         // given
-        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(new HashMap<String, Object>(), false);
+        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(extraContext, false);
         actionInvocation.setContainer(new MockContainer());
+
+        extraContext.put(ServletActionContext.HTTP_REQUEST, new MockHttpServletRequest());
+        extraContext.put(ServletActionContext.HTTP_RESPONSE, new MockHttpServletResponse());
+        actionInvocation.invocationContext = new ActionContext(extraContext);
 
         // when
         DefaultActionInvocation serializable = (DefaultActionInvocation) actionInvocation.serialize();
@@ -86,6 +94,22 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         // then
         assertNull(actionInvocation.container);
         assertNull(serializable.container);
+
+        assertFalse("request should be removed from actionInvocation",
+                actionInvocation.invocationContext.getContextMap().containsKey(ServletActionContext.HTTP_REQUEST));
+        assertFalse("response should be removed from actionInvocation",
+                actionInvocation.invocationContext.getContextMap().containsKey(ServletActionContext.HTTP_RESPONSE));
+        assertFalse("request should be removed from serializable",
+                serializable.invocationContext.getContextMap().containsKey(ServletActionContext.HTTP_REQUEST));
+        assertFalse("response should be removed from serializable",
+                serializable.invocationContext.getContextMap().containsKey(ServletActionContext.HTTP_RESPONSE));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(serializable);
+        oos.close();
+        assertTrue("should have serialized data", baos.size() > 0);
+        baos.close();
     }
 
     public void testDeserialization() throws Exception {

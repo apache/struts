@@ -503,9 +503,9 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     /**
-     * Version ready to be serialize
+     * Version ready to be serialize via removing all unserializable but restorable references
      *
-     * @return instance without reference to {@link Container}
+     * @return instance without unserializable references
      */
     public ActionInvocation serialize() {
         DefaultActionInvocation that = this;
@@ -531,7 +531,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     /**
-     * Restoring Container
+     * Restoring references
      *
      * @param actionContext current {@link ActionContext}
      * @return instance which can be used to invoke action

@@ -36,6 +36,8 @@ import ognl.NoSuchPropertyException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -501,24 +503,57 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     /**
-     * Version ready to be serialize
+     * Version ready to be serialize via removing all unserializable but restorable references
      *
-     * @return instance without reference to {@link Container}
+     * @return instance without unserializable references
      */
     public ActionInvocation serialize() {
         DefaultActionInvocation that = this;
         that.container = null;
+
+        if(that.getInvocationContext() != null && that.getInvocationContext().getContextMap() != null) {
+            Map<String, Object> thatContextMap = that.getInvocationContext().getContextMap();
+            List<String> keysToRemove = new ArrayList<>();
+            for (Map.Entry<String, Object> entry : thatContextMap.entrySet()) {
+                Object entryValue = entry.getValue();
+                // WW-4873 Remove Servlet Request and Response as they are not intended to being serializable
+                if (entryValue instanceof ServletRequest ||
+                        entryValue instanceof ServletResponse) {
+                    keysToRemove.add(entry.getKey());
+                }
+            }
+            for (String keyToRemove : keysToRemove) {
+                thatContextMap.remove(keyToRemove);
+            }
+        }
+
         return that;
     }
 
     /**
-     * Restoring Container
+     * Restoring references
      *
      * @param actionContext current {@link ActionContext}
      * @return instance which can be used to invoke action
      */
     public ActionInvocation deserialize(ActionContext actionContext) {
         DefaultActionInvocation that = this;
+
+        if(that.getInvocationContext() != null && that.getInvocationContext().getContextMap() != null) {
+            Map<String, Object> thatContextMap = that.getInvocationContext().getContextMap();
+            Map<String, Object> acContextMap = actionContext.getContextMap();
+            for (Map.Entry<String, Object> entry : acContextMap.entrySet()) {
+                Object entryValue = entry.getValue();
+                String entryKey = entry.getKey();
+                // WW-4873 Restore Servlet Request and Response
+                if ((entryValue instanceof ServletRequest ||
+                        entryValue instanceof ServletResponse) &&
+                        !thatContextMap.containsKey(entryKey)) {
+                    thatContextMap.put(entryKey, entryValue);
+                }
+            }
+        }
+
         that.container = actionContext.getContainer();
         return that;
     }

@@ -38,6 +38,10 @@ import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts2.views.jsp.StrutsMockHttpSession;
 
 import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -157,6 +161,41 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         long diff = System.currentTimeMillis() - before;
         assertEquals("success", result);
         assertTrue("Job done already after 500 so there should not be such long delay", diff <= 1000);
+    }
+
+    public void testFromDeserializedSession() throws Exception {
+        waitInterceptor.setDelay(0);
+        waitInterceptor.setDelaySleepInterval(0);
+
+        ActionProxy proxy = buildProxy("action1");
+        String result = proxy.execute();
+        assertEquals("wait", result);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(session);
+        oos.close();
+        byte b[] = baos.toByteArray();
+        baos.close();
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(b);
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        session = (Map) ois.readObject();
+        context.put(ActionContext.SESSION, session);
+        ois.close();
+        bais.close();
+
+        Thread.sleep(1000);
+
+        ActionProxy proxy2 = buildProxy("action1");
+        String result2 = proxy2.execute();
+        assertEquals("wait", result2);
+
+        Thread.sleep(1000);
+
+        ActionProxy proxy3 = buildProxy("action1");
+        String result3 = proxy3.execute();
+        assertEquals("success", result3);
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {

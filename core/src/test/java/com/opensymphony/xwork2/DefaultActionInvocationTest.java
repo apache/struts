@@ -25,12 +25,15 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockContainer;
 import com.opensymphony.xwork2.mock.MockInterceptor;
-import com.opensymphony.xwork2.mock.MockLazyInterceptor;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +47,8 @@ import java.util.Map;
  * @author <a href="mailto:kristian at zenior.no">Kristian Rosenvold</a>
  */
 public class DefaultActionInvocationTest extends XWorkTestCase {
+    private static final String HTTP_REQUEST = "com.opensymphony.xwork2.DefaultActionInvocationTest.HttpServletRequest";
+    private static final String HTTP_RESPONSE = "com.opensymphony.xwork2.DefaultActionInvocationTest.HttpServletResponse";
 
     /**
      * Tests interceptor chain invoke.
@@ -77,8 +82,13 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testSerialization() throws Exception {
         // given
-        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(new HashMap<String, Object>(), false);
+        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(extraContext, false);
         actionInvocation.setContainer(new MockContainer());
+
+        extraContext.put(HTTP_REQUEST, new MockHttpServletRequest());
+        extraContext.put(HTTP_RESPONSE, new MockHttpServletResponse());
+        actionInvocation.invocationContext = new ActionContext(extraContext);
 
         // when
         DefaultActionInvocation serializable = (DefaultActionInvocation) actionInvocation.serialize();
@@ -86,13 +96,38 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         // then
         assertNull(actionInvocation.container);
         assertNull(serializable.container);
+
+        assertFalse("request should be removed from actionInvocation",
+                actionInvocation.invocationContext.getContextMap().containsKey(HTTP_REQUEST));
+        assertFalse("response should be removed from actionInvocation",
+                actionInvocation.invocationContext.getContextMap().containsKey(HTTP_RESPONSE));
+        assertFalse("request should be removed from serializable",
+                serializable.invocationContext.getContextMap().containsKey(HTTP_REQUEST));
+        assertFalse("response should be removed from serializable",
+                serializable.invocationContext.getContextMap().containsKey(HTTP_RESPONSE));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(serializable);
+        oos.close();
+        assertTrue("should have serialized data", baos.size() > 0);
+        baos.close();
     }
 
     public void testDeserialization() throws Exception {
         // given
-        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(new HashMap<String, Object>(), false);
+        HashMap<String, Object> extraContext = new HashMap<String, Object>();
+        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(extraContext, false);
+        actionInvocation.invocationContext = new ActionContext(extraContext);
+
         MockContainer mockContainer = new MockContainer();
         ActionContext.getContext().setContainer(mockContainer);
+
+        Map<String, Object> acContextMap = ActionContext.getContext().getContextMap();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        acContextMap.put(HTTP_REQUEST, request);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        acContextMap.put(HTTP_RESPONSE, response);
 
         // when
         DefaultActionInvocation deserializable = (DefaultActionInvocation) actionInvocation.deserialize(ActionContext.getContext());
@@ -101,6 +136,20 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertNotNull(actionInvocation.container);
         assertNotNull(deserializable.container);
         assertEquals(mockContainer, deserializable.container);
+
+        assertTrue("request should be restored into actionInvocation",
+                actionInvocation.invocationContext.getContextMap().containsKey(HTTP_REQUEST));
+        assertTrue("response should be restored into actionInvocation",
+                actionInvocation.invocationContext.getContextMap().containsKey(HTTP_RESPONSE));
+        assertTrue("request should be restored into deserializable",
+                deserializable.invocationContext.getContextMap().containsKey(HTTP_REQUEST));
+        assertTrue("response should be restored into deserializable",
+                deserializable.invocationContext.getContextMap().containsKey(HTTP_RESPONSE));
+
+        assertEquals(request, actionInvocation.invocationContext.getContextMap().get(HTTP_REQUEST));
+        assertEquals(response, actionInvocation.invocationContext.getContextMap().get(HTTP_RESPONSE));
+        assertEquals(request, deserializable.invocationContext.getContextMap().get(HTTP_REQUEST));
+        assertEquals(response, deserializable.invocationContext.getContextMap().get(HTTP_RESPONSE));
     }
 
     public void testInvokingExistingExecuteMethod() throws Exception {

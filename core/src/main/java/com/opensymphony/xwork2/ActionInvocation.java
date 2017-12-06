@@ -180,14 +180,14 @@ public interface ActionInvocation extends Serializable {
 
     /**
      * Prepares instance of ActionInvocation to be serializable,
-     * which simple means removing all unserializable fields, eg. Container
+     * which simply means removing all unserializable but restorable references
      *
      * @return ActionInvocation which can be serialize (eg. into HttpSession)
      */
     ActionInvocation serialize();
 
     /**
-     * Performs opposite process to restore back ActionInvocation after deserialisation
+     * Performs opposite process to restore back ActionInvocation after serialisation
      *
      * @param actionContext current {@link ActionContext}
      * @return fully operational ActionInvocation

@@ -32,7 +32,6 @@ public class BackgroundProcess implements Serializable {
     private static final long serialVersionUID = 3884464776311686443L;
 
     protected Object action;
-    protected ActionInvocation invocation;
     protected String result;
     protected Exception exception;
     protected boolean done;
@@ -45,13 +44,12 @@ public class BackgroundProcess implements Serializable {
      * @param threadPriority The thread priority
      */
     public BackgroundProcess(String threadName, final ActionInvocation invocation, int threadPriority) {
-        this.invocation = invocation;
         this.action = invocation.getAction();
         try {
             final Thread t = new Thread(new Runnable() {
                 public void run() {
                     try {
-                        beforeInvocation();
+                        beforeInvocation(invocation);
                         result = invocation.invokeActionOnly();
                         afterInvocation();
                     } catch (Exception e) {
@@ -75,7 +73,7 @@ public class BackgroundProcess implements Serializable {
      *
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
      */
-    protected void beforeInvocation() throws Exception {
+    protected void beforeInvocation(ActionInvocation invocation) throws Exception {
         ActionContext.setContext(invocation.getInvocationContext());
     }
 
@@ -97,15 +95,6 @@ public class BackgroundProcess implements Serializable {
      */
     public Object getAction() {
         return action;
-    }
-
-    /**
-     * Retrieves the action invocation.
-     *
-     * @return the action invocation
-     */
-    public ActionInvocation getInvocation() {
-        return invocation;
     }
 
     /**

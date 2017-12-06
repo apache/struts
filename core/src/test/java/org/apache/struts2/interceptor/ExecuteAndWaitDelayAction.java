@@ -20,11 +20,13 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.Action;
 
+import java.io.Serializable;
+
 /**
  * Used by ExecuteAndWaitInterceptorTest.
  *
  */
-public class ExecuteAndWaitDelayAction implements Action {
+public class ExecuteAndWaitDelayAction implements Action, Serializable {
 
     public String execute() throws Exception {
         Thread.sleep(500);

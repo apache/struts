@@ -178,6 +178,11 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     private static final Logger LOG = LogManager.getLogger(ExecuteAndWaitInterceptor.class);
 
     public static final String KEY = "__execWait";
+    /**
+     * WW-4900 Control the behaviour when we miss the background thread after session deserialization
+     * @since 2.6
+     */
+    public static final String KEY_HASHCODE = KEY + "_hashCode";
     public static final String WAIT = "wait";
     protected int delay;
     protected int delaySleepInterval = 100; // default sleep 100 millis before checking if background process is done
@@ -243,9 +248,17 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         synchronized (httpSession) {
             BackgroundProcess bp = (BackgroundProcess) session.get(KEY + name);
 
+            Integer bpHashCode = (Integer) session.get(KEY_HASHCODE + name);
+            if (bp != null && bpHashCode != null && bp.hashCode() != bpHashCode) {
+                //WW-4900 Is background thread missed? let's start a new one
+                session.remove(KEY + name);
+                bp = null;
+            }
+
             if ((!executeAfterValidationPass || secondTime) && bp == null) {
                 bp = getNewBackgroundProcess(name, actionInvocation, threadPriority);
                 session.put(KEY + name, bp);
+                session.put(KEY_HASHCODE + name, bp.hashCode());
                 performInitialDelay(bp); // first time let some time pass before showing wait page
                 secondTime = false;
             }

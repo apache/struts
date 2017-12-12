@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -32,13 +33,14 @@ import java.security.PrivilegedExceptionAction;
 import java.util.jar.JarFile;
 
 /**
- * WW-4901 Decouples Struts from {@link URL#openConnection()} implementation of container (e.g. IBM WebSphere com.ibm.ws.classloader.Handler$ClassLoaderURLConnection)
+ * WW-4901 Decouples from underlying implementation of {@link URL#openConnection()}
+ * e.g. from IBM WebSphere com.ibm.ws.classloader.Handler$ClassLoaderURLConnection
  * @since 2.5.15
  */
 class StrutsJarURLConnection extends JarURLConnection {
     private JarFile jarFile;
 
-    StrutsJarURLConnection(URL url) throws MalformedURLException {
+    private StrutsJarURLConnection(URL url) throws MalformedURLException {
         super(url);
     }
 
@@ -50,8 +52,9 @@ class StrutsJarURLConnection extends JarURLConnection {
 
     @Override
     public void connect() throws IOException {
-        if (connected)
+        if (connected) {
             return;
+        }
 
         try (final InputStream in = getJarFileURL().openConnection().getInputStream()) {
             jarFile = AccessController.doPrivileged(
@@ -81,13 +84,19 @@ class StrutsJarURLConnection extends JarURLConnection {
         }
     }
 
-    void disconnect() {
-        if (connected) {
-            connected = false;
+
+    static JarURLConnection openConnection(URL url) throws IOException {
+        URLConnection conn = url.openConnection();
+        if (conn instanceof JarURLConnection) {
+            return (JarURLConnection) conn;
+        } else {
             try {
-                jarFile.close();
+                conn.getInputStream().close();
             } catch (IOException ignored) {
             }
         }
+
+        StrutsJarURLConnection result = new StrutsJarURLConnection(url);
+        return result;
     }
 }

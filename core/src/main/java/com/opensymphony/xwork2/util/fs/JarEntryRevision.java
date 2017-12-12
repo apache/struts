@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
+import java.net.JarURLConnection;
 import java.net.URL;
 
 /**
@@ -36,9 +37,9 @@ public class JarEntryRevision extends Revision {
     private long lastModified;
 
     public static Revision build(URL fileUrl, FileManager fileManager) {
-        StrutsJarURLConnection conn = null;
+        JarURLConnection conn = null;
         try {
-            conn = new StrutsJarURLConnection(fileUrl);
+            conn = StrutsJarURLConnection.openConnection(fileUrl);
             conn.setUseCaches(false);
             URL url = fileManager.normalizeToFileProtocol(fileUrl);
             if (url != null) {
@@ -52,7 +53,10 @@ public class JarEntryRevision extends Revision {
         }
         finally {
             if(null != conn) {
-                conn.disconnect();
+                try {
+                    conn.getInputStream().close();
+                } catch (IOException ignored) {
+                }
             }
         }
     }
@@ -66,17 +70,20 @@ public class JarEntryRevision extends Revision {
     }
 
     public boolean needsReloading() {
-        StrutsJarURLConnection conn = null;
+        JarURLConnection conn = null;
         long lastLastModified = lastModified;
         try {
-            conn = new StrutsJarURLConnection(jarFileURL);
+            conn = StrutsJarURLConnection.openConnection(jarFileURL);
             conn.setUseCaches(false);
             lastLastModified = conn.getJarEntry().getTime();
         } catch (IOException ignored) {
         }
         finally {
             if(null != conn) {
-                conn.disconnect();
+                try {
+                    conn.getInputStream().close();
+                } catch (IOException ignored) {
+                }
             }
         }
 

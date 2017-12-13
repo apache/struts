@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
+import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -26,6 +27,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Test case for BackgroundProcessTest.
@@ -33,21 +37,35 @@ import java.io.ObjectOutputStream;
 public class BackgroundProcessTest extends StrutsInternalTestCase {
 
     public void testSerializeDeserialize() throws Exception {
-        MockActionInvocation invocation = new MockActionInvocation();
-        invocation.setResultCode("BackgroundProcessTest.testSerializeDeserialize");
+        final NotSerializableException expectedException = new NotSerializableException(new MockHttpServletRequest());
+        final Semaphore lock = new Semaphore(1);
+        lock.acquire();
+        MockActionInvocationWithActionInvoker invocation = new MockActionInvocationWithActionInvoker(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                lock.release();
+                throw expectedException;
+            }
+        });
         invocation.setInvocationContext(ActionContext.getContext());
 
         BackgroundProcess bp = new BackgroundProcess("BackgroundProcessTest.testSerializeDeserialize", invocation
                 , Thread.MIN_PRIORITY);
+        if(!lock.tryAcquire(1500L, TimeUnit.MILLISECONDS)) {
+            lock.release();
+            fail("background thread did not release lock on timeout");
+        }
+        lock.release();
 
-        bp.exception = new Exception();
+        bp.result = "BackgroundProcessTest.testSerializeDeserialize";
         bp.done = true;
+        Thread.sleep(1000);//give a chance to background thread to set exception
+        assertEquals(expectedException, bp.exception);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(bp);
         oos.close();
-        assertTrue("should have serialized data", baos.size() > 0);
         byte b[] = baos.toByteArray();
         baos.close();
 
@@ -61,5 +79,26 @@ public class BackgroundProcessTest extends StrutsInternalTestCase {
         assertNull("exception should not be serialized", deserializedBp.exception);
         assertEquals(bp.result, deserializedBp.result);
         assertEquals(bp.done, deserializedBp.done);
+    }
+
+
+    private class MockActionInvocationWithActionInvoker extends MockActionInvocation {
+        private Callable<String> actionInvoker;
+
+        MockActionInvocationWithActionInvoker(Callable<String> actionInvoker){
+            this.actionInvoker = actionInvoker;
+        }
+
+        @Override
+        public String invokeActionOnly() throws Exception {
+            return actionInvoker.call();
+        }
+    }
+
+    private class NotSerializableException extends Exception {
+        private MockHttpServletRequest notSerializableField;
+        NotSerializableException(MockHttpServletRequest notSerializableField) {
+            this.notSerializableField = notSerializableField;
+        }
     }
 }

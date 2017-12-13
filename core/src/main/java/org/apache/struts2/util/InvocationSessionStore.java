@@ -59,7 +59,7 @@ public class InvocationSessionStore {
         ValueStack stack = invocationContext.invocation.getStack();
         ActionContext.getContext().setValueStack(stack);
 
-        return invocationContext.invocation.deserialize(ActionContext.getContext());
+        return invocationContext.invocation;
     }
 
     /**
@@ -71,7 +71,7 @@ public class InvocationSessionStore {
      * @param invocation the action invocation
      */
     public static void storeInvocation(String key, String token, ActionInvocation invocation) {
-        InvocationContext invocationContext = new InvocationContext(invocation.serialize(), token);
+        InvocationContext invocationContext = new InvocationContext(invocation, token);
         Map invocationMap = getInvocationMap();
         invocationMap.put(key, invocationContext);
         setInvocationMap(invocationMap);

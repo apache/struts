@@ -556,8 +556,6 @@ public class JSONInterceptorTest extends StrutsTestCase {
 
 class MockActionInvocationEx extends MockActionInvocation {
 
-    private static final long serialVersionUID = 3057703805130170757L;
-
     private boolean invoked;
 
     @Override

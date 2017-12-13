@@ -500,27 +500,4 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
     }
 
-    /**
-     * Version ready to be serialize
-     *
-     * @return instance without reference to {@link Container}
-     */
-    public ActionInvocation serialize() {
-        DefaultActionInvocation that = this;
-        that.container = null;
-        return that;
-    }
-
-    /**
-     * Restoring Container
-     *
-     * @param actionContext current {@link ActionContext}
-     * @return instance which can be used to invoke action
-     */
-    public ActionInvocation deserialize(ActionContext actionContext) {
-        DefaultActionInvocation that = this;
-        that.container = actionContext.getContainer();
-        return that;
-    }
-
 }

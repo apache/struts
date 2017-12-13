@@ -110,7 +110,6 @@ public class DWRValidator {
     }
 
     public static class ValidatorActionInvocation extends DefaultActionInvocation {
-        private static final long serialVersionUID = -7645433725470191275L;
 
         protected ValidatorActionInvocation(Map<String, Object> extraContext, boolean pushAction) throws Exception {
             super(extraContext, pushAction);

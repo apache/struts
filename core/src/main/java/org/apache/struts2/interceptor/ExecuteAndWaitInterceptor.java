@@ -243,6 +243,12 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         synchronized (httpSession) {
             BackgroundProcess bp = (BackgroundProcess) session.get(KEY + name);
 
+            //WW-4900 Checks if from a de-serialized session? so background thread missed, let's start a new one.
+            if (bp != null && bp.getInvocation() == null) {
+                session.remove(KEY + name);
+                bp = null;
+            }
+
             if ((!executeAfterValidationPass || secondTime) && bp == null) {
                 bp = getNewBackgroundProcess(name, actionInvocation, threadPriority);
                 session.put(KEY + name, bp);

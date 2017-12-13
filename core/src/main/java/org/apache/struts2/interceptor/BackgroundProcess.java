@@ -45,7 +45,7 @@ public class BackgroundProcess implements Serializable {
      * @param invocation The action invocation
      * @param threadPriority The thread priority
      */
-    BackgroundProcess(String threadName, final ActionInvocation invocation, int threadPriority) {
+    public BackgroundProcess(String threadName, final ActionInvocation invocation, int threadPriority) {
         this.invocation = invocation;
         try {
             final Thread t = new Thread(new Runnable() {
@@ -75,7 +75,7 @@ public class BackgroundProcess implements Serializable {
      *
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
      */
-    private void beforeInvocation() throws Exception {
+    protected void beforeInvocation() throws Exception {
         ActionContext.setContext(invocation.getInvocationContext());
     }
 
@@ -86,7 +86,7 @@ public class BackgroundProcess implements Serializable {
      *
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
      */
-    private void afterInvocation() throws Exception {
+    protected void afterInvocation() throws Exception {
         ActionContext.setContext(null);
     }
 

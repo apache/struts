@@ -20,7 +20,6 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -56,10 +55,14 @@ public class InvocationSessionStore {
             return null;
         }
 
-        ValueStack stack = invocationContext.invocation.getStack();
-        ActionContext.getContext().setValueStack(stack);
+        ActionInvocation savedInvocation = null;
+        if (invocationContext.invocation != null) {
+            savedInvocation = invocationContext.invocation;
+            ActionContext.setContext(savedInvocation.getInvocationContext());
+            ActionContext.getContext().setValueStack(savedInvocation.getStack());
+        }
 
-        return invocationContext.invocation;
+        return savedInvocation;
     }
 
     /**
@@ -109,7 +112,9 @@ public class InvocationSessionStore {
 
         private static final long serialVersionUID = -286697666275777888L;
 
-        ActionInvocation invocation;
+        //WW-4873 transient since 2.5.15
+        transient ActionInvocation invocation;
+
         String token;
 
         public InvocationContext(ActionInvocation invocation, String token) {

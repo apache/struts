@@ -46,8 +46,6 @@ import java.util.Map;
  */
 public class RestActionInvocation extends DefaultActionInvocation {
 
-    private static final long serialVersionUID = 3485701178946428716L;
-
     private static final Logger LOG = LogManager.getLogger(RestActionInvocation.class);
 
     private ContentTypeHandlerManager handlerSelector;

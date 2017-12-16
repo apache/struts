@@ -75,34 +75,6 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertTrue(mockInterceptor3.isExecuted());
     }
 
-    public void testSerialization() throws Exception {
-        // given
-        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(new HashMap<String, Object>(), false);
-        actionInvocation.setContainer(new MockContainer());
-
-        // when
-        DefaultActionInvocation serializable = (DefaultActionInvocation) actionInvocation.serialize();
-
-        // then
-        assertNull(actionInvocation.container);
-        assertNull(serializable.container);
-    }
-
-    public void testDeserialization() throws Exception {
-        // given
-        DefaultActionInvocation actionInvocation = new DefaultActionInvocation(new HashMap<String, Object>(), false);
-        MockContainer mockContainer = new MockContainer();
-        ActionContext.getContext().setContainer(mockContainer);
-
-        // when
-        DefaultActionInvocation deserializable = (DefaultActionInvocation) actionInvocation.deserialize(ActionContext.getContext());
-
-        // then
-        assertNotNull(actionInvocation.container);
-        assertNotNull(deserializable.container);
-        assertEquals(mockContainer, deserializable.container);
-    }
-
     public void testInvokingExistingExecuteMethod() throws Exception {
         // given
         DefaultActionInvocation dai = new DefaultActionInvocation(new HashMap<String, Object>(), false) {

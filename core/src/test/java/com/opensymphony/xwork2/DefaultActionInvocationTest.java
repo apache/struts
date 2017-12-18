@@ -23,9 +23,8 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.mock.MockContainer;
 import com.opensymphony.xwork2.mock.MockInterceptor;
-import com.opensymphony.xwork2.mock.MockLazyInterceptor;
+import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -34,7 +33,6 @@ import org.apache.struts2.dispatcher.HttpParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -69,10 +67,22 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         container.inject(defaultActionInvocation);
         defaultActionInvocation.stack = container.getInstance(ValueStackFactory.class).createValueStack();
 
+        defaultActionInvocation.setResultCode("");//is possible when result is not executed already
         defaultActionInvocation.invoke();
         assertTrue(mockInterceptor1.isExecuted());
         assertTrue(mockInterceptor2.isExecuted());
         assertTrue(mockInterceptor3.isExecuted());
+        assertTrue(defaultActionInvocation.isExecuted());
+        try {
+            defaultActionInvocation.setResultCode("");
+            fail("should not possible when result already executed");
+        } catch (Exception ignored) {
+        }
+        try {
+            defaultActionInvocation.invoke();
+            fail("should not possible when result already executed");
+        } catch (Exception ignored) {
+        }
     }
 
     public void testInvokingExistingExecuteMethod() throws Exception {
@@ -312,6 +322,74 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertEquals("this is blah", action.getName());
     }
 
+    public void testActionEventListener() throws Exception {
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("",
+                "ExceptionFoo", "exceptionMethod", new HashMap<String, Object>());
+        DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
+
+        SimpleActionEventListener actionEventListener = new SimpleActionEventListener("prepared", "exceptionHandled");
+        defaultActionInvocation.setActionEventListener(actionEventListener);
+        defaultActionInvocation.init(actionProxy);
+
+        SimpleAction action = (SimpleAction) defaultActionInvocation.getAction();
+        action.setThrowException(true);
+
+        defaultActionInvocation.unknownHandlerManager = new DefaultUnknownHandlerManager() {
+            @Override
+            public boolean hasUnknownHandlers() {
+                return false;
+            }
+        };
+
+        String result = defaultActionInvocation.invoke();
+
+        // then
+        assertEquals("prepared", action.getName());
+        assertEquals("exceptionHandled", result);
+    }
+
+    public void testActionChainResult() throws Exception {
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "Foo", null,
+                new HashMap<String, Object>());
+        DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
+        defaultActionInvocation.init(actionProxy);
+
+        SimpleAction action = (SimpleAction) defaultActionInvocation.getAction();
+        action.setFoo(1);
+        action.setBar(2);
+
+        defaultActionInvocation.invoke();
+
+        // then
+        assertTrue(defaultActionInvocation.result instanceof ActionChainResult);
+        Result result = defaultActionInvocation.getResult();
+        assertTrue(result instanceof MockResult);
+    }
+
+    public void testNoResultDefined() throws Exception {
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "Foo", null,
+                new HashMap<String, Object>());
+        DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
+        defaultActionInvocation.init(actionProxy);
+
+        try {
+            defaultActionInvocation.invoke();//foo==bar so returns error which is not defined
+            fail("should not possible when result is not defined");
+        } catch (Exception ignored) {
+        }
+    }
+
+    public void testNullResultPossible() throws Exception {
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("",
+                "NullFoo", "nullMethod", new HashMap<String, Object>());
+        DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
+        defaultActionInvocation.init(actionProxy);
+
+        String result = defaultActionInvocation.invoke();
+
+        assertNull(result);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -322,6 +400,29 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         loadConfigurationProviders(configurationProvider);
     }
 
+
+    private class SimpleActionEventListener implements ActionEventListener {
+
+        private String name;
+        private String result;
+
+        SimpleActionEventListener(String name, String result) {
+
+            this.name = name;
+            this.result = result;
+        }
+
+        @Override
+        public Object prepare(Object action, ValueStack stack) {
+            ((SimpleAction)action).setName(name);
+            return action;
+        }
+
+        @Override
+        public String handleException(Throwable t, ValueStack stack) {
+            return result;
+        }
+    }
 }
 
 class DefaultActionInvocationTester extends DefaultActionInvocation {

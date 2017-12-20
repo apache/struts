@@ -98,7 +98,7 @@ public class TagUtils {
                 // last part (/foo/bar/baz.xyz -> /foo/bar)
 
                 String path = RequestUtils.getServletPath(request);
-                return path.substring(0, path.lastIndexOf("/"));
+                return path.substring(0, path.lastIndexOf('/'));
             }
         } else {
             return invocation.getProxy().getNamespace();

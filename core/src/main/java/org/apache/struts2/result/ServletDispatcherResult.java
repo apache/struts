@@ -137,8 +137,8 @@ public class ServletDispatcherResult extends StrutsResultSupport {
 
             //add parameters passed on the location to #parameters
             // see WW-2120
-            if (StringUtils.isNotEmpty(finalLocation) && finalLocation.indexOf("?") > 0) {
-                String queryString = finalLocation.substring(finalLocation.indexOf("?") + 1);
+            if (StringUtils.isNotEmpty(finalLocation) && finalLocation.indexOf('?') > 0) {
+                String queryString = finalLocation.substring(finalLocation.indexOf('?') + 1);
                 HttpParameters parameters = getParameters(invocation);
                 Map<String, Object> queryParams = urlHelper.parseQueryString(queryString, true);
                 if (queryParams != null && !queryParams.isEmpty()) {

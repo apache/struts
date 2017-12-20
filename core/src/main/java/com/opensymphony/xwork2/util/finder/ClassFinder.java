@@ -189,7 +189,7 @@ public interface ClassFinder {
         }
 
         public String getPackageName(){
-            return name.indexOf(".") > 0 ? name.substring(0, name.lastIndexOf(".")) : "" ;
+            return name.indexOf('.') > 0 ? name.substring(0, name.lastIndexOf('.')) : "" ;
         }
 
         public List<MethodInfo> getConstructors() {

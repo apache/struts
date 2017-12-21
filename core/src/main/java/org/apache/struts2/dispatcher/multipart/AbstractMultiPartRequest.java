@@ -131,8 +131,8 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     protected String getCanonicalName(final String originalFileName) {
         String fileName = originalFileName;
 
-        int forwardSlash = fileName.lastIndexOf("/");
-        int backwardSlash = fileName.lastIndexOf("\\");
+        int forwardSlash = fileName.lastIndexOf('/');
+        int backwardSlash = fileName.lastIndexOf('\\');
         if (forwardSlash != -1 && forwardSlash > backwardSlash) {
             fileName = fileName.substring(forwardSlash + 1, fileName.length());
         } else {

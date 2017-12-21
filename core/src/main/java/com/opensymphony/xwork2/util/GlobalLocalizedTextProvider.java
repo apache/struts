@@ -171,8 +171,8 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
             indexedTextName = aTextName;
 
-            while ((i = indexedTextName.indexOf("[", i + 1)) != -1) {
-                int j = indexedTextName.indexOf("]", i);
+            while ((i = indexedTextName.indexOf('[', i + 1)) != -1) {
+                int j = indexedTextName.indexOf(']', i);
                 String a = indexedTextName.substring(0, i);
                 String b = indexedTextName.substring(j);
                 indexedTextName = a + "[*" + b;

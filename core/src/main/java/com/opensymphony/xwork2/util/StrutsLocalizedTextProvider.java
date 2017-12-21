@@ -232,8 +232,8 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
             indexedTextName = aTextName;
 
-            while ((i = indexedTextName.indexOf("[", i + 1)) != -1) {
-                int j = indexedTextName.indexOf("]", i);
+            while ((i = indexedTextName.indexOf('[', i + 1)) != -1) {
+                int j = indexedTextName.indexOf(']', i);
                 String a = indexedTextName.substring(0, i);
                 String b = indexedTextName.substring(j);
                 indexedTextName = a + "[*" + b;
@@ -293,14 +293,14 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
         }
 
         // see if it's a child property
-        int idx = aTextName.indexOf(".");
+        int idx = aTextName.indexOf('.');
 
         if (idx != -1) {
             String newKey = null;
             String prop = null;
 
             if (aTextName.startsWith(XWorkConverter.CONVERSION_ERROR_PROPERTY_PREFIX)) {
-                idx = aTextName.indexOf(".", XWorkConverter.CONVERSION_ERROR_PROPERTY_PREFIX.length());
+                idx = aTextName.indexOf('.', XWorkConverter.CONVERSION_ERROR_PROPERTY_PREFIX.length());
 
                 if (idx != -1) {
                     prop = aTextName.substring(XWorkConverter.CONVERSION_ERROR_PROPERTY_PREFIX.length(), idx);

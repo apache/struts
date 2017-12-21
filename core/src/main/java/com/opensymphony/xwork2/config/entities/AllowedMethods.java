@@ -56,7 +56,7 @@ public class AllowedMethods {
             if (isPattern && !method.startsWith("regex:") && !strictMethodInvocation) {
                 allowedMethods.add(new PatternAllowedMethod(methodPattern.toString(), method));
             } else if (method.startsWith("regex:")) {
-                String pattern = method.substring(method.indexOf(":") + 1);
+                String pattern = method.substring(method.indexOf(':') + 1);
                 allowedMethods.add(new PatternAllowedMethod(pattern, method));
             } else if (method.contains("*") && !method.startsWith("regex:") && !strictMethodInvocation) {
                 String pattern = method.replace("*", defaultRegex);

@@ -564,12 +564,12 @@ public class Dispatcher {
             ActionProxy proxy;
 
             //check if we are probably in an async resuming
-            ActionInvocation inv = ActionContext.getContext().getActionInvocation();
-            if (inv == null || inv.isExecuted()) {
+            ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
+            if (invocation == null || invocation.isExecuted()) {
                 proxy = getContainer().getInstance(ActionProxyFactory.class).createActionProxy(namespace, name, method,
                         extraContext, true, false);
             } else {
-                proxy = inv.getProxy();
+                proxy = invocation.getProxy();
             }
 
             request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());

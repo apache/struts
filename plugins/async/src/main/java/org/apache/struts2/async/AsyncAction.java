@@ -27,6 +27,12 @@ import java.util.concurrent.Executor;
  * @since 2.6
  */
 public class AsyncAction implements Callable {
+
+    /**
+     * The action invocation was successful but did not return the result before timeout.
+     */
+    public static final String TIMEOUT = "timeout";
+
     private Callable callable;
     private Long timeout;
     private Executor executor;

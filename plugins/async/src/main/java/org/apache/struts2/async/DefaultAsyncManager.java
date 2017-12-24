@@ -132,7 +132,7 @@ public class DefaultAsyncManager implements AsyncManager, AsyncListener {
     @Override
     public void onTimeout(AsyncEvent asyncEvent) throws IOException {
         LOG.debug("Processing timeout for " + asyncEvent.getAsyncContext());
-        setAsyncActionResultAndDispatch("timeout");
+        setAsyncActionResultAndDispatch(AsyncAction.TIMEOUT);
     }
 
     @Override

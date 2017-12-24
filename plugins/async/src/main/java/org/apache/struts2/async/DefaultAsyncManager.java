@@ -106,7 +106,7 @@ public class DefaultAsyncManager implements AsyncManager, AsyncListener {
 
         String log = "Async result [" + asyncActionResult + "] of " + asyncContext;
         if (asyncCompleted) {
-            LOG.error(log + " - could not complete result executing due to timeout or network error");
+            LOG.debug(log + " - could not complete result executing due to timeout or network error");
         } else {
             LOG.debug(log + " - dispatching request to execute result in container");
             asyncContext.dispatch();

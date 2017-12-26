@@ -235,6 +235,7 @@
                             <li><s:a value="/token/index.html">Token</s:a></li>
                             <li><s:url var="url" namespace="/modelDriven" action="modelDriven"/><s:a
                                     href="%{url}">Model Driven</s:a></li>
+                            <li><s:a value="/async/index.html">Async</s:a></li>
                         </ul>
                     </li>
                     <li class="dropdown">

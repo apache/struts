@@ -163,8 +163,8 @@ public class DefaultActionMapper implements ActionMapper {
                                 }
                             }
                             if (!allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
-                                if (actionName.lastIndexOf("/") != -1) {
-                                    actionName = actionName.substring(actionName.lastIndexOf("/") + 1);
+                                if (actionName.lastIndexOf('/') != -1) {
+                                    actionName = actionName.substring(actionName.lastIndexOf('/') + 1);
                                 }
                             }
                             mapping.setName(actionName);
@@ -271,7 +271,7 @@ public class DefaultActionMapper implements ActionMapper {
         ActionMapping mapping = new ActionMapping();
         String uri = RequestUtils.getUri(request);
 
-        int indexOfSemicolon = uri.indexOf(";");
+        int indexOfSemicolon = uri.indexOf(';');
         uri = (indexOfSemicolon > -1) ? uri.substring(0, indexOfSemicolon) : uri;
 
         uri = dropExtension(uri, mapping);
@@ -291,7 +291,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowDynamicMethodCalls) {
             // handle "name!method" convention.
             String name = mapping.getName();
-            int exclamation = name.lastIndexOf("!");
+            int exclamation = name.lastIndexOf('!');
             if (exclamation != -1) {
                 mapping.setName(name.substring(0, exclamation));
 
@@ -341,7 +341,7 @@ public class DefaultActionMapper implements ActionMapper {
      */
     protected void parseNameAndNamespace(String uri, ActionMapping mapping, ConfigurationManager configManager) {
         String namespace, name;
-        int lastSlash = uri.lastIndexOf("/");
+        int lastSlash = uri.lastIndexOf('/');
         if (lastSlash == -1) {
             namespace = "";
             name = uri;

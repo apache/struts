@@ -108,12 +108,13 @@ public abstract class BaseOsgiHost implements OsgiHost {
                 configProps.put(AutoProcessor.AUTO_START_PROP + ".2", StringUtils.join(bundles, " "));
             }
         } else {
-            for (String runLevel : runLevels.keySet()) {
-                if ("1".endsWith(runLevel)) {
+            for (Map.Entry<String, String> runLevel : runLevels.entrySet()) {
+                String runLevelKey = runLevel.getKey();
+                if ("1".endsWith(runLevelKey)) {
                     throw new StrutsException("Run level dirs must be greater than 1. Run level 1 is reserved for the Felix bundles");
                 }
-                List<String> bundles = getBundlesInDir(runLevels.get(runLevel));
-                configProps.put(AutoProcessor.AUTO_START_PROP + "." + runLevel, StringUtils.join(bundles, " "));
+                List<String> bundles = getBundlesInDir(runLevel.getValue());
+                configProps.put(AutoProcessor.AUTO_START_PROP + "." + runLevelKey, StringUtils.join(bundles, " "));
             }
         }
     }

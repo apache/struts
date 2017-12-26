@@ -142,7 +142,7 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
 
     protected String getFinalTemplateName(Template template) {
         String t = template.toString();
-        if (t.indexOf(".") <= 0) {
+        if (t.indexOf('.') <= 0) {
             return t + "." + getSuffix();
         }
         return t;

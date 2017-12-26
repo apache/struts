@@ -146,7 +146,7 @@ public abstract class AbstractDirective extends Directive {
         // node.value uses the StrutsValueStack to evaluate the directive's value parameter
         String param = node.value(contextAdapter).toString();
 
-        int idx = param.indexOf("=");
+        int idx = param.indexOf('=');
 
         if (idx != -1) {
             String property = param.substring(0, idx);

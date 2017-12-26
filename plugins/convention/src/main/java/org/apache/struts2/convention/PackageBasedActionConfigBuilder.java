@@ -681,8 +681,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         && actionAnnotation == null && actionsAnnotation == null
                         && (alwaysMapExecute || map.isEmpty())) {
                     boolean found = false;
-                    for (String method : map.keySet()) {
-                        List<Action> actions = map.get(method);
+                    for (List<Action> actions : map.values()) {
                         for (Action action : actions) {
 
                             // Check if there are duplicate action names in the annotations.
@@ -709,8 +708,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 }
 
                 // Build the actions for the annotations
-                for (String method : map.keySet()) {
-                    List<Action> actions = map.get(method);
+                for (Map.Entry<String, List<Action>> entry : map.entrySet()) {
+                    String method = entry.getKey();
+                    List<Action> actions = entry.getValue();
                     for (Action action : actions) {
                         PackageConfig.Builder pkgCfg = defaultPackageConfig;
                         if (action.value().contains("/") && !slashesInActionNames) {

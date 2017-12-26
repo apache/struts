@@ -140,8 +140,6 @@ public abstract class OldDecorator2NewStrutsDecorator extends BaseWebAppDecorato
 
     static class DummyActionInvocation implements ActionInvocation {
 
-        private static final long serialVersionUID = -4808072199157363028L;
-
         ActionSupport action;
 
         public DummyActionInvocation(ActionSupport action) {
@@ -194,14 +192,6 @@ public abstract class OldDecorator2NewStrutsDecorator extends BaseWebAppDecorato
         }
 
         public void init(ActionProxy proxy) {
-        }
-
-        public ActionInvocation serialize() {
-            return null;
-        }
-
-        public ActionInvocation deserialize(ActionContext actionContext) {
-            return null;
         }
 
     }

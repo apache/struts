@@ -29,6 +29,7 @@ public class StrutsTextProviderFactory implements TextProviderFactory {
 
     protected LocaleProviderFactory localeProviderFactory;
     protected LocalizedTextProvider localizedTextProvider;
+    protected TextProvider defaultTextProvider;
 
     @Inject
     public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
@@ -38,6 +39,11 @@ public class StrutsTextProviderFactory implements TextProviderFactory {
     @Inject
     public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
         this.localizedTextProvider = localizedTextProvider;
+    }
+
+    @Inject(required = false)
+    public void setDefaultTextProvider(TextProvider defaultTextProvider) {
+        this.defaultTextProvider = defaultTextProvider;
     }
 
     @Override
@@ -61,10 +67,18 @@ public class StrutsTextProviderFactory implements TextProviderFactory {
     }
 
     protected TextProvider getTextProvider(Class clazz) {
+        if (defaultTextProvider != null) {
+            return defaultTextProvider;
+        }
+
         return new TextProviderSupport(clazz, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
     }
 
     protected TextProvider getTextProvider(ResourceBundle bundle) {
+        if (defaultTextProvider != null) {
+            return defaultTextProvider;
+        }
+
         return new TextProviderSupport(bundle, localeProviderFactory.createLocaleProvider(), localizedTextProvider);
     }
 

@@ -305,6 +305,46 @@ public class TextTagTest extends AbstractTagTest {
         assertEquals("No foo here", stack.findString("myId")); // is in stack now
     }
 
+    public void testEscapeHtml() throws Exception {
+        final String key = "foo.escape.html";
+        final String value = "1 &lt; 2";
+        tag.setName(key);
+        tag.setEscapeHtml(true);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(value, writer.toString());
+    }
+
+    public void testEscapeXml() throws Exception {
+        final String key = "foo.escape.xml";
+        final String value = "&lt;&gt;&apos;&quot;&amp;";
+        tag.setName(key);
+        tag.setEscapeXml(true);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(value, writer.toString());
+    }
+
+    public void testEscapeJavaScript() throws Exception {
+        final String key = "foo.escape.javascript";
+        final String value = "\\t\\b\\n\\f\\r\\\"\\\'\\/\\\\";
+        tag.setName(key);
+        tag.setEscapeJavaScript(true);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(value, writer.toString());
+    }
+
+    public void testEscapeCsv() throws Exception {
+        final String key = "foo.escape.csv";
+        final String value = "\"something,\"\",\"\"\"";
+        tag.setName(key);
+        tag.setEscapeCsv(true);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(value, writer.toString());
+    }
+
     /**
      * todo remove ActionContext set after LocalizedTextUtil is fixed to not use ThreadLocal
      *

@@ -29,7 +29,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-parent</artifactId>
-    <version>2.5.14-SNAPSHOT</version>
+    <version>2.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/</url>
@@ -48,20 +48,20 @@
     -->
 
     <scm>
-        <connection>scm:git:git://git.apache.org/struts.git</connection>
-        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/struts.git</developerConnection>
-        <url>http://git.apache.org/struts.git</url>
+        <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
+        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
+        <url>https://github.com/apache/struts/</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>JIRA</system>
-        <url>https://issues.apache.org/jira/browse/WW</url>
+        <url>https://issues.apache.org/jira/projects/WW</url>
     </issueManagement>
 
     <ciManagement>
         <system>Jenkins</system>
-        <url>https://builds.apache.org/hudson/view/S-Z/view/Struts</url>
+        <url>https://builds.apache.org/view/S-Z/view/Struts/</url>
         <notifiers>
             <notifier>
                 <type>mail</type>
@@ -102,10 +102,14 @@
         <asm.version>5.2</asm.version>
         <tiles.version>3.0.7</tiles.version>
         <tiles-request.version>1.0.6</tiles-request.version>
-        <log4j2.version>2.9.0</log4j2.version>
+        <log4j2.version>2.9.1</log4j2.version>
+        <jackson.version>2.9.2</jackson.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.6</fluido-skin.version>
+
+        <!-- Sonar -->
+        <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
     </properties>
 
     <profiles>
@@ -163,6 +167,10 @@
             <activation>
                 <jdk>9</jdk>
             </activation>
+            <properties>
+                <!-- coverall version 4.3.0 does not work with java 9, see https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
+                <coveralls.skip>true</coveralls.skip>
+            </properties>
             <build>
                 <pluginManagement>
                     <plugins>
@@ -175,6 +183,41 @@
                         </plugin>
                     </plugins>
                 </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>travis-coveralls</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <version>2.7</version>
+                        <configuration>
+                            <format>xml</format>
+                            <maxmem>256m</maxmem>
+                            <!-- aggregated reports for multi-module projects -->
+                            <aggregate>true</aggregate>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.eluder.coveralls</groupId>
+                        <artifactId>coveralls-maven-plugin</artifactId>
+                        <version>4.3.0</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>update-impact</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.updateimpact</groupId>
+                        <artifactId>updateimpact-maven-plugin</artifactId>
+                        <version>1.0.10</version>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
     </profiles>
@@ -268,8 +311,11 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.0.2</version>
                     <configuration>
+                        <suppressionFiles>
+                            <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
+                        </suppressionFiles>
                         <failBuildOnCVSS>8</failBuildOnCVSS>
                         <skipProvidedScope>true</skipProvidedScope>
                         <skipRuntimeScope>true</skipRuntimeScope>
@@ -391,6 +437,20 @@
                     <reportSet>
                         <reports>
                             <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.5</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependency-updates-report</report>
+                            <report>plugin-updates-report</report>
+                            <report>property-updates-report</report>
                         </reports>
                     </reportSet>
                 </reportSets>
@@ -1002,12 +1062,12 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.8.2</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.8.2</version>
+                <version>${jackson.version}</version>
             </dependency>
 
             <!-- CDI & Weld -->

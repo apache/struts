@@ -271,7 +271,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
         try {
             String rawUrl = url;
             if (url.contains("?")) {
-                rawUrl = url.substring(0, url.indexOf("?"));
+                rawUrl = url.substring(0, url.indexOf('?'));
             }
             URI uri = URI.create(rawUrl.replaceAll(" ", "%20"));
             if (uri.isAbsolute()) {

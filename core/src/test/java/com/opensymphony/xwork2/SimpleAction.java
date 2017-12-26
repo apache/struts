@@ -229,6 +229,10 @@ public class SimpleAction extends ActionSupport {
         return "OK";
     }
 
+    public String nullMethod() {
+        return null;
+    }
+
     @Override
     public String execute() throws Exception {
         if (foo == bar) {

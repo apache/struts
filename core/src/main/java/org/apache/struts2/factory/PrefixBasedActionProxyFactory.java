@@ -60,16 +60,10 @@ public class PrefixBasedActionProxyFactory extends DefaultActionProxyFactory {
     private static final Logger LOG = LogManager.getLogger(PrefixBasedActionProxyFactory.class);
 
     private Map<String, ActionProxyFactory> actionProxyFactories = new HashMap<>();
-    private ActionProxyFactory defaultFactory;
 
     @Inject
     public void setContainer(Container container) {
         this.container = container;
-    }
-
-    @Inject(StrutsConstants.STRUTS_ACTIONPROXYFACTORY)
-    public void setActionProxyFactory(ActionProxyFactory factory) {
-        this.defaultFactory = factory;
     }
 
     @Inject(StrutsConstants.PREFIX_BASED_MAPPER_CONFIGURATION)
@@ -106,8 +100,8 @@ public class PrefixBasedActionProxyFactory extends DefaultActionProxyFactory {
                 LOG.debug("No ActionProxyFactory defined for [{}]", key);
             }
         }
-        LOG.debug("Cannot find any matching ActionProxyFactory, falling back to [{}]", defaultFactory);
-        return defaultFactory.createActionProxy(namespace, actionName, methodName, extraContext, executeResult, cleanupContext);
+        LOG.debug("Cannot find any matching ActionProxyFactory, falling back to [{}]", super.getClass().getName());
+        return super.createActionProxy(namespace, actionName, methodName, extraContext, executeResult, cleanupContext);
     }
 
 }

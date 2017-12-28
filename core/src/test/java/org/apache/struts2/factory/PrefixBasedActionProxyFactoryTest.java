@@ -2,9 +2,11 @@ package org.apache.struts2.factory;
 
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.DefaultActionProxy;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
@@ -19,11 +21,10 @@ import java.util.Map;
 
 public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
 
+    private PrefixBasedActionProxyFactory factory;
+
     public void testDifferentPrefixes() throws Exception {
-        PrefixBasedActionProxyFactory factory = new PrefixBasedActionProxyFactory();
-        factory.setContainer(container);
-        factory.setPrefixBasedActionProxyFactories("/ns1:prefix1,/ns2:prefix2");
-        factory.init();
+        initFactory("/ns1:prefix1,/ns2:prefix2");
 
         ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
@@ -32,9 +33,20 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
         assertTrue(proxy2 instanceof Prefix2ActionProxy);
     }
 
+    public void testFallbackToDefault() throws Exception {
+        initFactory("/ns1:prefix1");
+
+        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
+        assertTrue(proxy1 instanceof Prefix1ActionProxy);
+
+        ActionProxy proxy2 = factory.createActionProxy("", "Foo", "", Collections.<String, Object>emptyMap(), false, true);
+        assertTrue(proxy2 instanceof DefaultActionProxy);
+    }
+
     @Override
     public void setUp() throws Exception {
-        ConfigurationProvider[] providers = new ConfigurationProvider[] {
+        ConfigurationProvider[] providers = new ConfigurationProvider[]{
+                new XmlConfigurationProvider("xwork-sample.xml"),
                 new StubConfigurationProvider() {
                     @Override
                     public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
@@ -60,6 +72,14 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
         };
 
         loadConfigurationProviders(providers);
+
+        factory = new PrefixBasedActionProxyFactory();
+        factory.setContainer(container);
+    }
+
+    void initFactory(String prefixes) {
+        factory.setPrefixBasedActionProxyFactories(prefixes);
+        factory.init();
     }
 
     public static class Prefix1Factory extends DefaultActionProxyFactory {

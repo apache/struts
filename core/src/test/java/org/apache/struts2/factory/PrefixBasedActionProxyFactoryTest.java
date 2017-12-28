@@ -2,7 +2,6 @@ package org.apache.struts2.factory;
 
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.DefaultActionProxy;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -40,7 +39,7 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
 
         ActionProxy proxy2 = factory.createActionProxy("", "Foo", "", Collections.<String, Object>emptyMap(), false, true);
-        assertTrue(proxy2 instanceof DefaultActionProxy);
+        assertTrue(proxy2 instanceof StrutsActionProxy);
     }
 
     @Override

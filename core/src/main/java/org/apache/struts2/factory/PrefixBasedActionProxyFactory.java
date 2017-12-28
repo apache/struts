@@ -59,7 +59,7 @@ import java.util.Set;
  * </pre>
  * <!-- END SNIPPET: description -->
  */
-public class PrefixBasedActionProxyFactory extends DefaultActionProxyFactory implements Initializable {
+public class PrefixBasedActionProxyFactory extends StrutsActionProxyFactory implements Initializable {
 
     private static final Logger LOG = LogManager.getLogger(PrefixBasedActionProxyFactory.class);
 

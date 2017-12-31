@@ -42,6 +42,16 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
         assertTrue(proxy2 instanceof StrutsActionProxy);
     }
 
+    public void testEmptyPrefix() throws Exception {
+        initFactory(":prefix1");
+
+        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
+        assertTrue(proxy1 instanceof Prefix1ActionProxy);
+
+        ActionProxy proxy2 = factory.createActionProxy("/ns2", "", "", Collections.<String, Object>emptyMap(), false, true);
+        assertTrue(proxy2 instanceof Prefix1ActionProxy);
+    }
+
     @Override
     public void setUp() throws Exception {
         ConfigurationProvider[] providers = new ConfigurationProvider[]{

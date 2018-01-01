@@ -41,7 +41,7 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
     private PrefixBasedActionProxyFactory factory;
 
     public void testDifferentPrefixes() throws Exception {
-        factory.setPrefixBasedActionProxyFactories("/ns1:prefix1,/ns2:prefix2");
+        initFactory("/ns1:prefix1,/ns2:prefix2");
 
         ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
@@ -51,7 +51,7 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
     }
 
     public void testFallbackToDefault() throws Exception {
-        factory.setPrefixBasedActionProxyFactories("/ns1:prefix1");
+        initFactory("/ns1:prefix1");
 
         ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
@@ -61,7 +61,7 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
     }
 
     public void testEmptyPrefix() throws Exception {
-        factory.setPrefixBasedActionProxyFactories(":prefix1");
+        initFactory(":prefix1");
 
         ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
@@ -81,7 +81,9 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
                             public Object create(Context context) throws Exception {
                                 return new Prefix1Factory();
                             }
-
+                            public Class type() {
+                                return Prefix1Factory.class;
+                            }
                         }, Scope.SINGLETON);
                     }
                 },
@@ -92,7 +94,9 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
                             public Object create(Context context) throws Exception {
                                 return new Prefix2Factory();
                             }
-
+                            public Class type() {
+                                return Prefix2Factory.class;
+                            }
                         }, Scope.SINGLETON);
                     }
                 }
@@ -102,6 +106,11 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
 
         factory = new PrefixBasedActionProxyFactory();
         factory.setContainer(container);
+    }
+
+    void initFactory(String list) {
+        factory.setPrefixBasedActionProxyFactories(list);
+        factory.init();
     }
 
     @Override

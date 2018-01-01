@@ -23,7 +23,7 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
     private PrefixBasedActionProxyFactory factory;
 
     public void testDifferentPrefixes() throws Exception {
-        initFactory("/ns1:prefix1,/ns2:prefix2");
+        factory.setPrefixBasedActionProxyFactories("/ns1:prefix1,/ns2:prefix2");
 
         ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
@@ -33,7 +33,7 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
     }
 
     public void testFallbackToDefault() throws Exception {
-        initFactory("/ns1:prefix1");
+        factory.setPrefixBasedActionProxyFactories("/ns1:prefix1");
 
         ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
@@ -43,7 +43,7 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
     }
 
     public void testEmptyPrefix() throws Exception {
-        initFactory(":prefix1");
+        factory.setPrefixBasedActionProxyFactories(":prefix1");
 
         ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
@@ -86,9 +86,10 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
         factory.setContainer(container);
     }
 
-    void initFactory(String prefixes) {
-        factory.setPrefixBasedActionProxyFactories(prefixes);
-        factory.init();
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+        factory = null;
     }
 
     public static class Prefix1Factory extends DefaultActionProxyFactory {

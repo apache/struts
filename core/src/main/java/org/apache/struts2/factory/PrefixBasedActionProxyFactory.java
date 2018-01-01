@@ -59,12 +59,11 @@ import java.util.Set;
  * </pre>
  * <!-- END SNIPPET: description -->
  */
-public class PrefixBasedActionProxyFactory extends StrutsActionProxyFactory implements Initializable {
+public class PrefixBasedActionProxyFactory extends StrutsActionProxyFactory {
 
     private static final Logger LOG = LogManager.getLogger(PrefixBasedActionProxyFactory.class);
 
     private Map<String, ActionProxyFactory> actionProxyFactories = new HashMap<>();
-    private Set<String> prefixes = new HashSet<>();
 
     @Inject
     public void setContainer(Container container) {
@@ -74,22 +73,18 @@ public class PrefixBasedActionProxyFactory extends StrutsActionProxyFactory impl
     @Inject(StrutsConstants.PREFIX_BASED_MAPPER_CONFIGURATION)
     public void setPrefixBasedActionProxyFactories(String list) {
         if (list != null) {
-            prefixes = new HashSet<>(Arrays.asList(list.split(",")));
-        }
-    }
-
-    @Override
-    public void init() {
-        for (String factory : prefixes) {
-            String[] thisFactory = factory.split(":");
-            if (thisFactory.length == 2) {
-                String factoryPrefix = thisFactory[0].trim();
-                String factoryName = thisFactory[1].trim();
-                ActionProxyFactory obj = container.getInstance(ActionProxyFactory.class, factoryName);
-                if (obj != null) {
-                    actionProxyFactories.put(factoryPrefix, obj);
-                } else {
-                    LOG.warn("Invalid PrefixBasedActionProxyFactory config entry: [{}]", factory);
+            Set<String> prefixes = new HashSet<>(Arrays.asList(list.split(",")));
+            for (String factory : prefixes) {
+                String[] thisFactory = factory.split(":");
+                if (thisFactory.length == 2) {
+                    String factoryPrefix = thisFactory[0].trim();
+                    String factoryName = thisFactory[1].trim();
+                    ActionProxyFactory obj = container.getInstance(ActionProxyFactory.class, factoryName);
+                    if (obj != null) {
+                        actionProxyFactories.put(factoryPrefix, obj);
+                    } else {
+                        LOG.warn("Invalid PrefixBasedActionProxyFactory config entry: [{}]", factory);
+                    }
                 }
             }
         }

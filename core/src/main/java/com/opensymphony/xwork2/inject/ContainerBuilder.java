@@ -57,6 +57,11 @@ public final class ContainerBuilder {
                 public Container create(InternalContext context) {
                     return context.getContainer();
                 }
+
+                @Override
+                public Class<? extends Container> type() {
+                    return Container.class;
+                }
             };
 
     private static final InternalFactory<Logger> LOGGER_FACTORY =
@@ -65,6 +70,11 @@ public final class ContainerBuilder {
                     Member member = context.getExternalContext().getMember();
                     return member == null ? Logger.getAnonymousLogger()
                             : Logger.getLogger(member.getDeclaringClass().getName());
+                }
+
+                @Override
+                public Class<? extends Logger> type() {
+                    return Logger.class;
                 }
             };
 
@@ -92,7 +102,7 @@ public final class ContainerBuilder {
         if (scope == Scope.SINGLETON) {
             singletonFactories.add(createCallableFactory(key, scopedFactory));
         }
-        if (Initializable.class.isAssignableFrom(key.getType())) {
+        if (Initializable.class.isAssignableFrom(factory.type())) {
             initializableFactories.add(createCallableFactory(key, scopedFactory));
         }
         return this;
@@ -107,6 +117,11 @@ public final class ContainerBuilder {
                 } finally {
                     context.setExternalContext(null);
                 }
+            }
+
+            @Override
+            public Class<? extends T> type() {
+                return scopedFactory.type();
             }
         };
     }
@@ -143,6 +158,11 @@ public final class ContainerBuilder {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+            }
+
+            @Override
+            public Class<? extends T> type() {
+                return factory.type();
             }
 
             @Override
@@ -229,6 +249,11 @@ public final class ContainerBuilder {
                             context.getContainerImpl().getConstructor(implementation);
                 }
                 return (T) constructor.construct(context, type);
+            }
+
+            @Override
+            public Class<? extends T> type() {
+                return implementation;
             }
 
             @Override
@@ -513,6 +538,11 @@ public final class ContainerBuilder {
         InternalFactory<T> factory = new InternalFactory<T>() {
             public T create(InternalContext ignored) {
                 return value;
+            }
+
+            @Override
+            public Class<? extends T> type() {
+                return (Class<? extends T>) value.getClass();
             }
 
             @Override

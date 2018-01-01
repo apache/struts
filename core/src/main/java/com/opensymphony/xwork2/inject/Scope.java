@@ -56,6 +56,11 @@ public enum Scope {
                 }
 
                 @Override
+                public Class<? extends T> type() {
+                    return factory.type();
+                }
+
+                @Override
                 public String toString() {
                     return factory.toString();
                 }
@@ -90,6 +95,11 @@ public enum Scope {
                 }
 
                 @Override
+                public Class<? extends T> type() {
+                    return factory.type();
+                }
+
+                @Override
                 public String toString() {
                     return factory.toString();
                 }
@@ -112,6 +122,11 @@ public enum Scope {
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
+                }
+
+                @Override
+                public Class<? extends T> type() {
+                    return factory.type();
                 }
 
                 @Override
@@ -140,6 +155,11 @@ public enum Scope {
                 }
 
                 @Override
+                public Class<? extends T> type() {
+                    return factory.type();
+                }
+
+                @Override
                 public String toString() {
                     return factory.toString();
                 }
@@ -162,6 +182,11 @@ public enum Scope {
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
+                }
+
+                @Override
+                public Class<? extends T> type() {
+                    return factory.type();
                 }
 
                 @Override

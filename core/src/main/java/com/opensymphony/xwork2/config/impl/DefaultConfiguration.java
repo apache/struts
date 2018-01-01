@@ -172,6 +172,11 @@ public class DefaultConfiguration implements Configuration {
             public Configuration create(Context context) throws Exception {
                 return DefaultConfiguration.this;
             }
+
+            @Override
+            public Class<? extends Configuration> type() {
+                return DefaultConfiguration.this.getClass();
+            }
         });
 
         ActionContext oldContext = ActionContext.getContext();

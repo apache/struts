@@ -113,5 +113,10 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
                 throw new ConfigurationException("Unable to load bean "+type.getName()+" ("+name+")");
             }
         }
+
+        @Override
+        public Class type() {
+            return type;
+        }
     }
 }

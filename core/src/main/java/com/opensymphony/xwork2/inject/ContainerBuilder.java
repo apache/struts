@@ -99,12 +99,14 @@ public final class ContainerBuilder {
         checkKey(key);
         final InternalFactory<? extends T> scopedFactory = scope.scopeFactory(key.getType(), key.getName(), factory);
         factories.put(key, scopedFactory);
-        if (scope == Scope.SINGLETON) {
-            singletonFactories.add(createCallableFactory(key, scopedFactory));
-        }
+
+        InternalFactory<T> callableFactory = createCallableFactory(key, scopedFactory);
         if (Initializable.class.isAssignableFrom(factory.type())) {
-            initializableFactories.add(createCallableFactory(key, scopedFactory));
+            initializableFactories.add(callableFactory);
+        } else if (scope == Scope.SINGLETON) {
+            singletonFactories.add(callableFactory);
         }
+
         return this;
     }
 

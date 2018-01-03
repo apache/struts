@@ -1261,8 +1261,9 @@ public abstract class UIBean extends Component {
         for (Object o : params.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
             String key = (String) entry.getKey();
-            if(!isValidTagAttribute(key) && !key.equals("dynamicAttributes"))
+            if (!isValidTagAttribute(key) && !key.equals("dynamicAttributes")) {
                 dynamicAttributes.put(key, entry.getValue());
+            }
         }
     }
 

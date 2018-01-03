@@ -28,26 +28,26 @@ import java.io.Writer;
  *
  */
 public interface UrlRenderer {
-	
-	/**
-	 * Preprocessing step
-	 * @param provider The {@link UrlProvider} component that "owns" this renderer.
-	 */
-	void beforeRenderUrl(UrlProvider provider);
-	
-	/**
-	 * Render a URL.
-	 * @param writer A writer that the implementation can use to write the result to.
-	 * @param provider The {@link UrlProvider} component that "owns" this renderer.
-	 */
-	void renderUrl(Writer writer, UrlProvider provider);
-	
-	/**
-	 * Render a Form URL.
-	 * @param formComponent The {@link Form} component that "owns" this renderer.
-	 */
-	void renderFormUrl(Form formComponent);
 
-      void setActionMapper(ActionMapper actionMapper);
+    /**
+     * Preprocessing step
+     * @param provider The {@link UrlProvider} component that "owns" this renderer.
+     */
+    void beforeRenderUrl(UrlProvider provider);
+
+    /**
+     * Render a URL.
+     * @param writer A writer that the implementation can use to write the result to.
+     * @param provider The {@link UrlProvider} component that "owns" this renderer.
+     */
+    void renderUrl(Writer writer, UrlProvider provider);
+
+    /**
+     * Render a Form URL.
+     * @param formComponent The {@link Form} component that "owns" this renderer.
+     */
+    void renderFormUrl(Form formComponent);
+
+    void setActionMapper(ActionMapper actionMapper);
 
 }

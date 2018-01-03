@@ -99,16 +99,17 @@ public class Anchor extends ClosingUIBean {
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        if (href != null)
+        if (href != null) {
             addParameter("href", ensureAttributeSafelyNotEscaped(findString(href)));
-        else {
+        } else {
             //no href, build it from URL attributes
             StringWriter sw = new StringWriter();
             urlRenderer.beforeRenderUrl(urlProvider);
             urlRenderer.renderUrl(sw, urlProvider);
             String builtHref = sw.toString();
-            if (StringUtils.isNotEmpty(builtHref))
+            if (StringUtils.isNotEmpty(builtHref)) {
                 addParameter("href", ensureAttributeSafelyNotEscaped(builtHref));
+            }
         }
     }
 
@@ -147,8 +148,7 @@ public class Anchor extends ClosingUIBean {
             mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
         } catch (Exception e) {
             LOG.error("error when rendering", e);
-        }
-        finally {
+        } finally {
             popComponentStack();
         }
 
@@ -164,8 +164,9 @@ public class Anchor extends ClosingUIBean {
          */
         if (processingTagBody) {
             this.urlParameters.put(key, value);
-        } else
+        } else {
             super.addParameter(key, value);
+        }
     }
 
     @Override
@@ -177,8 +178,9 @@ public class Anchor extends ClosingUIBean {
          */
         if (processingTagBody) {
             this.urlParameters.putAll(params);
-        } else
+        } else {
             super.addAllParameters(params);
+        }
     }
 
     public UrlProvider getUrlProvider() {

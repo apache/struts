@@ -883,7 +883,7 @@ public abstract class UIBean extends Component {
         evaluateExtraParams();
     }
 
-	protected String escape(String name) {
+    protected String escape(String name) {
         // escape any possible values that can make the ID painful to work with in JavaScript
         if (name != null) {
             return name.replaceAll("[\\/\\.\\[\\]]", "_");
@@ -930,7 +930,7 @@ public abstract class UIBean extends Component {
             form.addParameter("customOnsubmitEnabled", Boolean.TRUE);
         } else {
             if (LOG.isWarnEnabled()) {
-        	LOG.warn("Cannot find an Ancestor form, custom onsubmit is NOT enabled");
+                LOG.warn("Cannot find an Ancestor form, custom onsubmit is NOT enabled");
             }
         }
     }
@@ -1240,7 +1240,7 @@ public abstract class UIBean extends Component {
         this.tooltipIconPath = tooltipIconPath;
     }
 
-	public void setDynamicAttributes(Map<String, Object> tagDynamicAttributes) {
+    public void setDynamicAttributes(Map<String, Object> tagDynamicAttributes) {
         for (Map.Entry<String, Object> entry : tagDynamicAttributes.entrySet()) {
             String key = entry.getKey();
 
@@ -1250,12 +1250,12 @@ public abstract class UIBean extends Component {
         }
     }
 
-	@Override
-	/**
-	 * supports dynamic attributes for freemarker ui tags
-	 * @see https://issues.apache.org/jira/browse/WW-3174
+    @Override
+    /**
+     * supports dynamic attributes for freemarker ui tags
+     * @see https://issues.apache.org/jira/browse/WW-3174
      * @see https://issues.apache.org/jira/browse/WW-4166
-	 */
+     */
     public void copyParams(Map params) {
         super.copyParams(params);
         for (Object o : params.entrySet()) {

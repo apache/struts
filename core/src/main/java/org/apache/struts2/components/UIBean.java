@@ -528,6 +528,7 @@ public abstract class UIBean extends Component {
         this.templateEngineManager = mgr;
     }
 
+    @Override
     public boolean end(Writer writer, String body) {
         evaluateParams();
         try {

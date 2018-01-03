@@ -47,7 +47,7 @@ public final class ContainerBuilder {
 
     final Map<Key<?>, InternalFactory<?>> factories = new HashMap<>();
     final List<InternalFactory<?>> singletonFactories = new ArrayList<>();
-    final List<InternalFactory<?>> initializableFactories = new ArrayList<>();
+    final List<InternalFactory<?>> earlyInitializableFactories = new ArrayList<>();
     final List<Class<?>> staticInjections = new ArrayList<>();
     boolean created;
     boolean allowDuplicates = false;
@@ -101,8 +101,8 @@ public final class ContainerBuilder {
         factories.put(key, scopedFactory);
 
         InternalFactory<T> callableFactory = createCallableFactory(key, scopedFactory);
-        if (Initializable.class.isAssignableFrom(factory.type())) {
-            initializableFactories.add(callableFactory);
+        if (EarlyInitializable.class.isAssignableFrom(factory.type())) {
+            earlyInitializableFactories.add(callableFactory);
         } else if (scope == Scope.SINGLETON) {
             singletonFactories.add(callableFactory);
         }
@@ -608,22 +608,30 @@ public final class ContainerBuilder {
     public Container create(boolean loadSingletons) {
         ensureNotCreated();
         created = true;
-        final ContainerImpl container = new ContainerImpl(new HashMap<>(factories));
+
+        final Map<Key<?>, InternalFactory<?>> realFactories = new HashMap<>();
+
+        for (Map.Entry<Key<?>, InternalFactory<?>> entry : factories.entrySet()) {
+            realFactories.put(entry.getKey(), InitializableFactory.wrapIfNeeded(entry.getValue()));
+        }
+
+        final ContainerImpl container = new ContainerImpl(realFactories);
+
         if (loadSingletons) {
             container.callInContext(new ContainerImpl.ContextualCallable<Void>() {
                 public Void call(InternalContext context) {
                     for (InternalFactory<?> factory : singletonFactories) {
-                        factory.create(context);
+                        InitializableFactory.wrapIfNeeded(factory).create(context);
                     }
                     return null;
                 }
             });
         }
+
         container.callInContext(new ContainerImpl.ContextualCallable<Void>() {
             public Void call(InternalContext context) {
-            for (InternalFactory<?> factory : initializableFactories) {
-                Initializable instance = (Initializable) factory.create(context);
-                instance.init();
+            for (InternalFactory<?> factory : earlyInitializableFactories) {
+                InitializableFactory.wrapIfNeeded(factory).create(context);
             }
             return null;
             }

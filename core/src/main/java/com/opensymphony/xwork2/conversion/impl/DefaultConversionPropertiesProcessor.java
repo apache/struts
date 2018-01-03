@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.TypeConverterCreator;
 import com.opensymphony.xwork2.conversion.TypeConverterHolder;
+import com.opensymphony.xwork2.inject.EarlyInitializable;
 import com.opensymphony.xwork2.inject.Initializable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -35,7 +36,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-public class DefaultConversionPropertiesProcessor implements ConversionPropertiesProcessor, Initializable {
+public class DefaultConversionPropertiesProcessor implements ConversionPropertiesProcessor, EarlyInitializable {
 
     private static final Logger LOG = LogManager.getLogger(DefaultConversionPropertiesProcessor.class);
 

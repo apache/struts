@@ -80,14 +80,17 @@ public class Anchor extends ClosingUIBean {
         urlProvider.setHttpServletResponse(response);
     }
 
+    @Override
     public String getDefaultOpenTemplate() {
         return OPEN_TEMPLATE;
     }
 
+    @Override
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
 
+    @Override
     public boolean usesBody() {
         return true;
     }
@@ -135,6 +138,7 @@ public class Anchor extends ClosingUIBean {
     /**
      * Overrides to be able to render body in a template rather than always before the template
      */
+    @Override
     public boolean end(Writer writer, String body) {
         this.processingTagBody = false;
         evaluateParams();
@@ -151,7 +155,7 @@ public class Anchor extends ClosingUIBean {
         return false;
     }
 
-
+    @Override
     public void addParameter(String key, Object value) {
         /*
           the parameters added by this method are used in the template. this method is also
@@ -196,6 +200,7 @@ public class Anchor extends ClosingUIBean {
         urlProvider.setScheme(scheme);
     }
 
+    @Override
     @StrutsTagAttribute(description = "The target value to use, if not using action")
     public void setValue(String value) {
         urlProvider.setValue(value);

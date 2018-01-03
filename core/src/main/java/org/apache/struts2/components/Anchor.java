@@ -115,10 +115,10 @@ public class Anchor extends ClosingUIBean {
     }
 
     @Inject
-	public void setUrlRenderer(UrlRenderer urlRenderer) {
-		urlProvider.setUrlRenderer(urlRenderer);
+    public void setUrlRenderer(UrlRenderer urlRenderer) {
+        urlProvider.setUrlRenderer(urlRenderer);
         this.urlRenderer = urlRenderer;
-	}
+    }
 
     @Inject(required=false)
     public void setExtraParameterProvider(ExtraParameterProvider provider) {

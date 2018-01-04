@@ -19,10 +19,15 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.components.template.Template;
+import org.apache.struts2.components.template.TemplateEngine;
+import org.apache.struts2.components.template.TemplateEngineManager;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+
 
 import java.util.Collections;
 import java.util.Map;
@@ -159,6 +164,28 @@ public class UIBeanTest extends StrutsInternalTestCase {
 
         TextField txtFld = new TextField(stack, req, res);
         assertEquals("12", txtFld.getTheme());
+    }
+
+    public void testMergeTemplateNullEngineException() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        //templateEngineManager that returns null as TemplateEngine
+        TemplateEngineManager templateEngineManager = new TemplateEngineManager() {
+            public TemplateEngine getTemplateEngine(Template template, String templateTypeOverride) {
+                return null;
+            }
+        };
+        TextField txtFld = new TextField(stack, req, res);
+
+        txtFld.setTemplateEngineManager(templateEngineManager);
+
+        try {
+            txtFld.mergeTemplate(null, new Template(null, null, null));
+            fail("Exception not thrown");
+        } catch(final Exception e){
+            assertTrue(e instanceof ConfigurationException);
+        }
     }
 
 }

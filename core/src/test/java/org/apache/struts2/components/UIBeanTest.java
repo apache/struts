@@ -258,4 +258,17 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("template", txtFld.getTemplateDir());
     }
 
+    public void testSetAccesskey() {
+        String accesskeyValue = "myAccesskey";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setAccesskey(accesskeyValue);
+        txtFld.evaluateParams();
+
+        assertEquals(accesskeyValue, txtFld.getParameters().get("accesskey"));
+    }
+
 }

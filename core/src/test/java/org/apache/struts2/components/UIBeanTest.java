@@ -197,11 +197,65 @@ public class UIBeanTest extends StrutsInternalTestCase {
 
         TextField txtFld = new TextField(stack, req, res);
         
-	Template defaultTemplate = txtFld.buildTemplateName(null, defaultTemplateName);
-	Template customTemplate = txtFld.buildTemplateName(customTemplateName, defaultTemplateName);
+        Template defaultTemplate = txtFld.buildTemplateName(null, defaultTemplateName);
+        Template customTemplate = txtFld.buildTemplateName(customTemplateName, defaultTemplateName);
 
         assertEquals(defaultTemplateName, defaultTemplate.getName());
         assertEquals(customTemplateName, customTemplate.getName());
+    }
+
+    public void testGetTemplateDirExplicit() throws Exception {
+        String explicitTemplateDir = "explicitTemplateDirectory";
+        String attrTemplateDir = "attrTemplateDirectory";
+        String defaultTemplateDir = "defaultTemplateDirectory";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Map context = Collections.singletonMap("templateDir", attrTemplateDir);
+        ActionContext.getContext().put("attr", context);
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setTemplateDir(explicitTemplateDir);
+        txtFld.setDefaultTemplateDir(defaultTemplateDir);
+
+        assertEquals(explicitTemplateDir, txtFld.getTemplateDir());
+    }
+
+    public void testGetTemplateDirAttr() throws Exception {
+        String attrTemplateDir = "attrTemplateDirectory";
+        String defaultTemplateDir = "defaultTemplateDirectory";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Map context = Collections.singletonMap("templateDir", attrTemplateDir);
+        ActionContext.getContext().put("attr", context);
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setDefaultTemplateDir(defaultTemplateDir);
+
+        assertEquals(attrTemplateDir, txtFld.getTemplateDir());
+    }
+
+    public void testGetTemplateDirDefault() throws Exception {
+        String defaultTemplateDir = "defaultTemplateDirectory";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setDefaultTemplateDir(defaultTemplateDir);
+
+        assertEquals(defaultTemplateDir, txtFld.getTemplateDir());
+    }
+
+    public void testGetTemplateDirNoneSet() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+
+        assertEquals("template", txtFld.getTemplateDir());
     }
 
 }

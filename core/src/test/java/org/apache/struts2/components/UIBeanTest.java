@@ -188,4 +188,20 @@ public class UIBeanTest extends StrutsInternalTestCase {
         }
     }
 
+    public void testBuildTemplate() throws Exception {
+        String defaultTemplateName = "default";
+        String customTemplateName = "custom";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        
+	Template defaultTemplate = txtFld.buildTemplateName(null, defaultTemplateName);
+	Template customTemplate = txtFld.buildTemplateName(customTemplateName, defaultTemplateName);
+
+        assertEquals(defaultTemplateName, defaultTemplate.getName());
+        assertEquals(customTemplateName, customTemplate.getName());
+    }
+
 }

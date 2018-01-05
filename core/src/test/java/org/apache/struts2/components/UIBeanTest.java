@@ -292,4 +292,17 @@ public class UIBeanTest extends StrutsInternalTestCase {
 
         assertEquals(cssClass, txtFld.getParameters().get("cssClass"));
     }
+
+    public void testSetStyle() {
+        String cssStyle = "insertCssStyleHere";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setStyle(cssStyle);
+        txtFld.evaluateParams();
+
+        assertEquals(cssStyle, txtFld.getParameters().get("cssStyle"));
+    }
 }

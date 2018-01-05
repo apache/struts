@@ -32,10 +32,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- *
- * @version $Date$ $Id$
- */
 public class UIBeanTest extends StrutsInternalTestCase {
 
     public void testPopulateComponentHtmlId1() throws Exception {

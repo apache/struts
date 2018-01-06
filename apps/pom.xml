@@ -99,7 +99,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${struts2.springPlatformVersion}</version>
+            <version>${spring.platformVersion}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

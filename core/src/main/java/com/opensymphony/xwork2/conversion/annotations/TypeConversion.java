@@ -82,15 +82,15 @@ import java.lang.annotation.Target;
  * </tr>
  * <tr>
  * <td>converter</td>
- * <td>DEPRECATED: either this or value</td>
+ * <td>either this or value</td>
  * <td>&nbsp;</td>
- * <td>The class name of the TypeConverter to be used as converter.</td>
+ * <td>The class or bean name of the TypeConverter to be used as converter.</td>
  * </tr>
  * <tr>
  * <td>converterClass</td>
  * <td>either this or value</td>
- * <td>&nbsp;</td>
- * <td>The class of the TypeConverter to be used as converter. XWorkBasicConverter by default.</td>
+ * <td>XWorkBasicConverter</td>
+ * <td>The class of the TypeConverter to be used as converter.</td>
  * </tr>
  * <tr>
  * <td>value</td>
@@ -181,14 +181,13 @@ public @interface TypeConversion {
     ConversionRule rule() default ConversionRule.PROPERTY;
 
     /**
-     * The class of the TypeConverter to be used as converter.
+     * The class or bean name of the TypeConverter to be used as converter.
      *
      * Note: This can not be used with ConversionRule.KEY_PROPERTY!
      *
-     * @return class of the TypeConverter to be used as converter
-     * @deprecated user {@link #converterClass()} instead
+     * @return class or bean name of the TypeConverter to be used as converter
+     * @see {@link #converterClass()}
      */
-    @Deprecated
     String converter() default "";
 
     /**

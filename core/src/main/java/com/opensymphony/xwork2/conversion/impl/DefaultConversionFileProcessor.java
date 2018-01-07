@@ -86,7 +86,7 @@ public class DefaultConversionFileProcessor implements ConversionFileProcessor {
                     //for keys of Maps
                     else if (key.startsWith(DefaultObjectTypeDeterminer.KEY_PREFIX)) {
 
-                        Class converterClass = Thread.currentThread().getContextClassLoader().loadClass((String) entry.getValue());
+                        Class converterClass = ClassLoaderUtil.loadClass((String) entry.getValue(), this.getClass());
 
                         //check if the converter is a type converter if it is one
                         //then just put it in the map as is. Otherwise
@@ -102,7 +102,7 @@ public class DefaultConversionFileProcessor implements ConversionFileProcessor {
                     }
                     //elements(values) of maps / lists
                     else {
-                        Class _c = Thread.currentThread().getContextClassLoader().loadClass((String) entry.getValue());
+                        Class _c = ClassLoaderUtil.loadClass((String) entry.getValue(), this.getClass());
                         LOG.debug("\t{}:{} [treated as Class {}]", key, entry.getValue(), _c);
                         mapping.put(key, _c);
                     }

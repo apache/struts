@@ -106,7 +106,7 @@ public class Foo {
         this.annotatedCats = annotatedCats;
     }
 
-    @TypeConversion(type = ConversionType.CLASS, rule = ConversionRule.ELEMENT, converterClass = Cat.class)
+    @TypeConversion(rule = ConversionRule.ELEMENT, converterClass = Cat.class)
     public List getAnnotatedCats() {
         return annotatedCats;
     }
@@ -169,12 +169,12 @@ public class Foo {
         this.barCollection = barCollection;
     }
 
-    @TypeConversion(type = ConversionType.CLASS, rule = ConversionRule.KEY_PROPERTY, value = "id")
+    @TypeConversion(rule = ConversionRule.KEY_PROPERTY, value = "id")
     public void setAnnotatedBarCollection(Collection annotatedBarCollection) {
         this.annotatedBarCollection = annotatedBarCollection;
     }
 
-    @TypeConversion(type = ConversionType.CLASS, rule = ConversionRule.ELEMENT, converterClass = Bar.class)
+    @TypeConversion(rule = ConversionRule.ELEMENT, converter = "com.opensymphony.xwork2.util.Bar")
     public Collection getAnnotatedBarCollection() {
         return annotatedBarCollection;
     }

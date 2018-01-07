@@ -85,7 +85,7 @@ public class AnnotatedTestBean {
         return bar;
     }
 
-    @TypeConversion(converterClass = FooBarConverter.class)
+    @TypeConversion(converter = "com.opensymphony.xwork2.conversion.impl.FooBarConverter")
     public void setSupperBarObj(Bar b) {
         bar = b;
     }

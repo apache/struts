@@ -36,12 +36,10 @@ import java.util.Map;
  */
 @Conversion(
         conversions= {
-                @TypeConversion(key = "Key_annotatedBeanMap", type = ConversionType.CLASS, rule = ConversionRule.KEY, converterClass = Long.class),
-                @TypeConversion(key = "KeyProperty_annotatedBeanMap", type = ConversionType.CLASS, rule = ConversionRule.KEY_PROPERTY, value = "id"),
-                @TypeConversion(key = "Element_annotatedBeanMap", type = ConversionType.CLASS, rule = ConversionRule.ELEMENT, converterClass = MyBean.class),
-                @TypeConversion(key = "CreateIfNull_annotatedBeanList", type = ConversionType.CLASS, rule = ConversionRule.CREATE_IF_NULL, value = "true"),
-                @TypeConversion(key = "KeyProperty_annotatedBeanList", type = ConversionType.CLASS, rule = ConversionRule.KEY_PROPERTY, value = "id"),
-                @TypeConversion(key = "Element_annotatedBeanList", type = ConversionType.CLASS, rule = ConversionRule.ELEMENT, converterClass = MyBean.class)
+                @TypeConversion(key = "KeyProperty_annotatedBeanMap", rule = ConversionRule.KEY_PROPERTY, value = "id"),
+                @TypeConversion(key = "Element_annotatedBeanMap", rule = ConversionRule.ELEMENT, converterClass = MyBean.class),
+                @TypeConversion(key = "KeyProperty_annotatedBeanList", rule = ConversionRule.KEY_PROPERTY, value = "id"),
+                @TypeConversion(key = "Element_annotatedBeanList", rule = ConversionRule.ELEMENT, converterClass = MyBean.class)
         })
 public class MyBeanAction implements Action {
 
@@ -70,6 +68,7 @@ public class MyBeanAction implements Action {
         return annotatedBeanMap;
     }
 
+    @TypeConversion(rule = ConversionRule.KEY, converterClass = Long.class)
     public void setAnnotatedBeanMap(Map annotatedBeanMap) {
         this.annotatedBeanMap = annotatedBeanMap;
     }
@@ -78,6 +77,7 @@ public class MyBeanAction implements Action {
         return annotatedBeanList;
     }
 
+    @TypeConversion(rule = ConversionRule.CREATE_IF_NULL, value = "true")
     public void setAnnotatedBeanList(List annotatedBeanList) {
         this.annotatedBeanList = annotatedBeanList;
     }

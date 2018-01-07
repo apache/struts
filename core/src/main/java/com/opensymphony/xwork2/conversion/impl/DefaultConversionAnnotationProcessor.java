@@ -69,7 +69,7 @@ public class DefaultConversionAnnotationProcessor implements ConversionAnnotatio
                     mapping.put(key, tc.value());
                 }
                 //for properties of classes
-                else if (tc.rule() != ConversionRule.ELEMENT || tc.rule() == ConversionRule.KEY || tc.rule() == ConversionRule.COLLECTION) {
+                else if (tc.rule() != ConversionRule.ELEMENT && tc.rule() != ConversionRule.KEY && tc.rule() != ConversionRule.COLLECTION) {
                     if (StringUtils.isNoneEmpty(tc.converter())) {
                         mapping.put(key, converterCreator.createTypeConverter(tc.converter()));
                     } else {

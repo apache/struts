@@ -500,14 +500,31 @@ public class XWorkConverter extends DefaultTypeConverter {
             for (Annotation annotation : annotations) {
                 if (annotation instanceof TypeConversion) {
                     TypeConversion tc = (TypeConversion) annotation;
-                    if (mapping.containsKey(tc.key())) {
-                        break;
-                    }
                     String key = tc.key();
-                    // Default to the property name
+                    // Default to the property name with prefix
                     if (StringUtils.isEmpty(key)) {
                         key = AnnotationUtils.resolvePropertyName(method);
+                        switch (tc.rule()) {
+                            case COLLECTION:
+                                key = DefaultObjectTypeDeterminer.DEPRECATED_ELEMENT_PREFIX + key;
+                                break;
+                            case CREATE_IF_NULL:
+                                key = DefaultObjectTypeDeterminer.CREATE_IF_NULL_PREFIX + key;
+                                break;
+                            case ELEMENT:
+                                key = DefaultObjectTypeDeterminer.ELEMENT_PREFIX + key;
+                                break;
+                            case KEY:
+                                key = DefaultObjectTypeDeterminer.KEY_PREFIX + key;
+                                break;
+                            case KEY_PROPERTY:
+                                key = DefaultObjectTypeDeterminer.KEY_PROPERTY_PREFIX + key;
+                                break;
+                        }
                         LOG.debug("Retrieved key [{}] from method name [{}]", key, method.getName());
+                    }
+                    if (mapping.containsKey(key)) {
+                        break;
                     }
                     annotationProcessor.process(mapping, tc, key);
                 }

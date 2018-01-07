@@ -733,11 +733,24 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals("Cat One", ((Cat) foo.getCats().get(0)).getName());
         assertEquals("Cat Two", ((Cat) foo.getCats().get(1)).getName());
 
+        vs.setValue("annotatedCats[0].name", "Cat One By Annotation");
+        vs.setValue("annotatedCats[1].name", "Cat Two By Annotation");
+        assertNotNull(foo.getAnnotatedCats());
+        assertEquals(2, foo.getAnnotatedCats().size());
+        assertEquals("Cat One By Annotation", ((Cat) foo.getAnnotatedCats().get(0)).getName());
+        assertEquals("Cat Two By Annotation", ((Cat) foo.getAnnotatedCats().get(1)).getName());
+
         vs.setValue("cats[0].foo.cats[1].name", "Deep null cat");
         assertNotNull(((Cat) foo.getCats().get(0)).getFoo());
         assertNotNull(((Cat) foo.getCats().get(0)).getFoo().getCats());
         assertNotNull(((Cat) foo.getCats().get(0)).getFoo().getCats().get(1));
         assertEquals("Deep null cat", ((Cat) ((Cat) foo.getCats().get(0)).getFoo().getCats().get(1)).getName());
+
+        vs.setValue("annotatedCats[0].foo.annotatedCats[1].name", "Deep null cat by annotation");
+        assertNotNull(((Cat) foo.getAnnotatedCats().get(0)).getFoo());
+        assertNotNull(((Cat) foo.getAnnotatedCats().get(0)).getFoo().getAnnotatedCats());
+        assertNotNull(((Cat) foo.getAnnotatedCats().get(0)).getFoo().getAnnotatedCats().get(1));
+        assertEquals("Deep null cat by annotation", ((Cat) ((Cat) foo.getAnnotatedCats().get(0)).getFoo().getAnnotatedCats().get(1)).getName());
     }
 
     public void testSetMultiple() {

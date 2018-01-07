@@ -244,6 +244,7 @@ public class SetPropertiesTest extends XWorkTestCase {
         Bar bar2 = new Bar();
         bar2.setId(new Long(22));
         barColl.add(bar2);
+        foo.setAnnotatedBarCollection(barColl);
         //try modifying bar1 and bar2
         //check the logs here to make sure
         //the Map is being created
@@ -262,13 +263,31 @@ public class SetPropertiesTest extends XWorkTestCase {
                 assertEquals(bar1Title, next.getTitle());
             }
         }
+        Bar bar3 = new Bar();
+        bar3.setId(new Long(33));
+        barColl.add(bar3);
+        Bar bar4 = new Bar();
+        bar4.setId(new Long(44));
+        barColl.add(bar4);
+        String bar1TitleByAnnotation = "The Phantom Menace By Annotation";
+        String bar2TitleByAnnotation = "The Clone Wars By Annotation";
+        vs.setValue("annotatedBarCollection(44).title", bar2TitleByAnnotation);
+        vs.setValue("annotatedBarCollection(33).title", bar1TitleByAnnotation);
+        for (Object aBarColl : barColl) {
+            Bar next = (Bar) aBarColl;
+            if (next.getId().intValue() == 44) {
+                assertEquals(bar2TitleByAnnotation, next.getTitle());
+            } else if (next.getId().intValue() == 33) {
+                assertEquals(bar1TitleByAnnotation, next.getTitle());
+            }
+        }
         //now test adding to a collection
         String bar3Title = "Revenge of the Sith";
         String bar4Title = "A New Hope";
         vs.setValue("barCollection.makeNew[4].title", bar4Title, true);
         vs.setValue("barCollection.makeNew[0].title", bar3Title, true);
 
-        assertEquals(4, barColl.size());
+        assertEquals(6, barColl.size());
 
         for (Object aBarColl : barColl) {
             Bar next = (Bar) aBarColl;
@@ -279,6 +298,24 @@ public class SetPropertiesTest extends XWorkTestCase {
             }
         }
 
+        //now test adding to a collection by annotation
+        String bar3TitleByAnnotation = "Revenge of the Sith By Annotation";
+        String bar4TitleByAnnotation = "A New Hope By Annotation";
+        vs.setValue("annotatedBarCollection.makeNew[5].title", bar4TitleByAnnotation, true);
+        vs.setValue("annotatedBarCollection.makeNew[1].title", bar3TitleByAnnotation, true);
+
+        assertEquals(8, barColl.size());
+
+        for (Object aBarColl : barColl) {
+            Bar next = (Bar) aBarColl;
+            if (next.getId() == null) {
+                assertNotNull(next.getTitle());
+                assertTrue(next.getTitle().equals(bar4TitleByAnnotation)
+                        || next.getTitle().equals(bar3TitleByAnnotation)
+                        || next.getTitle().equals(bar4Title)
+                        || next.getTitle().equals(bar3Title));
+            }
+        }
     }
     public void testAddingToCollectionBasedOnPermission() {
         final MockObjectTypeDeterminer determiner = new MockObjectTypeDeterminer(Long.class,Bar.class,"id",true);

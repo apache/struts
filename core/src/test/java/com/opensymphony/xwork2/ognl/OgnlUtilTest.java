@@ -582,7 +582,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         // just do some of the 15 tests
         Map beans = ognlUtil.getBeanMap(foo);
         assertNotNull(beans);
-        assertEquals(19, beans.size());
+        assertEquals(21, beans.size());
         assertEquals("Hello Santa", beans.get("title"));
         assertEquals(new Long("123"), beans.get("ALong"));
         assertEquals(new Integer("44"), beans.get("number"));

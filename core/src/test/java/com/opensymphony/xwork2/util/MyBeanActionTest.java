@@ -39,6 +39,9 @@ public class MyBeanActionTest extends XWorkTestCase {
         params.put("beanList(1234567890).name", "This is the bla bean");
         params.put("beanList(1234567891).name", "This is the 2nd bla bean");
 
+        params.put("annotatedBeanList(1234567890).name", "This is the bla bean by annotation");
+        params.put("annotatedBeanList(1234567891).name", "This is the 2nd bla bean by annotation");
+
         HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
@@ -53,6 +56,15 @@ public class MyBeanActionTest extends XWorkTestCase {
             assertEquals(new Long(1234567890), Long.valueOf(proxy.getInvocation().getStack().findValue("beanList.get(0).id").toString()));
             assertEquals("This is the 2nd bla bean", proxy.getInvocation().getStack().findValue("beanList.get(1).name"));
             assertEquals(new Long(1234567891), Long.valueOf(proxy.getInvocation().getStack().findValue("beanList.get(1).id").toString()));
+
+            assertEquals(2, Integer.parseInt(proxy.getInvocation().getStack().findValue("annotatedBeanList.size").toString()));
+            assertEquals(MyBean.class.getName(), proxy.getInvocation().getStack().findValue("annotatedBeanList.get(0)").getClass().getName());
+            assertEquals(MyBean.class.getName(), proxy.getInvocation().getStack().findValue("annotatedBeanList.get(1)").getClass().getName());
+
+            assertEquals("This is the bla bean by annotation", proxy.getInvocation().getStack().findValue("annotatedBeanList.get(0).name"));
+            assertEquals(new Long(1234567890), Long.valueOf(proxy.getInvocation().getStack().findValue("annotatedBeanList.get(0).id").toString()));
+            assertEquals("This is the 2nd bla bean by annotation", proxy.getInvocation().getStack().findValue("annotatedBeanList.get(1).name"));
+            assertEquals(new Long(1234567891), Long.valueOf(proxy.getInvocation().getStack().findValue("annotatedBeanList.get(1).id").toString()));
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -66,6 +78,12 @@ public class MyBeanActionTest extends XWorkTestCase {
 
         params.put("beanMap[1234567890].name", "This is the bla bean");
         params.put("beanMap[1234567891].name", "This is the 2nd bla bean");
+
+        params.put("annotatedBeanMap[1234567890].id", "1234567890");
+        params.put("annotatedBeanMap[1234567891].id", "1234567891");
+
+        params.put("annotatedBeanMap[1234567890].name", "This is the bla bean by annotation");
+        params.put("annotatedBeanMap[1234567891].name", "This is the 2nd bla bean by annotation");
 
         HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
@@ -89,6 +107,21 @@ public class MyBeanActionTest extends XWorkTestCase {
 
             assertEquals("1234567890", proxy.getInvocation().getStack().findValue("beanMap.get(1234567890L).id").toString());
             assertEquals("1234567891", proxy.getInvocation().getStack().findValue("beanMap.get(1234567891L).id").toString());
+
+            assertEquals(2, Integer.parseInt(proxy.getInvocation().getStack().findValue("annotatedBeanMap.size").toString()));
+
+            assertEquals(true, action.getAnnotatedBeanMap().containsKey(1234567890L));
+            assertEquals(true, action.getAnnotatedBeanMap().containsKey(1234567891L));
+
+
+            assertEquals(MyBean.class.getName(), proxy.getInvocation().getStack().findValue("annotatedBeanMap.get(1234567890L)").getClass().getName());
+            assertEquals(MyBean.class.getName(), proxy.getInvocation().getStack().findValue("annotatedBeanMap.get(1234567891L)").getClass().getName());
+
+            assertEquals("This is the bla bean by annotation", proxy.getInvocation().getStack().findValue("annotatedBeanMap.get(1234567890L).name"));
+            assertEquals("This is the 2nd bla bean by annotation", proxy.getInvocation().getStack().findValue("annotatedBeanMap.get(1234567891L).name"));
+
+            assertEquals("1234567890", proxy.getInvocation().getStack().findValue("annotatedBeanMap.get(1234567890L).id").toString());
+            assertEquals("1234567891", proxy.getInvocation().getStack().findValue("annotatedBeanMap.get(1234567891L).id").toString());
         } catch (Exception e) {
             e.printStackTrace();
             fail();

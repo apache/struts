@@ -37,6 +37,8 @@ public class ContainerImplTest extends TestCase {
         ContainerBuilder cb = new ContainerBuilder();
         cb.constant("methodCheck.name", "Lukasz");
         cb.constant("fieldCheck.name", "Lukasz");
+        cb.factory(EarlyInitializableCheck.class, EarlyInitializableCheck.class, Scope.SINGLETON);
+        cb.factory(InitializableCheck.class, InitializableCheck.class, Scope.SINGLETON);
         c = cb.create(false);
     }
 
@@ -107,6 +109,25 @@ public class ContainerImplTest extends TestCase {
         } catch (DependencyException expected) {
             // that was expected
         }
+    }
+
+    public void testEarlyInitializable() throws Exception {
+        assertTrue("should being initialized already", EarlyInitializableCheck.initializedEarly);
+
+        EarlyInitializableCheck earlyInitializableCheck = c.getInstance(EarlyInitializableCheck.class);
+        assertEquals("initialized early", earlyInitializableCheck.getMessage());
+        earlyInitializableCheck = c.getInstance(EarlyInitializableCheck.class);
+        assertEquals("initialized early", earlyInitializableCheck.getMessage());
+    }
+
+    public void testInitializable() throws Exception {
+        assertFalse("should not being initialized already", InitializableCheck.initialized);
+
+        InitializableCheck initializableCheck = c.getInstance(InitializableCheck.class);
+        assertTrue("should being initialized here", InitializableCheck.initialized);
+        assertEquals("initialized", initializableCheck.getMessage());
+        initializableCheck = c.getInstance(InitializableCheck.class);
+        assertEquals("initialized", initializableCheck.getMessage());
     }
 
     class FieldCheck {

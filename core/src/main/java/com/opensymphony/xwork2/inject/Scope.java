@@ -33,7 +33,7 @@ public enum Scope {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(Class<T> type, String name,
                                                       InternalFactory<? extends T> factory) {
-            return factory;
+            return InitializableFactory.wrapIfNeeded(factory);
         }
     },
 

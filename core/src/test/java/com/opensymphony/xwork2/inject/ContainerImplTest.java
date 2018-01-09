@@ -43,6 +43,8 @@ public class ContainerImplTest extends TestCase {
         cb.constant("fieldCheck.name", "Lukasz");
         cb.factory(EarlyInitializable.class, EarlyInitializableBean.class, Scope.SINGLETON);
         cb.factory(Initializable.class, InitializableBean.class, Scope.SINGLETON);
+        cb.factory(EarlyInitializable.class, "prototypeEarlyInitializable", EarlyInitializableBean.class, Scope.PROTOTYPE);
+        cb.factory(Initializable.class, "prototypeInitializable", InitializableBean.class, Scope.PROTOTYPE);
         c = cb.create(false);
 
         Class.forName(FieldCheck.class.getName());
@@ -119,10 +121,12 @@ public class ContainerImplTest extends TestCase {
         EarlyInitializableCheck earlyInitializableCheck = new EarlyInitializableCheck();
         c.inject(earlyInitializableCheck);
         assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck.getEarlyInitializable()).getMessage());
+        assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck.getPrototypeEarlyInitializable()).getMessage());
 
         EarlyInitializableCheck earlyInitializableCheck2 = new EarlyInitializableCheck();
         c.inject(earlyInitializableCheck2);
         assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck2.getEarlyInitializable()).getMessage());
+        assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck2.getPrototypeEarlyInitializable()).getMessage());
     }
 
     public void testInitializable() throws Exception {
@@ -132,10 +136,12 @@ public class ContainerImplTest extends TestCase {
         c.inject(initializableCheck);
         assertTrue("should being initialized here", InitializableBean.initialized);
         assertEquals("initialized", ((InitializableBean) initializableCheck.getInitializable()).getMessage());
+        assertEquals("initialized", ((InitializableBean) initializableCheck.getPrototypeInitializable()).getMessage());
 
         InitializableCheck initializableCheck2 = new InitializableCheck();
         c.inject(initializableCheck2);
         assertEquals("initialized", ((InitializableBean) initializableCheck2.getInitializable()).getMessage());
+        assertEquals("initialized", ((InitializableBean) initializableCheck2.getPrototypeInitializable()).getMessage());
     }
 
     public static class FieldCheck {
@@ -166,28 +172,48 @@ public class ContainerImplTest extends TestCase {
     class InitializableCheck {
 
         private Initializable initializable;
+        private Initializable prototypeInitializable;
 
         @Inject
         public void setInitializable(Initializable initializable) {
             this.initializable = initializable;
         }
 
+        @Inject("prototypeInitializable")
+        public void setPrototypeInitializable(Initializable prototypeInitializable) {
+            this.prototypeInitializable = prototypeInitializable;
+        }
+
         public Initializable getInitializable() {
             return initializable;
+        }
+
+        public Initializable getPrototypeInitializable() {
+            return prototypeInitializable;
         }
     }
 
     class EarlyInitializableCheck {
 
         private EarlyInitializable earlyInitializable;
+        private EarlyInitializable prototypeEarlyInitializable;
 
         @Inject
         public void setEarlyInitializable(EarlyInitializable earlyInitializable) {
             this.earlyInitializable = earlyInitializable;
         }
 
+        @Inject("prototypeEarlyInitializable")
+        public void setPrototypeEarlyInitializable(EarlyInitializable prototypeEarlyInitializable) {
+            this.prototypeEarlyInitializable = prototypeEarlyInitializable;
+        }
+
         public EarlyInitializable getEarlyInitializable() {
             return earlyInitializable;
+        }
+
+        public EarlyInitializable getPrototypeEarlyInitializable() {
+            return prototypeEarlyInitializable;
         }
     }
 

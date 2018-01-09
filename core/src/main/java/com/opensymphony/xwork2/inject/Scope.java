@@ -49,7 +49,7 @@ public enum Scope {
                 public T create(InternalContext context) {
                     synchronized (context.getContainer()) {
                         if (instance == null) {
-                            instance = factory.create(context);
+                            instance = InitializableFactory.wrapIfNeeded(factory).create(context);
                         }
                         return instance;
                     }
@@ -88,7 +88,7 @@ public enum Scope {
                 public T create(final InternalContext context) {
                     T t = threadLocal.get();
                     if (t == null) {
-                        t = factory.create(context);
+                        t = InitializableFactory.wrapIfNeeded(factory).create(context);
                         threadLocal.set(t);
                     }
                     return t;
@@ -201,7 +201,7 @@ public enum Scope {
                                          final InternalFactory<? extends T> factory) {
         return new Callable<T>() {
             public T call() throws Exception {
-                return factory.create(context);
+                return InitializableFactory.wrapIfNeeded(factory).create(context);
             }
         };
     }

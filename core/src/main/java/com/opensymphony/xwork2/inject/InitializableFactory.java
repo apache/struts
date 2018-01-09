@@ -31,7 +31,7 @@ class InitializableFactory<T> implements InternalFactory<T> {
         this.internalFactory = internalFactory;
     }
 
-    public static InternalFactory<?> wrapIfNeeded(InternalFactory<?> internalFactory) {
+    public static <T> InternalFactory<T> wrapIfNeeded(InternalFactory<T> internalFactory) {
         if (Initializable.class.isAssignableFrom(internalFactory.type())) {
             return new InitializableFactory<>(internalFactory);
         }

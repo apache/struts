@@ -609,19 +609,13 @@ public final class ContainerBuilder {
         ensureNotCreated();
         created = true;
 
-        final Map<Key<?>, InternalFactory<?>> realFactories = new HashMap<>();
-
-        for (Map.Entry<Key<?>, InternalFactory<?>> entry : factories.entrySet()) {
-            realFactories.put(entry.getKey(), InitializableFactory.wrapIfNeeded(entry.getValue()));
-        }
-
-        final ContainerImpl container = new ContainerImpl(realFactories);
+        final ContainerImpl container = new ContainerImpl(factories);
 
         if (loadSingletons) {
             container.callInContext(new ContainerImpl.ContextualCallable<Void>() {
                 public Void call(InternalContext context) {
                     for (InternalFactory<?> factory : singletonFactories) {
-                        InitializableFactory.wrapIfNeeded(factory).create(context);
+                        factory.create(context);
                     }
                     return null;
                 }
@@ -630,10 +624,10 @@ public final class ContainerBuilder {
 
         container.callInContext(new ContainerImpl.ContextualCallable<Void>() {
             public Void call(InternalContext context) {
-            for (InternalFactory<?> factory : earlyInitializableFactories) {
-                InitializableFactory.wrapIfNeeded(factory).create(context);
-            }
-            return null;
+                for (InternalFactory<?> factory : earlyInitializableFactories) {
+                    factory.create(context);
+                }
+                return null;
             }
         });
 

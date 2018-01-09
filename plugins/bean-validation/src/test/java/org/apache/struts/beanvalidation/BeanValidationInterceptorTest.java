@@ -19,14 +19,13 @@
 package org.apache.struts.beanvalidation;
 
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.struts.beanvalidation.actions.FieldAction;
-import org.apache.struts.beanvalidation.actions.FieldActionDoExecute;
 import org.apache.struts.beanvalidation.actions.FieldMatchAction;
 import org.apache.struts.beanvalidation.actions.ModelDrivenAction;
+import org.apache.struts.beanvalidation.actions.ValidateGroupAction;
 
 import java.util.Collection;
 import java.util.List;
@@ -145,6 +144,137 @@ public class BeanValidationInterceptorTest extends XWorkTestCase {
 
         assertNotNull(actionErrors);
         assertEquals(2, actionErrors.size());
+    }
+
+
+    public void testValidationGroupActionStandard() throws Exception {
+        ActionProxy baseActionProxy = getValidateGroupAction("actionStandard");
+        ValidateGroupAction action = (ValidateGroupAction) baseActionProxy.getAction();
+        action.getModel().setName(null);
+        action.getModel().setEmail(null);
+        action.getModel().getAddress().setStreet(null);
+        baseActionProxy.execute();
+        assertEquals("every properties not valid", 3, ((ValidationAware) baseActionProxy.getAction()).getFieldErrors().size());
+    }
+
+
+    public void testValidationGroupActionDefault() throws Exception {
+        ActionProxy baseActionProxy = getValidateGroupAction("actionDefault");
+        ValidateGroupAction action = (ValidateGroupAction) baseActionProxy.getAction();
+        action.getModel().setName(null);
+        action.getModel().setEmail(null);
+        action.getModel().getAddress().setStreet(null);
+
+        baseActionProxy.execute();
+        assertEquals("every properties not valid", 3, ((ValidationAware) baseActionProxy.getAction()).getFieldErrors().size());
+    }
+
+    public void testValidationGroupActionNameChecks() throws Exception {
+        ActionProxy baseActionProxy = getValidateGroupAction("actionNameChecks");
+        baseActionProxy.execute();
+        Map<String, List<String>> fieldErrors = ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors();
+        assertEquals(1, fieldErrors.size());
+        assertEquals("check name-property @NotNull", "nameNotNull", fieldErrors.get("name").get(0));
+
+        baseActionProxy = getValidateGroupAction("actionNameChecks");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().setName("a");
+        baseActionProxy.execute();
+        fieldErrors = ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors();
+        assertEquals(1, fieldErrors.size());
+        assertEquals("check name-property @Size", "nameSize", fieldErrors.get("name").get(0));
+
+        baseActionProxy = getValidateGroupAction("actionNameChecks");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().setName("aName");
+        baseActionProxy.execute();
+        assertTrue("name-property valid", ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors().isEmpty());
+    }
+
+
+    public void testValidationGroupActionStreetChecks() throws Exception {
+        ActionProxy baseActionProxy = getValidateGroupAction("actionStreetChecks");
+        baseActionProxy.execute();
+        Map<String, List<String>> fieldErrors = ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors();
+        assertEquals(1, fieldErrors.size());
+        assertEquals("street-property @NotNull", "streetNotNull", fieldErrors.get("address.street").get(0));
+
+        baseActionProxy = getValidateGroupAction("actionStreetChecks");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().getAddress().setStreet("a");
+        baseActionProxy.execute();
+        fieldErrors = ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors();
+        assertEquals(1, fieldErrors.size());
+        assertEquals("street-property @Size", "streetSize", fieldErrors.get("address.street").get(0));
+
+        baseActionProxy = getValidateGroupAction("actionStreetChecks");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().getAddress().setStreet("aStreet");
+        baseActionProxy.execute();
+        assertTrue("street-property valid", ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors().isEmpty());
+    }
+
+
+    public void testValidationGroupActionNameAndStreetChecks() throws Exception {
+        ActionProxy baseActionProxy = getValidateGroupAction("actionNameAndStreetChecks");
+        baseActionProxy.execute();
+        Map<String, List<String>> fieldErrors = ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors();
+        assertEquals(2, fieldErrors.size());
+        assertTrue("name-property @NotNull", fieldErrors.containsKey("name"));
+        assertTrue("street-property @NotNull", fieldErrors.containsKey("address.street"));
+
+        baseActionProxy = getValidateGroupAction("actionNameAndStreetChecks");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().setName("aName");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().getAddress().setStreet("aStreet");
+        baseActionProxy.execute();
+        assertTrue("name and street-property valid", ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors().isEmpty());
+    }
+
+    public void testValidationGroupActionMultiGroupsChecks() throws Exception {
+        ActionProxy baseActionProxy = getValidateGroupAction("actionMultiGroupsChecks");
+        baseActionProxy.execute();
+        Map<String, List<String>> fieldErrors = ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors();
+        assertEquals(2, fieldErrors.size());
+        assertTrue("name-property @NotNull", fieldErrors.containsKey("name"));
+        assertTrue("firstName-property @NotBlank", fieldErrors.containsKey("firstName"));
+
+        baseActionProxy = getValidateGroupAction("actionMultiGroupsChecks");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().setName("aName");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().setFirstName("aFirstName");
+        baseActionProxy.execute();
+        assertTrue("name and firstName-property valid", ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors().isEmpty());
+    }
+
+    public void testValidationGroupActionLongNameChecks() throws Exception {
+        ActionProxy baseActionProxy = getValidateGroupAction("actionLongNameChecks");
+        baseActionProxy.execute();
+        Map<String, List<String>> fieldErrors = ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors();
+        assertEquals(3, fieldErrors.size());
+        assertTrue("name-property @NotNull", fieldErrors.containsKey("name"));
+        assertTrue("email-property @NotNull", fieldErrors.containsKey("email"));
+        assertTrue("street-property @NotNull", fieldErrors.containsKey("address.street"));
+
+        baseActionProxy = getValidateGroupAction("actionLongNameChecks");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().setName("toShortName");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().setEmail("actionLongNameChecks@mail.org");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().getAddress().setStreet("aStreet");
+        baseActionProxy.execute();
+        fieldErrors = ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors();
+        assertEquals(1, fieldErrors.size());
+        assertEquals("name-property @Size", "nameSize20", fieldErrors.get("name").get(0));
+
+
+        baseActionProxy = getValidateGroupAction("actionLongNameChecks");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().setName("this_is_a_really_long_Name");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().setEmail("actionLongNameChecks@mail.org");
+        ((ValidateGroupAction) baseActionProxy.getAction()).getModel().getAddress().setStreet("aStreet");
+        baseActionProxy.execute();
+        assertTrue("every properties not valid", ((ValidateGroupAction) baseActionProxy.getAction()).getFieldErrors().isEmpty());
+    }
+
+    private ActionProxy getValidateGroupAction(String methodName) {
+        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("bean-validation", "validateGroupActions", methodName, null);
+        ValidateGroupAction action = (ValidateGroupAction) baseActionProxy.getAction();
+        action.getModel().setName(null);
+        action.getModel().setEmail(null);
+        action.getModel().getAddress().setStreet(null);
+        return baseActionProxy;
     }
 
     @Override

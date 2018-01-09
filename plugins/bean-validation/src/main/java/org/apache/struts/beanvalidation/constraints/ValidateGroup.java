@@ -16,24 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts.beanvalidation.models;
+package org.apache.struts.beanvalidation.constraints;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.validation.groups.Default;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class Address {
+/**
+ * Validation with Group Constrains on execution method (Action)
+ * <p>
+ * Example, Validate with on special group
+ * </p>
+ * <pre>
+ *
+ *  {@literal @}ValidateGroup(CarChecks.class)
+ *  {@literal @}Action...
+ * </pre>
+ * <p>
+ * <p>
+ * Example, Validate with severals special group
+ * </p>
+ * <pre>
+ *  {@literal @}ValidateGroup(Default.class, CarChecks.class, DriverChecks.class)
+ *  {@literal @}Action...
+ * </pre>
+ */
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ValidateGroup {
 
-    @NotNull(message = "streetNotNull", groups = {Default.class, Person.StreetChecks.class, Person.NameAndStreetChecks.class})
-    @Size(min = 3, max = 64, message = "streetSize", groups = {Default.class, Person.StreetChecks.class, Person.NameAndStreetChecks.class})
-    private String street;
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
+    Class<?>[] value() default {};
 }

@@ -20,8 +20,8 @@
  */
 -->
 <!DOCTYPE xwork PUBLIC
-        "-//Apache Struts//XWork 2.0//EN"
-        "http://struts.apache.org/dtds/xwork-2.0.dtd"
+        "-//Apache Struts//XWork 2.5//EN"
+        "http://struts.apache.org/dtds/xwork-2.5.dtd"
         >
 
 <xwork>
@@ -63,6 +63,12 @@
         <action name="fieldActionDoExecute" class="org.apache.struts.beanvalidation.actions.FieldActionDoExecute">
             <interceptor-ref name="beanValidation"/>
             <result type="void"/>
+        </action>
+
+        <action name="validateGroupActions" class="org.apache.struts.beanvalidation.actions.ValidateGroupAction">
+            <interceptor-ref name="beanValidation"/>
+            <result type="void"/>
+            <allowed-methods>actionStandard, actionDefault, actionNameChecks, actionStreetChecks, actionNameAndStreetChecks, actionMultiGroupsChecks, actionLongNameChecks</allowed-methods>
         </action>
 
     </package>

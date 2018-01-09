@@ -20,6 +20,8 @@ package com.opensymphony.xwork2.inject;
 
 import junit.framework.TestCase;
 
+import java.security.Permission;
+
 /**
  * ContainerImpl Tester.
  *
@@ -33,6 +35,8 @@ public class ContainerImplTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
+        System.setSecurityManager(null);
+
         super.setUp();
         ContainerBuilder cb = new ContainerBuilder();
         cb.constant("methodCheck.name", "Lukasz");
@@ -77,37 +81,32 @@ public class ContainerImplTest extends TestCase {
     /**
      * Inject values into field under SecurityManager
      */
-    public void disabled_testFieldInjectorWithSecurityEnabled() throws Exception {
-
-        System.setSecurityManager(new SecurityManager());
+    public void testFieldInjectorWithSecurityEnabled() throws Exception {
+        System.setSecurityManager(new TestSecurityManager());
 
         FieldCheck fieldCheck = new FieldCheck();
 
         try {
             c.inject(fieldCheck);
-            assertEquals(fieldCheck.getName(), "Lukasz");
             fail("Exception should be thrown!");
-        } catch (DependencyException expected) {
-            // that was expected
+        } catch (Error expected) {
+            assertTrue(true);
         }
     }
 
     /**
      * Inject values into method under SecurityManager
      */
-    public void disabled_testMethodInjectorWithSecurityEnabled() throws Exception {
-
-        // not needed, already set
-        //System.setSecurityManager(new SecurityManager());
+    public void testMethodInjectorWithSecurityEnabled() throws Exception {
+        System.setSecurityManager(new TestSecurityManager());
 
         MethodCheck methodCheck = new MethodCheck();
 
         try {
             c.inject(methodCheck);
-            assertEquals(methodCheck.getName(), "Lukasz");
-            fail("Exception sould be thrown!");
-        } catch (DependencyException expected) {
-            // that was expected
+            fail("Exception should be thrown!");
+        } catch (Error expected) {
+            assertTrue(true);
         }
     }
 
@@ -189,4 +188,13 @@ public class ContainerImplTest extends TestCase {
         }
     }
 
+    class TestSecurityManager extends SecurityManager {
+
+        @Override
+        public void checkPermission(Permission perm) {
+            if (!"setSecurityManager".equals(perm.getName())) {
+                super.checkPermission(perm);
+            }
+        }
+    }
 }

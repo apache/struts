@@ -44,6 +44,9 @@ public class ContainerImplTest extends TestCase {
         cb.factory(EarlyInitializable.class, EarlyInitializableBean.class, Scope.SINGLETON);
         cb.factory(Initializable.class, InitializableBean.class, Scope.SINGLETON);
         c = cb.create(false);
+
+        Class.forName(FieldCheck.class.getName());
+        Class.forName(ContainerImpl.FieldInjector.class.getName());
     }
 
     /**
@@ -89,7 +92,7 @@ public class ContainerImplTest extends TestCase {
         try {
             c.inject(fieldCheck);
             fail("Exception should be thrown!");
-        } catch (Error expected) {
+        } catch (Error | DependencyException expected) {
             assertTrue(true);
         }
     }

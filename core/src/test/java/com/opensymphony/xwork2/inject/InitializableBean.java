@@ -18,7 +18,7 @@
  */
 package com.opensymphony.xwork2.inject;
 
-public class InitializableCheck implements Initializable {
+public class InitializableBean implements Initializable {
     private String message = "";
     static boolean initialized;
 

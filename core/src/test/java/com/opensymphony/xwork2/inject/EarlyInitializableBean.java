@@ -18,7 +18,7 @@
  */
 package com.opensymphony.xwork2.inject;
 
-class EarlyInitializableCheck implements EarlyInitializable {
+class EarlyInitializableBean implements EarlyInitializable {
     private String message = "";
     static boolean initializedEarly;
 

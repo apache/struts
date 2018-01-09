@@ -105,7 +105,7 @@ public class ContainerImplTest extends TestCase {
         try {
             c.inject(methodCheck);
             fail("Exception should be thrown!");
-        } catch (Error expected) {
+        } catch (DependencyException | Error expected) {
             assertTrue(true);
         }
     }

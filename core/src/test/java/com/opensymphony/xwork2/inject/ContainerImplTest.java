@@ -135,7 +135,7 @@ public class ContainerImplTest extends TestCase {
         assertEquals("initialized", ((InitializableBean) initializableCheck2.getInitializable()).getMessage());
     }
 
-    class FieldCheck {
+    public static class FieldCheck {
 
         @Inject("fieldCheck.name")
         private String name;
@@ -145,7 +145,7 @@ public class ContainerImplTest extends TestCase {
         }
     }
 
-    class MethodCheck {
+    public static class MethodCheck {
 
         private String name;
 

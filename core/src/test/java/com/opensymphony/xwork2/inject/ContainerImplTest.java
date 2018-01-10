@@ -20,6 +20,8 @@ package com.opensymphony.xwork2.inject;
 
 import junit.framework.TestCase;
 
+import java.security.Permission;
+
 /**
  * ContainerImpl Tester.
  *
@@ -33,11 +35,20 @@ public class ContainerImplTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
+        System.setSecurityManager(null);
+
         super.setUp();
         ContainerBuilder cb = new ContainerBuilder();
         cb.constant("methodCheck.name", "Lukasz");
         cb.constant("fieldCheck.name", "Lukasz");
+        cb.factory(EarlyInitializable.class, EarlyInitializableBean.class, Scope.SINGLETON);
+        cb.factory(Initializable.class, InitializableBean.class, Scope.SINGLETON);
+        cb.factory(EarlyInitializable.class, "prototypeEarlyInitializable", EarlyInitializableBean.class, Scope.PROTOTYPE);
+        cb.factory(Initializable.class, "prototypeInitializable", InitializableBean.class, Scope.PROTOTYPE);
         c = cb.create(false);
+
+        Class.forName(FieldCheck.class.getName());
+        Class.forName(ContainerImpl.FieldInjector.class.getName());
     }
 
     /**
@@ -76,17 +87,15 @@ public class ContainerImplTest extends TestCase {
      * Inject values into field under SecurityManager
      */
     public void testFieldInjectorWithSecurityEnabled() throws Exception {
-
-        System.setSecurityManager(new SecurityManager());
+        System.setSecurityManager(new TestSecurityManager());
 
         FieldCheck fieldCheck = new FieldCheck();
 
         try {
             c.inject(fieldCheck);
-            assertEquals(fieldCheck.getName(), "Lukasz");
             fail("Exception should be thrown!");
-        } catch (DependencyException expected) {
-            // that was expected
+        } catch (Error | DependencyException expected) {
+            assertTrue(true);
         }
     }
 
@@ -94,22 +103,48 @@ public class ContainerImplTest extends TestCase {
      * Inject values into method under SecurityManager
      */
     public void testMethodInjectorWithSecurityEnabled() throws Exception {
-
-        // not needed, already set
-        //System.setSecurityManager(new SecurityManager());
+        System.setSecurityManager(new TestSecurityManager());
 
         MethodCheck methodCheck = new MethodCheck();
 
         try {
             c.inject(methodCheck);
-            assertEquals(methodCheck.getName(), "Lukasz");
-            fail("Exception sould be thrown!");
-        } catch (DependencyException expected) {
-            // that was expected
+            fail("Exception should be thrown!");
+        } catch (DependencyException | Error expected) {
+            assertTrue(true);
         }
     }
 
-    class FieldCheck {
+    public void testEarlyInitializable() throws Exception {
+        assertTrue("should being initialized already", EarlyInitializableBean.initializedEarly);
+
+        EarlyInitializableCheck earlyInitializableCheck = new EarlyInitializableCheck();
+        c.inject(earlyInitializableCheck);
+        assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck.getEarlyInitializable()).getMessage());
+        assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck.getPrototypeEarlyInitializable()).getMessage());
+
+        EarlyInitializableCheck earlyInitializableCheck2 = new EarlyInitializableCheck();
+        c.inject(earlyInitializableCheck2);
+        assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck2.getEarlyInitializable()).getMessage());
+        assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck2.getPrototypeEarlyInitializable()).getMessage());
+    }
+
+    public void testInitializable() throws Exception {
+        assertFalse("should not being initialized already", InitializableBean.initialized);
+
+        InitializableCheck initializableCheck = new InitializableCheck();
+        c.inject(initializableCheck);
+        assertTrue("should being initialized here", InitializableBean.initialized);
+        assertEquals("initialized", ((InitializableBean) initializableCheck.getInitializable()).getMessage());
+        assertEquals("initialized", ((InitializableBean) initializableCheck.getPrototypeInitializable()).getMessage());
+
+        InitializableCheck initializableCheck2 = new InitializableCheck();
+        c.inject(initializableCheck2);
+        assertEquals("initialized", ((InitializableBean) initializableCheck2.getInitializable()).getMessage());
+        assertEquals("initialized", ((InitializableBean) initializableCheck2.getPrototypeInitializable()).getMessage());
+    }
+
+    public static class FieldCheck {
 
         @Inject("fieldCheck.name")
         private String name;
@@ -119,7 +154,7 @@ public class ContainerImplTest extends TestCase {
         }
     }
 
-    class MethodCheck {
+    public static class MethodCheck {
 
         private String name;
 
@@ -134,4 +169,61 @@ public class ContainerImplTest extends TestCase {
 
     }
 
+    class InitializableCheck {
+
+        private Initializable initializable;
+        private Initializable prototypeInitializable;
+
+        @Inject
+        public void setInitializable(Initializable initializable) {
+            this.initializable = initializable;
+        }
+
+        @Inject("prototypeInitializable")
+        public void setPrototypeInitializable(Initializable prototypeInitializable) {
+            this.prototypeInitializable = prototypeInitializable;
+        }
+
+        public Initializable getInitializable() {
+            return initializable;
+        }
+
+        public Initializable getPrototypeInitializable() {
+            return prototypeInitializable;
+        }
+    }
+
+    class EarlyInitializableCheck {
+
+        private EarlyInitializable earlyInitializable;
+        private EarlyInitializable prototypeEarlyInitializable;
+
+        @Inject
+        public void setEarlyInitializable(EarlyInitializable earlyInitializable) {
+            this.earlyInitializable = earlyInitializable;
+        }
+
+        @Inject("prototypeEarlyInitializable")
+        public void setPrototypeEarlyInitializable(EarlyInitializable prototypeEarlyInitializable) {
+            this.prototypeEarlyInitializable = prototypeEarlyInitializable;
+        }
+
+        public EarlyInitializable getEarlyInitializable() {
+            return earlyInitializable;
+        }
+
+        public EarlyInitializable getPrototypeEarlyInitializable() {
+            return prototypeEarlyInitializable;
+        }
+    }
+
+    class TestSecurityManager extends SecurityManager {
+
+        @Override
+        public void checkPermission(Permission perm) {
+            if (!"setSecurityManager".equals(perm.getName())) {
+                super.checkPermission(perm);
+            }
+        }
+    }
 }

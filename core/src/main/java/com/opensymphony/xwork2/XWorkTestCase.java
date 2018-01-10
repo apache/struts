@@ -82,7 +82,11 @@ public abstract class XWorkTestCase extends TestCase {
                     public Object create(Context context) throws Exception {
                         return impl;
                     }
-                    
+
+                    @Override
+                    public Class type() {
+                        return impl.getClass();
+                    }
                 }, Scope.SINGLETON);
             }
         });

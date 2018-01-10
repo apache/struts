@@ -16,25 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.conversion;
+package com.opensymphony.xwork2.inject;
 
-/**
- * Used to read converters from Properties file
- */
-public interface ConversionPropertiesProcessor {
+class EarlyInitializableBean implements EarlyInitializable {
+    private String message = "";
+    static boolean initializedEarly;
 
-    /**
-     * Process given property to load converters as not required (Properties file doesn't have to exist)
-     *
-     * @param propsName Properties file name
-     */
-    void process(String propsName);
+    public String getMessage() {
+        return message;
+    }
 
-    /**
-     * Process given property to load converters as required (Properties file must exist)
-     *
-     * @param propsName Properties file name
-     */
-    void processRequired(String propsName);
-
+    @Override
+    public void init() {
+        message += "initialized early";
+        initializedEarly = true;
+    }
 }

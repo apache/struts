@@ -144,7 +144,11 @@ public class SetPropertiesTest extends XWorkTestCase {
                     public Object create(Context context) throws Exception {
                         return new MockObjectTypeDeterminer(null,Cat.class,null,allowAdditions);
                     }
-                    
+
+                    @Override
+                    public Class type() {
+                        return Cat.class;
+                    }
                 });
             }
         });
@@ -290,7 +294,11 @@ public class SetPropertiesTest extends XWorkTestCase {
                     public Object create(Context context) throws Exception {
                         return determiner;
                     }
-                    
+
+                    @Override
+                    public Class type() {
+                        return determiner.getClass();
+                    }
                 }, Scope.SINGLETON);
             }
         });

@@ -113,6 +113,7 @@ import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.factory.PrefixBasedActionProxyFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;

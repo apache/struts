@@ -18,8 +18,6 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.inject.Initializable;
-
 /**
  * ValidatorFactory
  *
@@ -227,7 +225,7 @@ import com.opensymphony.xwork2.inject.Initializable;
  * @author Jason Carreira
  * @author James House
  */
-public interface ValidatorFactory extends Initializable {
+public interface ValidatorFactory {
 
     /**
      * Get a Validator that matches the given configuration.

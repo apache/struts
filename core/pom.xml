@@ -65,7 +65,6 @@
                         <exclude>**/TestBean2.java</exclude>
                         <exclude>**/TestInterceptor.java</exclude>
                         <exclude>**/AnnotatedTestBean.java</exclude>
-                        <exclude>**/ContainerImplTest.java</exclude>
                         <exclude>**/DefaultFileManagerTest.java</exclude>
                     </excludes>
                 </configuration>

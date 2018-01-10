@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2006 Google Inc.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,28 +15,8 @@
  */
 package com.opensymphony.xwork2.inject;
 
-import java.io.Serializable;
-
 /**
- * Creates objects which will be injected.
- *
- * @author crazybob@google.com (Bob Lee)
+ * A marking interface that will tell CI to initialise the bean when instating the whole objects' graph
  */
-interface InternalFactory<T> extends Serializable {
-
-    /**
-     * Creates an object to be injected.
-     *
-     * @param context of this injection
-     * @return instance to be injected
-     */
-    T create(InternalContext context);
-
-    /**
-     * Returns a class of <T>
-     *
-     * @return class of the object
-     */
-    Class<? extends T> type();
-
+public interface EarlyInitializable extends Initializable {
 }

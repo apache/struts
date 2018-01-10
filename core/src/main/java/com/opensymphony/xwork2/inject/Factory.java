@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2006 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.opensymphony.xwork2.inject;
 
 /**
@@ -23,12 +22,20 @@ package com.opensymphony.xwork2.inject;
  */
 public interface Factory<T> {
 
-  /**
-   * Creates an object to be injected.
-   *
-   * @param context of this injection
-   * @return instance to be injected
-   * @throws Exception if unable to create object
-   */
-  T create(Context context) throws Exception;
+    /**
+     * Creates an object to be injected.
+     *
+     * @param context of this injection
+     * @return instance to be injected
+     * @throws Exception if unable to create object
+     */
+    T create(Context context) throws Exception;
+
+    /**
+     * Returns a class of <T>
+     *
+     * @return class of the object
+     */
+    Class<? extends T> type();
+
 }

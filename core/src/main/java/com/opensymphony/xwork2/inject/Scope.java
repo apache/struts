@@ -33,7 +33,7 @@ public enum Scope {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(Class<T> type, String name,
                                                       InternalFactory<? extends T> factory) {
-            return factory;
+            return InitializableFactory.wrapIfNeeded(factory);
         }
     },
 
@@ -49,10 +49,15 @@ public enum Scope {
                 public T create(InternalContext context) {
                     synchronized (context.getContainer()) {
                         if (instance == null) {
-                            instance = factory.create(context);
+                            instance = InitializableFactory.wrapIfNeeded(factory).create(context);
                         }
                         return instance;
                     }
+                }
+
+                @Override
+                public Class<? extends T> type() {
+                    return factory.type();
                 }
 
                 @Override
@@ -83,10 +88,15 @@ public enum Scope {
                 public T create(final InternalContext context) {
                     T t = threadLocal.get();
                     if (t == null) {
-                        t = factory.create(context);
+                        t = InitializableFactory.wrapIfNeeded(factory).create(context);
                         threadLocal.set(t);
                     }
                     return t;
+                }
+
+                @Override
+                public Class<? extends T> type() {
+                    return factory.type();
                 }
 
                 @Override
@@ -115,6 +125,11 @@ public enum Scope {
                 }
 
                 @Override
+                public Class<? extends T> type() {
+                    return factory.type();
+                }
+
+                @Override
                 public String toString() {
                     return factory.toString();
                 }
@@ -137,6 +152,11 @@ public enum Scope {
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
+                }
+
+                @Override
+                public Class<? extends T> type() {
+                    return factory.type();
                 }
 
                 @Override
@@ -165,6 +185,11 @@ public enum Scope {
                 }
 
                 @Override
+                public Class<? extends T> type() {
+                    return factory.type();
+                }
+
+                @Override
                 public String toString() {
                     return factory.toString();
                 }
@@ -176,7 +201,7 @@ public enum Scope {
                                          final InternalFactory<? extends T> factory) {
         return new Callable<T>() {
             public T call() throws Exception {
-                return factory.create(context);
+                return InitializableFactory.wrapIfNeeded(factory).create(context);
             }
         };
     }

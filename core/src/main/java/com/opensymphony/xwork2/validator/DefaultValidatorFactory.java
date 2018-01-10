@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.Initializable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +45,7 @@ import java.util.zip.ZipInputStream;
  * @author Jason Carreira
  * @author James House
  */
-public class DefaultValidatorFactory implements ValidatorFactory {
+public class DefaultValidatorFactory implements ValidatorFactory, Initializable {
 
     protected Map<String, String> validators = new HashMap<>();
     private static Logger LOG = LogManager.getLogger(DefaultValidatorFactory.class);

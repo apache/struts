@@ -94,13 +94,11 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
         ActionProxy actionProxy = invocation.getProxy();
         String methodName = actionProxy.getMethod();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
-        }
         Class<?>[] validationGroup = getValidationGroups(action, methodName);
 
         if (null == MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), SkipValidation.class,
                 true, true)) {
+            LOG.debug("Validating [{}/{}] with method [{}] and groups [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName, Arrays.toString(validationGroup));
             // performing bean validation on action
             performBeanValidation(action, validator, validationGroup);
         }
@@ -115,7 +113,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
 
     protected void performBeanValidation(Object action, Validator validator, Class<?>[] groups) {
 
-        LOG.trace("Initiating bean validation.. with groups [{}]", Arrays.toString(groups));
+        LOG.trace("Initiating bean validation..");
 
         Set<ConstraintViolation<Object>> constraintViolations;
 
@@ -156,9 +154,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
                     if (action instanceof ModelDriven && fieldName.startsWith(ValidatorConstants.MODELDRIVEN_PREFIX)) {
                         fieldName = fieldName.replace("model.", ValidatorConstants.EMPTY_SPACE);
                     }
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Adding field error [{}] with message [{}]", fieldName, validationError.getMessage());
-                    }
+                    LOG.debug("Adding field error [{}] with message [{}]", fieldName, validationError.getMessage());
                     validatorContext.addFieldError(fieldName, validationError.getMessage());
                 }
             }

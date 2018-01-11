@@ -20,7 +20,7 @@ package org.apache.struts.beanvalidation.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
-import org.apache.struts.beanvalidation.constraints.ValidateGroup;
+import org.apache.struts.beanvalidation.constraints.ValidationGroup;
 import org.apache.struts.beanvalidation.models.Person;
 
 import javax.validation.Valid;
@@ -38,32 +38,32 @@ public class ValidateGroupAction extends ActionSupport implements ModelDriven<Pe
         return SUCCESS;
     }
 
-    @ValidateGroup
+    @ValidationGroup
     public String actionDefault() {
         return SUCCESS;
     }
 
-    @ValidateGroup(Person.NameChecks.class)
+    @ValidationGroup(Person.NameChecks.class)
     public String actionNameChecks() {
         return SUCCESS;
     }
 
-    @ValidateGroup(Person.StreetChecks.class)
+    @ValidationGroup(Person.StreetChecks.class)
     public String actionStreetChecks() {
         return SUCCESS;
     }
 
-    @ValidateGroup(Person.NameAndStreetChecks.class)
+    @ValidationGroup(Person.NameAndStreetChecks.class)
     public String actionNameAndStreetChecks() {
         return SUCCESS;
     }
 
-    @ValidateGroup({Person.NameChecks.class, Person.FirstNameChecks.class})
+    @ValidationGroup({Person.NameChecks.class, Person.FirstNameChecks.class})
     public String actionMultiGroupsChecks() {
         return SUCCESS;
     }
 
-    @ValidateGroup({Person.LongNameChecks.class})
+    @ValidationGroup({Person.LongNameChecks.class})
     public String actionLongNameChecks() {
         return SUCCESS;
     }

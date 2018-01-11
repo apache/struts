@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * </p>
  * <pre>
  *
- *  {@literal @}ValidateGroup(CarChecks.class)
+ *  {@literal @}ValidationGroup(CarChecks.class)
  *  {@literal @}Action...
  * </pre>
  * <p>
@@ -38,13 +38,13 @@ import java.lang.annotation.Target;
  * Example, Validate with severals special group
  * </p>
  * <pre>
- *  {@literal @}ValidateGroup(Default.class, CarChecks.class, DriverChecks.class)
+ *  {@literal @}ValidationGroup(Default.class, CarChecks.class, DriverChecks.class)
  *  {@literal @}Action...
  * </pre>
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidateGroup {
+public @interface ValidationGroup {
 
     Class<?>[] value() default {};
 }

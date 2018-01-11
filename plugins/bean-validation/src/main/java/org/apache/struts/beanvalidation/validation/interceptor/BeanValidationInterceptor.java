@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts.beanvalidation.constraints.ValidateGroup;
+import org.apache.struts.beanvalidation.constraints.ValidationGroup;
 import org.apache.struts.beanvalidation.validation.constant.ValidatorConstants;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 
@@ -109,8 +109,8 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
     }
 
     protected Class<?>[] getValidationGroups(Object action, String methodName) throws NoSuchMethodException {
-        ValidateGroup validateGroup = MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), ValidateGroup.class, true, true);
-        return validateGroup == null ? new Class[]{} : validateGroup.value();
+        ValidationGroup validationGroup = MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), ValidationGroup.class, true, true);
+        return validationGroup == null ? new Class[]{} : validationGroup.value();
     }
 
     protected void performBeanValidation(Object action, Validator validator, Class<?>[] groups) {

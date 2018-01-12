@@ -94,13 +94,11 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
         ActionProxy actionProxy = invocation.getProxy();
         String methodName = actionProxy.getMethod();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
-        }
-        Class<?>[] validationGroup = getValidationGroups(action, methodName);
+        LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
 
         if (null == MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), SkipValidation.class,
                 true, true)) {
+            Class<?>[] validationGroup = getValidationGroups(action, methodName);
             // performing bean validation on action
             performBeanValidation(action, validator, validationGroup);
         }
@@ -156,9 +154,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
                     if (action instanceof ModelDriven && fieldName.startsWith(ValidatorConstants.MODELDRIVEN_PREFIX)) {
                         fieldName = fieldName.replace("model.", ValidatorConstants.EMPTY_SPACE);
                     }
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Adding field error [{}] with message [{}]", fieldName, validationError.getMessage());
-                    }
+                    LOG.debug("Adding field error [{}] with message [{}]", fieldName, validationError.getMessage());
                     validatorContext.addFieldError(fieldName, validationError.getMessage());
                 }
             }

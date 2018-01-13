@@ -18,6 +18,7 @@
  */
 package org.apache.struts.beanvalidation.constraints;
 
+import javax.validation.groups.Default;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -46,5 +47,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidationGroup {
 
-    Class<?>[] value() default {};
+    Class<?>[] value() default {Default.class};
 }

@@ -37,6 +37,7 @@ import org.apache.struts2.interceptor.validation.SkipValidation;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.validation.groups.Default;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
@@ -108,7 +109,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
 
     protected Class<?>[] getValidationGroups(Object action, String methodName) throws NoSuchMethodException {
         ValidationGroup validationGroup = MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), ValidationGroup.class, true, true);
-        return validationGroup == null ? new Class[]{} : validationGroup.value();
+        return validationGroup == null ? new Class[]{Default.class} : validationGroup.value();
     }
 
     protected void performBeanValidation(Object action, Validator validator, Class<?>[] groups) {

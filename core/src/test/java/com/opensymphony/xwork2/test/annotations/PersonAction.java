@@ -32,7 +32,7 @@ import java.util.List;
 						converterClass=AddressTypeConverter.class),
 		@TypeConversion(type=ConversionType.APPLICATION,
 						key="com.opensymphony.xwork2.test.annotations.Person",
-						converterClass=PersonTypeConverter.class)})
+						converter="com.opensymphony.xwork2.test.annotations.PersonTypeConverter")})
 public class PersonAction {
 	List<Person> users;
 	private List<Address> address;

@@ -18,6 +18,9 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
+import com.opensymphony.xwork2.conversion.impl.FooBarConverter;
+import com.opensymphony.xwork2.util.Bar;
 import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
@@ -37,6 +40,7 @@ public class AnnotatedTestBean {
     private Date birth;
     private String name;
     private int count;
+    private Bar bar;
 
     //~ Constructors ///////////////////////////////////////////////////////////
 
@@ -75,5 +79,14 @@ public class AnnotatedTestBean {
 
     public String getName() {
         return name;
+    }
+
+    public Bar getSupperBarObj() {
+        return bar;
+    }
+
+    @TypeConversion(converter = "com.opensymphony.xwork2.conversion.impl.FooBarConverter")
+    public void setSupperBarObj(Bar b) {
+        bar = b;
     }
 }

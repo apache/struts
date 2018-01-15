@@ -177,7 +177,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         assertEquals("Invalid field value for field \"foo\".", message);
     }
 
-    public void testFindConversionMappingForInterface() {
+    public void testFindConversionMappingForInterfaceAndSuperclass() {
         ModelDrivenAnnotationAction2 action = new ModelDrivenAnnotationAction2();
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(action);
@@ -193,6 +193,14 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
 
         Bar b = (Bar) o;
         assertEquals(value, b.getTitle() + ":" + b.getSomethingElse());
+
+        String value2 = "qwer:456";
+        Object o2 = converter.convertValue(ognlStackContext, action.getModel(), null, "supperBarObj", value2, Bar.class);
+        assertNotNull(o2);
+        assertTrue("class is: " + o.getClass(), o2 instanceof Bar);
+
+        Bar b2 = (Bar) o2;
+        assertEquals(value2, b2.getTitle() + ":" + b2.getSomethingElse());
     }
 
     public void testLocalizedDateConversion() throws Exception {

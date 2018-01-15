@@ -19,6 +19,10 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.conversion.annotations.Conversion;
+import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
+import com.opensymphony.xwork2.conversion.annotations.ConversionType;
+import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,10 +34,19 @@ import java.util.Map;
  *
  * @author Rainer Hermanns
  */
+@Conversion(
+        conversions= {
+                @TypeConversion(key = "KeyProperty_annotatedBeanMap", rule = ConversionRule.KEY_PROPERTY, value = "id"),
+                @TypeConversion(key = "Element_annotatedBeanMap", rule = ConversionRule.ELEMENT, converterClass = MyBean.class),
+                @TypeConversion(key = "KeyProperty_annotatedBeanList", rule = ConversionRule.KEY_PROPERTY, value = "id"),
+                @TypeConversion(key = "Element_annotatedBeanList", rule = ConversionRule.ELEMENT, converterClass = MyBean.class)
+        })
 public class MyBeanAction implements Action {
 
     private List beanList = new ArrayList();
     private Map beanMap = new HashMap();
+    private Map annotatedBeanMap = new HashMap();
+    private List annotatedBeanList = new ArrayList();
 
     public List getBeanList() {
         return beanList;
@@ -49,6 +62,24 @@ public class MyBeanAction implements Action {
 
     public void setBeanMap(Map beanMap) {
         this.beanMap = beanMap;
+    }
+
+    public Map getAnnotatedBeanMap() {
+        return annotatedBeanMap;
+    }
+
+    @TypeConversion(rule = ConversionRule.KEY, converterClass = Long.class)
+    public void setAnnotatedBeanMap(Map annotatedBeanMap) {
+        this.annotatedBeanMap = annotatedBeanMap;
+    }
+
+    public List getAnnotatedBeanList() {
+        return annotatedBeanList;
+    }
+
+    @TypeConversion(rule = ConversionRule.CREATE_IF_NULL, value = "true")
+    public void setAnnotatedBeanList(List annotatedBeanList) {
+        this.annotatedBeanList = annotatedBeanList;
     }
 
     public String execute() throws Exception {

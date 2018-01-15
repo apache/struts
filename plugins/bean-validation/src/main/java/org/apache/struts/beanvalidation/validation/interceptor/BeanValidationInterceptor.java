@@ -27,16 +27,19 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts.beanvalidation.constraints.ValidationGroup;
 import org.apache.struts.beanvalidation.validation.constant.ValidatorConstants;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.validation.groups.Default;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -92,39 +95,43 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
         ActionProxy actionProxy = invocation.getProxy();
         String methodName = actionProxy.getMethod();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
-        }
+        LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
 
         if (null == MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), SkipValidation.class,
                 true, true)) {
+            Class<?>[] validationGroup = getValidationGroups(action, methodName);
             // performing bean validation on action
-            performBeanValidation(action, validator);
+            performBeanValidation(action, validator, validationGroup);
         }
 
         return invocation.invoke();
     }
 
-    protected void performBeanValidation(Object action, Validator validator) {
+    protected Class<?>[] getValidationGroups(Object action, String methodName) throws NoSuchMethodException {
+        ValidationGroup validationGroup = MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), ValidationGroup.class, true, true);
+        return validationGroup == null ? new Class[]{Default.class} : validationGroup.value();
+    }
 
-        LOG.trace("Initiating bean validation..");
+    protected void performBeanValidation(Object action, Validator validator, Class<?>[] groups) {
+
+        LOG.trace("Initiating bean validation.. with groups [{}]", Arrays.toString(groups));
 
         Set<ConstraintViolation<Object>> constraintViolations;
 
         if (action instanceof ModelDriven) {
             LOG.trace("Performing validation on model..");
             Object model = (Object)((ModelDriven<?>) action).getModel();
-            constraintViolations = validator.validate(model);
+            constraintViolations = validator.validate(model, groups);
         } else {
             LOG.trace("Performing validation on action..");
-            constraintViolations = validator.validate(action);
+            constraintViolations = validator.validate(action, groups);
         }
 
         addBeanValidationErrors(constraintViolations, action);
     }
 
     @SuppressWarnings("nls")
-    private void addBeanValidationErrors(Set<ConstraintViolation<Object>> constraintViolations, Object action) {
+    protected void addBeanValidationErrors(Set<ConstraintViolation<Object>> constraintViolations, Object action) {
         if (constraintViolations != null) {
             ValidatorContext validatorContext = new DelegatingValidatorContext(action, textProviderFactory);
             for (ConstraintViolation<Object> constraintViolation : constraintViolations) {
@@ -148,9 +155,7 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
                     if (action instanceof ModelDriven && fieldName.startsWith(ValidatorConstants.MODELDRIVEN_PREFIX)) {
                         fieldName = fieldName.replace("model.", ValidatorConstants.EMPTY_SPACE);
                     }
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Adding field error [{}] with message [{}]", fieldName, validationError.getMessage());
-                    }
+                    LOG.debug("Adding field error [{}] with message [{}]", fieldName, validationError.getMessage());
                     validatorContext.addFieldError(fieldName, validationError.getMessage());
                 }
             }

@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.ListPropertyAccessor;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.Collection;
 import java.util.List;
@@ -49,12 +50,18 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
     private ObjectTypeDeterminer objectTypeDeterminer;
     private OgnlUtil ognlUtil;
     private int autoGrowCollectionLimit = 255;
-    
+
+    @Deprecated()
     @Inject(value = "xwork.autoGrowCollectionLimit", required = false)
-	public void setAutoGrowCollectionLimit(String value) {
-		this.autoGrowCollectionLimit = Integer.valueOf(value);
-	}
+    public void setDeprecatedAutoGrowCollectionLimit(String value) {
+        this.autoGrowCollectionLimit = Integer.valueOf(value);
+    }
     
+    @Inject(value = StrutsConstants.STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT, required = false)
+    public void setAutoGrowCollectionLimit(String value) {
+        this.autoGrowCollectionLimit = Integer.parseInt(value);
+    }
+
     @Inject("java.util.Collection")
     public void setXWorkCollectionPropertyAccessor(PropertyAccessor acc) {
         this._sAcc = (XWorkCollectionPropertyAccessor) acc;

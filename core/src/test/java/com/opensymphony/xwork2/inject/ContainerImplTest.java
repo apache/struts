@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.inject;
 import junit.framework.TestCase;
 
 import java.security.Permission;
+import java.util.concurrent.Callable;
 
 /**
  * ContainerImpl Tester.
@@ -45,7 +46,12 @@ public class ContainerImplTest extends TestCase {
         cb.factory(Initializable.class, InitializableBean.class, Scope.SINGLETON);
         cb.factory(EarlyInitializable.class, "prototypeEarlyInitializable", EarlyInitializableBean.class, Scope.PROTOTYPE);
         cb.factory(Initializable.class, "prototypeInitializable", InitializableBean.class, Scope.PROTOTYPE);
+        cb.factory(Initializable.class, "requestInitializable", InitializableBean.class, Scope.REQUEST);
+        cb.factory(Initializable.class, "sessionInitializable", InitializableBean.class, Scope.SESSION);
+        cb.factory(Initializable.class, "threadInitializable", InitializableBean.class, Scope.THREAD);
+        cb.factory(Initializable.class, "wizardInitializable", InitializableBean.class, Scope.WIZARD);
         c = cb.create(false);
+        c.setScopeStrategy(new TestScopeStrategy());
 
         Class.forName(FieldCheck.class.getName());
         Class.forName(ContainerImpl.FieldInjector.class.getName());
@@ -125,8 +131,14 @@ public class ContainerImplTest extends TestCase {
 
         EarlyInitializableCheck earlyInitializableCheck2 = new EarlyInitializableCheck();
         c.inject(earlyInitializableCheck2);
-        assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck2.getEarlyInitializable()).getMessage());
+        assertEquals("singletons should not being initialized twice", "initialized early",
+                ((EarlyInitializableBean) earlyInitializableCheck2.getEarlyInitializable()).getMessage());
         assertEquals("initialized early", ((EarlyInitializableBean) earlyInitializableCheck2.getPrototypeEarlyInitializable()).getMessage());
+
+        assertEquals("singletons should being instantiated once",
+                earlyInitializableCheck.getEarlyInitializable(), earlyInitializableCheck2.getEarlyInitializable());
+        assertNotSame("prototypes should being instantiated for each injection",
+                earlyInitializableCheck.getPrototypeEarlyInitializable(), earlyInitializableCheck2.getPrototypeEarlyInitializable());
     }
 
     public void testInitializable() throws Exception {
@@ -140,8 +152,51 @@ public class ContainerImplTest extends TestCase {
 
         InitializableCheck initializableCheck2 = new InitializableCheck();
         c.inject(initializableCheck2);
-        assertEquals("initialized", ((InitializableBean) initializableCheck2.getInitializable()).getMessage());
+        assertEquals("singletons should not being initialized twice", "initialized",
+                ((InitializableBean) initializableCheck2.getInitializable()).getMessage());
         assertEquals("initialized", ((InitializableBean) initializableCheck2.getPrototypeInitializable()).getMessage());
+        assertEquals("threads should not being initialized twice", "initialized",
+                ((InitializableBean) initializableCheck2.getThreadInitializable()).getMessage());
+
+        assertEquals("singletons should being instantiated once",
+                initializableCheck.getInitializable(), initializableCheck2.getInitializable());
+        assertNotSame("prototypes should being instantiated for each injection",
+                initializableCheck.getPrototypeInitializable(), initializableCheck2.getPrototypeInitializable());
+        assertEquals("threads should being instantiated once for each thread",
+                initializableCheck.getThreadInitializable(), initializableCheck2.getThreadInitializable());
+
+        final InitializableCheck initializableCheck3 = new InitializableCheck();
+        final TestScopeStrategy testScopeStrategy = new TestScopeStrategy();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ContainerBuilder cb2 = new ContainerBuilder();
+                cb2.factory(EarlyInitializable.class, EarlyInitializableBean.class, Scope.SINGLETON);
+                cb2.factory(Initializable.class, InitializableBean.class, Scope.SINGLETON);
+                cb2.factory(EarlyInitializable.class, "prototypeEarlyInitializable", EarlyInitializableBean.class, Scope.PROTOTYPE);
+                cb2.factory(Initializable.class, "prototypeInitializable", InitializableBean.class, Scope.PROTOTYPE);
+                cb2.factory(Initializable.class, "requestInitializable", InitializableBean.class, Scope.REQUEST);
+                cb2.factory(Initializable.class, "sessionInitializable", InitializableBean.class, Scope.SESSION);
+                cb2.factory(Initializable.class, "threadInitializable", InitializableBean.class, Scope.THREAD);
+                cb2.factory(Initializable.class, "wizardInitializable", InitializableBean.class, Scope.WIZARD);
+                Container c2 = cb2.create(false);
+                c2.setScopeStrategy(testScopeStrategy);
+                c2.inject(initializableCheck3);
+            }
+        });
+        thread.run();
+        thread.join();
+        assertNotSame("threads should being instantiated in new threads",
+                initializableCheck.getThreadInitializable(), initializableCheck3.getThreadInitializable());
+        assertEquals("initialized", ((InitializableBean) initializableCheck3.getThreadInitializable()).getMessage());
+
+        assertEquals("initialized", ((InitializableBean) initializableCheck3.getRequestInitializable()).getMessage());
+        assertEquals("initialized", ((InitializableBean) initializableCheck3.getSessionInitializable()).getMessage());
+        assertEquals("initialized", ((InitializableBean) initializableCheck3.getWizardInitializable()).getMessage());
+
+        assertEquals(testScopeStrategy.requestInitializable, initializableCheck3.getRequestInitializable());
+        assertEquals(testScopeStrategy.sessionInitializable, initializableCheck3.getSessionInitializable());
+        assertEquals(testScopeStrategy.wizardInitializable, initializableCheck3.getWizardInitializable());
     }
 
     public static class FieldCheck {
@@ -173,6 +228,10 @@ public class ContainerImplTest extends TestCase {
 
         private Initializable initializable;
         private Initializable prototypeInitializable;
+        private Initializable requestInitializable;
+        private Initializable sessionInitializable;
+        private Initializable threadInitializable;
+        private Initializable wizardInitializable;
 
         @Inject
         public void setInitializable(Initializable initializable) {
@@ -182,6 +241,42 @@ public class ContainerImplTest extends TestCase {
         @Inject("prototypeInitializable")
         public void setPrototypeInitializable(Initializable prototypeInitializable) {
             this.prototypeInitializable = prototypeInitializable;
+        }
+
+        @Inject("requestInitializable")
+        public void setRequestInitializable(Initializable requestInitializable) {
+            this.requestInitializable = requestInitializable;
+        }
+
+        @Inject("sessionInitializable")
+        public void setSessionInitializable(Initializable sessionInitializable) {
+            this.sessionInitializable = sessionInitializable;
+        }
+
+        @Inject("threadInitializable")
+        public void setThreadInitializable(Initializable threadInitializable) {
+            this.threadInitializable = threadInitializable;
+        }
+
+        @Inject("wizardInitializable")
+        public void setWizardInitializable(Initializable wizardInitializable) {
+            this.wizardInitializable = wizardInitializable;
+        }
+
+        public Initializable getRequestInitializable() {
+            return requestInitializable;
+        }
+
+        public Initializable getSessionInitializable() {
+            return sessionInitializable;
+        }
+
+        public Initializable getThreadInitializable() {
+            return threadInitializable;
+        }
+
+        public Initializable getWizardInitializable() {
+            return wizardInitializable;
         }
 
         public Initializable getInitializable() {
@@ -224,6 +319,36 @@ public class ContainerImplTest extends TestCase {
             if (!"setSecurityManager".equals(perm.getName())) {
                 super.checkPermission(perm);
             }
+        }
+    }
+
+    class TestScopeStrategy implements Scope.Strategy {
+        Initializable requestInitializable;
+        Initializable sessionInitializable;
+        Initializable wizardInitializable;
+
+        @Override
+        public <T> T findInRequest(Class<T> type, String name, Callable<? extends T> factory) throws Exception {
+            if (requestInitializable == null) {
+                requestInitializable = (Initializable) factory.call();
+            }
+            return (T) requestInitializable;
+        }
+
+        @Override
+        public <T> T findInSession(Class<T> type, String name, Callable<? extends T> factory) throws Exception {
+            if (sessionInitializable == null) {
+                sessionInitializable = (Initializable) factory.call();
+            }
+            return (T) sessionInitializable;
+        }
+
+        @Override
+        public <T> T findInWizard(Class<T> type, String name, Callable<? extends T> factory) throws Exception {
+            if (wizardInitializable == null) {
+                wizardInitializable = (Initializable) factory.call();
+            }
+            return (T) wizardInitializable;
         }
     }
 }

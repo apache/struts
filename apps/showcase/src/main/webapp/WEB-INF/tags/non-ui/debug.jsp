@@ -42,7 +42,7 @@
 			<p>
 			    Just click on the Debug label to see the Struts ValueStack Debug information.
 		    <p/>
-		    <s:debug disabled="false" />
+		    <s:debug />
 		</div>
 	</div>
 </div>

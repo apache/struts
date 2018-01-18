@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import java.util.HashMap;
@@ -63,43 +64,25 @@ public class DebugTagTest extends AbstractUITagTest {
         assertTrue("nothing to see here, devMode=false", StringUtils.isEmpty(writer.toString()));
     }
 
-    public void testTagAttributeDisableEmpty() throws Exception {
+    public void testTagAttributeOverrideDevModeTrue() throws Exception {
         setDevMode(false);
 
-        tag.doStartTag();
-        tag.doEndTag();
-        assertTrue("nothing to see here, devMode=false and Tag<disable> not set", StringUtils.isEmpty(writer.toString()));
-    }
-
-    public void testTagAttributeDisableFalse() throws Exception {
-        setDevMode(false);
-
-        tag.setDisabled("false");
+        PrepareOperations.overrideDevMode(true);
         tag.doStartTag();
         tag.doEndTag();
         String result = writer.toString();
-        assertTrue("devMode=false but Tag<disable> is set 'false'", StringUtils.isNotEmpty(result));
+        assertTrue(StringUtils.isNotEmpty(result));
         assertTrue("Property 'checkStackProperty' should be in Debug Tag output", StringUtils.contains(result, "<td>checkStackProperty</td>"));
     }
 
-    public void testTagAttributeDisableTrue() throws Exception {
+    public void testTagAttributeOverrideDevModeFalse() throws Exception {
         setDevMode(false);
 
-        tag.setDisabled("true");
+        PrepareOperations.overrideDevMode(false);
         tag.doStartTag();
         tag.doEndTag();
-        assertTrue("nothing to see here, devMode=false and Tag<disable> is set 'true", StringUtils.isEmpty(writer.toString()));
+        assertTrue("nothing to see here, devMode=false and overrideDevMode=false", StringUtils.isEmpty(writer.toString()));
     }
-
-    public void testTagAttributeDisableAny() throws Exception {
-        setDevMode(false);
-
-        tag.setDisabled("rubbish");
-        tag.doStartTag();
-        tag.doEndTag();
-        assertTrue("nothing to see here, devMode=false and Tag<disable> is set 'rubbish", StringUtils.isEmpty(writer.toString()));
-    }
-
 
     private void setDevMode(final boolean devMode) {
         setStrutsConstant(new HashMap<String, String>() {{

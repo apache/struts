@@ -30,11 +30,12 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.StrutsException;
 
 @StrutsTag(name="debug", tldTagClass="org.apache.struts2.views.jsp.ui.DebugTag",
-        description="Prints debugging information (Only if 'struts.devMode' enabled or disable tag is set 'false')")
+        description="Prints debugging information (Only if 'struts.devMode' is enabled)")
 public class Debug extends UIBean {
     public static final String TEMPLATE = "debug";
 
@@ -88,7 +89,7 @@ public class Debug extends UIBean {
     }
 
     protected boolean showDebug() {
-        return (devMode || "false".equalsIgnoreCase(disabled));
+        return (devMode || Boolean.TRUE == PrepareOperations.getDevModeOverride());
     }
 
     private static class DebugMapEntry implements Map.Entry {

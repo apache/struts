@@ -80,6 +80,12 @@
             </result>
         </action>
 
+        <action name="test9" class="com.opensymphony.xwork2.ActionSupport">
+            <result type="freemarker">
+                <param name="location">org/apache/struts2/views/freemarker/select.ftl</param>
+            </result>
+        </action>
+
     </package>
 
     <package name="sitegraph" namespace="/tutorial/sitegraph" extends="struts-default">

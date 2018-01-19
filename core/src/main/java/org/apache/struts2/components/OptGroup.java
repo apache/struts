@@ -127,7 +127,7 @@ public class OptGroup extends Component {
     }
 
     @StrutsTagAttribute(description="Set the list attribute.")
-    public void setList(String list) {
+    public void setList(Object list) {
         internalUiBean.setList(list);
     }
 

@@ -70,7 +70,7 @@ public abstract class ListUIBean extends UIBean {
 
         if (list instanceof String) {
             value = findValue((String) list);
-        } else if (list instanceof Collection) {
+        } else if (list instanceof Collection || list instanceof Map) {
             value = list;
         } else if (MakeIterator.isIterable(list)) {
             value = MakeIterator.convert(list);
@@ -107,6 +107,8 @@ public abstract class ListUIBean extends UIBean {
             addParameter("listKey", listKey);
         } else if (value instanceof Map) {
             addParameter("listKey", "key");
+        } else {
+            addParameter("listKey", "top");
         }
 
         if (listValueKey != null) {
@@ -119,6 +121,8 @@ public abstract class ListUIBean extends UIBean {
             addParameter("listValue", listValue);
         } else if (value instanceof Map) {
             addParameter("listValue", "value");
+        } else {
+            addParameter("listValue", "top");
         }
 
         if (listLabelKey != null) {

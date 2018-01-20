@@ -151,7 +151,7 @@
         <action name="date">
             <result>/WEB-INF/tags/non-ui/date.jsp</result>
         </action>
-        <action name="debugTagDemo">
+		<action name="debugTagDemo" class="org.apache.struts2.showcase.tag.nonui.debugtag.DebugTagAction">
             <result>/WEB-INF/tags/non-ui/debug.jsp</result>
         </action>
     </package>

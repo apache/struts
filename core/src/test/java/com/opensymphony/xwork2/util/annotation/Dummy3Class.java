@@ -18,11 +18,8 @@
  */
 package com.opensymphony.xwork2.util.annotation;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.opensymphony.xwork2.util.annotation.pkg1.AbstractDummyAction;
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface MyAnnotation2 {
+public class Dummy3Class extends AbstractDummyAction{
 
-    String value() default "";
 }

@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -129,7 +130,7 @@ public class AnnotationUtils {
     }
 
     /**
-     * Returns the annotation on the given class or the package of the class. This searchs up the
+     * Returns the annotation on the given class or the package of the class. This searches up the
      * class hierarchy and the package hierarchy for the closest match.
      *
      * @param <T>             class type
@@ -150,5 +151,34 @@ public class AnnotationUtils {
         }
 
         return ann;
+    }
+
+    /**
+     * Returns the annotation on the given class or the package of the class. This searches up the
+     * class hierarchy and the package hierarchy for the closest match.
+     *
+     * @param <T>             class type
+     * @param clazz           The class to search for the annotation.
+     * @param annotationClass The Class of the annotation.
+     * @return The annotation or null.
+     */
+    public static <T extends Annotation> List<T> findAnnotations(Class<?> clazz, Class<T> annotationClass) {
+        List<T> anns = new ArrayList<>();
+
+        T ann = clazz.getAnnotation(annotationClass);
+        if (ann != null) {
+            anns.add(ann);
+        }
+
+        ann = clazz.getPackage().getAnnotation(annotationClass);
+        if (ann != null) {
+            anns.add(ann);
+        }
+
+        if (clazz.getSuperclass() != Object.class) {
+            anns.addAll(findAnnotations(clazz.getSuperclass(), annotationClass));
+        }
+
+        return anns;
     }
 }

@@ -22,13 +22,15 @@ import com.opensymphony.xwork2.util.annotation.Dummy2Class;
 import com.opensymphony.xwork2.util.annotation.Dummy3Class;
 import com.opensymphony.xwork2.util.annotation.DummyClass;
 import com.opensymphony.xwork2.util.annotation.MyAnnotation;
-
 import com.opensymphony.xwork2.util.annotation.MyAnnotation2;
 import junit.framework.TestCase;
 
-/**
- * @author Dan Oxlade, dan d0t oxlade at gmail d0t c0m
- */
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.fest.assertions.Assertions.assertThat;
+
 public class AnnotationUtilsTest extends TestCase {
 
     public void testFindAnnotationOnClass() {
@@ -47,6 +49,21 @@ public class AnnotationUtilsTest extends TestCase {
         MyAnnotation2 ns = AnnotationUtils.findAnnotation(Dummy3Class.class, MyAnnotation2.class);
         assertNotNull(ns);
         assertEquals("abstract-abstract", ns.value());
+    }
+
+    public void testFindAnnotationsOnAll() {
+        List<MyAnnotation> annotations = AnnotationUtils.findAnnotations(DummyClass.class, MyAnnotation.class);
+
+        assertThat(annotations)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(2);
+
+        Set<String> values = new HashSet<>();
+        for (MyAnnotation annotation : annotations) {
+            values.add(annotation.value());
+        }
+        assertThat(values).contains("class-test", "package-test");
     }
 
 }

@@ -29,9 +29,8 @@ import java.util.ArrayList;
  */
 public class DefaultUnknownHandlerManagerTest extends XWorkTestCase {
 
-    ActionConfig.Builder actionConfigBuilder = new ActionConfig.Builder( "com", "someAction", "someClass");
-    ActionConfig actionConfig = actionConfigBuilder.build();
-    SomeUnknownHandler someUnknownHandler = new SomeUnknownHandler();
+    ActionConfig actionConfig;
+    SomeUnknownHandler someUnknownHandler;
 
     /**
      * Relationshsip when UnknownAction method is called.
@@ -71,6 +70,10 @@ public class DefaultUnknownHandlerManagerTest extends XWorkTestCase {
         super.setUp();
 
         // Make sure we are using the actionConfig we initialized.
+        ActionConfig.Builder actionConfigBuilder = new ActionConfig.Builder( "com", "someAction", "someClass");
+        actionConfig = actionConfigBuilder.build();
+        someUnknownHandler = new SomeUnknownHandler();
+
         someUnknownHandler.setActionConfig(actionConfig);
         someUnknownHandler.setActionMethodResult("specialActionMethod");
     }

@@ -21,13 +21,15 @@ package com.opensymphony.xwork2;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.SomeUnknownHandler;
 
+import junit.framework.TestCase;
+
 import java.util.ArrayList;
 
 /**
  * Partial test to the DefaultUnknownHandlerManager to understand the relationship between Manager and Handlers.
  *
  */
-public class DefaultUnknownHandlerManagerTest extends XWorkTestCase {
+public class DefaultUnknownHandlerManagerTest extends TestCase {
 
     ActionConfig actionConfig;
     SomeUnknownHandler someUnknownHandler;
@@ -76,12 +78,6 @@ public class DefaultUnknownHandlerManagerTest extends XWorkTestCase {
 
         someUnknownHandler.setActionConfig(actionConfig);
         someUnknownHandler.setActionMethodResult("specialActionMethod");
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-
     }
 
 }

@@ -154,13 +154,13 @@ public class AnnotationUtils {
     }
 
     /**
-     * Returns the annotation on the given class or the package of the class. This searches up the
-     * class hierarchy and the package hierarchy for the closest match.
+     * Returns a list of the annotation on the given class or the package of the class.
+     * This searches up the class hierarchy and the package hierarchy.
      *
      * @param <T>             class type
      * @param clazz           The class to search for the annotation.
      * @param annotationClass The Class of the annotation.
-     * @return The annotation or null.
+     * @return List of the annotations or an empty list.
      */
     public static <T extends Annotation> List<T> findAnnotations(Class<?> clazz, Class<T> annotationClass) {
         List<T> anns = new ArrayList<>();

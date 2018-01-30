@@ -18,15 +18,8 @@
  */
 package com.opensymphony.xwork2.util.annotation;
 
-import com.opensymphony.xwork2.util.annotation.pkg2.Package2DummyInterface;
+import com.opensymphony.xwork2.util.annotation.pkg1.AbstractDummyAction;
 
-@MyAnnotation("class-test")
-public class DummyClass implements Package2DummyInterface {
+public class Dummy3Class extends AbstractDummyAction{
 
-    public DummyClass() {
-    }
-
-    @MyAnnotation("method-test")
-    public void methodWithAnnotation() {
-    }
 }

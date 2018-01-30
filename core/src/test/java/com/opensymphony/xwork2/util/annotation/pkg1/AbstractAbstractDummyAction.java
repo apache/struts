@@ -16,17 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util.annotation;
+package com.opensymphony.xwork2.util.annotation.pkg1;
 
-import com.opensymphony.xwork2.util.annotation.pkg2.Package2DummyInterface;
+import com.opensymphony.xwork2.util.annotation.MyAnnotation2;
 
-@MyAnnotation("class-test")
-public class DummyClass implements Package2DummyInterface {
-
-    public DummyClass() {
-    }
-
-    @MyAnnotation("method-test")
-    public void methodWithAnnotation() {
-    }
+@MyAnnotation2("abstract-abstract")
+public class AbstractAbstractDummyAction {
 }

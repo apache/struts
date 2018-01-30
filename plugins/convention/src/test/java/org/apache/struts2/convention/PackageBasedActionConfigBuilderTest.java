@@ -544,10 +544,14 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         assertEquals("struts-default", pkgConfig.getParents().get(0).getName());
 
         ActionConfig actionConfig = pkgConfig.getActionConfigs().get("class-level-allowed-methods");
-        assertEquals(actionConfig.getAllowedMethods().size(), 5);
+        assertEquals(7, actionConfig.getAllowedMethods().size());
         assertTrue(actionConfig.getAllowedMethods().contains("execute"));
         assertTrue(actionConfig.getAllowedMethods().contains("end"));
         assertTrue(actionConfig.getAllowedMethods().contains("input"));
+        assertTrue(actionConfig.getAllowedMethods().contains("cancel"));
+        assertTrue(actionConfig.getAllowedMethods().contains("start"));
+        assertTrue(actionConfig.getAllowedMethods().contains("home"));
+        assertTrue(actionConfig.getAllowedMethods().contains("browse"));
 
         /* org.apache.struts2.convention.actions.allowedmethods.sub package level */
         pkgConfig = configuration.getPackageConfig("org.apache.struts2.convention.actions.allowedmethods.sub#struts-default#/allowedmethods/sub");

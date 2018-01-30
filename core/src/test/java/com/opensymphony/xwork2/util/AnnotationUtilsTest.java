@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.util;
 import com.opensymphony.xwork2.util.annotation.Dummy2Class;
 import com.opensymphony.xwork2.util.annotation.Dummy3Class;
 import com.opensymphony.xwork2.util.annotation.DummyClass;
+import com.opensymphony.xwork2.util.annotation.DummyClassExt;
 import com.opensymphony.xwork2.util.annotation.MyAnnotation;
 import com.opensymphony.xwork2.util.annotation.MyAnnotation2;
 import junit.framework.TestCase;
@@ -52,18 +53,18 @@ public class AnnotationUtilsTest extends TestCase {
     }
 
     public void testFindAnnotationsOnAll() {
-        List<MyAnnotation> annotations = AnnotationUtils.findAnnotations(DummyClass.class, MyAnnotation.class);
+        List<MyAnnotation> annotations = AnnotationUtils.findAnnotations(DummyClassExt.class, MyAnnotation.class);
 
         assertThat(annotations)
                 .isNotNull()
                 .isNotEmpty()
-                .hasSize(2);
+                .hasSize(5);
 
         Set<String> values = new HashSet<>();
         for (MyAnnotation annotation : annotations) {
             values.add(annotation.value());
         }
-        assertThat(values).contains("class-test", "package-test");
+        assertThat(values).contains("class-test", "package-test", "interface-test", "package2-test");
     }
 
 }

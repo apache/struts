@@ -18,6 +18,8 @@
  */
 package com.opensymphony.xwork2.util;
 
+import org.apache.commons.lang3.ClassUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -168,18 +170,21 @@ public class AnnotationUtils {
     public static <T extends Annotation> List<T> findAnnotations(Class<?> clazz, Class<T> annotationClass) {
         List<T> anns = new ArrayList<>();
 
-        T ann = clazz.getAnnotation(annotationClass);
-        if (ann != null) {
-            anns.add(ann);
-        }
+        List<Class<?>> classes = new ArrayList<>();
+        classes.add(clazz);
 
-        ann = clazz.getPackage().getAnnotation(annotationClass);
-        if (ann != null) {
-            anns.add(ann);
-        }
+        classes.addAll(ClassUtils.getAllSuperclasses(clazz));
+        classes.addAll(ClassUtils.getAllInterfaces(clazz));
+        for (Class<?> aClass : classes) {
+            T ann = aClass.getAnnotation(annotationClass);
+            if (ann != null) {
+                anns.add(ann);
+            }
 
-        if (clazz.getSuperclass() != Object.class) {
-            anns.addAll(findAnnotations(clazz.getSuperclass(), annotationClass));
+            ann = aClass.getPackage().getAnnotation(annotationClass);
+            if (ann != null) {
+                anns.add(ann);
+            }
         }
 
         return anns;

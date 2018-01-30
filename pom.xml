@@ -97,7 +97,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <struts2.springPlatformVersion>4.1.9.RELEASE</struts2.springPlatformVersion>
+        <spring.platformVersion>4.3.13.RELEASE</spring.platformVersion>
         <ognl.version>3.1.15</ognl.version>
         <asm.version>5.2</asm.version>
         <tiles.version>3.0.7</tiles.version>
@@ -878,47 +878,47 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>${struts2.springPlatformVersion}</version>
+                <version>${spring.platformVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc-portlet</artifactId>
-                <version>${struts2.springPlatformVersion}</version>
+                <version>${spring.platformVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>${struts2.springPlatformVersion}</version>
+                <version>${spring.platformVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
-                <version>${struts2.springPlatformVersion}</version>
+                <version>${spring.platformVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aspects</artifactId>
-                <version>${struts2.springPlatformVersion}</version>
+                <version>${spring.platformVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
-                <version>${struts2.springPlatformVersion}</version>
+                <version>${spring.platformVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
-                <version>${struts2.springPlatformVersion}</version>
+                <version>${spring.platformVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context-support</artifactId>
-                <version>${struts2.springPlatformVersion}</version>
+                <version>${spring.platformVersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
-                <version>${struts2.springPlatformVersion}</version>
+                <version>${spring.platformVersion}</version>
             </dependency>
 
             <dependency>

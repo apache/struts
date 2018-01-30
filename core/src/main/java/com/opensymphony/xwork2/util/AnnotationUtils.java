@@ -177,12 +177,12 @@ public class AnnotationUtils {
         classes.addAll(ClassUtils.getAllInterfaces(clazz));
         for (Class<?> aClass : classes) {
             T ann = aClass.getAnnotation(annotationClass);
-            if (ann != null && !anns.contains(ann)) {
+            if (ann != null) {
                 anns.add(ann);
             }
 
             ann = aClass.getPackage().getAnnotation(annotationClass);
-            if (ann != null && !anns.contains(ann)) {
+            if (ann != null) {
                 anns.add(ann);
             }
         }

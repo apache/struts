@@ -58,7 +58,7 @@ public class AnnotationUtilsTest extends TestCase {
         assertThat(annotations)
                 .isNotNull()
                 .isNotEmpty()
-                .hasSize(4);
+                .hasSize(5);
 
         Set<String> values = new HashSet<>();
         for (MyAnnotation annotation : annotations) {

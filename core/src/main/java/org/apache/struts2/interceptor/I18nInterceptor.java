@@ -281,15 +281,17 @@ public class I18nInterceptor extends AbstractInterceptor {
 
         @Override
         public Locale store(ActionInvocation invocation, Locale locale) {
-            //save it in session
-            Map<String, Object> session = invocation.getInvocationContext().getSession();
+            HttpSession session = ServletActionContext.getRequest().getSession(false);
 
             if (session != null) {
-                String sessionId = ServletActionContext.getRequest().getSession().getId();
+                String sessionId = session.getId();
                 synchronized (sessionId.intern()) {
-                    session.put(attributeName, locale);
+                    invocation.getInvocationContext().getSession().put(attributeName, locale);
                 }
+            } else {
+                LOG.debug("session creation avoided as it doesn't exist already");
             }
+
             return locale;
         }
 
@@ -298,19 +300,15 @@ public class I18nInterceptor extends AbstractInterceptor {
             Locale locale = null;
 
             LOG.debug("Checks session for saved locale");
-            Map<String, Object> session = invocation.getInvocationContext().getSession();
+            HttpSession session = ServletActionContext.getRequest().getSession(false);
 
             if (session != null) {
-                //[WW-4741] Do not force session creation while this is a read operation
-                HttpSession httpSession = ServletActionContext.getRequest().getSession(false);
-                if(null != httpSession) {
-                    String sessionId = httpSession.getId();
-                    synchronized (sessionId.intern()) {
-                        Object sessionLocale = session.get(attributeName);
-                        if (sessionLocale != null && sessionLocale instanceof Locale) {
-                            locale = (Locale) sessionLocale;
-                            LOG.debug("Applied session locale: {}", locale);
-                        }
+                String sessionId = session.getId();
+                synchronized (sessionId.intern()) {
+                    Object sessionLocale = invocation.getInvocationContext().getSession().get(attributeName);
+                    if (sessionLocale != null && sessionLocale instanceof Locale) {
+                        locale = (Locale) sessionLocale;
+                        LOG.debug("Applied session locale: {}", locale);
                     }
                 }
             }

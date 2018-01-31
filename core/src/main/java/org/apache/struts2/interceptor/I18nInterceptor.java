@@ -281,7 +281,6 @@ public class I18nInterceptor extends AbstractInterceptor {
 
         @Override
         public Locale store(ActionInvocation invocation, Locale locale) {
-            LOG.debug("Do not create session if it doesn't exist");
             HttpSession session = ServletActionContext.getRequest().getSession(false);
 
             if (session != null) {
@@ -289,6 +288,8 @@ public class I18nInterceptor extends AbstractInterceptor {
                 synchronized (sessionId.intern()) {
                     invocation.getInvocationContext().getSession().put(attributeName, locale);
                 }
+            } else {
+                LOG.debug("session creation avoided as it doesn't exist already");
             }
 
             return locale;

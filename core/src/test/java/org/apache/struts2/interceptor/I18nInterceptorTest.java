@@ -61,9 +61,10 @@ public class I18nInterceptorTest extends TestCase {
             fail("Shouldn't throw any exception!");
         }
 
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
+        assertFalse("should have been removed",
+                mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined());
+        assertNull("should not be created", request.getSession(false));
+        assertNull("should not be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
     }
 
     public void testNoSessionButLocale() throws Exception {
@@ -76,9 +77,10 @@ public class I18nInterceptorTest extends TestCase {
             fail("Shouldn't throw any exception!");
         }
 
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
+        assertFalse("should have been removed",
+                mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined());
+        assertNull("should not be created", request.getSession(false));
+        assertNull("should not be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
     }
 
     public void testDefaultLocale() throws Exception {

@@ -52,7 +52,7 @@ public class I18nInterceptorTest extends TestCase {
         interceptor.intercept(mai);
     }
 
-    public void testNoSession() throws Exception {
+    public void testNoSessionNoLocale() throws Exception {
         request.setSession(null);
         try {
             interceptor.intercept(mai);
@@ -60,6 +60,25 @@ public class I18nInterceptorTest extends TestCase {
         } catch (Exception ignore) {
             fail("Shouldn't throw any exception!");
         }
+
+        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
+
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
+    }
+
+    public void testNoSessionButLocale() throws Exception {
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "da_DK"); //prevents shouldStore to being false
+        request.setSession(null);
+        try {
+            interceptor.intercept(mai);
+            assertTrue(true);
+        } catch (Exception ignore) {
+            fail("Shouldn't throw any exception!");
+        }
+
+        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
+
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
     }
 
     public void testDefaultLocale() throws Exception {

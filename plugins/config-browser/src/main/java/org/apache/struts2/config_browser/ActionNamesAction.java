@@ -21,7 +21,7 @@ package org.apache.struts2.config_browser;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.Set;

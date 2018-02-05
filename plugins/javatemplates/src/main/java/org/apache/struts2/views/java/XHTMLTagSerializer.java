@@ -20,7 +20,7 @@ package org.apache.struts2.views.java;
 
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.IOException;
 import java.io.Writer;

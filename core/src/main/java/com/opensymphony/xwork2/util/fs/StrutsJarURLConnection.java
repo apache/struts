@@ -38,10 +38,10 @@ import java.util.jar.JarFile;
 /**
  * WW-4901 If was needed, decouples from underlying implementation of {@link URL#openConnection()}
  * e.g. from IBM WebSphere com.ibm.ws.classloader.Handler$ClassLoaderURLConnection
- * Also decouples from and fixes {@link JarURLConnection#parseSpecs(URL)} if was needed
+ * WW-4920 Also decouples from and fixes {@link JarURLConnection#parseSpecs(URL)} if was needed
  * e.g. from Oracle WebLogic which may report jar urls like "zip:C:/web-app-lib-path/some-jar.jar"
  * but {@link JarURLConnection#parseSpecs(URL)} breaks on such urls
- * While {@link JarURLConnection#parseSpecs(URL)} is private then we had too extends {@link URLConnection} instead
+ * While {@link JarURLConnection#parseSpecs(URL)} is private, then we had to extend {@link URLConnection} instead
  * @since 2.5.15
  */
 class StrutsJarURLConnection extends URLConnection {

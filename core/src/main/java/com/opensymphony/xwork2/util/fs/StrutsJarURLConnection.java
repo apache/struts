@@ -18,14 +18,14 @@
  */
 package com.opensymphony.xwork2.util.fs;
 
-import sun.net.www.ParseUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -71,7 +71,7 @@ class StrutsJarURLConnection extends URLConnection {
     /**
     * A fixed copy of {@link JarURLConnection#parseSpecs(URL)}
     */
-    private void parseSpecs(URL url) throws MalformedURLException {
+    private void parseSpecs(URL url) throws MalformedURLException, UnsupportedEncodingException {
         String spec = url.getFile();
 
         int separator = spec.indexOf("!/");
@@ -101,7 +101,7 @@ class StrutsJarURLConnection extends URLConnection {
         /* if ! is the last letter of the innerURL, entryName is null */
         if (++separator != spec.length()) {
             entryName = spec.substring(separator, spec.length());
-            entryName = ParseUtil.decode (entryName);
+            entryName = URLDecoder.decode (entryName, "UTF-8");
         }
     }
 

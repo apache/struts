@@ -311,12 +311,12 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>3.0.2</version>
+                    <version>3.1.1</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
                         </suppressionFiles>
-                        <failBuildOnCVSS>8</failBuildOnCVSS>
+                        <failBuildOnCVSS>7</failBuildOnCVSS>
                         <skipProvidedScope>true</skipProvidedScope>
                         <skipRuntimeScope>true</skipRuntimeScope>
                     </configuration>

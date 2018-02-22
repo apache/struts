@@ -83,6 +83,37 @@ public class I18nInterceptorTest extends TestCase {
         assertNull("should not be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
     }
 
+    public void testNoInvocationSessionNoLocale() throws Exception {
+        mai.getInvocationContext().setSession(null);
+        try {
+            interceptor.intercept(mai);
+            assertTrue(true);
+        } catch (Exception ignore) {
+            fail("Shouldn't throw any exception!");
+        }
+
+        assertFalse("should have been removed",
+                mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined());
+        assertNull("should not be created", mai.getInvocationContext().getSession());
+        assertNull("should not be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+    }
+
+    public void testNoInvocationSessionButLocale() throws Exception {
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "da_DK"); //prevents shouldStore to being false
+        mai.getInvocationContext().setSession(null);
+        try {
+            interceptor.intercept(mai);
+            assertTrue(true);
+        } catch (Exception ignore) {
+            fail("Shouldn't throw any exception!");
+        }
+
+        assertFalse("should have been removed",
+                mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined());
+        assertNull("should not be created", mai.getInvocationContext().getSession());
+        assertNull("should not be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+    }
+
     public void testDefaultLocale() throws Exception {
         prepare(I18nInterceptor.DEFAULT_PARAMETER, "_"); // bad locale that would get us default locale instead
         interceptor.intercept(mai);

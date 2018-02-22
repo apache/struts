@@ -282,14 +282,15 @@ public class I18nInterceptor extends AbstractInterceptor {
         @Override
         public Locale store(ActionInvocation invocation, Locale locale) {
             HttpSession session = ServletActionContext.getRequest().getSession(false);
+            Map<String, Object> invocationSession = invocation.getInvocationContext().getSession();
 
-            if (session != null) {
+            if (session != null && invocationSession != null) {
                 String sessionId = session.getId();
                 synchronized (sessionId.intern()) {
-                    invocation.getInvocationContext().getSession().put(attributeName, locale);
+                    invocationSession.put(attributeName, locale);
                 }
             } else {
-                LOG.debug("session creation avoided as it doesn't exist already");
+                LOG.debug("locale did not stored because either request or invocation does not have session");
             }
 
             return locale;
@@ -301,11 +302,12 @@ public class I18nInterceptor extends AbstractInterceptor {
 
             LOG.debug("Checks session for saved locale");
             HttpSession session = ServletActionContext.getRequest().getSession(false);
+            Map<String, Object> invocationSession = invocation.getInvocationContext().getSession();
 
-            if (session != null) {
+            if (session != null && invocationSession != null) {
                 String sessionId = session.getId();
                 synchronized (sessionId.intern()) {
-                    Object sessionLocale = invocation.getInvocationContext().getSession().get(attributeName);
+                    Object sessionLocale = invocationSession.get(attributeName);
                     if (sessionLocale != null && sessionLocale instanceof Locale) {
                         locale = (Locale) sessionLocale;
                         LOG.debug("Applied session locale: {}", locale);

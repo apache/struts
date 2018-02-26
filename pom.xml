@@ -314,7 +314,7 @@
                     <version>3.1.1</version>
                     <configuration>
                         <suppressionFiles>
-                            <suppressionFile>${project.basedir}/src/etc/project-suppression.xml</suppressionFile>
+                            <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
                         </suppressionFiles>
                         <failBuildOnCVSS>7</failBuildOnCVSS>
                         <skipProvidedScope>true</skipProvidedScope>

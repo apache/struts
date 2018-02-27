@@ -37,6 +37,7 @@ import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 
@@ -155,10 +156,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         ActionProxy proxy = config.getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
                 namespace, name, method, new HashMap<String, Object>(), true, false);
 
-        ActionContext invocationContext = proxy.getInvocation().getInvocationContext();
-        invocationContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
-        // set the action context to the one used by the proxy
-        ActionContext.setContext(invocationContext);
+        initActionContext(proxy.getInvocation().getInvocationContext());
 
         // this is normally done in onSetUp(), but we are using Struts internal
         // objects (proxy and action invocation)
@@ -168,6 +166,20 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         ServletActionContext.setResponse(response);
 
         return proxy;
+    }
+
+    private void initActionContext(ActionContext actionContext) {
+        actionContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
+        initSession(actionContext);
+        // set the action context to the one used by the proxy
+        ActionContext.setContext(actionContext);
+    }
+
+    private void initSession(ActionContext actionContext) {
+        if (actionContext.getSession() == null) {
+            actionContext.setSession(new HashMap<String, Object>());
+            request.setSession(new MockHttpSession(servletContext));
+        }
     }
 
     /**

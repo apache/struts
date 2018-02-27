@@ -384,7 +384,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             throw new ServletException(e.getMessage(), e);
         } finally {
             try {
-                if(conn != null) {
+                if (conn != null) {
                     // avoid NPE if connection was not used for the report
                     conn.close();
                 }

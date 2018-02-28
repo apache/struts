@@ -46,7 +46,7 @@ public class JasperReportsResultTest extends StrutsTestCase {
         JasperReportsResult result = new JasperReportsResult();
         URL url = ClassLoaderUtil.getResource("org/apache/struts2/views/jasperreports/empty.jrxml", this.getClass());
         JasperCompileManager.compileReportToFile(url.getFile(), url.getFile() + ".jasper");
-        result.setLocation("empty.jrxml.jasper");
+        result.setLocation("org/apache/struts2/views/jasperreports/empty.jrxml.jasper");
         result.setFormat(JasperReportConstants.FORMAT_XML);
 
         Connection connection = createMock(Connection.class);

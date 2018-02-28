@@ -37,7 +37,7 @@ public class JarEntryRevision extends Revision {
     private long lastModified;
 
     public static Revision build(URL fileUrl, FileManager fileManager) {
-        JarURLConnection conn = null;
+        StrutsJarURLConnection conn = null;
         try {
             conn = StrutsJarURLConnection.openConnection(fileUrl);
             conn.setUseCaches(false);
@@ -70,7 +70,7 @@ public class JarEntryRevision extends Revision {
     }
 
     public boolean needsReloading() {
-        JarURLConnection conn = null;
+        StrutsJarURLConnection conn = null;
         long lastLastModified = lastModified;
         try {
             conn = StrutsJarURLConnection.openConnection(jarFileURL);

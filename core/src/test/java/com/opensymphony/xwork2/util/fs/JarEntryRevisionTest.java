@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,6 +68,7 @@ public class JarEntryRevisionTest extends XWorkTestCase {
         createJarFile(now);
         URL url = new URL("jar:file:target/JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class");
         Revision entry = JarEntryRevision.build(url, fileManager);
+        assert entry != null;
         assertFalse(entry.needsReloading());
 
         createJarFile(now + 60000);
@@ -81,6 +83,30 @@ public class JarEntryRevisionTest extends XWorkTestCase {
                 "jar:file:target/JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class",
                 new ContainerProvidedURLStreamHandler());
         Revision entry = JarEntryRevision.build(url, fileManager);
+        assert entry != null;
+        assertFalse(entry.needsReloading());
+
+        createJarFile(now + 60000);
+        assertTrue(entry.needsReloading());
+    }
+
+    public void testNeedsReloadingWithContainerProvidedURLConnectionEmptyProtocol() throws Exception {
+        long now = System.currentTimeMillis();
+
+        createJarFile(now);
+        File targetDir = new File("target");
+        String targetUrlStr = targetDir.toURI().toURL().toString();
+        if (targetUrlStr.startsWith("file:")) {
+            targetUrlStr = targetUrlStr.substring(5);//emptying protocol; we expect framework will fix it
+        }
+        if (targetUrlStr.startsWith("/")) {
+            targetUrlStr = targetUrlStr.substring(1);//we expect framework will fix it also
+        }
+        URL url = new URL(null,
+                "zip:" + targetUrlStr + "JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class",
+                new ContainerProvidedURLStreamHandler());
+        Revision entry = JarEntryRevision.build(url, fileManager);
+        assert entry != null;
         assertFalse(entry.needsReloading());
 
         createJarFile(now + 60000);
@@ -107,7 +133,7 @@ public class JarEntryRevisionTest extends XWorkTestCase {
      */
     private class ContainerProvidedURLConnection extends URLConnection {
 
-        protected ContainerProvidedURLConnection(URL url) {
+        ContainerProvidedURLConnection(URL url) {
             super(url);
         }
 

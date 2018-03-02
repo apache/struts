@@ -18,6 +18,7 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -192,7 +193,7 @@ public class ActionContext implements Serializable {
      *
      * @param conversionErrors a Map of errors which occurred when executing the action.
      */
-    public void setConversionErrors(Map<String, Object> conversionErrors) {
+    public void setConversionErrors(Map<String, ConversionData> conversionErrors) {
         put(CONVERSION_ERRORS, conversionErrors);
     }
 
@@ -202,8 +203,8 @@ public class ActionContext implements Serializable {
      * @return the map of conversion errors which occurred when executing the action or an empty map if
      *         there were no errors.
      */
-    public Map<String, Object> getConversionErrors() {
-        Map<String, Object> errors = (Map) get(CONVERSION_ERRORS);
+    public Map<String, ConversionData> getConversionErrors() {
+        Map<String, ConversionData> errors = (Map) get(CONVERSION_ERRORS);
 
         if (errors == null) {
             errors = new HashMap<>();

@@ -18,6 +18,7 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
@@ -131,9 +132,9 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      * @return formatted expr with format specified by key
      */
     public String getFormatted(String key, String expr) {
-        Map<String, Object> conversionErrors = ActionContext.getContext().getConversionErrors();
+        Map<String, ConversionData> conversionErrors = ActionContext.getContext().getConversionErrors();
         if (conversionErrors.containsKey(expr)) {
-            String[] vals = (String[]) conversionErrors.get(expr);
+            String[] vals = (String[]) conversionErrors.get(expr).getValue();
             return vals[0];
         } else {
             final ValueStack valueStack = ActionContext.getContext().getValueStack();

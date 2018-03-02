@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.ValidationException;
@@ -155,12 +156,12 @@ public abstract class RepopulateConversionErrorFieldValidatorSupport extends Fie
     public void repopulateField(Object object) throws ValidationException {
 
         ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
-        Map<String, Object> conversionErrors = ActionContext.getContext().getConversionErrors();
+        Map<String, ConversionData> conversionErrors = ActionContext.getContext().getConversionErrors();
 
         String fieldName = getFieldName();
         String fullFieldName = getValidatorContext().getFullFieldName(fieldName);
         if (conversionErrors.containsKey(fullFieldName)) {
-            Object value = conversionErrors.get(fullFieldName);
+            Object value = conversionErrors.get(fullFieldName).getValue();
 
             final Map<Object, Object> fakeParams = new LinkedHashMap<Object, Object>();
             boolean doExprOverride = false;

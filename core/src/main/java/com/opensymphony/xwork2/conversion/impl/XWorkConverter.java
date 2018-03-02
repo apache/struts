@@ -201,10 +201,11 @@ public class XWorkConverter extends DefaultTypeConverter {
 
         propertyName = removeAllIndexesInPropertyName(propertyName);
 
-        String getTextExpression = "getText('" + CONVERSION_ERROR_PROPERTY_PREFIX + propertyName + "', null)";
+        String prefixedPropertyName = CONVERSION_ERROR_PROPERTY_PREFIX + propertyName;
+        String getTextExpression = "getText('" + prefixedPropertyName + "')";
         String message = (String) stack.findValue(getTextExpression);
 
-        if (message == null) {
+        if (message == null || prefixedPropertyName.equals(message)) {
             getTextExpression = "getText('" + CONVERSION_ERROR_PROPERTY_PREFIX + toClass.getName() + "','" + defaultMessage + "')";
             message = (String) stack.findValue(getTextExpression);
         }

@@ -234,6 +234,83 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(value, b.getTitle() + ":" + b.getSomethingElse());
     }
 
+    public void testDefaultFieldConversionErrorMessage() {
+        SimpleAction action = new SimpleAction();
+        container.inject(action);
+
+        stack.push(action);
+
+        String message = XWorkConverter.getConversionErrorMessage("baz", int.class, stack);
+        assertNotNull(message);
+        assertEquals("Invalid field value for field \"baz\".", message);
+    }
+
+    public void testCustomFieldConversionErrorMessage() {
+        SimpleAction action = new SimpleAction();
+        container.inject(action);
+
+        stack.push(action);
+
+        String message = XWorkConverter.getConversionErrorMessage("foo", int.class, stack);
+        assertNotNull(message);
+        assertEquals("Custom error message for foo.", message);
+    }
+
+    public void testCustomPrimitiveConversionErrorMessage() {
+        SimpleAction action = new SimpleAction();
+        container.inject(action);
+
+        stack.push(action);
+
+        String message = XWorkConverter.getConversionErrorMessage("percentage", double.class, stack);
+        assertNotNull(message);
+        assertEquals("Custom error message for double.", message);
+    }
+
+    public void testCustomClassConversionErrorMessage() {
+        SimpleAction action = new SimpleAction();
+        container.inject(action);
+
+        stack.push(action);
+
+        String message = XWorkConverter.getConversionErrorMessage("date", Date.class, stack);
+        assertNotNull(message);
+        assertEquals("Custom error message for java.util.Date.", message);
+    }
+
+    public void testDefaultIndexedConversionErrorMessage() {
+        SimpleAction action = new SimpleAction();
+        container.inject(action);
+
+        stack.push(action);
+
+        String message = XWorkConverter.getConversionErrorMessage("beanList[0].name", String.class, stack);
+        assertNotNull(message);
+        assertEquals("Invalid field value for field \"beanList[0].name\".", message);
+    }
+
+    public void testCustomIndexedFieldConversionErrorMessage() {
+        SimpleAction action = new SimpleAction();
+        container.inject(action);
+
+        stack.push(action);
+
+        String message = XWorkConverter.getConversionErrorMessage("beanList[0].count", int.class, stack);
+        assertNotNull(message);
+        assertEquals("Custom error message for beanList.count.", message);
+    }
+
+    public void testCustomIndexedClassConversionErrorMessage() {
+        SimpleAction action = new SimpleAction();
+        container.inject(action);
+
+        stack.push(action);
+
+        String message = XWorkConverter.getConversionErrorMessage("beanList[0].birth", Date.class, stack);
+        assertNotNull(message);
+        assertEquals("Custom error message for java.util.Date.", message);
+    }
+
     public void testLocalizedDateConversion() throws Exception {
         Date date = new Date(System.currentTimeMillis());
         Locale locale = Locale.GERMANY;

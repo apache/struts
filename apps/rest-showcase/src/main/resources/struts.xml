@@ -32,6 +32,12 @@
 
     <constant name="struts.convention.package.locators" value="example"/>
 
+<!-- Uncomment the lines below to use Jackson XML bindings instead of the XStream library to handle XML serialisations -->
+<!--
+    <bean name="jacksonXml" type="org.apache.struts2.rest.handler.ContentTypeHandler" class="org.apache.struts2.rest.handler.JacksonXmlHandler" />
+    <constant name="struts.rest.handlerOverride.xml" value="jacksonXml"/>
+-->
+
     <package name="rest-showcase" extends="rest-default">
         <global-allowed-methods>index,show,create,update,destroy,deleteConfirm,edit,editNew</global-allowed-methods>
     </package>

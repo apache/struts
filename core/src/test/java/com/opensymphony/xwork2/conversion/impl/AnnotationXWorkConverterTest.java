@@ -168,11 +168,11 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         stack.push(action);
         stack.push(action.getModel());
 
-        String message = XWorkConverter.getConversionErrorMessage("birth", stack);
+        String message = XWorkConverter.getConversionErrorMessage("birth", Integer.class, stack);
         assertNotNull(message);
         assertEquals("Invalid date for birth.", message);
 
-        message = XWorkConverter.getConversionErrorMessage("foo", stack);
+        message = XWorkConverter.getConversionErrorMessage("foo", Integer.class, stack);
         assertNotNull(message);
         assertEquals("Invalid field value for field \"foo\".", message);
     }

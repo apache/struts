@@ -111,7 +111,7 @@ public class ConversionErrorInterceptor extends MethodFilterInterceptor {
             ConversionData conversionData = entry.getValue();
 
             if (shouldAddError(propertyName, conversionData.getValue())) {
-                String message = XWorkConverter.getConversionErrorMessage(propertyName, stack);
+                String message = XWorkConverter.getConversionErrorMessage(propertyName, conversionData.getToClass(), stack);
 
                 Object action = invocation.getAction();
                 if (action instanceof ValidationAware) {

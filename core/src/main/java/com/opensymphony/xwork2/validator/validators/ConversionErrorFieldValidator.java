@@ -75,7 +75,7 @@ public class ConversionErrorFieldValidator extends RepopulateConversionErrorFiel
         
         if (conversionErrors.containsKey(fullFieldName)) {
             if (StringUtils.isBlank(defaultMessage)) {
-                defaultMessage = XWorkConverter.getConversionErrorMessage(fullFieldName, context.getValueStack());
+                defaultMessage = XWorkConverter.getConversionErrorMessage(fullFieldName, conversionErrors.get(fullFieldName).getToClass(), context.getValueStack());
             }
             
             addFieldError(fieldName, object);

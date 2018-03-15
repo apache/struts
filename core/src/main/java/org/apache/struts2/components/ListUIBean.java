@@ -70,25 +70,23 @@ public abstract class ListUIBean extends UIBean {
 
         if (list instanceof String) {
             value = findValue((String) list);
-        } else if (list instanceof Collection || list instanceof Map) {
-            value = list;
-        } else if (MakeIterator.isIterable(list)) {
-            value = MakeIterator.convert(list);
-        }
-        if (value == null) {
-            if (throwExceptionOnNullValueAttribute) {
-                // will throw an exception if not found
-                value = findValue((list == null) ? (String) list : list.toString(), "list",
-                        "The requested list key '" + list + "' could not be resolved as a collection/array/map/enumeration/iterator type. " +
-                                "Example: people or people.{name}");
-            } else {
-                // ww-1010, allows value with null value to be compatible with ww
-                // 2.1.7 behaviour
-                value = findValue((list == null) ? (String) list : list.toString());
+            if (value == null) {
+                if (throwExceptionOnNullValueAttribute) {
+                    // will throw an exception if not found
+                    value = findValue((list == null) ? (String) list : list.toString(), "list",
+                            "The requested list key '" + list + "' could not be resolved as a collection/array/map/enumeration/iterator type. " +
+                                    "Example: people or people.{name}");
+                } else {
+                    // ww-1010, allows value with null value to be compatible with ww
+                    // 2.1.7 behaviour
+                    value = findValue((list == null) ? (String) list : list.toString());
+                }
             }
+        } else {
+            value = list;
         }
 
-        if (value instanceof Collection) {
+        if (value instanceof Iterable || !MakeIterator.isIterable(value)) {
             addParameter("list", value);
         } else {
             addParameter("list", MakeIterator.convert(value));

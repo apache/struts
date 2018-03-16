@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -86,10 +87,12 @@ public abstract class ListUIBean extends UIBean {
             value = list;
         }
 
-        if (value instanceof Iterable || !MakeIterator.isIterable(value)) {
+        if (value instanceof Iterable) {
             addParameter("list", value);
-        } else {
+        } else if (MakeIterator.isIterable(value)) {
             addParameter("list", MakeIterator.convert(value));
+        } else {
+            addParameter("list", Collections.singletonList(value));
         }
 
         if (value instanceof Collection) {

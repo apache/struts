@@ -19,7 +19,7 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -225,7 +225,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
             result = StringEscapeUtils.escapeEcmaScript(result);
         }
         if (escapeXml) {
-            result = StringEscapeUtils.escapeXml(result);
+            result = StringEscapeUtils.escapeXml10(result);
         }
         if (escapeCsv) {
             result = StringEscapeUtils.escapeCsv(result);

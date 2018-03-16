@@ -21,7 +21,7 @@ package org.apache.struts2.views.java.simple;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.IOException;
 import java.util.Map;

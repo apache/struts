@@ -31,11 +31,9 @@ import java.util.Map;
  */
 public class RestActionProxyFactory extends DefaultActionProxyFactory {
 
-    public static final String STRUTS_REST_NAMESPACE = "struts.rest.namespace";
-
     protected String namespace;
 
-    @Inject(value = STRUTS_REST_NAMESPACE, required = false)
+    @Inject(value = RestConstants.STRUTS_REST_NAMESPACE, required = false)
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }

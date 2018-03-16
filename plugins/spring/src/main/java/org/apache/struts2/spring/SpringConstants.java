@@ -16,19 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.json;
+package org.apache.struts2.spring;
 
-/**
- * <p>Class consisting of various constant values being used controlling
- * JSON plugin behaviour</p>
- *
- * <p>
- * These values can be overridden using struts.xml file by providing custom values.
- * </p>
- */
-public class JSONConstants {
-
-    public static final String JSON_WRITER = "struts.json.writer";
-    public static final String RESULT_EXCLUDE_PROXY_PROPERTIES = "struts.json.result.excludeProxyProperties";
-    public static final String DATE_FORMAT = "struts.json.dateformat";
+public class SpringConstants {
+    public static final String SPRING_CLASS_RELOADING_WATCH_LIST = "struts.class.reloading.watchList";
+    public static final String SPRING_CLASS_RELOADING_ACCEPT_CLASSES = "struts.class.reloading.acceptClasses";
+    public static final String SPRING_CLASS_RELOADING_RELOAD_CONFIG = "struts.class.reloading.reloadConfig";
 }

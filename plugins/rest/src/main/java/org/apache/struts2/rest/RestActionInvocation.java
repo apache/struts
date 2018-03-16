@@ -62,12 +62,12 @@ public class RestActionInvocation extends DefaultActionInvocation {
         super(extraContext, pushAction);
     }
 
-    @Inject("struts.rest.logger")
+    @Inject(RestConstants.REST_LOGGER)
     public void setLogger(String logger) {
         this.logger = BooleanUtils.toBoolean(logger);
     }
 
-    @Inject("struts.rest.defaultErrorResultName")
+    @Inject(RestConstants.REST_DEFAULT_ERROR_RESULT_NAME)
     public void setDefaultErrorResultName(String defaultErrorResultName) {
         this.defaultErrorResultName = defaultErrorResultName;
     }
@@ -78,7 +78,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
      * 
      * @param restrictToGet true or false
      */
-    @Inject(value = "struts.rest.content.restrictToGET", required = false)
+    @Inject(value = RestConstants.REST_CONTENT_RESTRICT_TO_GET, required = false)
     public void setRestrictToGet(String restrictToGet) {
         this.restrictToGet = BooleanUtils.toBoolean(restrictToGet);
     }

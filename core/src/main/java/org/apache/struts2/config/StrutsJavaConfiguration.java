@@ -16,19 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.json;
+package org.apache.struts2.config;
 
-/**
- * <p>Class consisting of various constant values being used controlling
- * JSON plugin behaviour</p>
- *
- * <p>
- * These values can be overridden using struts.xml file by providing custom values.
- * </p>
- */
-public class JSONConstants {
+import java.util.List;
 
-    public static final String JSON_WRITER = "struts.json.writer";
-    public static final String RESULT_EXCLUDE_PROXY_PROPERTIES = "struts.json.result.excludeProxyProperties";
-    public static final String DATE_FORMAT = "struts.json.dateformat";
+import org.apache.struts2.config.entities.BeanConfig;
+import org.apache.struts2.config.entities.ConstantConfig;
+
+public interface StrutsJavaConfiguration {
+    List<BeanConfig> beans();
+
+    List<ConstantConfig> constants();
+
+    List<String> unknownHandlerStack();
 }

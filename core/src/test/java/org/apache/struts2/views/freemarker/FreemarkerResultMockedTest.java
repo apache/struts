@@ -236,9 +236,11 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         dispatcher.serviceAction(request, response, mapping);
         String result = stringWriter.toString();
         assertTrue(result.contains("<option value=\"a\">a</option>"));
+        assertTrue(result.contains("<option value=\"1\">1</option>"));
         assertTrue(result.contains("<option value=\"key\">value</option>"));
         assertTrue(result.contains("<option value=\"optgroupKey1\">optgroupValue1</option>"));
         assertTrue(result.contains("<option value=\"optgroupKey3\">optgroupKey3</option>"));
+        assertTrue(result.contains("<option value=\"2\">2</option>"));
     }
 
     private void init() throws MalformedURLException, URISyntaxException {

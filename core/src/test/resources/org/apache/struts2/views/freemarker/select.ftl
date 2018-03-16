@@ -19,8 +19,10 @@
  */
 -->
 <@s.select theme="simple" list=['a','b','c'] />
+<@s.select theme="simple" list=1 />
 <@s.select theme="simple" list={'key':'value'} />
 <@s.select theme="simple">
 <@s.optgroup label="label1" list={'optgroupKey1':'optgroupValue1','optgroupKey2':'optgroupValue2'} />
 <@s.optgroup label="label2" disabled=true list=['optgroupKey3','optgroupKey4'] />
+<@s.optgroup label="label3" disabled=true list=2 />
 </@s.select>

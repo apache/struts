@@ -87,7 +87,7 @@ public abstract class ListUIBean extends UIBean {
             value = list;
         }
 
-        if (value instanceof Iterable) {
+        if (value == null || value instanceof Iterable) {
             addParameter("list", value);
         } else if (MakeIterator.isIterable(value)) {
             addParameter("list", MakeIterator.convert(value));

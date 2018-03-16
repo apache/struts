@@ -18,6 +18,7 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.*;
@@ -303,7 +304,7 @@ public class ActionSupportTest extends XWorkTestCase {
     }
 
     public void testFormattingSupportWithConversionError() throws Exception {
-        ActionContext.getContext().getConversionErrors().put("val", new String[]{"4567def"});
+        ActionContext.getContext().getConversionErrors().put("val", new ConversionData(new String[]{"4567def"}, Double.class));
         ActionContext.getContext().setLocale(new Locale("da"));
         MyActionSupport mas = new MyActionSupport();
         container.inject(mas);

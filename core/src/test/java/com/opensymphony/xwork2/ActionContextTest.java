@@ -18,6 +18,7 @@
  */
 package com.opensymphony.xwork2;
 
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -97,11 +98,11 @@ public class ActionContextTest extends XWorkTestCase {
     }
 
     public void testConversionErrors() {
-        Map<String, Object> errors = context.getConversionErrors();
+        Map<String, ConversionData> errors = context.getConversionErrors();
         assertNotNull(errors);
         assertEquals(0, errors.size());
 
-        Map<String, Object> errors2 = new HashMap<>();
+        Map<String, ConversionData> errors2 = new HashMap<>();
         context.setConversionErrors(errors);
         assertEquals(errors2, context.getConversionErrors());
     }

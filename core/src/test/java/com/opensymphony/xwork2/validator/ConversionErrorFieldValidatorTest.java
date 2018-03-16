@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.ConversionErrorFieldValidator;
 
@@ -50,8 +51,8 @@ public class ConversionErrorFieldValidatorTest extends XWorkTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         ActionContext context = new ActionContext(stack.getContext());
 
-        Map<String, Object> conversionErrors = new HashMap<>();
-        conversionErrors.put("foo", "bar");
+        Map<String, ConversionData> conversionErrors = new HashMap<>();
+        conversionErrors.put("foo", new ConversionData("bar", Integer.class));
         context.setConversionErrors(conversionErrors);
         validator = new ConversionErrorFieldValidator();
         validationAware = new ValidationAwareSupport();

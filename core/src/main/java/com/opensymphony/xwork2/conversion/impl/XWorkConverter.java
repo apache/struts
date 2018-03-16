@@ -189,7 +189,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         this.converterHolder = converterHolder;
     }
 
-    public static String getConversionErrorMessage(String propertyName, ValueStack stack) {
+    public static String getConversionErrorMessage(String propertyName, Class toClass, ValueStack stack) {
         LocalizedTextProvider localizedTextProvider = ActionContext.getContext().getContainer().getInstance(LocalizedTextProvider.class);
         String defaultMessage = localizedTextProvider.findDefaultText("xwork.default.invalid.fieldvalue",
                 ActionContext.getContext().getLocale(),
@@ -201,8 +201,14 @@ public class XWorkConverter extends DefaultTypeConverter {
 
         propertyName = removeAllIndexesInPropertyName(propertyName);
 
-        String getTextExpression = "getText('" + CONVERSION_ERROR_PROPERTY_PREFIX + propertyName + "','" + defaultMessage + "')";
+        String prefixedPropertyName = CONVERSION_ERROR_PROPERTY_PREFIX + propertyName;
+        String getTextExpression = "getText('" + prefixedPropertyName + "')";
         String message = (String) stack.findValue(getTextExpression);
+
+        if (message == null || prefixedPropertyName.equals(message)) {
+            getTextExpression = "getText('" + CONVERSION_ERROR_PROPERTY_PREFIX + toClass.getName() + "','" + defaultMessage + "')";
+            message = (String) stack.findValue(getTextExpression);
+        }
 
         if (message == null) {
             message = defaultMessage;
@@ -308,7 +314,7 @@ public class XWorkConverter extends DefaultTypeConverter {
                 return tc.convertValue(context, target, member, property, value, toClass);
             } catch (Exception e) {
                 LOG.debug("Unable to convert value using type converter [{}]", tc.getClass().getName(), e);
-                handleConversionException(context, property, value, target);
+                handleConversionException(context, property, value, target, toClass);
 
                 return TypeConverter.NO_CONVERSION_POSSIBLE;
             }
@@ -320,7 +326,7 @@ public class XWorkConverter extends DefaultTypeConverter {
                 return defaultTypeConverter.convertValue(context, target, member, property, value, toClass);
             } catch (Exception e) {
                 LOG.debug("Unable to convert value using type converter [{}]", defaultTypeConverter.getClass().getName(), e);
-                handleConversionException(context, property, value, target);
+                handleConversionException(context, property, value, target, toClass);
 
                 return TypeConverter.NO_CONVERSION_POSSIBLE;
             }
@@ -330,7 +336,7 @@ public class XWorkConverter extends DefaultTypeConverter {
                 return super.convertValue(value, toClass);
             } catch (Exception e) {
                 LOG.debug("Unable to convert value using type converter [{}]", super.getClass().getName(), e);
-                handleConversionException(context, property, value, target);
+                handleConversionException(context, property, value, target, toClass);
 
                 return TypeConverter.NO_CONVERSION_POSSIBLE;
             }
@@ -426,7 +432,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         return null;
     }
 
-    protected void handleConversionException(Map<String, Object> context, String property, Object value, Object object) {
+    protected void handleConversionException(Map<String, Object> context, String property, Object value, Object object, Class toClass) {
         if (context != null && (Boolean.TRUE.equals(context.get(REPORT_CONVERSION_ERRORS)))) {
             String realProperty = property;
             String fullName = (String) context.get(CONVERSION_PROPERTY_FULLNAME);
@@ -435,14 +441,14 @@ public class XWorkConverter extends DefaultTypeConverter {
                 realProperty = fullName;
             }
 
-            Map<String, Object> conversionErrors = (Map<String, Object>) context.get(ActionContext.CONVERSION_ERRORS);
+            Map<String, ConversionData> conversionErrors = (Map<String, ConversionData>) context.get(ActionContext.CONVERSION_ERRORS);
 
             if (conversionErrors == null) {
                 conversionErrors = new HashMap<>();
                 context.put(ActionContext.CONVERSION_ERRORS, conversionErrors);
             }
 
-            conversionErrors.put(realProperty, value);
+            conversionErrors.put(realProperty, new ConversionData(value, toClass));
         }
     }
 

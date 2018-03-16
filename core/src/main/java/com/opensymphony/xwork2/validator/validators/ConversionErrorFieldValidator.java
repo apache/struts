@@ -19,6 +19,7 @@
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
@@ -70,11 +71,11 @@ public class ConversionErrorFieldValidator extends RepopulateConversionErrorFiel
         String fieldName = getFieldName();
         String fullFieldName = getValidatorContext().getFullFieldName(fieldName);
         ActionContext context = ActionContext.getContext();
-        Map<String, Object> conversionErrors = context.getConversionErrors();
+        Map<String, ConversionData> conversionErrors = context.getConversionErrors();
         
         if (conversionErrors.containsKey(fullFieldName)) {
             if (StringUtils.isBlank(defaultMessage)) {
-                defaultMessage = XWorkConverter.getConversionErrorMessage(fullFieldName, context.getValueStack());
+                defaultMessage = XWorkConverter.getConversionErrorMessage(fullFieldName, conversionErrors.get(fullFieldName).getToClass(), context.getValueStack());
             }
             
             addFieldError(fieldName, object);

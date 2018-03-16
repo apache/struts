@@ -194,6 +194,55 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         assertEquals(expected, stringWriter.toString());
     }
 
+    public void testSequenceForSelect() throws Exception {
+        File file = new File(FreeMarkerResultTest.class.getResource("select.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/select.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/select.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/select.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/select.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/optgroup.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/optgroup.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/optgroup.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/css.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/css.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/css.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/scripting-events.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/common-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/dynamic-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/empty.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/empty.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/empty.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/xhtml/empty.ftl")).andReturn(file.getAbsolutePath());
+
+        EasyMock.replay(servletContext);
+
+        init();
+
+        request.setRequestURI("/tutorial/test9.action");
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
+        dispatcher.serviceAction(request, response, mapping);
+        String result = stringWriter.toString();
+        assertTrue(result.contains("<option value=\"a\">a</option>"));
+        assertTrue(result.contains("<option value=\"1\">1</option>"));
+        assertTrue(result.contains("<option value=\"key\">value</option>"));
+        assertTrue(result.contains("<option value=\"optgroupKey1\">optgroupValue1</option>"));
+        assertTrue(result.contains("<option value=\"optgroupKey3\">optgroupKey3</option>"));
+        assertTrue(result.contains("<option value=\"2\">2</option>"));
+    }
+
     private void init() throws MalformedURLException, URISyntaxException {
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);

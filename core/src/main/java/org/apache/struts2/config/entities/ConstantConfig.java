@@ -139,6 +139,7 @@ public class ConstantConfig {
     private BeanConfig textProviderFactory;
     private BeanConfig localizedTextProvider;
     private Boolean disallowProxyMemberAccess;
+    private Integer ognlAutoGrowthCollectionLimit;
 
     protected String beanConfToString(BeanConfig beanConf) {
         return beanConf == null ? null : beanConf.getName();
@@ -266,6 +267,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_TEXT_PROVIDER_FACTORY, beanConfToString(textProviderFactory));
         map.put(StrutsConstants.STRUTS_LOCALIZED_TEXT_PROVIDER, beanConfToString(localizedTextProvider));
         map.put(StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Objects.toString(disallowProxyMemberAccess, null));
+        map.put(StrutsConstants.STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT, Objects.toString(ognlAutoGrowthCollectionLimit, null));
 
         return map;
     }
@@ -1304,5 +1306,13 @@ public class ConstantConfig {
 
     public void setDisallowProxyMemberAccess(Boolean disallowProxyMemberAccess) {
         this.disallowProxyMemberAccess = disallowProxyMemberAccess;
+    }
+
+    public Integer getOgnlAutoGrowthCollectionLimit() {
+        return ognlAutoGrowthCollectionLimit;
+    }
+
+    public void setOgnlAutoGrowthCollectionLimit(Integer ognlAutoGrowthCollectionLimit) {
+        this.ognlAutoGrowthCollectionLimit = ognlAutoGrowthCollectionLimit;
     }
 }

@@ -146,27 +146,27 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
 
     private int validationFailureStatusCode = SC_BAD_REQUEST;
 
-    @Inject(required=false,value="struts.mapper.postMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_POST_METHOD_NAME)
     public void setPostMethodName(String postMethodName) {
         this.postMethodName = postMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.editMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_EDIT_METHOD_NAME)
     public void setEditMethodName(String editMethodName) {
         this.editMethodName = editMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.newMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_NEW_METHOD_NAME)
     public void setNewMethodName(String newMethodName) {
         this.newMethodName = newMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.putMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_PUT_METHOD_NAME)
     public void setPutMethodName(String putMethodName) {
         this.putMethodName = putMethodName;
     }
 
-    @Inject(required=false,value="struts.rest.validationFailureStatusCode")
+    @Inject(required = false, value = RestConstants.REST_VALIDATION_FAILURE_STATUS_CODE)
     public void setValidationFailureStatusCode(String code) {
         this.validationFailureStatusCode = Integer.parseInt(code);
     }

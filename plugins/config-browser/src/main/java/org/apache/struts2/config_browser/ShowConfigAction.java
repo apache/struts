@@ -24,7 +24,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.beans.PropertyDescriptor;
 import java.util.Set;

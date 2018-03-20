@@ -24,12 +24,12 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * StrutsConversionErrorInterceptorTest
@@ -39,16 +39,16 @@ public class StrutsConversionErrorInterceptorTest extends StrutsInternalTestCase
 
     protected ActionContext context;
     protected ActionInvocation invocation;
-    protected Map<String, Object> conversionErrors;
+    protected Map<String, ConversionData> conversionErrors;
     protected Mock mockInvocation;
     protected ValueStack stack;
     protected StrutsConversionErrorInterceptor interceptor;
 
 
     public void testEmptyValuesDoNotSetFieldErrors() throws Exception {
-        conversionErrors.put("foo", 123L);
-        conversionErrors.put("bar", "");
-        conversionErrors.put("baz", new String[]{""});
+        conversionErrors.put("foo", new ConversionData("bar", Integer.class));
+        conversionErrors.put("bar", new ConversionData("", Integer.class));
+        conversionErrors.put("baz", new ConversionData(new String[]{""}, Integer.class));
 
         ActionSupport action = new ActionSupport();
         mockInvocation.expectAndReturn("getAction", action);
@@ -65,7 +65,7 @@ public class StrutsConversionErrorInterceptorTest extends StrutsInternalTestCase
     }
 
     public void testFieldErrorAdded() throws Exception {
-        conversionErrors.put("foo", 123L);
+        conversionErrors.put("foo", new ConversionData("bar", Integer.class));
 
         ActionSupport action = new ActionSupport();
         mockInvocation.expectAndReturn("getAction", action);
@@ -84,7 +84,7 @@ public class StrutsConversionErrorInterceptorTest extends StrutsInternalTestCase
         invocation = (ActionInvocation) mockInvocation.proxy();
         stack = ActionContext.getContext().getValueStack();
         context = new ActionContext(stack.getContext());
-        conversionErrors = new HashMap<String, Object>();
+        conversionErrors = new HashMap<>();
         context.setConversionErrors(conversionErrors);
         mockInvocation.matchAndReturn("getInvocationContext", context);
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);

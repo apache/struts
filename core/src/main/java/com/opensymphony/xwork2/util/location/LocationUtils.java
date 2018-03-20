@@ -19,6 +19,8 @@
 package com.opensymphony.xwork2.util.location;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+
+import org.apache.struts2.config.StrutsJavaConfiguration;
 import org.w3c.dom.Element;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXParseException;
@@ -303,6 +305,10 @@ public class LocationUtils {
 	        			return new LocationImpl(description, uri, trace.getLineNumber(), -1);
         			}
         		}
+        }
+
+        if (obj instanceof StrutsJavaConfiguration) {
+            return new LocationImpl(description, obj.toString());
         }
 
         return Location.UNKNOWN;

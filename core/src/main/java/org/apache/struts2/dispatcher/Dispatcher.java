@@ -48,6 +48,8 @@ import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.config.DefaultBeanSelectionProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.PropertiesConfigurationProvider;
+import org.apache.struts2.config.StrutsJavaConfiguration;
+import org.apache.struts2.config.StrutsJavaConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
@@ -411,6 +413,30 @@ public class Dispatcher {
         return new StrutsXmlConfigurationProvider(filename, errorIfMissing, ctx);
     }
 
+    private void init_JavaConfigurations() {
+        String configClasses = initParams.get("javaConfigClasses");
+        if (configClasses != null) {
+            String[] classes = configClasses.split("\\s*[,]\\s*");
+            for (String cname : classes) {
+                try {
+                    Class cls = ClassLoaderUtil.loadClass(cname, this.getClass());
+                    StrutsJavaConfiguration config = (StrutsJavaConfiguration) cls.newInstance();
+                    configurationManager.addContainerProvider(createJavaConfigurationProvider(config));
+                } catch (InstantiationException e) {
+                    throw new ConfigurationException("Unable to instantiate java configuration: " + cname, e);
+                } catch (IllegalAccessException e) {
+                    throw new ConfigurationException("Unable to access java configuration: " + cname, e);
+                } catch (ClassNotFoundException e) {
+                    throw new ConfigurationException("Unable to locate java configuration class: " + cname, e);
+                }
+            }
+        }
+    }
+
+    protected StrutsJavaConfigurationProvider createJavaConfigurationProvider(StrutsJavaConfiguration config) {
+        return new StrutsJavaConfigurationProvider(config);
+    }
+
     private void init_CustomConfigurationProviders() {
         String configProvs = initParams.get("configProviders");
         if (configProvs != null) {
@@ -488,6 +514,7 @@ public class Dispatcher {
             init_FileManager();
             init_DefaultProperties(); // [1]
             init_TraditionalXmlConfigurations(); // [2]
+            init_JavaConfigurations();
             init_LegacyStrutsProperties(); // [3]
             init_CustomConfigurationProviders(); // [5]
             init_FilterInitParameters() ; // [6]

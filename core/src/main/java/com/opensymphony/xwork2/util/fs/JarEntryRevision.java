@@ -37,11 +37,9 @@ public class JarEntryRevision extends Revision {
     private long lastModified;
 
     public static Revision build(URL fileUrl, FileManager fileManager) {
-        // File within a Jar
-        // Find separator index of jar filename and filename within jar
-        JarURLConnection conn = null;
+        StrutsJarURLConnection conn = null;
         try {
-            conn = (JarURLConnection) fileUrl.openConnection();
+            conn = StrutsJarURLConnection.openConnection(fileUrl);
             conn.setUseCaches(false);
             URL url = fileManager.normalizeToFileProtocol(fileUrl);
             if (url != null) {
@@ -72,10 +70,10 @@ public class JarEntryRevision extends Revision {
     }
 
     public boolean needsReloading() {
-        JarURLConnection conn = null;
+        StrutsJarURLConnection conn = null;
         long lastLastModified = lastModified;
         try {
-            conn = (JarURLConnection) jarFileURL.openConnection();
+            conn = StrutsJarURLConnection.openConnection(jarFileURL);
             conn.setUseCaches(false);
             lastLastModified = conn.getJarEntry().getTime();
         } catch (IOException ignored) {

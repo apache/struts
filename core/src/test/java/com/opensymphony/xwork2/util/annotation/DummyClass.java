@@ -18,8 +18,10 @@
  */
 package com.opensymphony.xwork2.util.annotation;
 
+import com.opensymphony.xwork2.util.annotation.pkg2.Package2DummyInterface;
+
 @MyAnnotation("class-test")
-public class DummyClass {
+public class DummyClass implements Package2DummyInterface {
 
     public DummyClass() {
     }

@@ -30,17 +30,17 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.StrutsException;
 
 @StrutsTag(name="debug", tldTagClass="org.apache.struts2.views.jsp.ui.DebugTag",
-        description="Prints debugging information")
+        description="Prints debugging information (Only if 'struts.devMode' is enabled)")
 public class Debug extends UIBean {
     public static final String TEMPLATE = "debug";
-    
+
     protected ReflectionProvider reflectionProvider;
 
-    
 
     public Debug(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -50,7 +50,7 @@ public class Debug extends UIBean {
     public void setReflectionProvider(ReflectionProvider prov) {
         this.reflectionProvider = prov;
     }
-    
+
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
@@ -58,23 +58,38 @@ public class Debug extends UIBean {
     public boolean start(Writer writer) {
         boolean result = super.start(writer);
 
-        ValueStack stack = getStack();
-        Iterator iter = stack.getRoot().iterator();
-        List stackValues = new ArrayList(stack.getRoot().size());
-        while (iter.hasNext()) {
-            Object o = iter.next();
-            Map values;
-            try {
-                values = reflectionProvider.getBeanMap(o);
-            } catch (Exception e) {
-                throw new StrutsException("Caught an exception while getting the property values of " + o, e);
+        if (showDebug()) {
+            ValueStack stack = getStack();
+            Iterator iter = stack.getRoot().iterator();
+            List stackValues = new ArrayList(stack.getRoot().size());
+            while (iter.hasNext()) {
+                Object o = iter.next();
+                Map values;
+                try {
+                    values = reflectionProvider.getBeanMap(o);
+                } catch (Exception e) {
+                    throw new StrutsException("Caught an exception while getting the property values of " + o, e);
+                }
+                stackValues.add(new DebugMapEntry(o.getClass().getName(), values));
             }
-            stackValues.add(new DebugMapEntry(o.getClass().getName(), values));
+
+            addParameter("stackValues", stackValues);
         }
-
-        addParameter("stackValues", stackValues);
-
         return result;
+    }
+
+    @Override
+    public boolean end(Writer writer, String body) {
+        if (showDebug()) {
+            return super.end(writer, body);
+        } else {
+            popComponentStack();
+            return false;
+        }
+    }
+
+    protected boolean showDebug() {
+        return (devMode || Boolean.TRUE == PrepareOperations.getDevModeOverride());
     }
 
     private static class DebugMapEntry implements Map.Entry {

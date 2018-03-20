@@ -328,4 +328,6 @@ public final class StrutsConstants {
     public static final String STRUTS_LOCALIZED_TEXT_PROVIDER = "struts.localizedTextProvider";
 
     public static final String STRUTS_DISALLOW_PROXY_MEMBER_ACCESS = "struts.disallowProxyMemberAccess";
+
+    public static final String STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT = "struts.ognl.autoGrowthCollectionLimit";
 }

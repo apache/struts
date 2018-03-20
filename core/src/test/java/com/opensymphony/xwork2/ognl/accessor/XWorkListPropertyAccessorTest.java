@@ -22,6 +22,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ListHolder;
 import com.opensymphony.xwork2.util.ValueStack;
+import ognl.ListPropertyAccessor;
+import ognl.PropertyAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,4 +63,43 @@ public class XWorkListPropertyAccessorTest extends XWorkTestCase {
         assertEquals(new Integer(myList.size()), vs.findValue("strings.size()"));
         assertEquals(new Integer(myList.size()), vs.findValue("strings.size"));
     }
+
+    public void testAutoGrowthCollectionLimit() {
+        PropertyAccessor accessor = container.getInstance(PropertyAccessor.class, ArrayList.class.getName());
+        ((XWorkListPropertyAccessor) accessor).setAutoGrowCollectionLimit("2");
+
+        List<String> myList = new ArrayList<>();
+        ListHolder listHolder = new ListHolder();
+        listHolder.setStrings(myList);
+
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(listHolder);
+
+        vs.setValue("strings[0]", "a");
+        vs.setValue("strings[1]", "b");
+        vs.setValue("strings[2]", "c");
+        vs.setValue("strings[3]", "d");
+
+        assertEquals(3, vs.findValue("strings.size()"));
+    }
+
+    public void testDeprecatedAutoGrowCollectionLimit() {
+        PropertyAccessor accessor = container.getInstance(PropertyAccessor.class, ArrayList.class.getName());
+        ((XWorkListPropertyAccessor) accessor).setDeprecatedAutoGrowCollectionLimit("2");
+
+        List<String> myList = new ArrayList<>();
+        ListHolder listHolder = new ListHolder();
+        listHolder.setStrings(myList);
+
+        ValueStack vs = ActionContext.getContext().getValueStack();
+        vs.push(listHolder);
+
+        vs.setValue("strings[0]", "a");
+        vs.setValue("strings[1]", "b");
+        vs.setValue("strings[2]", "c");
+        vs.setValue("strings[3]", "d");
+
+        assertEquals(3, vs.findValue("strings.size()"));
+    }
+
 }

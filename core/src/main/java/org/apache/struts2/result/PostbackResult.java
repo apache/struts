@@ -215,8 +215,9 @@ public class PostbackResult extends StrutsResultSupport {
 
     private void writeFormElements(HttpServletRequest request, PrintWriter pw) throws UnsupportedEncodingException {
         Map<String, String[]> params = request.getParameterMap();
-        for (String name : params.keySet()) {
-            String[] values = params.get(name);
+        for (Map.Entry<String, String[]> entry : params.entrySet()) {
+            String name = entry.getKey();
+            String[] values = entry.getValue();
             if (isElementIncluded(name, values)) {
                 writeFormElement(pw, name, values);
             }

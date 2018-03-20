@@ -681,8 +681,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         && actionAnnotation == null && actionsAnnotation == null
                         && (alwaysMapExecute || map.isEmpty())) {
                     boolean found = false;
-                    for (String method : map.keySet()) {
-                        List<Action> actions = map.get(method);
+                    for (List<Action> actions : map.values()) {
                         for (Action action : actions) {
 
                             // Check if there are duplicate action names in the annotations.
@@ -709,8 +708,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 }
 
                 // Build the actions for the annotations
-                for (String method : map.keySet()) {
-                    List<Action> actions = map.get(method);
+                for (Map.Entry<String, List<Action>> entry : map.entrySet()) {
+                    String method = entry.getKey();
+                    List<Action> actions = entry.getValue();
                     for (Action action : actions) {
                         PackageConfig.Builder pkgCfg = defaultPackageConfig;
                         if (action.value().contains("/") && !slashesInActionNames) {
@@ -749,13 +749,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     }
 
     private Set<String> getAllowedMethods(Class<?> actionClass) {
-        AllowedMethods annotation = AnnotationUtils.findAnnotation(actionClass, AllowedMethods.class);
-        if (annotation == null) {
+        List<AllowedMethods> annotations = AnnotationUtils.findAnnotations(actionClass, AllowedMethods.class);
+        if (annotations == null || annotations.isEmpty()) {
             return Collections.emptySet();
         } else {
             Set<String> methods = new HashSet<>();
-            for (String method : annotation.value()) {
-                methods.add(method);
+            for (AllowedMethods allowedMethods : annotations) {
+                methods.addAll(Arrays.asList(allowedMethods.value()));
             }
             return methods;
         }
@@ -924,7 +924,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                                       String actionMethod, Action annotation, Set<String> allowedMethods) {
     	String className = actionClass.getName();
         if (annotation != null) {
-            actionName = annotation.value() != null && annotation.value().equals(Action.DEFAULT_VALUE) ? actionName : annotation.value();
+            actionName = annotation.value().equals(Action.DEFAULT_VALUE) ? actionName : annotation.value();
             actionName = StringUtils.contains(actionName, "/") && !slashesInActionNames ? StringUtils.substringAfterLast(actionName, "/") : actionName;
             if(!Action.DEFAULT_VALUE.equals(annotation.className())){
             	className = annotation.className();
@@ -960,7 +960,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
             actionConfig.addParams(StringTools.createParameterMap(annotation.params()));
 
         //add exception mappings from annotation
-        if (annotation != null && annotation.exceptionMappings() != null)
+        if (annotation != null)
             actionConfig.addExceptionMappings(buildExceptionMappings(annotation.exceptionMappings(), actionName));
 
         //add exception mapping from class
@@ -997,8 +997,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                         exceptionMapping.result(), actionName);
             ExceptionMappingConfig.Builder builder = new ExceptionMappingConfig.Builder(null, exceptionMapping
                     .exception(), exceptionMapping.result());
-            if (exceptionMapping.params() != null)
-                builder.addParams(StringTools.createParameterMap(exceptionMapping.params()));
+            builder.addParams(StringTools.createParameterMap(exceptionMapping.params()));
             exceptionMappings.add(builder.build());
         }
 

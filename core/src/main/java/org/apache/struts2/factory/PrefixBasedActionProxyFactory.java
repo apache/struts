@@ -22,13 +22,17 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Initializable;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -55,38 +59,37 @@ import java.util.Map;
  * </pre>
  * <!-- END SNIPPET: description -->
  */
-public class PrefixBasedActionProxyFactory extends DefaultActionProxyFactory {
+public class PrefixBasedActionProxyFactory extends StrutsActionProxyFactory implements Initializable {
 
     private static final Logger LOG = LogManager.getLogger(PrefixBasedActionProxyFactory.class);
 
     private Map<String, ActionProxyFactory> actionProxyFactories = new HashMap<>();
-    private ActionProxyFactory defaultFactory;
+    private Set<String> prefixes = new HashSet<>();
 
     @Inject
     public void setContainer(Container container) {
         this.container = container;
     }
 
-    @Inject(StrutsConstants.STRUTS_ACTIONPROXYFACTORY)
-    public void setActionProxyFactory(ActionProxyFactory factory) {
-        this.defaultFactory = factory;
-    }
-
     @Inject(StrutsConstants.PREFIX_BASED_MAPPER_CONFIGURATION)
     public void setPrefixBasedActionProxyFactories(String list) {
         if (list != null) {
-            String[] factories = list.split(",");
-            for (String factory : factories) {
-                String[] thisFactory = factory.split(":");
-                if (thisFactory.length == 2) {
-                    String factoryPrefix = thisFactory[0].trim();
-                    String factoryName = thisFactory[1].trim();
-                    ActionProxyFactory obj = container.getInstance(ActionProxyFactory.class, factoryName);
-                    if (obj != null) {
-                        actionProxyFactories.put(factoryPrefix, obj);
-                    } else {
-                        LOG.warn("Invalid PrefixBasedActionProxyFactory config entry: [{}]", factory);
-                    }
+            prefixes = new HashSet<>(Arrays.asList(list.split(",")));
+        }
+    }
+
+    @Override
+    public void init() {
+        for (String factory : prefixes) {
+            String[] thisFactory = factory.split(":");
+            if (thisFactory.length == 2) {
+                String factoryPrefix = thisFactory[0].trim();
+                String factoryName = thisFactory[1].trim();
+                ActionProxyFactory obj = container.getInstance(ActionProxyFactory.class, factoryName);
+                if (obj != null) {
+                    actionProxyFactories.put(factoryPrefix, obj);
+                } else {
+                    LOG.warn("Invalid PrefixBasedActionProxyFactory config entry: [{}]", factory);
                 }
             }
         }
@@ -106,8 +109,7 @@ public class PrefixBasedActionProxyFactory extends DefaultActionProxyFactory {
                 LOG.debug("No ActionProxyFactory defined for [{}]", key);
             }
         }
-        LOG.debug("Cannot find any matching ActionProxyFactory, falling back to [{}]", defaultFactory);
-        return defaultFactory.createActionProxy(namespace, actionName, methodName, extraContext, executeResult, cleanupContext);
+        LOG.debug("Cannot find any matching ActionProxyFactory, falling back to [{}]", super.getClass().getName());
+        return super.createActionProxy(namespace, actionName, methodName, extraContext, executeResult, cleanupContext);
     }
-
 }

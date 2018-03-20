@@ -154,15 +154,15 @@ public abstract class AbstractMatcher<E> implements Serializable {
         Map<String, String> map = new LinkedHashMap<>();
         
         //this will set the group index references, like {1}
-        for (String key : orig.keySet()) {
-            map.put(key, convertParam(orig.get(key), vars));
+        for (Map.Entry<String,String> entry : orig.entrySet()) {
+            map.put(entry.getKey(), convertParam(entry.getValue(), vars));
         }
         
         //the values map will contain entries like name->"Lex Luthor" and 1->"Lex Luthor"
         //now add the non-numeric values
-        for (String key: vars.keySet()) {
-            if (!NumberUtils.isNumber(key)) {
-                map.put(key, vars.get(key));
+        for (Map.Entry<String,String> entry: vars.entrySet()) {
+            if (!NumberUtils.isCreatable(entry.getKey())) {
+                map.put(entry.getKey(), entry.getValue());
             }
         }
         

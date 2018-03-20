@@ -34,7 +34,10 @@ import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Handles JSON content using json-lib
+ *
+ * @deprecated Use {@link JacksonLibHandler} instead
  */
+@Deprecated
 public class JsonLibHandler extends AbstractContentTypeHandler {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";

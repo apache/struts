@@ -524,8 +524,8 @@ public class FreemarkerManager {
         ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
         populateContext(model, stack, action, request, response);
         if (tagLibraries != null) {
-            for (String prefix : tagLibraries.keySet()) {
-                model.put(prefix, tagLibraries.get(prefix).getModels(stack, request, response));
+            for (Map.Entry<String, TagLibraryModelProvider> entry : tagLibraries.entrySet()) {
+                model.put(entry.getKey(), entry.getValue().getModels(stack, request, response));
             }
         }
 

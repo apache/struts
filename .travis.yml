@@ -7,3 +7,15 @@ jdk:
 
 install: true
 script: mvn test -DskipAssembly
+
+after_success:
+  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report com.updateimpact:updateimpact-maven-plugin:submit -Ptravis-coveralls,update-impact -DskipAssembly
+
+env:
+  global:
+    secure: DusDFL9cuX+mj64tXQfrYVbUVYnxlXmad4nuIMj0/lgDbwJ6kxYasJmR99bdvwu08gS9D5b7a+m7WJTN0FNATzEiiGDXcM+TiDPlYDh7dcalU4QGiLmMuCCEw1r7hp2XE4BWVgDfFhCsHhStgjE4RXzHIyPowoPXr4ugPf8at6w=
+
+cache:
+  directories:
+  - $HOME/.m2
+  

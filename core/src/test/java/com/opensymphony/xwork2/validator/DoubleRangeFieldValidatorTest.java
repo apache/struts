@@ -287,7 +287,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         assertTrue(context.hasFieldErrors());
         assertEquals(1, context.getFieldErrors().size());
         assertEquals(1, context.getFieldErrors().get("doubleArray").size());
-        assertEquals("Value 15.0 not in scope!", context.getFieldErrors().get("doubleArray").get(0));
+        assertEquals("Value 15 not in scope!", context.getFieldErrors().get("doubleArray").get(0));
     }
 
     public void testCollectionOfDoubles() throws Exception {
@@ -308,7 +308,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         assertTrue(context.hasFieldErrors());
         assertEquals(1, context.getFieldErrors().size());
         assertEquals(1, context.getFieldErrors().get("doubleCollection").size());
-        assertEquals("Value 15.0 not in scope!", context.getFieldErrors().get("doubleCollection").get(0));
+        assertEquals("Value 15 not in scope!", context.getFieldErrors().get("doubleCollection").get(0));
     }
 
     @Override

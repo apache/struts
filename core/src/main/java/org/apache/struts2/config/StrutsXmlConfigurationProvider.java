@@ -90,6 +90,9 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
                 public ServletContext create(Context context) throws Exception {
                     return servletContext;
                 }
+                public Class<? extends ServletContext> type() {
+                    return servletContext.getClass();
+                }
             });
         }
         super.register(containerBuilder, props);

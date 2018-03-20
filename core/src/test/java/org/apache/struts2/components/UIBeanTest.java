@@ -19,18 +19,19 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.components.template.Template;
+import org.apache.struts2.components.template.TemplateEngine;
+import org.apache.struts2.components.template.TemplateEngineManager;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+
 
 import java.util.Collections;
 import java.util.Map;
 
-/**
- *
- * @version $Date$ $Id$
- */
 public class UIBeanTest extends StrutsInternalTestCase {
 
     public void testPopulateComponentHtmlId1() throws Exception {
@@ -161,4 +162,147 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("12", txtFld.getTheme());
     }
 
+    public void testMergeTemplateNullEngineException() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        //templateEngineManager that returns null as TemplateEngine
+        TemplateEngineManager templateEngineManager = new TemplateEngineManager() {
+            public TemplateEngine getTemplateEngine(Template template, String templateTypeOverride) {
+                return null;
+            }
+        };
+        TextField txtFld = new TextField(stack, req, res);
+
+        txtFld.setTemplateEngineManager(templateEngineManager);
+
+        try {
+            txtFld.mergeTemplate(null, new Template(null, null, null));
+            fail("Exception not thrown");
+        } catch(final Exception e){
+            assertTrue(e instanceof ConfigurationException);
+        }
+    }
+
+    public void testBuildTemplate() throws Exception {
+        String defaultTemplateName = "default";
+        String customTemplateName = "custom";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        
+        Template defaultTemplate = txtFld.buildTemplateName(null, defaultTemplateName);
+        Template customTemplate = txtFld.buildTemplateName(customTemplateName, defaultTemplateName);
+
+        assertEquals(defaultTemplateName, defaultTemplate.getName());
+        assertEquals(customTemplateName, customTemplate.getName());
+    }
+
+    public void testGetTemplateDirExplicit() throws Exception {
+        String explicitTemplateDir = "explicitTemplateDirectory";
+        String attrTemplateDir = "attrTemplateDirectory";
+        String defaultTemplateDir = "defaultTemplateDirectory";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Map context = Collections.singletonMap("templateDir", attrTemplateDir);
+        ActionContext.getContext().put("attr", context);
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setTemplateDir(explicitTemplateDir);
+        txtFld.setDefaultTemplateDir(defaultTemplateDir);
+
+        assertEquals(explicitTemplateDir, txtFld.getTemplateDir());
+    }
+
+    public void testGetTemplateDirAttr() throws Exception {
+        String attrTemplateDir = "attrTemplateDirectory";
+        String defaultTemplateDir = "defaultTemplateDirectory";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Map context = Collections.singletonMap("templateDir", attrTemplateDir);
+        ActionContext.getContext().put("attr", context);
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setDefaultTemplateDir(defaultTemplateDir);
+
+        assertEquals(attrTemplateDir, txtFld.getTemplateDir());
+    }
+
+    public void testGetTemplateDirDefault() throws Exception {
+        String defaultTemplateDir = "defaultTemplateDirectory";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setDefaultTemplateDir(defaultTemplateDir);
+
+        assertEquals(defaultTemplateDir, txtFld.getTemplateDir());
+    }
+
+    public void testGetTemplateDirNoneSet() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+
+        assertEquals("template", txtFld.getTemplateDir());
+    }
+
+    public void testSetAccesskey() {
+        String accesskeyValue = "myAccesskey";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setAccesskey(accesskeyValue);
+        txtFld.evaluateParams();
+
+        assertEquals(accesskeyValue, txtFld.getParameters().get("accesskey"));
+    }
+
+    public void testValueParameterEvaluation() {
+        String value = "myValue";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.addParameter("value", value);
+        txtFld.evaluateParams();
+
+        assertEquals(value, txtFld.getParameters().get("nameValue"));
+    }
+
+    public void testSetClass() {
+        String cssClass = "insertCssClassHere";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setClass(cssClass);
+        txtFld.evaluateParams();
+
+        assertEquals(cssClass, txtFld.getParameters().get("cssClass"));
+    }
+
+    public void testSetStyle() {
+        String cssStyle = "insertCssStyleHere";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setStyle(cssStyle);
+        txtFld.evaluateParams();
+
+        assertEquals(cssStyle, txtFld.getParameters().get("cssStyle"));
+    }
 }

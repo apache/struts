@@ -20,11 +20,12 @@ package org.apache.struts.beanvalidation.models;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
 public class Address {
 
-    @NotNull(message = "streetNotNull")
-    @Size(min = 3, max = 64, message = "streetSize")
+    @NotNull(message = "streetNotNull", groups = {Default.class, Person.StreetChecks.class, Person.NameAndStreetChecks.class})
+    @Size(min = 3, max = 64, message = "streetSize", groups = {Default.class, Person.StreetChecks.class, Person.NameAndStreetChecks.class})
     private String street;
 
     public void setStreet(String street) {

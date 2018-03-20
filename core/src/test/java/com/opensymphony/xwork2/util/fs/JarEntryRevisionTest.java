@@ -23,9 +23,13 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -64,9 +68,78 @@ public class JarEntryRevisionTest extends XWorkTestCase {
         createJarFile(now);
         URL url = new URL("jar:file:target/JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class");
         Revision entry = JarEntryRevision.build(url, fileManager);
+        assert entry != null;
         assertFalse(entry.needsReloading());
 
         createJarFile(now + 60000);
         assertTrue(entry.needsReloading());
+    }
+
+    public void testNeedsReloadingWithContainerProvidedURLConnection() throws Exception {
+        long now = System.currentTimeMillis();
+
+        createJarFile(now);
+        URL url = new URL(null,
+                "jar:file:target/JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class",
+                new ContainerProvidedURLStreamHandler());
+        Revision entry = JarEntryRevision.build(url, fileManager);
+        assert entry != null;
+        assertFalse(entry.needsReloading());
+
+        createJarFile(now + 60000);
+        assertTrue(entry.needsReloading());
+    }
+
+    public void testNeedsReloadingWithContainerProvidedURLConnectionEmptyProtocol() throws Exception {
+        long now = System.currentTimeMillis();
+
+        createJarFile(now);
+        File targetDir = new File("target");
+        String targetUrlStr = targetDir.toURI().toURL().toString();
+        if (targetUrlStr.startsWith("file:")) {
+            targetUrlStr = targetUrlStr.substring(5);//emptying protocol; we expect framework will fix it
+        }
+        if (targetUrlStr.startsWith("/")) {
+            targetUrlStr = targetUrlStr.substring(1);//we expect framework will fix it also
+        }
+        URL url = new URL(null,
+                "zip:" + targetUrlStr + "JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class",
+                new ContainerProvidedURLStreamHandler());
+        Revision entry = JarEntryRevision.build(url, fileManager);
+        assert entry != null;
+        assertFalse(entry.needsReloading());
+
+        createJarFile(now + 60000);
+        assertTrue(entry.needsReloading());
+    }
+
+
+    /**
+     * WW-4901 Simulating container implementation of {@link URL#openConnection()}
+     * @since 2.5.15
+     */
+    private class ContainerProvidedURLStreamHandler extends URLStreamHandler {
+
+        @Override
+        protected URLConnection openConnection(URL u) throws IOException {
+            return new ContainerProvidedURLConnection(u);
+        }
+    }
+
+    /**
+     * WW-4901 Simulating container implementation of {@link URLConnection}
+     * e.g. like IBM WebSphere com.ibm.ws.classloader.Handler$ClassLoaderURLConnection
+     * @since 2.5.15
+     */
+    private class ContainerProvidedURLConnection extends URLConnection {
+
+        ContainerProvidedURLConnection(URL url) {
+            super(url);
+        }
+
+        @Override
+        public void connect() throws IOException {
+            throw new IllegalStateException("This is not expected (should not coupled to underlying implementation)");
+        }
     }
 }

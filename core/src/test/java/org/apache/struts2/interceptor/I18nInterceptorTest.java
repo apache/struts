@@ -31,6 +31,7 @@ import org.apache.struts2.dispatcher.HttpParameters;
 import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -45,14 +46,41 @@ public class I18nInterceptorTest extends TestCase {
     private ActionInvocation mai;
     private ActionContext ac;
     private Map session;
+    private MockHttpServletRequest request;
 
     public void testEmptyParamAndSession() throws Exception {
         interceptor.intercept(mai);
     }
 
-    public void testNoSession() throws Exception {
-        ac.setSession(null);
-        interceptor.intercept(mai);
+    public void testNoSessionNoLocale() throws Exception {
+        request.setSession(null);
+        try {
+            interceptor.intercept(mai);
+            assertTrue(true);
+        } catch (Exception ignore) {
+            fail("Shouldn't throw any exception!");
+        }
+
+        assertFalse("should have been removed",
+                mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined());
+        assertNull("should not be created", request.getSession(false));
+        assertNull("should not be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+    }
+
+    public void testNoSessionButLocale() throws Exception {
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "da_DK"); //prevents shouldStore to being false
+        request.setSession(null);
+        try {
+            interceptor.intercept(mai);
+            assertTrue(true);
+        } catch (Exception ignore) {
+            fail("Shouldn't throw any exception!");
+        }
+
+        assertFalse("should have been removed",
+                mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined());
+        assertNull("should not be created", request.getSession(false));
+        assertNull("should not be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
     }
 
     public void testDefaultLocale() throws Exception {
@@ -235,7 +263,9 @@ public class I18nInterceptorTest extends TestCase {
         ac = new ActionContext(ctx);
 
         ServletActionContext.setContext(ac);
-        ServletActionContext.setRequest(new MockHttpServletRequest());
+        request = new MockHttpServletRequest();
+        request.setSession(new MockHttpSession());
+        ServletActionContext.setRequest(request);
 
         Action action = new Action() {
             public String execute() throws Exception {

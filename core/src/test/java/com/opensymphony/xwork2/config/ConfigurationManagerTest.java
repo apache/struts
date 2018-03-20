@@ -23,6 +23,7 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.conversion.TypeConverterHolder;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
@@ -150,6 +151,12 @@ public class ConfigurationManagerTest extends XWorkTestCase {
         configProviderMock.expect("destroy");
         configurationManager.clearContainerProviders();
         configProviderMock.verify();
+    }
+
+    public void testEarlyInitializable() throws Exception {
+        TypeConverterHolder converterHolder = container.getInstance(TypeConverterHolder.class);
+        assertTrue("java.io.File mapping should being putted by DefaultConversionPropertiesProcessor.init()",
+                converterHolder.containsDefaultMapping("java.io.File"));
     }
 
     @Override

@@ -118,11 +118,13 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
         for (String param : parameters.keySet()) {
             boolean currentAllowed = !isDefaultBlock();
 
-            for (String currRule : includesExcludesMap.keySet()) {
+            for (Map.Entry<String, Boolean> entry : includesExcludesMap.entrySet()) {
+                String currRule = entry.getKey();
+
                 if (param.startsWith(currRule) &&
                     (param.length() == currRule.length() || isPropertySeparator(param.charAt(currRule.length())))
                 ) {
-                    currentAllowed = includesExcludesMap.get(currRule);
+                    currentAllowed = entry.getValue();
                 }
             }
             if (!currentAllowed) {

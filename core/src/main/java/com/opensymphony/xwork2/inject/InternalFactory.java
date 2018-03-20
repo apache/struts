@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2006 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.opensymphony.xwork2.inject;
 
 import java.io.Serializable;
@@ -25,11 +24,19 @@ import java.io.Serializable;
  */
 interface InternalFactory<T> extends Serializable {
 
-  /**
-   * Creates an object to be injected.
-   *
-   * @param context of this injection
-   * @return instance to be injected
-   */
-  T create(InternalContext context);
+    /**
+     * Creates an object to be injected.
+     *
+     * @param context of this injection
+     * @return instance to be injected
+     */
+    T create(InternalContext context);
+
+    /**
+     * Returns a class of <T>
+     *
+     * @return class of the object
+     */
+    Class<? extends T> type();
+
 }

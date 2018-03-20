@@ -89,8 +89,8 @@ public class ServletUrlRenderer implements UrlRenderer {
 
             // We don't include the request parameters cause they would have been
             // prioritised before this [in start(Writer) method]
-            if (_value != null && _value.indexOf("?") > 0) {
-                _value = _value.substring(0, _value.indexOf("?"));
+            if (_value != null && _value.indexOf('?') > 0) {
+                _value = _value.substring(0, _value.indexOf('?'));
             }
             result = urlHelper.buildUrl(_value, urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
         }
@@ -150,10 +150,10 @@ public class ServletUrlRenderer implements UrlRenderer {
         }
 
         Map actionParams = null;
-        if (action != null && action.indexOf("?") > 0) {
-            String queryString = action.substring(action.indexOf("?") + 1);
+        if (action != null && action.indexOf('?') > 0) {
+            String queryString = action.substring(action.indexOf('?') + 1);
             actionParams = urlHelper.parseQueryString(queryString, false);
-            action = action.substring(0, action.indexOf("?"));
+            action = action.substring(0, action.indexOf('?'));
         }
 
         ActionMapping nameMapping = actionMapper.getMappingFromActionName(action);
@@ -322,7 +322,7 @@ public class ServletUrlRenderer implements UrlRenderer {
         // where the parameters specified in value attribute takes priority.
 
         if (StringUtils.contains(value, "?")) {
-            String queryString = value.substring(value.indexOf("?") + 1);
+            String queryString = value.substring(value.indexOf('?') + 1);
 
             mergedParams = urlHelper.parseQueryString(queryString, false);
             for (Map.Entry<String, Object> entry : contextParameters.entrySet()) {

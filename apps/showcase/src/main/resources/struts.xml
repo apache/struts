@@ -74,6 +74,8 @@
 
     <include file="struts-xslt.xml" />
 
+    <include file="struts-async.xml" />
+
     <package name="default" extends="struts-default">
         <interceptors>
             <interceptor-stack name="crudStack">

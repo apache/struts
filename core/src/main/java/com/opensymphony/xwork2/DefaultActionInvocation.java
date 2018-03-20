@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * The Default ActionInvocation implementation
@@ -71,6 +72,8 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected Container container;
     protected UnknownHandlerManager unknownHandlerManager;
     protected OgnlUtil ognlUtil;
+    protected AsyncManager asyncManager;
+    protected Callable asyncAction;
     protected WithLazyParams.LazyParamInjector lazyParamInjector;
 
     public DefaultActionInvocation(final Map<String, Object> extraContext, final boolean pushAction) {
@@ -106,6 +109,11 @@ public class DefaultActionInvocation implements ActionInvocation {
     @Inject
     public void setOgnlUtil(OgnlUtil ognlUtil) {
         this.ognlUtil = ognlUtil;
+    }
+
+    @Inject(required=false)
+    public void setAsyncManager(AsyncManager asyncManager) {
+        this.asyncManager = asyncManager;
     }
 
     public Object getAction() {
@@ -237,49 +245,61 @@ public class DefaultActionInvocation implements ActionInvocation {
                 throw new IllegalStateException("Action has already executed");
             }
 
-            if (interceptors.hasNext()) {
-                final InterceptorMapping interceptorMapping = interceptors.next();
-                String interceptorMsg = "interceptorMapping: " + interceptorMapping.getName();
-                UtilTimerStack.push(interceptorMsg);
-                try {
-                    Interceptor interceptor = interceptorMapping.getInterceptor();
-                    if (interceptor instanceof WithLazyParams) {
-                        interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
+            if (asyncManager == null || !asyncManager.hasAsyncActionResult()) {
+                if (interceptors.hasNext()) {
+                    final InterceptorMapping interceptorMapping = interceptors.next();
+                    String interceptorMsg = "interceptorMapping: " + interceptorMapping.getName();
+                    UtilTimerStack.push(interceptorMsg);
+                    try {
+                        Interceptor interceptor = interceptorMapping.getInterceptor();
+                        if (interceptor instanceof WithLazyParams) {
+                            interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
+                        }
+                        resultCode = interceptor.intercept(DefaultActionInvocation.this);
+                    } finally {
+                        UtilTimerStack.pop(interceptorMsg);
                     }
-                    resultCode = interceptor.intercept(DefaultActionInvocation.this);
-                } finally {
-                    UtilTimerStack.pop(interceptorMsg);
+                } else {
+                    resultCode = invokeActionOnly();
                 }
             } else {
-                resultCode = invokeActionOnly();
+                Object asyncActionResult = asyncManager.getAsyncActionResult();
+                if (asyncActionResult instanceof Throwable) {
+                    throw new Exception((Throwable) asyncActionResult);
+                }
+                asyncAction = null;
+                resultCode = saveResult(proxy.getConfig(), asyncActionResult);
             }
 
-            // this is needed because the result will be executed, then control will return to the Interceptor, which will
-            // return above and flow through again
-            if (!executed) {
-                if (preResultListeners != null) {
-                    LOG.trace("Executing PreResultListeners for result [{}]", result);
+            if (asyncManager == null || asyncAction == null) {
+                // this is needed because the result will be executed, then control will return to the Interceptor, which will
+                // return above and flow through again
+                if (!executed) {
+                    if (preResultListeners != null) {
+                        LOG.trace("Executing PreResultListeners for result [{}]", result);
 
-                    for (Object preResultListener : preResultListeners) {
-                        PreResultListener listener = (PreResultListener) preResultListener;
+                        for (Object preResultListener : preResultListeners) {
+                            PreResultListener listener = (PreResultListener) preResultListener;
 
-                        String _profileKey = "preResultListener: ";
-                        try {
-                            UtilTimerStack.push(_profileKey);
-                            listener.beforeResult(this, resultCode);
-                        }
-                        finally {
-                            UtilTimerStack.pop(_profileKey);
+                            String _profileKey = "preResultListener: ";
+                            try {
+                                UtilTimerStack.push(_profileKey);
+                                listener.beforeResult(this, resultCode);
+                            } finally {
+                                UtilTimerStack.pop(_profileKey);
+                            }
                         }
                     }
-                }
 
-                // now execute the result, if we're supposed to
-                if (proxy.getExecuteResult()) {
-                    executeResult();
-                }
+                    // now execute the result, if we're supposed to
+                    if (proxy.getExecuteResult()) {
+                        executeResult();
+                    }
 
-                executed = true;
+                    executed = true;
+                }
+            } else {
+                asyncManager.invokeAsyncAction(asyncAction);
             }
 
             return resultCode;
@@ -494,6 +514,9 @@ public class DefaultActionInvocation implements ActionInvocation {
 
             // Wire the result automatically
             container.inject(explicitResult);
+            return null;
+        } else if (methodResult instanceof Callable) {
+            asyncAction = (Callable) methodResult;
             return null;
         } else {
             return (String) methodResult;

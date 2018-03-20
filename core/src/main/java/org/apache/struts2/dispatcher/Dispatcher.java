@@ -588,8 +588,16 @@ public class Dispatcher {
             String name = mapping.getName();
             String method = mapping.getMethod();
 
-            ActionProxy proxy = getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
-                    namespace, name, method, extraContext, true, false);
+            ActionProxy proxy;
+
+            //check if we are probably in an async resuming
+            ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
+            if (invocation == null || invocation.isExecuted()) {
+                proxy = getContainer().getInstance(ActionProxyFactory.class).createActionProxy(namespace, name, method,
+                        extraContext, true, false);
+            } else {
+                proxy = invocation.getProxy();
+            }
 
             request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
 

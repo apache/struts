@@ -90,6 +90,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-async-plugin</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <scope>provided</scope>

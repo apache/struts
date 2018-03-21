@@ -65,7 +65,9 @@ public class PortletServletContext implements ServletContext {
         throw new IllegalStateException("Not supported in a portlet");
     }
 
-    @Override
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContext#getContextPath()
+     */
     public String getContextPath() {
         throw new IllegalStateException("Not supported in a portlet");
     }

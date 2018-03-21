@@ -803,6 +803,24 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(expected.getMessage(), "It isn't a simple method which can be called!");
     }
 
+    public void testAccessContext() throws Exception {
+        Map<String, Object> context = ognlUtil.createDefaultContext(null);
+
+        Foo foo = new Foo();
+        
+        Object result = ognlUtil.getValue("#context", context, null);
+        Object root = ognlUtil.getValue("#root", context, foo);
+        Object that = ognlUtil.getValue("#this", context, foo);
+
+        assertNotSame(context, result);
+        assertNull(result);
+        assertNotNull(root);
+        assertSame(root.getClass(), Foo.class);
+        assertNotNull(that);
+        assertSame(that.getClass(), Foo.class);
+        assertSame(that, root);
+    }
+
     public static class Email {
         String address;
 

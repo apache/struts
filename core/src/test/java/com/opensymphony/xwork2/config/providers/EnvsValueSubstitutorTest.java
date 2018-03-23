@@ -20,16 +20,54 @@ package com.opensymphony.xwork2.config.providers;
 
 import org.apache.struts2.StrutsInternalTestCase;
 
-
 public class EnvsValueSubstitutorTest extends StrutsInternalTestCase {
 
-    public void testSimpleValue() throws Exception {
+    public void testEnvSimpleValue() throws Exception {
         // given
         String expected = System.getenv("USER");
         ValueSubstitutor substitutor = new EnvsValueSubstitutor();
 
         // when
         String actual = substitutor.substitute("${env.USER}");
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    public void testEnvSimpleDefaultValue() throws Exception {
+        // given
+        String expected = "defaultValue";
+        ValueSubstitutor substitutor = new EnvsValueSubstitutor();
+
+        // when
+        String actual = substitutor.substitute("${env.UNKNOWN:" + expected + "}");
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    public void testSystemSimpleValue() throws Exception {
+        // given
+        String key = "sysPropKey";
+        String expected = "sysPropValue";
+        System.setProperty(key, expected);
+       
+        ValueSubstitutor substitutor = new EnvsValueSubstitutor();
+
+        // when
+        String actual = substitutor.substitute("${" + key + "}");
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    public void testSystemSimpleDefaultValue() throws Exception {
+        // given
+        String expected = "defaultValue";
+        ValueSubstitutor substitutor = new EnvsValueSubstitutor();
+
+        // when
+        String actual = substitutor.substitute("${UNKNOWN:" + expected + "}");
 
         // then
         assertEquals(expected, actual);

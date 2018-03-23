@@ -84,11 +84,6 @@ public class ActionContext implements Serializable {
     public static final String LOCALE = "com.opensymphony.xwork2.ActionContext.locale";
 
     /**
-     * Constant for the action's type converter.
-     */
-    public static final String TYPE_CONVERTER = "com.opensymphony.xwork2.ActionContext.typeConverter";
-
-    /**
      * Constant for the action's {@link com.opensymphony.xwork2.ActionInvocation invocation} context.
      */
     public static final String ACTION_INVOCATION = "com.opensymphony.xwork2.ActionContext.actionInvocation";
@@ -171,21 +166,12 @@ public class ActionContext implements Serializable {
     }
 
     /**
-     * Sets the action's context map.
-     *
-     * @param contextMap the context map.
-     */
-    public void setContextMap(Map<String, Object> contextMap) {
-        getContext().context = contextMap;
-    }
-
-    /**
      * Gets the context map.
      *
      * @return the context map.
      */
     public Map<String, Object> getContextMap() {
-        return new HashMap<>(getContext().context);
+        return getContext().context;
     }
 
     /**

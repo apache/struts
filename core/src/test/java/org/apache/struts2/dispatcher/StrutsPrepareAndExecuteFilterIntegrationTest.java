@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.ng;
+package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import junit.framework.TestCase;
@@ -31,6 +31,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.FilterConfig;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
@@ -186,5 +187,41 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest extends TestCase {
         assertTrue(response.getContentAsString().contains("StrutsUtils"));
         assertNull(ActionContext.getContext());
         assertNull(Dispatcher.getInstance());
+    }
+
+    public void testDestroy() throws ServletException {
+        MockFilterConfig filterConfig = new MockFilterConfig();
+        final MockPrepareOperations[] prepareOperations = {null};
+
+        StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter() {
+            @Override
+            protected PrepareOperations createPrepareOperations(Dispatcher dispatcher) {
+                prepareOperations[0] = new MockPrepareOperations(dispatcher);
+                return prepareOperations[0];
+            }
+        };
+
+        filter.init(filterConfig);
+        filter.destroy();
+
+        assertNotNull(prepareOperations[0]);
+        assertTrue(prepareOperations[0].isCleaned());
+    }
+
+    private class MockPrepareOperations extends PrepareOperations {
+        private boolean cleaned;
+
+        public MockPrepareOperations(Dispatcher dispatcher) {
+            super(dispatcher);
+        }
+
+        @Override
+        public void cleanupDispatcher() {
+            cleaned = true;
+        }
+
+        public boolean isCleaned() {
+            return cleaned;
+        }
     }
 }

@@ -187,11 +187,7 @@ public class ActionContext implements Serializable {
      * @return the context map.
      */
     public Map<String, Object> getContextMap() {
-        Map<String, Object> context = getContext().context;
-        if (context instanceof OgnlContext) {
-            ((OgnlContext) context).put(TypeConverter.TYPE_CONVERTER_CONTEXT_KEY, ((OgnlContext) context).getTypeConverter());
-        }
-        return context;
+        return new HashMap<>(getContext().context);
     }
 
     /**

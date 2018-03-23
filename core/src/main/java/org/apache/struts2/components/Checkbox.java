@@ -79,7 +79,7 @@ public class Checkbox extends UIBean {
         if (submitUnchecked != null) {
             addParameter("submitUnchecked", findString(submitUnchecked));
         } else {
-            addParameter("submitUnchecked", "true");
+            addParameter("submitUnchecked", "false");
         }
     }
 
@@ -92,7 +92,7 @@ public class Checkbox extends UIBean {
         this.fieldValue = fieldValue;
     }
 
-    @StrutsTagAttribute(description="If set to false, unchecked elements will not be submitted with the form.", defaultValue="true")
+    @StrutsTagAttribute(description="If set to true, unchecked elements will be submitted with the form.", defaultValue="false")
     public void setSubmitUnchecked(String submitUnchecked) {
         this.submitUnchecked = submitUnchecked;
     }

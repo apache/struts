@@ -38,8 +38,11 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-/><input type="hidden" id="__checkbox_${parameters.id?html}" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
+/>
+<#if (parameters.submitUnchecked?boolean)!false>
+<input type="hidden" id="__checkbox_${parameters.id?html}" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
  />
+</#if>

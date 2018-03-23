@@ -194,4 +194,48 @@ public class CheckboxTest extends AbstractUITagTest {
 
         verify(CheckboxTag.class.getResource("Checkbox-6.txt"));
     }
+
+    public void testSubmitUncheckedAsFalse() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("true");
+
+        CheckboxTag tag = new CheckboxTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setFieldValue("baz");
+        //tag.setSubmitUnchecked("false");        // Test default value
+        tag.setTitle("mytitle");
+        tag.setDisabled("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(CheckboxTag.class.getResource("Checkbox-7.txt"));
+
+        // Test value set
+        tag.setSubmitUnchecked("false");
+        verify(CheckboxTag.class.getResource("Checkbox-7.txt"));
+
+    }
+
+    public void testSubmitUncheckedAsTrue() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("true");
+
+        CheckboxTag tag = new CheckboxTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setFieldValue("baz");
+        tag.setSubmitUnchecked("true");
+        tag.setTitle("mytitle");
+        tag.setDisabled("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(CheckboxTag.class.getResource("Checkbox-8.txt"));
+    }
+
 }

@@ -55,12 +55,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-/**
- * Copy of {@link com.opensymphony.xwork2.util.finder.DefaultClassFinder} with proper support for Java8
- */
-public class Java8ClassFinder implements ClassFinder {
+public class DefaultClassFinder implements ClassFinder {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Java8ClassFinder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultClassFinder.class);
 
     private final Map<String, List<Info>> annotated = new HashMap<String, List<Info>>();
     private final Map<String, ClassInfo> classInfos = new LinkedHashMap<String, ClassInfo>();
@@ -71,7 +68,7 @@ public class Java8ClassFinder implements ClassFinder {
     private ClassLoaderInterface classLoaderInterface;
     private FileManager fileManager;
 
-    public Java8ClassFinder(ClassLoaderInterface classLoaderInterface, Collection<URL> urls, boolean extractBaseInterfaces, Set<String> protocols, Test<String> classNameFilter) {
+    public DefaultClassFinder(ClassLoaderInterface classLoaderInterface, Collection<URL> urls, boolean extractBaseInterfaces, Set<String> protocols, Test<String> classNameFilter) {
         this.classLoaderInterface = classLoaderInterface;
         this.extractBaseInterfaces = extractBaseInterfaces;
         this.fileManager = ActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
@@ -109,11 +106,11 @@ public class Java8ClassFinder implements ClassFinder {
         }
     }
 
-    public Java8ClassFinder(Class... classes){
+    public DefaultClassFinder(Class... classes){
         this(Arrays.asList(classes));
     }
 
-    public Java8ClassFinder(List<Class> classes){
+    public DefaultClassFinder(List<Class> classes){
         this.classLoaderInterface = null;
         List<Info> infos = new ArrayList<Info>();
         List<Package> packages = new ArrayList<Package>();
@@ -407,7 +404,7 @@ public class Java8ClassFinder implements ClassFinder {
             }
         } else if (LOG.isDebugEnabled())
             LOG.debug("Unable to read [#0]", location.toExternalForm());
-        
+
         return Collections.emptyList();
     }
 
@@ -423,7 +420,7 @@ public class Java8ClassFinder implements ClassFinder {
             className = className.replaceFirst(".class$", "");
 
             //war files are treated as .jar files, so takeout WEB-INF/classes
-            className = StringUtils.removeStart(className, "WEB-INF/classes/"); 
+            className = StringUtils.removeStart(className, "WEB-INF/classes/");
 
             className = className.replace('/', '.');
             classNames.add(className);

@@ -28,19 +28,19 @@
     -->
 
     <scm>
-        <connection>scm:git:git://git.apache.org/struts.git</connection>
-        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/struts.git</developerConnection>
-        <url>http://git.apache.org/struts.git</url>
+        <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
+        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
+        <url>https://github.com/apache/struts/</url>
     </scm>
 
     <issueManagement>
         <system>JIRA</system>
-        <url>https://issues.apache.org/jira/browse/WW</url>
+        <url>https://issues.apache.org/jira/projects/WW</url>
     </issueManagement>
 
     <ciManagement>
         <system>Jenkins</system>
-        <url>https://builds.apache.org/hudson/view/S-Z/view/Struts</url>
+        <url>https://builds.apache.org/view/S-Z/view/Struts/</url>
         <notifiers>
             <notifier>
                 <type>mail</type>
@@ -50,13 +50,6 @@
             </notifier>
         </notifiers>
     </ciManagement>
-
-    <distributionManagement>
-        <site>
-            <id>apache-site</id>
-            <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/struts/content/release/2.3.x/</url>
-        </site>
-    </distributionManagement>
 
     <modules>
         <module>bom</module>
@@ -86,16 +79,10 @@
         <currentVersion>${project.version}</currentVersion>
         <struts2.springPlatformVersion>3.0.5.RELEASE</struts2.springPlatformVersion>
         <ognl.version>3.0.21</ognl.version>
-        <asm.version>3.3</asm.version>
-        <asm5.version>5.0.2</asm5.version>
+        <asm.version>5.0.2</asm.version>
         <tiles.version>2.2.2</tiles.version>
         <log4j2.version>2.3</log4j2.version>
 
-        <!-- SCM Site Configuration -->
-        <site.mainDirectory>${project.build.directory}/site</site.mainDirectory>
-        <siteContent.path>${site.mainDirectory}/staging</siteContent.path>
-        <scmCheckout.path>${site.mainDirectory}/scm</scmCheckout.path>
-        <siteDeploy.url>file://${siteContent.path}</siteDeploy.url>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -111,34 +98,8 @@
                 <module>assembly</module>
             </modules>
         </profile>
-        <profile>
-            <id>struts-annotations</id>
-            <modules>
-                <module>../maven/struts-annotations</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <configuration>
-                                <additionalparam>-Xdoclint:none</additionalparam>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
     </profiles>
-
-
+    
     <build>
         <pluginManagement>
             <plugins>
@@ -163,7 +124,9 @@
                     <version>1.0-alpha-2</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.7.0</version>
                     <configuration>
                         <source>1.7</source>
                         <target>1.7</target>
@@ -172,7 +135,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.3.1</version>
+                    <version>2.20.1</version>
                     <configuration>
                         <includes>
                             <include>**/*Test.java</include>
@@ -542,7 +505,7 @@
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.22</version>
+                <version>2.3.26-incubating</version>
             </dependency>
 
             <dependency>
@@ -609,27 +572,17 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>
-                <version>${asm5.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-commons</artifactId>
-                <version>${asm5.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>asm</groupId>
-                <artifactId>asm</artifactId>
                 <version>${asm.version}</version>
             </dependency>
             <dependency>
-                <groupId>asm</groupId>
+                <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-commons</artifactId>
                 <version>${asm.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.8.2</version>
+                <version>4.12</version>
             </dependency>
             <dependency>
                 <groupId>cglib</groupId>
@@ -763,12 +716,12 @@
             <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
-                <version>1.3.2</version>
+                <version>1.3.3</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.2</version>
+                <version>2.5</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -778,7 +731,7 @@
             <dependency>
                 <groupId>commons-digester</groupId>
                 <artifactId>commons-digester</artifactId>
-                <version>2.0</version>
+                <version>2.1</version>
             </dependency>
             <dependency>
                 <groupId>commons-el</groupId>
@@ -788,7 +741,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-jci-fam</artifactId>
-                <version>1.0</version>
+                <version>1.1</version>
                 <optional>true</optional>
             </dependency>
 
@@ -924,10 +877,9 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>5.1</version>
+                <version>5.14.10</version>
                 <scope>compile</scope>
                 <optional>true</optional>
-                <classifier>jdk15</classifier>
             </dependency>
 
             <dependency>

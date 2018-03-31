@@ -126,14 +126,6 @@
             <artifactId>ognl</artifactId>
         </dependency>
         <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm-commons</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <optional>true</optional>
@@ -189,7 +181,6 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <optional>true</optional>
-            <classifier>jdk15</classifier>
         </dependency>
 
         <dependency>

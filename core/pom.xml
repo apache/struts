@@ -207,7 +207,11 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
@@ -273,6 +277,15 @@
         <dependency>
             <groupId>org.easytesting</groupId>
             <artifactId>fest-assert</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- The Servlet API mocks in Spring Framework 4.x only supports Servlet 3.0 and higher.
+             This is only necessary in tests-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
             <scope>test</scope>
         </dependency>
 

@@ -213,18 +213,18 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
 
         req.setCharacterEncoding("text/html");
-        req.setContentType("multipart/form-data; boundary=---1234");
+        req.setMethod("post");
+        req.addHeader("Content-type", "multipart/form-data");
         req.setContent(null); // there is no content
 
-        MyFileupAction action = new MyFileupAction();
+        MyFileupAction action = container.inject(MyFileupAction.class);
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
 
-        Map param = new HashMap();
-        ActionContext.getContext().setParameters(param);
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest((HttpServletRequest) req, 2000));
+        ActionContext.getContext().setParameters(HttpParameters.create().build());
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);
 

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC 
-	"-//SPRING//DTD BEAN//EN" 
-	"http://www.springframework.org/dtd/spring-beans.dtd">
-	
-<beans>
-	<!-- Example of SAF2 action instantiated by Spring -->
-    <bean id="helloWorldAction" class="${package}.HelloWorldAction" singleton="false" />
-</beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <beans>
+    <!-- Example of SAF2 action instantiated by Spring -->
+    <bean id="helloWorldAction" class="${package}.HelloWorldAction" scope="prototype"/>
+  </beans>
 

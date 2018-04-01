@@ -5,12 +5,11 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts-master</artifactId>
-        <version>9</version>
-        <relativePath>../struts-master</relativePath>
+        <version>11</version>
     </parent>
 
     <artifactId>struts2-bom</artifactId>
-    <version>2.3.35-SNAPSHOT</version>
+    <version>2.4.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Struts 2 Bill of Materials</name>
@@ -25,7 +24,7 @@
     </licenses>
 
     <properties>
-        <struts-version.version>2.3.35-SNAPSHOT</struts-version.version>
+        <struts-version.version>2.4.0-SNAPSHOT</struts-version.version>
     </properties>
 
     <build>
@@ -196,7 +195,4 @@
         </dependencies>
     </dependencyManagement>
 
-  <scm>
-    <tag>STRUTS_2_3_24_1</tag>
-  </scm>
 </project>

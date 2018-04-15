@@ -119,6 +119,7 @@ public class TilesResult extends ServletDispatcherResult {
             LOG.debug("using new location name '{}' and @TilesDefinition '{}'", location, tilesDefinition);
         }
         setLocation(location);
+        setParse(false);
 
         ServletContext servletContext = ServletActionContext.getServletContext();
 

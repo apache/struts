@@ -33,45 +33,62 @@
     <name>Struts 2 Core</name>
 
     <properties>
-        <tlib.version>2.3</tlib.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.myfaces.tobago</groupId>
-                <artifactId>maven-apt-plugin</artifactId>
-                <version>1.0.15</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <A>uri=/struts-tags,tlibVersion=${tlib.version},jspVersion=2.0,shortName=s,displayName=Struts Tags,
-                        outFile=${basedir}/target/classes/META-INF/struts-tags.tld,
-                        description="To make it easier to access dynamic data;
-                        the Apache Struts framework includes a library of custom tags.
-                        The tags interact with the framework's validation and internationalization features;
-                        to ensure that input is correct and output is localized.
-                        The Struts Tags can be used with JSP FreeMarker or Velocity.",
-                        outTemplatesDir=${basedir}/src/site/resources/tags
-                    </A>
-                    <resourceTargetPath>target</resourceTargetPath>
-                    <fork>false</fork>
-                    <force>true</force>
-                    <nocompile>true</nocompile>
-                    <showWarnings>true</showWarnings>
-                    <factory>org.apache.struts.annotations.taglib.apt.TLDAnnotationProcessorFactory</factory>
-                    <target>1.5</target>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
+                    <compilerArgs>
+                        <arg>-Auri=/struts-tags</arg>
+                        <arg>-AtlibVersion=${tlib.version}</arg>
+                        <arg>-AjspVersion=2.0</arg>
+                        <arg>-AshortName=s</arg>
+                        <arg>-AdisplayName=Struts Tags</arg>
+                        <arg>-AoutFile=${basedir}/target/classes/META-INF/struts-tags.tld</arg>
+                        <arg>-Adescription="To make it easier to access dynamic data;
+                            the Apache Struts framework includes a library of custom tags.
+                            The tags interact with the framework's validation and
+                            internationalization features;
+                            to ensure that input is correct and output is localized.
+                            The Struts Tags can be used with JSP FreeMarker or Velocity."</arg>
+                        <arg>-AoutTemplatesDir=${basedir}/src/site/resources/tags</arg>
+                    </compilerArgs>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                    </execution>
-                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Duser.language=en -Duser.region=US</argLine>
+                    <properties>
+                        <property>
+                            <name>maven.testng.output.dir</name>
+                            <value>${project.basedir}/target/surefire-reports</value>
+                        </property>
+                    </properties>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <additionalClasspathElements>
+                        <element>${project.build.testOutputDirectory}/xwork-jar.jar</element>
+                        <element>${project.build.testOutputDirectory}/xwork-zip.zip</element>
+                        <element>${project.build.testOutputDirectory}/xwork - jar.jar</element>
+                        <element>${project.build.testOutputDirectory}/xwork - zip.zip</element>
+                    </additionalClasspathElements>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/XWorkTestCase.java</exclude>
+                        <exclude>**/TestBean.java</exclude>
+                        <exclude>**/TestBean2.java</exclude>
+                        <exclude>**/TestInterceptor.java</exclude>
+                        <exclude>**/AnnotatedTestBean.java</exclude>
+                        <exclude>**/DefaultFileManagerTest.java</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

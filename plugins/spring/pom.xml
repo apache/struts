@@ -71,7 +71,15 @@
             <optional>true</optional>
         </dependency>
 
-		 <dependency>
+        <!-- The Servlet API mocks in Spring Framework 4.x only supports Servlet 3.0 and higher.
+             This is only necessary in tests-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <scope>test</scope>

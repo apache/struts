@@ -22,9 +22,12 @@
 package org.apache.struts2.rest;
 
 import org.apache.struts2.RequestUtils;
+import org.apache.struts2.util.DateFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static javax.servlet.http.HttpServletResponse.*;

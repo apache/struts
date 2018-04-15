@@ -181,6 +181,7 @@ public class PortletActionRedirectResult extends PortletResult {
 		}
 		if (namespace == null) {
 			namespace = invocation.getProxy().getNamespace();
+			parseLocation = false;
 		} else {
 			namespace = conditionalParse(namespace, invocation);
 		}

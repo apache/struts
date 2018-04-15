@@ -81,6 +81,7 @@
         <asm.version>5.2</asm.version>
         <tiles.version>2.2.2</tiles.version>
         <log4j2.version>2.11.0</log4j2.version>
+        <tlib.version>2.3</tlib.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -141,6 +142,7 @@
                         </includes>
                         <excludes>
                             <exclude>**/TestBean.java</exclude>
+                            <exclude>**/Struts2PortletTest.java</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
@@ -332,7 +334,7 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-annotations</artifactId>
-                <version>1.0.5</version>
+                <version>1.0.6</version>
             </dependency>
 
             <dependency>

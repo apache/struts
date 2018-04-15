@@ -18,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.rest;
 
 import junit.framework.TestCase;
@@ -36,19 +35,28 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class DefaultHttpHeadersTest extends TestCase {
+
+    private static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
+    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+
     private MockHttpServletResponse mockResponse;
     private MockHttpServletRequest mockRequest;
+    private SimpleDateFormat dateFormat;
 
     @Override
     public void setUp() {
         mockResponse = new MockHttpServletResponse();
         mockRequest = new MockHttpServletRequest();
+
+        dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+        dateFormat.setTimeZone(GMT);
     }
 
     @Override
     public void tearDown() {
         mockRequest = null;
         mockRequest = null;
+        dateFormat = null;
     }
 
     public void testApply() {
@@ -63,9 +71,9 @@ public class DefaultHttpHeadersTest extends TestCase {
         headers.apply(mockRequest, mockResponse, new Object());
 
         assertEquals(SC_CREATED, mockResponse.getStatus());
-        assertEquals("http://localhost:80/foo/bar/44.xhtml", mockResponse.getHeader("Location"));
+        assertEquals("http://localhost/foo/bar/44.xhtml", mockResponse.getHeader("Location"));
         assertEquals("asdf", mockResponse.getHeader("ETag"));
-        assertEquals(now.getTime(), mockResponse.getHeader("Last-Modified"));
+        assertEquals(dateFormat.format(now), mockResponse.getHeader("Last-Modified"));
 
     }
 
@@ -75,7 +83,7 @@ public class DefaultHttpHeadersTest extends TestCase {
         mockRequest.setRequestURI("/foo/bar");
 
         headers.apply(mockRequest, mockResponse, new Object());
-        assertEquals("http://localhost:80/foo/bar/44", mockResponse.getHeader("Location"));
+        assertEquals("http://localhost/foo/bar/44", mockResponse.getHeader("Location"));
         assertEquals(SC_CREATED, mockResponse.getStatus());
     }
 

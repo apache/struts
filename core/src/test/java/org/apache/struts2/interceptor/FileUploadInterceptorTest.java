@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -217,13 +218,13 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         req.addHeader("Content-type", "multipart/form-data");
         req.setContent(null); // there is no content
 
-        MyFileupAction action = container.inject(MyFileupAction.class);
+        MyFileupAction action = new MyFileupAction();
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
 
-        ActionContext.getContext().setParameters(HttpParameters.create().build());
+        ActionContext.getContext().setParameters(Collections.<String, Object>emptyMap());
         ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
 
         interceptor.intercept(mai);

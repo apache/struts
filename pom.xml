@@ -80,7 +80,7 @@
         <ognl.version>3.1.17</ognl.version>
         <asm.version>5.2</asm.version>
         <tiles.version>2.2.2</tiles.version>
-        <log4j2.version>2.11.0</log4j2.version>
+        <log4j2.version>2.3</log4j2.version>
         <tlib.version>2.3</tlib.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -126,10 +126,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.7.0</version>
+                    <version>3.6.1</version>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
+                        <source>1.6</source>
+                        <target>1.6</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -143,6 +143,7 @@
                         <excludes>
                             <exclude>**/TestBean.java</exclude>
                             <exclude>**/Struts2PortletTest.java</exclude>
+                            <exclude>**/ChartResultTest.java</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
@@ -334,7 +335,7 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-annotations</artifactId>
-                <version>1.0.6</version>
+                <version>1.0.5</version>
             </dependency>
 
             <dependency>

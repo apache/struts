@@ -85,20 +85,37 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.apache.myfaces.tobago</groupId>
+                <artifactId>maven-apt-plugin</artifactId>
+                <version>1.0.15</version>
                 <configuration>
-                    <compilerArgs>
-                        <arg>-Auri=/struts-tags</arg>
-                        <arg>-AtlibVersion=${tlib.version}</arg>
-                        <arg>-AjspVersion=2.0</arg>
-                        <arg>-AshortName=sx</arg>
-                        <arg>-AdisplayName=Struts Dojo Tags</arg>
-                        <arg>-AoutFile=${basedir}/target/classes/META-INF/struts-dojo-tags.tld</arg>
-                        <arg>-Adescription="Struts AJAX tags based on Dojo."</arg>
-                        <arg>-AoutTemplatesDir=${basedir}/../../core/src/site/resources/tags/ajax</arg>
-                    </compilerArgs>
+                    <A>
+                        uri=/struts-dojo-tags,tlibVersion=${tlib.version},jspVersion=2.0,shortName=sx,
+                        displayName="Struts Dojo Tags",
+                        outFile=${basedir}/target/classes/META-INF/struts-dojo-tags.tld,
+                        description="Struts AJAX tags based on Dojo.",
+                        outTemplatesDir=${basedir}/../../core/src/site/resources/tags/ajax
+                    </A>
+                    <resourceTargetPath>target</resourceTargetPath>
+                    <fork>false</fork>
+                    <force>true</force>
+                    <nocompile>true</nocompile>
+                    <showWarnings>true</showWarnings>
+                    <factory>
+                        org.apache.struts.annotations.taglib.apt.TLDAnnotationProcessorFactory
+                    </factory>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

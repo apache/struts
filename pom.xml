@@ -55,7 +55,7 @@
         <module>bom</module>
         <module>xwork-core</module>
         <module>core</module>
-        <module>apps</module>
+        <!--<module>apps</module>-->
         <module>plugins</module>
         <module>bundles</module>
         <module>archetypes</module>

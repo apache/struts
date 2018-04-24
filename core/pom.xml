@@ -46,15 +46,11 @@
                 <configuration>
                     <A>uri=/struts-tags,tlibVersion=${tlib.version},jspVersion=2.0,shortName=s,displayName=Struts Tags,
                         outFile=${basedir}/target/classes/META-INF/struts-tags.tld,
-                        description="To make it easier to access dynamic data;
-                        the Apache Struts framework includes a library of custom tags.
-                        The tags interact with the framework's validation and internationalization features;
-                        to ensure that input is correct and output is localized.
-                        The Struts Tags can be used with JSP FreeMarker or Velocity.",
+                        description='To make it easier to access dynamic data the Apache Struts framework includes a library of custom tags. The tags interact with the framework validation and internationalization features to ensure that input is correct and output is localized. The Struts Tags can be used with JSP FreeMarker or Velocity.',
                         outTemplatesDir=${basedir}/src/site/resources/tags
                     </A>
                     <resourceTargetPath>target</resourceTargetPath>
-                    <fork>false</fork>
+                    <fork>true</fork>
                     <force>true</force>
                     <nocompile>true</nocompile>
                     <showWarnings>true</showWarnings>

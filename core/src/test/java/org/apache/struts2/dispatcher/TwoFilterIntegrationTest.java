@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.dispatcher.ng;
+package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import junit.framework.TestCase;

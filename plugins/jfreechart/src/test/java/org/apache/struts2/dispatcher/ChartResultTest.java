@@ -33,6 +33,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -97,7 +98,9 @@ public class ChartResultTest extends StrutsTestCase {
         result.execute(actionInvocation);
 
         EasyMock.verify(responseMock);
-        assertTrue(os.isWritten());
+
+        boolean envSupportsJpeg = ImageIO.getImageWritersByFormatName("jpeg").hasNext();
+        assertTrue(envSupportsJpeg ^ !os.isWritten());
     }
 
 

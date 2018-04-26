@@ -33,7 +33,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -54,7 +53,7 @@ public class ChartResultTest extends StrutsTestCase {
     public void testChart() throws Exception {
         EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
         EasyMock.replay(responseMock, mockActionProxy, actionInvocation);
-        
+
         ChartResult result = new ChartResult();
 
         result.setChart(mockChart);
@@ -66,7 +65,7 @@ public class ChartResultTest extends StrutsTestCase {
         EasyMock.verify(responseMock);
         assertTrue(os.isWritten());
     }
-    
+
     public void testContentTypePng() throws Exception {
         EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
         responseMock.setContentType("image/png");
@@ -83,7 +82,7 @@ public class ChartResultTest extends StrutsTestCase {
         EasyMock.verify(responseMock);
         assertTrue(os.isWritten());
     }
-    
+
     public void testContentTypeJpg() throws Exception {
         EasyMock.expect(responseMock.getOutputStream()).andReturn(os);
         responseMock.setContentType("image/jpg");
@@ -98,9 +97,7 @@ public class ChartResultTest extends StrutsTestCase {
         result.execute(actionInvocation);
 
         EasyMock.verify(responseMock);
-
-        boolean envSupportsJpeg = ImageIO.getImageWritersByFormatName("jpeg").hasNext();
-        assertTrue(envSupportsJpeg ^ !os.isWritten());
+        assertTrue(os.isWritten());
     }
 
 

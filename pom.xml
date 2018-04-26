@@ -181,6 +181,7 @@
                         <excludes>
                             <exclude>**/TestBean.java</exclude>
                         </excludes>
+                        <useFile>false</useFile>
                     </configuration>
                 </plugin>
                 <plugin>

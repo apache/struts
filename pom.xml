@@ -103,7 +103,7 @@
         <tiles.version>3.0.7</tiles.version>
         <tiles-request.version>1.0.6</tiles-request.version>
         <log4j2.version>2.10.0</log4j2.version>
-        <jackson.version>2.9.4</jackson.version>
+        <jackson.version>2.9.5</jackson.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.6</fluido-skin.version>

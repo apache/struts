@@ -64,7 +64,7 @@ public class SecurityMemberAccess implements MemberAccess {
             AccessibleObject accessible = (AccessibleObject) member;
 
             if (!accessible.isAccessible()) {
-                result = Boolean.TRUE;
+                result = Boolean.FALSE;
                 accessible.setAccessible(true);
             }
         }

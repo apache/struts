@@ -201,13 +201,10 @@ public class ActionChainResult implements Result {
      * @param invocation the DefaultActionInvocation calling the action call stack
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        // if the finalNamespace wasn't explicitly defined, assume the current one
-        if (this.namespace == null) {
-            this.namespace = invocation.getProxy().getNamespace();
-        }
-
         ValueStack stack = ActionContext.getContext().getValueStack();
-        String finalNamespace = TextParseUtil.translateVariables(namespace, stack);
+        String finalNamespace = this.namespace != null
+                ? TextParseUtil.translateVariables(namespace, stack)
+                : invocation.getProxy().getNamespace();
         String finalActionName = TextParseUtil.translateVariables(actionName, stack);
         String finalMethodName = this.methodName != null
                 ? TextParseUtil.translateVariables(this.methodName, stack)

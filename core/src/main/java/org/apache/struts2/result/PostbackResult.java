@@ -136,6 +136,7 @@ public class PostbackResult extends StrutsResultSupport {
             actionName = conditionalParse(actionName, invocation);
             if (namespace == null) {
                 namespace = invocation.getProxy().getNamespace();
+                parseLocation = false;
             } else {
                 namespace = conditionalParse(namespace, invocation);
             }

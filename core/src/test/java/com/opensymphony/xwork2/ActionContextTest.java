@@ -88,8 +88,9 @@ public class ActionContextTest extends XWorkTestCase {
 
     public void testContextMap() {
         Map<String, Object> map = new HashMap<>();
-        context.setContextMap(map);
-        assertEquals(map, context.getContextMap());
+        ActionContext.setContext(new ActionContext(map));
+
+        assertEquals(map, ActionContext.getContext().getContextMap());
     }
 
     public void testParameters() {

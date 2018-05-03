@@ -94,9 +94,8 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
                            boolean allowStaticMethodAccess) {
         this.root = compoundRoot;
         this.securityMemberAccess = new SecurityMemberAccess(allowStaticMethodAccess);
-        this.context = Ognl.createDefaultContext(this.root, accessor, new OgnlTypeConverterWrapper(xworkConverter), securityMemberAccess);
+        this.context = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
         context.put(VALUE_STACK, this);
-        Ognl.setClassResolver(context, accessor);
         ((OgnlContext) context).setTraceEvaluations(false);
         ((OgnlContext) context).setKeepLastEvaluation(false);
     }

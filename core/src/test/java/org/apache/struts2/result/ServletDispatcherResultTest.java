@@ -57,8 +57,6 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         Mock responseMock = new Mock(HttpServletResponse.class);
         responseMock.expectAndReturn("isCommitted", Boolean.TRUE);
 
-        ActionContext ac = new ActionContext(Ognl.createDefaultContext(null));
-        ActionContext.setContext(ac);
         ServletActionContext.setRequest((HttpServletRequest) requestMock.proxy());
         ServletActionContext.setResponse((HttpServletResponse) responseMock.proxy());
 
@@ -92,8 +90,6 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         Mock responseMock = new Mock(HttpServletResponse.class);
         responseMock.expectAndReturn("isCommitted", Boolean.FALSE);
 
-        ActionContext ac = new ActionContext(Ognl.createDefaultContext(null));
-        ActionContext.setContext(ac);
         ServletActionContext.setRequest((HttpServletRequest) requestMock.proxy());
         ServletActionContext.setResponse((HttpServletResponse) responseMock.proxy());
 
@@ -127,14 +123,11 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
         Mock responseMock = new Mock(HttpServletResponse.class);
         responseMock.expectAndReturn("isCommitted", Boolean.FALSE);
 
-        ActionContext ac = new ActionContext(Ognl.createDefaultContext(null));
-        ac.setContainer(container);
-        ActionContext.setContext(ac);
         ServletActionContext.setRequest((HttpServletRequest) requestMock.proxy());
         ServletActionContext.setResponse((HttpServletResponse) responseMock.proxy());
 
         MockActionInvocation mockActionInvocation = new MockActionInvocation();
-        mockActionInvocation.setInvocationContext(ac);
+        mockActionInvocation.setInvocationContext(ActionContext.getContext());
         mockActionInvocation.setStack(container.getInstance(ValueStackFactory.class).createValueStack());
 
         try {

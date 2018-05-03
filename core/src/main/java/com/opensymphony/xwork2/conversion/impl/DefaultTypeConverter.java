@@ -19,12 +19,12 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.XWorkTypeConverterWrapper;
+import ognl.OgnlContext;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;
@@ -81,17 +81,22 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         return convertValue(context, value, toType);
     }
     
-    public TypeConverter getTypeConverter( Map<String, Object> context )
-    {
-        Object obj = context.get(TypeConverter.TYPE_CONVERTER_CONTEXT_KEY);
-        if (obj instanceof TypeConverter) {
-            return (TypeConverter) obj;
-            
-        // for backwards-compatibility
-        } else if (obj instanceof ognl.TypeConverter) {
-            return new XWorkTypeConverterWrapper((ognl.TypeConverter) obj);
+    public TypeConverter getTypeConverter( Map<String, Object> context ) {
+        ognl.TypeConverter converter = null;
+
+        if (context instanceof OgnlContext) {
+            converter = ((OgnlContext) context).getTypeConverter();
         }
-        return null; 
+
+        if (converter != null) {
+            if (converter instanceof TypeConverter) {
+                return (TypeConverter) converter;
+            } else {
+                return new XWorkTypeConverterWrapper(converter);
+            }
+        }
+
+        return null;
     }
 
     /**

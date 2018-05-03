@@ -23,30 +23,32 @@ import java.util.Map;
 
 /**
  * Interface for accessing the type conversion facilities within a context.
- * 
+ *
  * This interface was copied from OGNL's TypeConverter
- * 
+ *
  * @author Luke Blanshard (blanshlu@netscape.net)
  * @author Drew Davidson (drew@ognl.org)
  */
-public interface TypeConverter
-{
+public interface TypeConverter {
     /**
-       * Converts the given value to a given type.  The OGNL context, target, member and
-       * name of property being set are given.  This method should be able to handle
-       * conversion in general without any context, target, member or property name specified.
-       * @param context context under which the conversion is being done
-       * @param target target object in which the property is being set
-       * @param member member (Constructor, Method or Field) being set
-       * @param propertyName property name being set
-       * @param value value to be converted
-       * @param toType type to which value is converted
-       * @return Converted value of type toType or TypeConverter.NoConversionPossible to indicate that the
-                 conversion was not possible.
+     * Converts the given value to a given type.  The OGNL context, target, member and
+     * name of property being set are given.  This method should be able to handle
+     * conversion in general without any context, target, member or property name specified.
+     *
+     * @param context      context under which the conversion is being done
+     * @param target       target object in which the property is being set
+     * @param member       member (Constructor, Method or Field) being set
+     * @param propertyName property name being set
+     * @param value        value to be converted
+     * @param toType       type to which value is converted
+     * @return Converted value of type toType or TypeConverter.NoConversionPossible to indicate that the
+     * conversion was not possible.
      */
-    public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType);
-    
-    public static final Object NO_CONVERSION_POSSIBLE = "ognl.NoConversionPossible";
-    
-    public static final String TYPE_CONVERTER_CONTEXT_KEY = "_typeConverter";
+    Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType);
+
+    Object NO_CONVERSION_POSSIBLE = "ognl.NoConversionPossible";
+
+    @Deprecated
+    String TYPE_CONVERTER_CONTEXT_KEY = "_typeConverter";
+
 }

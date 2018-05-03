@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.oval.interceptor;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ModelDriven;
@@ -27,6 +28,11 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import net.sf.oval.exception.ExpressionEvaluationException;
+import net.sf.oval.expression.ExpressionLanguage;
+import net.sf.oval.expression.ExpressionLanguageOGNLImpl;
+import ognl.Ognl;
+import ognl.OgnlException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
@@ -43,6 +49,7 @@ import org.apache.struts2.oval.annotation.Profiles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /*
  This interceptor provides validation using the OVal validation framework
@@ -58,6 +65,12 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     protected OValValidationManager validationManager;
     protected boolean validateJPAAnnotations;
     protected TextProviderFactory textProviderFactory;
+
+    private ExpressionLanguage ognlExpressionLanguage;
+
+    public OValValidationInterceptor() {
+        ognlExpressionLanguage = new ExpressionLanguageOGNL();
+    }
 
     @Inject
     public void setValidationManager(OValValidationManager validationManager) {
@@ -153,6 +166,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
         List<Configurer> configurers = validationManager.getConfigurers(clazz, context, validateJPAAnnotations);
 
         Validator validator = configurers.isEmpty() ? new Validator() : new Validator(configurers);
+        validator.addExpressionLanguage("ognl", ognlExpressionLanguage);
         //if the method is annotated with a @Profiles annotation, use those profiles
         Method method = clazz.getMethod(methodName, new Class[0]);
         if (method != null) {
@@ -284,4 +298,20 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
             return message;
         }
     }
+
 }
+
+class ExpressionLanguageOGNL extends ExpressionLanguageOGNLImpl {
+
+    private static final Logger LOG = LogManager.getLogger(ExpressionLanguageOGNL.class);
+
+    public Object evaluate(final String expression, final Map<String, ? > values) throws ExpressionEvaluationException {
+        try {
+            LOG.debug("Evaluating OGNL expression: {1}", expression);
+            return Ognl.getValue(expression, ActionContext.getContext().getContextMap(), values);
+        } catch (final OgnlException ex) {
+            throw new ExpressionEvaluationException("Evaluating script with OGNL failed.", ex);
+        }
+    }
+}
+

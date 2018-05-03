@@ -57,7 +57,7 @@ public class SetPropertiesTest extends XWorkTestCase {
     }
     public void testOgnlUtilEmptyStringAsLong() {
         Bar bar = new Bar();
-        Map context = Ognl.createDefaultContext(bar);
+        Map context = Ognl.createDefaultContext(bar, new SecurityMemberAccess(false));
         context.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
         bar.setId(null);
 

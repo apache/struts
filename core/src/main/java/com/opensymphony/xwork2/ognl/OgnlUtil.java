@@ -184,8 +184,6 @@ public class OgnlUtil {
             return;
         }
 
-        Ognl.setTypeConverter(context, getTypeConverterFromContext(context));
-
         Object oldRoot = Ognl.getRoot(context);
         Ognl.setRoot(context, o);
 
@@ -245,7 +243,6 @@ public class OgnlUtil {
      *                                problems setting the property
      */
     public void setProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
-        Ognl.setTypeConverter(context, getTypeConverterFromContext(context));
 
         Object oldRoot = Ognl.getRoot(context);
         Ognl.setRoot(context, o);
@@ -487,11 +484,8 @@ public class OgnlUtil {
             return;
         }
 
-        TypeConverter converter = getTypeConverterFromContext(context);
         final Map contextFrom = createDefaultContext(from, null);
-        Ognl.setTypeConverter(contextFrom, converter);
         final Map contextTo = createDefaultContext(to, null);
-        Ognl.setTypeConverter(contextTo, converter);
 
         PropertyDescriptor[] fromPds;
         PropertyDescriptor[] toPds;
@@ -667,18 +661,6 @@ public class OgnlUtil {
         }
     }
 
-    TypeConverter getTypeConverterFromContext(Map<String, Object> context) {
-        /*ValueStack stack = (ValueStack) context.get(ActionContext.VALUE_STACK);
-        Container cont = (Container)stack.getContext().get(ActionContext.CONTAINER);
-        if (cont != null) {
-            return new OgnlTypeConverterWrapper(cont.getInstance(XWorkConverter.class));
-        } else {
-            throw new IllegalArgumentException("Cannot find type converter in context map");
-        }
-        */
-        return defaultConverter;
-    }
-
     protected Map createDefaultContext(Object root) {
         return createDefaultContext(root, null);
     }
@@ -695,7 +677,7 @@ public class OgnlUtil {
         memberAccess.setExcludedPackageNames(excludedPackageNames);
         memberAccess.setDisallowProxyMemberAccess(disallowProxyMemberAccess);
 
-        return Ognl.createDefaultContext(root, resolver, defaultConverter, memberAccess);
+        return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);
     }
 
     private interface OgnlTask<T> {

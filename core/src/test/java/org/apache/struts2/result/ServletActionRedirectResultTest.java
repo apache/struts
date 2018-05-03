@@ -179,7 +179,7 @@ public class ServletActionRedirectResultTest extends StrutsInternalTestCase {
             .build();
 
         ObjectFactory factory = container.getInstance(ObjectFactory.class);
-        ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, new HashMap<String, Object>());
+        ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, ActionContext.getContext().getContextMap());
         assertNotNull(result);
     }
     

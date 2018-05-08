@@ -118,6 +118,8 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     private String location;
     private String lastFinalLocation;
 
+    protected boolean parseLocation = true;
+
     public StrutsResultSupport() {
         this(null, true, false);
     }
@@ -187,7 +189,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
      * @throws Exception if an error occurs while executing the result.
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        lastFinalLocation = conditionalParse(location, invocation);
+        lastFinalLocation = parseLocation ? conditionalParse(location, invocation) : location;
         doExecute(lastFinalLocation, invocation);
     }
 

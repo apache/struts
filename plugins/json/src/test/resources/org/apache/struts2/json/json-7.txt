@@ -19,5 +19,7 @@
         "arrayMapField": [{"id1":2073501,"id2":3}],
         "setField": ["A", "C", "B"],
         "sortedSetField": ["A", "C", "B"],
-        "navigableSetField": ["A", "B", "C"]
+        "navigableSetField": ["A", "B", "C"],
+        "queueField": ["A", "B", "C"],
+        "dequeField": ["A", "B", "C"]
 }

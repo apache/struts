@@ -18,9 +18,11 @@
  */
 package org.apache.struts2.json;
 
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
+import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -46,6 +48,8 @@ public class WrapperClassBean {
     private Set<String> setField;
     private SortedSet<String> sortedSetField;
     private NavigableSet<String> navigableSetField;
+    private Queue<String> queueField;
+    private Deque<String> dequeField;
 
     public List<SimpleValue> getListField() {
         return listField;
@@ -101,6 +105,22 @@ public class WrapperClassBean {
 
     public void setNavigableSetField(NavigableSet<String> navigableSetField) {
         this.navigableSetField = navigableSetField;
+    }
+
+    public Queue<String> getQueueField() {
+        return queueField;
+    }
+
+    public void setQueueField(Queue<String> queueField) {
+        this.queueField = queueField;
+    }
+
+    public Deque<String> getDequeField() {
+        return dequeField;
+    }
+
+    public void setDequeField(Deque<String> dequeField) {
+        this.dequeField = dequeField;
     }
 
     public Boolean getBooleanField() {

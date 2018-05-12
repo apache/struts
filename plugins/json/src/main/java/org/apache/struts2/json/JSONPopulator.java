@@ -207,6 +207,8 @@ public class JSONPopulator {
                     newCollection = new TreeSet();
                 } else if (Set.class.isAssignableFrom(clazz)) {
                     newCollection = new HashSet();
+                } else if (Queue.class.isAssignableFrom(clazz)) {
+                    newCollection = new ArrayDeque();
                 } else {
                     newCollection = new ArrayList();
                 }

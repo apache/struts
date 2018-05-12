@@ -127,6 +127,16 @@ public class JSONPopulatorTest extends TestCase {
         assertEquals("A", bean.getNavigableSetField().first());
         assertEquals(true, bean.getNavigableSetField().contains("B"));
         assertEquals("C", bean.getNavigableSetField().last());
+
+        assertEquals(3, bean.getQueueField().size());
+        assertEquals("A", bean.getQueueField().poll());
+        assertEquals("B", bean.getQueueField().poll());
+        assertEquals("C", bean.getQueueField().poll());
+
+        assertEquals(3, bean.getDequeField().size());
+        assertEquals("A", bean.getDequeField().pollFirst());
+        assertEquals("B", bean.getDequeField().pollFirst());
+        assertEquals("C", bean.getDequeField().pollFirst());
     }
 
     public void testObjectBeanWithStrings() throws Exception {

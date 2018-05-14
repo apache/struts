@@ -18,8 +18,13 @@
  */
 package org.apache.struts2.json;
 
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
+import java.util.Queue;
+import java.util.Set;
+import java.util.SortedSet;
 
 public class WrapperClassBean {
 
@@ -40,6 +45,11 @@ public class WrapperClassBean {
     private List<Map<String, Long>> listMapField;
     private Map<String, List<Long>> mapListField;
     private Map<String, Long>[] arrayMapField;
+    private Set<String> setField;
+    private SortedSet<String> sortedSetField;
+    private NavigableSet<String> navigableSetField;
+    private Queue<String> queueField;
+    private Deque<String> dequeField;
 
     public List<SimpleValue> getListField() {
         return listField;
@@ -71,6 +81,46 @@ public class WrapperClassBean {
 
     public void setArrayMapField(Map<String, Long>[] arrayMapField) {
         this.arrayMapField = arrayMapField;
+    }
+
+    public Set<String> getSetField() {
+        return setField;
+    }
+
+    public void setSetField(Set<String> setField) {
+        this.setField = setField;
+    }
+
+    public SortedSet<String> getSortedSetField() {
+        return sortedSetField;
+    }
+
+    public void setSortedSetField(SortedSet<String> sortedSetField) {
+        this.sortedSetField = sortedSetField;
+    }
+
+    public NavigableSet<String> getNavigableSetField() {
+        return navigableSetField;
+    }
+
+    public void setNavigableSetField(NavigableSet<String> navigableSetField) {
+        this.navigableSetField = navigableSetField;
+    }
+
+    public Queue<String> getQueueField() {
+        return queueField;
+    }
+
+    public void setQueueField(Queue<String> queueField) {
+        this.queueField = queueField;
+    }
+
+    public Deque<String> getDequeField() {
+        return dequeField;
+    }
+
+    public void setDequeField(Deque<String> dequeField) {
+        this.dequeField = dequeField;
     }
 
     public Boolean getBooleanField() {

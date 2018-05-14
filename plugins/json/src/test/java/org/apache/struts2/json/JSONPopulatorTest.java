@@ -112,6 +112,31 @@ public class JSONPopulatorTest extends TestCase {
         assertEquals(2, bean.getArrayMapField()[0].size());
         assertEquals(new Long(2073501), bean.getArrayMapField()[0].get("id1"));
         assertEquals(new Long(3), bean.getArrayMapField()[0].get("id2"));
+
+        assertEquals(3, bean.getSetField().size());
+        assertEquals(true, bean.getSetField().contains("A"));
+        assertEquals(true, bean.getSetField().contains("B"));
+        assertEquals(true, bean.getSetField().contains("C"));
+
+        assertEquals(3, bean.getSortedSetField().size());
+        assertEquals("A", bean.getSortedSetField().first());
+        assertEquals(true, bean.getSortedSetField().contains("B"));
+        assertEquals("C", bean.getSortedSetField().last());
+
+        assertEquals(3, bean.getNavigableSetField().size());
+        assertEquals("A", bean.getNavigableSetField().first());
+        assertEquals(true, bean.getNavigableSetField().contains("B"));
+        assertEquals("C", bean.getNavigableSetField().last());
+
+        assertEquals(3, bean.getQueueField().size());
+        assertEquals("A", bean.getQueueField().poll());
+        assertEquals("B", bean.getQueueField().poll());
+        assertEquals("C", bean.getQueueField().poll());
+
+        assertEquals(3, bean.getDequeField().size());
+        assertEquals("A", bean.getDequeField().pollFirst());
+        assertEquals("B", bean.getDequeField().pollFirst());
+        assertEquals("C", bean.getDequeField().pollFirst());
     }
 
     public void testObjectBeanWithStrings() throws Exception {

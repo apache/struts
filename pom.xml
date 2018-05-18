@@ -100,8 +100,8 @@
         <spring.platformVersion>4.3.13.RELEASE</spring.platformVersion>
         <ognl.version>3.2.5</ognl.version>
         <asm.version>5.2</asm.version>
-        <tiles.version>3.0.7</tiles.version>
-        <tiles-request.version>1.0.6</tiles-request.version>
+        <tiles.version>3.0.8</tiles.version>
+        <tiles-request.version>1.0.7</tiles-request.version>
         <log4j2.version>2.10.0</log4j2.version>
         <jackson.version>2.9.4</jackson.version>
 

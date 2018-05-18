@@ -733,6 +733,14 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals("Cat One", ((Cat) foo.getCats().get(0)).getName());
         assertEquals("Cat Two", ((Cat) foo.getCats().get(1)).getName());
 
+        //test when both Key and Value types of Map are interfaces but concrete classes are defined in .properties file
+        vs.setValue("animalMap[3].name", "Cat Three by interface");
+        vs.setValue("animalMap[6].name", "Cat Six by interface");
+        assertNotNull(foo.getAnimalMap());
+        assertEquals(2, foo.getAnimalMap().size());
+        assertEquals("Cat Three by interface", foo.getAnimalMap().get(new Long(3)).getName());
+        assertEquals("Cat Six by interface", foo.getAnimalMap().get(new Long(6)).getName());
+
         vs.setValue("annotatedCats[0].name", "Cat One By Annotation");
         vs.setValue("annotatedCats[1].name", "Cat Two By Annotation");
         assertNotNull(foo.getAnnotatedCats());

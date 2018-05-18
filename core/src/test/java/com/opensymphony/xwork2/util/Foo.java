@@ -53,6 +53,7 @@ public class Foo {
     long aLong;
     Calendar calendar;
     BarJunior barJunior;
+    Map<MyNumber, Animal> animalMap;
 
     public BarJunior getBarJunior() {
         return barJunior;
@@ -242,5 +243,13 @@ public class Foo {
 
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
-    }     
+    }
+
+    public Map<MyNumber, Animal> getAnimalMap() {
+        return animalMap;
+    }
+
+    public void setAnimalMap(Map<MyNumber, Animal> animalMap) {
+        this.animalMap = animalMap;
+    }
 }

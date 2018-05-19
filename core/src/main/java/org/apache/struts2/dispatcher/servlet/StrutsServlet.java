@@ -49,7 +49,6 @@ public class StrutsServlet extends HttpServlet {
         Dispatcher dispatcher = null;
         try {
             ServletHostConfig config = new ServletHostConfig(filterConfig);
-            init.initLogging(config);
             dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 

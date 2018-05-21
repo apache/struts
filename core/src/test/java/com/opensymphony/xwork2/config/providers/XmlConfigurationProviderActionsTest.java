@@ -23,9 +23,9 @@ import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.*;
-import com.opensymphony.xwork2.interceptor.TimerInterceptor;
 import com.opensymphony.xwork2.mock.MockInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
+import org.apache.struts2.interceptor.NoOpInterceptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,8 +68,8 @@ public class XmlConfigurationProviderActionsTest extends ConfigurationTestBase {
         params.put("bar", "24");
         results.put("success", new ResultConfig.Builder("success", MockResult.class.getName()).build());
 
-        InterceptorConfig timerInterceptorConfig = new InterceptorConfig.Builder("timer", TimerInterceptor.class.getName()).build();
-        interceptors.add(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptorConfig, new HashMap<String, String>())));
+        InterceptorConfig noopInterceptorConfig = new InterceptorConfig.Builder("noop", NoOpInterceptor.class.getName()).build();
+        interceptors.add(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptorConfig, new HashMap<String, String>())));
 
         ActionConfig fooAction = new ActionConfig.Builder("", "Foo", SimpleAction.class.getName())
                 .addParams(params)

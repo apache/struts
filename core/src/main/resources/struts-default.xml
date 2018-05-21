@@ -226,7 +226,6 @@
             <interceptor name="staticParams" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>
             <interceptor name="scope" class="org.apache.struts2.interceptor.ScopeInterceptor"/>
             <interceptor name="servletConfig" class="org.apache.struts2.interceptor.ServletConfigInterceptor"/>
-            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
             <interceptor name="token" class="org.apache.struts2.interceptor.TokenInterceptor"/>
             <interceptor name="tokenSession" class="org.apache.struts2.interceptor.TokenSessionStoreInterceptor"/>
             <interceptor name="validation" class="org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor"/>

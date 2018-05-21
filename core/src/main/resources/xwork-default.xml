@@ -36,7 +36,6 @@
         <interceptors>
             <!-- START SNIPPET: xwork2-default-interceptors -->
 
-            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
             <interceptor name="logger" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
             <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
             <interceptor name="staticParams" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>

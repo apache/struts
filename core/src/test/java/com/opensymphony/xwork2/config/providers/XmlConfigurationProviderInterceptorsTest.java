@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.*;
 import com.opensymphony.xwork2.interceptor.LoggingInterceptor;
-import com.opensymphony.xwork2.interceptor.TimerInterceptor;
 import com.opensymphony.xwork2.mock.MockInterceptor;
+import org.apache.struts2.interceptor.NoOpInterceptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
     InterceptorConfig loggingInterceptor = new InterceptorConfig.Builder("logging", LoggingInterceptor.class.getName()).build();
     InterceptorConfig mockInterceptor = new InterceptorConfig.Builder("mock", MockInterceptor.class.getName()).build();
-    InterceptorConfig timerInterceptor = new InterceptorConfig.Builder("timer", TimerInterceptor.class.getName()).build();
+    InterceptorConfig noopInterceptor = new InterceptorConfig.Builder("noop", NoOpInterceptor.class.getName()).build();
     ObjectFactory objectFactory;
     
     @Override
@@ -68,16 +68,16 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
         // the default interceptor stack
         InterceptorStackConfig defaultStack = new InterceptorStackConfig.Builder("defaultStack")
-                .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
+                .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
                 .addInterceptor(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptor, params)))
                 .build();
 
         // the derivative interceptor stack
         InterceptorStackConfig derivativeStack = new InterceptorStackConfig.Builder("derivativeStack")
-                .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
-            .addInterceptor(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptor, params)))
+                .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
+                .addInterceptor(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptor, params)))
                 .addInterceptor(new InterceptorMapping("logging", objectFactory.buildInterceptor(loggingInterceptor, new HashMap<String, String>())))
-            .build();
+                .build();
 
         // execute the configuration
         provider.init(configuration);
@@ -90,7 +90,7 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
         assertEquals(5, interceptorConfigs.size());
 
         // assertions for interceptors
-        assertEquals(timerInterceptor, interceptorConfigs.get("timer"));
+        assertEquals(noopInterceptor, interceptorConfigs.get("noop"));
         assertEquals(loggingInterceptor, interceptorConfigs.get("logging"));
         assertEquals(paramsInterceptor, interceptorConfigs.get("test"));
 
@@ -114,13 +114,13 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
             .build();
 
         ActionConfig actionWithDefaultRef = new ActionConfig.Builder("", "ActionWithDefaultRef", SimpleAction.class.getName())
-            .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
+            .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
             .build();
 
         // sub package
         // this should inherit
         ActionConfig actionWithNoRef = new ActionConfig.Builder("", "ActionWithNoRef", SimpleAction.class.getName())
-            .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
+            .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
             .build();
 
         interceptors = new ArrayList<>();
@@ -144,7 +144,7 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
         
         // expectations - the inherited interceptor stack
         InterceptorStackConfig inheritedStack = new InterceptorStackConfig.Builder("subDefaultStack")
-            .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
+            .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
             .build();
 
         ConfigurationProvider provider = buildConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-inheritance.xml");
@@ -160,8 +160,8 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
         // expectations - the inherited interceptor stack
         inheritedStack = new InterceptorStackConfig.Builder("subSubDefaultStack")
-                .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
-                .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
+                .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
+                .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
                 .build();
 
         PackageConfig subSubPkg = configuration.getPackageConfig("subSubPackage");
@@ -178,7 +178,7 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
         params.put("expectedFoo", "expectedFooValue");
 
         InterceptorStackConfig defaultStack = new InterceptorStackConfig.Builder("defaultStack")
-            .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
+            .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
             .addInterceptor(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptor, params)))
             .build();
 
@@ -195,7 +195,7 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
         interceptorParams.put("foo", "foo123");
 
         InterceptorStackConfig defaultStack2 = new InterceptorStackConfig.Builder("defaultStack")
-            .addInterceptor(new InterceptorMapping("timer", objectFactory.buildInterceptor(timerInterceptor, new HashMap<String, String>())))
+            .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
             .addInterceptor(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptor, interceptorParams)))
             .build();
 

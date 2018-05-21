@@ -28,11 +28,11 @@
     <!-- this package has a default interceptor ref - so actions with no refs should have the default ref -->
     <package name="default">
         <interceptors>
-            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+            <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor"/>
             <interceptor name="logging" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
         </interceptors>
 
-        <default-interceptor-ref name="timer" />
+        <default-interceptor-ref name="noop" />
         <action name="ActionWithOwnRef" class="com.opensymphony.xwork2.SimpleAction">
             <interceptor-ref name="logging"/>
         </action>

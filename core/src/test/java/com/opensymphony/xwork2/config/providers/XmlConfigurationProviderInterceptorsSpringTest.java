@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.interceptor.TimerInterceptor;
+import org.apache.struts2.interceptor.NoOpInterceptor;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.context.support.StaticApplicationContext;
 
@@ -39,13 +39,13 @@ import java.util.Map;
  */
 public class XmlConfigurationProviderInterceptorsSpringTest extends ConfigurationTestBase {
 
-    InterceptorConfig timerInterceptor = new InterceptorConfig.Builder("timer", TimerInterceptor.class.getName()).build();
+    InterceptorConfig noopInterceptor = new InterceptorConfig.Builder("noop", NoOpInterceptor.class.getName()).build();
     ObjectFactory objectFactory;
     StaticApplicationContext sac;
 
 
     public void testInterceptorsLoadedFromSpringApplicationContext() throws ConfigurationException {
-        sac.registerSingleton("timer-interceptor", TimerInterceptor.class, new MutablePropertyValues());
+        sac.registerSingleton("noop-interceptor", NoOpInterceptor.class, new MutablePropertyValues());
 
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-interceptors-spring.xml";
 
@@ -64,8 +64,8 @@ public class XmlConfigurationProviderInterceptorsSpringTest extends Configuratio
         assertEquals(1, interceptorConfigs.size());
 
         // assertions for interceptors
-        InterceptorConfig seen = (InterceptorConfig) interceptorConfigs.get("timer");
-        assertEquals("timer-interceptor", seen.getClassName());
+        InterceptorConfig seen = (InterceptorConfig) interceptorConfigs.get("noop");
+        assertEquals("noop-interceptor", seen.getClassName());
     }
 
     @Override

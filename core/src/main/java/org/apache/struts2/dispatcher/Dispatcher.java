@@ -580,7 +580,6 @@ public class Dispatcher {
             extraContext.put(ActionContext.VALUE_STACK, valueStackFactory.createValueStack(stack));
         }
 
-        String timerKey = "Handling request from Dispatcher";
         try {
             String namespace = mapping.getNamespace();
             String name = mapping.getName();

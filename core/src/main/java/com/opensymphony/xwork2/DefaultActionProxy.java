@@ -149,7 +149,6 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
         String retCode = null;
 
-        String profileKey = "execute: ";
         try {
             retCode = invocation.invoke();
         } finally {
@@ -179,25 +178,22 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     }
 
     protected void prepare() {
-        String profileKey = "create DefaultActionProxy: ";
-        try {
-            config = configuration.getRuntimeConfiguration().getActionConfig(namespace, actionName);
+        config = configuration.getRuntimeConfiguration().getActionConfig(namespace, actionName);
 
-            if (config == null && unknownHandlerManager.hasUnknownHandlers()) {
-                config = unknownHandlerManager.handleUnknownAction(namespace, actionName);
-            }
-            if (config == null) {
-                throw new ConfigurationException(getErrorMessage());
-            }
+        if (config == null && unknownHandlerManager.hasUnknownHandlers()) {
+            config = unknownHandlerManager.handleUnknownAction(namespace, actionName);
+        }
+        if (config == null) {
+            throw new ConfigurationException(getErrorMessage());
+        }
 
-            resolveMethod();
+        resolveMethod();
 
-            if (config.isAllowedMethod(method)) {
-                invocation.init(this);
-            } else {
-                throw new ConfigurationException(prepareNotAllowedErrorMessage());
-            }
-        } finally {}
+        if (config.isAllowedMethod(method)) {
+            invocation.init(this);
+        } else {
+            throw new ConfigurationException(prepareNotAllowedErrorMessage());
+        }
     }
 
     protected String prepareNotAllowedErrorMessage() {

@@ -236,65 +236,57 @@ public class DefaultActionInvocation implements ActionInvocation {
      * @throws ConfigurationException If no result can be found with the returned code
      */
     public String invoke() throws Exception {
-        String profileKey = "invoke: ";
-        try {
-            if (executed) {
-                throw new IllegalStateException("Action has already executed");
-            }
+        if (executed) {
+            throw new IllegalStateException("Action has already executed");
+        }
 
-            if (asyncManager == null || !asyncManager.hasAsyncActionResult()) {
-                if (interceptors.hasNext()) {
-                    final InterceptorMapping interceptorMapping = interceptors.next();
-                    String interceptorMsg = "interceptorMapping: " + interceptorMapping.getName();
-                    try {
-                        Interceptor interceptor = interceptorMapping.getInterceptor();
-                        if (interceptor instanceof WithLazyParams) {
-                            interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
-                        }
-                        resultCode = interceptor.intercept(DefaultActionInvocation.this);
-                    } finally {}
-                } else {
-                    resultCode = invokeActionOnly();
+        if (asyncManager == null || !asyncManager.hasAsyncActionResult()) {
+            if (interceptors.hasNext()) {
+                final InterceptorMapping interceptorMapping = interceptors.next();
+                String interceptorMsg = "interceptorMapping: " + interceptorMapping.getName();
+                Interceptor interceptor = interceptorMapping.getInterceptor();
+                if (interceptor instanceof WithLazyParams) {
+                    interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
                 }
+                resultCode = interceptor.intercept(DefaultActionInvocation.this);
             } else {
-                Object asyncActionResult = asyncManager.getAsyncActionResult();
-                if (asyncActionResult instanceof Throwable) {
-                    throw new Exception((Throwable) asyncActionResult);
-                }
-                asyncAction = null;
-                resultCode = saveResult(proxy.getConfig(), asyncActionResult);
+                resultCode = invokeActionOnly();
             }
-
-            if (asyncManager == null || asyncAction == null) {
-                // this is needed because the result will be executed, then control will return to the Interceptor, which will
-                // return above and flow through again
-                if (!executed) {
-                    if (preResultListeners != null) {
-                        LOG.trace("Executing PreResultListeners for result [{}]", result);
-
-                        for (Object preResultListener : preResultListeners) {
-                            PreResultListener listener = (PreResultListener) preResultListener;
-
-                            String _profileKey = "preResultListener: ";
-                            try {
-                                listener.beforeResult(this, resultCode);
-                            } finally {}
-                        }
-                    }
-
-                    // now execute the result, if we're supposed to
-                    if (proxy.getExecuteResult()) {
-                        executeResult();
-                    }
-
-                    executed = true;
-                }
-            } else {
-                asyncManager.invokeAsyncAction(asyncAction);
+        } else {
+            Object asyncActionResult = asyncManager.getAsyncActionResult();
+            if (asyncActionResult instanceof Throwable) {
+                throw new Exception((Throwable) asyncActionResult);
             }
+            asyncAction = null;
+            resultCode = saveResult(proxy.getConfig(), asyncActionResult);
+        }
 
-            return resultCode;
-        } finally {}
+        if (asyncManager == null || asyncAction == null) {
+            // this is needed because the result will be executed, then control will return to the Interceptor, which will
+            // return above and flow through again
+            if (!executed) {
+                if (preResultListeners != null) {
+                    LOG.trace("Executing PreResultListeners for result [{}]", result);
+
+                    for (Object preResultListener : preResultListeners) {
+                        PreResultListener listener = (PreResultListener) preResultListener;
+
+                        listener.beforeResult(this, resultCode);
+                    }
+                }
+
+                // now execute the result, if we're supposed to
+                if (proxy.getExecuteResult()) {
+                    executeResult();
+                }
+
+                executed = true;
+            }
+        } else {
+            asyncManager.invokeAsyncAction(asyncAction);
+        }
+
+        return resultCode;
     }
 
     public String invokeActionOnly() throws Exception {
@@ -325,7 +317,7 @@ public class DefaultActionInvocation implements ActionInvocation {
 
             gripe += (((" -- " + e.getMessage()) != null) ? e.getMessage() : " [no message in exception]");
             throw new XWorkException(gripe, e, proxy.getConfig());
-        } finally {}
+        }
 
         if (actionEventListener != null) {
             action = actionEventListener.prepare(action, stack);
@@ -374,18 +366,16 @@ public class DefaultActionInvocation implements ActionInvocation {
         result = createResult();
 
         String timerKey = "executeResult: " + getResultCode();
-        try {
-            if (result != null) {
-                result.execute(this);
-            } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
-                throw new ConfigurationException("No result defined for action " + getAction().getClass().getName()
-                        + " and result " + getResultCode(), proxy.getConfig());
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
-                }
+        if (result != null) {
+            result.execute(this);
+        } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
+            throw new ConfigurationException("No result defined for action " + getAction().getClass().getName()
+                    + " and result " + getResultCode(), proxy.getConfig());
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
             }
-        } finally {}
+        }
     }
 
     public void init(ActionProxy proxy) {
@@ -477,7 +467,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             } else {
                 throw e;
             }
-        } finally {}
+        }
     }
 
     /**

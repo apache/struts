@@ -187,8 +187,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
             } else {
                 LOG.debug("Result not processed because the status code is not modified.");
             }
-
-        }
+        } finally {}
     }
 
     /**

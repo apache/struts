@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
-import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -164,8 +163,6 @@ public class RestActionInvocation extends DefaultActionInvocation {
     protected void processResult() throws Exception {
         String timerKey = "processResult: " + getResultCode();
         try {
-            UtilTimerStack.push(timerKey);
-
             HttpServletRequest request = ServletActionContext.getRequest();
             HttpServletResponse response = ServletActionContext.getResponse();
 
@@ -191,8 +188,6 @@ public class RestActionInvocation extends DefaultActionInvocation {
                 LOG.debug("Result not processed because the status code is not modified.");
             }
 
-        } finally {
-            UtilTimerStack.pop(timerKey);
         }
     }
 

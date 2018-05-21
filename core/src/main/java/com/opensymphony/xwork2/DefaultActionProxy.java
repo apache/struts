@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -152,14 +151,11 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
         String profileKey = "execute: ";
         try {
-            UtilTimerStack.push(profileKey);
-
             retCode = invocation.invoke();
         } finally {
             if (cleanupContext) {
                 ActionContext.setContext(nestedContext);
             }
-            UtilTimerStack.pop(profileKey);
         }
 
         return retCode;
@@ -185,7 +181,6 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     protected void prepare() {
         String profileKey = "create DefaultActionProxy: ";
         try {
-            UtilTimerStack.push(profileKey);
             config = configuration.getRuntimeConfiguration().getActionConfig(namespace, actionName);
 
             if (config == null && unknownHandlerManager.hasUnknownHandlers()) {
@@ -202,9 +197,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
             } else {
                 throw new ConfigurationException(prepareNotAllowedErrorMessage());
             }
-        } finally {
-            UtilTimerStack.pop(profileKey);
-        }
+        } finally {}
     }
 
     protected String prepareNotAllowedErrorMessage() {

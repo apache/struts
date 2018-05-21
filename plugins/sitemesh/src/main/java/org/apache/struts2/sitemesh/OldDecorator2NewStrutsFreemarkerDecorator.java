@@ -24,7 +24,6 @@ import com.opensymphony.sitemesh.compatability.Content2HTMLPage;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
@@ -72,8 +71,6 @@ public class OldDecorator2NewStrutsFreemarkerDecorator extends OldDecorator2NewS
         }
 
         try {
-            UtilTimerStack.push(timerKey);
-
             // get the configuration and template
             Configuration config = freemarkerManager.getConfiguration(servletContext);
             Template template = config.getTemplate(oldDecorator.getPage(), getLocale(ctx.getActionInvocation(), config)); // WW-1181
@@ -98,8 +95,6 @@ public class OldDecorator2NewStrutsFreemarkerDecorator extends OldDecorator2NewS
             String msg = "Error applying decorator to request: " + request.getRequestURL() + "?" + request.getQueryString() + " with message:" + e.getMessage();
             LOG.error(msg, e);
             throw new ServletException(msg, e);
-        } finally {
-            UtilTimerStack.pop(timerKey);
         }
     }
 

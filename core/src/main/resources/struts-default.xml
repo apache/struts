@@ -233,7 +233,6 @@
             <interceptor name="store" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
             <interceptor name="checkbox" class="org.apache.struts2.interceptor.CheckboxInterceptor" />
             <interceptor name="datetime" class="org.apache.struts2.interceptor.DateTextFieldInterceptor" />
-            <interceptor name="profiling" class="org.apache.struts2.interceptor.ProfilingActivationInterceptor" />
             <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor" />
             <interceptor name="annotationWorkflow" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
             <interceptor name="annotationParameterFilter" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationParameterFilterInterceptor" />

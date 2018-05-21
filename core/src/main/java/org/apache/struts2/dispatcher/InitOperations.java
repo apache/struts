@@ -20,7 +20,6 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.*;
@@ -32,33 +31,6 @@ import java.util.regex.Pattern;
 public class InitOperations {
 
     public InitOperations() {
-    }
-
-    /**
-     * Initializes the internal Struts logging
-     *
-     * @param filterConfig host configuration
-     * @deprecated since 2.5
-     */
-    @Deprecated
-    public void initLogging( HostConfig filterConfig ) {
-        String factoryName = filterConfig.getInitParameter("loggerFactory");
-        if (factoryName != null) {
-            try {
-                Class cls = ClassLoaderUtil.loadClass(factoryName, this.getClass());
-                LoggerFactory fac = (LoggerFactory) cls.newInstance();
-                LoggerFactory.setLoggerFactory(fac);
-            } catch ( InstantiationException e ) {
-                System.err.println("Unable to instantiate logger factory: " + factoryName + ", using default");
-                e.printStackTrace();
-            } catch ( IllegalAccessException e ) {
-                System.err.println("Unable to access logger factory: " + factoryName + ", using default");
-                e.printStackTrace();
-            } catch ( ClassNotFoundException e ) {
-                System.err.println("Unable to locate logger factory class: " + factoryName + ", using default");
-                e.printStackTrace();
-            }
-        }
     }
 
     /**

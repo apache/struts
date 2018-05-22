@@ -33,14 +33,14 @@
         </result-types>
 
         <interceptors>
-            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+            <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor"/>
             <interceptor name="logging" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
             <interceptor name="test" class="com.opensymphony.xwork2.mock.MockInterceptor">
                 <param name="foo">fooDefault</param>
             </interceptor>
 
             <interceptor-stack name="defaultStack">
-                <interceptor-ref name="timer"/>
+                <interceptor-ref name="noop"/>
             </interceptor-stack>
         </interceptors>
 

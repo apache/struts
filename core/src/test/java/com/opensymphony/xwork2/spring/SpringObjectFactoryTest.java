@@ -26,12 +26,12 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor;
-import com.opensymphony.xwork2.interceptor.TimerInterceptor;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.Validator;
 import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
+import org.apache.struts2.interceptor.NoOpInterceptor;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
 import org.springframework.aop.interceptor.DebugInterceptor;
@@ -126,12 +126,12 @@ public class SpringObjectFactoryTest extends XWorkTestCase {
     }
 
     public void testObtainInterceptorBySpringName() throws Exception {
-        sac.registerSingleton("timer-interceptor", TimerInterceptor.class, new MutablePropertyValues());
+        sac.registerSingleton("noop-interceptor", NoOpInterceptor.class, new MutablePropertyValues());
 
-        InterceptorConfig iConfig = new InterceptorConfig.Builder("timer", "timer-interceptor").build();
+        InterceptorConfig iConfig = new InterceptorConfig.Builder("noop", "noop-interceptor").build();
         Interceptor interceptor = objectFactory.buildInterceptor(iConfig, new HashMap<String, String>());
 
-        assertEquals(TimerInterceptor.class, interceptor.getClass());
+        assertEquals(NoOpInterceptor.class, interceptor.getClass());
     }
 
     public void testObtainResultBySpringName() throws Exception {

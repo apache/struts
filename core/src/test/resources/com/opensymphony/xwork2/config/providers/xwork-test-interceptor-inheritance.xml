@@ -28,10 +28,10 @@
 	<include file="xwork-test-beans.xml" />
     <package name="default">
         <interceptors>
-            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+            <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor"/>
 
             <interceptor-stack name="defaultStack">
-                <interceptor-ref name="timer"/>
+                <interceptor-ref name="noop"/>
             </interceptor-stack>
         </interceptors>
     </package>

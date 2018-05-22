@@ -34,7 +34,6 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -581,9 +580,7 @@ public class Dispatcher {
             extraContext.put(ActionContext.VALUE_STACK, valueStackFactory.createValueStack(stack));
         }
 
-        String timerKey = "Handling request from Dispatcher";
         try {
-            UtilTimerStack.push(timerKey);
             String namespace = mapping.getNamespace();
             String name = mapping.getName();
             String method = mapping.getMethod();
@@ -623,8 +620,6 @@ public class Dispatcher {
             } else {
                 throw new ServletException(e);
             }
-        } finally {
-            UtilTimerStack.pop(timerKey);
         }
     }
 

@@ -53,7 +53,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
         }
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ADDITIONAL_EXCLUDED_PATTERNS, required = false)
+    @Inject(value = StrutsConstants.STRUTS_ADDITIONAL_ACCEPTED_PATTERNS, required = false)
     public void setAdditionalAcceptedPatterns(String acceptablePatterns) {
         LOG.warn("Adding additional global patterns [{}] to accepted patterns!", acceptablePatterns);
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {

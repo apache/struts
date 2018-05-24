@@ -76,8 +76,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected WithLazyParams.LazyParamInjector lazyParamInjector;
 
     public DefaultActionInvocation(final Map<String, Object> extraContext, final boolean pushAction) {
-        this.extraContext = extraContext;
-        this.pushAction = pushAction;
+        this.extraContext = extraContext; this.pushAction = pushAction;
     }
 
     @Inject
@@ -150,14 +149,8 @@ public class DefaultActionInvocation implements ActionInvocation {
             if (aProxy != null) {
                 Result proxyResult = aProxy.getInvocation().getResult();
 
-                if ((proxyResult != null) && (aProxy.getExecuteResult())) {
-                    returnResult = proxyResult;
-                } else {
-                    break;
-                }
-            } else {
-                break;
-            }
+                if ((proxyResult != null) && (aProxy.getExecuteResult())) { returnResult = proxyResult; } else { break; }
+            } else { break; }
         }
 
         return returnResult;
@@ -168,9 +161,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     public void setResultCode(String resultCode) {
-        if (isExecuted()) {
-            throw new IllegalStateException("Result has already been executed.");
-        }
+        if (isExecuted()) { throw new IllegalStateException("Result has already been executed."); }
         this.resultCode = resultCode;
     }
 
@@ -187,24 +178,14 @@ public class DefaultActionInvocation implements ActionInvocation {
      * @param listener to register
      */
     public void addPreResultListener(PreResultListener listener) {
-        if (preResultListeners == null) {
-            preResultListeners = new ArrayList<>(1);
-        }
+        if (preResultListeners == null) { preResultListeners = new ArrayList<>(1); }
 
         preResultListeners.add(listener);
     }
 
     public Result createResult() throws Exception {
-        LOG.trace("Creating result related to resultCode [{}]", resultCode);
-
-        if (explicitResult != null) {
-            Result ret = explicitResult;
-            explicitResult = null;
-
-            return ret;
-        }
-        ActionConfig config = proxy.getConfig();
-        Map<String, ResultConfig> results = config.getResults();
+        if (explicitResult != null) { Result ret = explicitResult; explicitResult = null; return ret; }
+        ActionConfig config = proxy.getConfig(); Map<String, ResultConfig> results = config.getResults();
 
         ResultConfig resultConfig = null;
 
@@ -213,11 +194,8 @@ public class DefaultActionInvocation implements ActionInvocation {
         } catch (NullPointerException e) {
             LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
         }
-        
-        if (resultConfig == null) {
-            // If no result is found for the given resultCode, try to get a wildcard '*' match.
-            resultConfig = results.get("*");
-        }
+
+        if (resultConfig == null) { resultConfig = results.get("*"); }
 
         if (resultConfig != null) {
             try {
@@ -236,39 +214,28 @@ public class DefaultActionInvocation implements ActionInvocation {
      * @throws ConfigurationException If no result can be found with the returned code
      */
     public String invoke() throws Exception {
-        if (executed) {
-            throw new IllegalStateException("Action has already executed");
-        }
+        if (executed) { throw new IllegalStateException("Action has already executed"); }
 
-        if (asyncManager == null || !asyncManager.hasAsyncActionResult()) {
-            if (interceptors.hasNext()) {
+        if (asyncManager == null || !asyncManager.hasAsyncActionResult()) { if (interceptors.hasNext()) {
                 final InterceptorMapping interceptorMapping = interceptors.next();
                 String interceptorMsg = "interceptorMapping: " + interceptorMapping.getName();
                 Interceptor interceptor = interceptorMapping.getInterceptor();
-                if (interceptor instanceof WithLazyParams) {
-                    interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
+                if (interceptor instanceof WithLazyParams) { interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
                 }
                 resultCode = interceptor.intercept(DefaultActionInvocation.this);
-            } else {
-                resultCode = invokeActionOnly();
-            }
+            } else { resultCode = invokeActionOnly(); }
         } else {
             Object asyncActionResult = asyncManager.getAsyncActionResult();
             if (asyncActionResult instanceof Throwable) {
                 throw new Exception((Throwable) asyncActionResult);
             }
-            asyncAction = null;
-            resultCode = saveResult(proxy.getConfig(), asyncActionResult);
+            asyncAction = null; resultCode = saveResult(proxy.getConfig(), asyncActionResult);
         }
 
         if (asyncManager == null || asyncAction == null) {
             // this is needed because the result will be executed, then control will return to the Interceptor, which will
             // return above and flow through again
-            if (!executed) {
-                if (preResultListeners != null) {
-                    LOG.trace("Executing PreResultListeners for result [{}]", result);
-
-                    for (Object preResultListener : preResultListeners) {
+            if (!executed) { if (preResultListeners != null) { for (Object preResultListener : preResultListeners) {
                         PreResultListener listener = (PreResultListener) preResultListener;
 
                         listener.beforeResult(this, resultCode);
@@ -276,15 +243,11 @@ public class DefaultActionInvocation implements ActionInvocation {
                 }
 
                 // now execute the result, if we're supposed to
-                if (proxy.getExecuteResult()) {
-                    executeResult();
-                }
+                if (proxy.getExecuteResult()) { executeResult(); }
 
                 executed = true;
             }
-        } else {
-            asyncManager.invokeAsyncAction(asyncAction);
-        }
+        } else { asyncManager.invokeAsyncAction(asyncAction); }
 
         return resultCode;
     }
@@ -294,8 +257,6 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     protected void createAction(Map<String, Object> contextMap) {
-        // load action
-        String timerKey = "actionCreate: " + proxy.getActionName();
         try {
             action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), contextMap);
         } catch (InstantiationException e) {
@@ -319,9 +280,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             throw new XWorkException(gripe, e, proxy.getConfig());
         }
 
-        if (actionEventListener != null) {
-            action = actionEventListener.prepare(action, stack);
-        }
+        if (actionEventListener != null) { action = actionEventListener.prepare(action, stack); }
     }
 
     protected Map<String, Object> createContextMap() {
@@ -339,20 +298,14 @@ public class DefaultActionInvocation implements ActionInvocation {
         } else {
             // create the value stack
             // this also adds the ValueStack to its context
-            stack = valueStackFactory.createValueStack();
-
-            // create the action context
-            contextMap = stack.getContext();
+            stack = valueStackFactory.createValueStack(); contextMap = stack.getContext();
         }
 
         // put extraContext in
-        if (extraContext != null) {
-            contextMap.putAll(extraContext);
-        }
+        if (extraContext != null) { contextMap.putAll(extraContext); }
 
         //put this DefaultActionInvocation into the context map
-        contextMap.put(ActionContext.ACTION_INVOCATION, this);
-        contextMap.put(ActionContext.CONTAINER, container);
+        contextMap.put(ActionContext.ACTION_INVOCATION, this); contextMap.put(ActionContext.CONTAINER, container);
 
         return contextMap;
     }
@@ -365,40 +318,30 @@ public class DefaultActionInvocation implements ActionInvocation {
     private void executeResult() throws Exception {
         result = createResult();
 
-        String timerKey = "executeResult: " + getResultCode();
-        if (result != null) {
-            result.execute(this);
-        } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
+        if (result != null) { result.execute(this); } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
             throw new ConfigurationException("No result defined for action " + getAction().getClass().getName()
                     + " and result " + getResultCode(), proxy.getConfig());
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
+            if (false) {
+                result=null;//LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
             }
         }
     }
 
     public void init(ActionProxy proxy) {
-        this.proxy = proxy;
-        Map<String, Object> contextMap = createContextMap();
+        this.proxy = proxy; Map<String, Object> contextMap = createContextMap();
 
         // Setting this so that other classes, like object factories, can use the ActionProxy and other
         // contextual information to operate
         ActionContext actionContext = ActionContext.getContext();
 
-        if (actionContext != null) {
-            actionContext.setActionInvocation(this);
-        }
+        if (actionContext != null) { actionContext.setActionInvocation(this); }
 
         createAction(contextMap);
 
-        if (pushAction) {
-            stack.push(action);
-            contextMap.put("action", action);
-        }
+        if (pushAction) { stack.push(action); contextMap.put("action", action); }
 
-        invocationContext = new ActionContext(contextMap);
-        invocationContext.setName(proxy.getActionName());
+        invocationContext = new ActionContext(contextMap); invocationContext.setName(proxy.getActionName());
 
         createInterceptors(proxy);
 
@@ -406,8 +349,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     protected void prepareLazyParamInjector(ValueStack valueStack) {
-        lazyParamInjector = new WithLazyParams.LazyParamInjector(valueStack);
-        container.inject(lazyParamInjector);
+        lazyParamInjector = new WithLazyParams.LazyParamInjector(valueStack); container.inject(lazyParamInjector);
     }
 
     protected void createInterceptors(ActionProxy proxy) {
@@ -419,9 +361,6 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected String invokeAction(Object action, ActionConfig actionConfig) throws Exception {
         String methodName = proxy.getMethod();
 
-        LOG.debug("Executing action method = {}", methodName);
-
-        String timerKey = "invokeAction: " + proxy.getActionName();
         try {
             Object methodResult;
             try {
@@ -432,22 +371,11 @@ public class DefaultActionInvocation implements ActionInvocation {
                     if (unknownHandlerManager.hasUnknownHandlers()) {
                         try {
                             methodResult = unknownHandlerManager.handleUnknownMethod(action, methodName);
-                        } catch (NoSuchMethodException ignore) {
-                            // throw the original one
-                            throw e;
-                        }
-                    } else {
-                        // throw the original one
-                        throw e;
-                    }
+                        } catch (NoSuchMethodException ignore) { throw e; }
+                    } else { throw e; }
                     // throw the original exception as UnknownHandlers weren't able to handle invocation as well
-                    if (methodResult == null) {
-                        throw e;
-                    }
-                } else {
-                    // exception isn't related to missing action method, throw it
-                    throw e;
-                }
+                    if (methodResult == null) { throw e; }
+                } else { throw e; }
             }
             return saveResult(actionConfig, methodResult);
         } catch (NoSuchPropertyException e) {
@@ -456,17 +384,10 @@ public class DefaultActionInvocation implements ActionInvocation {
             // We try to return the source exception.
             Throwable t = e.getCause();
 
-            if (actionEventListener != null) {
-                String result = actionEventListener.handleException(t, getStack());
-                if (result != null) {
-                    return result;
-                }
+            if (actionEventListener != null) { String result = actionEventListener.handleException(t, getStack());
+                if (result != null) { return result; }
             }
-            if (t instanceof Exception) {
-                throw (Exception) t;
-            } else {
-                throw e;
-            }
+            if (t instanceof Exception) { throw (Exception) t; } else { throw e; }
         }
     }
 
@@ -477,17 +398,9 @@ public class DefaultActionInvocation implements ActionInvocation {
      * @return the result code to process.
      */
     protected String saveResult(ActionConfig actionConfig, Object methodResult) {
-        if (methodResult instanceof Result) {
-            this.explicitResult = (Result) methodResult;
-
-            // Wire the result automatically
-            container.inject(explicitResult);
+        if (methodResult instanceof Result) { this.explicitResult = (Result) methodResult; container.inject(explicitResult);
             return null;
-        } else if (methodResult instanceof Callable) {
-            asyncAction = (Callable) methodResult;
-            return null;
-        } else {
-            return (String) methodResult;
+        } else if (methodResult instanceof Callable) { asyncAction = (Callable) methodResult; return null; } else { return (String) methodResult;
         }
     }
 

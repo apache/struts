@@ -25,6 +25,6 @@
 
 <xwork>
 
-    <constant name="ognlExcludedClasses" value="java.lang.Object,java.lang.Runtime,ognl.OgnlContext,ognl.MemberAccess,ognl.ClassResolver,ognl.TypeConverter,com.opensymphony.xwork2.ognl.SecurityMemberAccess" />
+    <constant name="struts.excludedClasses" value="java.lang.Object,java.lang.Runtime,ognl.OgnlContext,ognl.MemberAccess,ognl.ClassResolver,ognl.TypeConverter,com.opensymphony.xwork2.ognl.SecurityMemberAccess" />
 
 </xwork>

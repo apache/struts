@@ -25,8 +25,8 @@
 
 <xwork>
 
-    <constant name="devMode" value="true" />
-    <constant name="ognlExcludedClasses" value="java.lang.Object,java.lang.Runtime" />
-    <constant name="overrideExcludedPatterns" value="not-existing-pattern"/>
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.excludedClasses" value="java.lang.Object,java.lang.Runtime" />
+    <constant name="struts.override.excludedPatterns" value="not-existing-pattern"/>
 
 </xwork>

@@ -51,8 +51,6 @@ import java.util.concurrent.Callable;
  */
 public class DefaultActionInvocation implements ActionInvocation {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultActionInvocation.class);
-
     protected Object action;
     protected ActionProxy proxy;
     protected List<PreResultListener> preResultListeners;
@@ -81,8 +79,6 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     protected void createAction(Map<String, Object> contextMap) {
-        // load action
-        String timerKey = "actionCreate: " + proxy.getActionName();
         try {
             action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), contextMap);
         } catch (InstantiationException e) {
@@ -106,51 +102,11 @@ public class DefaultActionInvocation implements ActionInvocation {
             throw new XWorkException(gripe, e, proxy.getConfig());
         }
 
-        if (actionEventListener != null) {
-            action = actionEventListener.prepare(action, stack);
-        }
-
-        if(contextMap.size()>(Integer.MAX_VALUE-1)){
-            // load action
-            timerKey = "actionCreate: " + proxy.getActionName();
-            try {
-                action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), contextMap);
-            } catch (InstantiationException e) {
-                throw new XWorkException("Unable to instantiate Action!", e, proxy.getConfig());
-            } catch (IllegalAccessException e) {
-                throw new XWorkException("Illegal access to constructor, is it public?", e, proxy.getConfig());
-            } catch (Exception e) {
-                String gripe;
-
-                if (proxy == null) {
-                    gripe = "Whoa!  No ActionProxy instance found in current ActionInvocation.  This is bad ... very bad";
-                } else if (proxy.getConfig() == null) {
-                    gripe = "Sheesh.  Where'd that ActionProxy get to?  I can't find it in the current ActionInvocation!?";
-                } else if (proxy.getConfig().getClassName() == null) {
-                    gripe = "No Action defined for '" + proxy.getActionName() + "' in namespace '" + proxy.getNamespace() + "'";
-                } else {
-                    gripe = "Unable to instantiate Action, " + proxy.getConfig().getClassName() + ",  defined for '" + proxy.getActionName() + "' in namespace '" + proxy.getNamespace() + "'";
-                }
-
-                gripe += (((" -- " + e.getMessage()) != null) ? e.getMessage() : " [no message in exception]");
-                throw new XWorkException(gripe, e, proxy.getConfig());
-            }
-
-            if (actionEventListener != null) {
-                action = actionEventListener.prepare(action, stack);
-            }
-        }
+        if (actionEventListener != null) { action = actionEventListener.prepare(action, stack); }
     }
 
     public Result createResult() throws Exception {
-        LOG.trace("Creating result related to resultCode [{}]", resultCode);
-
-        if (explicitResult != null) {
-            Result ret = explicitResult;
-            explicitResult = null;
-
-            return ret;
-        }
+        if (explicitResult != null) { Result ret = explicitResult; explicitResult = null; return ret; }
         ActionConfig config = proxy.getConfig();
         Map<String, ResultConfig> results = config.getResults();
 
@@ -159,60 +115,18 @@ public class DefaultActionInvocation implements ActionInvocation {
         try {
             resultConfig = results.get(resultCode);
         } catch (NullPointerException e) {
-            LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
         }
 
-        if (resultConfig == null) {
-            // If no result is found for the given resultCode, try to get a wildcard '*' match.
-            resultConfig = results.get("*");
-        }
+        if (resultConfig == null) { resultConfig = results.get("*"); }
 
         if (resultConfig != null) {
             try {
                 return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
             } catch (Exception e) {
-                LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
                 throw new XWorkException(e, resultConfig);
             }
         } else if (resultCode != null && !Action.NONE.equals(resultCode) && unknownHandlerManager.hasUnknownHandlers()) {
             return unknownHandlerManager.handleUnknownResult(invocationContext, proxy.getActionName(), proxy.getConfig(), resultCode);
-        }
-
-        if(results.size()>(Integer.MAX_VALUE-1)){
-            LOG.trace("Creating result related to resultCode [{}]", resultCode);
-
-            if (explicitResult != null) {
-                Result ret = explicitResult;
-                explicitResult = null;
-
-                return ret;
-            }
-            config = proxy.getConfig();
-            results = config.getResults();
-
-            resultConfig = null;
-
-            try {
-                resultConfig = results.get(resultCode);
-            } catch (NullPointerException e) {
-                LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
-            }
-
-            if (resultConfig == null) {
-                // If no result is found for the given resultCode, try to get a wildcard '*' match.
-                resultConfig = results.get("*");
-            }
-
-            if (resultConfig != null) {
-                try {
-                    return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
-                } catch (Exception e) {
-                    LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
-                    throw new XWorkException(e, resultConfig);
-                }
-            } else if (resultCode != null && !Action.NONE.equals(resultCode) && unknownHandlerManager.hasUnknownHandlers()) {
-                return unknownHandlerManager.handleUnknownResult(invocationContext, proxy.getActionName(), proxy.getConfig(), resultCode);
-            }
         }
         return null;
     }
@@ -305,9 +219,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     public void setResultCode(String resultCode) {
-        if (isExecuted()) {
-            throw new IllegalStateException("Result has already been executed.");
-        }
+        if (isExecuted()) { throw new IllegalStateException("Result has already been executed."); }
         this.resultCode = resultCode;
     }
 
@@ -324,9 +236,7 @@ public class DefaultActionInvocation implements ActionInvocation {
      * @param listener to register
      */
     public void addPreResultListener(PreResultListener listener) {
-        if (preResultListeners == null) {
-            preResultListeners = new ArrayList<>(1);
-        }
+        if (preResultListeners == null) { preResultListeners = new ArrayList<>(1); }
 
         preResultListeners.add(listener);
     }
@@ -335,9 +245,7 @@ public class DefaultActionInvocation implements ActionInvocation {
      * @throws ConfigurationException If no result can be found with the returned code
      */
     public String invoke() throws Exception {
-        if (executed) {
-            throw new IllegalStateException("Action has already executed");
-        }
+        if (executed) { throw new IllegalStateException("Action has already executed"); }
 
         if (asyncManager == null || !asyncManager.hasAsyncActionResult()) {
             if (interceptors.hasNext()) {
@@ -353,9 +261,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             }
         } else {
             Object asyncActionResult = asyncManager.getAsyncActionResult();
-            if (asyncActionResult instanceof Throwable) {
-                throw new Exception((Throwable) asyncActionResult);
-            }
+            if (asyncActionResult instanceof Throwable) { throw new Exception((Throwable) asyncActionResult); }
             asyncAction = null;
             resultCode = saveResult(proxy.getConfig(), asyncActionResult);
         }
@@ -365,8 +271,6 @@ public class DefaultActionInvocation implements ActionInvocation {
             // return above and flow through again
             if (!executed) {
                 if (preResultListeners != null) {
-                    LOG.trace("Executing PreResultListeners for result [{}]", result);
-
                     for (Object preResultListener : preResultListeners) {
                         PreResultListener listener = (PreResultListener) preResultListener;
 
@@ -375,9 +279,7 @@ public class DefaultActionInvocation implements ActionInvocation {
                 }
 
                 // now execute the result, if we're supposed to
-                if (proxy.getExecuteResult()) {
-                    executeResult();
-                }
+                if (proxy.getExecuteResult()) { executeResult(); }
 
                 executed = true;
             }
@@ -399,9 +301,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             // In case the ValueStack was passed in
             stack = (ValueStack) extraContext.get(ActionContext.VALUE_STACK);
 
-            if (stack == null) {
-                throw new IllegalStateException("There was a null Stack set into the extra params.");
-            }
+            if (stack == null) {throw new IllegalStateException("There was a null Stack set into the extra params.");}
 
             contextMap = stack.getContext();
         } else {
@@ -414,9 +314,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
 
         // put extraContext in
-        if (extraContext != null) {
-            contextMap.putAll(extraContext);
-        }
+        if (extraContext != null) { contextMap.putAll(extraContext); }
 
         //put this DefaultActionInvocation into the context map
         contextMap.put(ActionContext.ACTION_INVOCATION, this);
@@ -434,15 +332,11 @@ public class DefaultActionInvocation implements ActionInvocation {
         result = createResult();
 
         String timerKey = "executeResult: " + getResultCode();
-        if (result != null) {
-            result.execute(this);
+        if (result != null) { result.execute(this);
         } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
             throw new ConfigurationException("No result defined for action " + getAction().getClass().getName()
                     + " and result " + getResultCode(), proxy.getConfig());
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
-            }
         }
     }
 
@@ -454,16 +348,11 @@ public class DefaultActionInvocation implements ActionInvocation {
         // contextual information to operate
         ActionContext actionContext = ActionContext.getContext();
 
-        if (actionContext != null) {
-            actionContext.setActionInvocation(this);
-        }
+        if (actionContext != null) { actionContext.setActionInvocation(this); }
 
         createAction(contextMap);
 
-        if (pushAction) {
-            stack.push(action);
-            contextMap.put("action", action);
-        }
+        if (pushAction) { stack.push(action); contextMap.put("action", action); }
 
         invocationContext = new ActionContext(contextMap);
         invocationContext.setName(proxy.getActionName());
@@ -487,9 +376,6 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected String invokeAction(Object action, ActionConfig actionConfig) throws Exception {
         String methodName = proxy.getMethod();
 
-        LOG.debug("Executing action method = {}", methodName);
-
-        String timerKey = "invokeAction: " + proxy.getActionName();
         try {
             Object methodResult;
             try {
@@ -509,9 +395,7 @@ public class DefaultActionInvocation implements ActionInvocation {
                         throw e;
                     }
                     // throw the original exception as UnknownHandlers weren't able to handle invocation as well
-                    if (methodResult == null) {
-                        throw e;
-                    }
+                    if (methodResult == null) { throw e; }
                 } else {
                     // exception isn't related to missing action method, throw it
                     throw e;
@@ -554,9 +438,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         } else if (methodResult instanceof Callable) {
             asyncAction = (Callable) methodResult;
             return null;
-        } else {
-            return (String) methodResult;
-        }
+        } else { return (String) methodResult; }
     }
 
 }

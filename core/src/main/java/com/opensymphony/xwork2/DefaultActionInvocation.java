@@ -51,6 +51,8 @@ import java.util.concurrent.Callable;
  */
 public class DefaultActionInvocation implements ActionInvocation {
 
+    private static final Logger LOG = LogManager.getLogger(DefaultActionInvocation.class);
+
     protected Object action;
     protected ActionProxy proxy;
     protected List<PreResultListener> preResultListeners;
@@ -190,7 +192,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         try {
             resultConfig = results.get(resultCode);
         } catch (NullPointerException e) {
-            e.printStackTrace();//LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
+            LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
         }
 
         if (resultConfig == null) { resultConfig = results.get("*"); }
@@ -199,7 +201,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             try {
                 return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
             } catch (Exception e) {
-                e.printStackTrace();//LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
+                LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
                 throw new XWorkException(e, resultConfig);
             }
         } else if (resultCode != null && !Action.NONE.equals(resultCode) && unknownHandlerManager.hasUnknownHandlers()) {

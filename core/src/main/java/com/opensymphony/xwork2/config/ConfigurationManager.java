@@ -18,12 +18,12 @@
  */
 package com.opensymphony.xwork2.config;
 
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -187,10 +187,10 @@ public class ConfigurationManager {
     }
 
     private void updateReloadConfigsFlag() {
-        reloadConfigs = Boolean.parseBoolean(configuration.getContainer().getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION));
+        reloadConfigs = Boolean.parseBoolean(configuration.getContainer().getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD));
         if (LOG.isDebugEnabled()) {
             LOG.debug("Updating [{}], current value is [{}], new value [{}]",
-                    XWorkConstants.RELOAD_XML_CONFIGURATION, String.valueOf(reloadConfigs), String.valueOf(reloadConfigs));
+                    StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, String.valueOf(reloadConfigs), String.valueOf(reloadConfigs));
         }
     }
 

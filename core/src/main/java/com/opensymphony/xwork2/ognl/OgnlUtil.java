@@ -18,7 +18,6 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
@@ -75,17 +74,17 @@ public class OgnlUtil {
         this.defaultConverter = new OgnlTypeConverterWrapper(conv);
     }
 
-    @Inject(XWorkConstants.DEV_MODE)
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
-    @Inject(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE)
+    @Inject(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE)
     public void setEnableExpressionCache(String cache) {
         enableExpressionCache = BooleanUtils.toBoolean(cache);
     }
 
-    @Inject(value = XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, required = false)
+    @Inject(value = StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, required = false)
     public void setEnableEvalExpression(String evalExpression) {
         enableEvalExpression = "true".equals(evalExpression);
         if(enableEvalExpression){
@@ -94,7 +93,7 @@ public class OgnlUtil {
         }
     }
 
-    @Inject(value = XWorkConstants.OGNL_EXCLUDED_CLASSES, required = false)
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
     public void setExcludedClasses(String commaDelimitedClasses) {
         Set<String> classNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
         Set<Class<?>> classes = new HashSet<>();
@@ -110,7 +109,7 @@ public class OgnlUtil {
         excludedClasses = Collections.unmodifiableSet(classes);
     }
 
-    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
     public void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
         Set<Pattern> packageNamePatterns = new HashSet<>();
@@ -122,7 +121,7 @@ public class OgnlUtil {
         excludedPackageNamePatterns = Collections.unmodifiableSet(packageNamePatterns);
     }
 
-    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAMES, required = false)
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
     public void setExcludedPackageNames(String commaDelimitedPackageNames) {
         excludedPackageNames = Collections.unmodifiableSet(TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames));
     }
@@ -144,7 +143,7 @@ public class OgnlUtil {
         this.container = container;
     }
 
-    @Inject(value = XWorkConstants.ALLOW_STATIC_METHOD_ACCESS, required = false)
+    @Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, required = false)
     public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
         this.allowStaticMethodAccess = Boolean.parseBoolean(allowStaticMethodAccess);
     }

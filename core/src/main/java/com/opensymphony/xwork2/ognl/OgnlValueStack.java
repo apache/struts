@@ -20,7 +20,6 @@ package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
@@ -35,6 +34,7 @@ import ognl.*;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -100,7 +100,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         ((OgnlContext) context).setKeepLastEvaluation(false);
     }
 
-    @Inject(XWorkConstants.DEV_MODE)
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
@@ -450,7 +450,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         XWorkConverter xworkConverter = cont.getInstance(XWorkConverter.class);
         CompoundRootAccessor accessor = (CompoundRootAccessor) cont.getInstance(PropertyAccessor.class, CompoundRoot.class.getName());
         TextProvider prov = cont.getInstance(TextProvider.class, "system");
-        boolean allow = BooleanUtils.toBoolean(cont.getInstance(String.class, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS));
+        boolean allow = BooleanUtils.toBoolean(cont.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS));
         OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, allow);
         aStack.setOgnlUtil(cont.getInstance(OgnlUtil.class));
         aStack.setRoot(xworkConverter, accessor, this.root, allow);

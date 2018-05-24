@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -50,6 +49,7 @@ import com.opensymphony.xwork2.validator.validators.ShortRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.validators.URLValidator;
 import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
+import org.apache.struts2.StrutsConstants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -331,7 +331,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             }
 
             public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-                builder.constant(XWorkConstants.DEV_MODE, true);
+                builder.constant(StrutsConstants.STRUTS_DEVMODE, true);
             }
         });
 

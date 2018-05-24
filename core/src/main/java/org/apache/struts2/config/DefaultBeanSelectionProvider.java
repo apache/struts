@@ -30,7 +30,6 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.UnknownHandlerManager;
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor;
 import com.opensymphony.xwork2.conversion.ConversionFileProcessor;
 import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
@@ -426,22 +425,6 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         alias(AcceptedPatternsChecker.class, StrutsConstants.STRUTS_ACCEPTED_PATTERNS_CHECKER, builder, props, Scope.PROTOTYPE);
 
         switchDevMode(props);
-
-        // Convert Struts properties into XWork properties
-        convertIfExist(props, StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES, XWorkConstants.LOG_MISSING_PROPERTIES);
-        convertIfExist(props, StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE);
-        convertIfExist(props, StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION);
-        convertIfExist(props, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS);
-        convertIfExist(props, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, XWorkConstants.RELOAD_XML_CONFIGURATION);
-
-        convertIfExist(props, StrutsConstants.STRUTS_EXCLUDED_CLASSES, XWorkConstants.OGNL_EXCLUDED_CLASSES);
-        convertIfExist(props, StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS);
-        convertIfExist(props, StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAMES);
-
-        convertIfExist(props, StrutsConstants.STRUTS_ADDITIONAL_EXCLUDED_PATTERNS, XWorkConstants.ADDITIONAL_EXCLUDED_PATTERNS);
-        convertIfExist(props, StrutsConstants.STRUTS_ADDITIONAL_ACCEPTED_PATTERNS, XWorkConstants.ADDITIONAL_ACCEPTED_PATTERNS);
-        convertIfExist(props, StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS);
-        convertIfExist(props, StrutsConstants.STRUTS_OVERRIDE_ACCEPTED_PATTERNS, XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS);
     }
 
     /**
@@ -460,10 +443,6 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
             if (props.getProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY) == null) {
                 props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY, "0");
             }
-            // Convert struts properties into ones that xwork expects
-            props.setProperty(XWorkConstants.DEV_MODE, "true");
-        } else {
-            props.setProperty(XWorkConstants.DEV_MODE, "false");
         }
     }
 

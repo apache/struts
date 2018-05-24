@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,7 +72,7 @@ public class AnnotationActionValidatorManager implements ActionValidatorManager 
         this.fileManager = fileManagerFactory.getFileManager();
     }
 
-    @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
+    @Inject(value = StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, required = false)
     public void setReloadingConfigs(String reloadingConfigs) {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
     }

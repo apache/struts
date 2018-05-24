@@ -18,7 +18,6 @@
  */
 package com.opensymphony.xwork2.security;
 
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.lang3.BooleanUtils;
@@ -46,17 +45,17 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
         setExcludedPatterns(EXCLUDED_PATTERNS);
     }
 
-    @Inject(value = XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS, required = false)
+    @Inject(value = StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, required = false)
     public void setOverrideExcludePatterns(String excludePatterns) {
         LOG.warn("Overriding excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
-                    XWorkConstants.OVERRIDE_EXCLUDED_PATTERNS, excludePatterns);
+                    StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, excludePatterns);
         excludedPatterns = new HashSet<Pattern>();
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 
-    @Inject(value = XWorkConstants.ADDITIONAL_EXCLUDED_PATTERNS, required = false)
+    @Inject(value = StrutsConstants.STRUTS_ADDITIONAL_EXCLUDED_PATTERNS, required = false)
     public void setAdditionalExcludePatterns(String excludePatterns) {
         LOG.debug("Adding additional global patterns [{}] to excluded patterns!", excludePatterns);
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {

@@ -80,6 +80,75 @@ public class DefaultActionInvocation implements ActionInvocation {
         this.pushAction = pushAction;
     }
 
+    protected void createAction(Map<String, Object> contextMap) {
+        // load action
+        String timerKey = "actionCreate: " + proxy.getActionName();
+        try {
+            action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), contextMap);
+        } catch (InstantiationException e) {
+            throw new XWorkException("Unable to instantiate Action!", e, proxy.getConfig());
+        } catch (IllegalAccessException e) {
+            throw new XWorkException("Illegal access to constructor, is it public?", e, proxy.getConfig());
+        } catch (Exception e) {
+            String gripe;
+
+            if (proxy == null) {
+                gripe = "Whoa!  No ActionProxy instance found in current ActionInvocation.  This is bad ... very bad";
+            } else if (proxy.getConfig() == null) {
+                gripe = "Sheesh.  Where'd that ActionProxy get to?  I can't find it in the current ActionInvocation!?";
+            } else if (proxy.getConfig().getClassName() == null) {
+                gripe = "No Action defined for '" + proxy.getActionName() + "' in namespace '" + proxy.getNamespace() + "'";
+            } else {
+                gripe = "Unable to instantiate Action, " + proxy.getConfig().getClassName() + ",  defined for '" + proxy.getActionName() + "' in namespace '" + proxy.getNamespace() + "'";
+            }
+
+            gripe += (((" -- " + e.getMessage()) != null) ? e.getMessage() : " [no message in exception]");
+            throw new XWorkException(gripe, e, proxy.getConfig());
+        }
+
+        if (actionEventListener != null) {
+            action = actionEventListener.prepare(action, stack);
+        }
+    }
+
+    public Result createResult() throws Exception {
+        LOG.trace("Creating result related to resultCode [{}]", resultCode);
+
+        if (explicitResult != null) {
+            Result ret = explicitResult;
+            explicitResult = null;
+
+            return ret;
+        }
+        ActionConfig config = proxy.getConfig();
+        Map<String, ResultConfig> results = config.getResults();
+
+        ResultConfig resultConfig = null;
+
+        try {
+            resultConfig = results.get(resultCode);
+        } catch (NullPointerException e) {
+            LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
+        }
+
+        if (resultConfig == null) {
+            // If no result is found for the given resultCode, try to get a wildcard '*' match.
+            resultConfig = results.get("*");
+        }
+
+        if (resultConfig != null) {
+            try {
+                return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
+            } catch (Exception e) {
+                LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
+                throw new XWorkException(e, resultConfig);
+            }
+        } else if (resultCode != null && !Action.NONE.equals(resultCode) && unknownHandlerManager.hasUnknownHandlers()) {
+            return unknownHandlerManager.handleUnknownResult(invocationContext, proxy.getActionName(), proxy.getConfig(), resultCode);
+        }
+        return null;
+    }
+
     @Inject
     public void setUnknownHandlerManager(UnknownHandlerManager unknownHandlerManager) {
         this.unknownHandlerManager = unknownHandlerManager;
@@ -194,44 +263,6 @@ public class DefaultActionInvocation implements ActionInvocation {
         preResultListeners.add(listener);
     }
 
-    public Result createResult() throws Exception {
-        LOG.trace("Creating result related to resultCode [{}]", resultCode);
-
-        if (explicitResult != null) {
-            Result ret = explicitResult;
-            explicitResult = null;
-
-            return ret;
-        }
-        ActionConfig config = proxy.getConfig();
-        Map<String, ResultConfig> results = config.getResults();
-
-        ResultConfig resultConfig = null;
-
-        try {
-            resultConfig = results.get(resultCode);
-        } catch (NullPointerException e) {
-            LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
-        }
-        
-        if (resultConfig == null) {
-            // If no result is found for the given resultCode, try to get a wildcard '*' match.
-            resultConfig = results.get("*");
-        }
-
-        if (resultConfig != null) {
-            try {
-                return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
-            } catch (Exception e) {
-                LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
-                throw new XWorkException(e, resultConfig);
-            }
-        } else if (resultCode != null && !Action.NONE.equals(resultCode) && unknownHandlerManager.hasUnknownHandlers()) {
-            return unknownHandlerManager.handleUnknownResult(invocationContext, proxy.getActionName(), proxy.getConfig(), resultCode);
-        }
-        return null;
-    }
-
     /**
      * @throws ConfigurationException If no result can be found with the returned code
      */
@@ -291,37 +322,6 @@ public class DefaultActionInvocation implements ActionInvocation {
 
     public String invokeActionOnly() throws Exception {
         return invokeAction(getAction(), proxy.getConfig());
-    }
-
-    protected void createAction(Map<String, Object> contextMap) {
-        // load action
-        String timerKey = "actionCreate: " + proxy.getActionName();
-        try {
-            action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), contextMap);
-        } catch (InstantiationException e) {
-            throw new XWorkException("Unable to instantiate Action!", e, proxy.getConfig());
-        } catch (IllegalAccessException e) {
-            throw new XWorkException("Illegal access to constructor, is it public?", e, proxy.getConfig());
-        } catch (Exception e) {
-            String gripe;
-
-            if (proxy == null) {
-                gripe = "Whoa!  No ActionProxy instance found in current ActionInvocation.  This is bad ... very bad";
-            } else if (proxy.getConfig() == null) {
-                gripe = "Sheesh.  Where'd that ActionProxy get to?  I can't find it in the current ActionInvocation!?";
-            } else if (proxy.getConfig().getClassName() == null) {
-                gripe = "No Action defined for '" + proxy.getActionName() + "' in namespace '" + proxy.getNamespace() + "'";
-            } else {
-                gripe = "Unable to instantiate Action, " + proxy.getConfig().getClassName() + ",  defined for '" + proxy.getActionName() + "' in namespace '" + proxy.getNamespace() + "'";
-            }
-
-            gripe += (((" -- " + e.getMessage()) != null) ? e.getMessage() : " [no message in exception]");
-            throw new XWorkException(gripe, e, proxy.getConfig());
-        }
-
-        if (actionEventListener != null) {
-            action = actionEventListener.prepare(action, stack);
-        }
     }
 
     protected Map<String, Object> createContextMap() {

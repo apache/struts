@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
  * </p>
  * <ul>
  * <li>Set "struts.devMode" to "true" </li>
- * <li>Set "struts.class.reloading.watchList" to a comma separated list of directories, or jar files (absolute paths)</li>
+ * <li>Set "struts.objectFactory.spring.class.reloading.watchList" to a comma separated list of directories, or jar files (absolute paths)</li>
  * <li>Add this to web.xml:
  *  <pre>
  *  &lt;context-param&gt;

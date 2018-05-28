@@ -18,7 +18,6 @@
  */
 package com.opensymphony.xwork2.ognl.accessor;
 
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
@@ -28,6 +27,7 @@ import ognl.*;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -65,7 +65,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
     private static Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
     private boolean devMode = false;
 
-    @Inject(XWorkConstants.DEV_MODE)
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
     }

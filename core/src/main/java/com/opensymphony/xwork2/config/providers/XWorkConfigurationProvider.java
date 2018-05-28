@@ -39,7 +39,6 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.UnknownHandlerManager;
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -221,11 +220,10 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
         props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());
         props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, Boolean.FALSE.toString());
         props.setProperty(StrutsConstants.STRUTS_DEVMODE, Boolean.FALSE.toString());
-        props.setProperty(XWorkConstants.DEV_MODE, Boolean.FALSE.toString());
-        props.setProperty(XWorkConstants.LOG_MISSING_PROPERTIES, Boolean.FALSE.toString());
-        props.setProperty(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, Boolean.TRUE.toString());
-        props.setProperty(XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, Boolean.FALSE.toString());
-        props.setProperty(XWorkConstants.RELOAD_XML_CONFIGURATION, Boolean.FALSE.toString());
+        props.setProperty(StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES, Boolean.FALSE.toString());
+        props.setProperty(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, Boolean.TRUE.toString());
+        props.setProperty(StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, Boolean.FALSE.toString());
+        props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, Boolean.FALSE.toString());
     }
 
 }

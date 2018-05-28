@@ -20,7 +20,6 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClearableValueStack;
@@ -32,6 +31,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.Map;
 
@@ -99,7 +99,7 @@ public class AliasInterceptor extends AbstractInterceptor {
     protected LocalizedTextProvider localizedTextProvider;
     protected boolean devMode = false;
 
-    @Inject(XWorkConstants.DEV_MODE)
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = Boolean.parseBoolean(mode);
     }   

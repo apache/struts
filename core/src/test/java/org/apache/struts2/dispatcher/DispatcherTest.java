@@ -23,7 +23,6 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.StubValueStack;
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
@@ -230,8 +229,8 @@ public class DispatcherTest extends StrutsInternalTestCase {
         cm.setConfiguration((Configuration)mockConfiguration.proxy());
         
         Mock mockContainer = new Mock(Container.class);
-        String reloadConfigs = container.getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION);
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
+        String reloadConfigs = container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD);
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)),
                 reloadConfigs);
         final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
         destroyedObjectFactory.setContainer((Container) mockContainer.proxy());
@@ -266,8 +265,8 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         Mock mockContainer = new Mock(Container.class);
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory());
-        String reloadConfigs = container.getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION);
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(XWorkConstants.RELOAD_XML_CONFIGURATION)),
+        String reloadConfigs = container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD);
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)),
                 reloadConfigs);
 
         Mock mockConfiguration = new Mock(Configuration.class);

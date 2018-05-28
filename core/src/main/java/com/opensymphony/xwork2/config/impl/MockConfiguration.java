@@ -18,7 +18,6 @@
  */
 package com.opensymphony.xwork2.config.impl;
 
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.*;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
@@ -52,9 +51,9 @@ public class MockConfiguration implements Configuration {
         builder.factory(Configuration.class, MockConfiguration.class, Scope.SINGLETON);
         LocatableProperties props = new LocatableProperties();
         new XWorkConfigurationProvider().register(builder, props);
-        builder.constant(XWorkConstants.DEV_MODE, "false");
-        builder.constant(XWorkConstants.RELOAD_XML_CONFIGURATION, "true");
-        builder.constant(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, "true");
+        builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
+        builder.constant(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
+        builder.constant(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, "true");
         builder.constant(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, "false");
         container = builder.create(true);
     }

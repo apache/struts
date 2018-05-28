@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
@@ -169,7 +170,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         this.fileManager = fileManagerFactory.getFileManager();
     }
 
-    @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
+    @Inject(value = StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, required = false)
     public void setReloadingConfigs(String reloadingConfigs) {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
     }

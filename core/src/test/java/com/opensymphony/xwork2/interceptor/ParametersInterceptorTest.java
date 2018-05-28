@@ -555,7 +555,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider,
-                new MockConfigurationProvider(Collections.singletonMap("devMode", "true")));
+                new MockConfigurationProvider(Collections.singletonMap("struts.devMode", "true")));
         Map<String, Object> params = new HashMap<>();
         params.put("not_a_property", "There is no action property named like this");
 
@@ -574,7 +574,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider,
-                new MockConfigurationProvider(Collections.singletonMap("devMode", "false")));
+                new MockConfigurationProvider(Collections.singletonMap("struts.devMode", "false")));
         Map<String, Object> params = new HashMap<>();
         params.put("not_a_property", "There is no action property named like this");
 

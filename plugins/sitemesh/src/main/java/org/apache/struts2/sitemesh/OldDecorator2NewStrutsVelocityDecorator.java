@@ -62,7 +62,6 @@ public class OldDecorator2NewStrutsVelocityDecorator extends OldDecorator2NewStr
      * @param ctx            The action context for this request, populated with the server state
      */
     protected void render(Content content, HttpServletRequest request, HttpServletResponse response, ServletContext servletContext, ActionContext ctx) throws ServletException, IOException {
-        String timerKey = "FreemarkerPageFilter_applyDecorator: ";
         if (velocityManager == null) {
             throw new ServletException("Missing freemarker dependency");
         }

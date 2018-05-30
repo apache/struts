@@ -295,7 +295,6 @@ public class DefaultActionInvocation implements ActionInvocation {
 
     protected void createAction(Map<String, Object> contextMap) {
         // load action
-        String timerKey = "actionCreate: " + proxy.getActionName();
         try {
             action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), contextMap);
         } catch (InstantiationException e) {
@@ -365,7 +364,6 @@ public class DefaultActionInvocation implements ActionInvocation {
     private void executeResult() throws Exception {
         result = createResult();
 
-        String timerKey = "executeResult: " + getResultCode();
         if (result != null) {
             result.execute(this);
         } else if (resultCode != null && !Action.NONE.equals(resultCode)) {

@@ -821,6 +821,51 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertSame(that, root);
     }
 
+    public void testGetExcludedPackageNames() {
+      // Getter should return an immutable collection
+      OgnlUtil util = new OgnlUtil();
+      util.setExcludedPackageNames("java.lang,java.awt");
+      assertEquals(util.getExcludedPackageNames().size(), 2);
+      try {
+          util.getExcludedPackageNames().clear();
+      }
+      catch (Exception ex) {
+          assertTrue(ex instanceof UnsupportedOperationException);
+      } finally {
+          assertEquals(util.getExcludedPackageNames().size(), 2);
+      }
+    }
+
+    public void testGetExcludedClasses() {
+        // Getter should return an immutable collection
+        OgnlUtil util = new OgnlUtil();
+        util.setExcludedClasses("java.lang.Runtime,java.lang.ProcessBuilder,java.net.URL");
+        assertEquals(util.getExcludedClasses().size(), 3);
+        try {
+            util.getExcludedClasses().clear();
+        }
+        catch (Exception ex) {
+            assertTrue(ex instanceof UnsupportedOperationException);
+        } finally {
+            assertEquals(util.getExcludedClasses().size(), 3);
+        }
+    }
+
+    public void testGetExcludedPackageNamePatterns() {
+        // Getter should return an immutable collection
+        OgnlUtil util = new OgnlUtil();
+        util.setExcludedPackageNamePatterns("java.lang.");
+        assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
+        try {
+            util.getExcludedPackageNamePatterns().clear();
+        }
+        catch (Exception ex) {
+            assertTrue(ex instanceof UnsupportedOperationException);
+        } finally {
+            assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
+        }
+    }
+
     public static class Email {
         String address;
 

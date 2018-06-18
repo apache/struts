@@ -66,6 +66,7 @@
                 freemarker.template.,
                 freemarker.ext.rhino.,
                 freemarker.ext.beans.,
+                org.codehaus.groovy.,
                 sun.misc.,
                 sun.reflect.,
                 javassist." />

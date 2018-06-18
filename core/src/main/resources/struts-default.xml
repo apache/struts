@@ -60,6 +60,7 @@
     <constant name="struts.excludedPackageNames"
               value="
                 java.lang.,
+                java.rmi.,
                 ognl.,
                 javax,
                 freemarker.core.,

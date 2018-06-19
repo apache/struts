@@ -68,7 +68,8 @@
                 freemarker.ext.beans.,
                 sun.misc.,
                 sun.reflect.,
-                javassist." />
+                javassist.,
+                org.apache.commons.io." />
 
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts" class="org.apache.struts2.factory.StrutsResultFactory" />

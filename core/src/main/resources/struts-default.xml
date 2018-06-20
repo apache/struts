@@ -59,6 +59,7 @@
     <!-- this is simpler version of the above used with string comparison -->
     <constant name="struts.excludedPackageNames"
               value="
+                com.opensymphony.xwork2.ognl.,
                 java.lang.,
                 ognl.,
                 javax,

@@ -60,9 +60,8 @@
     <!-- this is simpler version of the above used with string comparison -->
     <constant name="struts.excludedPackageNames"
               value="
-                java.lang.,
                 ognl.,
-                javax,
+                javax.,
                 freemarker.core.,
                 freemarker.template.,
                 freemarker.ext.rhino.,

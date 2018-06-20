@@ -154,9 +154,9 @@ public class SecurityMemberAccess implements MemberAccess {
         if (targetPackage == null || memberPackage == null) {
             LOG.warn("The use of the default (unnamed) package is discouraged!");
         }
-
-        final String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
-        final String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
+        
+        String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
+        String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
 
         for (Pattern pattern : excludedPackageNamePatterns) {
             if (pattern.matcher(targetPackageName).matches() || pattern.matcher(memberPackageName).matches()) {
@@ -164,7 +164,10 @@ public class SecurityMemberAccess implements MemberAccess {
             }
         }
 
-        for (String packageName : excludedPackageNames) {
+        targetPackageName = targetPackageName + ".";
+        memberPackageName = memberPackageName + ".";
+
+        for (String packageName: excludedPackageNames) {
             if (targetPackageName.startsWith(packageName) || targetPackageName.equals(packageName)
                     || memberPackageName.startsWith(packageName) || memberPackageName.equals(packageName)) {
                 return true;

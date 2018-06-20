@@ -61,6 +61,7 @@
               value="
                 com.opensymphony.xwork2.ognl.,
                 java.lang.,
+                java.rmi.,
                 ognl.,
                 javax,
                 freemarker.core.,

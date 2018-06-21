@@ -168,8 +168,7 @@ public class SecurityMemberAccess implements MemberAccess {
         memberPackageName = memberPackageName + ".";
 
         for (String packageName: excludedPackageNames) {
-            if (targetPackageName.startsWith(packageName) || targetPackageName.equals(packageName)
-                    || memberPackageName.startsWith(packageName) || memberPackageName.equals(packageName)) {
+            if (targetPackageName.startsWith(packageName) || memberPackageName.startsWith(packageName)) {
                 return true;
             }
         }

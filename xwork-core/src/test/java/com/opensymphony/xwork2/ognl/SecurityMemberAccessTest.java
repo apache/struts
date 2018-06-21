@@ -4,7 +4,6 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Member;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -168,7 +167,7 @@ public class SecurityMemberAccessTest extends TestCase {
         // then
         assertFalse("stringField is accessible!", actual);
     }
-    
+
     public void testPackageNameExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
@@ -187,29 +186,29 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("stringField is accessible!", actual);
     }
 
-    public void testDefaultPackageExclusion() throws Exception {
+    public void testDefaultPackageExclusion() {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
 
         Set<Pattern> excluded = new HashSet<Pattern>();
         excluded.add(Pattern.compile("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*"));
         sma.setExcludedPackageNamePatterns(excluded);
-        
+
         // when
         boolean actual = sma.isPackageExcluded(null, null);
 
         // then
         assertFalse("default package is excluded!", actual);
     }
-    
-    public void testDefaultPackageExclusion2() throws Exception {
+
+    public void testDefaultPackageExclusion2() {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
 
         Set<Pattern> excluded = new HashSet<Pattern>();
         excluded.add(Pattern.compile("^$"));
         sma.setExcludedPackageNamePatterns(excluded);
-        
+
         // when
         boolean actual = sma.isPackageExcluded(null, null);
 
@@ -299,7 +298,7 @@ public class SecurityMemberAccessTest extends TestCase {
     public void testAccessPrimitiveDoubleWithNames() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
-        sma.setExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang.,ognl,javax"));
+        sma.setExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("ognl.,javax."));
 
 
         Set<Class<?>> excluded = new HashSet<Class<?>>();
@@ -399,6 +398,21 @@ public class SecurityMemberAccessTest extends TestCase {
 
         // then
         assertFalse(accessible);
+    }
+
+    public void testPackageNameExclusionAsCommaDelimited() {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+
+        sma.setExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang."));
+
+        // when
+        boolean actual = sma.isPackageExcluded(String.class.getPackage(), null);
+        actual &= sma.isPackageExcluded(null, String.class.getPackage());
+
+        // then
+        assertTrue("package java.lang. is accessible!", actual);
     }
 
 }

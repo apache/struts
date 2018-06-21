@@ -49,7 +49,7 @@
                 ognl.ClassResolver,
                 ognl.TypeConverter,
                 ognl.MemberAccess,
-                com.opensymphony.xwork2.ognl.SecurityMemberAccess,
+                ognl.DefaultMemberAccess,
                 com.opensymphony.xwork2.ActionContext" />
 
     <!-- this must be valid regex, each '.' in package name must be escaped! -->
@@ -69,7 +69,9 @@
                 freemarker.ext.beans.,
                 sun.misc.,
                 sun.reflect.,
-                javassist." />
+                javassist.,
+                com.opensymphony.xwork2.ognl.,
+                com.opensymphony.xwork2.security." />
 
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts" class="org.apache.struts2.factory.StrutsResultFactory" />

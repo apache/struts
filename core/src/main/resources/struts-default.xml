@@ -59,7 +59,6 @@
                 freemarker.core.,
                 freemarker.template.,
                 freemarker.ext.rhino.,
-                freemarker.ext.beans.,
                 sun.reflect.,
                 javassist.,
                 com.opensymphony.xwork2.ognl.,

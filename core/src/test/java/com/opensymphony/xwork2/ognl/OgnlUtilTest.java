@@ -653,7 +653,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Exception expected = null;
         try {
-            ognlUtil.addExcludedClasses(Object.class.getName());
+            ognlUtil.setExcludedClasses(Object.class.getName());
             ognlUtil.setValue("class.classLoader.defaultAssertionStatus", ognlUtil.createDefaultContext(foo), foo, true);
             fail();
         } catch (OgnlException e) {
@@ -669,7 +669,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Exception expected = null;
         try {
-            ognlUtil.addExcludedClasses(Object.class.getName());
+            ognlUtil.setExcludedClasses(Object.class.getName());
             ognlUtil.setValue("Class.ClassLoader.DefaultAssertionStatus", ognlUtil.createDefaultContext(foo), foo, true);
             fail();
         } catch (OgnlException e) {
@@ -685,7 +685,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Exception expected = null;
         try {
-            ognlUtil.addExcludedClasses(Object.class.getName());
+            ognlUtil.setExcludedClasses(Object.class.getName());
             ognlUtil.setValue("class['classLoader']['defaultAssertionStatus']", ognlUtil.createDefaultContext(foo), foo, true);
             fail();
         } catch (OgnlException e) {
@@ -716,7 +716,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Exception expected = null;
         try {
-            ognlUtil.addExcludedClasses(Object.class.getName());
+            ognlUtil.setExcludedClasses(Object.class.getName());
             ognlUtil.setValue("class[\"classLoader\"]['defaultAssertionStatus']", ognlUtil.createDefaultContext(foo), foo, true);
             fail();
         } catch (OgnlException e) {
@@ -762,7 +762,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Exception expected = null;
         try {
-            ognlUtil.addExcludedClasses(Runtime.class.getName());
+            ognlUtil.setExcludedClasses(Runtime.class.getName());
             ognlUtil.setValue("@java.lang.Runtime@getRuntime().exec('mate')", ognlUtil.createDefaultContext(foo), foo, true);
             fail();
         } catch (OgnlException e) {

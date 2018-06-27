@@ -69,26 +69,10 @@ public class OgnlUtil {
     private boolean allowStaticMethodAccess;
     private boolean disallowProxyMemberAccess;
 
-    public OgnlUtil(
-        @Inject(value = XWorkConstants.OGNL_EXCLUDED_CLASSES, required = false)
-        String commaDelimitedClasses,
-        @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
-        String commaDelimitedPackagePatterns,
-        @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAMES, required = false)
-        String commaDelimitedPackageNames
-    ) {
-        excludedClasses = Collections.unmodifiableSet(parseExcludedClasses(commaDelimitedClasses));
-        excludedPackageNamePatterns = Collections.unmodifiableSet(parseExcludedPackageNamePatterns(commaDelimitedPackagePatterns));
-        excludedPackageNames = Collections.unmodifiableSet(parseExcludedPackageNames(commaDelimitedPackageNames));
-    }
-
-    /**
-     * Constructor used by internal DI
-     */
     public OgnlUtil() {
-        excludedClasses = Collections.emptySet();
-        excludedPackageNamePatterns = Collections.emptySet();
-        excludedPackageNames = Collections.emptySet();
+        excludedClasses = new HashSet<>();
+        excludedPackageNamePatterns = new HashSet<>();
+        excludedPackageNames = new HashSet<>();
     }
 
     @Inject
@@ -115,6 +99,13 @@ public class OgnlUtil {
         }
     }
 
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_CLASSES, required = false)
+    public void setExcludedClasses(String commaDelimitedClasses) {
+        Set<Class<?>> excludedClasses = this.excludedClasses;
+        excludedClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
+        this.excludedClasses = Collections.unmodifiableSet(excludedClasses);
+    }
+
     private Set<Class<?>> parseExcludedClasses(String commaDelimitedClasses) {
         Set<String> classNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
         Set<Class<?>> classes = new HashSet<>();
@@ -130,6 +121,12 @@ public class OgnlUtil {
         return classes;
     }
 
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    public void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+        Set<Pattern> excludedPackageNamePatterns = this.excludedPackageNamePatterns;
+        excludedPackageNamePatterns.addAll(parseExcludedPackageNamePatterns(commaDelimitedPackagePatterns));
+        this.excludedPackageNamePatterns = Collections.unmodifiableSet(excludedPackageNamePatterns);
+    }
 
     private Set<Pattern> parseExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
@@ -140,6 +137,13 @@ public class OgnlUtil {
         }
 
         return packageNamePatterns;
+    }
+
+    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAMES, required = false)
+    public void setExcludedPackageNames(String commaDelimitedPackageNames) {
+        Set<String> excludedPackageNames = this.excludedPackageNames;
+        excludedPackageNames.addAll(parseExcludedPackageNames(commaDelimitedPackageNames));
+        this.excludedPackageNames = Collections.unmodifiableSet(excludedPackageNames);
     }
 
     private Set<String> parseExcludedPackageNames(String commaDelimitedPackageNames) {
@@ -697,13 +701,6 @@ public class OgnlUtil {
         memberAccess.setDisallowProxyMemberAccess(disallowProxyMemberAccess);
 
         return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);
-    }
-
-    protected void addExcludedClasses(String commaDelimitedClasses) {
-        Set<Class<?>> existingClasses = new HashSet<>(excludedClasses);
-        existingClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
-
-        excludedClasses = Collections.unmodifiableSet(existingClasses);
     }
 
     private interface OgnlTask<T> {

@@ -120,6 +120,10 @@ public class DefaultActionMapper implements ActionMapper {
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
     protected PrefixTrie prefixTrie = null;
+
+    protected Pattern allowedNamespaceNames = Pattern.compile("[a-zA-Z0-9._/\\-]*");
+    protected String defaultNamespaceName = "/";
+
     protected Pattern allowedActionNames = Pattern.compile("[a-zA-Z0-9._!/\\-]*");
     protected String defaultActionName = "index";
 
@@ -166,8 +170,8 @@ public class DefaultActionMapper implements ActionMapper {
                                 }
                             }
                             if (!allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
-                                if (actionName.lastIndexOf("/") != -1) {
-                                    actionName = actionName.substring(actionName.lastIndexOf("/") + 1);
+                                if (actionName.lastIndexOf('/') != -1) {
+                                    actionName = actionName.substring(actionName.lastIndexOf('/') + 1);
                                 }
                             }
                             mapping.setName(actionName);
@@ -203,6 +207,16 @@ public class DefaultActionMapper implements ActionMapper {
     @Inject(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE)
     public void setAlwaysSelectFullNamespace(String val) {
         this.alwaysSelectFullNamespace = "true".equals(val);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ALLOWED_NAMESPACE_NAMES, required = false)
+    public void setAllowedNamespaceNames(String allowedNamespaceNames) {
+        this.allowedNamespaceNames = Pattern.compile(allowedNamespaceNames);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEFAULT_NAMESPACE_NAME, required = false)
+    public void setDefaultNamespaceName(String defaultNamespaceName) {
+        this.defaultNamespaceName = defaultNamespaceName;
     }
 
     @Inject(value = StrutsConstants.STRUTS_ALLOWED_ACTION_NAMES, required = false)
@@ -274,7 +288,7 @@ public class DefaultActionMapper implements ActionMapper {
         ActionMapping mapping = new ActionMapping();
         String uri = RequestUtils.getUri(request);
 
-        int indexOfSemicolon = uri.indexOf(";");
+        int indexOfSemicolon = uri.indexOf(';');
         uri = (indexOfSemicolon > -1) ? uri.substring(0, indexOfSemicolon) : uri;
 
         uri = dropExtension(uri, mapping);
@@ -294,7 +308,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowDynamicMethodCalls) {
             // handle "name!method" convention.
             String name = mapping.getName();
-            int exclamation = name.lastIndexOf("!");
+            int exclamation = name.lastIndexOf('!');
             if (exclamation != -1) {
                 mapping.setName(name.substring(0, exclamation));
 
@@ -343,7 +357,7 @@ public class DefaultActionMapper implements ActionMapper {
      */
     protected void parseNameAndNamespace(String uri, ActionMapping mapping, ConfigurationManager configManager) {
         String namespace, name;
-        int lastSlash = uri.lastIndexOf("/");
+        int lastSlash = uri.lastIndexOf('/');
         if (lastSlash == -1) {
             namespace = "";
             name = uri;
@@ -391,8 +405,26 @@ public class DefaultActionMapper implements ActionMapper {
             }
         }
 
-        mapping.setNamespace(namespace);
+        mapping.setNamespace(cleanupNamespaceName(namespace));
         mapping.setName(cleanupActionName(name));
+    }
+
+    /**
+     * Checks namespace name against allowed pattern if not matched returns default namespace
+     *
+     * @param rawNamespace name extracted from URI
+     * @return safe namespace name
+     */
+    protected String cleanupNamespaceName(final String rawNamespace) {
+        if (allowedNamespaceNames.matcher(rawNamespace).matches()) {
+            return rawNamespace;
+        } else {
+            LOG.warn(
+                "{} did not match allowed namespace names {} - default namespace {} will be used!",
+                rawNamespace, allowedActionNames, defaultActionName
+            );
+            return defaultNamespaceName;
+        }
     }
 
     /**

@@ -40,6 +40,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -66,13 +67,19 @@ public class OgnlUtil {
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
 
-    private Set<Class<?>> excludedClasses = new HashSet<Class<?>>();
-    private Set<Pattern> excludedPackageNamePatterns = new HashSet<Pattern>();
-    private Set<String> excludedPackageNames = new HashSet<String>();
+    private Set<Class<?>> excludedClasses;
+    private Set<Pattern> excludedPackageNamePatterns;
+    private Set<String> excludedPackageNames;
 
     private Container container;
     private boolean allowStaticMethodAccess;
     private boolean disallowProxyMemberAccess;
+
+    public OgnlUtil() {
+        excludedClasses = new HashSet<Class<?>>();
+        excludedPackageNamePatterns = new HashSet<Pattern>();
+        excludedPackageNames = new HashSet<String>();
+    }
 
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
@@ -100,27 +107,56 @@ public class OgnlUtil {
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_CLASSES, required = false)
     public void setExcludedClasses(String commaDelimitedClasses) {
-        Set<String> classes = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
-        for (String className : classes) {
+        Set<Class<?>> excludedClasses = new HashSet<Class<?>>();
+        excludedClasses.addAll(this.excludedClasses);
+        excludedClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
+        this.excludedClasses = Collections.unmodifiableSet(excludedClasses);
+    }
+
+    private Set<Class<?>> parseExcludedClasses(String commaDelimitedClasses) {
+        Set<String> classNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
+        Set<Class<?>> classes = new HashSet<Class<?>>();
+
+        for (String className : classNames) {
             try {
-                excludedClasses.add(Class.forName(className));
+                classes.add(Class.forName(className));
             } catch (ClassNotFoundException e) {
                 throw new ConfigurationException("Cannot load excluded class: " + className, e);
             }
         }
+
+        return classes;
     }
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
     public void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+        Set<Pattern> excludedPackageNamePatterns = new HashSet<Pattern>();
+        excludedPackageNamePatterns.addAll(this.excludedPackageNamePatterns);
+        excludedPackageNamePatterns.addAll(parseExcludedPackageNamePatterns(commaDelimitedPackagePatterns));
+        this.excludedPackageNamePatterns = Collections.unmodifiableSet(excludedPackageNamePatterns);
+    }
+
+    private Set<Pattern> parseExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
+        Set<Pattern> packageNamePatterns = new HashSet<Pattern>();
+
         for (String pattern : packagePatterns) {
-            excludedPackageNamePatterns.add(Pattern.compile(pattern));
+            packageNamePatterns.add(Pattern.compile(pattern));
         }
+
+        return packageNamePatterns;
     }
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAMES, required = false)
     public void setExcludedPackageNames(String commaDelimitedPackageNames) {
-        excludedPackageNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
+        Set<String> excludedPackageNames = new HashSet<String>();
+        excludedPackageNames.addAll(this.excludedPackageNames);
+        excludedPackageNames.addAll(parseExcludedPackageNames(commaDelimitedPackageNames));
+        this.excludedPackageNames = Collections.unmodifiableSet(excludedPackageNames);
+    }
+
+    private Set<String> parseExcludedPackageNames(String commaDelimitedPackageNames) {
+        return TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
     }
 
     public Set<Class<?>> getExcludedClasses() {

@@ -30,7 +30,7 @@ import java.util.*;
 
 
 /**
- * Unit test of {@link ognlUtil}.
+ * Unit test of {@link OgnlUtil}.
  * 
  * @version $Date$ $Id$
  */

@@ -270,6 +270,11 @@ public final class StrutsConstants {
 
     public static final String STRUTS_EXPRESSION_PARSER = "struts.expression.parser";
 
+    /** namespaces names' whitelist **/
+    public static final String STRUTS_ALLOWED_NAMESPACE_NAMES = "struts.allowed.namespace.names";
+    /** default namespace name to use when namespace didn't match the whitelist **/
+    public static final String STRUTS_DEFAULT_NAMESPACE_NAME = "struts.default.namespace.name";
+
     /** actions names' whitelist **/
     public static final String STRUTS_ALLOWED_ACTION_NAMES = "struts.allowed.action.names";
     /** default action name to use when action didn't match the whitelist **/

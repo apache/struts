@@ -28,20 +28,20 @@
     -->
 
     <scm>
-        <connection>scm:git:git://git.apache.org/struts.git</connection>
-        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/struts.git</developerConnection>
-        <url>http://git.apache.org/struts.git</url>
-        <tag>STRUTS_2_3_24_1</tag>
+        <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
+        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
+        <url>https://github.com/apache/struts/</url>
+        <tag>support-2-3</tag>
     </scm>
 
     <issueManagement>
         <system>JIRA</system>
-        <url>https://issues.apache.org/jira/browse/WW</url>
+        <url>https://issues.apache.org/jira/projects/WW</url>
     </issueManagement>
 
     <ciManagement>
         <system>Jenkins</system>
-        <url>https://builds.apache.org/hudson/view/S-Z/view/Struts</url>
+        <url>https://builds.apache.org/view/S-Z/view/Struts/</url>
         <notifiers>
             <notifier>
                 <type>mail</type>
@@ -51,13 +51,6 @@
             </notifier>
         </notifiers>
     </ciManagement>
-
-    <distributionManagement>
-        <site>
-            <id>apache-site</id>
-            <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/struts/content/release/2.3.x/</url>
-        </site>
-    </distributionManagement>
 
     <modules>
         <module>bom</module>

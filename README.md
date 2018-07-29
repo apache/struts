@@ -28,9 +28,9 @@ The Apache Struts web framework is a free open-source solution for creating Java
 
 ## Documentation
 
-More information can be found on the [homepage](https://struts.apache.org/). Please read the [Security Guide](https://struts.apache.org/security/) 
+More information can be found on the [homepage](https://struts.apache.org/). Please read the [Security Guide](https://struts.apache.org/security/),
 and the [JavaDocs](https://struts.apache.org/maven/struts2-core/apidocs/index.html) can be browsed.
-Questions related to the usage of the Apache Struts should be posted to the [user mailing list](https://struts.apache.org/mail.html).
+Questions related to the usage of Apache Struts should be posted to the [user mailing list](https://struts.apache.org/mail.html).
 
 ## Description
 
@@ -43,13 +43,15 @@ In practice, we find that unless these concerns are separated, larger applicatio
 One way to separate concerns in a software application is to use a Model-View-Controller (MVC) architecture. The Model 
 represents the business or database code, the View represents the page design code, and the Controller represents 
 the navigational code. The Struts framework is designed to help developers create web applications that utilize 
-a MVC architecture.
+an MVC architecture.
 
 The framework provides three key components:
 
-A “request” handler provided by the application developer that is mapped to a standard URI. A “response” handler that 
-transfers control to another resource which completes the response. A tag library that helps developers create interactive 
-form-based applications with server pages. The framework’s architecture and tags are buzzword compliant. Struts works well
+- A “request” handler provided by the application developer that is mapped to a standard URI.
+- A “response” handler that transfers control to another resource which completes the response.
+- A tag library that helps developers create interactive form-based applications with server pages.
+
+The framework’s architecture and tags are buzzword compliant. Struts works well
 with conventional REST applications and with technologies like SOAP and AJAX.
 
 ## The Apache Struts Project

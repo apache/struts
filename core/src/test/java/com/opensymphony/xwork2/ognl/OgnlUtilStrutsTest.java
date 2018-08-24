@@ -20,16 +20,19 @@ package com.opensymphony.xwork2.ognl;
 
 import org.apache.struts2.StrutsInternalTestCase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OgnlUtilStrutsTest extends StrutsInternalTestCase {
-    
+
     private OgnlUtil ognlUtil;
-    
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
         ognlUtil = container.getInstance(OgnlUtil.class);
     }
-    
+
     public void testDefaultExcludes() {
         ognlUtil.setExcludedClasses("");
         ognlUtil.setExcludedPackageNames("");
@@ -39,18 +42,33 @@ public class OgnlUtilStrutsTest extends StrutsInternalTestCase {
 
         try {
             ognlUtil.getExcludedClasses().clear();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertTrue(ex instanceof UnsupportedOperationException);
         }
         try {
             ognlUtil.getExcludedPackageNames().clear();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertTrue(ex instanceof UnsupportedOperationException);
         }
         try {
             ognlUtil.getExcludedPackageNamePatterns().clear();
-        } catch (Exception ex){
+        } catch (Exception ex) {
             assertTrue(ex instanceof UnsupportedOperationException);
         }
     }
+
+    public void testAccessToSizeMethod() throws Exception {
+        // given
+        List<String> list = new ArrayList<>();
+        list.add("1");
+        list.add("2");
+
+        // when
+        Object value = ognlUtil.getValue("size() > 0", ognlUtil.createDefaultContext(list), list);
+
+        // then
+        assertTrue(value instanceof Boolean);
+        assertTrue((Boolean) value);
+    }
+
 }

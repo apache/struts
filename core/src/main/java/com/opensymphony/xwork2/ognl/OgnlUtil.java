@@ -99,7 +99,7 @@ public class OgnlUtil {
         }
     }
 
-    @Inject(value = XWorkConstants.OGNL_EXCLUDED_CLASSES, required = false)
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
     public void setExcludedClasses(String commaDelimitedClasses) {
         Set<Class<?>> excludedClasses = new HashSet<>();
         excludedClasses.addAll(this.excludedClasses);
@@ -122,7 +122,7 @@ public class OgnlUtil {
         return classes;
     }
 
-    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
     public void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         Set<Pattern> excludedPackageNamePatterns = new HashSet<>();
         excludedPackageNamePatterns.addAll(this.excludedPackageNamePatterns);
@@ -141,7 +141,7 @@ public class OgnlUtil {
         return packageNamePatterns;
     }
 
-    @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAMES, required = false)
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
     public void setExcludedPackageNames(String commaDelimitedPackageNames) {
         Set<String> excludedPackageNames = new HashSet<>();
         excludedPackageNames.addAll(this.excludedPackageNames);

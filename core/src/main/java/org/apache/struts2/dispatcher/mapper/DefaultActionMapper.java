@@ -421,7 +421,7 @@ public class DefaultActionMapper implements ActionMapper {
         } else {
             LOG.warn(
                 "{} did not match allowed namespace names {} - default namespace {} will be used!",
-                rawNamespace, allowedActionNames, defaultActionName
+                rawNamespace, allowedNamespaceNames, defaultNamespaceName
             );
             return defaultNamespaceName;
         }

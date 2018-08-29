@@ -18,10 +18,8 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.test.TestArrayBean;
 import org.apache.struts2.StrutsInternalTestCase;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OgnlUtilStrutsTest extends StrutsInternalTestCase {
 
@@ -59,12 +57,12 @@ public class OgnlUtilStrutsTest extends StrutsInternalTestCase {
 
     public void testAccessToSizeMethod() throws Exception {
         // given
-        List<String> list = new ArrayList<>();
-        list.add("1");
-        list.add("2");
+        TestArrayBean bean = new TestArrayBean();
+        bean.getPersons().add("Alice");
+        bean.getPersons().add("Mich");
 
         // when
-        Object value = ognlUtil.getValue("size() > 0", ognlUtil.createDefaultContext(list), list);
+        Object value = ognlUtil.getValue("persons.size() > 0", ognlUtil.createDefaultContext(bean), bean);
 
         // then
         assertTrue(value instanceof Boolean);

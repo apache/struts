@@ -98,7 +98,8 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
-            LOG.warn("Package of target [{}] or package of member [{}] are excluded!", target, member);
+            LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!", targetClass.getPackage(), targetClass,
+                    target, memberClass.getPackage(), member);
             return false;
         }
 

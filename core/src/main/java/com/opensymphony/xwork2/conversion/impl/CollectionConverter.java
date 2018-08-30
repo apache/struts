@@ -21,7 +21,6 @@ package com.opensymphony.xwork2.conversion.impl;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.XWorkList;
 
 import java.lang.reflect.Member;
 import java.util.Collection;

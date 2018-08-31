@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.TypeConverter;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 

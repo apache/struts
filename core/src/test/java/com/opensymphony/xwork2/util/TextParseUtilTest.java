@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.beans.ognl.TestObject;
 import org.junit.Assert;
 
 import java.util.*;
@@ -37,11 +38,9 @@ public class TextParseUtilTest extends XWorkTestCase {
 
 	public void testTranslateVariablesWithEvaluator() throws Exception {
 		ValueStack stack = ActionContext.getContext().getValueStack();
-		stack.push(new Object() {
-			public String getMyVariable() {
-				return "My Variable ";
-			}
-		});
+		TestObject to = new TestObject();
+		to.setMyStrProperty("My Variable ");
+		stack.push(to);
 
 		TextParseUtil.ParsedValueEvaluator evaluator = new TextParseUtil.ParsedValueEvaluator() {
 			public Object evaluate(String parsedValue) {
@@ -49,7 +48,7 @@ public class TextParseUtilTest extends XWorkTestCase {
             }
 		};
 
-		String result = TextParseUtil.translateVariables("Hello ${myVariable}", stack, evaluator);
+		String result = TextParseUtil.translateVariables("Hello ${myStrProperty}", stack, evaluator);
 
 		assertEquals(result, "Hello My Variable Something");
 	}

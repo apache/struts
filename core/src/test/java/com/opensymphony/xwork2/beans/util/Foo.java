@@ -173,7 +173,7 @@ public class Foo {
         this.annotatedBarCollection = annotatedBarCollection;
     }
 
-    @TypeConversion(rule = ConversionRule.ELEMENT, converter = "com.opensymphony.xwork2.util.Bar")
+    @TypeConversion(rule = ConversionRule.ELEMENT, converter = "com.opensymphony.xwork2.beans.util.Bar")
     public Collection getAnnotatedBarCollection() {
         return annotatedBarCollection;
     }

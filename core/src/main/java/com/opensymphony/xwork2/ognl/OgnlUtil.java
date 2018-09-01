@@ -72,8 +72,12 @@ public class OgnlUtil {
 
     public OgnlUtil() {
         excludedClasses = new HashSet<>();
+        setExcludedClasses("java.lang.Object,java.lang.Runtime,java.lang.System,java.lang.Class,java.lang.ClassLoader,"
+                + "java.lang.Shutdown,java.lang.ProcessBuilder,com.opensymphony.xwork2.ActionContext");
         excludedPackageNamePatterns = new HashSet<>();
         excludedPackageNames = new HashSet<>();
+        setExcludedPackageNames("ognl.,javax.,freemarker.core.,freemarker.template.,freemarker.ext.rhino.,sun.reflect.,"
+                + "javassist.,com.opensymphony.xwork2.ognl.,com.opensymphony.xwork2.security.,com.opensymphony.xwork2.util.");
     }
 
     @Inject

@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.util;
 
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.beans.util.Bar;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.TestBean2;

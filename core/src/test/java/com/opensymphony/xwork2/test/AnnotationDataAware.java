@@ -21,10 +21,9 @@ package com.opensymphony.xwork2.test;
 import com.opensymphony.xwork2.conversion.annotations.Conversion;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.conversion.impl.FooBarConverter;
-import com.opensymphony.xwork2.util.Bar;
+import com.opensymphony.xwork2.beans.util.Bar;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.annotations.Validation;
 
 
 /**

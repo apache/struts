@@ -16,27 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.util;
 
-import java.util.List;
-
+import java.io.Serializable;
 
 /**
- * DOCUMENT ME!
+ * <code>MyBean</code>
  *
- * @author $author$
- * @version $Revision$
+ * @author Rainer Hermanns
  */
-public class Tiger extends Cat {
+public class MyBean implements Serializable {
 
-    List dogs;
+    private Long id;
+    private String name;
 
-
-    public void setDogs(List dogs) {
-        this.dogs = dogs;
+    public Long getId() {
+        return id;
     }
 
-    public List getDogs() {
-        return dogs;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    @Override
+    public String toString() {
+        return "MyBean{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

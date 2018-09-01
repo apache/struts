@@ -112,7 +112,7 @@
             <result name="error" type="mock" />
         </action>
 
-        <action name="MyBean" class="com.opensymphony.xwork2.util.MyBeanAction">
+        <action name="MyBean" class="com.opensymphony.xwork2.beans.util.MyBeanAction">
             <interceptor-ref name="debugStack"/>
             <interceptor-ref name="defaultStack"/>
             <result name="success" type="mock" />

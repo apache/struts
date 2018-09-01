@@ -19,11 +19,15 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.beans.util.Bar;
+import com.opensymphony.xwork2.beans.util.BarJunior;
+import com.opensymphony.xwork2.beans.util.Cat;
+import com.opensymphony.xwork2.beans.util.Dog;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.test.TestBean2;
 import com.opensymphony.xwork2.util.*;
-import com.opensymphony.xwork2.util.Foo;
+import com.opensymphony.xwork2.beans.util.Foo;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.PropertyAccessor;
 
@@ -261,7 +265,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         Dog dog = new Dog();
         dog.setDeity("fido");
         vs.push(dog);
-        assertEquals("fido", vs.findValue("@com.opensymphony.xwork2.util.Dog@getDeity()", String.class));
+        assertEquals("fido", vs.findValue("@com.opensymphony.xwork2.beans.util.Dog@getDeity()", String.class));
     }
 
     /**
@@ -281,7 +285,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         Dog dog = new Dog();
         dog.setDeity("fido");
         vs.push(dog);
-        assertNull(vs.findValue("@com.opensymphony.xwork2.util.Dog@getDeity()", String.class));
+        assertNull(vs.findValue("@com.opensymphony.xwork2.beans.util.Dog@getDeity()", String.class));
     }
 
     public void testBasicSet() {

@@ -19,7 +19,7 @@
 package com.opensymphony.xwork2.test;
 
 import com.opensymphony.xwork2.SimpleAnnotationAction;
-import com.opensymphony.xwork2.util.Bar;
+import com.opensymphony.xwork2.beans.util.Bar;
 
 
 /**

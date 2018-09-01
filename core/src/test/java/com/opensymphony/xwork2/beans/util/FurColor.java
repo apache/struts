@@ -16,42 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.util;
 
-import java.io.Serializable;
-
-/**
- * <code>MyBean</code>
- *
- * @author Rainer Hermanns
- */
-public class MyBean implements Serializable {
-
-    private Long id;
-    private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    @Override
-    public String toString() {
-        return "MyBean{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
+public enum FurColor {
+    BROWN, BLACK, GREEN
 }

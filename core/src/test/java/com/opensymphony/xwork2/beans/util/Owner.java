@@ -16,8 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.util;
 
-public enum FurColor {
-    BROWN, BLACK, GREEN
+
+/**
+ * DOCUMENT ME!
+ *
+ * @author $author$
+ * @version $Revision$
+ */
+public class Owner {
+
+    private Dog dog;
+
+
+    public void setDog(Dog dog) {
+        this.dog = dog;
+    }
+
+    public Dog getDog() {
+        return dog;
+    }
 }

@@ -19,8 +19,8 @@
 package com.opensymphony.xwork2.test;
 
 import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.util.Bar;
-import com.opensymphony.xwork2.util.Cat;
+import com.opensymphony.xwork2.beans.util.Bar;
+import com.opensymphony.xwork2.beans.util.Cat;
 
 
 /**

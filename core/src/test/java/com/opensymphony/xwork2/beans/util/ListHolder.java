@@ -16,44 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
+import java.util.List;
 
 /**
- * @author mimo
- *
+ * User: patrick Date: Dec 20, 2005 Time: 11:15:29 AM
  */
-public class Indexed {
+public class ListHolder {
+    List<Long> longs;
+    List<String> strings;
+    List<Date> dates;
 
-    public Object[] values = new Object[3];
-    public Map<String, Object> map = new HashMap<>();
-
-    public void setSimple(int i, Object v) {
-        values[i] = v;
+    public List<Long> getLongs() {
+        return longs;
     }
 
-    public Object getSimple(int i) {
-        return values[i];
+    public void setLongs(List<Long> longs) {
+        this.longs = longs;
     }
 
-
-
-    public void setIntegerMap(String key, Integer value) {
-        map.put(key, value);
+    public List<String> getStrings() {
+        return strings;
     }
 
-    public Integer getIntegerMap(String key) {
-        return (Integer) map.get(key);
+    public void setStrings(List<String> strings) {
+        this.strings = strings;
     }
 
-    public void setStringMap(String key, String value) {
-        map.put(key, value);
+    public List<Date> getDates() {
+        return dates;
     }
 
-    public String getStringMap(String key) {
-        return (String) map.get(key);
+    public void setDates(List<Date> dates) {
+        this.dates = dates;
     }
-
 }

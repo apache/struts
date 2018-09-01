@@ -21,6 +21,9 @@ package com.opensymphony.xwork2.ognl;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.beans.util.Bar;
+import com.opensymphony.xwork2.beans.util.Foo;
+import com.opensymphony.xwork2.beans.util.Owner;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.interceptor.ChainingInterceptor;
 import com.opensymphony.xwork2.test.User;
@@ -661,7 +664,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
         assertNotNull(expected);
         assertSame(NoSuchPropertyException.class, expected.getClass());
-        assertEquals("com.opensymphony.xwork2.util.Foo.class", expected.getMessage());
+        assertEquals("com.opensymphony.xwork2.beans.util.Foo.class", expected.getMessage());
     }
 
     public void testAvoidCallingMethodsOnObjectClassUpperCased() throws Exception {
@@ -677,7 +680,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
         assertNotNull(expected);
         assertSame(NoSuchPropertyException.class, expected.getClass());
-        assertEquals("com.opensymphony.xwork2.util.Foo.Class", expected.getMessage());
+        assertEquals("com.opensymphony.xwork2.beans.util.Foo.Class", expected.getMessage());
     }
 
     public void testAvoidCallingMethodsOnObjectClassAsMap() throws Exception {
@@ -693,7 +696,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
         assertNotNull(expected);
         assertSame(NoSuchPropertyException.class, expected.getClass());
-        assertEquals("com.opensymphony.xwork2.util.Foo.class", expected.getMessage());
+        assertEquals("com.opensymphony.xwork2.beans.util.Foo.class", expected.getMessage());
     }
 
     public void testAvoidCallingMethodsOnObjectClassAsMap2() throws Exception {
@@ -708,7 +711,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
         assertNotNull(expected);
         assertSame(NoSuchPropertyException.class, expected.getClass());
-        assertEquals("com.opensymphony.xwork2.util.Foo.foo", expected.getMessage());
+        assertEquals("com.opensymphony.xwork2.beans.util.Foo.foo", expected.getMessage());
     }
 
     public void testAvoidCallingMethodsOnObjectClassAsMapWithQuotes() throws Exception {
@@ -724,7 +727,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
         assertNotNull(expected);
         assertSame(NoSuchPropertyException.class, expected.getClass());
-        assertEquals("com.opensymphony.xwork2.util.Foo.class", expected.getMessage());
+        assertEquals("com.opensymphony.xwork2.beans.util.Foo.class", expected.getMessage());
     }
 
     public void testAvoidCallingToString() throws Exception {

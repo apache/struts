@@ -16,25 +16,49 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.util;
+
+import com.opensymphony.xwork2.ActionSupport;
 
 
 /**
- * DOCUMENT ME!
- *
- * @author $author$
+ * @author <a href="mailto:plightbo@cisco.com">Pat Lightbody</a>
+ * @author $Author$
  * @version $Revision$
  */
-public class Owner {
+public class Bar extends ActionSupport {
 
-    private Dog dog;
+    Long id;
+    String title;
+    int somethingElse;
 
 
-    public void setDog(Dog dog) {
-        this.dog = dog;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Dog getDog() {
-        return dog;
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setSomethingElse(int somethingElse) {
+        this.somethingElse = somethingElse;
+    }
+
+    public int getSomethingElse() {
+        return somethingElse;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String toString() {
+        return getTitle() + ":" + getSomethingElse();
     }
 }

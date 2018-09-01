@@ -19,8 +19,10 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.beans.ognl.EmailAction;
+import com.opensymphony.xwork2.beans.ognl.MyWriteBar;
+import com.opensymphony.xwork2.beans.ognl.TestObject;
 import com.opensymphony.xwork2.beans.util.Bar;
 import com.opensymphony.xwork2.beans.util.Foo;
 import com.opensymphony.xwork2.beans.util.Owner;
@@ -806,91 +808,4 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(expected.getMessage(), "It isn't a simple method which can be called!");
     }
 
-    public static class Email {
-        String address;
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        @Override
-        public String toString() {
-            return address;
-        }
-    }
-
-    static class TestObject {
-        private Integer myIntegerProperty;
-        private Long myLongProperty;
-        private String myStrProperty;
-
-        public void setMyIntegerProperty(Integer myIntegerProperty) {
-            this.myIntegerProperty = myIntegerProperty;
-        }
-
-        public String getMyIntegerProperty() {
-            return myIntegerProperty.toString();
-        }
-
-        public void setMyLongProperty(Long myLongProperty) {
-            this.myLongProperty = myLongProperty;
-        }
-
-        public Long getMyLongProperty() {
-            return myLongProperty;
-        }
-
-        public void setMyStrProperty(String myStrProperty) {
-            this.myStrProperty = myStrProperty;
-        }
-
-        public String getMyStrProperty() {
-            return myStrProperty;
-        }
-    }
-
-    class EmailAction {
-        public List email = new OgnlList(Email.class);
-
-        public List getEmail() {
-            return this.email;
-        }
-    }
-
-    class OgnlList extends ArrayList {
-        private Class clazz;
-
-        public OgnlList(Class clazz) {
-            this.clazz = clazz;
-        }
-
-        @Override
-        public synchronized Object get(int index) {
-            while (index >= this.size()) {
-                try {
-                    this.add(clazz.newInstance());
-                } catch (Exception e) {
-                    throw new XWorkException(e);
-                }
-            }
-
-            return super.get(index);
-        }
-    }
-    
-    private class MyWriteBar {
-    	private int id;
-    	
-    	public int getId() {
-    		return id;
-    	}
-    	
-    	public void setBar(String name) {
-    		if ("Sams".equals(name))
-    			id = 1;
-    		else
-    			id = 999;
-    	}
-    	
-    }
 }

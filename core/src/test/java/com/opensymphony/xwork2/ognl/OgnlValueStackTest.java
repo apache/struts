@@ -19,6 +19,8 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.beans.ognl.BadJavaBean;
+import com.opensymphony.xwork2.beans.ognl.MyAction;
 import com.opensymphony.xwork2.beans.util.Bar;
 import com.opensymphony.xwork2.beans.util.BarJunior;
 import com.opensymphony.xwork2.beans.util.Cat;
@@ -274,9 +276,9 @@ public class OgnlValueStackTest extends XWorkTestCase {
     public void testEnum() throws Exception {
         OgnlValueStack vs = createValueStack();
 
-        assertEquals("ONE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[0]", String.class));
-        assertEquals("TWO", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[1]", String.class));
-        assertEquals("THREE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[2]", String.class));
+        assertEquals("ONE", vs.findValue("@com.opensymphony.xwork2.beans.ognl.MyNumbers@values()[0]", String.class));
+        assertEquals("TWO", vs.findValue("@com.opensymphony.xwork2.beans.ognl.MyNumbers@values()[1]", String.class));
+        assertEquals("THREE", vs.findValue("@com.opensymphony.xwork2.beans.ognl.MyNumbers@values()[2]", String.class));
     }
 
     public void testStaticMethodDisallow() {
@@ -972,118 +974,4 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals(null, stack.findValue("address.country.name", String.class));
     }
 
-    class BadJavaBean {
-        private int count;
-        private int count2;
-
-        public void setCount(int count) {
-            this.count = count;
-        }
-
-        public String getCount() {
-            return "" + count;
-        }
-
-        public void setCount2(String count2) {
-            this.count2 = Integer.parseInt(count2);
-        }
-
-        public int getCount2() {
-            return count2;
-        }
-    }
-
-    class MyAction {
-        private Long id;
-        private String name;
-        private Address address;
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Address getAddress() {
-            return address;
-        }
-
-        public void setAddress(Address address) {
-            this.address = address;
-        }
-    }
-
-    class Address {
-        private String address;
-        private Country country;
-        private String city;
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public String getCity() {
-            return city;
-        }
-
-        public void setCity(String city) {
-            this.city = city;
-        }
-
-        public Country getCountry() {
-            return country;
-        }
-
-        public void setCountry(Country country) {
-            this.country = country;
-        }
-    }
-
-    class Country {
-        private String iso;
-        private String name;
-        private String displayName;
-
-        public String getIso() {
-            return iso;
-        }
-
-        public void setIso(String iso) {
-            this.iso = iso;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        public void setDisplayName(String displayName) {
-            this.displayName = displayName;
-        }
-    }
-}
-
-enum MyNumbers {
-    ONE, TWO, THREE
 }

@@ -81,29 +81,31 @@ public class SecurityMemberAccess implements MemberAccess {
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
-
+        
+        Class targetClass = target.getClass();
+        Class memberClass = member.getDeclaringClass();
+        
         if (checkEnumAccess(target, member)) {
-            LOG.trace("Allowing access to enum: {}", target);
+            LOG.trace("Allowing access to enum: target class [{}] of target [{}], member [{}]", targetClass, target, member);
             return true;
         }
 
-        Class targetClass = target.getClass();
-        Class memberClass = member.getDeclaringClass();
-
         if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
-            LOG.debug("Support for accessing static methods [target: {}, member: {}, property: {}] is deprecated!", target, member, propertyName);
+            LOG.debug("Support for accessing static methods [target: {}, targetClass: {}, member: {}, property: {}] is deprecated!",
+                    target, targetClass, member, propertyName);
             if (!isClassExcluded(member.getDeclaringClass())) {
                 targetClass = member.getDeclaringClass();
             }
         }
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
-            LOG.warn("Package of target [{}] or package of member [{}] are excluded!", target, member);
+            LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!", targetClass.getPackage(), targetClass,
+                    target, memberClass.getPackage(), member);
             return false;
         }
 
         if (isClassExcluded(targetClass)) {
-            LOG.warn("Target class [{}] is excluded!", target);
+            LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
             return false;
         }
 
@@ -113,7 +115,7 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
-            LOG.warn("Access to proxy [{}] is blocked!", member);
+            LOG.warn("Access to proxy is blocked! Target class [{}] of target [{}], member [{}]", targetClass, target, member);
             return false;
         }
 

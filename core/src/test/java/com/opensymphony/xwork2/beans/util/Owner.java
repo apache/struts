@@ -16,46 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
-
-import java.util.List;
+package com.opensymphony.xwork2.beans.util;
 
 
 /**
- * @author <a href="mailto:plightbo@cisco.com">Pat Lightbody</a>
- * @author $Author$
+ * DOCUMENT ME!
+ *
+ * @author $author$
  * @version $Revision$
  */
-public class Cat {
+public class Owner {
 
-    public static final String SCIENTIFIC_NAME = "Feline";
-
-    Foo foo;
-    List kittens;
-    String name;
+    private Dog dog;
 
 
-    public void setFoo(Foo foo) {
-        this.foo = foo;
+    public void setDog(Dog dog) {
+        this.dog = dog;
     }
 
-    public Foo getFoo() {
-        return foo;
-    }
-
-    public void setKittens(List kittens) {
-        this.kittens = kittens;
-    }
-
-    public List getKittens() {
-        return kittens;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    public Dog getDog() {
+        return dog;
     }
 }

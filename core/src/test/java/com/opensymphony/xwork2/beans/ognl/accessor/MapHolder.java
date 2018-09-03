@@ -16,46 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.test;
+package com.opensymphony.xwork2.beans.ognl.accessor;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.beans.util.Bar;
-import com.opensymphony.xwork2.beans.util.Cat;
+import com.opensymphony.xwork2.util.Element;
 
+import java.util.Map;
 
-/**
- * Extend TestBean to test class hierarchy traversal.
- *
- * @author Mark Woon
- */
-public class TestBean2 extends TestBean implements DataAware {
+public class MapHolder {
+    private final Map map;
 
-    private Bar bar;
-    private String data;
-    private Cat cat;
-
-
-    public void setBarObj(Bar b) {
-        bar = b;
+    public MapHolder(Map m) {
+        this.map = m;
     }
 
-    public Bar getBarObj() {
-        return bar;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public Cat getCat() {
-        return cat;
-    }
-
-    public void setCat(Cat cat) {
-        this.cat = cat;
+    @Element(value = Object.class)
+    public Map getMap() {
+        return map;
     }
 }

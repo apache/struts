@@ -18,9 +18,9 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.util.AnnotatedCat;
-import com.opensymphony.xwork2.util.Bar;
-import com.opensymphony.xwork2.util.Cat;
+import com.opensymphony.xwork2.beans.util.AnnotatedCat;
+import com.opensymphony.xwork2.beans.util.Bar;
+import com.opensymphony.xwork2.beans.util.Cat;
 
 import java.lang.reflect.Member;
 import java.util.Map;

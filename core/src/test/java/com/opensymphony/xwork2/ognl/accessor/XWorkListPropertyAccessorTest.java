@@ -20,9 +20,8 @@ package com.opensymphony.xwork2.ognl.accessor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.util.ListHolder;
+import com.opensymphony.xwork2.beans.util.ListHolder;
 import com.opensymphony.xwork2.util.ValueStack;
-import ognl.ListPropertyAccessor;
 import ognl.PropertyAccessor;
 
 import java.util.ArrayList;

@@ -16,40 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.util;
 
-import java.util.Date;
-import java.util.List;
+import com.opensymphony.xwork2.ActionSupport;
 
-/**
- * User: patrick Date: Dec 20, 2005 Time: 11:15:29 AM
- */
-public class ListHolder {
-    List<Long> longs;
-    List<String> strings;
-    List<Date> dates;
+public class MyAction extends ActionSupport {
+    private Bar testBean2;
 
-    public List<Long> getLongs() {
-        return longs;
+    public Bar getBarObj() {
+        return testBean2;
     }
 
-    public void setLongs(List<Long> longs) {
-        this.longs = longs;
-    }
-
-    public List<String> getStrings() {
-        return strings;
-    }
-
-    public void setStrings(List<String> strings) {
-        this.strings = strings;
-    }
-
-    public List<Date> getDates() {
-        return dates;
-    }
-
-    public void setDates(List<Date> dates) {
-        this.dates = dates;
+    public void setBarObj(Bar testBean2) {
+        this.testBean2 = testBean2;
     }
 }

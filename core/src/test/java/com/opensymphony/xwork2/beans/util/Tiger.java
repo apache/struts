@@ -16,46 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.test;
+package com.opensymphony.xwork2.beans.util;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.beans.util.Bar;
-import com.opensymphony.xwork2.beans.util.Cat;
+import java.util.List;
 
 
 /**
- * Extend TestBean to test class hierarchy traversal.
+ * DOCUMENT ME!
  *
- * @author Mark Woon
+ * @author $author$
+ * @version $Revision$
  */
-public class TestBean2 extends TestBean implements DataAware {
+public class Tiger extends Cat {
 
-    private Bar bar;
-    private String data;
-    private Cat cat;
+    List dogs;
 
 
-    public void setBarObj(Bar b) {
-        bar = b;
+    public void setDogs(List dogs) {
+        this.dogs = dogs;
     }
 
-    public Bar getBarObj() {
-        return bar;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public Cat getCat() {
-        return cat;
-    }
-
-    public void setCat(Cat cat) {
-        this.cat = cat;
+    public List getDogs() {
+        return dogs;
     }
 }

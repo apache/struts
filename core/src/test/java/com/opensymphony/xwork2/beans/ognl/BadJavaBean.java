@@ -16,7 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.ognl;
 
-public class BarJunior extends Bar {
+public class BadJavaBean {
+    private int count;
+    private int count2;
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public String getCount() {
+        return "" + count;
+    }
+
+    public void setCount2(String count2) {
+        this.count2 = Integer.parseInt(count2);
+    }
+
+    public int getCount2() {
+        return count2;
+    }
 }

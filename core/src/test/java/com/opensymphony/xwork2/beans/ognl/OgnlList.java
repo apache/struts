@@ -16,46 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.test;
+package com.opensymphony.xwork2.beans.ognl;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.beans.util.Bar;
-import com.opensymphony.xwork2.beans.util.Cat;
+import com.opensymphony.xwork2.XWorkException;
 
+import java.util.ArrayList;
 
-/**
- * Extend TestBean to test class hierarchy traversal.
- *
- * @author Mark Woon
- */
-public class TestBean2 extends TestBean implements DataAware {
+public class OgnlList extends ArrayList {
+    private Class clazz;
 
-    private Bar bar;
-    private String data;
-    private Cat cat;
-
-
-    public void setBarObj(Bar b) {
-        bar = b;
+    public OgnlList(Class clazz) {
+        this.clazz = clazz;
     }
 
-    public Bar getBarObj() {
-        return bar;
-    }
+    @Override
+    public synchronized Object get(int index) {
+        while (index >= this.size()) {
+            try {
+                this.add(clazz.newInstance());
+            } catch (Exception e) {
+                throw new XWorkException(e);
+            }
+        }
 
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public Cat getCat() {
-        return cat;
-    }
-
-    public void setCat(Cat cat) {
-        this.cat = cat;
+        return super.get(index);
     }
 }

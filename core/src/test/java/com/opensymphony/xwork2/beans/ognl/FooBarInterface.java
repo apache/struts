@@ -16,27 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.ognl;
 
-import java.util.List;
+public interface FooBarInterface extends FooInterface, BarInterface {
 
-
-/**
- * DOCUMENT ME!
- *
- * @author $author$
- * @version $Revision$
- */
-public class Tiger extends Cat {
-
-    List dogs;
-
-
-    public void setDogs(List dogs) {
-        this.dogs = dogs;
-    }
-
-    public List getDogs() {
-        return dogs;
-    }
 }

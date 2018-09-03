@@ -21,7 +21,7 @@ package com.opensymphony.xwork2.conversion.impl;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.test.AnnotationUser;
 import com.opensymphony.xwork2.test.ModelDrivenAnnotationAction2;
-import com.opensymphony.xwork2.util.Bar;
+import com.opensymphony.xwork2.beans.util.Bar;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlException;

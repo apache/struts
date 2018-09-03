@@ -16,46 +16,49 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.test;
+package com.opensymphony.xwork2.beans.util;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.beans.util.Bar;
-import com.opensymphony.xwork2.beans.util.Cat;
+import com.opensymphony.xwork2.ActionSupport;
 
 
 /**
- * Extend TestBean to test class hierarchy traversal.
- *
- * @author Mark Woon
+ * @author <a href="mailto:plightbo@cisco.com">Pat Lightbody</a>
+ * @author $Author$
+ * @version $Revision$
  */
-public class TestBean2 extends TestBean implements DataAware {
+public class Bar extends ActionSupport {
 
-    private Bar bar;
-    private String data;
-    private Cat cat;
+    Long id;
+    String title;
+    int somethingElse;
 
 
-    public void setBarObj(Bar b) {
-        bar = b;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Bar getBarObj() {
-        return bar;
+    public Long getId() {
+        return this.id;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setSomethingElse(int somethingElse) {
+        this.somethingElse = somethingElse;
     }
 
-    public String getData() {
-        return data;
+    public int getSomethingElse() {
+        return somethingElse;
     }
 
-    public Cat getCat() {
-        return cat;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setCat(Cat cat) {
-        this.cat = cat;
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String toString() {
+        return getTitle() + ":" + getSomethingElse();
     }
 }

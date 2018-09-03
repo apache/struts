@@ -20,12 +20,11 @@ package com.opensymphony.xwork2.ognl.accessor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.util.Element;
+import com.opensymphony.xwork2.beans.ognl.accessor.MapHolder;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
 import java.util.Collections;
-import java.util.Map;
 
 public class XWorkMapPropertyAccessorTest extends XWorkTestCase {
     public void testCreateNullObjectsIsFalseByDefault() {
@@ -57,16 +56,4 @@ public class XWorkMapPropertyAccessorTest extends XWorkTestCase {
         assertNull(vs.findValue("map['key']"));
     }
 
-    private static class MapHolder {
-        private final Map map;
-
-        public MapHolder(Map m) {
-            this.map = m;
-        }
-
-        @Element(value = Object.class)
-        public Map getMap() {
-            return map;
-        }
-    }
 }

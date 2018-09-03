@@ -20,6 +20,9 @@ package com.opensymphony.xwork2.util;
 
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.beans.util.Bar;
+import com.opensymphony.xwork2.beans.util.MyAction;
+import com.opensymphony.xwork2.beans.util.MyObject;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.TestBean2;
@@ -50,14 +53,8 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 		String result = localizedTextProvider.findText(MyObject.class, "someObj.someI18nKey", Locale.ENGLISH, "default message", null, stack);
 		System.out.println(result);
 	}
-	
-	public static class MyObject extends ActionSupport {
-		public boolean getSomeObj() {
-			return true;
-		}
-	}
-	
-	public void testActionGetTextWithNullObject() throws Exception {
+
+    public void testActionGetTextWithNullObject() throws Exception {
 		MyAction action = new MyAction();
         container.inject(action);
 		
@@ -69,19 +66,8 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 		String message = action.getText("barObj.title");
 		assertEquals("Title:", message);
 	}
-	
-	
-	public static class MyAction extends ActionSupport {
-		private Bar testBean2;
-		
-		public Bar getBarObj() {
-			return testBean2;
-		}
-		public void setBarObj(Bar testBean2) {
-			this.testBean2 = testBean2;
-		}
-	}
-	
+
+
     public void testActionGetText() throws Exception {
         ModelDrivenAction2 action = new ModelDrivenAction2();
         container.inject(action);

@@ -16,46 +16,50 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.test;
+package com.opensymphony.xwork2.beans.ognl;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.beans.util.Bar;
-import com.opensymphony.xwork2.beans.util.Cat;
+public class FooBar implements FooBarInterface {
 
+    private String stringField;
 
-/**
- * Extend TestBean to test class hierarchy traversal.
- *
- * @author Mark Woon
- */
-public class TestBean2 extends TestBean implements DataAware {
+    private int intField;
 
-    private Bar bar;
-    private String data;
-    private Cat cat;
+    private Double doubleField;
 
-
-    public void setBarObj(Bar b) {
-        bar = b;
+    public String getStringField() {
+        return stringField;
     }
 
-    public Bar getBarObj() {
-        return bar;
+    public void setStringField(String stringField) {
+        this.stringField = stringField;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public String fooLogic() {
+        return "fooLogic";
     }
 
-    public String getData() {
-        return data;
+    public String barLogic() {
+        return "barLogic";
     }
 
-    public Cat getCat() {
-        return cat;
+    @Override
+    public int hashCode() {
+        return 1;
     }
 
-    public void setCat(Cat cat) {
-        this.cat = cat;
+    public int getIntField() {
+        return intField;
+    }
+
+    public void setIntField(int intField) {
+        this.intField = intField;
+    }
+
+    public Double getDoubleField() {
+        return doubleField;
+    }
+
+    public void setDoubleField(Double doubleField) {
+        this.doubleField = doubleField;
     }
 }

@@ -21,11 +21,12 @@ package com.opensymphony.xwork2.util;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.beans.util.MyBean;
+import com.opensymphony.xwork2.beans.util.MyBeanAction;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <code>MyBeanActionTest</code>

@@ -22,10 +22,10 @@ import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.User;
-import com.opensymphony.xwork2.util.Bar;
-import com.opensymphony.xwork2.util.Cat;
-import com.opensymphony.xwork2.util.Foo;
-import com.opensymphony.xwork2.util.FurColor;
+import com.opensymphony.xwork2.beans.util.Bar;
+import com.opensymphony.xwork2.beans.util.Cat;
+import com.opensymphony.xwork2.beans.util.Foo;
+import com.opensymphony.xwork2.beans.util.FurColor;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
@@ -621,7 +621,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         Class clazz = (Class) converter.convertValue(context, "java.util.Date", Class.class);
         assertEquals(Date.class.getName(), clazz.getName());
 
-        Class clazz2 = (Class) converter.convertValue(context, "com.opensymphony.xwork2.util.Bar", Class.class);
+        Class clazz2 = (Class) converter.convertValue(context, "com.opensymphony.xwork2.beans.util.Bar", Class.class);
         assertEquals(Bar.class.getName(), clazz2.getName());
 
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, "com.opensymphony.xwork2.util.IDoNotExist", Class.class));

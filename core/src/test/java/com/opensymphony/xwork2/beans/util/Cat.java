@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.util;
 
-import com.opensymphony.xwork2.ActionSupport;
+import java.util.List;
 
 
 /**
@@ -26,39 +26,36 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author $Author$
  * @version $Revision$
  */
-public class Bar extends ActionSupport {
+public class Cat {
 
-    Long id;
-    String title;
-    int somethingElse;
+    public static final String SCIENTIFIC_NAME = "Feline";
+
+    Foo foo;
+    List kittens;
+    String name;
 
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setFoo(Foo foo) {
+        this.foo = foo;
     }
 
-    public Long getId() {
-        return this.id;
+    public Foo getFoo() {
+        return foo;
     }
 
-    public void setSomethingElse(int somethingElse) {
-        this.somethingElse = somethingElse;
+    public void setKittens(List kittens) {
+        this.kittens = kittens;
     }
 
-    public int getSomethingElse() {
-        return somethingElse;
+    public List getKittens() {
+        return kittens;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public String toString() {
-        return getTitle() + ":" + getSomethingElse();
+    public String getName() {
+        return name;
     }
 }

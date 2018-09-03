@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.beans.util.Foo;
 
 import java.util.ArrayList;
 import java.util.Collection;

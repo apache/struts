@@ -18,6 +18,10 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.beans.ognl.BarInterface;
+import com.opensymphony.xwork2.beans.ognl.FooBar;
+import com.opensymphony.xwork2.beans.ognl.FooBarInterface;
+import com.opensymphony.xwork2.beans.ognl.MyValues;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import junit.framework.TestCase;
 
@@ -433,72 +437,6 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("package java.lang. is accessible!", actual);
     }
 
-}
-
-class FooBar implements FooBarInterface {
-
-    private String stringField;
-
-    private int intField;
-
-    private Double doubleField;
-
-    public String getStringField() {
-        return stringField;
-    }
-
-    public void setStringField(String stringField) {
-        this.stringField = stringField;
-    }
-
-    public String fooLogic() {
-        return "fooLogic";
-    }
-
-    public String barLogic() {
-        return "barLogic";
-    }
-
-    @Override
-    public int hashCode() {
-        return 1;
-    }
-
-    public int getIntField() {
-        return intField;
-    }
-
-    public void setIntField(int intField) {
-        this.intField = intField;
-    }
-
-    public Double getDoubleField() {
-        return doubleField;
-    }
-
-    public void setDoubleField(Double doubleField) {
-        this.doubleField = doubleField;
-    }
-}
-
-interface FooInterface {
-
-    String fooLogic();
-
-}
-
-interface BarInterface {
-
-    String barLogic();
-
-}
-
-interface FooBarInterface extends FooInterface, BarInterface {
-
-}
-
-enum MyValues {
-    ONE, TWO, THREE
 }
 
 class StaticTester {

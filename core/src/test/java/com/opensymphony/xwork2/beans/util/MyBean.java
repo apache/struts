@@ -16,46 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.test;
+package com.opensymphony.xwork2.beans.util;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.beans.util.Bar;
-import com.opensymphony.xwork2.beans.util.Cat;
-
+import java.io.Serializable;
 
 /**
- * Extend TestBean to test class hierarchy traversal.
+ * <code>MyBean</code>
  *
- * @author Mark Woon
+ * @author Rainer Hermanns
  */
-public class TestBean2 extends TestBean implements DataAware {
+public class MyBean implements Serializable {
 
-    private Bar bar;
-    private String data;
-    private Cat cat;
+    private Long id;
+    private String name;
 
-
-    public void setBarObj(Bar b) {
-        bar = b;
+    public Long getId() {
+        return id;
     }
 
-    public Bar getBarObj() {
-        return bar;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public String getName() {
+        return name;
     }
 
-    public String getData() {
-        return data;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Cat getCat() {
-        return cat;
-    }
 
-    public void setCat(Cat cat) {
-        this.cat = cat;
+    @Override
+    public String toString() {
+        return "MyBean{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

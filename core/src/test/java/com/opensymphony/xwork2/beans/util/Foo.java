@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.util;
+package com.opensymphony.xwork2.beans.util;
 
 import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
-import com.opensymphony.xwork2.conversion.annotations.ConversionType;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 
 import java.util.*;
@@ -174,7 +173,7 @@ public class Foo {
         this.annotatedBarCollection = annotatedBarCollection;
     }
 
-    @TypeConversion(rule = ConversionRule.ELEMENT, converter = "com.opensymphony.xwork2.util.Bar")
+    @TypeConversion(rule = ConversionRule.ELEMENT, converter = "com.opensymphony.xwork2.beans.util.Bar")
     public Collection getAnnotatedBarCollection() {
         return annotatedBarCollection;
     }

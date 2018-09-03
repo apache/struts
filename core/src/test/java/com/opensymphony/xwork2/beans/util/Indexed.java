@@ -16,46 +16,44 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.test;
+package com.opensymphony.xwork2.beans.util;
 
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.beans.util.Bar;
-import com.opensymphony.xwork2.beans.util.Cat;
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Extend TestBean to test class hierarchy traversal.
+ * @author mimo
  *
- * @author Mark Woon
  */
-public class TestBean2 extends TestBean implements DataAware {
+public class Indexed {
 
-    private Bar bar;
-    private String data;
-    private Cat cat;
+    public Object[] values = new Object[3];
+    public Map<String, Object> map = new HashMap<>();
 
-
-    public void setBarObj(Bar b) {
-        bar = b;
+    public void setSimple(int i, Object v) {
+        values[i] = v;
     }
 
-    public Bar getBarObj() {
-        return bar;
+    public Object getSimple(int i) {
+        return values[i];
     }
 
-    public void setData(String data) {
-        this.data = data;
+
+
+    public void setIntegerMap(String key, Integer value) {
+        map.put(key, value);
     }
 
-    public String getData() {
-        return data;
+    public Integer getIntegerMap(String key) {
+        return (Integer) map.get(key);
     }
 
-    public Cat getCat() {
-        return cat;
+    public void setStringMap(String key, String value) {
+        map.put(key, value);
     }
 
-    public void setCat(Cat cat) {
-        this.cat = cat;
+    public String getStringMap(String key) {
+        return (String) map.get(key);
     }
+
 }

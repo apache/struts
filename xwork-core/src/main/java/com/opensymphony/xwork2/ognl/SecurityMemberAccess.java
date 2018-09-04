@@ -55,19 +55,24 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
-        if (checkEnumAccess(target, member)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Allowing access to enum #0", target);
-            }
-            return true;
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Checking access for [target: #0, member: #1, property: #2]", target, member, propertyName);
         }
 
         Class targetClass = target.getClass();
         Class memberClass = member.getDeclaringClass();
 
+        if (checkEnumAccess(target, member)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Allowing access to enum: target class [#0] of target [#1], member [#2]", targetClass, target, member);
+            }
+            return true;
+        }
+
         if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Support for accessing static methods [target: #0, member: #1, property: #2] is deprecated!", target, member, propertyName);
+                LOG.debug("Support for accessing static methods [target: #0, targetClass: #1, member: #2, property: #3] is deprecated!",
+                        target, targetClass, member, propertyName);
             }
             if (!isClassExcluded(member.getDeclaringClass())) {
                 targetClass = member.getDeclaringClass();
@@ -76,14 +81,15 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Package of target [#0] or package of member [#1] are excluded!", target, member);
+                LOG.warn("Package [#0] of target class [#1] of target [#2] or package [#3] of member [#4] are excluded!", targetClass.getPackage(),
+                        targetClass, target, memberClass.getPackage(), member);
             }
             return false;
         }
 
         if (isClassExcluded(targetClass)) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Target class [#0] is excluded!", target);
+                LOG.warn("Target class [#0] of target [#1] is excluded!", targetClass, target);
             }
             return false;
         }
@@ -96,7 +102,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         }
 
         if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
-            LOG.warn("Access to proxy [#0] is blocked!", member);
+            LOG.warn("Access to proxy is blocked! Target class [#0] of target [#1], member [#2]", targetClass, target, member);
             return false;
         }
 

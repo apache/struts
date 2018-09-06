@@ -44,7 +44,7 @@ import java.util.jar.JarFile;
  * While {@link JarURLConnection#parseSpecs(URL)} is private, then we had to extend {@link URLConnection} instead
  * @since 2.5.15
  */
-class StrutsJarURLConnection extends URLConnection {
+class StrutsJarURLConnection extends URLConnection implements AutoCloseable {
     private static final String FILE_URL_PREFIX = "file:";
 
     private JarURLConnection jarURLConnection;
@@ -123,8 +123,8 @@ class StrutsJarURLConnection extends URLConnection {
                             Path tmpFile = Files.createTempFile("jar_cache", null);
                             try {
                                 Files.copy(in, tmpFile, StandardCopyOption.REPLACE_EXISTING);
-                                JarFile jarFile = new JarFile(tmpFile.toFile(), true, JarFile.OPEN_READ);
-                                tmpFile.toFile().deleteOnExit();
+                                JarFile jarFile = new JarFile(tmpFile.toFile(), true, JarFile.OPEN_READ
+                                        | JarFile.OPEN_DELETE);
                                 return jarFile;
                             } catch (Throwable thr) {
                                 try {
@@ -168,6 +168,20 @@ class StrutsJarURLConnection extends URLConnection {
             return jarURLConnection.getInputStream();
         } else {
             return jarFile.getInputStream(jarFile.getJarEntry(entryName));
+        }
+    }
+
+    @Override
+    public void close() throws Exception {
+        try {
+            getInputStream().close();
+        } catch (IOException ignored) {
+        }
+        if (jarURLConnection == null) {
+            try {
+                jarFile.close();
+            } catch (IOException ignored) {
+            }
         }
     }
 

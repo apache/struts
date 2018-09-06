@@ -37,9 +37,7 @@ public class JarEntryRevision extends Revision {
     private long lastModified;
 
     public static Revision build(URL fileUrl, FileManager fileManager) {
-        StrutsJarURLConnection conn = null;
-        try {
-            conn = StrutsJarURLConnection.openConnection(fileUrl);
+        try (StrutsJarURLConnection conn = StrutsJarURLConnection.openConnection(fileUrl)) {
             conn.setUseCaches(false);
             URL url = fileManager.normalizeToFileProtocol(fileUrl);
             if (url != null) {
@@ -50,14 +48,6 @@ public class JarEntryRevision extends Revision {
         } catch (Throwable e) {
             LOG.warn("Could not create JarEntryRevision for [{}]!", fileUrl, e);
             return null;
-        }
-        finally {
-            if(null != conn) {
-                try {
-                    conn.getInputStream().close();
-                } catch (IOException ignored) {
-                }
-            }
         }
     }
 
@@ -70,21 +60,12 @@ public class JarEntryRevision extends Revision {
     }
 
     public boolean needsReloading() {
-        StrutsJarURLConnection conn = null;
         long lastLastModified = lastModified;
-        try {
-            conn = StrutsJarURLConnection.openConnection(jarFileURL);
+        try (StrutsJarURLConnection conn = StrutsJarURLConnection.openConnection(jarFileURL)) {
             conn.setUseCaches(false);
             lastLastModified = conn.getJarEntry().getTime();
-        } catch (IOException ignored) {
-        }
-        finally {
-            if(null != conn) {
-                try {
-                    conn.getInputStream().close();
-                } catch (IOException ignored) {
-                }
-            }
+        } catch (Throwable e) {
+            LOG.warn("Could not check if needsReloading for [{}]!", jarFileURL, e);
         }
 
         return lastModified < lastLastModified;

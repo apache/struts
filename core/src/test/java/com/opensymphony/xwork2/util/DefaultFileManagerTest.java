@@ -21,16 +21,9 @@ package com.opensymphony.xwork2.util;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.util.fs.DefaultFileManager;
-import org.apache.struts2.util.fs.JBossFileManager;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
-import java.net.URLStreamHandlerFactory;
+import java.net.*;
 
 /**
  * FileManager Tester.
@@ -49,23 +42,40 @@ public class DefaultFileManagerTest extends XWorkTestCase {
         fileManager = container.getInstance(FileManagerFactory.class).getFileManager();
     }
 
-    public void disabled_testGetFileInJar() throws Exception {
-        testLoadFile("xwork-jar.xml");
-        testLoadFile("xwork - jar.xml");
-        testLoadFile("xwork-zip.xml");
-        testLoadFile("xwork - zip.xml");
-        testLoadFile("xwork-jar2.xml");
-        testLoadFile("xwork - jar2.xml");
-        testLoadFile("xwork-zip2.xml");
-        testLoadFile("xwork - zip2.xml");
+    public void testGetFileInJar() throws Exception {
+        testLoadFile("xwork-jar.xml", false);
+        testLoadFile("xwork - jar.xml", false);
+        testLoadFile("xwork-zip.xml", false);
+        testLoadFile("xwork - zip.xml", false);
+        testLoadFile("xwork-jar2.xml", false);
+        testLoadFile("xwork - jar2.xml", false);
+        testLoadFile("xwork-zip2.xml", false);
+        testLoadFile("xwork - zip2.xml", false);
+
+        testLoadFile("xwork-jar.xml", true);
+        testLoadFile("xwork - jar.xml", true);
+        testLoadFile("xwork-zip.xml", true);
+        testLoadFile("xwork - zip.xml", true);
+        testLoadFile("xwork-jar2.xml", true);
+        testLoadFile("xwork - jar2.xml", true);
+        testLoadFile("xwork-zip2.xml", true);
+        testLoadFile("xwork - zip2.xml", true);
     }
 
-    private void testLoadFile(String fileName) {
-        fileManager.setReloadingConfigs(true);
+    private void testLoadFile(String fileName, boolean reloadConfigs) throws Exception {
+        fileManager.setReloadingConfigs(reloadConfigs);
         URL url = ClassLoaderUtil.getResource(fileName, DefaultFileManagerTest.class);
         InputStream file = fileManager.loadFile(url);
         assertNotNull(file);
-        assertTrue(fileManager.fileNeedsReloading(fileName));
+        file.close();
+        assertFalse(fileManager.fileNeedsReloading(url.toString()));
+
+        long now = System.currentTimeMillis();
+        JarURLConnection conn = (JarURLConnection) url.openConnection();
+        conn.getJarEntry().setTime(now + 60000);
+        conn.getInputStream().close();
+
+        assertEquals(reloadConfigs, fileManager.fileNeedsReloading(url.toString()));
     }
 
     public void testReloadingConfigs() throws Exception {

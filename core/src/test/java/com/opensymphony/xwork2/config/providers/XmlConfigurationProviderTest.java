@@ -78,18 +78,38 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     }
 
     public void testNeedsReload() throws Exception {
-        container.getInstance(FileManagerFactory.class).setReloadingConfigs("true");
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-actions.xml";
-        ConfigurationProvider provider = buildConfigurationProvider(filename);
-        container.getInstance(FileManagerFactory.class).setReloadingConfigs("true");
+        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
+        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
+        container.inject(provider);
+        provider.init(configuration);
+        provider.loadPackages();
 
-        assertTrue(!provider.needsReload()); // Revision exists and timestamp didn't change
+        assertFalse(provider.needsReload()); // Revision exists and timestamp didn't change
 
         File file = new File(getClass().getResource("/" + filename).toURI());
         assertTrue("not exists: " + file.toString(), file.exists());
         changeFileTime(file);
 
         assertTrue(provider.needsReload());
+    }
+
+    public void testNeedsReloadNotReloadingConfigs() throws Exception {
+        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-actions.xml";
+        buildConfigurationProvider(filename);
+        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
+        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(false);
+        container.inject(provider);
+        provider.init(configuration);
+        provider.loadPackages();
+
+        assertFalse(provider.needsReload()); // Revision exists and timestamp didn't change
+
+        File file = new File(getClass().getResource("/" + filename).toURI());
+        assertTrue("not exists: " + file.toString(), file.exists());
+        changeFileTime(file);
+
+        assertFalse(provider.needsReload());
     }
 
     public void testInheritence() throws Exception {
@@ -155,10 +175,13 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
     public void testEmptySpaces() throws Exception {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork- test.xml";
+        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
         container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
+        container.inject(provider);
+        provider.init(configuration);
+        provider.loadPackages();
 
-        ConfigurationProvider provider = buildConfigurationProvider(filename);
-        assertTrue(!provider.needsReload());
+        assertFalse(provider.needsReload());
 
         URI uri = ClassLoaderUtil.getResource(filename, ConfigurationProvider.class).toURI();
 
@@ -168,6 +191,27 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         changeFileTime(file);
 
         assertTrue(provider.needsReload());
+    }
+
+    public void testEmptySpacesNotReloadingConfigs() throws Exception {
+        final String filename = "com/opensymphony/xwork2/config/providers/xwork- test.xml";
+        buildConfigurationProvider(filename);
+        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
+        container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(false);
+        container.inject(provider);
+        provider.init(configuration);
+        provider.loadPackages();
+
+        assertFalse(provider.needsReload());
+
+        URI uri = ClassLoaderUtil.getResource(filename, ConfigurationProvider.class).toURI();
+
+        File file = new File(uri);
+
+        assertTrue(file.exists());
+        changeFileTime(file);
+
+        assertFalse(provider.needsReload());
     }
 
     public void testConfigsInJarFiles() throws Exception {

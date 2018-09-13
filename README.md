@@ -76,7 +76,7 @@ to difficult problems.
 
 ## Why should you use Apache Struts?
 
-Apache Struts is a modern, maintained and full-featured web framework. It has been there for years and given the huge user 
+Apache Struts is a modern, maintained and full-featured web framework. As it has been around for years and grown a huge user 
 base it is unlikely it will go away anytime soon. Not only that, we have dedicated users and developers 
 on the project. Apache Struts is licensed under the Apache License 2.0 and this will not change. We maintain a clean IP 
 and you are “safe” to use the project. Sometimes you are not “safe” to use a project when a company controls the SCM. 

@@ -21,7 +21,9 @@ package com.opensymphony.xwork2.util.fs;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +32,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -111,6 +115,20 @@ public class JarEntryRevisionTest extends XWorkTestCase {
 
         createJarFile(now + 60000);
         assertTrue(entry.needsReloading());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        Path tmpFile = Files.createTempFile("jar_cache", null);
+        Path tmpFolder = tmpFile.getParent();
+        int count = FileUtils.listFiles(tmpFolder.toFile(), new WildcardFileFilter("jar_cache*"),
+                null).size();
+        if (tmpFile.toFile().delete()) {
+            count--;
+        }
+        assertEquals(0, count);
+
+        super.tearDown();
     }
 
 

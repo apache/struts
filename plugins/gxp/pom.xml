@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.5.18-SNAPSHOT</version>
+        <version>2.5.18</version>
     </parent>
 
     <artifactId>struts2-gxp-plugin</artifactId>

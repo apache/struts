@@ -29,7 +29,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-parent</artifactId>
-    <version>2.5.18-SNAPSHOT</version>
+    <version>2.5.18</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/</url>
@@ -51,7 +51,7 @@
         <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
         <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
         <url>https://github.com/apache/struts/</url>
-        <tag>STRUTS_2_5_16</tag>
+        <tag>STRUTS_2_5_18</tag>
     </scm>
 
     <issueManagement>
@@ -280,10 +280,10 @@
                         <useDefaultExcludes>true</useDefaultExcludes>
                         <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
                         <licenses>
-                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20"/>
+                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20" />
                         </licenses>
                         <licenseFamilies>
-                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily"/>
+                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily" />
                         </licenseFamilies>
                         <includes>
                             <include>pom.xml</include>

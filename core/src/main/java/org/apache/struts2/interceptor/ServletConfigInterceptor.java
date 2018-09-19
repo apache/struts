@@ -138,6 +138,11 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
             ((ServletResponseAware) action).setServletResponse(response);
         }
 
+        if (action instanceof org.apache.struts2.action.ServletResponseAware) {
+            HttpServletResponse response = (HttpServletResponse) context.get(HTTP_RESPONSE);
+            ((org.apache.struts2.action.ServletResponseAware) action).withServletResponse(response);
+        }
+
         if (action instanceof ParameterAware) {
             context.getParameters().applyParameters((ParameterAware) action);
         }

@@ -64,6 +64,22 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         verify(mock);
     }
 
+    public void testActionServletRequestAware() throws Exception {
+        org.apache.struts2.action.ServletRequestAware mock = createMock(org.apache.struts2.action.ServletRequestAware.class);
+
+        MockHttpServletRequest req = new MockHttpServletRequest();
+
+        MockActionInvocation mai = createActionInvocation(mock);
+        mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
+
+        mock.withServletRequest(req);
+        expectLastCall();
+
+        replay(mock);
+        interceptor.intercept(mai);
+        verify(mock);
+    }
+
     public void testServletResponseAware() throws Exception {
         ServletResponseAware mock = (ServletResponseAware) createMock(ServletResponseAware.class);
 

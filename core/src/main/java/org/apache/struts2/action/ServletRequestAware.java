@@ -16,34 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.interceptor;
+package org.apache.struts2.action;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * <p>
  * All Actions that want to have access to the servlet request object must implement this interface.
- * </p>
  *
- * <p>
  * This interface is only relevant if the Action is used in a servlet environment.
- * </p>
  *
- * <p>
  * Note that using this interface makes the Action tied to a servlet environment, so it should be
  * avoided if possible since things like unit testing will become more difficult.
- * </p>
- * @deprecated please use {@link org.apache.struts2.action.ServletRequestAware} instead
  */
-@Deprecated
 public interface ServletRequestAware {
 
     /**
-     * Sets the HTTP request object in implementing classes.
+     * Applies the HTTP request object in implementing classes.
      *
      * @param request the HTTP request.
-     * @deprecated please use {@link org.apache.struts2.action.ServletRequestAware#withServletRequest(HttpServletRequest)}
      */
-    @Deprecated
-    public void setServletRequest(HttpServletRequest request);
+    void withServletRequest(HttpServletRequest request);
 }

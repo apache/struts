@@ -149,6 +149,10 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
             ((SessionAware) action).setSession(context.getSession());
         }
         
+        if (action instanceof org.apache.struts2.action.SessionAware) {
+            ((org.apache.struts2.action.SessionAware) action).withSession(context.getSession());
+        }
+
         if (action instanceof RequestAware) {
             ((RequestAware) action).setRequest((Map) context.get("request"));
         }

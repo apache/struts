@@ -128,6 +128,22 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         verify(mock);
     }
 
+    public void testActionSessionAware() throws Exception {
+        org.apache.struts2.action.SessionAware mock = createMock(org.apache.struts2.action.SessionAware.class);
+
+        MockActionInvocation mai = createActionInvocation(mock);
+
+        Map<String, Object> session = new HashMap<String, Object>();
+        mai.getInvocationContext().setSession(session);
+
+        mock.withSession(session);
+        expectLastCall().times(1);
+
+        replay(mock);
+        interceptor.intercept(mai);
+        verify(mock);
+    }
+
     public void testApplicationAware() throws Exception {
         ApplicationAware mock = (ApplicationAware) createMock(ApplicationAware.class);
 

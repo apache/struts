@@ -16,30 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.interceptor;
+package org.apache.struts2.action;
 
 import java.util.Map;
 
 /**
- * <p>
  * Actions that want to be aware of the application Map object should implement this interface.
  * This will give them access to a Map where they can put objects that should be available
  * to other parts of the application.
- * </p>
- * <p>
+ *
  * Typical uses are configuration objects and caches.
- * </p>
- * @deprecated please use {@link org.apache.struts2.action.ApplicationAware} instead
  */
-@Deprecated
 public interface ApplicationAware {
 
     /**
-     * Sets the map of application properties in the implementing class.
+     * Applies the map of application properties in the implementing class.
      *
      * @param application a Map of application properties.
-     * @deprecated please use {@link org.apache.struts2.action.ApplicationAware#withApplication(Map)} instead
      */
-    @Deprecated
-    public void setApplication(Map<String,Object> application);
+    void withApplication(Map<String, Object> application);
 }

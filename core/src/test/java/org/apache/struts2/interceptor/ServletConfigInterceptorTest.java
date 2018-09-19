@@ -18,31 +18,32 @@
  */
 package org.apache.struts2.interceptor;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.interceptor.servlet.ServletPrincipalProxy;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.servlet.ServletPrincipalProxy;
 import org.apache.struts2.util.ServletContextAware;
-
-import static org.easymock.EasyMock.*;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 /**
  * Unit test for {@link ServletConfigInterceptor}.
- *
  */
 public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
@@ -192,6 +193,22 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         verify(mock);
     }
 
+    public void testActionApplicationAware() throws Exception {
+        org.apache.struts2.action.ApplicationAware mock = createMock(org.apache.struts2.action.ApplicationAware.class);
+
+        MockActionInvocation mai = createActionInvocation(mock);
+
+        Map<String, Object> app = new HashMap<>();
+        mai.getInvocationContext().setApplication(app);
+
+        mock.withApplication(app);
+        expectLastCall().times(1);
+
+        replay(mock);
+        interceptor.intercept(mai);
+        verify(mock);
+    }
+
     public void testPrincipalAware() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setUserPrincipal(null);
@@ -200,7 +217,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
         MockActionInvocation mai = createActionInvocation(mock);
         mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
-        
+
         MockServletContext ctx = new MockServletContext();
         mai.getInvocationContext().put(StrutsStatics.SERVLET_CONTEXT, ctx);
 
@@ -228,8 +245,8 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
         PrincipalProxy proxy = action.getProxy();
         assertNull(proxy.getUserPrincipal());
-        assertTrue(! proxy.isRequestSecure());
-        assertTrue(! proxy.isUserInRole("no.role"));
+        assertTrue(!proxy.isRequestSecure());
+        assertTrue(!proxy.isUserInRole("no.role"));
         assertEquals("Santa", proxy.getRemoteUser());
 
     }

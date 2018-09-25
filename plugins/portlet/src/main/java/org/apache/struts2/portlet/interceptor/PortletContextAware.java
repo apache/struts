@@ -20,8 +20,15 @@ package org.apache.struts2.portlet.interceptor;
 
 import javax.portlet.PortletContext;
 
+/**
+ * @deprecated please use {@link org.apache.struts2.portlet.action.PortletContextAware} instead
+ */
+@Deprecated
 public interface PortletContextAware {
 
-	void setPortletContext(PortletContext portletContext);
+    /**
+     * @deprecated please use {@link org.apache.struts2.portlet.action.PortletContextAware#withPortletContext(PortletContext)} instead
+     */
+    void setPortletContext(PortletContext portletContext);
 
 }

@@ -25,13 +25,18 @@ import javax.portlet.PortletPreferences;
  * All Actions that want to have access to the portlet preferences should
  * implement this interface.  If running in a servlet environment, an
  * appropriate testing implementation will be provided.
+ *
+ * @deprecated please use {@link org.apache.struts2.portlet.action.PortletPreferencesAware} instead
  */
+@Deprecated
 public interface PortletPreferencesAware {
 
     /**
      * Sets the HTTP request object in implementing classes.
      *
      * @param prefs the portlet preferences.
+     * @deprecated please use {@link org.apache.struts2.portlet.action.PortletPreferencesAware#withPortletPreferences(PortletPreferences)} instead
      */
-    public void setPortletPreferences(PortletPreferences prefs);
+    @Deprecated
+    void setPortletPreferences(PortletPreferences prefs);
 }

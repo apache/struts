@@ -150,8 +150,8 @@ public class PrefixMethodInvocationUtil {
 	public static Method getPrefixedMethod(String[] prefixes, String methodName, Object action) {
 		assert(prefixes != null);
 		String capitalizedMethodName = capitalizeMethodName(methodName);
-        for (String prefixe : prefixes) {
-            String prefixedMethodName = prefixe + capitalizedMethodName;
+        for (String prefix : prefixes) {
+            String prefixedMethodName = prefix + capitalizedMethodName;
             try {
                 return action.getClass().getMethod(prefixedMethodName, EMPTY_CLASS_ARRAY);
             }

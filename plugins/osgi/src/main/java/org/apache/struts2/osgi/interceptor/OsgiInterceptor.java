@@ -51,6 +51,10 @@ public class OsgiInterceptor extends AbstractInterceptor {
             if (action instanceof BundleContextAware)
                 ((BundleContextAware)action).setBundleContext(bundleContext);
 
+            if (action instanceof org.apache.struts2.osgi.action.BundleContextAware) {
+                ((org.apache.struts2.osgi.action.BundleContextAware) action).withBundleContext(bundleContext);
+            }
+
             //inject service implementations
             if (action instanceof ServiceAware) {
                 Type[] types = action.getClass().getGenericInterfaces();

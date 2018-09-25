@@ -16,7 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.interceptor;
+package org.apache.struts2.action;
+
+import org.apache.struts2.interceptor.CookieInterceptor;
 
 import java.util.Map;
 
@@ -27,14 +29,12 @@ import java.util.Map;
  * Please note that the {@link CookieInterceptor} needs to be
  * activated to receive a cookies map.
  *
- * @deprecated please use {@link org.apache.struts2.action.CookiesAware} instead
+ * @since 2.6
  */
-@Deprecated
 public interface CookiesAware {
     /**
      * Sets a map of filtered cookies.
      * @param cookies the cookies
-     * @deprecated please use {@link org.apache.struts2.action.CookiesAware#withCookies(Map)} instead
      */
-    void setCookiesMap(Map<String, String> cookies);
+    void withCookies(Map<String, String> cookies);
 }

@@ -53,6 +53,11 @@ public class PortletAwareInterceptor extends AbstractInterceptor implements Stru
             ((PortletRequestAware) action).setPortletRequest(request);
         }
 
+        if (action instanceof org.apache.struts2.portlet.action.PortletRequestAware) {
+            PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
+            ((org.apache.struts2.portlet.action.PortletRequestAware) action).withPortletRequest(request);
+        }
+
         if (action instanceof PortletResponseAware) {
             PortletResponse response = (PortletResponse) context.get(PortletConstants.RESPONSE);
             ((PortletResponseAware) action).setPortletResponse(response);

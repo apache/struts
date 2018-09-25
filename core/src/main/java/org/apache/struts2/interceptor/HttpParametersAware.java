@@ -31,13 +31,19 @@ import org.apache.struts2.dispatcher.HttpParameters;
  * One common use for this is to have the action propagate parameters to internally instantiated data
  * objects.
  * </p>
+ *
+ * @deprecated please use {@link org.apache.struts2.action.ParametersAware} instead
  */
+@Deprecated
 public interface HttpParametersAware {
 
     /**
      * Sets the HTTP parameters in the implementing class.
      *
      * @param parameters an instance of {@link HttpParameters}.
+     *
+     * @deprecated please use {@link org.apache.struts2.action.ParametersAware#withParameters(HttpParameters)} instead
      */
+    @Deprecated
     void setParameters(HttpParameters parameters);
 }

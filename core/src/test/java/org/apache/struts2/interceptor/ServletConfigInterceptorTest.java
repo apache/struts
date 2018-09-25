@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.action.ParametersAware;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.interceptor.servlet.ServletPrincipalProxy;
 import org.apache.struts2.util.ServletContextAware;
@@ -138,6 +139,22 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         mai.getInvocationContext().setParameters(param);
 
         mock.setParameters(param);
+        expectLastCall().times(1);
+
+        replay(mock);
+        interceptor.intercept(mai);
+        verify(mock);
+    }
+
+    public void testActionParametersAware() throws Exception {
+        ParametersAware mock = createMock(ParametersAware.class);
+
+        MockActionInvocation mai = createActionInvocation(mock);
+
+        HttpParameters params = HttpParameters.create().build();
+        mai.getInvocationContext().setParameters(params);
+
+        mock.withParameters(params);
         expectLastCall().times(1);
 
         replay(mock);

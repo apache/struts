@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.action.ParametersAware;
 import org.apache.struts2.interceptor.servlet.ServletPrincipalProxy;
 import org.apache.struts2.util.ServletContextAware;
 
@@ -103,7 +104,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  * @see ServletRequestAware
  * @see ServletResponseAware
  * @see ParameterAware
- * @see HttpParametersAware
+ * @see ParametersAware
  * @see SessionAware
  * @see ApplicationAware
  * @see PrincipalAware
@@ -149,6 +150,10 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
 
         if (action instanceof HttpParametersAware) {
             ((HttpParametersAware) action).setParameters(context.getParameters());
+        }
+
+        if (action instanceof ParametersAware) {
+            ((ParametersAware) action).withParameters(context.getParameters());
         }
 
         if (action instanceof ApplicationAware) {

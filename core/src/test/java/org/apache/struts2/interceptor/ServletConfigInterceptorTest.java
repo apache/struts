@@ -229,6 +229,26 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         verify(mock);
     }
 
+    public void testActionPrincipalAware() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setUserPrincipal(null);
+        req.setRemoteUser("Santa");
+        org.apache.struts2.action.PrincipalAware mock = createMock(org.apache.struts2.action.PrincipalAware.class);
+
+        MockActionInvocation mai = createActionInvocation(mock);
+        mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
+
+        MockServletContext ctx = new MockServletContext();
+        mai.getInvocationContext().put(StrutsStatics.SERVLET_CONTEXT, ctx);
+
+        mock.withPrincipalProxy(anyObject(ServletPrincipalProxy.class)); // less strict match is needed for this unit test to be conducted using mocks
+        expectLastCall().times(1);
+
+        replay(mock);
+        interceptor.intercept(mai);
+        verify(mock);
+    }
+
     public void testPrincipalProxy() throws Exception {
         // uni test that does not use mock, but an Action so we also get code coverage for the PrincipalProxy class
         MockHttpServletRequest req = new MockHttpServletRequest();
@@ -247,6 +267,28 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         assertNull(proxy.getUserPrincipal());
         assertTrue(!proxy.isRequestSecure());
         assertTrue(!proxy.isUserInRole("no.role"));
+        assertEquals("Santa", proxy.getRemoteUser());
+
+    }
+
+    public void testActionPrincipalProxy() throws Exception {
+        // unit test that does not use mock, but an Action so we also get code coverage for the PrincipalProxy class
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setUserPrincipal(null);
+        req.setRemoteUser("Santa");
+
+        MyNewPrincipalAction action = new MyNewPrincipalAction();
+        MockActionInvocation mai = createActionInvocation(action);
+        mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
+
+        assertNull(action.getProxy());
+        interceptor.intercept(mai);
+        assertNotNull(action.getProxy());
+
+        PrincipalProxy proxy = action.getProxy();
+        assertNull(proxy.getUserPrincipal());
+        assertFalse(proxy.isRequestSecure());
+        assertFalse(proxy.isUserInRole("no.role"));
         assertEquals("Santa", proxy.getRemoteUser());
 
     }
@@ -297,6 +339,23 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         }
 
         public void setPrincipalProxy(PrincipalProxy proxy) {
+            this.proxy = proxy;
+        }
+
+        public PrincipalProxy getProxy() {
+            return proxy;
+        }
+    }
+
+    private class MyNewPrincipalAction implements Action, org.apache.struts2.action.PrincipalAware {
+
+        private PrincipalProxy proxy;
+
+        public String execute() throws Exception {
+            return SUCCESS;
+        }
+
+        public void withPrincipalProxy(PrincipalProxy proxy) {
             this.proxy = proxy;
         }
 

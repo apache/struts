@@ -178,6 +178,15 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
                 ((PrincipalAware) action).setPrincipalProxy(new ServletPrincipalProxy(request));
             }
         }
+
+        if (action instanceof org.apache.struts2.action.PrincipalAware) {
+            HttpServletRequest request = (HttpServletRequest) context.get(HTTP_REQUEST);
+            if(request != null) {
+                // We are in servlet environment, so principal information resides in HttpServletRequest
+                ((org.apache.struts2.action.PrincipalAware) action).withPrincipalProxy(new ServletPrincipalProxy(request));
+            }
+        }
+
         if (action instanceof ServletContextAware) {
             ServletContext servletContext = (ServletContext) context.get(SERVLET_CONTEXT);
             ((ServletContextAware) action).setServletContext(servletContext);

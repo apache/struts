@@ -16,23 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.interceptor;
+package org.apache.struts2.action;
+
+import org.apache.struts2.interceptor.PrincipalProxy;
 
 /**
  * Actions that want access to the Principal information from HttpServletRequest object
  * should implement this interface.
  *
- * <p>This interface is only relevant if the Action is used in a servlet environment.
- * By using this interface you will not become tied to servlet environment.</p>
- *
- * @deprecated please use {@link org.apache.struts2.action.PrincipalAware} instead
+ * This interface is only relevant if the Action is used in a servlet environment.
+ * By using this interface you will not become tied to servlet environment.
  */
-@Deprecated
 public interface PrincipalAware {
 
-    /**
-     * @deprecated please use {@link org.apache.struts2.action.PrincipalAware#withPrincipalProxy(PrincipalProxy)} instead
-     */
-    @Deprecated
-    void setPrincipalProxy(PrincipalProxy principalProxy);
+    void withPrincipalProxy(PrincipalProxy principalProxy);
+
 }

@@ -61,6 +61,12 @@ public class PortletAwareInterceptor extends AbstractInterceptor implements Stru
             PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
             ((PrincipalAware) action).setPrincipalProxy(new PortletPrincipalProxy(request));
         }
+
+        if (action instanceof org.apache.struts2.action.PrincipalAware) {
+            PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
+            ((org.apache.struts2.action.PrincipalAware) action).withPrincipalProxy(new PortletPrincipalProxy(request));
+        }
+
         if (action instanceof PortletContextAware) {
             PortletContext portletContext = (PortletContext) context.get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
             ((PortletContextAware) action).setPortletContext(portletContext);

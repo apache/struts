@@ -196,6 +196,12 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
             ServletContext servletContext = (ServletContext) context.get(SERVLET_CONTEXT);
             ((ServletContextAware) action).setServletContext(servletContext);
         }
+
+        if (action instanceof org.apache.struts2.action.ServletContextAware) {
+            ServletContext servletContext = (ServletContext) context.get(SERVLET_CONTEXT);
+            ((org.apache.struts2.action.ServletContextAware) action).withServletContext(servletContext);
+        }
+
         return invocation.invoke();
     }
 }

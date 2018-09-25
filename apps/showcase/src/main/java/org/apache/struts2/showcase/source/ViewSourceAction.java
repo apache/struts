@@ -23,7 +23,7 @@ package org.apache.struts2.showcase.source;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.util.ServletContextAware;
+import org.apache.struts2.action.ServletContextAware;
 
 import javax.servlet.ServletContext;
 import java.io.BufferedReader;
@@ -227,7 +227,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 		return snippet;
 	}
 
-	public void setServletContext(ServletContext arg0) {
+	public void withServletContext(ServletContext arg0) {
 		this.servletContext = arg0;
 	}
 

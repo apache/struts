@@ -16,21 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.action;
 
 import javax.servlet.ServletContext;
 
 /**
  * For components that have a dependence on the Servlet context.
  *
- * @deprecated please use {@link org.apache.struts2.action.ServletContextAware} instead
+ * @since 2.6
  */
-@Deprecated
 public interface ServletContextAware {
 
-    /**
-     * @deprecated please use {@link org.apache.struts2.action.ServletContextAware#withServletContext(ServletContext)} instead
-     */
-    @Deprecated
-    public void setServletContext(ServletContext context);
+    void withServletContext(ServletContext context);
 }

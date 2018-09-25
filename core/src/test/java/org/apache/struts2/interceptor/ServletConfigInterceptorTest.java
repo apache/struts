@@ -326,6 +326,22 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         verify(mock);
     }
 
+    public void testActionServletContextAware() throws Exception {
+        org.apache.struts2.action.ServletContextAware mock = createMock(org.apache.struts2.action.ServletContextAware.class);
+
+        MockActionInvocation mai = createActionInvocation(mock);
+
+        MockServletContext ctx = new MockServletContext();
+        mai.getInvocationContext().put(StrutsStatics.SERVLET_CONTEXT, ctx);
+
+        mock.withServletContext(ctx);
+        expectLastCall().times(1);
+
+        replay(mock);
+        interceptor.intercept(mai);
+        verify(mock);
+    }
+
     private MockActionInvocation createActionInvocation(Object mock) {
         MockActionInvocation mai = new MockActionInvocation();
         mai.setResultCode("success");

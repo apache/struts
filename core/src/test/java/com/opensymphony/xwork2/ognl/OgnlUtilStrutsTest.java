@@ -40,16 +40,19 @@ public class OgnlUtilStrutsTest extends StrutsInternalTestCase {
 
         try {
             ognlUtil.getExcludedClasses().clear();
+            fail("Missing the expected Exception");
         } catch (Exception ex) {
             assertTrue(ex instanceof UnsupportedOperationException);
         }
         try {
             ognlUtil.getExcludedPackageNames().clear();
+            fail("Missing the expected Exception");
         } catch (Exception ex) {
             assertTrue(ex instanceof UnsupportedOperationException);
         }
         try {
             ognlUtil.getExcludedPackageNamePatterns().clear();
+            fail("Missing the expected Exception");
         } catch (Exception ex) {
             assertTrue(ex instanceof UnsupportedOperationException);
         }

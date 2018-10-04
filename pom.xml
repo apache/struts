@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts-master</artifactId>
-        <version>12</version>
+        <version>13</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

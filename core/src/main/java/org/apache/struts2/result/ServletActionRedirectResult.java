@@ -159,6 +159,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
      */
     public void execute(ActionInvocation invocation) throws Exception {
         actionName = conditionalParse(actionName, invocation);
+        parseLocation = false;
         if (namespace == null) {
             namespace = invocation.getProxy().getNamespace();
         } else {

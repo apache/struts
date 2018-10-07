@@ -364,7 +364,7 @@ public class RestActionMapper extends DefaultActionMapper {
             name = uri.substring(namespace.length() + 1);
         }
 
-        mapping.setNamespace(namespace);
+        mapping.setNamespace(cleanupNamespaceName(namespace));
         mapping.setName(name);
     }
 

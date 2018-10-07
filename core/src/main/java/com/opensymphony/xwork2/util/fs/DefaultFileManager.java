@@ -70,7 +70,9 @@ public class DefaultFileManager implements FileManager {
             return null;
         }
         InputStream is = openFile(fileUrl);
-        monitorFile(fileUrl);
+        if (reloadingConfigs) {
+            monitorFile(fileUrl);
+        }
         return is;
     }
 

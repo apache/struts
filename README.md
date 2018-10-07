@@ -28,9 +28,9 @@ The Apache Struts web framework is a free open-source solution for creating Java
 
 ## Documentation
 
-More information can be found on the [homepage](https://struts.apache.org/). Please read the [Security Guide](https://struts.apache.org/security/) 
+More information can be found on the [homepage](https://struts.apache.org/). Please read the [Security Guide](https://struts.apache.org/security/),
 and the [JavaDocs](https://struts.apache.org/maven/struts2-core/apidocs/index.html) can be browsed.
-Questions related to the usage of the Apache Struts should be posted to the [user mailing list](https://struts.apache.org/mail.html).
+Questions related to the usage of Apache Struts should be posted to the [user mailing list](https://struts.apache.org/mail.html).
 
 ## Description
 
@@ -43,13 +43,15 @@ In practice, we find that unless these concerns are separated, larger applicatio
 One way to separate concerns in a software application is to use a Model-View-Controller (MVC) architecture. The Model 
 represents the business or database code, the View represents the page design code, and the Controller represents 
 the navigational code. The Struts framework is designed to help developers create web applications that utilize 
-a MVC architecture.
+an MVC architecture.
 
 The framework provides three key components:
 
-A “request” handler provided by the application developer that is mapped to a standard URI. A “response” handler that 
-transfers control to another resource which completes the response. A tag library that helps developers create interactive 
-form-based applications with server pages. The framework’s architecture and tags are buzzword compliant. Struts works well
+- A “request” handler provided by the application developer that is mapped to a standard URI.
+- A “response” handler that transfers control to another resource which completes the response.
+- A tag library that helps developers create interactive form-based applications with server pages.
+
+The framework’s architecture and tags are buzzword compliant. Struts works well
 with conventional REST applications and with technologies like SOAP and AJAX.
 
 ## The Apache Struts Project
@@ -65,7 +67,7 @@ platform into a coherent whole. Our goal is to leverage existing standards by pr
 enterprise-grade applications that are easy to maintain over time.
 
 The Apache Struts Project offered two major versions of the Struts framework. Currently we are only maintaining the Struts 2 
-version. It is recommended to upgrade all Struts 1.x application to Struts 2. Please do not start new application development 
+version. It is recommended to upgrade all Struts 1.x applications to Struts 2. Please do not start new application development 
 using Struts 1.x, as we are no longer issuing security patches.
 
 Struts 2 was originally known as WebWork 2. After working independently for several years, the WebWork and Struts 
@@ -74,25 +76,25 @@ to difficult problems.
 
 ## Why should you use Apache Struts?
 
-Apache Struts is a modern, maintained and full-featured web framework. It has been there for years and give the huge user 
-base it is unlikely it will go away anytime soon in the future. Not only that we have dedicated users and developers 
-on the project. Apache Struts is licensed to the Apache License 2.0 and this will not change. We maintain a clean IP 
+Apache Struts is a modern, maintained and full-featured web framework. As it has been around for years and grown a huge user 
+base it is unlikely it will go away anytime soon. Not only that, we have dedicated users and developers 
+on the project. Apache Struts is licensed under the Apache License 2.0 and this will not change. We maintain a clean IP 
 and you are “safe” to use the project. Sometimes you are not “safe” to use a project when a company controls the SCM. 
 Access to Source Code doesn’t mean it is free. With Apache Struts, you are not only free to “do what you want with it”, 
-you can even contribute (which is not always the case). And best of it: you can become a part of the core team too.
+you can even contribute (which is not always the case). And best of all: you can become a part of the core team too.
 
 It is usually very easy to integrate other technologies with Apache Struts. If you are using an ORM like Apache Cayenne, 
-Hibernate or JDBC you will not have any restrictions. Apache Struts is not even tied too much to a frontend technology. 
+Hibernate or JDBC, you will not have any restrictions. Apache Struts is not even tied too much to a frontend technology. 
 In old days it was JSP, then came Velocity and Freemarker. Nowadays you might build your web application with just static 
-HTML and AngularJS. Or you want to use Sitemesh or Tiles. This all is no problem due to Struts elegant and easy to use 
+HTML and AngularJS. Or you might want to use Sitemesh or Tiles. This all is no problem due to Struts' elegant and easy-to-use 
 extension mechanisms.
 
-Unlike other, component oriented frameworks, we do not aim to hide the stateless nature of the web. We think it is 
+Unlike other, component-oriented frameworks, we do not aim to hide the stateless nature of the web. We think it is 
 perfectly acceptable to build upon a Request/Response cycle. We also think the MVC pattern is not so bad, just because 
 it is old. In fact, we believe the Apache Struts architecture is clean and easy to understand.
 
-Of course, if you wish to build components on the server side which render on the front end side, you are most likely 
-wrong with Struts. This is a different approach which promises to reduce the amount of HTML/JavaScript knowledge needed 
+Of course, if you wish to build components on the server side which render on the front end side, you will most likely 
+not want Struts. This is a different approach which promises to reduce the amount of HTML/JavaScript knowledge needed 
 and to create reusable components for the view layer. Projects like Wicket and Tapestry serve this purpose very well. 
-As with every framework you need to decide if it makes sense for you to build components or if you are better with 
-the Struts-approach.
+As with every framework, you need to decide if it makes sense for you to build components or if you prefer 
+the Struts approach.

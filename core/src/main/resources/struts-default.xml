@@ -45,11 +45,6 @@
                 java.lang.ClassLoader,
                 java.lang.Shutdown,
                 java.lang.ProcessBuilder,
-                ognl.OgnlContext,
-                ognl.ClassResolver,
-                ognl.TypeConverter,
-                ognl.MemberAccess,
-                com.opensymphony.xwork2.ognl.SecurityMemberAccess,
                 com.opensymphony.xwork2.ActionContext" />
 
     <!-- this must be valid regex, each '.' in package name must be escaped! -->
@@ -59,16 +54,16 @@
     <!-- this is simpler version of the above used with string comparison -->
     <constant name="struts.excludedPackageNames"
               value="
-                java.lang.,
                 ognl.,
-                javax,
+                javax.,
                 freemarker.core.,
                 freemarker.template.,
                 freemarker.ext.rhino.,
-                freemarker.ext.beans.,
-                sun.misc.,
                 sun.reflect.,
-                javassist." />
+                javassist.,
+                com.opensymphony.xwork2.ognl.,
+                com.opensymphony.xwork2.security.,
+                com.opensymphony.xwork2.util." />
 
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts" class="org.apache.struts2.factory.StrutsResultFactory" />

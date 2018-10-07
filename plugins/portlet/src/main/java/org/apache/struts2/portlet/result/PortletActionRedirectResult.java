@@ -172,6 +172,8 @@ public class PortletActionRedirectResult extends PortletResult {
 	 */
 	public void execute(ActionInvocation invocation) throws Exception {
 		actionName = conditionalParse(actionName, invocation);
+		parseLocation = false;
+
 		String portletNamespace = (String)invocation.getInvocationContext().get(PortletConstants.PORTLET_NAMESPACE);
 		if (portletMode != null) {
 			Map<PortletMode, String> namespaceMap = getNamespaceMap(invocation);

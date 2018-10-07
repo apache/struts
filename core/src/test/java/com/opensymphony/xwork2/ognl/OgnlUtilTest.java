@@ -41,7 +41,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         ognlUtil = container.getInstance(OgnlUtil.class);
     }
     
-    public void testCanSetADependentObject() throws Exception {
+    public void testCanSetADependentObject() {
         String dogName = "fido";
 
         OgnlRuntime.setNullHandler(Owner.class, new NullHandler() {

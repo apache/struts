@@ -61,13 +61,19 @@ public class OgnlUtil {
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
 
-    private Set<Class<?>> excludedClasses = Collections.emptySet();
-    private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
-    private Set<String> excludedPackageNames = Collections.emptySet();
+    private Set<Class<?>> excludedClasses;
+    private Set<Pattern> excludedPackageNamePatterns;
+    private Set<String> excludedPackageNames;
 
     private Container container;
     private boolean allowStaticMethodAccess;
     private boolean disallowProxyMemberAccess;
+
+    public OgnlUtil() {
+        excludedClasses = new HashSet<>();
+        excludedPackageNamePatterns = new HashSet<>();
+        excludedPackageNames = new HashSet<>();
+    }
 
     @Inject
     public void setXWorkConverter(XWorkConverter conv) {
@@ -95,6 +101,13 @@ public class OgnlUtil {
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
     public void setExcludedClasses(String commaDelimitedClasses) {
+        Set<Class<?>> excludedClasses = new HashSet<>();
+        excludedClasses.addAll(this.excludedClasses);
+        excludedClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
+        this.excludedClasses = Collections.unmodifiableSet(excludedClasses);
+    }
+
+    private Set<Class<?>> parseExcludedClasses(String commaDelimitedClasses) {
         Set<String> classNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
         Set<Class<?>> classes = new HashSet<>();
 
@@ -106,11 +119,18 @@ public class OgnlUtil {
             }
         }
 
-        excludedClasses = Collections.unmodifiableSet(classes);
+        return classes;
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
     public void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+        Set<Pattern> excludedPackageNamePatterns = new HashSet<>();
+        excludedPackageNamePatterns.addAll(this.excludedPackageNamePatterns);
+        excludedPackageNamePatterns.addAll(parseExcludedPackageNamePatterns(commaDelimitedPackagePatterns));
+        this.excludedPackageNamePatterns = Collections.unmodifiableSet(excludedPackageNamePatterns);
+    }
+
+    private Set<Pattern> parseExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
         Set<Pattern> packageNamePatterns = new HashSet<>();
 
@@ -118,12 +138,19 @@ public class OgnlUtil {
             packageNamePatterns.add(Pattern.compile(pattern));
         }
 
-        excludedPackageNamePatterns = Collections.unmodifiableSet(packageNamePatterns);
+        return packageNamePatterns;
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
     public void setExcludedPackageNames(String commaDelimitedPackageNames) {
-        excludedPackageNames = Collections.unmodifiableSet(TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames));
+        Set<String> excludedPackageNames = new HashSet<>();
+        excludedPackageNames.addAll(this.excludedPackageNames);
+        excludedPackageNames.addAll(parseExcludedPackageNames(commaDelimitedPackageNames));
+        this.excludedPackageNames = Collections.unmodifiableSet(excludedPackageNames);
+    }
+
+    private Set<String> parseExcludedPackageNames(String commaDelimitedPackageNames) {
+        return TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
     }
 
     public Set<Class<?>> getExcludedClasses() {

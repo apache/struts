@@ -72,6 +72,41 @@ public class ChainResultTest extends XWorkTestCase {
         }
     }
 
+    public void testWithNoNamespace() throws Exception {
+        ActionChainResult result = new ActionChainResult();
+        result.setActionName("${actionName}");
+
+        String expectedActionName = "testActionName";
+        String expectedNamespace = "${1-1}";
+        Map<String, Object> values = new HashMap<>();
+        values.put("actionName", expectedActionName);
+
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.push(values);
+
+        Mock actionProxyMock = new Mock(ActionProxy.class);
+        actionProxyMock.expect("execute");
+        actionProxyMock.expectAndReturn("getNamespace", expectedNamespace);
+        actionProxyMock.expectAndReturn("getActionName", expectedActionName);
+        actionProxyMock.expectAndReturn("getMethod", null);
+
+        ActionProxy actionProxy = (ActionProxy) actionProxyMock.proxy();
+        ActionProxyFactory testActionProxyFactory = new NamespaceActionNameTestActionProxyFactory(expectedNamespace, expectedActionName, actionProxy);
+        result.setActionProxyFactory(testActionProxyFactory);
+
+        Mock invocationMock = new Mock(ActionInvocation.class);
+        invocationMock.matchAndReturn("getProxy", actionProxy);
+        try {
+
+            ActionContext testContext = new ActionContext(stack.getContext());
+            ActionContext.setContext(testContext);
+            result.execute((ActionInvocation) invocationMock.proxy());
+            actionProxyMock.verify();
+        } finally {
+            ActionContext.setContext(null);
+        }
+    }
+
     public void testRecursiveChain() throws Exception {
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "InfiniteRecursionChain", null, null);
 
@@ -88,7 +123,7 @@ public class ChainResultTest extends XWorkTestCase {
         private String expectedActionName;
         private String expectedNamespace;
 
-        public NamespaceActionNameTestActionProxyFactory(String expectedNamespace, String expectedActionName, ActionProxy returnVal) {
+        NamespaceActionNameTestActionProxyFactory(String expectedNamespace, String expectedActionName, ActionProxy returnVal) {
             this.expectedNamespace = expectedNamespace;
             this.expectedActionName = expectedActionName;
             this.returnVal = returnVal;

@@ -34,28 +34,28 @@
 
 	<package name="validation" extends="json-default" namespace="/validation">
         <action name="index">
-            <result>/WEB-INF/validation/index.jsp</result>
+            <result>index.jsp</result>
         </action>
 
 	    <action name="quizBasic" class="org.apache.struts2.showcase.validation.QuizAction">
-            <result name="input">quiz-basic.jsp</result>
-            <result>quiz-success.jsp</result>
+            <result name="input">/WEB-INF/validation/quiz-basic.jsp</result>
+            <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>
 
         <action name="quizClient" class="org.apache.struts2.showcase.validation.QuizAction">
-            <result name="input">quiz-client.jsp</result>
-            <result>quiz-success.jsp</result>
+            <result name="input">/WEB-INF/validation/quiz-client.jsp</result>
+            <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>
 
         <action name="quizClientCss" class="org.apache.struts2.showcase.validation.QuizAction">
-            <result name="input">quiz-client-css.jsp</result>
-            <result>quiz-success.jsp</result>
+            <result name="input">/WEB-INF/validation/quiz-client-css.jsp</result>
+            <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>
 
         <action name="quizAjax" class="org.apache.struts2.showcase.validation.QuizAction">
             <interceptor-ref name="jsonValidationWorkflowStack"/>
-            <result name="input">quiz-ajax.jsp</result>
-            <result>quiz-success.jsp</result>
+            <result name="input">/WEB-INF/validation/quiz-ajax.jsp</result>
+            <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>
 
 		<!-- =========================================== -->

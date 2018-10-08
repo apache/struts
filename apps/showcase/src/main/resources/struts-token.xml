@@ -48,7 +48,7 @@
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="token"/>
             <result name="invalid.token">/WEB-INF/token/doublePost.jsp</result>
-            <result name="success" type="redirect">/WEB-INF/token/transferDone.jsp</result>
+            <result name="success">/WEB-INF/token/transferDone.jsp</result>
         </action>
 
 
@@ -62,7 +62,7 @@
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="tokenSession"/>
             <result name="invalid.token">/WEB-INF/token/doublePost.jsp</result>
-            <result name="success" type="redirect">/WEB-INF/token/transferDone.jsp</result>
+            <result name="success">/WEB-INF/token/transferDone.jsp</result>
         </action>
 
 

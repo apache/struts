@@ -16,21 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.osgi.action;
 
-import javax.servlet.ServletContext;
+import org.osgi.framework.BundleContext;
 
 /**
- * For components that have a dependence on the Servlet context.
- *
- * @deprecated please use {@link org.apache.struts2.action.ServletContextAware} instead
+ * Actions implementing this interface will receive an instance of the BundleContext,
+ * the OsgiInterceptor must be applied to the action.
  */
-@Deprecated
-public interface ServletContextAware {
+public interface BundleContextAware {
 
-    /**
-     * @deprecated please use {@link org.apache.struts2.action.ServletContextAware#withServletContext(ServletContext)} instead
-     */
-    @Deprecated
-    public void setServletContext(ServletContext context);
+    void withBundleContext(BundleContext bundleContext);
+
 }

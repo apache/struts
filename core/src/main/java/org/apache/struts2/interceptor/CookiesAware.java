@@ -26,11 +26,15 @@ import java.util.Map;
  *
  * Please note that the {@link CookieInterceptor} needs to be
  * activated to receive a cookies map.
+ *
+ * @deprecated please use {@link org.apache.struts2.action.CookiesAware} instead
  */
+@Deprecated
 public interface CookiesAware {
     /**
      * Sets a map of filtered cookies.
      * @param cookies the cookies
+     * @deprecated please use {@link org.apache.struts2.action.CookiesAware#withCookies(Map)} instead
      */
     void setCookiesMap(Map<String, String> cookies);
 }

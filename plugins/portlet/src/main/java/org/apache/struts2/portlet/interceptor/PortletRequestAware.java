@@ -20,8 +20,16 @@ package org.apache.struts2.portlet.interceptor;
 
 import javax.portlet.PortletRequest;
 
+/**
+ * @deprecated please use {@link org.apache.struts2.portlet.action.PortletRequestAware} instead
+ */
+@Deprecated
 public interface PortletRequestAware {
 
-	void setPortletRequest(PortletRequest request);
+    /**
+     * @deprecated please use {@link org.apache.struts2.portlet.action.PortletRequestAware#withPortletRequest(PortletRequest)} instead
+     */
+    @Deprecated
+    void setPortletRequest(PortletRequest request);
 
 }

@@ -29,13 +29,17 @@ import java.util.Map;
  * <p>
  * Typical uses are configuration objects and caches.
  * </p>
+ * @deprecated please use {@link org.apache.struts2.action.ApplicationAware} instead
  */
+@Deprecated
 public interface ApplicationAware {
 
     /**
      * Sets the map of application properties in the implementing class.
      *
      * @param application a Map of application properties.
+     * @deprecated please use {@link org.apache.struts2.action.ApplicationAware#withApplication(Map)} instead
      */
+    @Deprecated
     public void setApplication(Map<String,Object> application);
 }

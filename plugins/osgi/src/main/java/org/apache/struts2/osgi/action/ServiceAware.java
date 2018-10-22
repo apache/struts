@@ -16,21 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.osgi.action;
 
-import javax.servlet.ServletContext;
+import java.util.List;
 
 /**
- * For components that have a dependence on the Servlet context.
+ * Classes implementing this interface, will be injected a list of services
+ * registered with the type of the parameterized type
  *
- * @deprecated please use {@link org.apache.struts2.action.ServletContextAware} instead
+ * @param <T> The type of the service
+ * @since 2.6
  */
-@Deprecated
-public interface ServletContextAware {
+public interface ServiceAware<T> {
 
-    /**
-     * @deprecated please use {@link org.apache.struts2.action.ServletContextAware#withServletContext(ServletContext)} instead
-     */
-    @Deprecated
-    public void setServletContext(ServletContext context);
+    void withServices(List<T> services);
+
 }

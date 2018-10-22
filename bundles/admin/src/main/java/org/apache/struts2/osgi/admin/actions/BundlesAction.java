@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.osgi.BundleAccessor;
 import org.apache.struts2.osgi.host.OsgiHost;
 import org.apache.struts2.osgi.StrutsOsgiListener;
-import org.apache.struts2.util.ServletContextAware;
+import org.apache.struts2.action.ServletContextAware;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
@@ -197,7 +197,7 @@ public class BundlesAction extends ActionSupport implements ServletContextAware 
         this.bundleAccessor = bundleAccessor;
     }
 
-    public void setServletContext(ServletContext servletContext) {
+    public void withServletContext(ServletContext servletContext) {
         osgiHost = (OsgiHost) servletContext.getAttribute(StrutsOsgiListener.OSGI_HOST);
     }
 }

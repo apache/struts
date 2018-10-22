@@ -31,13 +31,17 @@ import javax.servlet.http.HttpServletResponse;
  * Note that using this interface makes the Action tied to a servlet environment, so it should be
  * avoided if possible since things like unit testing will become more difficult.
  * </p>
+ * @deprecated please use {@link org.apache.struts2.action.ServletResponseAware} instead
  */
+@Deprecated
 public interface ServletResponseAware {
 
     /**
      * Sets the HTTP response object in implementing classes.
      *
      * @param response the HTTP response.
+     * @deprecated please use {@link org.apache.struts2.action.ServletResponseAware#withServletResponse(HttpServletResponse)} instead
      */
+    @Deprecated
     public void setServletResponse(HttpServletResponse response);
 }

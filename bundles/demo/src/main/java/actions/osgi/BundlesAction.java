@@ -22,7 +22,7 @@ package actions.osgi;
 
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.convention.annotation.ResultPath;
-import org.apache.struts2.osgi.interceptor.BundleContextAware;
+import org.apache.struts2.osgi.action.BundleContextAware;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -33,7 +33,7 @@ import org.osgi.framework.BundleContext;
 public class BundlesAction extends ActionSupport implements BundleContextAware {
     private BundleContext bundleContext;
 
-    public void setBundleContext(BundleContext bundleContext) {
+    public void withBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }
 

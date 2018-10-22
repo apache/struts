@@ -16,32 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.interceptor;
+package org.apache.struts2.action;
 
-import java.util.Map;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 /**
- * <p>
- * Actions that want access to the user's HTTP session attributes should implement this interface.
- * </p>
- * <p>
- * This will give them access to a Map where they can put objects that can be made available
- * to subsequent requests.
- * </p>
- * <p>
- * Typical uses may be cached user data such as name, or a shopping cart.
- * </p>
- * @deprecated use {@link org.apache.struts2.action.SessionAware}
+ * This interface gives actions an alternative way of receiving input parameters. The parameters will
+ * contain all input parameters as implementation of {@link org.apache.struts2.dispatcher.Parameter}.
+ * Actions that need this should simply implement it.
+ *
+ * One common use for this is to have the action propagate parameters to internally instantiated data
+ * objects.
+ *
+ * @since 2.6
  */
-@Deprecated
-public interface SessionAware {
+public interface ParametersAware {
 
     /**
-     * Sets the Map of session attributes in the implementing class.
+     * Sets the HTTP parameters in the implementing class.
      *
-     * @param session a Map of HTTP session attribute name/value pairs.
-     * @deprecated please use {@link org.apache.struts2.action.SessionAware#withSession(Map)}
+     * @param parameters an instance of {@link HttpParameters}.
      */
-    @Deprecated
-    public void setSession(Map<String,Object> session);
+    void withParameters(HttpParameters parameters);
 }

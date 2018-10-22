@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.osgi.interceptor;
 
+import org.apache.struts2.osgi.action.ServiceAction;
 import org.easymock.EasyMock;
 import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.BundleContext;
@@ -53,10 +54,51 @@ public class OsgiInterceptorTest extends TestCase {
         EasyMock.verify(bundleContextAware);
     }
 
+    public void testActionBundleContextAware() throws Exception {
+        ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
+        BundleContext bundleContext = EasyMock.createStrictMock(BundleContext.class);
+        ActionInvocation actionInvocation = EasyMock.createStrictMock(ActionInvocation.class);
+        org.apache.struts2.osgi.action.BundleContextAware bundleContextAware = EasyMock.createStrictMock(org.apache.struts2.osgi.action.BundleContextAware.class);
+
+        EasyMock.expect(servletContext.getAttribute(OsgiHost.OSGI_BUNDLE_CONTEXT)).andReturn(bundleContext);
+        EasyMock.expect(actionInvocation.getAction()).andReturn(bundleContextAware);
+        bundleContextAware.withBundleContext(bundleContext);
+        EasyMock.expect(actionInvocation.invoke()).andReturn("");
+
+        EasyMock.replay(bundleContextAware);
+        EasyMock.replay(servletContext);
+        EasyMock.replay(actionInvocation);
+
+        OsgiInterceptor osgiInterceptor = new OsgiInterceptor();
+        osgiInterceptor.setServletContext(servletContext);
+        osgiInterceptor.intercept(actionInvocation);
+
+        EasyMock.verify(bundleContextAware);
+    }
+
      public void testBundleContextAwareNegative() throws Exception {
         ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
         ActionInvocation actionInvocation = EasyMock.createStrictMock(ActionInvocation.class);
         BundleContextAware bundleContextAware = EasyMock.createStrictMock(BundleContextAware.class);
+
+        EasyMock.expect(servletContext.getAttribute(OsgiHost.OSGI_BUNDLE_CONTEXT)).andReturn(null);
+        EasyMock.expect(actionInvocation.invoke()).andReturn("");
+
+        EasyMock.replay(bundleContextAware);
+        EasyMock.replay(servletContext);
+        EasyMock.replay(actionInvocation);
+
+        OsgiInterceptor osgiInterceptor = new OsgiInterceptor();
+        osgiInterceptor.setServletContext(servletContext);
+        osgiInterceptor.intercept(actionInvocation);
+
+        EasyMock.verify(bundleContextAware);
+    }
+
+     public void testActionBundleContextAwareNegative() throws Exception {
+        ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
+        ActionInvocation actionInvocation = EasyMock.createStrictMock(ActionInvocation.class);
+         org.apache.struts2.osgi.action.BundleContextAware bundleContextAware = EasyMock.createStrictMock(org.apache.struts2.osgi.action.BundleContextAware.class);
 
         EasyMock.expect(servletContext.getAttribute(OsgiHost.OSGI_BUNDLE_CONTEXT)).andReturn(null);
         EasyMock.expect(actionInvocation.invoke()).andReturn("");
@@ -97,6 +139,35 @@ public class OsgiInterceptorTest extends TestCase {
         osgiInterceptor.intercept(actionInvocation);
 
         List<Object> objects = someAction.getServices();
+        assertNotNull(objects);
+        assertSame(someObject, objects.get(0));
+    }
+
+    public void testActionServiceAware() throws Exception {
+        ServletContext servletContext = EasyMock.createStrictMock(ServletContext.class);
+        BundleContext bundleContext = EasyMock.createStrictMock(BundleContext.class);
+        ActionInvocation actionInvocation = EasyMock.createStrictMock(ActionInvocation.class);
+        ServiceAction serviceAction = new ServiceAction();
+
+        //service refs
+        ServiceReference objectRef = EasyMock.createNiceMock(ServiceReference.class);
+        Object someObject = new Object();
+
+        EasyMock.expect(servletContext.getAttribute(OsgiHost.OSGI_BUNDLE_CONTEXT)).andReturn(bundleContext);
+        EasyMock.expect(actionInvocation.getAction()).andReturn(serviceAction);
+        EasyMock.expect(actionInvocation.invoke()).andReturn("");
+        EasyMock.expect(bundleContext.getAllServiceReferences(Object.class.getName(), null)).andReturn(new ServiceReference[] {objectRef});
+        EasyMock.expect(bundleContext.getService(objectRef)).andReturn(someObject);
+
+        EasyMock.replay(bundleContext);
+        EasyMock.replay(servletContext);
+        EasyMock.replay(actionInvocation);
+
+        OsgiInterceptor osgiInterceptor = new OsgiInterceptor();
+        osgiInterceptor.setServletContext(servletContext);
+        osgiInterceptor.intercept(actionInvocation);
+
+        List<Object> objects = serviceAction.getServices();
         assertNotNull(objects);
         assertSame(someObject, objects.get(0));
     }

@@ -426,6 +426,49 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         assertFalse(excludedName.get(reqCookieName));
     }
 
+    public void testActionCookieAwareWithStrutsInternalsAccess() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        String sessionCookieName = "session.userId";
+        String sessionCookieValue = "session.userId=1";
+        String appCookieName = "application.userId";
+        String appCookieValue = "application.userId=1";
+        String reqCookieName = "request.userId";
+        String reqCookieValue = "request.userId=1";
+
+        request.setCookies(
+                new Cookie(sessionCookieName, "1"),
+                new Cookie("1", sessionCookieValue),
+                new Cookie(appCookieName, "1"),
+                new Cookie("1", appCookieValue),
+                new Cookie(reqCookieName, "1"),
+                new Cookie("1", reqCookieValue)
+            );
+        ServletActionContext.setRequest(request);
+
+        final Map<String, Boolean> excludedName = new HashMap<>();
+
+        CookieInterceptor interceptor = new CookieInterceptor() {
+            @Override
+            protected boolean isAcceptableName(String name) {
+                boolean accepted = super.isAcceptableName(name);
+                excludedName.put(name, accepted);
+                return accepted;
+            }
+        };
+        interceptor.setExcludedPatternsChecker(new DefaultExcludedPatternsChecker());
+        interceptor.setAcceptedPatternsChecker(new DefaultAcceptedPatternsChecker());
+        interceptor.setCookiesName("*");
+
+        MockActionInvocation invocation = new MockActionInvocation();
+        invocation.setAction(new MockActionWithActionCookieAware());
+
+        interceptor.intercept(invocation);
+
+        assertFalse(excludedName.get(sessionCookieName));
+        assertFalse(excludedName.get(appCookieName));
+        assertFalse(excludedName.get(reqCookieName));
+    }
+
     public static class MockActionWithCookieAware extends ActionSupport implements CookiesAware {
 
         private static final long serialVersionUID = -6202290616812813386L;
@@ -436,6 +479,31 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
         private String cookie3;
 
         public void setCookiesMap(Map<String, String> cookies) {
+            this.cookies = cookies;
+        }
+
+        public Map getCookiesMap() {
+            return this.cookies;
+        }
+
+        public String getCookie1() { return cookie1; }
+        public void setCookie1(String cookie1) { this.cookie1 = cookie1; }
+
+        public String getCookie2() { return cookie2; }
+        public void setCookie2(String cookie2) { this.cookie2 = cookie2; }
+
+        public String getCookie3() { return cookie3; }
+        public void setCookie3(String cookie3) { this.cookie3 = cookie3; }
+    }
+
+    public static class MockActionWithActionCookieAware extends ActionSupport implements org.apache.struts2.action.CookiesAware {
+
+        private Map cookies = Collections.EMPTY_MAP;
+        private String cookie1;
+        private String cookie2;
+        private String cookie3;
+
+        public void withCookies(Map<String, String> cookies) {
             this.cookies = cookies;
         }
 

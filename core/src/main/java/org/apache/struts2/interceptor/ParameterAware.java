@@ -36,7 +36,7 @@ import java.util.Map;
  * the map is <tt>java.lang.String[]</tt>.
  * </p>
  *
- * @deprecated please use {@link HttpParametersAware} instead
+ * @deprecated please use {@link org.apache.struts2.action.ParametersAware} instead
  */
 @Deprecated
 public interface ParameterAware {

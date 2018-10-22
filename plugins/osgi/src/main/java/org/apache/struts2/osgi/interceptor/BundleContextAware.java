@@ -23,9 +23,16 @@ import org.osgi.framework.BundleContext;
 /**
  * Actions implementing this interface will receive an instance of the BundleContext,
  * the OsgiInterceptor must be applied to the action.
+ *
+ * @deprecated please use {@link org.apache.struts2.osgi.action.BundleContextAware} instead
  */
+@Deprecated
 public interface BundleContextAware {
 
+    /**
+     * @deprecated please use {@link org.apache.struts2.osgi.action.BundleContextAware#withBundleContext(BundleContext)} instead
+     */
+    @Deprecated
     void setBundleContext(BundleContext bundleContext);
 
 }

@@ -51,7 +51,7 @@ public class IncludeTagTest extends AbstractTagTest {
 
     public void testIncludeNoParam() throws Exception {
         
-        // use always matcher as we can not determine the excact objects used in mock.include(request, response) call
+        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
         mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
         expectLastCall().times(1);
         
@@ -69,7 +69,7 @@ public class IncludeTagTest extends AbstractTagTest {
 
     public void testIncludeWithParameters() throws Exception {
        
-        // use always matcher as we can not determine the excact objects used in mock.include(request, response) call
+        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
         mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
         expectLastCall().times(1);
         
@@ -90,7 +90,7 @@ public class IncludeTagTest extends AbstractTagTest {
 
     public void testIncludeRelative2Dots() throws Exception {
         // TODO: we should test for .. in unit test - is this test correct?
-        // use always matcher as we can not determine the exact objects used in mock.include(request, response) call
+        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
         mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
         expectLastCall().times(1);
         
@@ -114,7 +114,7 @@ public class IncludeTagTest extends AbstractTagTest {
         //   right now in unit-test form.
         // Seems that the best we can do is verify the setUseResponseEncoding() doesn't fail...
 
-        // use always matcher as we can not determine the exact objects used in mock.include(request, response) call
+        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
         mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
         expectLastCall().times(1);
 
@@ -141,7 +141,7 @@ public class IncludeTagTest extends AbstractTagTest {
         //   right now in unit-test form.
         // Seems that the best we can do is verify the setUseResponseEncoding() doesn't fail...
 
-        // use always matcher as we can not determine the exact objects used in mock.include(request, response) call
+        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
         mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
         expectLastCall().times(1);
 

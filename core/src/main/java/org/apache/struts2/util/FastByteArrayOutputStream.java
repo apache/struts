@@ -150,7 +150,7 @@ public class FastByteArrayOutputStream extends OutputStream {
         // Append bytes to current buffer
         // Previous data maybe partially decoded, this part will appended to previous
         in.put(bytes, 0, length);
-        // To begin of data
+        // To begin processing of data
         in.flip();
         decodeAndWriteBuffered(writer, in, out, decoder, endOfInput);
     }
@@ -186,11 +186,11 @@ public class FastByteArrayOutputStream extends OutputStream {
 
     private static CoderResult decodeAndWrite(Writer writer, ByteBuffer in, CharBuffer out, CharsetDecoder decoder, boolean endOfInput) throws IOException {
         CoderResult result = decoder.decode(in, out, endOfInput);
-        // To begin of decoded data
+        // To begin processing of decoded data
         out.flip();
         // Output
         writer.write(out.toString());
-        // clear output to avoid infinitive loops, see WW-4383
+        // Clear output to avoid infinite loops, see WW-4383
         out.clear();
         return result;
     }

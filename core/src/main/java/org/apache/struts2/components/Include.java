@@ -229,7 +229,7 @@ public class Include extends Component {
     }
 
     public void addParameter(String key, Object value) {
-        // don't use the default implementation of addParameter,
+        // Don't use the default implementation of addParameter,
         // instead, include tag requires that each parameter be a list of objects,
         // just like the HTTP servlet interfaces are (String[])
         if (value != null) {
@@ -276,7 +276,7 @@ public class Include extends Component {
             // Use given encoding
             pageResponse.getContent().writeTo(writer, encoding);
         } else {
-            //use the platform specific encoding
+            // Use the platform specific encoding
             pageResponse.getContent().writeTo(writer, systemEncoding);
         }
     }
@@ -369,9 +369,9 @@ public class Include extends Component {
          * @throws IOException
          */
         public FastByteArrayOutputStream getContent() throws IOException {
-            //if we are using a writer, we need to flush the
-            //data to the underlying outputstream.
-            //most containers do this - but it seems Jetty 4.0.5 doesn't
+            // If we are using a writer, we need to flush the
+            // data to the underlying outputstream.
+            // Most containers do this - but it seems Jetty 4.0.5 doesn't
             if (pagePrintWriter != null) {
                 pagePrintWriter.flush();
             }

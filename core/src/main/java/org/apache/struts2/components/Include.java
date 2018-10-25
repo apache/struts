@@ -20,6 +20,7 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
@@ -35,6 +36,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.*;
@@ -90,17 +92,19 @@ public class Include extends Component {
 
     private static final Logger LOG = LogManager.getLogger(Include.class);
 
-    private static String systemEncoding = System.getProperty("file.encoding");
+    private static final String systemEncoding = System.getProperty("file.encoding");
 
     protected String value;
     private HttpServletRequest req;
     private HttpServletResponse res;
-    private static String defaultEncoding;
+    private String defaultEncoding;       // Made non-static (during WW-4971 fix)
+    private boolean useResponseEncoding;  // Added with WW-4971 fix (allows switch between usage of response or default encoding)
 
     public Include(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
         this.req = req;
         this.res = res;
+        useResponseEncoding = false;  // By default use defaultEncoding (vs. response/page encoding)
     }
 
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
@@ -108,9 +112,25 @@ public class Include extends Component {
         defaultEncoding = encoding;
     }
 
+    @Inject(value = StrutsConstants.STRUTS_TAG_INCLUDETAG_USERESPONSEENCODING, required=false)
+    public void setUseResponseEncoding(String useEncoding) {
+        useResponseEncoding = Boolean.parseBoolean(useEncoding);
+    }
+
     public boolean end(Writer writer, String body) {
         String page = findString(value, "value", "You must specify the URL to include. Example: /foo.jsp");
         StringBuilder urlBuf = new StringBuilder();
+        String encodingForInclude;
+
+        if (useResponseEncoding) {
+            encodingForInclude = res.getCharacterEncoding();  // Use response (page) encoding
+            if (encodingForInclude == null || encodingForInclude.length() == 0) {
+                encodingForInclude = defaultEncoding;  // Revert to defaultEncoding when response (page) encoding is invalid
+            }
+        }
+        else {
+            encodingForInclude = defaultEncoding;  // Use default encoding (when useResponseEncoding is false)
+        }
 
         // Add URL
         urlBuf.append(page);
@@ -147,7 +167,7 @@ public class Include extends Component {
 
         // Include
         try {
-            include(result, writer, req, res, defaultEncoding);
+            include(result, writer, req, res, encodingForInclude);
         } catch (ServletException | IOException e) {
             LOG.warn("Exception thrown during include of {}", result, e);
         }

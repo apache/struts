@@ -47,6 +47,9 @@ public final class StrutsConstants {
     /** Whether to use the alterative syntax for the tags or not */
     public static final String STRUTS_TAG_ALTSYNTAX = "struts.tag.altSyntax";
 
+    /** Whether to use the response encoding (JSP page encoding) for s:include tag processing (false - use STRUTS_I18N_ENCODING - by default) */
+    public static final String STRUTS_TAG_INCLUDETAG_USERESPONSEENCODING = "struts.tag.includetag.useResponseEncoding";
+
     /** The HTTP port used by Struts URLs */
     public static final String STRUTS_URL_HTTP_PORT = "struts.url.http.port";
 

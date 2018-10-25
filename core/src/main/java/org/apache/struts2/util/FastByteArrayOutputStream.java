@@ -18,6 +18,9 @@
  */
 package org.apache.struts2.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.jsp.JspWriter;
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -35,6 +38,9 @@ import java.util.LinkedList;
  *
  */
 public class FastByteArrayOutputStream extends OutputStream {
+
+    private static final Logger LOG = LogManager.getLogger(FastByteArrayOutputStream.class);
+
     private static final int DEFAULT_BLOCK_SIZE = 8192;
 
     private LinkedList<byte[]> buffers;
@@ -158,7 +164,7 @@ public class FastByteArrayOutputStream extends OutputStream {
             if (in.hasRemaining()) {
                 // Move remaining to top of buffer
                 in.compact();
-                if (result.isOverflow() && !result.isError() && !result.isMalformed()) {
+                if (result.isOverflow() && !result.isError()) {  // isError covers isMalformed and isUnmappable
                     // Not all buffer chars decoded, spin it again
                     // Set to begin
                     in.flip();
@@ -167,7 +173,15 @@ public class FastByteArrayOutputStream extends OutputStream {
                 // Clean up buffer
                 in.clear();
             }
-        } while (in.hasRemaining() && result.isOverflow() && !result.isError() && !result.isMalformed());
+        } while (in.hasRemaining() && result.isOverflow() && !result.isError());  // isError covers isMalformed and isUnmappable
+
+        if (result.isError()) {
+            if (LOG.isWarnEnabled()) {
+                // Provide a log warning when the decoding fails (prior to 2.5.19 it failed silently).
+                // Note: Set FastByteArrayOutputStream's Logger level to error or higher to suppress this log warning.
+                LOG.warn("Buffer decoding-in-to-out [{}] failed, coderResult [{}]", decoder.charset().name(), result.toString());
+            }
+        }
     }
 
     private static CoderResult decodeAndWrite(Writer writer, ByteBuffer in, CharBuffer out, CharsetDecoder decoder, boolean endOfInput) throws IOException {

@@ -108,6 +108,60 @@ public class IncludeTagTest extends AbstractTagTest {
         verify(mockRequestDispatcher);        
     }
 
+    public void testIncludeSetUseResponseEncodingTrue() throws Exception {
+        // TODO: If possible in future mock-test an actual content-includes with various encodings
+        //   while setting the response encoding to match.  Doesn't appear to be possible
+        //   right now in unit-test form.
+        // Seems that the best we can do is verify the setUseResponseEncoding() doesn't fail...
+
+        // use always matcher as we can not determine the exact objects used in mock.include(request, response) call
+        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
+        expectLastCall().times(1);
+
+        replay(mockRequestDispatcher);
+
+        tag.setValue("person/create.jsp");
+        response.setCharacterEncoding("UTF-8");
+        tag.doStartTag();
+        // Manipulate after doStartTag to ensure the tag component has undergone injection
+        Include include = (Include) tag.getComponent();
+        include.setUseResponseEncoding("true");
+        tag.doEndTag();
+
+        assertEquals("UTF-8", response.getCharacterEncoding());
+        assertEquals("/person/create.jsp", request.getRequestDispatherString());
+        assertEquals("", writer.toString());  // Nothing gets written for mock-include
+
+        verify(mockRequestDispatcher);
+    }
+
+    public void testIncludeSetUseResponseEncodingFalse() throws Exception {
+        // TODO: If possible in future mock-test an actual content-includes with various encodings
+        //   while setting the response encoding to match.  Doesn't appear to be possible
+        //   right now in unit-test form.
+        // Seems that the best we can do is verify the setUseResponseEncoding() doesn't fail...
+
+        // use always matcher as we can not determine the exact objects used in mock.include(request, response) call
+        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
+        expectLastCall().times(1);
+
+        replay(mockRequestDispatcher);
+
+        tag.setValue("person/create.jsp");
+        response.setCharacterEncoding("UTF-8");
+        tag.doStartTag();
+        // Manipulate after doStartTag to ensure the tag component has undergone injection
+        Include include = (Include) tag.getComponent();
+        include.setUseResponseEncoding("false");
+        tag.doEndTag();
+
+        assertEquals("UTF-8", response.getCharacterEncoding());
+        assertEquals("/person/create.jsp", request.getRequestDispatherString());
+        assertEquals("", writer.toString());  // Nothing gets written for mock-include
+
+        verify(mockRequestDispatcher);
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         request.setupGetRequestDispatcher(new MockRequestDispatcher());

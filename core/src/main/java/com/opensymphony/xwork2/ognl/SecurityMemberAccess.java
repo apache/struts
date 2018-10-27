@@ -81,8 +81,9 @@ public class SecurityMemberAccess implements MemberAccess {
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
-        
-        Class targetClass = target.getClass();
+
+        // target can be null in case of accessing static fields, since OGNL 3.2.8
+        Class targetClass = target != null ? target.getClass() : member.getDeclaringClass();
         Class memberClass = member.getDeclaringClass();
         
         if (checkEnumAccess(target, member)) {

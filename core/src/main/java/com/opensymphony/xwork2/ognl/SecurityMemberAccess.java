@@ -83,9 +83,9 @@ public class SecurityMemberAccess implements MemberAccess {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
         // target can be null in case of accessing static fields, since OGNL 3.2.8
-        Class targetClass = target != null ? target.getClass() : member.getDeclaringClass();
-        Class memberClass = member.getDeclaringClass();
-        
+        final Class memberClass = member.getDeclaringClass();
+        Class targetClass = target != null ? target.getClass() : memberClass;
+
         if (checkEnumAccess(target, member)) {
             LOG.trace("Allowing access to enum: target class [{}] of target [{}], member [{}]", targetClass, target, member);
             return true;

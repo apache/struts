@@ -87,7 +87,7 @@ public class ProxyUtil {
      * @param object the object to check
      */
     public static boolean isProxyMember(Member member, Object object) {
-        if (!isProxy(object))
+        if (object == null || !isProxy(object))
             return false;
 
         Boolean flag = isProxyMemberCache.get(member);

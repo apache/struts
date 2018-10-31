@@ -82,22 +82,25 @@ public class SecurityMemberAccess implements MemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
-        // target can be null in case of accessing static fields, since OGNL 3.2.8
-        final Class memberClass = member.getDeclaringClass();
-        Class targetClass = target != null ? target.getClass() : memberClass;
-
         if (checkEnumAccess(target, member)) {
-            LOG.trace("Allowing access to enum: target class [{}] of target [{}], member [{}]", targetClass, target, member);
+            LOG.trace("Allowing access to enum: target [{}], member [{}]", target, member);
             return true;
         }
 
-        if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
-            LOG.debug("Support for accessing static methods [target: {}, targetClass: {}, member: {}, property: {}] is deprecated!",
-                    target, targetClass, member, propertyName);
-            if (!isClassExcluded(member.getDeclaringClass())) {
-                targetClass = member.getDeclaringClass();
-            }
+        if (!checkStaticMethodAccess(member)) {
+            LOG.warn("Access to static [{}] is blocked!", member);
+            return false;
         }
+
+        final Class memberClass = member.getDeclaringClass();
+
+        if (isClassExcluded(memberClass)) {
+            LOG.warn("Declaring class of member type [{}] is excluded!", member);
+            return false;
+        }
+
+        // target can be null in case of accessing static fields, since OGNL 3.2.8
+        Class targetClass = Modifier.isStatic(member.getModifiers()) ? memberClass : target.getClass();
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
             LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!", targetClass.getPackage(), targetClass,
@@ -110,24 +113,8 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        if (isClassExcluded(memberClass)) {
-            LOG.warn("Declaring class of member type [{}] is excluded!", member);
-            return false;
-        }
-
         if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
             LOG.warn("Access to proxy is blocked! Target class [{}] of target [{}], member [{}]", targetClass, target, member);
-            return false;
-        }
-
-        boolean allow = true;
-        if (!checkStaticMethodAccess(member)) {
-            LOG.warn("Access to static [{}] is blocked!", member);
-            allow = false;
-        }
-
-        //failed static test
-        if (!allow) {
             return false;
         }
 
@@ -137,6 +124,9 @@ public class SecurityMemberAccess implements MemberAccess {
     protected boolean checkStaticMethodAccess(Member member) {
         int modifiers = member.getModifiers();
         if (Modifier.isStatic(modifiers)) {
+            if (allowStaticMethodAccess) {
+                LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
+            }
             return allowStaticMethodAccess;
         } else {
             return true;

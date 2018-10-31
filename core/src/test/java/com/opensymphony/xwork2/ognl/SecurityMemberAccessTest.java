@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Member;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -257,6 +258,45 @@ public class SecurityMemberAccessTest extends TestCase {
 
         // then
         assertTrue("Access to static is blocked!", actual);
+    }
+
+    public void testAccessStaticField() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        Member method = StaticTester.class.getField("MAX_VALUE");
+        boolean actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertTrue("Access to static field is blocked!", actual);
+    }
+
+    public void testBlockedStaticFieldWhenFlagIsFalse() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        Member method = StaticTester.class.getField("MAX_VALUE");
+        boolean actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to static field isn't blocked!", actual);
+    }
+
+    public void testBlockedStaticFieldWhenClassIsExcluded() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        sma.setExcludedClasses(new HashSet<>(Arrays.asList(Class.class, StaticTester.class)));
+
+        // when
+        Member method = StaticTester.class.getField("MAX_VALUE");
+        boolean actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to static field isn't blocked!", actual);
     }
 
     public void testBlockStaticAccess() throws Exception {
@@ -502,6 +542,8 @@ enum MyValues {
 }
 
 class StaticTester {
+
+    public static int MAX_VALUE = 0;
 
     public static String sayHello() {
         return "Hello";

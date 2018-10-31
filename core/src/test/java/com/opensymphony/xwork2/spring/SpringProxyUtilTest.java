@@ -87,6 +87,8 @@ public class SpringProxyUtilTest extends XWorkTestCase {
     }
 
     public void testIsProxyMember() throws Exception {
+        assertFalse(ProxyUtil.isProxyMember(SimpleAction.class.getField("COMMAND_RETURN_CODE"), null));
+
         Object simpleAction = appContext.getBean("simple-action");
         assertFalse(ProxyUtil.isProxyMember(
                 simpleAction.getClass().getMethod("setName", String.class), simpleAction));

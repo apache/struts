@@ -41,6 +41,7 @@ public class DefaultFileManager implements FileManager {
     private static final int JAR_FILE_PATH = 3;
 
     protected static final Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
+    private static final List<URL> lazyMonitoredFilesCache = Collections.synchronizedList(new ArrayList<URL>());
 
     protected boolean reloadingConfigs = false;
 
@@ -49,19 +50,13 @@ public class DefaultFileManager implements FileManager {
 
     public void setReloadingConfigs(boolean reloadingConfigs) {
         if (reloadingConfigs && !this.reloadingConfigs) {
+            //starting monitoring cached not-monitored files (lazy monitoring on demand because of performance)
             this.reloadingConfigs = true;
-            //starting monitoring not-monitored loaded files on demand
-            synchronized (files) {
-                for (String fileName :
-                        files.keySet()) {
-                    if (null == files.get(fileName)) {
-                        try {
-                            monitorFile(new URL(fileName));
-                        } catch (MalformedURLException e) {
-                            LOG.warn("Error creating URL from [{}]!", fileName, e);
-                        }
-                    }
+            synchronized (lazyMonitoredFilesCache) {
+                for (URL fileUrl : lazyMonitoredFilesCache) {
+                    monitorFile(fileUrl);
                 }
+                lazyMonitoredFilesCache.clear();
             }
         }
         this.reloadingConfigs = reloadingConfigs;
@@ -105,7 +100,9 @@ public class DefaultFileManager implements FileManager {
     public void monitorFile(URL fileUrl) {
         String fileName = fileUrl.toString();
         if (!reloadingConfigs) {
-            files.put(fileName, null);
+            //reserve file for monitoring on demand because of performance
+            files.remove(fileName);
+            lazyMonitoredFilesCache.add(fileUrl);
             return;
         }
         Revision revision;

@@ -31,6 +31,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -92,6 +95,36 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         changeFileTime(file);
 
         assertTrue(provider.needsReload());
+    }
+
+    public void testReload() throws Exception {
+        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-reload.xml";
+        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
+        loadConfigurationProviders(provider);
+
+        assertFalse(provider.needsReload()); // Revision exists and timestamp didn't change
+
+        File file = new File(getClass().getResource("/" + filename).toURI());
+        assertTrue("not exists: " + file.toString(), file.exists());
+
+        Path configPath = Paths.get(file.getAbsolutePath());
+        String content = new String(Files.readAllBytes(configPath));
+        content = content.replaceAll("<constant name=\"struts.configuration.xml.reload\" value=\"true\" />",
+                "<constant name=\"struts.configuration.xml.reload\" value=\"false\" />");
+        Files.write(configPath, content.getBytes()); // user demand: stop reloading configs
+
+        try {
+            assertTrue(provider.needsReload()); // config file has changed in previous lines
+
+            configurationManager.reload();
+
+            changeFileTime(file);
+            assertFalse(provider.needsReload());    // user already has stopped reloading configs
+        } finally {
+            content = content.replaceAll("<constant name=\"struts.configuration.xml.reload\" value=\"false\" />",
+                    "<constant name=\"struts.configuration.xml.reload\" value=\"true\" />");
+            Files.write(configPath, content.getBytes());
+        }
     }
 
     public void testNeedsReloadNotReloadingConfigs() throws Exception {

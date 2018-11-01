@@ -98,13 +98,12 @@ public class Include extends Component {
     private HttpServletRequest req;
     private HttpServletResponse res;
     private String defaultEncoding;       // Made non-static (during WW-4971 fix)
-    private boolean useResponseEncoding;  // Added with WW-4971 fix (allows switch between usage of response or default encoding)
+    private boolean useResponseEncoding = true;  // Added with WW-4971 fix (allows switch between usage of response or default encoding)
 
     public Include(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
         this.req = req;
         this.res = res;
-        useResponseEncoding = false;  // By default use defaultEncoding (vs. response/page encoding)
     }
 
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)

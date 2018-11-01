@@ -41,11 +41,14 @@ public final class StrutsConstants {
     /** The URL extension to use to determine if the request is meant for a Struts action */
     public static final String STRUTS_ACTION_EXTENSION = "struts.action.extension";
 
-	/** Comma separated list of patterns (java.util.regex.Pattern) to be excluded from Struts2-processing */
-	public static final String STRUTS_ACTION_EXCLUDE_PATTERN = "struts.action.excludePattern";
+    /** Comma separated list of patterns (java.util.regex.Pattern) to be excluded from Struts2-processing */
+    public static final String STRUTS_ACTION_EXCLUDE_PATTERN = "struts.action.excludePattern";
 
-    /** Whether to use the alterative syntax for the tags or not */
+    /** Whether to use the alternative syntax for the tags or not */
     public static final String STRUTS_TAG_ALTSYNTAX = "struts.tag.altSyntax";
+
+    /** Whether to use the response encoding (JSP page encoding) for s:include tag processing (false - use STRUTS_I18N_ENCODING - by default) */
+    public static final String STRUTS_TAG_INCLUDETAG_USERESPONSEENCODING = "struts.tag.includetag.useResponseEncoding";
 
     /** The HTTP port used by Struts URLs */
     public static final String STRUTS_URL_HTTP_PORT = "struts.url.http.port";
@@ -56,7 +59,7 @@ public final class StrutsConstants {
     /** The default includeParams method to generate Struts URLs */
     public static final String STRUTS_URL_INCLUDEPARAMS = "struts.url.includeParams";
 
-	public static final String STRUTS_URL_RENDERER = "struts.urlRenderer";
+    public static final String STRUTS_URL_RENDERER = "struts.urlRenderer";
 
     /** The com.opensymphony.xwork2.ObjectFactory implementation class */
     public static final String STRUTS_OBJECTFACTORY = "struts.objectFactory";
@@ -91,7 +94,7 @@ public final class StrutsConstants {
     /** The org.apache.struts2.views.freemarker.FreemarkerManager implementation class */
     public static final String STRUTS_FREEMARKER_MANAGER_CLASSNAME = "struts.freemarker.manager.classname";
 
-    /** Update freemarker templates cache in seconds*/
+    /** Update freemarker templates cache in seconds */
     public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY = "struts.freemarker.templatesCache.updateDelay";
     
     /** Cache model instances at BeanWrapper level */
@@ -220,12 +223,12 @@ public final class StrutsConstants {
     public static final String STRUTS_LOCALE_PROVIDER_FACTORY = "struts.localeProviderFactory";
 
     /** The name of the parameter to create when mapping an id (used by some action mappers) */
-	public static final String STRUTS_ID_PARAMETER_NAME = "struts.mapper.idParameterName";
-	
-	/** The name of the parameter to determine whether static method access will be allowed in OGNL expressions or not */
-	public static final String STRUTS_ALLOW_STATIC_METHOD_ACCESS = "struts.ognl.allowStaticMethodAccess";
+    public static final String STRUTS_ID_PARAMETER_NAME = "struts.mapper.idParameterName";
 
-	/** The com.opensymphony.xwork2.validator.ActionValidatorManager implementation class */
+    /** The name of the parameter to determine whether static method access will be allowed in OGNL expressions or not */
+    public static final String STRUTS_ALLOW_STATIC_METHOD_ACCESS = "struts.ognl.allowStaticMethodAccess";
+
+    /** The com.opensymphony.xwork2.validator.ActionValidatorManager implementation class */
     public static final String STRUTS_ACTIONVALIDATORMANAGER = "struts.actionValidatorManager";
 
     /** The {@link com.opensymphony.xwork2.util.ValueStackFactory} implementation class */
@@ -236,7 +239,7 @@ public final class StrutsConstants {
 
     /** The {@link com.opensymphony.xwork2.util.reflection.ReflectionContextFactory} implementation class */
     public static final String STRUTS_REFLECTIONCONTEXTFACTORY = "struts.reflectionContextFactory";
-    
+
     /** The {@link com.opensymphony.xwork2.util.PatternMatcher} implementation class */
     public static final String STRUTS_PATTERNMATCHER = "struts.patternMatcher";
 
@@ -246,32 +249,32 @@ public final class StrutsConstants {
     /** The {@link com.opensymphony.xwork2.UnknownHandlerManager} implementation class */
     public static final String STRUTS_UNKNOWN_HANDLER_MANAGER = "struts.unknownHandlerManager";
 
-    /** Throw RuntimeException when a property is not found, or the evaluation of the espression fails*/
+    /** Throw RuntimeException when a property is not found, or the evaluation of the expression fails */
     public static final String STRUTS_EL_THROW_EXCEPTION = "struts.el.throwExceptionOnFailure";
 
-    /** Logs properties that are not found (very verbose) **/
+    /** Logs properties that are not found (very verbose) */
     public static final String STRUTS_LOG_MISSING_PROPERTIES = "struts.ognl.logMissingProperties";
 
-    /** Enables caching of parsed OGNL expressions **/
+    /** Enables caching of parsed OGNL expressions */
     public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
 
-    /** Enables evaluation of OGNL expressions **/
+    /** Enables evaluation of OGNL expressions */
     public static final String STRUTS_ENABLE_OGNL_EVAL_EXPRESSION = "struts.ognl.enableOGNLEvalExpression";
 
-    /** Disables {@link org.apache.struts2.dispatcher.StrutsRequestWrapper} request attribute value stack lookup (JSTL accessibility) **/
+    /** Disables {@link org.apache.struts2.dispatcher.StrutsRequestWrapper} request attribute value stack lookup (JSTL accessibility) */
     public static final String STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP = "struts.disableRequestAttributeValueStackLookup";
 
-    /** The{@link org.apache.struts2.views.util.UrlHelper} implementation class **/
+    /** The{@link org.apache.struts2.views.util.UrlHelper} implementation class */
     public static final String STRUTS_URL_HELPER = "struts.view.urlHelper";
 
-    /** {@link com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter} **/
+    /** {@link com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter} */
     public static final String STRUTS_CONVERTER_COLLECTION = "struts.converter.collection";
     public static final String STRUTS_CONVERTER_ARRAY = "struts.converter.array";
     public static final String STRUTS_CONVERTER_DATE = "struts.converter.date";
     public static final String STRUTS_CONVERTER_NUMBER = "struts.converter.number";
     public static final String STRUTS_CONVERTER_STRING = "struts.converter.string";
 
-    /** Enable handling exceptions by Dispatcher - true by default **/
+    /** Enable handling exceptions by Dispatcher - true by default */
     public static final String STRUTS_HANDLE_EXCEPTION = "struts.handle.exception";
 
     public static final String STRUTS_CONVERTER_PROPERTIES_PROCESSOR = "struts.converter.properties.processor";
@@ -282,42 +285,42 @@ public final class StrutsConstants {
 
     public static final String STRUTS_EXPRESSION_PARSER = "struts.expression.parser";
 
-    /** namespaces names' whitelist **/
+    /** Namespace names' whitelist */
     public static final String STRUTS_ALLOWED_NAMESPACE_NAMES = "struts.allowed.namespace.names";
-    /** default namespace name to use when namespace didn't match the whitelist **/
+    /** Default namespace name to use when namespace didn't match the whitelist */
     public static final String STRUTS_DEFAULT_NAMESPACE_NAME = "struts.default.namespace.name";
 
-    /** actions names' whitelist **/
+    /** Action names' whitelist */
     public static final String STRUTS_ALLOWED_ACTION_NAMES = "struts.allowed.action.names";
-    /** default action name to use when action didn't match the whitelist **/
+    /** Default action name to use when action didn't match the whitelist */
     public static final String STRUTS_DEFAULT_ACTION_NAME = "struts.default.action.name";
 
-    /** methods names' whitelist **/
+    /** Method names' whitelist */
     public static final String STRUTS_ALLOWED_METHOD_NAMES = "struts.allowed.method.names";
-    /** default method name to use when method didn't match the whitelist **/
+    /** Default method name to use when method didn't match the whitelist */
     public static final String STRUTS_DEFAULT_METHOD_NAME = "struts.default.method.name";
 
-    /** enables action: prefix **/
+    /** Enables action: prefix */
     public static final String STRUTS_MAPPER_ACTION_PREFIX_ENABLED = "struts.mapper.action.prefix.enabled";
 
-    /** enables access to actions in other namespaces than current with action: prefix **/
+    /** Enables access to actions in other namespaces than current with action: prefix */
     public static final String STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES = "struts.mapper.action.prefix.crossNamespaces";
 
     public static final String DEFAULT_TEMPLATE_TYPE_CONFIG_KEY = "struts.ui.templateSuffix";
 
-    /** Allows override default DispatcherErrorHandler **/
+    /** Allows override default DispatcherErrorHandler */
     public static final String STRUTS_DISPATCHER_ERROR_HANDLER = "struts.dispatcher.errorHandler";
 
-    /** Comma delimited set of excluded classes and package names which cannot be accessed via expressions **/
+    /** Comma delimited set of excluded classes and package names which cannot be accessed via expressions */
     public static final String STRUTS_EXCLUDED_CLASSES = "struts.excludedClasses";
     public static final String STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS = "struts.excludedPackageNamePatterns";
     public static final String STRUTS_EXCLUDED_PACKAGE_NAMES = "struts.excludedPackageNames";
 
-    /** Dedicated services to check if passed string is excluded/accepted **/
+    /** Dedicated services to check if passed string is excluded/accepted */
     public static final String STRUTS_EXCLUDED_PATTERNS_CHECKER = "struts.excludedPatterns.checker";
     public static final String STRUTS_ACCEPTED_PATTERNS_CHECKER = "struts.acceptedPatterns.checker";
 
-    /** Constant is used to override framework's default excluded patterns **/
+    /** Constant is used to override framework's default excluded patterns */
     public static final String STRUTS_OVERRIDE_EXCLUDED_PATTERNS = "struts.override.excludedPatterns";
     public static final String STRUTS_OVERRIDE_ACCEPTED_PATTERNS = "struts.override.acceptedPatterns";
 

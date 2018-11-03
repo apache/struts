@@ -40,7 +40,8 @@ public class DefaultFileManager implements FileManager {
     private static final Pattern JAR_PATTERN = Pattern.compile("^(jar:|wsjar:|zip:|vfsfile:|code-source:)?(file:)?(.*?)(\\!/|\\.jar/)(.*)");
     private static final int JAR_FILE_PATH = 3;
 
-    protected static Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
+    protected static final Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
+    private static final List<URL> lazyMonitoredFilesCache = Collections.synchronizedList(new ArrayList<URL>());
 
     protected boolean reloadingConfigs = false;
 
@@ -48,6 +49,16 @@ public class DefaultFileManager implements FileManager {
     }
 
     public void setReloadingConfigs(boolean reloadingConfigs) {
+        if (reloadingConfigs && !this.reloadingConfigs) {
+            //starting monitoring cached not-monitored files (lazy monitoring on demand because of performance)
+            this.reloadingConfigs = true;
+            synchronized (lazyMonitoredFilesCache) {
+                for (URL fileUrl : lazyMonitoredFilesCache) {
+                    monitorFile(fileUrl);
+                }
+                lazyMonitoredFilesCache.clear();
+            }
+        }
         this.reloadingConfigs = reloadingConfigs;
     }
 
@@ -70,9 +81,7 @@ public class DefaultFileManager implements FileManager {
             return null;
         }
         InputStream is = openFile(fileUrl);
-        if (reloadingConfigs) {
-            monitorFile(fileUrl);
-        }
+        monitorFile(fileUrl);
         return is;
     }
 
@@ -90,6 +99,12 @@ public class DefaultFileManager implements FileManager {
 
     public void monitorFile(URL fileUrl) {
         String fileName = fileUrl.toString();
+        if (!reloadingConfigs) {
+            //reserve file for monitoring on demand because of performance
+            files.remove(fileName);
+            lazyMonitoredFilesCache.add(fileUrl);
+            return;
+        }
         Revision revision;
         LOG.debug("Creating revision for URL: {}", fileName);
         if (isJarURL(fileUrl)) {

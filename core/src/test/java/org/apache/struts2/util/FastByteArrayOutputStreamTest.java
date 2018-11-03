@@ -38,14 +38,14 @@ public class FastByteArrayOutputStreamTest extends TestCase {
 
     /**
      * Test usage UTF8 to UTF8
-     * 
+     *
      * No Warn log output produced
      */
     public void testUTF8WriteToUTF8() {
         FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
         ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
         OutputStreamWriter osw = null;
-        
+
         try {
           assertTrue("UTF-8 string length not same as UTF-16", utf16_String.length() == utf8_String.length());
           fbaos.write(utf8_String.getBytes("UTF-8"));
@@ -86,14 +86,14 @@ public class FastByteArrayOutputStreamTest extends TestCase {
 
     /**
      * Test Usage ISO8859-1 to ISO8859-1
-     * 
+     *
      * No Warn log output produced
      */
     public void testISO8859_1WriteToISO8859_1() {
         FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
         ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
         OutputStreamWriter osw = null;
-        
+
         try {
             assertTrue("ISO-8859-1 string length not same as UTF-16", utf16_String.length() == iso8859_1_String.length());
             fbaos.write(iso8859_1_String.getBytes("ISO-8859-1"));
@@ -134,14 +134,14 @@ public class FastByteArrayOutputStreamTest extends TestCase {
 
     /**
      * Test Usage UTF8 to ISO8859-1
-     * 
+     *
      * No Warn log output produced
      */
     public void testUTF8WriteToISO8859_1() {
         FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
         ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
         OutputStreamWriter osw = null;
-        
+
         try {
             assertTrue("UTF-8 string length not same as UTF-16", utf16_String.length() == utf8_String.length());
             fbaos.write(utf8_String.getBytes("UTF-8"));
@@ -184,14 +184,14 @@ public class FastByteArrayOutputStreamTest extends TestCase {
 
     /**
      * Test Usage ISO8859-1 to UTF8
-     * 
+     *
      * A single Warn log output produced
      */
     public void testISO8859_1WriteToUTF8() {
         FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
         ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
         OutputStreamWriter osw = null;
-        
+
         try {
             assertTrue("ISO-8859-1 string length not same as UTF-16", utf16_String.length() == iso8859_1_String.length());
             fbaos.write(iso8859_1_String.getBytes("ISO-8859-1"));
@@ -202,10 +202,10 @@ public class FastByteArrayOutputStreamTest extends TestCase {
             //   This will produce a Warn log output from FastByteArrayOutputStream
             // The UTF-8 decoder interprets the accented characters (C0-FF) as malformed
             //   input and decoding halts (which results in truncation of the input string at
-            //   the point of the accented characters).   
+            //   the point of the accented characters).
             assertTrue("Result is empty", baos.toString("UTF-8").length() > 0);
             assertFalse("UTF-8 string matches buffer write result (no truncation)", utf8_String.equals(baos.toString("UTF-8")));
-            assertTrue("Buffer write result not truncated", baos.toString("UTF-8").length() < utf8_String.length());            
+            assertTrue("Buffer write result not truncated", baos.toString("UTF-8").length() < utf8_String.length());
         }
         catch(UnsupportedEncodingException ue) {
             fail("Unexpected UnsupportedEncodingException during test: " + ue);

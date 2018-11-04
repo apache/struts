@@ -22,13 +22,41 @@ import org.apache.struts2.StrutsInternalTestCase;
 
 public class EnvsValueSubstitutorTest extends StrutsInternalTestCase {
 
-    public void testEnvSimpleValue() throws Exception {
-        // given
-        String expected = System.getenv("USER");
-        ValueSubstitutor substitutor = new EnvsValueSubstitutor();
+    private boolean osIsWindows = false;  // Assume Linux/Unix environment by default
 
-        // when
-        String actual = substitutor.substitute("${env.USER}");
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        final String os = System.getProperty("os.name");
+        if (os != null && os.startsWith("Windows")) {
+            osIsWindows = true;   // Determined that the OS is Windows (must use different environment variables)
+        }
+        else {
+            osIsWindows = false;  // Assume Linux/Unix environment by default
+        }
+    }
+
+    public void testEnvSimpleValue() throws Exception {
+
+        String expected;
+        String actual;
+        final ValueSubstitutor substitutor = new EnvsValueSubstitutor();
+
+        if (osIsWindows) {
+            // given
+            expected = System.getenv("USERNAME");
+
+            // when
+            actual = substitutor.substitute("${env.USERNAME}");
+        }
+        else {
+            // given
+            expected = System.getenv("USER");
+
+            // when
+            actual = substitutor.substitute("${env.USER}");
+        }
 
         // then
         assertEquals(expected, actual);

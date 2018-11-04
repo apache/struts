@@ -28,8 +28,16 @@
 
     <constant name="foo" value="bar"/>
 
+    <!-- Linux/Unix (or Unix-like) Environment -->
     <constant name="user" value="${env.USER}"/>
     <constant name="home" value="Current HOME = ${env.HOME}"/>
+    <!-- Linux/Unix (or Unix-like) Environment -->
+
+    <!-- Windows (or Windows-like) Environment -->
+    <constant name="username" value="${env.USERNAME}"/>
+    <constant name="homedrive.homepath" value="Current HOMEDRIVE.HOMEPATH = ${env.HOMEDRIVE}${env.HOMEPATH}"/>
+    <!-- Windows (or Windows-like) Environment -->
+
     <constant name="os" value="Current OS = ${os.name}"/>
     <constant name="unknown" value="Unknown = ${env.UNKNOWN:default}"/>
 

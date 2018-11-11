@@ -80,7 +80,7 @@ public class JspCompilationContext {
     protected String baseURI;
     protected String outputDir;
     protected ServletContext context;
-    protected URLClassLoader loader;
+    protected ClassLoader loader;
 
     protected JspRuntimeContext rctxt;
 
@@ -177,7 +177,7 @@ public class JspCompilationContext {
         return rctxt.getParentClassLoader();
     }
 
-    public void setClassLoader(URLClassLoader loader) {
+    public void setClassLoader(ClassLoader loader) {
         this.loader = loader;
     }
 

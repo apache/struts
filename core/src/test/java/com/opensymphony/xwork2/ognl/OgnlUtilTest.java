@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.test.User;
 import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.*;
+import org.apache.struts2.TestUtils;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -374,8 +375,18 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(cal.getTime(), foo.getBirthday());
         
         //UK style test
-        props.put("event", "18/10/2006 14:23:45");
-        props.put("meeting", "09/09/2006 14:30");
+        if (TestUtils.isJdk9OrLater()) {
+            /* In JDK 9 and later, the default locale data uses data derived from the
+            Unicode Consortium's Common Locale Data Repository (CLDR). The short date-time format is ‹{1}, {0}› in the
+            CLDR locale, as opposed to {1} {0} in the JRE locale data.
+            Please refer : http://www.oracle.com/technetwork/java/javase/9-relnote-issues-3704069.html#JDK-8008577 */
+            props.put("event", "18/10/2006, 14:23:45");
+            props.put("meeting", "09/09/2006, 14:30");
+        }
+        else {
+            props.put("event", "18/10/2006 14:23:45");
+            props.put("meeting", "09/09/2006 14:30");
+        }
         context.put(ActionContext.LOCALE, Locale.UK);
 
         ognlUtil.setProperties(props, foo, context);

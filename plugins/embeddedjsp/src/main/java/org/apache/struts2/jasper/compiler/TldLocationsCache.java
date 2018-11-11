@@ -25,12 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.xml.sax.InputSource;
@@ -508,24 +503,27 @@ public class TldLocationsCache {
         ClassLoader loader = webappLoader;
 
         while (loader != null) {
+            URL[] urls;
             if (loader instanceof URLClassLoader) {
-                URL[] urls = ((URLClassLoader) loader).getURLs();
-                for (int i=0; i<urls.length; i++) {
-                    URLConnection conn = urls[i].openConnection();
-                    if (conn instanceof JarURLConnection) {
-                        if (needScanJar(loader, webappLoader,
-                                        ((JarURLConnection) conn).getJarFile().getName())) {
-                            scanJar((JarURLConnection) conn, true);
-                        }
-                    } else {
-                        String urlStr = urls[i].toString();
-                        if (urlStr.startsWith(FILE_PROTOCOL)
-                                && urlStr.endsWith(JAR_FILE_SUFFIX)
-                                && needScanJar(loader, webappLoader, urlStr)) {
-                            URL jarURL = new URL("jar:" + urlStr + "!/");
-                            scanJar((JarURLConnection) jarURL.openConnection(),
-                                    true);
-                        }
+                urls = ((URLClassLoader) loader).getURLs();
+            } else {    //jdk9 or later
+                urls = Collections.list(loader.getResources("")).toArray(new URL[0]);
+            }
+            for (URL url : urls) {
+                URLConnection conn = url.openConnection();
+                if (conn instanceof JarURLConnection) {
+                    if (needScanJar(loader, webappLoader,
+                            ((JarURLConnection) conn).getJarFile().getName())) {
+                        scanJar((JarURLConnection) conn, true);
+                    }
+                } else {
+                    String urlStr = url.toString();
+                    if (urlStr.startsWith(FILE_PROTOCOL)
+                            && urlStr.endsWith(JAR_FILE_SUFFIX)
+                            && needScanJar(loader, webappLoader, urlStr)) {
+                        URL jarURL = new URL("jar:" + urlStr + "!/");
+                        scanJar((JarURLConnection) jarURL.openConnection(),
+                                true);
                     }
                 }
             }

@@ -20,6 +20,7 @@ package org.apache.struts2;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.StringTokenizer;
 
 /**
@@ -89,5 +90,21 @@ public class TestUtils {
         }
 
         return buffer.toString();
+    }
+
+    public static boolean isJdk9OrLater() {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
+        if(loader instanceof URLClassLoader) {
+            return false;
+        }
+
+        loader = TestUtils.class.getClassLoader();
+
+        if(loader instanceof URLClassLoader) {
+            return false;
+        }
+
+        return true;
     }
 }

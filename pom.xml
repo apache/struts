@@ -167,10 +167,6 @@
             <activation>
                 <jdk>[9,)</jdk>
             </activation>
-            <properties>
-                <!-- coverall version 4.3.0 does not work with java 9, see https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
-                <coveralls.skip>true</coveralls.skip>
-            </properties>
             <build>
                 <pluginManagement>
                     <plugins>
@@ -204,6 +200,15 @@
                         <groupId>org.eluder.coveralls</groupId>
                         <artifactId>coveralls-maven-plugin</artifactId>
                         <version>4.3.0</version>
+                        <!-- TODO delete following dependency after fix of https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
+                        <!-- coverall version 4.3.0 does not work with java 9 without following dependency -->
+                        <dependencies>
+                            <dependency>
+                                <groupId>javax.xml.bind</groupId>
+                                <artifactId>jaxb-api</artifactId>
+                                <version>2.3.0</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                 </plugins>
             </build>

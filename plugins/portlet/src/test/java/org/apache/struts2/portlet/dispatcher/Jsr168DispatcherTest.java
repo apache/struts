@@ -261,6 +261,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase {
         Map<String, String> initParams = new HashMap<String, String>();
         initParams.put("viewNamespace", "/view");
         initParams.put("editNamespace", "/edit");
+        initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
 
         initPortletConfig(initParams, new HashMap<String, Object>());
         initRequest(requestParams, new HashMap<String, Object>(), sessionMap, mode, WindowState.NORMAL, false, null);

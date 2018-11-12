@@ -51,7 +51,7 @@
         <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
         <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
         <url>https://github.com/apache/struts/</url>
-        <tag>STRUTS_2_5_16</tag>
+        <tag>STRUTS_2_5_19</tag>
     </scm>
 
     <issueManagement>
@@ -97,16 +97,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring.platformVersion>4.3.13.RELEASE</spring.platformVersion>
-        <ognl.version>3.1.15</ognl.version>
+        <spring.platformVersion>4.3.20.RELEASE</spring.platformVersion>
+        <ognl.version>3.1.18</ognl.version>
         <asm.version>5.2</asm.version>
-        <tiles.version>3.0.7</tiles.version>
-        <tiles-request.version>1.0.6</tiles-request.version>
-        <log4j2.version>2.10.0</log4j2.version>
-        <jackson.version>2.9.5</jackson.version>
+        <tiles.version>3.0.8</tiles.version>
+        <tiles-request.version>1.0.7</tiles-request.version>
+        <log4j2.version>2.11.1</log4j2.version>
+        <jackson.version>2.9.7</jackson.version>
 
         <!-- Site generation -->
-        <fluido-skin.version>1.6</fluido-skin.version>
+        <fluido-skin.version>1.7</fluido-skin.version>
 
         <!-- Sonar -->
         <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
@@ -234,6 +234,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.20.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-junit47</artifactId>
+                            <version>2.20.1</version>
+                        </dependency>
+                    </dependencies>
                     <configuration>
                         <argLine>-Duser.language=en -Duser.region=US</argLine>
                         <includes>
@@ -242,6 +249,12 @@
                         <excludes>
                             <exclude>**/TestBean.java</exclude>
                         </excludes>
+                        <properties>
+                          <property>
+                            <name>junit</name>
+                            <value>false</value>
+                          </property>
+                        </properties>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -312,7 +325,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.3.4</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
@@ -373,12 +386,12 @@
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
                         <artifactId>doxia-core</artifactId>
-                        <version>1.7</version>
+                        <version>1.8</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
                         <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.3</version>
+                        <version>1.7</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -445,7 +458,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.7</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -607,13 +620,13 @@
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.26-incubating</version>
+                <version>2.3.28</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.main</artifactId>
-                <version>4.0.3</version>
+                <version>4.6.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -689,13 +702,13 @@
             <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib-nodep</artifactId>
-                <version>2.1_3</version>
+                <version>3.2.5</version>
             </dependency>
 
             <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
-                <version>3.4</version>
+                <version>3.5.1</version>
                 <scope>test</scope>
             </dependency>
 
@@ -709,7 +722,7 @@
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.el</artifactId>
-                <version>3.0.0</version>
+                <version>3.0.1-b10</version>
             </dependency>
 
             <dependency>
@@ -729,7 +742,7 @@
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>jasper</artifactId>
-                <version>6.0.18</version>
+                <version>6.0.53</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -813,19 +826,19 @@
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>juli</artifactId>
-                <version>6.0.18</version>
+                <version>6.0.53</version>
             </dependency>
 
             <!-- Commons -->
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
-                <version>1.1.3</version>
+                <version>1.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
-                <version>4.1</version>
+                <version>4.2</version>
             </dependency>
             <!-- it's a dependency of Velocity defined here to override the transitive one -->
             <dependency>
@@ -841,12 +854,12 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.5</version>
+                <version>2.6</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.6</version>
+                <version>3.8.1</version>
             </dependency>
             <dependency>
                 <groupId>commons-digester</groupId>
@@ -867,12 +880,12 @@
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>1.9.2</version>
+                <version>1.9.3</version>
             </dependency>
             <dependency>
                 <groupId>commons-validator</groupId>
                 <artifactId>commons-validator</artifactId>
-                <version>1.5.1</version>
+                <version>1.6</version>
             </dependency>
 
             <!-- Mocks for unit testing (by Spring) -->
@@ -970,7 +983,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
-                <version>1.9.5</version>
+                <version>1.10.19</version>
                 <scope>test</scope>
             </dependency>
 
@@ -984,12 +997,12 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.12</version>
+                <version>1.7.25</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
-                <version>1.7.12</version>
+                <version>1.7.25</version>
             </dependency>
 
             <dependency>
@@ -1009,13 +1022,13 @@
             <dependency>
                 <groupId>net.sf.oval</groupId>
                 <artifactId>oval</artifactId>
-                <version>1.31</version>
+                <version>1.90</version>
             </dependency>
 
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
-                <version>1.4.10</version>
+                <version>1.4.11.1</version>
             </dependency>
 
             <dependency>
@@ -1027,12 +1040,12 @@
             <dependency>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty</artifactId>
-                <version>6.1.9</version>
+                <version>6.1.26</version>
             </dependency>
             <dependency>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jsp-2.1</artifactId>
-                <version>6.1.9</version>
+                <version>6.1.26</version>
             </dependency>
 
             <!-- Portlet -->
@@ -1075,13 +1088,13 @@
             <dependency>
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
-                <version>1.0-SP1</version>
+                <version>1.0-SP4</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jboss.weld</groupId>
                 <artifactId>weld-core</artifactId>
-                <version>1.0.1-Final</version>
+                <version>1.0.1-SP4</version>
             </dependency>
 
             <dependency>
@@ -1093,7 +1106,7 @@
             <dependency>
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
-                <version>2.10.0</version>
+                <version>2.12.0</version>
                 <scope>test</scope>
             </dependency>
 

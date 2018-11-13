@@ -166,7 +166,8 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
         List<Configurer> configurers = validationManager.getConfigurers(clazz, context, validateJPAAnnotations);
 
         Validator validator = configurers.isEmpty() ? new Validator() : new Validator(configurers);
-        validator.addExpressionLanguage("ognl", ognlExpressionLanguage);
+        // Note: For Oval <= 1.70, API requires "validator.addExpressionLanguage("ognl", ognlExpressionLanguage)".
+        validator.getExpressionLanguageRegistry().registerExpressionLanguage("ognl", ognlExpressionLanguage);  // Usage for Oval >= 1.80 due to API changes
         //if the method is annotated with a @Profiles annotation, use those profiles
         Method method = clazz.getMethod(methodName, new Class[0]);
         if (method != null) {

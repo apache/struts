@@ -49,4 +49,6 @@ public class ConventionConstants {
     public static final String CONVENTION_ACTION_MAP_ALL_MATCHES = "struts.convention.action.mapAllMatches";
     public static final String CONVENTION_ACTION_EAGER_LOADING = "struts.convention.action.eagerLoading";
     public static final String CONVENTION_RESULT_FLAT_LAYOUT = "struts.convention.result.flatLayout";
+    /** Enables the inheritance of the SMI value from a parent package config to its children */
+    public static final String CONVENTION_ENABLE_SMI_INHERITANCE = "struts.convention.enable.smi.inheritance";
 }

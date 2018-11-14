@@ -56,6 +56,7 @@ public class ConventionConstantConfig extends ConstantConfig {
     private Boolean conventionActionMapAllMatches;
     private Boolean conventionActionEagerLoading;
     private Boolean conventionResultFlatLayout;
+    private Boolean conventionEnableSmiInheritance;
 
     @Override
     public Map<String, String> getAllAsStringsMap() {
@@ -88,6 +89,7 @@ public class ConventionConstantConfig extends ConstantConfig {
         map.put(ConventionConstants.CONVENTION_ACTION_MAP_ALL_MATCHES, Objects.toString(conventionActionMapAllMatches, null));
         map.put(ConventionConstants.CONVENTION_ACTION_EAGER_LOADING, Objects.toString(conventionActionEagerLoading, null));
         map.put(ConventionConstants.CONVENTION_RESULT_FLAT_LAYOUT, Objects.toString(conventionResultFlatLayout, null));
+        map.put(ConventionConstants.CONVENTION_ENABLE_SMI_INHERITANCE, Objects.toString(conventionEnableSmiInheritance, null));
 
         return map;
     }
@@ -326,5 +328,13 @@ public class ConventionConstantConfig extends ConstantConfig {
 
     public void setConventionResultFlatLayout(Boolean conventionResultFlatLayout) {
         this.conventionResultFlatLayout = conventionResultFlatLayout;
+    }
+
+    public Boolean getConventionEnableSmiInheritance() {
+        return conventionEnableSmiInheritance;
+    }
+
+    public void setConventionEnableSmiInheritance(Boolean conventionEnableSmiInheritance) {
+        this.conventionEnableSmiInheritance = conventionEnableSmiInheritance;
     }
 }

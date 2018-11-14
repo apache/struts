@@ -84,6 +84,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private boolean alwaysMapExecute;
     private boolean excludeParentClassLoader;
     private boolean slashesInActionNames;
+    private boolean enableSmiInheritance;
 
     private static final String DEFAULT_METHOD = "execute";
     private boolean eagerLoading = false;
@@ -102,12 +103,14 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      *                              action for indexes. If this is set to true, index actions are not created because
      *                              the unknown handler will redirect from /foo to /foo/. The only action that is created
      *                              is to the empty action in the namespace (e.g. the namespace /foo and the action "").
+     * @param enableSmiInheritance  A boolean parameter which determines if a newly created package config inherits the SMI value of its parent package config
      * @param defaultParentPackage  The default parent package for all the configuration.
      */
     @Inject
     public PackageBasedActionConfigBuilder(Configuration configuration, Container container, ObjectFactory objectFactory,
                                            @Inject(ConventionConstants.CONVENTION_REDIRECT_TO_SLASH) String redirectToSlash,
-                                           @Inject(ConventionConstants.CONVENTION_DEFAULT_PARENT_PACKAGE) String defaultParentPackage) {
+                                           @Inject(ConventionConstants.CONVENTION_DEFAULT_PARENT_PACKAGE) String defaultParentPackage,
+                                           @Inject(ConventionConstants.CONVENTION_ENABLE_SMI_INHERITANCE) String enableSmiInheritance) {
 
         // Validate that the parameters are okay
         this.configuration = configuration;
@@ -116,6 +119,7 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         this.interceptorMapBuilder = container.getInstance(InterceptorMapBuilder.class, container.getInstance(String.class, ConventionConstants.CONVENTION_INTERCEPTOR_MAP_BUILDER));
         this.objectFactory = objectFactory;
         this.redirectToSlash = Boolean.parseBoolean(redirectToSlash);
+        this.enableSmiInheritance = Boolean.parseBoolean(enableSmiInheritance);
 
         if (LOG.isTraceEnabled()) {
             LOG.trace("Setting action default parent package to [{}]", defaultParentPackage);
@@ -1042,6 +1046,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         PackageConfig.Builder pkgConfig = packageConfigs.get(name);
         if (pkgConfig == null) {
             pkgConfig = new PackageConfig.Builder(name).namespace(actionNamespace).addParent(parentPkg);
+            if (enableSmiInheritance) {
+                pkgConfig.strictMethodInvocation(parentPkg.isStrictMethodInvocation());
+            }
             packageConfigs.put(name, pkgConfig);
 
             //check for @DefaultInterceptorRef in the package

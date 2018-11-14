@@ -347,7 +347,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         mockContainer.setResultMapBuilder(resultMapBuilder);
         mockContainer.setConventionsService(new ConventionsServiceImpl(""));
 
-        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(configuration, mockContainer ,of, "false", "struts-default");
+        PackageBasedActionConfigBuilder builder = new PackageBasedActionConfigBuilder(configuration, mockContainer ,of, "false", "struts-default", "false");
         builder.setFileProtocols("jar");
         if (actionPackages != null) {
             builder.setActionPackages(actionPackages);

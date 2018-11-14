@@ -31,7 +31,6 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
-import com.sun.net.httpserver.HttpsParameters;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -46,11 +45,7 @@ import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
@@ -231,6 +226,19 @@ public class EmbeddedJSPResultTest extends TestCase {
         assertEquals("WhoamI?", StringUtils.deleteWhitespace(response.getContentAsString()));
     }
 
+    public void testNotURLClassLoader() throws Exception {
+        ClassLoader parentClassLoader = Thread.currentThread().getContextClassLoader();
+        NotURLClassLoader loader = new NotURLClassLoader(parentClassLoader);
+        Thread.currentThread().setContextClassLoader(loader);
+
+        result.setLocation("org/apache/struts2/tag0.jsp");
+        result.execute(null);
+
+        assertEquals("Thissessionisnotsecure.OtherText", StringUtils.deleteWhitespace(response.getContentAsString()));
+
+        Thread.currentThread().setContextClassLoader(parentClassLoader);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -372,5 +380,12 @@ class CountingClassLoaderInterface extends ClassLoaderInterfaceDelegate {
         counters.put(name, counter);
 
         return super.getResourceAsStream(name);
+    }
+}
+
+class NotURLClassLoader extends ClassLoader {
+
+    NotURLClassLoader(ClassLoader parentClassLoader) {
+        super(parentClassLoader);
     }
 }

@@ -28,6 +28,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.AssertionFailedError;
+
 public class OValValidationInterceptorTest extends XWorkTestCase {
     public void testSimpleFieldsXML() throws Exception {
         ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "simpleFieldsXML", null, null);
@@ -283,7 +285,18 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         assertEquals(5, fieldErrors.size()); // 5: as there will be field errors for 'model' and 'address' themselves
         assertValue(fieldErrors, "name", Arrays.asList("name cannot be null"));
         assertValue(fieldErrors, "email", Arrays.asList("email cannot be null"));
-        assertValue(fieldErrors, "address.street", Arrays.asList("street cannot be smaller than 7 characters"));
+        try {
+            // Oval version <= 1.40 validation error for invalid data reports: "net.sf.oval.constraint.AssertValid.violated".
+            assertValue(fieldErrors, "address", Arrays.asList("net.sf.oval.constraint.AssertValid.violated"));
+            // Oval version <= 1.40 validation error for minimum length reports: "street cannot be smaller than 7 characters".
+            assertValue(fieldErrors, "address.street", Arrays.asList("street cannot be smaller than 7 characters"));
+        }
+        catch (AssertionFailedError afe) {
+            // Oval version >= 1.50 validation error for invalid data reports: "address is invalid".
+            assertValue(fieldErrors, "address", Arrays.asList("address is invalid"));
+            // Oval version >= 1.50 validation error for minimum length reports: "street cannot be shorter than 7 characters".
+            assertValue(fieldErrors, "address.street", Arrays.asList("street cannot be shorter than 7 characters"));
+        }
 
     }
 
@@ -300,7 +313,19 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
     	assertEquals(5, fieldErrors.size()); // 5: as there will be field errors for 'person' and 'person.address' themselves
     	assertValue(fieldErrors, "person.name", Arrays.asList("name cannot be null"));
     	assertValue(fieldErrors, "person.email", Arrays.asList("email cannot be null"));
-    	assertValue(fieldErrors, "person.address.street", Arrays.asList("street cannot be smaller than 7 characters"));
+       try {
+           // Oval version <= 1.40 validation error for invalid data reports: "net.sf.oval.constraint.AssertValid.violated".
+           assertValue(fieldErrors, "person.address", Arrays.asList("net.sf.oval.constraint.AssertValid.violated"));
+           // Oval version <= 1.40 validation error for minimum length reports: "street cannot be smaller than 7 characters".
+           assertValue(fieldErrors, "person.address.street", Arrays.asList("street cannot be smaller than 7 characters"));
+       }
+       catch (AssertionFailedError afe) {
+           // Oval version >= 1.50 validation error for invalid data reports: "address is invalid".
+           assertValue(fieldErrors, "person.address", Arrays.asList("address is invalid"));
+           // Oval version >= 1.50 validation error for minimum length reports: "street cannot be shorter than 7 characters".
+           assertValue(fieldErrors, "person.address.street", Arrays.asList("street cannot be shorter than 7 characters"));
+       }
+
     }
 
 

@@ -24,6 +24,7 @@ Servers/
 .java-version
 
 # Maven
+.mvn/wrapper/maven-wrapper.jar
 core/target
 plugins/convention/target
 plugins/embeddedjsp/target

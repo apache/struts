@@ -42,7 +42,6 @@
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="debugging"/>
-                <interceptor-ref name="profiling"/>
                 <interceptor-ref name="scopedModelDriven"/>
                 <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="fileUpload"/>

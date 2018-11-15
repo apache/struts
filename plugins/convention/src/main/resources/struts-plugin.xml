@@ -66,6 +66,8 @@
 
   <constant name="struts.convention.exclude.parentClassLoader" value="true" />
 
+  <constant name="struts.convention.enable.smi.inheritance" value="false" />
+
   <package name="convention-default" extends="struts-default">
   </package>
 </struts>

@@ -19,11 +19,17 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.commons.io.IOUtils;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 public class ClassPathFinderTest extends XWorkTestCase {
-	
+
 	public void testFinder() {
 		ClassPathFinder finder = new ClassPathFinder();
 		finder.setPattern("**/xwork-test-wildcard-*.xml");
@@ -52,4 +58,46 @@ public class ClassPathFinderTest extends XWorkTestCase {
 		
 	}
 
+    public void testFinderNotURLClassLoader() throws Exception {
+        NotURLClassLoader loader = new NotURLClassLoader(Thread.currentThread().getContextClassLoader());
+        Thread.currentThread().setContextClassLoader(loader);
+
+        Class<?> clazz = loader.loadClass(ClassPathFinderTest.class.getName());
+        Object test = clazz.getConstructor().newInstance();
+
+        clazz.getMethod("testFinder").invoke(test);
+
+        Thread.currentThread().setContextClassLoader(loader.parentClassLoader);
+    }
+
+
+	private class NotURLClassLoader extends ClassLoader {
+        private Map<String, Class<?>> loadedClasses = new HashMap<>();
+        private ClassLoader parentClassLoader;
+
+        NotURLClassLoader(ClassLoader parentClassLoader) {
+            super(null);
+            this.parentClassLoader = parentClassLoader;
+        }
+
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            if (!loadedClasses.containsKey(name)) {
+                try {
+                    byte[] classBits = IOUtils.toByteArray(ClassLoader.getSystemResourceAsStream(
+                            name.replace('.', '/') + ".class"));
+                    loadedClasses.put(name, defineClass(name, classBits, 0, classBits.length));
+                } catch (IOException e) {
+                    throw new ClassNotFoundException("class " + name + " is not findable", e);
+                }
+            }
+
+            return loadedClasses.get(name);
+        }
+
+        @Override
+        protected Enumeration<URL> findResources(String name) throws IOException {
+            return parentClassLoader.getResources(name);
+        }
+    }
 }

@@ -27,6 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
@@ -77,11 +78,7 @@ public class ClassPathFinder {
      */
 	public Vector<String> findMatches() {
 		Vector<String> matches = new Vector<>();
-		URLClassLoader cl = getURLClassLoader();
-		if (cl == null ) {
-			throw new XWorkException("unable to attain an URLClassLoader") ;
-		}
-		URL[] parentUrls = cl.getURLs();
+		URL[] parentUrls = getClassLoaderURLs();
 		compiledPattern = patternMatcher.compilePattern(pattern);
 		for (URL url : parentUrls) {
 			if (!"file".equals(url.getProtocol())) {
@@ -173,20 +170,24 @@ public class ClassPathFinder {
 		this.patternMatcher = patternMatcher;
 	}
 
-	private URLClassLoader getURLClassLoader() {
-		URLClassLoader ucl = null;
+	private URL[] getClassLoaderURLs() {
+		URL[] urls;
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		
-		if(! (loader instanceof URLClassLoader)) {
+
+		if (!(loader instanceof URLClassLoader)) {
 			loader = ClassPathFinder.class.getClassLoader();
-			if (loader instanceof URLClassLoader) {
-				ucl = (URLClassLoader) loader ;
+		}
+
+		if (loader instanceof URLClassLoader) {
+			urls = ((URLClassLoader) loader).getURLs();
+		} else {    //jdk9 or later
+			try {
+				urls = Collections.list(loader.getResources("")).toArray(new URL[0]);
+			} catch (IOException e) {
+				throw new XWorkException("unable to get ClassLoader URLs", e);
 			}
 		}
-		else {
-			ucl = (URLClassLoader) loader;
-		}
-		
-		return ucl ;
+
+		return urls;
 	}
 }

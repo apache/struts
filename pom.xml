@@ -215,7 +215,7 @@
                     <plugin>
                         <groupId>com.updateimpact</groupId>
                         <artifactId>updateimpact-maven-plugin</artifactId>
-                        <version>1.0.10</version>
+                        <version>1.0.12</version>
                     </plugin>
                 </plugins>
             </build>

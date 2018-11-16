@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.XWorkTestCase;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;

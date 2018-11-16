@@ -22,18 +22,15 @@ import freemarker.cache.TemplateLoader;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.hamcrest.core.IsEqual;
-import org.mockito.Matchers;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 public class FreemarkerThemeTemplateLoaderTest extends StrutsInternalTestCase {
 
@@ -65,7 +62,7 @@ public class FreemarkerThemeTemplateLoaderTest extends StrutsInternalTestCase {
         TemplateEngine engine = mock(TemplateEngine.class);
         Map<String, String> props = new HashMap<String, String>();
         props.put("parent", "foo/foo");
-        when(engine.getThemeProps(Matchers.argThat(new IsEqual<Template>(new Template("template", "foo/bar", "text.ftl"))))).thenReturn(props);
+        when(engine.getThemeProps(argThat(new IsEqual<>(new Template("template", "foo/bar", "text.ftl"))))).thenReturn(props);
         loader.setTemplateEngine(engine);
 
         TemplateLoader parent = mock(TemplateLoader.class);

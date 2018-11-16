@@ -38,9 +38,8 @@
         <include>org.apache.commons:commons-lang3</include>
         <include>org.apache.logging.log4j:log4j-api</include>
         <include>ognl:ognl</include>
-        <include>org.javassist:javassist</include>
         <include>commons-fileupload:commons-fileupload</include>
-        <include>commons-io:commons-io</include>
+        <include>org.apache.commons:commons-io</include>
       </includes>
     </dependencySet>
   </dependencySets>

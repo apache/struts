@@ -180,8 +180,6 @@
                             <artifactId>maven-surefire-plugin</artifactId>
                             <configuration>
                                 <argLine>--add-modules java.activation --add-modules java.xml.bind</argLine>
-                                <threadCount>0</threadCount>
-                                <forkMode>never</forkMode>
                             </configuration>
                         </plugin>
                     </plugins>

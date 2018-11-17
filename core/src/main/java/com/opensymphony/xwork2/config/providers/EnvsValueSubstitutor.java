@@ -18,8 +18,8 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
-import org.apache.commons.text.StrLookup;
-import org.apache.commons.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
+import org.apache.commons.text.lookup.StringLookupFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,16 +27,16 @@ public class EnvsValueSubstitutor implements ValueSubstitutor {
 
     private static final Logger LOG = LogManager.getLogger(EnvsValueSubstitutor.class);
 
-    protected StrSubstitutor envStrSubstitutor;
-    protected StrSubstitutor sysStrSubstitutor;
+    protected StringSubstitutor envStrSubstitutor;
+    protected StringSubstitutor sysStrSubstitutor;
 
     public EnvsValueSubstitutor() {
-        envStrSubstitutor = new StrSubstitutor(System.getenv());
+        envStrSubstitutor = new StringSubstitutor(System.getenv());
         envStrSubstitutor.setVariablePrefix("${env.");
         envStrSubstitutor.setVariableSuffix('}');
         envStrSubstitutor.setValueDelimiter(':');
 
-        sysStrSubstitutor = new StrSubstitutor(StrLookup.systemPropertiesLookup());
+        sysStrSubstitutor = new StringSubstitutor(StringLookupFactory.INSTANCE.systemPropertyStringLookup());
         sysStrSubstitutor.setVariablePrefix("${");
         sysStrSubstitutor.setVariableSuffix('}');
         sysStrSubstitutor.setValueDelimiter(':');

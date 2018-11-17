@@ -61,6 +61,37 @@
             <scope>test</scope>
         </dependency>
 
+        <!--
+         The Java EE API modules listed below are all marked @Deprecated(forRemoval=true), because they are scheduled
+         for removal in Java 11. So the -add-module approach will no longer work in Java 11 out of the box.
+         What we will need to do in Java 11 and forward is include our own copy of the Java EE APIs on the class path
+         or module path. For example, we can add the JAX-B APIs as a maven dependency like this:
+        -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.3.0.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

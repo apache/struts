@@ -5,6 +5,7 @@ jdk:
   - openjdk7
   - oraclejdk8
   - oraclejdk9
+  - oraclejdk11
 
 install: true
 script: mvn test -DskipAssembly

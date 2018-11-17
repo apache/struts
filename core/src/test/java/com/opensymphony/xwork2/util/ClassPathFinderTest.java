@@ -63,12 +63,14 @@ public class ClassPathFinderTest extends XWorkTestCase {
         NotURLClassLoader loader = new NotURLClassLoader(Thread.currentThread().getContextClassLoader());
         Thread.currentThread().setContextClassLoader(loader);
 
-        Class<?> clazz = loader.loadClass(ClassPathFinderTest.class.getName());
-        Object test = clazz.getConstructor().newInstance();
+        try {
+            Class<?> clazz = loader.loadClass(ClassPathFinderTest.class.getName());
+            Object test = clazz.getConstructor().newInstance();
 
-        clazz.getMethod("testFinder").invoke(test);
-
-        Thread.currentThread().setContextClassLoader(loader.parentClassLoader);
+            clazz.getMethod("testFinder").invoke(test);
+        } finally {
+            Thread.currentThread().setContextClassLoader(loader.parentClassLoader);
+        }
     }
 
 
@@ -90,6 +92,8 @@ public class ClassPathFinderTest extends XWorkTestCase {
                     loadedClasses.put(name, defineClass(name, classBits, 0, classBits.length));
                 } catch (IOException e) {
                     throw new ClassNotFoundException("class " + name + " is not findable", e);
+                } catch (Exception e) {
+                    loadedClasses.put(name, parentClassLoader.loadClass(name));
                 }
             }
 

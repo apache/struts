@@ -231,12 +231,14 @@ public class EmbeddedJSPResultTest extends TestCase {
         NotURLClassLoader loader = new NotURLClassLoader(parentClassLoader);
         Thread.currentThread().setContextClassLoader(loader);
 
-        result.setLocation("org/apache/struts2/tag0.jsp");
-        result.execute(null);
+        try {
+            result.setLocation("org/apache/struts2/tag0.jsp");
+            result.execute(null);
 
-        assertEquals("Thissessionisnotsecure.OtherText", StringUtils.deleteWhitespace(response.getContentAsString()));
-
-        Thread.currentThread().setContextClassLoader(parentClassLoader);
+            assertEquals("Thissessionisnotsecure.OtherText", StringUtils.deleteWhitespace(response.getContentAsString()));
+        } finally {
+            Thread.currentThread().setContextClassLoader(parentClassLoader);
+        }
     }
 
     @Override

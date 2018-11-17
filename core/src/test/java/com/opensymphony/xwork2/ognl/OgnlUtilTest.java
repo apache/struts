@@ -27,9 +27,9 @@ import com.opensymphony.xwork2.test.User;
 import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.*;
-import org.apache.struts2.TestUtils;
 
 import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.util.*;
 
 public class OgnlUtilTest extends XWorkTestCase {
@@ -373,24 +373,8 @@ public class OgnlUtilTest extends XWorkTestCase {
         cal.set(Calendar.YEAR, 1982);
 
         assertEquals(cal.getTime(), foo.getBirthday());
-        
-        //UK style test
-        if (TestUtils.isJdk9OrLater()) {
-            /* In JDK 9 and later, the default locale data uses data derived from the
-            Unicode Consortium's Common Locale Data Repository (CLDR). The short date-time format is ‹{1}, {0}› in the
-            CLDR locale, as opposed to {1} {0} in the JRE locale data.
-            Please refer : http://www.oracle.com/technetwork/java/javase/9-relnote-issues-3704069.html#JDK-8008577 */
-            props.put("event", "18/10/2006, 14:23:45");
-            props.put("meeting", "09/09/2006, 14:30");
-        }
-        else {
-            props.put("event", "18/10/2006 14:23:45");
-            props.put("meeting", "09/09/2006 14:30");
-        }
-        context.put(ActionContext.LOCALE, Locale.UK);
 
-        ognlUtil.setProperties(props, foo, context);
-        
+        //UK style test
         cal = Calendar.getInstance();
         cal.clear();
         cal.set(Calendar.MONTH, Calendar.OCTOBER);
@@ -399,9 +383,12 @@ public class OgnlUtilTest extends XWorkTestCase {
         cal.set(Calendar.HOUR_OF_DAY, 14);
         cal.set(Calendar.MINUTE, 23);
         cal.set(Calendar.SECOND, 45);
-        
-        assertEquals(cal.getTime(), foo.getEvent());
-        
+
+        Date eventTime = cal.getTime();
+        String formatted = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK)
+                .format(eventTime);
+        props.put("event", formatted);
+
         cal = Calendar.getInstance();
         cal.clear();
         cal.set(Calendar.MONTH, Calendar.SEPTEMBER);
@@ -409,8 +396,19 @@ public class OgnlUtilTest extends XWorkTestCase {
         cal.set(Calendar.YEAR, 2006);
         cal.set(Calendar.HOUR_OF_DAY, 14);
         cal.set(Calendar.MINUTE, 30);
-        
-        assertEquals(cal.getTime(), foo.getMeeting());
+
+        Date meetingTime = cal.getTime();
+        formatted = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK)
+                .format(meetingTime);
+        props.put("meeting", formatted);
+
+        context.put(ActionContext.LOCALE, Locale.UK);
+
+        ognlUtil.setProperties(props, foo, context);
+
+        assertEquals(eventTime, foo.getEvent());
+
+        assertEquals(meetingTime, foo.getMeeting());
         
         //test RFC 3339 date format for JSON
         props.put("event", "1996-12-19T16:39:57Z");

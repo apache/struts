@@ -55,11 +55,6 @@ public class EnvsValueSubstitutorTest extends StrutsInternalTestCase {
         assertThat(substitutor.substitute("${" + key + "}"), is(value));
     }
 
-    public void testSystemSimpleDefaultValue() {
-        final String defaultValue = "defaultValue";
-        assertThat(substitutor.substitute("${UNKNOWN:" + defaultValue + "}"), is(defaultValue));
-    }
-
     public void testNoSubstitution() {
         final String value = "val1";
         assertThat(substitutor.substitute(value), is(value));

@@ -18,97 +18,50 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.struts2.StrutsInternalTestCase;
 
 public class EnvsValueSubstitutorTest extends StrutsInternalTestCase {
 
-    private boolean osIsWindows = false;  // Assume Linux/Unix environment by default
+    private ValueSubstitutor substitutor;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        substitutor = new EnvsValueSubstitutor();
+    }
 
-        final String os = System.getProperty("os.name");
-        if (os != null && os.startsWith("Windows")) {
-            osIsWindows = true;   // Determined that the OS is Windows (must use different environment variables)
+    public void testEnvSimpleValue() {
+        if (SystemUtils.IS_OS_WINDOWS) {
+            assertThat(substitutor.substitute("${env.USERNAME}"), is(System.getenv("USERNAME")));
+        } else {
+            assertThat(substitutor.substitute("${env.USER}"), is(System.getenv("USER")));
         }
-        else {
-            osIsWindows = false;  // Assume Linux/Unix environment by default
-        }
     }
 
-    public void testEnvSimpleValue() throws Exception {
-
-        String expected;
-        String actual;
-        final ValueSubstitutor substitutor = new EnvsValueSubstitutor();
-
-        if (osIsWindows) {
-            // given
-            expected = System.getenv("USERNAME");
-
-            // when
-            actual = substitutor.substitute("${env.USERNAME}");
-        }
-        else {
-            // given
-            expected = System.getenv("USER");
-
-            // when
-            actual = substitutor.substitute("${env.USER}");
-        }
-
-        // then
-        assertEquals(expected, actual);
+    public void testEnvSimpleDefaultValue() {
+        final String defaultValue = "defaultValue";
+        assertThat(substitutor.substitute("${env.UNKNOWN:" + defaultValue + "}"), is(defaultValue));
     }
 
-    public void testEnvSimpleDefaultValue() throws Exception {
-        // given
-        String expected = "defaultValue";
-        ValueSubstitutor substitutor = new EnvsValueSubstitutor();
+    public void testSystemSimpleValue() {
+        final String key = "sysPropKey";
+        final String value = "sysPropValue";
+        System.setProperty(key, value);
 
-        // when
-        String actual = substitutor.substitute("${env.UNKNOWN:" + expected + "}");
-
-        // then
-        assertEquals(expected, actual);
+        assertThat(substitutor.substitute("${" + key + "}"), is(value));
     }
 
-    public void testSystemSimpleValue() throws Exception {
-        // given
-        String key = "sysPropKey";
-        String expected = "sysPropValue";
-        System.setProperty(key, expected);
-       
-        ValueSubstitutor substitutor = new EnvsValueSubstitutor();
-
-        // when
-        String actual = substitutor.substitute("${" + key + "}");
-
-        // then
-        assertEquals(expected, actual);
+    public void testSystemSimpleDefaultValue() {
+        final String defaultValue = "defaultValue";
+        assertThat(substitutor.substitute("${UNKNOWN:" + defaultValue + "}"), is(defaultValue));
     }
 
-    public void testSystemSimpleDefaultValue() throws Exception {
-        // given
-        String expected = "defaultValue";
-        ValueSubstitutor substitutor = new EnvsValueSubstitutor();
-
-        // when
-        String actual = substitutor.substitute("${UNKNOWN:" + expected + "}");
-
-        // then
-        assertEquals(expected, actual);
-    }
-
-    public void testNoSubstitution() throws Exception {
-        // given
-        ValueSubstitutor substitutor = new EnvsValueSubstitutor();
-
-        // when
-        String actual = substitutor.substitute("val1");
-
-        // then
-        assertEquals("val1", actual);
+    public void testNoSubstitution() {
+        final String value = "val1";
+        assertThat(substitutor.substitute(value), is(value));
     }
 }

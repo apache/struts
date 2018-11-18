@@ -65,13 +65,10 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
     }
 
     /**
-     * Access to this method will be restricted with the next versiob
-     * @deprecated since 2.5.6, do not use it
-     * TODO: reduce access level to `private`
+     * Access to this method can be potentially dangerous as it allows access to raw parameter values.
      */
-    @Deprecated
-    public Map<String, String[]> toMap() {
-        Map<String, String[]> result = new HashMap<>(parameters.size());
+    private Map<String, String[]> toMap() {
+        final Map<String, String[]> result = new HashMap<>(parameters.size());
         for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
             result.put(entry.getKey(), entry.getValue().getMultipleValues());
         }

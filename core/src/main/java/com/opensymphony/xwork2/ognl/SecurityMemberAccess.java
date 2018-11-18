@@ -46,9 +46,16 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     private Set<String> excludedPackageNames = Collections.emptySet();
     private boolean disallowProxyMemberAccess;
 
-    public SecurityMemberAccess(boolean method) {
+    /**
+     * SecurityMemberAccess
+     *   - access decisions based on whether member is static (or not)
+     *   - block or allow access to properties (configureable-after-construction)
+     * 
+     * @param allowStaticMethodAccess
+     */
+    public SecurityMemberAccess(boolean allowStaticMethodAccess) {
         super(false);
-        allowStaticMethodAccess = method;
+        this.allowStaticMethodAccess = allowStaticMethodAccess;
     }
 
     public boolean getAllowStaticMethodAccess() {
@@ -58,10 +65,14 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
-        
-        Class targetClass = target.getClass();
-        Class memberClass = member.getDeclaringClass();
-        
+
+        if (member == null) {
+            throw new IllegalArgumentException("member parameter cannot be null");
+        }
+
+        Class targetClass = (target != null ? target.getClass() : null);  // Note: target and propertyName may be null for static field checks
+        final Class memberClass = member.getDeclaringClass();
+
         if (checkEnumAccess(target, member)) {
             LOG.trace("Allowing access to enum: target class [{}] of target [{}], member [{}]", targetClass, target, member);
             return true;
@@ -73,6 +84,14 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             if (!isClassExcluded(member.getDeclaringClass())) {
                 targetClass = member.getDeclaringClass();
             }
+        }
+
+        if (targetClass == null) {
+            throw new NullPointerException("target class cannot be null before package exclusion checks");
+        }
+
+        if (memberClass == null) {
+          throw new NullPointerException("member class cannot be null before package exclusion checks");
         }
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {

@@ -20,16 +20,55 @@ package com.opensymphony.xwork2.config.providers;
 
 import org.apache.struts2.StrutsInternalTestCase;
 
-
 public class EnvsValueSubstitutorTest extends StrutsInternalTestCase {
 
+    private boolean osIsWindows = false;  // Assume Linux/Unix environment by default
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        final String os = System.getProperty("os.name");
+        if (os != null && os.startsWith("Windows")) {
+            osIsWindows = true;   // Determined that the OS is Windows (must use different environment variables)
+        }
+        else {
+            osIsWindows = false;  // Assume Linux/Unix environment by default
+        }
+    }
+
     public void testSimpleValue() throws Exception {
+
+        String expected;
+        String actual;
+        final ValueSubstitutor substitutor = new EnvsValueSubstitutor();
+
+        if (osIsWindows) {
+            // given
+            expected = System.getenv("USERNAME");
+
+            // when
+            actual = substitutor.substitute("${env.USERNAME}");
+        }
+        else {
+            // given
+            expected = System.getenv("USER");
+
+            // when
+            actual = substitutor.substitute("${env.USER}");
+        }
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    public void testDefaultValue() throws Exception {
         // given
-        String expected = System.getenv("USER");
+        String expected = "defaultValue";
         ValueSubstitutor substitutor = new EnvsValueSubstitutor();
 
         // when
-        String actual = substitutor.substitute("${env.USER}");
+        String actual = substitutor.substitute("${env.UNKNOWN:" + expected + "}");
 
         // then
         assertEquals(expected, actual);

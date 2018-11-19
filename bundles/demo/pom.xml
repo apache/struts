@@ -67,7 +67,6 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
-                <version>2.1.0</version>
                 <configuration>
                     <instructions>
                         <manifestLocation>META-INF</manifestLocation>

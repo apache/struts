@@ -37,8 +37,7 @@ public class JarResourceStore extends AbstractResourceStore {
 
     public byte[] read(String pResourceName) {
         InputStream in = null;
-        try {
-            ZipFile jarFile = new ZipFile(file);
+        try(ZipFile jarFile = new ZipFile(file)) {
             ZipEntry entry = jarFile.getEntry(pResourceName);
 
             //read into byte array

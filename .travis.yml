@@ -5,12 +5,18 @@ jdk:
   - openjdk7
   - oraclejdk8
   - oraclejdk9
+  - oraclejdk11
 
 install: true
 script: mvn test -DskipAssembly
 
 after_success:
-  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report com.updateimpact:updateimpact-maven-plugin:submit -Ptravis-coveralls,update-impact -DskipAssembly
+  # TODO delete following if statement after fix of https://github.com/cobertura/cobertura/issues/271
+  - if [ "$TRAVIS_JDK_VERSION" == "openjdk8" ] || [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ]; then
+      mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report com.updateimpact:updateimpact-maven-plugin:submit -Ptravis-coveralls,update-impact -DskipAssembly
+    else
+      echo "Not reporting coverage for $TRAVIS_JDK_VERSION due to incomatibility or to save performance";
+    fi
 
 env:
   global:

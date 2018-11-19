@@ -28,7 +28,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JacksonXmlHandlerTest extends XWorkTestCase {
 

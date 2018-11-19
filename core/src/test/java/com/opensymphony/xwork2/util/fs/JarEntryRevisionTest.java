@@ -34,6 +34,7 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -49,10 +50,13 @@ public class JarEntryRevisionTest extends XWorkTestCase {
         fileManager = container.getInstance(FileManagerFactory.class).getFileManager();
     }
 
-    private void createJarFile(long time) throws Exception {
+    private String createJarFile(long time) throws Exception {
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-        FileOutputStream fos = new FileOutputStream("target/JarEntryRevisionTest_testNeedsReloading.jar", false);
+        Path jarPath = Paths.get(Thread.currentThread().getContextClassLoader()
+                .getResource("xwork-jar.jar").toURI()).getParent();
+        File jarFile = jarPath.resolve("JarEntryRevisionTest_testNeedsReloading.jar").toFile();
+        FileOutputStream fos = new FileOutputStream(jarFile, false);
         JarOutputStream target = new JarOutputStream(fos, manifest);
         target.putNextEntry(new ZipEntry("com/opensymphony/xwork2/util/fs/"));
         ZipEntry entry = new ZipEntry("com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class");
@@ -64,13 +68,14 @@ public class JarEntryRevisionTest extends XWorkTestCase {
         target.closeEntry();
         target.close();
         fos.close();
+
+        return jarFile.toURI().toURL().toExternalForm();
     }
 
     public void testNeedsReloading() throws Exception {
         long now = System.currentTimeMillis();
 
-        createJarFile(now);
-        URL url = new URL("jar:file:target/JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class");
+        URL url = new URL("jar:" + createJarFile(now) + "!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class");
         Revision entry = JarEntryRevision.build(url, fileManager);
         assert entry != null;
         assertFalse(entry.needsReloading());
@@ -82,9 +87,8 @@ public class JarEntryRevisionTest extends XWorkTestCase {
     public void testNeedsReloadingWithContainerProvidedURLConnection() throws Exception {
         long now = System.currentTimeMillis();
 
-        createJarFile(now);
         URL url = new URL(null,
-                "jar:file:target/JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class",
+                "jar:" + createJarFile(now) + "!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class",
                 new ContainerProvidedURLStreamHandler());
         Revision entry = JarEntryRevision.build(url, fileManager);
         assert entry != null;
@@ -97,9 +101,7 @@ public class JarEntryRevisionTest extends XWorkTestCase {
     public void testNeedsReloadingWithContainerProvidedURLConnectionEmptyProtocol() throws Exception {
         long now = System.currentTimeMillis();
 
-        createJarFile(now);
-        File targetDir = new File("target");
-        String targetUrlStr = targetDir.toURI().toURL().toString();
+        String targetUrlStr = createJarFile(now);
         if (targetUrlStr.startsWith("file:")) {
             targetUrlStr = targetUrlStr.substring(5);//emptying protocol; we expect framework will fix it
         }
@@ -107,7 +109,7 @@ public class JarEntryRevisionTest extends XWorkTestCase {
             targetUrlStr = targetUrlStr.substring(1);//we expect framework will fix it also
         }
         URL url = new URL(null,
-                "zip:" + targetUrlStr + "JarEntryRevisionTest_testNeedsReloading.jar!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class",
+                "zip:" + targetUrlStr + "!/com/opensymphony/xwork2/util/fs/JarEntryRevisionTest.class",
                 new ContainerProvidedURLStreamHandler());
         Revision entry = JarEntryRevision.build(url, fileManager);
         assert entry != null;

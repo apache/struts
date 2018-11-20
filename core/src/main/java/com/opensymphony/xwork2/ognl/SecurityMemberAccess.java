@@ -66,12 +66,8 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
-        if (member == null) {
-            throw new IllegalArgumentException("member parameter cannot be null");
-        }
-
-        Class targetClass = (target != null ? target.getClass() : null);  // Note: target and propertyName may be null for static field checks
         final Class memberClass = member.getDeclaringClass();
+        Class targetClass = (target != null ? target.getClass() : memberClass);  // Note: target,propertyName may be null (static field checks OGNL 3.1.19+)
 
         if (checkEnumAccess(target, member)) {
             LOG.trace("Allowing access to enum: target class [{}] of target [{}], member [{}]", targetClass, target, member);
@@ -81,17 +77,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
             LOG.debug("Support for accessing static methods [target: {}, targetClass: {}, member: {}, property: {}] is deprecated!",
                     target, targetClass, member, propertyName);
-            if (!isClassExcluded(member.getDeclaringClass())) {
-                targetClass = member.getDeclaringClass();
+            if (!isClassExcluded(memberClass)) {
+                targetClass = memberClass;
             }
-        }
-
-        if (targetClass == null) {
-            throw new NullPointerException("target class cannot be null before package exclusion checks");
-        }
-
-        if (memberClass == null) {
-          throw new NullPointerException("member class cannot be null before package exclusion checks");
         }
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {

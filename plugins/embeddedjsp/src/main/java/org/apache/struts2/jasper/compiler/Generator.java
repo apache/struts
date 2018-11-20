@@ -711,16 +711,6 @@ class Generator {
         }
     }
 
-    /*
-     * Generates the constructor. (shared by servlet and tag handler preamble
-     * generation)
-     */
-    private void generateConstructor(String className) {
-        out.printil("public " + className + "() {");
-        out.printil("}");
-        out.println();
-    }
-
     /**
      * A visitor that generates codes for the elements in the page.
      */

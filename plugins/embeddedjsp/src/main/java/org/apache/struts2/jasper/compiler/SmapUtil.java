@@ -179,14 +179,6 @@ public class SmapUtil {
         return path.substring(path.lastIndexOf('/') + 1);
     }
 
-    /**
-     * Returns a file path corresponding to a potential SMAP input
-     * for the given compilation input (JSP file).
-     */
-    private static String inputSmapPath(String path) {
-        return path.substring(0, path.lastIndexOf('.') + 1) + "smap";
-    }
-
     //*********************************************************************
     // Installation logic (from Robert Field, JSR-045 spec lead)
     private static class SDEInstaller {

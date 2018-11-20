@@ -92,8 +92,7 @@ public class ClassPathFinder {
             }
             File entry = new File(entryURI);
             if (entry.isFile() && entry.toString().endsWith(".jar")) {
-                try {
-                    ZipInputStream zip = new ZipInputStream(new FileInputStream(entry));
+                try(ZipInputStream zip = new ZipInputStream(new FileInputStream(entry))) {
                     for (ZipEntry zipEntry = zip.getNextEntry(); zipEntry != null; zipEntry = zip.getNextEntry()) {
                         boolean doesMatch = patternMatcher.match(new HashMap<String, String>(), zipEntry.getName(), compiledPattern);
                         if (doesMatch) {

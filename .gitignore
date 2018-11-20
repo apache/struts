@@ -62,3 +62,4 @@ bundles/target
 plugins/target
 target
 plugins/testng/test-output
+test-output

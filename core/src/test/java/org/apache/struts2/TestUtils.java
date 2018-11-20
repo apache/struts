@@ -91,20 +91,4 @@ public class TestUtils {
 
         return buffer.toString();
     }
-
-    public static boolean isJdk9OrLater() {
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
-        if(loader instanceof URLClassLoader) {
-            return false;
-        }
-
-        loader = TestUtils.class.getClassLoader();
-
-        if(loader instanceof URLClassLoader) {
-            return false;
-        }
-
-        return true;
-    }
 }

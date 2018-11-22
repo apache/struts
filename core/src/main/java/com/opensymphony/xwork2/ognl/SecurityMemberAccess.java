@@ -46,9 +46,16 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     private Set<String> excludedPackageNames = Collections.emptySet();
     private boolean disallowProxyMemberAccess;
 
-    public SecurityMemberAccess(boolean method) {
+    /**
+     * SecurityMemberAccess
+     *   - access decisions based on whether member is static (or not)
+     *   - block or allow access to properties (configureable-after-construction)
+     * 
+     * @param allowStaticMethodAccess
+     */
+    public SecurityMemberAccess(boolean allowStaticMethodAccess) {
         super(false);
-        allowStaticMethodAccess = method;
+        this.allowStaticMethodAccess = allowStaticMethodAccess;
     }
 
     public boolean getAllowStaticMethodAccess() {
@@ -58,10 +65,10 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
-        
-        Class targetClass = target.getClass();
-        Class memberClass = member.getDeclaringClass();
-        
+
+        final Class memberClass = member.getDeclaringClass();
+        Class targetClass = (target != null ? target.getClass() : memberClass);  // Note: target,propertyName may be null (static field checks OGNL 3.1.19+)
+
         if (checkEnumAccess(target, member)) {
             LOG.trace("Allowing access to enum: target class [{}] of target [{}], member [{}]", targetClass, target, member);
             return true;
@@ -70,8 +77,8 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
             LOG.debug("Support for accessing static methods [target: {}, targetClass: {}, member: {}, property: {}] is deprecated!",
                     target, targetClass, member, propertyName);
-            if (!isClassExcluded(member.getDeclaringClass())) {
-                targetClass = member.getDeclaringClass();
+            if (!isClassExcluded(memberClass)) {
+                targetClass = memberClass;
             }
         }
 

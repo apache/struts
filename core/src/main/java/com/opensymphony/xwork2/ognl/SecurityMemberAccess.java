@@ -48,8 +48,15 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<String> excludedPackageNames = Collections.emptySet();
     private boolean disallowProxyMemberAccess;
 
-    public SecurityMemberAccess(boolean method) {
-        allowStaticMethodAccess = method;
+    /**
+     * SecurityMemberAccess
+     *   - access decisions based on whether member is static (or not)
+     *   - block or allow access to properties (configureable-after-construction)
+     * 
+     * @param allowStaticMethodAccess
+     */
+    public SecurityMemberAccess(boolean allowStaticMethodAccess) {
+        this.allowStaticMethodAccess = allowStaticMethodAccess;
     }
 
     public boolean getAllowStaticMethodAccess() {
@@ -108,7 +115,7 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         // target can be null in case of accessing static fields, since OGNL 3.2.8
-        Class targetClass = Modifier.isStatic(member.getModifiers()) ? memberClass : target.getClass();
+        final Class targetClass = Modifier.isStatic(member.getModifiers()) ? memberClass : target.getClass();
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
             LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!", targetClass.getPackage(), targetClass,
@@ -130,7 +137,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean checkStaticMethodAccess(Member member) {
-        int modifiers = member.getModifiers();
+        final int modifiers = member.getModifiers();
         if (Modifier.isStatic(modifiers)) {
             if (allowStaticMethodAccess) {
                 LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
@@ -143,7 +150,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     protected boolean checkEnumAccess(Object target, Member member) {
         if (target instanceof Class) {
-            Class clazz = (Class) target;
+            final Class clazz = (Class) target;
             if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values")) {
                 return true;
             }

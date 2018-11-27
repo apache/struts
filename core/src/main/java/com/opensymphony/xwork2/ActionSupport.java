@@ -284,8 +284,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      */
     protected TextProvider getTextProvider() {
         if (textProvider == null) {
-            Container container = getContainer();
-            TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
+            final TextProviderFactory tpf = getContainer().getInstance(TextProviderFactory.class);
             textProvider = tpf.createInstance(getClass());
         }
         return textProvider;
@@ -293,8 +292,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
 
     protected LocaleProvider getLocaleProvider() {
         if (localeProvider == null) {
-            Container container = getContainer();
-            LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
+            final LocaleProviderFactory localeProviderFactory = getContainer().getInstance(LocaleProviderFactory.class);
             localeProvider = localeProviderFactory.createLocaleProvider();
         }
         return localeProvider;

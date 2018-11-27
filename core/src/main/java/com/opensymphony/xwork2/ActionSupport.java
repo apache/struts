@@ -273,6 +273,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      */
     @Override
     public void validate() {
+        // A default implementation that validates nothing
     }
 
     @Override

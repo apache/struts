@@ -45,26 +45,32 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
 
     protected Container container;
 
+    @Override
     public void setActionErrors(Collection<String> errorMessages) {
         validationAware.setActionErrors(errorMessages);
     }
 
+    @Override
     public Collection<String> getActionErrors() {
         return validationAware.getActionErrors();
     }
 
+    @Override
     public void setActionMessages(Collection<String> messages) {
         validationAware.setActionMessages(messages);
     }
 
+    @Override
     public Collection<String> getActionMessages() {
         return validationAware.getActionMessages();
     }
 
+    @Override
     public void setFieldErrors(Map<String, List<String>> errorMap) {
         validationAware.setFieldErrors(errorMap);
     }
 
+    @Override
     public Map<String, List<String>> getFieldErrors() {
         return validationAware.getFieldErrors();
     }
@@ -84,42 +90,52 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
         return getLocaleProvider().isValidLocale(locale);
     }
 
+    @Override
     public boolean hasKey(String key) {
         return getTextProvider().hasKey(key);
     }
 
+    @Override
     public String getText(String aTextName) {
         return getTextProvider().getText(aTextName);
     }
 
+    @Override
     public String getText(String aTextName, String defaultValue) {
         return getTextProvider().getText(aTextName, defaultValue);
     }
 
+    @Override
     public String getText(String aTextName, String defaultValue, String obj) {
         return getTextProvider().getText(aTextName, defaultValue, obj);
     }
 
+    @Override
     public String getText(String aTextName, List<?> args) {
         return getTextProvider().getText(aTextName, args);
     }
 
+    @Override
     public String getText(String key, String[] args) {
         return getTextProvider().getText(key, args);
     }
 
+    @Override
     public String getText(String aTextName, String defaultValue, List<?> args) {
         return getTextProvider().getText(aTextName, defaultValue, args);
     }
 
+    @Override
     public String getText(String key, String defaultValue, String[] args) {
         return getTextProvider().getText(key, defaultValue, args);
     }
 
+    @Override
     public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         return getTextProvider().getText(key, defaultValue, args, stack);
     }
 
+    @Override
     public String getText(String key, String defaultValue, String[] args, ValueStack stack) {
         return getTextProvider().getText(key, defaultValue, args, stack);
     }
@@ -143,22 +159,27 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
         }
     }
 
+    @Override
     public ResourceBundle getTexts() {
         return getTextProvider().getTexts();
     }
 
+    @Override
     public ResourceBundle getTexts(String aBundleName) {
         return getTextProvider().getTexts(aBundleName);
     }
 
+    @Override
     public void addActionError(String anErrorMessage) {
         validationAware.addActionError(anErrorMessage);
     }
 
+    @Override
     public void addActionMessage(String aMessage) {
         validationAware.addActionMessage(aMessage);
     }
 
+    @Override
     public void addFieldError(String fieldName, String errorMessage) {
         validationAware.addFieldError(fieldName, errorMessage);
     }
@@ -181,22 +202,27 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      * @return returns {@link #SUCCESS}
      * @throws Exception can be thrown by subclasses.
      */
+    @Override
     public String execute() throws Exception {
         return SUCCESS;
     }
 
+    @Override
     public boolean hasActionErrors() {
         return validationAware.hasActionErrors();
     }
 
+    @Override
     public boolean hasActionMessages() {
         return validationAware.hasActionMessages();
     }
 
+    @Override
     public boolean hasErrors() {
         return validationAware.hasErrors();
     }
 
+    @Override
     public boolean hasFieldErrors() {
         return validationAware.hasFieldErrors();
     }
@@ -245,7 +271,9 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      * A default implementation that validates nothing.
      * Subclasses should override this method to provide validations.
      */
+    @Override
     public void validate() {
+        // A default implementation that validates nothing
     }
 
     @Override
@@ -284,8 +312,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
      */
     protected TextProvider getTextProvider() {
         if (textProvider == null) {
-            Container container = getContainer();
-            TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
+            final TextProviderFactory tpf = getContainer().getInstance(TextProviderFactory.class);
             textProvider = tpf.createInstance(getClass());
         }
         return textProvider;
@@ -293,8 +320,7 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
 
     protected LocaleProvider getLocaleProvider() {
         if (localeProvider == null) {
-            Container container = getContainer();
-            LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
+            final LocaleProviderFactory localeProviderFactory = getContainer().getInstance(LocaleProviderFactory.class);
             localeProvider = localeProviderFactory.createLocaleProvider();
         }
         return localeProvider;

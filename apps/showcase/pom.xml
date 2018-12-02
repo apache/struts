@@ -133,7 +133,7 @@
             <artifactId>sitemesh</artifactId>
         </dependency>
         <dependency>
-            <groupId>uk.ltd.getahead</groupId>
+            <groupId>org.directwebremoting</groupId>
             <artifactId>dwr</artifactId>
         </dependency>
         <dependency>

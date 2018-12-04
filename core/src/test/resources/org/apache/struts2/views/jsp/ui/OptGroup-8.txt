@@ -1,0 +1,40 @@
+<tr>
+    <td class="tdLabel"><label for="mySelection" class="label">My Selection:</label></td>
+    <td class="tdInput">
+<select name="mySelection" id="mySelection">
+    <option value="ONE" class="option-css-class">one</option>
+    <option value="TWO" class="option-css-class">two</option>
+    <option value="THREE" class="option-css-class">three</option>
+
+<optgroup 
+    label="My Label 1"
+>
+
+    <option value="AAA" class="optgroup-option-css-class"
+    >aaa
+    </option>
+    <option value="BBB" class="optgroup-option-css-class"
+    >bbb
+    </option>
+    <option value="CCC" class="optgroup-option-css-class"
+    >ccc
+    </option>
+</optgroup>
+<optgroup 
+    label="My Label 2"
+>
+
+    <option value="DDD"
+    >ddd
+    </option>
+    <option value="EEE"
+    >eee
+    </option>
+    <option value="FFF"
+    >fff
+    </option>
+</optgroup>
+
+</select>
+</td>
+</tr>

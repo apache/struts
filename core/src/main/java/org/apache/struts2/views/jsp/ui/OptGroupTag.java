@@ -38,6 +38,7 @@ public class OptGroupTag extends ComponentTagSupport {
     protected String listValue;
     protected String listCssClass;
     protected String listCssStyle;
+    protected String listTitle;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new OptGroup(stack, req, res);
@@ -54,6 +55,7 @@ public class OptGroupTag extends ComponentTagSupport {
         optGroup.setListValue(listValue);
         optGroup.setListCssClass(listCssClass);
         optGroup.setListCssStyle(listCssStyle);
+        optGroup.setListTitle(listTitle);
     }
 
     public void setList(String list) {
@@ -82,5 +84,9 @@ public class OptGroupTag extends ComponentTagSupport {
 
     public void setListCssStyle(String listCssStyle) {
         this.listCssStyle = listCssStyle;
+    }
+
+    public void setListTitle(String listTitle) {
+        this.listTitle = listTitle;
     }
 }

@@ -260,12 +260,14 @@ public class OptGroupTest extends AbstractUITagTest {
         selectTag.setList("%{#{'ONE':'one','TWO':'two','THREE':'three'}}");
         selectTag.setListCssClass("'option-css-class'");
         selectTag.setListCssStyle("'background-color: green;'");
+        selectTag.setListTitle("'option-title'");
 
         OptGroupTag optGroupTag1 = new OptGroupTag();
         optGroupTag1.setLabel("My Label 1");
         optGroupTag1.setList("%{#{'AAA':'aaa','BBB':'bbb','CCC':'ccc'}}");
         optGroupTag1.setListCssClass("'optgroup-option-css-class'");
         optGroupTag1.setListCssStyle("'background-color: blue;'");
+        optGroupTag1.setListTitle("'optgroup-option-title'");
 
         OptGroupTag optGroupTag2 = new OptGroupTag();
         optGroupTag2.setLabel("My Label 2");

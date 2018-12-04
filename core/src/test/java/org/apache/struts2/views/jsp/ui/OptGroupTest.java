@@ -253,17 +253,19 @@ public class OptGroupTest extends AbstractUITagTest {
         verify(SelectTag.class.getResource("OptGroup-6.txt"));
     }
 
-    public void testOptGroupListCssClass() throws Exception {
+    public void testOptGroupListAttributes() throws Exception {
         SelectTag selectTag = new SelectTag();
         selectTag.setName("mySelection");
         selectTag.setLabel("My Selection");
         selectTag.setList("%{#{'ONE':'one','TWO':'two','THREE':'three'}}");
         selectTag.setListCssClass("'option-css-class'");
+        selectTag.setListCssStyle("'background-color: green;'");
 
         OptGroupTag optGroupTag1 = new OptGroupTag();
         optGroupTag1.setLabel("My Label 1");
         optGroupTag1.setList("%{#{'AAA':'aaa','BBB':'bbb','CCC':'ccc'}}");
         optGroupTag1.setListCssClass("'optgroup-option-css-class'");
+        optGroupTag1.setListCssStyle("'background-color: blue;'");
 
         OptGroupTag optGroupTag2 = new OptGroupTag();
         optGroupTag2.setLabel("My Label 2");

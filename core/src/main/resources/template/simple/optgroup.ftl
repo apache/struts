@@ -35,9 +35,18 @@
 	<#assign tmpKey=stack.findValue(optGroupInternalListUiBean.parameters.listKey) />
 	<#assign tmpValue=stack.findValue(optGroupInternalListUiBean.parameters.listValue) />
 	<#assign tmpKeyStr = tmpKey.toString() />
+	<#assign optGroupItemCssClass = ''/>
+	<#if optGroupInternalListUiBean.parameters.listCssClass??>
+		<#if stack.findString(optGroupInternalListUiBean.parameters.listCssClass)??>
+			<#assign optGroupItemCssClass= stack.findString(optGroupInternalListUiBean.parameters.listCssClass)/>
+		</#if>
+	</#if>
 	<option value="${tmpKeyStr?html}"<#rt>
 	<#if tag.contains(parameters.nameValue, tmpKey) == true>
 	selected="selected"<#rt>
+	</#if>
+	<#if optGroupItemCssClass?has_content>
+	class="${optGroupItemCssClass?html}"<#rt/>
 	</#if>
 	>${tmpValue?html}<#t>
 	</option><#lt>

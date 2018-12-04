@@ -36,6 +36,7 @@ public class OptGroupTag extends ComponentTagSupport {
     protected String disabled;
     protected String listKey;
     protected String listValue;
+    protected String listCssClass;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new OptGroup(stack, req, res);
@@ -50,6 +51,7 @@ public class OptGroupTag extends ComponentTagSupport {
         optGroup.setDisabled(disabled);
         optGroup.setListKey(listKey);
         optGroup.setListValue(listValue);
+        optGroup.setListCssClass(listCssClass);
     }
 
     public void setList(String list) {
@@ -70,5 +72,9 @@ public class OptGroupTag extends ComponentTagSupport {
 
     public void setListValue(String listValue) {
         this.listValue = listValue;
+    }
+
+    public void setListCssClass(String listCssClass) {
+        this.listCssClass = listCssClass;
     }
 }

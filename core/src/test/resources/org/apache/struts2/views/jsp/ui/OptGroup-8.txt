@@ -2,21 +2,21 @@
     <td class="tdLabel"><label for="mySelection" class="label">My Selection:</label></td>
     <td class="tdInput">
 <select name="mySelection" id="mySelection">
-    <option value="ONE" class="option-css-class">one</option>
-    <option value="TWO" class="option-css-class">two</option>
-    <option value="THREE" class="option-css-class">three</option>
+    <option value="ONE" class="option-css-class" style="background-color: green;">one</option>
+    <option value="TWO" class="option-css-class" style="background-color: green;">two</option>
+    <option value="THREE" class="option-css-class" style="background-color: green;">three</option>
 
 <optgroup 
     label="My Label 1"
 >
 
-    <option value="AAA" class="optgroup-option-css-class"
+    <option value="AAA" class="optgroup-option-css-class" style="background-color: blue;"
     >aaa
     </option>
-    <option value="BBB" class="optgroup-option-css-class"
+    <option value="BBB" class="optgroup-option-css-class" style="background-color: blue;"
     >bbb
     </option>
-    <option value="CCC" class="optgroup-option-css-class"
+    <option value="CCC" class="optgroup-option-css-class" style="background-color: blue;"
     >ccc
     </option>
 </optgroup>

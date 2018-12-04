@@ -41,12 +41,21 @@
 			<#assign optGroupItemCssClass= stack.findString(optGroupInternalListUiBean.parameters.listCssClass)/>
 		</#if>
 	</#if>
+	<#assign optGroupItemCssStyle = ''/>
+	<#if optGroupInternalListUiBean.parameters.listCssStyle??>
+		<#if stack.findString(optGroupInternalListUiBean.parameters.listCssStyle)??>
+			<#assign optGroupItemCssStyle= stack.findString(optGroupInternalListUiBean.parameters.listCssStyle)/>
+		</#if>
+	</#if>
 	<option value="${tmpKeyStr?html}"<#rt>
 	<#if tag.contains(parameters.nameValue, tmpKey) == true>
 	selected="selected"<#rt>
 	</#if>
 	<#if optGroupItemCssClass?has_content>
 	class="${optGroupItemCssClass?html}"<#rt/>
+	</#if>
+	<#if optGroupItemCssStyle?has_content>
+	style="${optGroupItemCssStyle?html}"<#rt/>
 	</#if>
 	>${tmpValue?html}<#t>
 	</option><#lt>

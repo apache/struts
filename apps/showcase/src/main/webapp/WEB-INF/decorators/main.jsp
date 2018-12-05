@@ -201,6 +201,7 @@
                         <ul class="dropdown-menu" role="menu">
                             <s:url var="quizBasic" namespace="/validation" action="quizBasic" method="input"/>
                             <s:url var="quizClient" namespace="/validation" action="quizClient" method="input"/>
+                            <s:url var="quizDwr" namespace="/validation" action="quizDwr" method="input"/>
                             <s:url var="quizClientCss" namespace="/validation" action="quizClientCss" method="input"/>
                             <s:url var="fieldValidatorUrl" action="showFieldValidatorsExamples" namespace="/validation"/>
                             <s:url var="nonFieldValidatorUrl" action="showNonFieldValidatorsExamples" namespace="/validation"/>
@@ -216,6 +217,7 @@
                             <li><s:a href="%{storeMessageAcrossRequestExample}">Store across request using MessageStoreInterceptor (Example)</s:a></li>
                             <li><s:a href="%{quizBasic}">Validation (basic)</s:a></li>
                             <li><s:a href="%{quizClient}">Validation (client)</s:a></li>
+                            <li><s:a href="%{quizDwr}">Validation (DWR)</s:a></li>
                             <li><s:a href="%{quizClientCss}">Validation (client using css_xhtml theme)</s:a></li>
                             <li><s:a href="%{visitorValidatorUrl}">Visitor Validator</s:a></li>
                             <li><s:a href="%{ajaxFormSubmitUrl}">AJAX Form Submit</s:a></li>

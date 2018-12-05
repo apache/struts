@@ -37,21 +37,15 @@
 	<#assign tmpKeyStr = tmpKey.toString() />
 	<#assign optGroupItemCssClass = ''/>
 	<#if optGroupInternalListUiBean.parameters.listCssClass??>
-		<#if stack.findString(optGroupInternalListUiBean.parameters.listCssClass)??>
-			<#assign optGroupItemCssClass= stack.findString(optGroupInternalListUiBean.parameters.listCssClass)/>
-		</#if>
+		<#assign optGroupItemCssClass= stack.findString(optGroupInternalListUiBean.parameters.listCssClass)!''/>
 	</#if>
 	<#assign optGroupItemCssStyle = ''/>
 	<#if optGroupInternalListUiBean.parameters.listCssStyle??>
-		<#if stack.findString(optGroupInternalListUiBean.parameters.listCssStyle)??>
-			<#assign optGroupItemCssStyle= stack.findString(optGroupInternalListUiBean.parameters.listCssStyle)/>
-		</#if>
+		<#assign optGroupItemCssStyle= stack.findString(optGroupInternalListUiBean.parameters.listCssStyle)!''/>
 	</#if>
 	<#assign optGroupItemTitle = ''/>
 	<#if optGroupInternalListUiBean.parameters.listTitle??>
-		<#if stack.findString(optGroupInternalListUiBean.parameters.listTitle)??>
-			<#assign optGroupItemTitle= stack.findString(optGroupInternalListUiBean.parameters.listTitle)/>
-		</#if>
+		<#assign optGroupItemTitle= stack.findString(optGroupInternalListUiBean.parameters.listTitle)!''/>
 	</#if>
 	<option value="${tmpKeyStr?html}"<#rt>
 	<#if tag.contains(parameters.nameValue, tmpKey) == true>

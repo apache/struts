@@ -89,6 +89,7 @@
 
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="struts" class="org.apache.struts2.dispatcher.mapper.DefaultActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="composite" class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper" />
+    <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="prefix" class="org.apache.struts2.dispatcher.mapper.PrefixBasedActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="restful" class="org.apache.struts2.dispatcher.mapper.RestfulActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="restful2" class="org.apache.struts2.dispatcher.mapper.Restful2ActionMapper" />
 
@@ -171,8 +172,6 @@
 
     <bean type="org.apache.struts2.dispatcher.DispatcherErrorHandler" name="struts" class="org.apache.struts2.dispatcher.DefaultDispatcherErrorHandler" />
     
-    <constant name="struts.dispatcher.errorHandler" value="struts" />
-
     <!--  Silly workarounds for OGNL since there is currently no way to flush its internal caches -->
     <bean type="ognl.PropertyAccessor" name="java.util.ArrayList" class="com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor" />
     <bean type="ognl.PropertyAccessor" name="java.util.HashSet" class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor" />

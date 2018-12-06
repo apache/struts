@@ -41,7 +41,7 @@ import java.util.Map;
  * </p>
  *
  * <pre>
- * &lt;constant name="struts.mapper.class" value="org.apache.struts2.dispatcher.mapper.PrefixBasedActionMapper"/&gt;
+ * &lt;constant name="struts.mapper.class" value="prefix"/&gt;
  * &lt;constant name="struts.mapper.prefixMapping" value="/communities:pseudoRestful,/communityTags:pseudoRestful,/events:pseudoRestful,/mediaList:pseudoRestful,/users:pseudoRestful,/community:struts,/communityTag:struts,/event:struts,/media:struts,/user:struts,:struts"/&gt;
  * </pre>
  *

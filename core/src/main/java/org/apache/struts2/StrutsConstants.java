@@ -171,7 +171,7 @@ public final class StrutsConstants {
     /** Location of additional localization properties files to load */
     public static final String STRUTS_CUSTOM_I18N_RESOURCES = "struts.custom.i18n.resources";
 
-    /** The org.apache.struts2.dispatcher.mapper.ActionMapper implementation class */
+    /** A name of a bean implementing org.apache.struts2.dispatcher.mapper.ActionMapper interface */
     public static final String STRUTS_MAPPER_CLASS = "struts.mapper.class";
 
     /**

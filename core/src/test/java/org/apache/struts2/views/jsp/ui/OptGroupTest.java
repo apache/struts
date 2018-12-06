@@ -253,4 +253,40 @@ public class OptGroupTest extends AbstractUITagTest {
         verify(SelectTag.class.getResource("OptGroup-6.txt"));
     }
 
+    public void testOptGroupListAttributes() throws Exception {
+        SelectTag selectTag = new SelectTag();
+        selectTag.setName("mySelection");
+        selectTag.setLabel("My Selection");
+        selectTag.setList("#{'ONE':'one','TWO':'two','THREE':'three'}");
+        selectTag.setListCssClass("'option-css-class ' + key");
+        selectTag.setListCssStyle("'background-color: green; font-family: ' + key");
+        selectTag.setListTitle("'option-title' + key");
+
+        OptGroupTag optGroupTag1 = new OptGroupTag();
+        optGroupTag1.setLabel("My Label 1");
+        optGroupTag1.setList("#{'AAA':'aaa','BBB':'bbb','CCC':'ccc'}");
+        optGroupTag1.setListCssClass("'optgroup-option-css-class ' + key");
+        optGroupTag1.setListCssStyle("'background-color: blue; font-family: ' + key");
+        optGroupTag1.setListTitle("'optgroup-option-title' + key");
+
+        OptGroupTag optGroupTag2 = new OptGroupTag();
+        optGroupTag2.setLabel("My Label 2");
+        optGroupTag2.setList("#{'DDD':'ddd','EEE':'eee','FFF':'fff'}");
+        optGroupTag2.setListCssClass("notExistingProperty");
+        optGroupTag2.setListCssStyle("notExistingProperty");
+        optGroupTag2.setListTitle("notExistingProperty");
+
+        selectTag.setPageContext(pageContext);
+        selectTag.doStartTag();
+        optGroupTag1.setPageContext(pageContext);
+        optGroupTag1.doStartTag();
+        optGroupTag1.doEndTag();
+        optGroupTag2.setPageContext(pageContext);
+        optGroupTag2.doStartTag();
+        optGroupTag2.doEndTag();
+        selectTag.doEndTag();
+
+        //System.out.println(writer.toString());
+        verify(SelectTag.class.getResource("OptGroup-8.txt"));
+    }
 }

@@ -140,4 +140,19 @@ public class OptGroup extends Component {
     public void setListValue(String listValue) {
         internalUiBean.setListValue(listValue);
     }
+
+    @StrutsTagAttribute(description = "Property of list objects to get css class from")
+    public void setListCssClass(String listCssClass) {
+        internalUiBean.setListCssClass(listCssClass);
+    }
+
+    @StrutsTagAttribute(description = "Property of list objects to get css style from")
+    public void setListCssStyle(String listCssStyle) {
+        internalUiBean.setListCssStyle(listCssStyle);
+    }
+
+    @StrutsTagAttribute(description = "Property of list objects to get title from")
+    public void setListTitle(String listTitle) {
+        internalUiBean.setListTitle(listTitle);
+    }
 }

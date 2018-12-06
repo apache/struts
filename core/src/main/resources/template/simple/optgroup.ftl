@@ -35,9 +35,30 @@
 	<#assign tmpKey=stack.findValue(optGroupInternalListUiBean.parameters.listKey) />
 	<#assign tmpValue=stack.findValue(optGroupInternalListUiBean.parameters.listValue) />
 	<#assign tmpKeyStr = tmpKey.toString() />
+	<#assign optGroupItemCssClass = ''/>
+	<#if optGroupInternalListUiBean.parameters.listCssClass??>
+		<#assign optGroupItemCssClass= stack.findString(optGroupInternalListUiBean.parameters.listCssClass)!''/>
+	</#if>
+	<#assign optGroupItemCssStyle = ''/>
+	<#if optGroupInternalListUiBean.parameters.listCssStyle??>
+		<#assign optGroupItemCssStyle= stack.findString(optGroupInternalListUiBean.parameters.listCssStyle)!''/>
+	</#if>
+	<#assign optGroupItemTitle = ''/>
+	<#if optGroupInternalListUiBean.parameters.listTitle??>
+		<#assign optGroupItemTitle= stack.findString(optGroupInternalListUiBean.parameters.listTitle)!''/>
+	</#if>
 	<option value="${tmpKeyStr?html}"<#rt>
 	<#if tag.contains(parameters.nameValue, tmpKey) == true>
 	selected="selected"<#rt>
+	</#if>
+	<#if optGroupItemCssClass?has_content>
+	class="${optGroupItemCssClass?html}"<#rt/>
+	</#if>
+	<#if optGroupItemCssStyle?has_content>
+	style="${optGroupItemCssStyle?html}"<#rt/>
+	</#if>
+	<#if optGroupItemTitle?has_content>
+	title="${optGroupItemTitle?html}"<#rt/>
 	</#if>
 	>${tmpValue?html}<#t>
 	</option><#lt>

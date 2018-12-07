@@ -82,8 +82,8 @@ public class JuneauXmlHandlerTest extends XWorkTestCase {
 
         // then
         assertNotNull(obj);
-        assertEquals(obj.getName(), "Jan");
-        assertEquals(obj.getAge().longValue(), 12L);
+        assertEquals("Jan", obj.getName());
+        assertEquals(12L, obj.getAge().longValue());
         assertNotNull(obj.getParents());
         assertThat(obj.getParents())
                 .hasSize(2)

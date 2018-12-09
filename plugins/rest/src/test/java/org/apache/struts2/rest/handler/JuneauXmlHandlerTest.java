@@ -69,7 +69,13 @@ public class JuneauXmlHandlerTest extends XWorkTestCase {
 
         // then
         stream.flush();
-        assertEquals(xml, stream.toString());
+        assertThat(stream.toString())
+            .contains("<object>")
+            .contains("<name>Jan</name>")
+            .contains("<age>12</age>")
+            .contains("<parents><string>Adam</string>")
+            .contains("<string>Ewa</string></parents>")
+            .contains("</object>");
     }
 
     public void testXmlToObject() throws Exception {

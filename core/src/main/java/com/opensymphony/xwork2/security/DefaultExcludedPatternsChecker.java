@@ -47,8 +47,16 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     @Inject(value = StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, required = false)
     public void setOverrideExcludePatterns(String excludePatterns) {
-        LOG.warn("Overriding excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
-                    StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, excludePatterns);
+        if (excludedPatterns != null && excludedPatterns.size() > 0) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Overriding excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
+                            excludedPatterns, excludePatterns);
+            }
+        }
+        else if (LOG.isDebugEnabled()) {  // Limit unwanted log entries (when excludedPatterns null/empty - usually 1st call)
+            LOG.debug("Overriding excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
+                         excludedPatterns, excludePatterns);
+        }
         excludedPatterns = new HashSet<Pattern>();
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
@@ -57,7 +65,9 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     @Inject(value = StrutsConstants.STRUTS_ADDITIONAL_EXCLUDED_PATTERNS, required = false)
     public void setAdditionalExcludePatterns(String excludePatterns) {
-        LOG.debug("Adding additional global patterns [{}] to excluded patterns!", excludePatterns);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding additional global patterns [{}] to excluded patterns!", excludePatterns);
+        }
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
@@ -66,8 +76,13 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
     public void setDynamicMethodInvocation(String dmiValue) {
         if (!BooleanUtils.toBoolean(dmiValue)) {
-            LOG.debug("DMI is disabled, adding DMI related excluded patterns");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("DMI is disabled, adding DMI related excluded patterns");
+            }
             setAdditionalExcludePatterns("^(action|method):.*");
+        }
+        else if (LOG.isWarnEnabled()) {
+            LOG.warn("DMI is enabled, *NOT* adding DMI related excluded patterns");
         }
     }
 
@@ -80,7 +95,16 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     }
 
     public void setExcludedPatterns(Set<String> patterns) {
-        LOG.trace("Sets excluded patterns [{}]", patterns);
+        if (excludedPatterns != null && excludedPatterns.size() > 0) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Replacing excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
+                            excludedPatterns, patterns);
+            }
+        }
+        else if (LOG.isDebugEnabled()) {  // Limit unwanted log entries (when excludedPatterns null/empty - usually 1st call)
+            LOG.debug("Replacing excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
+                    excludedPatterns, patterns);
+        }
         excludedPatterns = new HashSet<>(patterns.size());
         for (String pattern : patterns) {
             excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
@@ -90,7 +114,9 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     public IsExcluded isExcluded(String value) {
         for (Pattern excludedPattern : excludedPatterns) {
             if (excludedPattern.matcher(value).matches()) {
-                LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
+                }
                 return IsExcluded.yes(excludedPattern);
             }
         }

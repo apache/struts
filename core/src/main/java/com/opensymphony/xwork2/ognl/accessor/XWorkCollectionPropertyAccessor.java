@@ -48,7 +48,7 @@ public class XWorkCollectionPropertyAccessor extends SetPropertyAccessor {
     //use a basic object Ognl property accessor here
     //to access properties of the objects in the Set
     //so that nothing is put in the context to screw things up
-    private ObjectPropertyAccessor _accessor = new ObjectPropertyAccessor();
+    private final ObjectPropertyAccessor _accessor = new ObjectPropertyAccessor();
     
     private XWorkConverter xworkConverter;
     private ObjectFactory objectFactory;

@@ -32,6 +32,9 @@ import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.Map;
 import java.util.Set;
@@ -41,11 +44,14 @@ import java.util.Set;
  */
 public class OgnlValueStackFactory implements ValueStackFactory {
     
+	private static final Logger LOG = LogManager.getLogger(OgnlValueStackFactory.class);
+
     protected XWorkConverter xworkConverter;
     protected CompoundRootAccessor compoundRootAccessor;
     protected TextProvider textProvider;
     protected Container container;
-    protected boolean allowStaticMethodAccess;
+    private boolean allowStaticMethodAccess;          // Defaults to false
+    private boolean allowStaticMethodAccessValueSet;  // Defaults to false (not explicitly set yet)
 
     @Inject
     public void setXWorkConverter(XWorkConverter converter) {
@@ -59,7 +65,19 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     
     @Inject(value="allowStaticMethodAccess", required=false)
     public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
-        this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
+        final boolean booleanAllowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
+        if (!this.allowStaticMethodAccessValueSet) {
+            this.allowStaticMethodAccess = booleanAllowStaticMethodAccess;
+            this.allowStaticMethodAccessValueSet = true;  // Permit setting allowStaticMethodAccess only once
+            if (this.allowStaticMethodAccess) {
+                LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
+                            this.allowStaticMethodAccess);
+            }
+        }
+        else {
+            LOG.debug("Error setting allow static method access value [{}], already previously set to [{}]",
+                        allowStaticMethodAccess, this.allowStaticMethodAccess);
+        }
     }
 
     public ValueStack createValueStack() {

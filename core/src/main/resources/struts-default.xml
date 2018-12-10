@@ -61,6 +61,7 @@
                 freemarker.ext.rhino.,
                 sun.reflect.,
                 javassist.,
+                org.objectweb.asm.,
                 com.opensymphony.xwork2.ognl.,
                 com.opensymphony.xwork2.security.,
                 com.opensymphony.xwork2.util." />

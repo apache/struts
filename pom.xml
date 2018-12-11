@@ -228,7 +228,7 @@
                         <version>1.0.12</version>
                         <executions>
                             <execution>
-                                <phase>verify</phase>
+                                <phase>validate</phase>
                                 <goals>
                                     <goal>submit</goal>
                                 </goals>

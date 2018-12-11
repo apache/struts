@@ -1072,6 +1072,12 @@
                 <version>${jackson.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.juneau</groupId>
+                <artifactId>juneau-marshall</artifactId>
+                <version>7.2.2</version>
+            </dependency>
+
             <!-- CDI & Weld -->
             <dependency>
                 <groupId>javax.enterprise</groupId>

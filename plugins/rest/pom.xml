@@ -56,6 +56,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.juneau</groupId>
+            <artifactId>juneau-marshall</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-core</artifactId>
             <scope>test</scope>

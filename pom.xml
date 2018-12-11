@@ -111,6 +111,7 @@
         <!-- Sonar -->
         <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+        <travis.ci>${env.TRAVIS}</travis.ci>
     </properties>
 
     <profiles>
@@ -213,14 +214,29 @@
         </profile>
         <profile>
             <id>update-impact</id>
+            <activation>
+                <jdk>1.7</jdk>
+                <property>
+                    <name>update-impact</name>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>com.updateimpact</groupId>
                         <artifactId>updateimpact-maven-plugin</artifactId>
                         <version>1.0.12</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>submit</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
+                
             </build>
         </profile>
     </profiles>

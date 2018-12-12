@@ -60,9 +60,9 @@
     </#if>
 <input type="radio"<#rt/>
 <#if parameters.name?has_content>
- name="${parameters.name?html}"<#rt/>
+ name="${parameters.name}"<#rt/>
 </#if>
- id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
+ id="${parameters.id}${itemKeyStr}"<#rt/>
 <#if tag.contains(parameters.nameValue!'', itemKey)>
  checked="checked"<#rt/>
 </#if>
@@ -93,7 +93,7 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 /><#rt/>
-<label for="${parameters.id?html}${itemKeyStr?html}"<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl"/>><#rt/>
+<label for="${parameters.id}${itemKeyStr}"<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl"/>><#rt/>
     ${itemValue}<#t/>
 </label>
 </@s.iterator>

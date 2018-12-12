@@ -19,44 +19,44 @@
  */
 -->
 <#if parameters.onclick??>
- onclick="${parameters.onclick?html}"<#rt/>
+ onclick="${parameters.onclick}"<#rt/>
 </#if>
 <#if parameters.ondblclick??>
- ondblclick="${parameters.ondblclick?html}"<#rt/>
+ ondblclick="${parameters.ondblclick}"<#rt/>
 </#if>
 <#if parameters.onmousedown??>
- onmousedown="${parameters.onmousedown?html}"<#rt/>
+ onmousedown="${parameters.onmousedown}"<#rt/>
 </#if>
 <#if parameters.onmouseup??>
- onmouseup="${parameters.onmouseup?html}"<#rt/>
+ onmouseup="${parameters.onmouseup}"<#rt/>
 </#if>
 <#if parameters.onmouseover??>
- onmouseover="${parameters.onmouseover?html}"<#rt/>
+ onmouseover="${parameters.onmouseover}"<#rt/>
 </#if>
 <#if parameters.onmousemove??>
- onmousemove="${parameters.onmousemove?html}"<#rt/>
+ onmousemove="${parameters.onmousemove}"<#rt/>
 </#if>
 <#if parameters.onmouseout??>
- onmouseout="${parameters.onmouseout?html}"<#rt/>
+ onmouseout="${parameters.onmouseout}"<#rt/>
 </#if>
 <#if parameters.onfocus??>
- onfocus="${parameters.onfocus?html}"<#rt/>
+ onfocus="${parameters.onfocus}"<#rt/>
 </#if>
 <#if parameters.onblur??>
- onblur="${parameters.onblur?html}"<#rt/>
+ onblur="${parameters.onblur}"<#rt/>
 </#if>
 <#if parameters.onkeypress??>
- onkeypress="${parameters.onkeypress?html}"<#rt/>
+ onkeypress="${parameters.onkeypress}"<#rt/>
 </#if>
 <#if parameters.onkeydown??>
- onkeydown="${parameters.onkeydown?html}"<#rt/>
+ onkeydown="${parameters.onkeydown}"<#rt/>
 </#if>
 <#if parameters.onkeyup??>
- onkeyup="${parameters.onkeyup?html}"<#rt/>
+ onkeyup="${parameters.onkeyup}"<#rt/>
 </#if>
 <#if parameters.onselect??>
- onselect="${parameters.onselect?html}"<#rt/>
+ onselect="${parameters.onselect}"<#rt/>
 </#if>
 <#if parameters.onchange??>
- onchange="${parameters.onchange?html}"<#rt/>
+ onchange="${parameters.onchange}"<#rt/>
 </#if>

@@ -111,7 +111,6 @@
         <!-- Sonar -->
         <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
-        <travis.ci>${env.TRAVIS}</travis.ci>
     </properties>
 
     <profiles>

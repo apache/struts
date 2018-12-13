@@ -213,14 +213,29 @@
         </profile>
         <profile>
             <id>update-impact</id>
+            <activation>
+                <jdk>1.8</jdk>
+                <property>
+                    <name>update-impact</name>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>com.updateimpact</groupId>
                         <artifactId>updateimpact-maven-plugin</artifactId>
                         <version>1.0.12</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>submit</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
+                
             </build>
         </profile>
     </profiles>
@@ -1070,6 +1085,12 @@
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.juneau</groupId>
+                <artifactId>juneau-marshall</artifactId>
+                <version>7.2.2</version>
             </dependency>
 
             <!-- CDI & Weld -->

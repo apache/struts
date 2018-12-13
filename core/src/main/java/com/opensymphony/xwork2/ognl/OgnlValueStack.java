@@ -69,8 +69,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     protected transient SecurityMemberAccess securityMemberAccess;
 
     private transient XWorkConverter converter;
-    private boolean devMode;
-    private boolean logMissingProperties;
+    private boolean devMode;               // Defaults to false
+    private boolean devModeValueSet;       // Defaults to false (not explicitly set yet)
+    private boolean logMissingProperties;  // Defaults to false
 
     protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticAccess) {
         setRoot(xworkConverter, accessor, new CompoundRoot(), allowStaticAccess);
@@ -103,7 +104,18 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
-        this.devMode = BooleanUtils.toBoolean(mode);
+        final boolean booleanMode = BooleanUtils.toBoolean(mode);
+        if (!this.devModeValueSet) {
+            this.devMode = booleanMode;
+            this.devModeValueSet = true;  // Permit setting devMode only once
+            if (this.devMode) {
+                LOG.warn("Setting development mode [{}] affects the safety of your application!",
+                            this.devMode);
+            }
+        }
+        else {
+            LOG.debug("Error setting development mode value [{}], already previously set to [{}]", mode, this.devMode);
+        }
     }
 
     @Inject(value = "logMissingProperties", required = false)

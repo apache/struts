@@ -19,9 +19,14 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.interceptor.ChainingInterceptor;
 import com.opensymphony.xwork2.test.User;
 import com.opensymphony.xwork2.util.*;
@@ -364,9 +369,10 @@ public class OgnlUtilTest extends XWorkTestCase {
         Map props = new HashMap();
         props.put("birthday", "02/12/1982");
         // US style test
+        context.put(ActionContext.LOCALE, Locale.US);
         ognlUtil.setProperties(props, foo, context);
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(Locale.US);
         cal.clear();
         cal.set(Calendar.MONTH, Calendar.FEBRUARY);
         cal.set(Calendar.DAY_OF_MONTH, 12);
@@ -375,7 +381,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(cal.getTime(), foo.getBirthday());
 
         //UK style test
-        cal = Calendar.getInstance();
+        cal = Calendar.getInstance(Locale.UK);
         cal.clear();
         cal.set(Calendar.MONTH, Calendar.OCTOBER);
         cal.set(Calendar.DAY_OF_MONTH, 18);
@@ -389,7 +395,7 @@ public class OgnlUtilTest extends XWorkTestCase {
                 .format(eventTime);
         props.put("event", formatted);
 
-        cal = Calendar.getInstance();
+        cal = Calendar.getInstance(Locale.UK);
         cal.clear();
         cal.set(Calendar.MONTH, Calendar.SEPTEMBER);
         cal.set(Calendar.DAY_OF_MONTH, 9);
@@ -412,9 +418,10 @@ public class OgnlUtilTest extends XWorkTestCase {
         
         //test RFC 3339 date format for JSON
         props.put("event", "1996-12-19T16:39:57Z");
+        context.put(ActionContext.LOCALE, Locale.US);
         ognlUtil.setProperties(props, foo, context);
         
-        cal = Calendar.getInstance();
+        cal = Calendar.getInstance(Locale.US);
         cal.clear();
         cal.set(Calendar.MONTH, Calendar.DECEMBER);
         cal.set(Calendar.DAY_OF_MONTH, 19);
@@ -427,6 +434,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         
         //test setting a calendar property
         props.put("calendar", "1996-12-19T16:39:57Z");
+        context.put(ActionContext.LOCALE, Locale.US);
         ognlUtil.setProperties(props, foo, context);
         assertEquals(cal, foo.getCalendar());
     }
@@ -628,6 +636,20 @@ public class OgnlUtilTest extends XWorkTestCase {
         String[] foo = new String[]{"asdf"};
         ((OgnlValueStack)stack).setDevMode("true");
         try {
+            reloadTestContainerConfiguration(true, false);  // Set dev mode true (above set now refused)
+        }
+        catch (Exception ex) {
+            fail("Unable to reload container configuration - exception: " + ex);
+        }
+
+        // Repeat stack/context set after retrieving updated stack
+        stack = ActionContext.getContext().getValueStack();
+        stackContext = stack.getContext();
+        stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
+        stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
+        stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+
+        try {
             stack.setValue("list.1114778947765", foo);
             fail("non-valid expression: list.1114778947765"); 
         }
@@ -645,16 +667,208 @@ public class OgnlUtilTest extends XWorkTestCase {
         
         try {
             stack.setValue("1234", foo);
-            fail("non-valid expression: 1114778947765"); 
+            fail("non-valid expression: 1234");
         }
         catch(RuntimeException ex) {
             ;
         }
         
         ((OgnlValueStack)stack).setDevMode("false");
+        try {
+            reloadTestContainerConfiguration(false, false);  // Set dev mode false (above set now refused)
+        }
+        catch (Exception ex) {
+            fail("Unable to reload container configuration - exception: " + ex);
+        }
+
+        // Repeat stack/context set after retrieving updated stack
+        stack = ActionContext.getContext().getValueStack();
+        stackContext = stack.getContext();
+        stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
+        stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
+        stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+
         stack.setValue("list.1114778947765", foo);
         stack.setValue("1114778947765", foo);
         stack.setValue("1234", foo);
+    }
+
+    public void testStackValueDevModeChange() throws Exception {
+
+        try {
+            reloadTestContainerConfiguration(false, false);  // Set dev mode false
+        }
+        catch (Exception ex) {
+            fail("Unable to reload container configuration - exception: " + ex);
+        }
+
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        Map stackContext = stack.getContext();
+        stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
+        stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
+        stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+
+        String[] foo = new String[]{"asdf"};
+
+        // With dev mode false, the following set values should not cause failures
+        stack.setValue("list.1114778947765", foo);
+        stack.setValue("1114778947765", foo);
+        stack.setValue("1234", foo);
+
+        ((OgnlValueStack)stack).setDevMode("true");  // Previously set, should remain false
+        // With dev mode false, the following set values should not cause failures
+        stack.setValue("list.1114778947765", foo);
+        stack.setValue("1114778947765", foo);
+        stack.setValue("1234", foo);
+
+        try {
+            reloadTestContainerConfiguration(true, false);  // Set dev mode true
+        }
+        catch (Exception ex) {
+            fail("Unable to reload container configuration - exception: " + ex);
+        }
+
+        // Repeat stack/context set after retrieving updated stack
+        stack = ActionContext.getContext().getValueStack();
+        stackContext = stack.getContext();
+        stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
+        stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
+        stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+
+        try {
+            stack.setValue("list.1114778947765", foo);
+            fail("non-valid expression: list.1114778947765");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+        try {
+            stack.setValue("1114778947765", foo);
+            fail("non-valid expression: 1114778947765");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+        try {
+            stack.setValue("1234", foo);
+            fail("non-valid expression: 1234");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+
+        ((OgnlValueStack)stack).setDevMode("false");  // Previously set, should remain true
+        try {
+            stack.setValue("list.1114778947765", foo);
+            fail("non-valid expression: list.1114778947765");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+        try {
+            stack.setValue("1114778947765", foo);
+            fail("non-valid expression: 1114778947765");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+        try {
+            stack.setValue("1234", foo);
+            fail("non-valid expression: 1234");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+
+    }
+
+    public void testDevModeChange() throws Exception {
+
+        try {
+            reloadTestContainerConfiguration(false, false);  // Set dev mode false
+        }
+        catch (Exception ex) {
+            fail("Unable to reload container configuration - exception: " + ex);
+        }
+
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        Map stackContext = stack.getContext();
+        stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
+        stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
+        stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+
+        String[] foo = new String[]{"asdf"};
+
+        // With dev mode false, the following set values should not cause failures
+        stack.setValue("list.1114778947765", foo);
+        stack.setValue("1114778947765", foo);
+        stack.setValue("1234", foo);
+
+        ognlUtil.setDevMode("true");  // Previously set, should remain false
+        // With dev mode false, the following set values should not cause failures
+        stack.setValue("list.1114778947765", foo);
+        stack.setValue("1114778947765", foo);
+        stack.setValue("1234", foo);
+
+        try {
+            reloadTestContainerConfiguration(true, false);  // Set dev mode true
+        }
+        catch (Exception ex) {
+            fail("Unable to reload container configuration - exception: " + ex);
+        }
+
+        // Repeat stack/context set after retrieving updated stack
+        stack = ActionContext.getContext().getValueStack();
+        stackContext = stack.getContext();
+        stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
+        stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
+        stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+
+        try {
+            stack.setValue("list.1114778947765", foo);
+            fail("non-valid expression: list.1114778947765");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+        try {
+            stack.setValue("1114778947765", foo);
+            fail("non-valid expression: 1114778947765");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+        try {
+            stack.setValue("1234", foo);
+            fail("non-valid expression: 1234");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+
+        ognlUtil.setDevMode("false");  // Previously set, should remain true
+        try {
+            stack.setValue("list.1114778947765", foo);
+            fail("non-valid expression: list.1114778947765");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+        try {
+            stack.setValue("1114778947765", foo);
+            fail("non-valid expression: 1114778947765");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+        try {
+            stack.setValue("1234", foo);
+            fail("non-valid expression: 1234");
+        }
+        catch(RuntimeException ex) {
+            // Expected with dev mode true
+        }
+
     }
 
     public void testAvoidCallingMethodsOnObjectClass() throws Exception {
@@ -810,6 +1024,39 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertNotNull(expected);
         assertSame(OgnlException.class, expected.getClass());
         assertEquals(expected.getMessage(), "It isn't a simple method which can be called!");
+    }
+
+    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStatic) throws Exception {
+        super.tearDown();
+
+        ConfigurationProvider configurationProvider;
+        if (devMode == true && allowStatic == true) {
+            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-devmode-true.xml", true);
+        }
+        else if (devMode == true && allowStatic == false) {
+            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-devmode-true.xml", true);
+        }
+        else if (devMode == false && allowStatic == true) {
+            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-true.xml", true);
+        }
+        else {  // devMode, allowStatic both false
+            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-devmode-false.xml", true);
+        }
+
+        configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
+        configurationManager.addContainerProvider(configurationProvider);
+        configuration = configurationManager.getConfiguration();
+        container = configuration.getContainer();
+        container.inject(configurationProvider);
+        configurationProvider.init(configuration);
+        actionProxyFactory = container.getInstance(ActionProxyFactory.class);
+
+        // Reset the value stack
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.getContext().put(ActionContext.CONTAINER, container);
+        ActionContext.setContext(new ActionContext(stack.getContext()));
+
+        ognlUtil = container.getInstance(OgnlUtil.class);
     }
 
     public static class Email {

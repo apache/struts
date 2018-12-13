@@ -58,17 +58,21 @@ public class OgnlUtil {
     private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
     private TypeConverter defaultConverter;
 
-    private boolean devMode = false;
+    private boolean devMode;                       // Defaults to false
+    private boolean devModeValueSet;               // Defaults to false (not explicitly set yet)
     private boolean enableExpressionCache = true;
-    private boolean enableEvalExpression;
+    private boolean enableEvalExpression;          // Defaults to false
+    private boolean enableEvalExpressionValueSet;  // Defaults to false (not explicitly set yet)
 
     private Set<Class<?>> excludedClasses;
     private Set<Pattern> excludedPackageNamePatterns;
     private Set<String> excludedPackageNames;
 
     private Container container;
-    private boolean allowStaticMethodAccess;
-    private boolean disallowProxyMemberAccess;
+    private boolean allowStaticMethodAccess;            // Defaults to false
+    private boolean allowStaticMethodAccessValueSet;    // Defaults to false (not explicitly set yet)
+    private boolean disallowProxyMemberAccess;          // Defaults to false
+    private boolean disallowProxyMemberAccessValueSet;  // Defaults to false (not explicitly set yet)
 
     public OgnlUtil() {
         excludedClasses = new HashSet<>();
@@ -83,7 +87,18 @@ public class OgnlUtil {
 
     @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
-        this.devMode = BooleanUtils.toBoolean(mode);
+        final boolean booleanMode = BooleanUtils.toBoolean(mode);
+        if (!this.devModeValueSet) {
+            this.devMode = booleanMode;
+            this.devModeValueSet = true;  // Permit setting devMode only once
+            if (this.devMode) {
+                LOG.warn("Setting development mode [{}] affects the safety of your application!",
+                            this.devMode);
+            }
+        }
+        else {
+            LOG.debug("Error setting development mode value [{}], already previously set to [{}]", mode, this.devMode);
+        }
     }
 
     @Inject(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE)
@@ -93,10 +108,17 @@ public class OgnlUtil {
 
     @Inject(value = XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, required = false)
     public void setEnableEvalExpression(String evalExpression) {
-        enableEvalExpression = "true".equals(evalExpression);
-        if(enableEvalExpression){
-            LOG.warn("Enabling OGNL expression evaluation may introduce security risks " +
-                    "(see http://struts.apache.org/release/2.3.x/docs/s2-013.html for further details)");
+        if (!this.enableEvalExpressionValueSet) {
+            this.enableEvalExpression = "true".equals(evalExpression);
+            this.enableEvalExpressionValueSet = true;  // Permit setting enableEvalExpression only once
+            if (this.enableEvalExpression) {
+                LOG.warn("Enabling OGNL expression evaluation may introduce security risks " +
+                        "(see http://struts.apache.org/release/2.3.x/docs/s2-013.html for further details)");
+            }
+        }
+        else {
+            LOG.debug("Error setting enable OGNL expression evaluation value [{}], already previously set to [{}]",
+                    evalExpression, this.enableEvalExpression);
         }
     }
 
@@ -173,12 +195,36 @@ public class OgnlUtil {
 
     @Inject(value = XWorkConstants.ALLOW_STATIC_METHOD_ACCESS, required = false)
     public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
-        this.allowStaticMethodAccess = Boolean.parseBoolean(allowStaticMethodAccess);
+        final boolean booleanAllowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
+        if (!this.allowStaticMethodAccessValueSet) {
+            this.allowStaticMethodAccess = booleanAllowStaticMethodAccess;
+            this.allowStaticMethodAccessValueSet = true;  // Permit setting allowStaticMethodAccess only once
+            if (this.allowStaticMethodAccess) {
+                LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
+                            this.allowStaticMethodAccess);
+            }
+        }
+        else {
+            LOG.debug("Error setting allow static method access value [{}], already previously set to [{}]",
+                        allowStaticMethodAccess, this.allowStaticMethodAccess);
+        }
     }
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
     public void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
-        this.disallowProxyMemberAccess = Boolean.parseBoolean(disallowProxyMemberAccess);
+
+        if (!this.disallowProxyMemberAccessValueSet) {
+            this.disallowProxyMemberAccess = Boolean.parseBoolean(disallowProxyMemberAccess);
+            this.disallowProxyMemberAccessValueSet = true;  // Permit setting disallowProxyMemberAccess only once
+            if (!this.disallowProxyMemberAccess) {
+                LOG.warn("Setting disallow proxy member access [{}] should only be done intentionally!",
+                            this.disallowProxyMemberAccess);
+            }
+        }
+        else {
+            LOG.debug("Error setting disallow proxy member access value [{}], already previously set to [{}]",
+                    disallowProxyMemberAccess, this.disallowProxyMemberAccess);
+        }
     }
 
     public boolean isDisallowProxyMemberAccess() {
@@ -431,7 +477,7 @@ public class OgnlUtil {
 
         final T exec = task.execute(tree);
         // if cache is enabled and it's a valid expression, puts it in
-        if(enableExpressionCache) {
+        if (enableExpressionCache) {
             expressions.putIfAbsent(expression, tree);
         }
         return exec;
@@ -452,7 +498,7 @@ public class OgnlUtil {
 
         final T exec = task.execute(tree);
         // if cache is enabled and it's a valid expression, puts it in
-        if(enableExpressionCache) {
+        if (enableExpressionCache) {
             expressions.putIfAbsent(expression, tree);
         }
         return exec;
@@ -668,8 +714,7 @@ public class OgnlUtil {
      */
     public BeanInfo getBeanInfo(Class clazz) throws IntrospectionException {
         synchronized (beanInfoCache) {
-            BeanInfo beanInfo;
-            beanInfo = beanInfoCache.get(clazz);
+            BeanInfo beanInfo = beanInfoCache.get(clazz);
             if (beanInfo == null) {
                 beanInfo = Introspector.getBeanInfo(clazz, Object.class);
                 beanInfoCache.putIfAbsent(clazz, beanInfo);

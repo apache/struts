@@ -9,7 +9,7 @@ jdk:
 
 install: true
 script:
-   - if [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
+   - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
       ./mvnw test -DskipAssembly;
     else
       ./mvnw test -DskipAssembly -Dupdate-impact;

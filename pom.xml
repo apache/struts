@@ -214,7 +214,7 @@
         <profile>
             <id>update-impact</id>
             <activation>
-                <jdk>1.7</jdk>
+                <jdk>1.8</jdk>
                 <property>
                     <name>update-impact</name>
                 </property>

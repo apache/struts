@@ -8,8 +8,12 @@ jdk:
   - oraclejdk11
 
 install: true
-script: ./mvnw test -DskipAssembly
-
+script:
+   - if [ "$TRAVIS_PULL_REQUEST" == "true" ]; then
+      ./mvnw test -DskipAssembly;
+    else
+      ./mvnw test -DskipAssembly -Dupdate-impact;
+    fi;
 after_success:
   # TODO delete following if statement after fix of https://github.com/cobertura/cobertura/issues/271
   - if [ "$TRAVIS_JDK_VERSION" == "openjdk8" ] || [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ]; then

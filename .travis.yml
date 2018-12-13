@@ -8,7 +8,7 @@ jdk:
   - oraclejdk11
 
 install: true
-script: ./mvnw test -DskipAssembly -Dupdate-impact
+script: ./mvnw test -DskipAssembly
 
 after_success:
   # TODO delete following if statement after fix of https://github.com/cobertura/cobertura/issues/271

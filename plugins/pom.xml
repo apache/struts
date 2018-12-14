@@ -29,7 +29,7 @@
 
     <artifactId>struts2-plugins</artifactId>
     <packaging>pom</packaging>
-    <name>Struts Plugins</name>
+    <name>Struts 2 Plugins</name>
 
     <modules>
         <module>bean-validation</module>

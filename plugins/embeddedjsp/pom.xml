@@ -29,7 +29,7 @@
 
     <artifactId>struts2-embeddedjsp-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>Struts 2 Embedded JSP Plugin</name>
+    <name>DEPRECATED: Struts 2 Embedded JSP Plugin</name>
 
     <dependencies>
         <dependency>

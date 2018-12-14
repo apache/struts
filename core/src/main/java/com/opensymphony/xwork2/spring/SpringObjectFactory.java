@@ -168,9 +168,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
             Class beanClazz = getClassInstance(beanName);
             o = buildBean(beanClazz, extraContext);
         }
-        if (injectInternal) {
-            injectInternalBeans(o);
-        }
+
         return o;
     }
 
@@ -224,9 +222,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
         }
         injectApplicationContext(bean);
 
-        injectInternalBeans(bean);
-
-        return bean;
+        return injectInternalBeans(bean);
     }
 
     private void injectApplicationContext(Object bean) {

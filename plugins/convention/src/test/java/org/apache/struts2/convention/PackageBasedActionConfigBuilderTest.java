@@ -921,7 +921,11 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         }
 
         public <T> T inject(Class<T> implementation) {
-            return null;
+            try {
+                return implementation.newInstance();
+            } catch (Exception e) {
+                return null;
+            }
         }
 
         public void removeScopeStrategy() {

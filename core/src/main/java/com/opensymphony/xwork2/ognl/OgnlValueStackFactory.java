@@ -44,7 +44,7 @@ import java.util.Set;
  */
 public class OgnlValueStackFactory implements ValueStackFactory {
     
-	private static final Logger LOG = LogManager.getLogger(OgnlValueStackFactory.class);
+    private static final Logger LOG = LogManager.getLogger(OgnlValueStackFactory.class);
 
     protected XWorkConverter xworkConverter;
     protected CompoundRootAccessor compoundRootAccessor;

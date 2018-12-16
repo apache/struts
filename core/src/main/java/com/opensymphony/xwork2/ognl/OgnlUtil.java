@@ -57,21 +57,17 @@ public class OgnlUtil {
     private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
     private TypeConverter defaultConverter;
 
-    private boolean devMode;                       // Defaults to false
-    private boolean devModeValueSet;               // Defaults to false (not explicitly set yet)
+    private boolean devMode;
     private boolean enableExpressionCache = true;
-    private boolean enableEvalExpression;          // Defaults to false
-    private boolean enableEvalExpressionValueSet;  // Defaults to false (not explicitly set yet)
+    private boolean enableEvalExpression;
 
     private Set<Class<?>> excludedClasses;
     private Set<Pattern> excludedPackageNamePatterns;
     private Set<String> excludedPackageNames;
 
     private Container container;
-    private boolean allowStaticMethodAccess;            // Defaults to false
-    private boolean allowStaticMethodAccessValueSet;    // Defaults to false (not explicitly set yet)
-    private boolean disallowProxyMemberAccess;          // Defaults to false
-    private boolean disallowProxyMemberAccessValueSet;  // Defaults to false (not explicitly set yet)
+    private boolean allowStaticMethodAccess;
+    private boolean disallowProxyMemberAccess;
 
     public OgnlUtil() {
         excludedClasses = new HashSet<>();
@@ -80,49 +76,35 @@ public class OgnlUtil {
     }
 
     @Inject
-    public void setXWorkConverter(XWorkConverter conv) {
+    protected void setXWorkConverter(XWorkConverter conv) {
         this.defaultConverter = new OgnlTypeConverterWrapper(conv);
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
-    public void setDevMode(String mode) {
-        final boolean booleanMode = BooleanUtils.toBoolean(mode);
-        if (!this.devModeValueSet) {
-            this.devMode = booleanMode;
-            this.devModeValueSet = true;  // Permit setting devMode only once
-            if (this.devMode) {
-                LOG.warn("Setting development mode [{}] affects the safety of your application!",
-                            this.devMode);
-            }
-        }
-        else {
-            LOG.debug("Error setting development mode value [{}], already previously set to [{}]", mode, this.devMode);
+    protected void setDevMode(String mode) {
+        this.devMode = BooleanUtils.toBoolean(mode);
+        if (this.devMode) {
+            LOG.warn("Setting development mode [{}] affects the safety of your application!",
+                        this.devMode);
         }
     }
 
     @Inject(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE)
-    public void setEnableExpressionCache(String cache) {
+    protected void setEnableExpressionCache(String cache) {
         enableExpressionCache = BooleanUtils.toBoolean(cache);
     }
 
     @Inject(value = StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, required = false)
-    public void setEnableEvalExpression(String evalExpression) {
-        if (!this.enableEvalExpressionValueSet) {
-            this.enableEvalExpression = "true".equals(evalExpression);
-            this.enableEvalExpressionValueSet = true;  // Permit setting enableEvalExpression only once
-            if (this.enableEvalExpression) {
-                LOG.warn("Enabling OGNL expression evaluation may introduce security risks " +
-                        "(see http://struts.apache.org/release/2.3.x/docs/s2-013.html for further details)");
-            }
-        }
-        else {
-            LOG.debug("Error setting enable OGNL expression evaluation value [{}], already previously set to [{}]",
-                    evalExpression, this.enableEvalExpression);
+    protected void setEnableEvalExpression(String evalExpression) {
+        this.enableEvalExpression = BooleanUtils.toBoolean(evalExpression);
+        if (this.enableEvalExpression) {
+            LOG.warn("Enabling OGNL expression evaluation may introduce security risks " +
+                    "(see http://struts.apache.org/release/2.3.x/docs/s2-013.html for further details)");
         }
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
-    public void setExcludedClasses(String commaDelimitedClasses) {
+    protected void setExcludedClasses(String commaDelimitedClasses) {
         Set<Class<?>> excludedClasses = new HashSet<>();
         excludedClasses.addAll(this.excludedClasses);
         excludedClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
@@ -145,7 +127,7 @@ public class OgnlUtil {
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
-    public void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+    protected void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         Set<Pattern> excludedPackageNamePatterns = new HashSet<>();
         excludedPackageNamePatterns.addAll(this.excludedPackageNamePatterns);
         excludedPackageNamePatterns.addAll(parseExcludedPackageNamePatterns(commaDelimitedPackagePatterns));
@@ -164,7 +146,7 @@ public class OgnlUtil {
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
-    public void setExcludedPackageNames(String commaDelimitedPackageNames) {
+    protected void setExcludedPackageNames(String commaDelimitedPackageNames) {
         Set<String> excludedPackageNames = new HashSet<>();
         excludedPackageNames.addAll(this.excludedPackageNames);
         excludedPackageNames.addAll(parseExcludedPackageNames(commaDelimitedPackageNames));
@@ -188,41 +170,26 @@ public class OgnlUtil {
     }
 
     @Inject
-    public void setContainer(Container container) {
+    protected void setContainer(Container container) {
         this.container = container;
     }
 
     @Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, required = false)
-    public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
-        final boolean booleanAllowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
-        if (!this.allowStaticMethodAccessValueSet) {
-            this.allowStaticMethodAccess = booleanAllowStaticMethodAccess;
-            this.allowStaticMethodAccessValueSet = true;  // Permit setting allowStaticMethodAccess only once
-            if (this.allowStaticMethodAccess) {
-                LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
-                            this.allowStaticMethodAccess);
-            }
-        }
-        else {
-            LOG.debug("Error setting allow static method access value [{}], already previously set to [{}]",
-                        allowStaticMethodAccess, this.allowStaticMethodAccess);
+    protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
+        this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
+        if (this.allowStaticMethodAccess) {
+            LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
+                        this.allowStaticMethodAccess);
         }
     }
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
-    public void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
+    protected void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
 
-        if (!this.disallowProxyMemberAccessValueSet) {
-            this.disallowProxyMemberAccess = Boolean.parseBoolean(disallowProxyMemberAccess);
-            this.disallowProxyMemberAccessValueSet = true;  // Permit setting disallowProxyMemberAccess only once
-            if (!this.disallowProxyMemberAccess) {
-                LOG.warn("Setting disallow proxy member access [{}] should only be done intentionally!",
-                            this.disallowProxyMemberAccess);
-            }
-        }
-        else {
-            LOG.debug("Error setting disallow proxy member access value [{}], already previously set to [{}]",
-                    disallowProxyMemberAccess, this.disallowProxyMemberAccess);
+        this.disallowProxyMemberAccess = Boolean.parseBoolean(disallowProxyMemberAccess);
+        if (this.disallowProxyMemberAccess == false) {
+            LOG.warn("Setting disallow proxy member access [{}] should only be done intentionally!",
+                        this.disallowProxyMemberAccess);
         }
     }
 

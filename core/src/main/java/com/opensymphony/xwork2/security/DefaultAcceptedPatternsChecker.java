@@ -44,11 +44,9 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     }
 
     @Inject(value = StrutsConstants.STRUTS_OVERRIDE_ACCEPTED_PATTERNS, required = false)
-    public void setOverrideAcceptedPatterns(String acceptablePatterns) {
-        if (LOG.isWarnEnabled()) {
-            LOG.warn("Overriding accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
-                        acceptedPatterns, acceptablePatterns);
-        }
+    protected void setOverrideAcceptedPatterns(String acceptablePatterns) {
+        LOG.warn("Overriding accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
+                    acceptedPatterns, acceptablePatterns);
         acceptedPatterns = new HashSet<>();
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {
             acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
@@ -56,10 +54,8 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     }
 
     @Inject(value = StrutsConstants.STRUTS_ADDITIONAL_ACCEPTED_PATTERNS, required = false)
-    public void setAdditionalAcceptedPatterns(String acceptablePatterns) {
-        if (LOG.isWarnEnabled()) {
-            LOG.warn("Adding additional global patterns [{}] to accepted patterns!", acceptablePatterns);
-        }
+    protected void setAdditionalAcceptedPatterns(String acceptablePatterns) {
+        LOG.warn("Adding additional global patterns [{}] to accepted patterns!", acceptablePatterns);
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {
             acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
@@ -75,12 +71,10 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
 
     public void setAcceptedPatterns(Set<String> patterns) {
         if (acceptedPatterns == null) {
-            if (LOG.isDebugEnabled()) {  // Limit unwanted log entries (for 1st call acceptedPatterns null)
-                LOG.debug("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
-                             acceptedPatterns, patterns);
-            }
+            LOG.debug("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
+                        acceptedPatterns, patterns);  // Limit unwanted log entries (for 1st call, acceptedPatterns null)
         }
-        else if (LOG.isWarnEnabled()) {
+        else {
             LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
                         acceptedPatterns, patterns);
         }
@@ -93,9 +87,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     public IsAccepted isAccepted(String value) {
         for (Pattern acceptedPattern : acceptedPatterns) {
             if (acceptedPattern.matcher(value).matches()) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("[{}] matches accepted pattern [{}]", value, acceptedPattern);
-                }
+                LOG.trace("[{}] matches accepted pattern [{}]", value, acceptedPattern);
                 return IsAccepted.yes(acceptedPattern.toString());
             }
         }

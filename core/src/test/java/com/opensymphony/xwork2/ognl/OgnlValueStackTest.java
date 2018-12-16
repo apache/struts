@@ -601,10 +601,8 @@ public class OgnlValueStackTest extends XWorkTestCase {
     public void testPrimitiveSettingWithInvalidValueAddsFieldErrorInDevMode() throws Exception {
         SimpleAction action = new SimpleAction();
         OgnlValueStack stack = createValueStack();
-        reloadTestContainerConfiguration(true, true);
-        stack = (OgnlValueStack) ActionContext.getContext().getValueStack();  // Retrieve updated stack
         stack.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-        stack.setDevMode("true");  // No effect, but matches loaded config
+        stack.setDevMode("true");
         stack.push(action);
 
         try {
@@ -622,10 +620,8 @@ public class OgnlValueStackTest extends XWorkTestCase {
     public void testPrimitiveSettingWithInvalidValueAddsFieldErrorInNonDevMode() throws Exception {
         SimpleAction action = new SimpleAction();
         OgnlValueStack stack = createValueStack();
-        reloadTestContainerConfiguration(false, true);
-        stack = (OgnlValueStack) ActionContext.getContext().getValueStack();  // Retrieve updated stack
         stack.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-        stack.setDevMode("false");  // No effect, but matches loaded config
+        stack.setDevMode("false");
         stack.push(action);
         stack.setValue("bar", "3x");
 

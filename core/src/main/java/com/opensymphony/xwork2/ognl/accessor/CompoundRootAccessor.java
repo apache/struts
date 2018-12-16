@@ -63,22 +63,14 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
     private final static Logger LOG = LogManager.getLogger(CompoundRootAccessor.class);
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
     private static Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
-    private boolean devMode;          // Defaults to false
-    private boolean devModeValueSet;  // Defaults to false (not explicitly set yet)
+    private boolean devMode;
 
     @Inject(XWorkConstants.DEV_MODE)
-    public void setDevMode(String mode) {
-        final boolean booleanMode = BooleanUtils.toBoolean(mode);
-        if (!this.devModeValueSet) {
-            this.devMode = booleanMode;
-            this.devModeValueSet = true;  // Permit setting devMode only once
-            if (this.devMode) {
-                LOG.warn("Setting development mode [{}] affects the safety of your application!",
-                            this.devMode);
-            }
-        }
-        else {
-            LOG.debug("Error setting development mode value [{}], already previously set to [{}]", mode, this.devMode);
+    protected void setDevMode(String mode) {
+        this.devMode = BooleanUtils.toBoolean(mode);
+        if (this.devMode) {
+            LOG.warn("Setting development mode [{}] affects the safety of your application!",
+                        this.devMode);
         }
     }
 

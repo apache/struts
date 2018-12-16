@@ -636,20 +636,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         String[] foo = new String[]{"asdf"};
         ((OgnlValueStack)stack).setDevMode("true");
         try {
-            reloadTestContainerConfiguration(true, false);  // Set dev mode true (above set now refused)
-        }
-        catch (Exception ex) {
-            fail("Unable to reload container configuration - exception: " + ex);
-        }
-
-        // Repeat stack/context set after retrieving updated stack
-        stack = ActionContext.getContext().getValueStack();
-        stackContext = stack.getContext();
-        stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
-        stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
-        stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-
-        try {
             stack.setValue("list.1114778947765", foo);
             fail("non-valid expression: list.1114778947765"); 
         }
@@ -674,20 +660,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
         
         ((OgnlValueStack)stack).setDevMode("false");
-        try {
-            reloadTestContainerConfiguration(false, false);  // Set dev mode false (above set now refused)
-        }
-        catch (Exception ex) {
-            fail("Unable to reload container configuration - exception: " + ex);
-        }
-
-        // Repeat stack/context set after retrieving updated stack
-        stack = ActionContext.getContext().getValueStack();
-        stackContext = stack.getContext();
-        stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
-        stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
-        stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-
         stack.setValue("list.1114778947765", foo);
         stack.setValue("1114778947765", foo);
         stack.setValue("1234", foo);
@@ -715,12 +687,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         stack.setValue("1114778947765", foo);
         stack.setValue("1234", foo);
 
-        ((OgnlValueStack)stack).setDevMode("true");  // Previously set, should remain false
-        // With dev mode false, the following set values should not cause failures
-        stack.setValue("list.1114778947765", foo);
-        stack.setValue("1114778947765", foo);
-        stack.setValue("1234", foo);
-
         try {
             reloadTestContainerConfiguration(true, false);  // Set dev mode true
         }
@@ -735,29 +701,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
         stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
-        try {
-            stack.setValue("list.1114778947765", foo);
-            fail("non-valid expression: list.1114778947765");
-        }
-        catch(RuntimeException ex) {
-            // Expected with dev mode true
-        }
-        try {
-            stack.setValue("1114778947765", foo);
-            fail("non-valid expression: 1114778947765");
-        }
-        catch(RuntimeException ex) {
-            // Expected with dev mode true
-        }
-        try {
-            stack.setValue("1234", foo);
-            fail("non-valid expression: 1234");
-        }
-        catch(RuntimeException ex) {
-            // Expected with dev mode true
-        }
-
-        ((OgnlValueStack)stack).setDevMode("false");  // Previously set, should remain true
         try {
             stack.setValue("list.1114778947765", foo);
             fail("non-valid expression: list.1114778947765");
@@ -804,12 +747,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         stack.setValue("1114778947765", foo);
         stack.setValue("1234", foo);
 
-        ognlUtil.setDevMode("true");  // Previously set, should remain false
-        // With dev mode false, the following set values should not cause failures
-        stack.setValue("list.1114778947765", foo);
-        stack.setValue("1114778947765", foo);
-        stack.setValue("1234", foo);
-
         try {
             reloadTestContainerConfiguration(true, false);  // Set dev mode true
         }
@@ -824,29 +761,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
         stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
 
-        try {
-            stack.setValue("list.1114778947765", foo);
-            fail("non-valid expression: list.1114778947765");
-        }
-        catch(RuntimeException ex) {
-            // Expected with dev mode true
-        }
-        try {
-            stack.setValue("1114778947765", foo);
-            fail("non-valid expression: 1114778947765");
-        }
-        catch(RuntimeException ex) {
-            // Expected with dev mode true
-        }
-        try {
-            stack.setValue("1234", foo);
-            fail("non-valid expression: 1234");
-        }
-        catch(RuntimeException ex) {
-            // Expected with dev mode true
-        }
-
-        ognlUtil.setDevMode("false");  // Previously set, should remain true
         try {
             stack.setValue("list.1114778947765", foo);
             fail("non-valid expression: list.1114778947765");

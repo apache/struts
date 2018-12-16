@@ -34,7 +34,6 @@ import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 
 import java.util.Map;
 import java.util.Set;
@@ -50,33 +49,24 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     protected CompoundRootAccessor compoundRootAccessor;
     protected TextProvider textProvider;
     protected Container container;
-    private boolean allowStaticMethodAccess;          // Defaults to false
-    private boolean allowStaticMethodAccessValueSet;  // Defaults to false (not explicitly set yet)
+    private boolean allowStaticMethodAccess;
 
     @Inject
-    public void setXWorkConverter(XWorkConverter converter) {
+    protected void setXWorkConverter(XWorkConverter converter) {
         this.xworkConverter = converter;
     }
     
     @Inject("system")
-    public void setTextProvider(TextProvider textProvider) {
+    protected void setTextProvider(TextProvider textProvider) {
         this.textProvider = textProvider;
     }
     
     @Inject(value="allowStaticMethodAccess", required=false)
-    public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
-        final boolean booleanAllowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
-        if (!this.allowStaticMethodAccessValueSet) {
-            this.allowStaticMethodAccess = booleanAllowStaticMethodAccess;
-            this.allowStaticMethodAccessValueSet = true;  // Permit setting allowStaticMethodAccess only once
-            if (this.allowStaticMethodAccess) {
-                LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
-                            this.allowStaticMethodAccess);
-            }
-        }
-        else {
-            LOG.debug("Error setting allow static method access value [{}], already previously set to [{}]",
-                        allowStaticMethodAccess, this.allowStaticMethodAccess);
+    protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
+        this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
+        if (this.allowStaticMethodAccess) {
+            LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
+                        this.allowStaticMethodAccess);
         }
     }
 
@@ -95,7 +85,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     }
     
     @Inject
-    public void setContainer(Container container) throws ClassNotFoundException {
+    protected void setContainer(Container container) throws ClassNotFoundException {
         Set<String> names = container.getInstanceNames(PropertyAccessor.class);
         for (String name : names) {
             Class cls = Class.forName(name);

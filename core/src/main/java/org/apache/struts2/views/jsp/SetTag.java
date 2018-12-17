@@ -35,6 +35,8 @@ public class SetTag extends ContextBeanTag {
 
     protected String scope;
     protected String value;
+    protected boolean doNotTrimBody;
+    protected boolean stripBodyLineBreaks;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Set(stack);
@@ -58,5 +60,33 @@ public class SetTag extends ContextBeanTag {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void setDoNotTrimBody(String doNotTrimBody) {
+        this.doNotTrimBody = Boolean.parseBoolean(doNotTrimBody);
+    }
+
+    public void setStripBodyLineBreaks(String stripBodyLineBreaks) {
+        this.stripBodyLineBreaks = Boolean.parseBoolean(stripBodyLineBreaks);
+    }
+
+    @Override
+    protected String getBody() {
+        if (bodyContent == null) {
+            return "";
+        } else {
+            if (doNotTrimBody == false && stripBodyLineBreaks == false) {
+                return bodyContent.getString().trim();
+            } else {
+                String whitespaceModifiedBodyContent = bodyContent.getString();
+                if (stripBodyLineBreaks) {
+                    whitespaceModifiedBodyContent = whitespaceModifiedBodyContent.replaceAll("[\r\n]+?", "");
+                }
+                if (doNotTrimBody == false) {
+                    whitespaceModifiedBodyContent = whitespaceModifiedBodyContent.trim();
+                }
+                return whitespaceModifiedBodyContent;
+            }
+        }
     }
 }

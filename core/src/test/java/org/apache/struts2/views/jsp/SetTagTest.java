@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.views.jsp;
 
+import com.mockobjects.servlet.MockJspWriter;
+import java.io.IOException;
 import javax.servlet.jsp.JspException;
 
 
@@ -81,6 +83,99 @@ public class SetTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(chewie, context.get("chewie"));
+    }
+
+    public void testSetDoNotTrimBody() throws JspException, IOException {
+        final String beginEndSpaceString = "  Preceding and trailing spaces.  ";
+        final String trimmedBeginEndSpaceString = beginEndSpaceString.trim();
+        StrutsMockBodyContent mockBodyContent;
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setDoNotTrimBody("false");
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(beginEndSpaceString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(trimmedBeginEndSpaceString, context.get("foo"));
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setDoNotTrimBody("true");
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(beginEndSpaceString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(beginEndSpaceString, context.get("foo"));
+    }
+
+    public void testStripBodyLineBreaks() throws JspException, IOException {
+        final String multiLineString = "First line of string.\r\nSecond line of string.\r\nThird line of string.\r\nLast line of string.";
+        final String removedLineBreaksMultiLineString = multiLineString.replaceAll("[\r\n]+?", "");
+        StrutsMockBodyContent mockBodyContent;
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setStripBodyLineBreaks("false");
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(multiLineString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(multiLineString, context.get("foo"));
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setStripBodyLineBreaks("true");
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(multiLineString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(removedLineBreaksMultiLineString, context.get("foo"));
+    }
+
+    public void testSetDoNotTrimBodyAndStripBodyLineBreaks() throws JspException, IOException {
+        final String beginEndSpaceMultiLineString = "   First line of string.\r\nSecond line of string.\r\nThird line of string.\r\nLast line of string.   ";
+        final String removedLineBreaksMultiLineString = beginEndSpaceMultiLineString.replaceAll("[\r\n]+?", "");
+        final String trimmedMultiLineString = beginEndSpaceMultiLineString.trim();
+        final String trimmedAndRemovedLineBreaksMultiLineString = beginEndSpaceMultiLineString.replaceAll("[\r\n]+?", "").trim();
+        StrutsMockBodyContent mockBodyContent;
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setDoNotTrimBody("false");
+        tag.setStripBodyLineBreaks("false");
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(beginEndSpaceMultiLineString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(trimmedMultiLineString, context.get("foo"));
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setDoNotTrimBody("false");
+        tag.setStripBodyLineBreaks("true");
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(beginEndSpaceMultiLineString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(trimmedAndRemovedLineBreaksMultiLineString, context.get("foo"));
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setDoNotTrimBody("true");
+        tag.setStripBodyLineBreaks("true");
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(beginEndSpaceMultiLineString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(removedLineBreaksMultiLineString, context.get("foo"));
     }
 
     protected void setUp() throws Exception {

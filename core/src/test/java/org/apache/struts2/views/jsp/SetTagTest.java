@@ -85,14 +85,14 @@ public class SetTagTest extends AbstractUITagTest {
         assertEquals(chewie, context.get("chewie"));
     }
 
-    public void testSetDoNotTrimBody() throws JspException, IOException {
+    public void testSetTrimBody() throws JspException, IOException {
         final String beginEndSpaceString = "  Preceding and trailing spaces.  ";
         final String trimmedBeginEndSpaceString = beginEndSpaceString.trim();
         StrutsMockBodyContent mockBodyContent;
 
         tag.setName("foo");
         tag.setValue(null);
-        tag.setDoNotTrimBody("false");
+        // Do not set any value - default for tag should be true
         mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
         mockBodyContent.setString(beginEndSpaceString);
         tag.setBodyContent(mockBodyContent);
@@ -102,7 +102,17 @@ public class SetTagTest extends AbstractUITagTest {
 
         tag.setName("foo");
         tag.setValue(null);
-        tag.setDoNotTrimBody("true");
+        tag.setTrimBody(true);
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(beginEndSpaceString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(trimmedBeginEndSpaceString, context.get("foo"));
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setTrimBody(false);
         mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
         mockBodyContent.setString(beginEndSpaceString);
         tag.setBodyContent(mockBodyContent);
@@ -118,7 +128,7 @@ public class SetTagTest extends AbstractUITagTest {
 
         tag.setName("foo");
         tag.setValue(null);
-        tag.setStripBodyLineBreaks("false");
+        tag.setStripBodyLineBreaks(false);
         mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
         mockBodyContent.setString(multiLineString);
         tag.setBodyContent(mockBodyContent);
@@ -128,7 +138,7 @@ public class SetTagTest extends AbstractUITagTest {
 
         tag.setName("foo");
         tag.setValue(null);
-        tag.setStripBodyLineBreaks("true");
+        tag.setStripBodyLineBreaks(true);
         mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
         mockBodyContent.setString(multiLineString);
         tag.setBodyContent(mockBodyContent);
@@ -137,7 +147,7 @@ public class SetTagTest extends AbstractUITagTest {
         assertEquals(removedLineBreaksMultiLineString, context.get("foo"));
     }
 
-    public void testSetDoNotTrimBodyAndStripBodyLineBreaks() throws JspException, IOException {
+    public void testSetTrimBodyAndStripBodyLineBreaks() throws JspException, IOException {
         final String beginEndSpaceMultiLineString = "   First line of string.\r\nSecond line of string.\r\nThird line of string.\r\nLast line of string.   ";
         final String removedLineBreaksMultiLineString = beginEndSpaceMultiLineString.replaceAll("[\r\n]+?", "");
         final String trimmedMultiLineString = beginEndSpaceMultiLineString.trim();
@@ -146,8 +156,8 @@ public class SetTagTest extends AbstractUITagTest {
 
         tag.setName("foo");
         tag.setValue(null);
-        tag.setDoNotTrimBody("false");
-        tag.setStripBodyLineBreaks("false");
+        tag.setTrimBody(true);
+        tag.setStripBodyLineBreaks(false);
         mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
         mockBodyContent.setString(beginEndSpaceMultiLineString);
         tag.setBodyContent(mockBodyContent);
@@ -157,8 +167,8 @@ public class SetTagTest extends AbstractUITagTest {
 
         tag.setName("foo");
         tag.setValue(null);
-        tag.setDoNotTrimBody("false");
-        tag.setStripBodyLineBreaks("true");
+        tag.setTrimBody(true);
+        tag.setStripBodyLineBreaks(true);
         mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
         mockBodyContent.setString(beginEndSpaceMultiLineString);
         tag.setBodyContent(mockBodyContent);
@@ -168,8 +178,8 @@ public class SetTagTest extends AbstractUITagTest {
 
         tag.setName("foo");
         tag.setValue(null);
-        tag.setDoNotTrimBody("true");
-        tag.setStripBodyLineBreaks("true");
+        tag.setTrimBody(false);
+        tag.setStripBodyLineBreaks(true);
         mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
         mockBodyContent.setString(beginEndSpaceMultiLineString);
         tag.setBodyContent(mockBodyContent);

@@ -35,7 +35,7 @@ public class SetTag extends ContextBeanTag {
 
     protected String scope;
     protected String value;
-    protected boolean doNotTrimBody;
+    protected boolean trimBody = true;
     protected boolean stripBodyLineBreaks;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -62,31 +62,31 @@ public class SetTag extends ContextBeanTag {
         this.value = value;
     }
 
-    public void setDoNotTrimBody(String doNotTrimBody) {
-        this.doNotTrimBody = Boolean.parseBoolean(doNotTrimBody);
+    public void setTrimBody(boolean trimBody) {
+        this.trimBody = trimBody;
     }
 
-    public void setStripBodyLineBreaks(String stripBodyLineBreaks) {
-        this.stripBodyLineBreaks = Boolean.parseBoolean(stripBodyLineBreaks);
+    public void setStripBodyLineBreaks(boolean stripBodyLineBreaks) {
+        this.stripBodyLineBreaks = stripBodyLineBreaks;
     }
 
     @Override
     protected String getBody() {
-        if (bodyContent == null) {
-            return "";
+        if (trimBody == true && stripBodyLineBreaks == false) {
+            return super.getBody();
         } else {
-            if (doNotTrimBody == false && stripBodyLineBreaks == false) {
-                return bodyContent.getString().trim();
-            } else {
-                String whitespaceModifiedBodyContent = bodyContent.getString();
+            String whitespaceModifiedBodyContent = (bodyContent == null ? "" : bodyContent.getString());
+            if (whitespaceModifiedBodyContent == null) {
+                whitespaceModifiedBodyContent = "";
+            } else if (whitespaceModifiedBodyContent.length() > 0) {
                 if (stripBodyLineBreaks) {
                     whitespaceModifiedBodyContent = whitespaceModifiedBodyContent.replaceAll("[\r\n]+?", "");
                 }
-                if (doNotTrimBody == false) {
+                if (trimBody == true) {
                     whitespaceModifiedBodyContent = whitespaceModifiedBodyContent.trim();
                 }
-                return whitespaceModifiedBodyContent;
             }
+            return whitespaceModifiedBodyContent;
         }
     }
 }

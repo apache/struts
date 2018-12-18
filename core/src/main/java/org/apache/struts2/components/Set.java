@@ -83,7 +83,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class Set extends ContextBean {
     protected String scope;
     protected String value;
-    protected boolean doNotTrimBody;
+    protected boolean trimBody = true;
     protected boolean stripBodyLineBreaks;
 
     public Set(ValueStack stack) {
@@ -138,14 +138,14 @@ public class Set extends ContextBean {
         this.value = value;
     }
 
-    @StrutsTagAttribute(description="Set to true to prevent the default whitespace-trim of this tag's body content")
-    public void setDoNotTrimBody(String doNotTrimBody) {
-        this.doNotTrimBody = Boolean.parseBoolean(doNotTrimBody);
+    @StrutsTagAttribute(description="Set to false to prevent the default whitespace-trim of this tag's body content", type="Boolean", defaultValue="true")
+    public void setTrimBody(boolean trimBody) {
+        this.trimBody = trimBody;
     }
 
-    @StrutsTagAttribute(description="Set to true to remove all line breaks from this tag's body content")
-    public void setStripBodyLineBreaks(String stripBodyLineBreaks) {
-        this.stripBodyLineBreaks = Boolean.parseBoolean(stripBodyLineBreaks);
+    @StrutsTagAttribute(description="Set to true to remove all line breaks from this tag's body content", type="Boolean", defaultValue="false")
+    public void setStripBodyLineBreaks(boolean stripBodyLineBreaks) {
+        this.stripBodyLineBreaks = stripBodyLineBreaks;
     }
 
     @Override

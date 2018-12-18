@@ -115,7 +115,7 @@
     <bean type="com.opensymphony.xwork2.conversion.ConversionFileProcessor" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor" />
     <bean type="com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor" />
     <bean type="com.opensymphony.xwork2.conversion.TypeConverterCreator" name="struts" class="org.apache.struts2.conversion.StrutsTypeConverterCreator" />
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverterHolder" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterHolder" />
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverterHolder" name="struts" class="org.apache.struts2.conversion.StrutsTypeConverterHolder" />
 
     <bean class="com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter" />
 

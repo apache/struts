@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.conversion.impl;
+package org.apache.struts2.conversion;
 
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.TypeConverterHolder;
@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Default implementation of {@link TypeConverterHolder}
  */
-public class DefaultTypeConverterHolder implements TypeConverterHolder {
+public class StrutsTypeConverterHolder implements TypeConverterHolder {
 
     /**
      * Record class and its type converter mapping.

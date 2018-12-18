@@ -42,7 +42,7 @@ public class DefaultConverterFactory implements ConverterFactory {
 
     public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, Map<String, Object> extraContext) throws Exception {
         LOG.debug("Creating converter of type [{}]", converterClass.getCanonicalName());
-        return container.getInstance(converterClass);
+        return container.inject(converterClass);
     }
 
 }

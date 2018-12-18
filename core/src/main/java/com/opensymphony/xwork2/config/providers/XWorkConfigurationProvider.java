@@ -57,7 +57,7 @@ import com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
-import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterHolder;
+import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.NumberConverter;
 import com.opensymphony.xwork2.conversion.impl.StringConverter;
@@ -159,7 +159,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON)
                 .factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON)
                 .factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON)
-                .factory(TypeConverterHolder.class, DefaultTypeConverterHolder.class, Scope.SINGLETON)
+                .factory(TypeConverterHolder.class, StrutsTypeConverterHolder.class, Scope.SINGLETON)
 
                 .factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON)
                 .factory(FileManagerFactory.class, DefaultFileManagerFactory.class, Scope.SINGLETON)

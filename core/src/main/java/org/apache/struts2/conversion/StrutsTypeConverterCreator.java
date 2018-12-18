@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.TypeConverterCreator;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.ognl.XWorkTypeConverterWrapper;
 
 /**
  * Default implementation of {@link TypeConverterCreator}
@@ -39,7 +38,7 @@ public class StrutsTypeConverterCreator implements TypeConverterCreator {
     public TypeConverter createTypeConverter(String className) throws Exception {
         Class<?> classInstance = objectFactory.getClassInstance(className);
 
-        if (classInstance.isAssignableFrom(TypeConverter.class)) {
+        if (TypeConverter.class.isAssignableFrom(classInstance)) {
             Class<? extends TypeConverter> converterClass = (Class<? extends TypeConverter>) classInstance;
             return objectFactory.buildConverter(converterClass, null);
         } else {
@@ -48,7 +47,7 @@ public class StrutsTypeConverterCreator implements TypeConverterCreator {
     }
 
     public TypeConverter createTypeConverter(Class<?> clazz) throws Exception {
-        if (clazz.isAssignableFrom(TypeConverter.class)) {
+        if (TypeConverter.class.isAssignableFrom(clazz)) {
             Class<? extends TypeConverter> converterClass = (Class<? extends TypeConverter>) clazz;
             return objectFactory.buildConverter(converterClass, null);
         } else {

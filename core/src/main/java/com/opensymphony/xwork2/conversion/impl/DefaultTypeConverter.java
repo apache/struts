@@ -63,7 +63,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         map.put(Float.TYPE, new Float(0.0f));
         map.put(Double.TYPE, new Double(0.0));
         map.put(BigInteger.class, new BigInteger("0"));
-        map.put(BigDecimal.class, new BigDecimal(0.0));
+        map.put(BigDecimal.class, BigDecimal.valueOf(0.0));
         primitiveDefaults = Collections.unmodifiableMap(map);
     }
 
@@ -278,7 +278,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (c == BigInteger.class)
             return new BigDecimal((BigInteger) value);
         if (c.getSuperclass() == Number.class)
-            return new BigDecimal(((Number) value).doubleValue());
+            return BigDecimal.valueOf(((Number) value).doubleValue());
         if (c == Boolean.class)
             return BigDecimal.valueOf((Boolean) value ? 1 : 0);
         if (c == Character.class)

@@ -202,10 +202,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * @param value
      *            an object to interpret as a long integer
      * @return the long integer value implied by the given object
-     * @throws NumberFormatException
-     *             if the given object can't be understood as a long integer
      */
-    public static long longValue(Object value) throws NumberFormatException {
+    public static long longValue(Object value) {
         if (value == null)
             return 0L;
         Class c = value.getClass();
@@ -224,10 +222,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * @param value
      *            an object to interpret as a double
      * @return the double value implied by the given object
-     * @throws NumberFormatException
-     *             if the given object can't be understood as a double
      */
-    public static double doubleValue(Object value) throws NumberFormatException {
+    public static double doubleValue(Object value) {
         if (value == null)
             return 0.0;
         Class c = value.getClass();
@@ -252,11 +248,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * @param value
      *            an object to interpret as a BigInteger
      * @return the BigInteger value implied by the given object
-     * @throws NumberFormatException
-     *             if the given object can't be understood as a BigInteger
      */
-    public static BigInteger bigIntValue(Object value)
-            throws NumberFormatException {
+    public static BigInteger bigIntValue(Object value) {
         if (value == null)
             return BigInteger.valueOf(0L);
         Class c = value.getClass();
@@ -279,11 +272,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * @param value
      *            an object to interpret as a BigDecimal
      * @return the BigDecimal value implied by the given object
-     * @throws NumberFormatException
-     *             if the given object can't be understood as a BigDecimal
      */
-    public static BigDecimal bigDecValue(Object value)
-            throws NumberFormatException {
+    public static BigDecimal bigDecValue(Object value) {
         if (value == null)
             return BigDecimal.valueOf(0L);
         Class c = value.getClass();

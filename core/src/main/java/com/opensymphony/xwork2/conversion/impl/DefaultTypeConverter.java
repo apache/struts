@@ -76,6 +76,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         return convertValue(value, toType);
     }
 
+    @Override
     public Object convertValue(Map<String, Object> context, Object target, Member member,
             String propertyName, Object value, Class toType) {
         return convertValue(context, value, toType);

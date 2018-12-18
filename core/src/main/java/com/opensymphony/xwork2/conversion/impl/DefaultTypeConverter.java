@@ -44,7 +44,7 @@ import java.util.Map;
  */
 public abstract class DefaultTypeConverter implements TypeConverter {
 
-    protected static String MILLISECOND_FORMAT = ".SSS";
+    protected static final String MILLISECOND_FORMAT = ".SSS";
 
     private static final String NULL_STRING = "null";
 

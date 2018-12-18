@@ -56,7 +56,7 @@ import com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProces
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterCreator;
+import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterHolder;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.NumberConverter;
@@ -112,7 +112,6 @@ import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.factory.PrefixBasedActionProxyFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -159,7 +158,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON)
                 .factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON)
                 .factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON)
-                .factory(TypeConverterCreator.class, DefaultTypeConverterCreator.class, Scope.SINGLETON)
+                .factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON)
                 .factory(TypeConverterHolder.class, DefaultTypeConverterHolder.class, Scope.SINGLETON)
 
                 .factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON)

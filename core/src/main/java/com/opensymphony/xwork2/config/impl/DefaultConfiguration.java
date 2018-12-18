@@ -42,6 +42,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 
 import java.util.*;
 
@@ -257,7 +258,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON);
         builder.factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON);
         builder.factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON);
-        builder.factory(TypeConverterCreator.class, DefaultTypeConverterCreator.class, Scope.SINGLETON);
+        builder.factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON);
         builder.factory(TypeConverterHolder.class, DefaultTypeConverterHolder.class, Scope.SINGLETON);
 
         builder.factory(XWorkBasicConverter.class, Scope.SINGLETON);

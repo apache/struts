@@ -236,10 +236,6 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         String s = stringValue(value, true);
 
         return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
-        /*
-         * For 1.1 parseDouble() is not available
-         */
-        // return Double.valueOf( value.toString() ).doubleValue();
     }
 
     /**

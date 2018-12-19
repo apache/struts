@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.test.annotations.Person;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.*;
 
@@ -226,6 +227,37 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         Object convertedObject = basicConverter.convertValue("94.1231233", Double.class);
         assertTrue(convertedObject instanceof Double);
         assertEquals(94.1231233d, (Double) convertedObject, 0.0001);
+    }
+
+    public void testBigDecimal() {
+        Object convertedObject = basicConverter.convertValue(null, BigDecimal.class);
+        assertNull(convertedObject);
+        
+        convertedObject = basicConverter.convertValue(new BigDecimal(0), BigDecimal.class);
+        assertEquals(BigDecimal.ZERO, convertedObject);
+        assertTrue(convertedObject instanceof BigDecimal);
+        assertEquals(0, BigDecimal.ZERO.compareTo((BigDecimal) convertedObject));
+        
+        convertedObject = basicConverter.convertValue(BigDecimal.valueOf(0), BigDecimal.class);
+        assertEquals(BigDecimal.ZERO, convertedObject);
+        assertTrue(convertedObject instanceof BigDecimal);
+        assertEquals(0, BigDecimal.ZERO.compareTo((BigDecimal) convertedObject));
+        
+        convertedObject = basicConverter.convertValue(BigDecimal.valueOf(0.0), BigDecimal.class);
+        assertEquals(BigDecimal.valueOf(0.0), convertedObject);
+        assertTrue(convertedObject instanceof BigDecimal);
+        assertEquals(0, BigDecimal.ZERO.compareTo((BigDecimal) convertedObject));
+
+        convertedObject = basicConverter.convertValue(BigDecimal.valueOf(0.000), BigDecimal.class);
+        assertEquals(BigDecimal.valueOf(0.000), convertedObject);
+        assertTrue(convertedObject instanceof BigDecimal);
+        assertEquals(0, BigDecimal.ZERO.compareTo((BigDecimal) convertedObject));
+
+        convertedObject = basicConverter.convertValue(BigDecimal.valueOf(10), BigDecimal.class);
+        assertEquals(BigDecimal.TEN, convertedObject);
+
+        convertedObject = basicConverter.convertValue(BigDecimal.valueOf(12345.67890), BigDecimal.class);
+        assertEquals(BigDecimal.valueOf(12345.67890), convertedObject);
     }
 
     public void testNestedEnumValue() throws Exception {

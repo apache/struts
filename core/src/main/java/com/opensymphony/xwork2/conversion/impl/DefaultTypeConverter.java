@@ -153,10 +153,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
                 if (Enum.class.isAssignableFrom(toType))
                     result = enumValue(toType, value);
             }
-        } else {
-            if (toType.isPrimitive()) {
-                result = primitiveDefaults.get(toType);
-            }
+        } else if (toType.isPrimitive()) {
+            result = primitiveDefaults.get(toType);
         }
         return result;
     }

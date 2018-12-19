@@ -84,7 +84,6 @@ public class Set extends ContextBean {
     protected String scope;
     protected String value;
     protected boolean trimBody = true;
-    protected boolean stripBodyLineBreaks;
 
     public Set(ValueStack stack) {
         super(stack);
@@ -141,11 +140,6 @@ public class Set extends ContextBean {
     @StrutsTagAttribute(description="Set to false to prevent the default whitespace-trim of this tag's body content", type="Boolean", defaultValue="true")
     public void setTrimBody(boolean trimBody) {
         this.trimBody = trimBody;
-    }
-
-    @StrutsTagAttribute(description="Set to true to remove all line breaks from this tag's body content", type="Boolean", defaultValue="false")
-    public void setStripBodyLineBreaks(boolean stripBodyLineBreaks) {
-        this.stripBodyLineBreaks = stripBodyLineBreaks;
     }
 
     @Override

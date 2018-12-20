@@ -53,8 +53,8 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
                         excludedPatterns, excludePatterns);
         }
         else {
-            LOG.debug("Overriding excluded patterns with [{}], be aware that this affects all instances and safety of your application!",
-                         excludePatterns);  // Limit unwanted log entries (when excludedPatterns null/empty - usually 1st call)
+            // Limit unwanted log entries (when excludedPatterns null/empty - usually 1st call)
+            LOG.debug("Overriding excluded patterns with [{}]", excludePatterns);
         }
         excludedPatterns = new HashSet<Pattern>();
         for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
@@ -95,8 +95,8 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
                         excludedPatterns, patterns);
         }
         else {
-            LOG.debug("Sets excluded patterns to [{}], be aware that this affects all instances and safety of your application!",
-                         patterns);  // Limit unwanted log entries (when excludedPatterns null/empty - usually 1st call)
+            // Limit unwanted log entries (when excludedPatterns null/empty - usually 1st call)
+            LOG.debug("Sets excluded patterns to [{}]", patterns);
         }
         excludedPatterns = new HashSet<>(patterns.size());
         for (String pattern : patterns) {

@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class XWorkIteratorPropertyAccessor extends IteratorPropertyAccessor {
 
-    ObjectPropertyAccessor opa = new ObjectPropertyAccessor();
+    private final ObjectPropertyAccessor opa = new ObjectPropertyAccessor();
 
     @Override
     public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {

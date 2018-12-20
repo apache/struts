@@ -226,6 +226,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
         props.setProperty(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, Boolean.TRUE.toString());
         props.setProperty(XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, Boolean.FALSE.toString());
         props.setProperty(XWorkConstants.RELOAD_XML_CONFIGURATION, Boolean.FALSE.toString());
+        props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, Boolean.FALSE.toString());
     }
 
 }

@@ -23,7 +23,7 @@ package com.opensymphony.xwork2.ognl;
  */
 public class ErrorMessageBuilder {
 
-    private StringBuilder message = new StringBuilder();
+    private final StringBuilder message = new StringBuilder();
 
     public static ErrorMessageBuilder create() {
         return new ErrorMessageBuilder();

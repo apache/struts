@@ -58,7 +58,7 @@ public class OgnlUtil {
     private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
     private TypeConverter defaultConverter;
 
-    private boolean devMode = false;
+    private boolean devMode;
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
 
@@ -77,31 +77,35 @@ public class OgnlUtil {
     }
 
     @Inject
-    public void setXWorkConverter(XWorkConverter conv) {
+    protected void setXWorkConverter(XWorkConverter conv) {
         this.defaultConverter = new OgnlTypeConverterWrapper(conv);
     }
 
     @Inject(XWorkConstants.DEV_MODE)
-    public void setDevMode(String mode) {
+    protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
+        if (this.devMode) {
+            LOG.warn("Setting development mode [{}] affects the safety of your application!",
+                        this.devMode);
+        }
     }
 
     @Inject(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE)
-    public void setEnableExpressionCache(String cache) {
+    protected void setEnableExpressionCache(String cache) {
         enableExpressionCache = BooleanUtils.toBoolean(cache);
     }
 
     @Inject(value = XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, required = false)
-    public void setEnableEvalExpression(String evalExpression) {
-        enableEvalExpression = "true".equals(evalExpression);
-        if(enableEvalExpression){
+    protected void setEnableEvalExpression(String evalExpression) {
+        this.enableEvalExpression = BooleanUtils.toBoolean(evalExpression);
+        if (this.enableEvalExpression) {
             LOG.warn("Enabling OGNL expression evaluation may introduce security risks " +
                     "(see http://struts.apache.org/release/2.3.x/docs/s2-013.html for further details)");
         }
     }
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_CLASSES, required = false)
-    public void setExcludedClasses(String commaDelimitedClasses) {
+    protected void setExcludedClasses(String commaDelimitedClasses) {
         Set<Class<?>> excludedClasses = new HashSet<>();
         excludedClasses.addAll(this.excludedClasses);
         excludedClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
@@ -124,7 +128,7 @@ public class OgnlUtil {
     }
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
-    public void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+    protected void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         Set<Pattern> excludedPackageNamePatterns = new HashSet<>();
         excludedPackageNamePatterns.addAll(this.excludedPackageNamePatterns);
         excludedPackageNamePatterns.addAll(parseExcludedPackageNamePatterns(commaDelimitedPackagePatterns));
@@ -143,7 +147,7 @@ public class OgnlUtil {
     }
 
     @Inject(value = XWorkConstants.OGNL_EXCLUDED_PACKAGE_NAMES, required = false)
-    public void setExcludedPackageNames(String commaDelimitedPackageNames) {
+    protected void setExcludedPackageNames(String commaDelimitedPackageNames) {
         Set<String> excludedPackageNames = new HashSet<>();
         excludedPackageNames.addAll(this.excludedPackageNames);
         excludedPackageNames.addAll(parseExcludedPackageNames(commaDelimitedPackageNames));
@@ -167,18 +171,27 @@ public class OgnlUtil {
     }
 
     @Inject
-    public void setContainer(Container container) {
+    protected void setContainer(Container container) {
         this.container = container;
     }
 
     @Inject(value = XWorkConstants.ALLOW_STATIC_METHOD_ACCESS, required = false)
-    public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
-        this.allowStaticMethodAccess = Boolean.parseBoolean(allowStaticMethodAccess);
+    protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
+        this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
+        if (this.allowStaticMethodAccess) {
+            LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
+                        this.allowStaticMethodAccess);
+        }
     }
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
-    public void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
+    protected void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
+
         this.disallowProxyMemberAccess = Boolean.parseBoolean(disallowProxyMemberAccess);
+        if (this.disallowProxyMemberAccess == false) {
+            LOG.warn("Setting disallow proxy member access [{}] should only be done intentionally!",
+                        this.disallowProxyMemberAccess);
+        }
     }
 
     public boolean isDisallowProxyMemberAccess() {
@@ -431,7 +444,7 @@ public class OgnlUtil {
 
         final T exec = task.execute(tree);
         // if cache is enabled and it's a valid expression, puts it in
-        if(enableExpressionCache) {
+        if (enableExpressionCache) {
             expressions.putIfAbsent(expression, tree);
         }
         return exec;
@@ -452,7 +465,7 @@ public class OgnlUtil {
 
         final T exec = task.execute(tree);
         // if cache is enabled and it's a valid expression, puts it in
-        if(enableExpressionCache) {
+        if (enableExpressionCache) {
             expressions.putIfAbsent(expression, tree);
         }
         return exec;
@@ -668,8 +681,7 @@ public class OgnlUtil {
      */
     public BeanInfo getBeanInfo(Class clazz) throws IntrospectionException {
         synchronized (beanInfoCache) {
-            BeanInfo beanInfo;
-            beanInfo = beanInfoCache.get(clazz);
+            BeanInfo beanInfo = beanInfoCache.get(clazz);
             if (beanInfo == null) {
                 beanInfo = Introspector.getBeanInfo(clazz, Object.class);
                 beanInfoCache.putIfAbsent(clazz, beanInfo);

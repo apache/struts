@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class OgnlTypeConverterWrapper implements ognl.TypeConverter {
 
-    private TypeConverter typeConverter;
+    private final TypeConverter typeConverter;
 
     public OgnlTypeConverterWrapper(TypeConverter converter) {
         if (converter == null) {

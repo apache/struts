@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE xwork PUBLIC
+    "-//Apache Struts//XWork 2.5//EN"
+    "http://struts.apache.org/dtds/xwork-2.5.dtd"
+ >
+
+<xwork>
+
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.i18n.reload" value="false" />
+    <constant name="struts.ognl.logMissingProperties" value="false" />
+    <constant name="struts.ognl.enableExpressionCache" value="true" />
+    <constant name="struts.ognl.enableOGNLEvalExpression" value="false" />
+    <constant name="struts.configuration.xml.reload" value="false" />
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true" />
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.dispatcher.errorHandler" value="struts" />
+
+    <bean class="com.opensymphony.xwork2.ObjectFactory" name="default" />
+    <bean class="org.apache.struts2.views.freemarker.FreemarkerThemeTemplateLoader" />
+    <bean class="org.apache.struts2.views.freemarker.FreemarkerManager" name="default" />
+    <bean class="org.apache.struts2.views.velocity.VelocityManager" name="default" optional="true" />
+    <bean class="org.apache.struts2.components.template.TemplateEngineManager" />
+    <bean class="com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter" />
+    <bean class="com.opensymphony.xwork2.ognl.OgnlUtil" />
+    <bean class="org.apache.struts2.views.jsp.ui.OgnlTool" />
+
+    <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="default" class="org.apache.struts2.factory.StrutsActionProxyFactory"/>
+    <bean type="com.opensymphony.xwork2.FileManager" name="system" class="com.opensymphony.xwork2.util.fs.DefaultFileManager" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.FileManagerFactory" name="default" class="com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.LocalizedTextProvider" name="global-only" class="com.opensymphony.xwork2.util.GlobalLocalizedTextProvider" scope="singleton" />
+    <bean type="com.opensymphony.xwork2.LocalizedTextProvider" name="default" class="com.opensymphony.xwork2.util.StrutsLocalizedTextProvider" scope="singleton" />
+    <bean type="com.opensymphony.xwork2.TextProvider" name="system" class="com.opensymphony.xwork2.DefaultTextProvider" scope="singleton" />
+    <bean type="com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor" name="default" class="com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor" />
+    <bean type="com.opensymphony.xwork2.conversion.ConversionFileProcessor" name="default" class="com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor" />
+    <bean type="com.opensymphony.xwork2.conversion.ObjectTypeDeterminer" name="default" class="com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer"/>
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverterCreator" name="default" class="com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterCreator" />
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverterHolder" name="default" class="com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterHolder" />
+    <bean type="com.opensymphony.xwork2.conversion.impl.XWorkConverter" name="default" class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" />
+    <bean type="com.opensymphony.xwork2.factory.ActionFactory" name="default" class="com.opensymphony.xwork2.factory.DefaultActionFactory" />
+    <bean type="com.opensymphony.xwork2.factory.ConverterFactory" name="default" class="com.opensymphony.xwork2.factory.DefaultConverterFactory" />
+    <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="default" class="org.apache.struts2.factory.StrutsResultFactory" />
+    <bean type="com.opensymphony.xwork2.factory.UnknownHandlerFactory" name="default" class="com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory" />
+    <bean type="com.opensymphony.xwork2.factory.ValidatorFactory" name="default" class="com.opensymphony.xwork2.factory.DefaultValidatorFactory" />
+    <bean type="com.opensymphony.xwork2.factory.InterceptorFactory" name="default" class="com.opensymphony.xwork2.factory.DefaultInterceptorFactory" />
+    <bean type="com.opensymphony.xwork2.util.ValueStackFactory" name="default" class="com.opensymphony.xwork2.ognl.OgnlValueStackFactory" />
+    <bean type="com.opensymphony.xwork2.util.reflection.ReflectionProvider" name="default" class="com.opensymphony.xwork2.ognl.OgnlReflectionProvider" />
+
+    <bean type="ognl.MethodAccessor" name="java.lang.Object" class="com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor" />
+    <bean type="ognl.MethodAccessor" name="com.opensymphony.xwork2.util.CompoundRoot" class="com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor" />
+    <bean type="ognl.PropertyAccessor" name="com.opensymphony.xwork2.util.CompoundRoot" class="com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor" />
+    <bean type="ognl.PropertyAccessor" name="org.apache.struts2.dispatcher.HttpParameters" class="com.opensymphony.xwork2.ognl.accessor.HttpParametersPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="com.opensymphony.xwork2.ognl.ObjectProxy" class="com.opensymphony.xwork2.ognl.accessor.ObjectProxyPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="org.apache.struts2.dispatcher.Parameter" class="com.opensymphony.xwork2.ognl.accessor.ParameterPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.util.ArrayList" class="com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.util.Collection" class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.util.Enumeration" class="com.opensymphony.xwork2.ognl.accessor.XWorkEnumerationAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.util.HashMap" class="com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.util.HashSet" class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.util.Iterator" class="com.opensymphony.xwork2.ognl.accessor.XWorkIteratorPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.util.List" class="com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.util.Map" class="com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.lang.Object" class="com.opensymphony.xwork2.ognl.accessor.ObjectAccessor" />
+    <bean type="ognl.PropertyAccessor" name="java.util.Set" class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor" />
+
+</xwork>

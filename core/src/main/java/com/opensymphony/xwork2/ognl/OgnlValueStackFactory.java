@@ -32,6 +32,8 @@ import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.Set;
@@ -41,25 +43,31 @@ import java.util.Set;
  */
 public class OgnlValueStackFactory implements ValueStackFactory {
     
+	private static final Logger LOG = LogManager.getLogger(OgnlValueStackFactory.class);
+
     protected XWorkConverter xworkConverter;
     protected CompoundRootAccessor compoundRootAccessor;
     protected TextProvider textProvider;
     protected Container container;
-    protected boolean allowStaticMethodAccess;
+    private boolean allowStaticMethodAccess;
 
     @Inject
-    public void setXWorkConverter(XWorkConverter converter) {
+    protected void setXWorkConverter(XWorkConverter converter) {
         this.xworkConverter = converter;
     }
     
     @Inject("system")
-    public void setTextProvider(TextProvider textProvider) {
+    protected void setTextProvider(TextProvider textProvider) {
         this.textProvider = textProvider;
     }
     
     @Inject(value="allowStaticMethodAccess", required=false)
-    public void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
+    protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
         this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
+        if (this.allowStaticMethodAccess) {
+            LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
+                        this.allowStaticMethodAccess);
+        }
     }
 
     public ValueStack createValueStack() {
@@ -77,7 +85,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     }
     
     @Inject
-    public void setContainer(Container container) throws ClassNotFoundException {
+    protected void setContainer(Container container) throws ClassNotFoundException {
         Set<String> names = container.getInstanceNames(PropertyAccessor.class);
         for (String name : names) {
             Class cls = Class.forName(name);

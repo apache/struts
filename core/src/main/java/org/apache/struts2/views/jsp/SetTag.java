@@ -35,6 +35,7 @@ public class SetTag extends ContextBeanTag {
 
     protected String scope;
     protected String value;
+    protected boolean trimBody = true;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Set(stack);
@@ -58,5 +59,18 @@ public class SetTag extends ContextBeanTag {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void setTrimBody(boolean trimBody) {
+        this.trimBody = trimBody;
+}
+
+    @Override
+    protected String getBody() {
+        if (trimBody) {
+            return super.getBody();
+        } else {
+            return (bodyContent == null ? "" : bodyContent.getString());
+        }
     }
 }

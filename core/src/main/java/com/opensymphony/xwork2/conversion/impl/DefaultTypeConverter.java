@@ -48,12 +48,12 @@ public abstract class DefaultTypeConverter implements TypeConverter {
 
     private static final String NULL_STRING = "null";
 
-    private static final Map<Class, Object> primitiveDefaults;
+    private static final Map<Class<?>, Object> primitiveDefaults;
 
     private Container container;
 
     static {
-        Map<Class, Object> map = new HashMap<>();
+        Map<Class<?>, Object> map = new HashMap<>();
         map.put(Boolean.TYPE, Boolean.FALSE);
         map.put(Byte.TYPE, Byte.valueOf((byte) 0));
         map.put(Short.TYPE, Short.valueOf((short) 0));
@@ -119,7 +119,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (value != null) {
             /* If array -> array then convert components of array individually */
             if (value.getClass().isArray() && toType.isArray()) {
-                Class componentType = toType.getComponentType();
+                final Class<?> componentType = toType.getComponentType();
 
                 result = Array.newInstance(componentType, Array
                         .getLength(value));
@@ -171,7 +171,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     public static boolean booleanValue(Object value) {
         if (value == null)
             return false;
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c == Boolean.class)
             return (Boolean) value;
         // if ( c == String.class )
@@ -205,7 +205,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     public static long longValue(Object value) {
         if (value == null)
             return 0L;
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c.getSuperclass() == Number.class)
             return ((Number) value).longValue();
         if (c == Boolean.class)
@@ -225,15 +225,14 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     public static double doubleValue(Object value) {
         if (value == null)
             return 0.0;
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c.getSuperclass() == Number.class)
             return ((Number) value).doubleValue();
         if (c == Boolean.class)
             return (Boolean) value ? 1 : 0;
         if (c == Character.class)
             return (Character) value;
-        String s = stringValue(value, true);
-
+        final String s = stringValue(value, true);
         return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
     }
 
@@ -247,7 +246,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     public static BigInteger bigIntValue(Object value) {
         if (value == null)
             return BigInteger.valueOf(0L);
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c == BigInteger.class)
             return (BigInteger) value;
         if (c == BigDecimal.class)
@@ -271,7 +270,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     public static BigDecimal bigDecValue(Object value) {
         if (value == null)
             return BigDecimal.valueOf(0L);
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c == BigDecimal.class)
             return (BigDecimal) value;
         if (c == BigInteger.class)

@@ -250,7 +250,9 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testBigDecimal() {
         Object convertedObject = basicConverter.convertValue(null, BigDecimal.class);
-        assertNull(convertedObject);
+        assertEquals(BigDecimal.ZERO, convertedObject);
+        assertTrue(convertedObject instanceof BigDecimal);
+        assertEquals(0, BigDecimal.ZERO.compareTo((BigDecimal) convertedObject));
         
         convertedObject = basicConverter.convertValue(new BigDecimal(0), BigDecimal.class);
         assertEquals(BigDecimal.ZERO, convertedObject);

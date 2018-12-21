@@ -48,7 +48,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
 
     private static final String NULL_STRING = "null";
 
-    private static final Map<Class<?>, Object> primitiveDefaults;
+    private static final Map<Class<?>, Object> baseTypeDefaults;
 
     private Container container;
 
@@ -62,9 +62,9 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         map.put(Long.TYPE, Long.valueOf(0L));
         map.put(Float.TYPE, new Float(0.0f));
         map.put(Double.TYPE, new Double(0.0));
-        map.put(BigInteger.class, new BigInteger("0"));
-        map.put(BigDecimal.class, BigDecimal.valueOf(0.0));
-        primitiveDefaults = Collections.unmodifiableMap(map);
+        map.put(BigInteger.class, BigInteger.ZERO);
+        map.put(BigDecimal.class, BigDecimal.ZERO);
+        baseTypeDefaults = Collections.unmodifiableMap(map);
     }
 
     @Inject
@@ -153,8 +153,8 @@ public abstract class DefaultTypeConverter implements TypeConverter {
                 if (Enum.class.isAssignableFrom(toType))
                     result = enumValue(toType, value);
             }
-        } else if (toType.isPrimitive()) {
-            result = primitiveDefaults.get(toType);
+        } else {
+            result = baseTypeDefaults.get(toType);
         }
         return result;
     }

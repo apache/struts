@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.test.annotations.Person;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.util.*;
 
@@ -227,6 +228,24 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         Object convertedObject = basicConverter.convertValue("94.1231233", Double.class);
         assertTrue(convertedObject instanceof Double);
         assertEquals(94.1231233d, (Double) convertedObject, 0.0001);
+    }
+
+    public void testBigInteger() {
+        Object convertedObject = basicConverter.convertValue(null, BigInteger.class);
+        assertEquals(BigInteger.ZERO, convertedObject);
+        assertEquals(0, BigInteger.ZERO.compareTo((BigInteger) convertedObject));
+
+        convertedObject = basicConverter.convertValue(BigInteger.ZERO, BigInteger.class);
+        assertEquals(BigInteger.ZERO, convertedObject);
+        assertEquals(0, BigInteger.ZERO.compareTo((BigInteger) convertedObject));
+
+        convertedObject = basicConverter.convertValue(new BigInteger("0"), BigInteger.class);
+        assertEquals(BigInteger.ZERO, convertedObject);
+        assertEquals(0, BigInteger.ZERO.compareTo((BigInteger) convertedObject));
+
+        convertedObject = basicConverter.convertValue(BigInteger.TEN, BigInteger.class);
+        assertEquals(BigInteger.TEN, convertedObject);
+        assertEquals(0, BigInteger.TEN.compareTo((BigInteger) convertedObject));
     }
 
     public void testBigDecimal() {

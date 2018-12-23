@@ -168,7 +168,9 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
             Class beanClazz = getClassInstance(beanName);
             o = buildBean(beanClazz, extraContext);
         }
-
+        if (injectInternal) {
+            injectInternalBeans(o);
+        }
         return o;
     }
 

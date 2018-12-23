@@ -32,7 +32,7 @@ import java.io.Writer;
 /**
  * Handles JSON content using jackson-lib
  */
-public class JacksonLibHandler extends AbstractContentTypeHandler {
+public class JacksonJsonHandler extends AbstractContentTypeHandler {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
     private String defaultEncoding = "ISO-8859-1";

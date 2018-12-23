@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.views.jsp;
 
+import com.mockobjects.servlet.MockJspWriter;
+import java.io.IOException;
 import javax.servlet.jsp.JspException;
 
 
@@ -81,6 +83,42 @@ public class SetTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(chewie, context.get("chewie"));
+    }
+
+    public void testSetTrimBody() throws JspException, IOException {
+        final String beginEndSpaceString = "  Preceding and trailing spaces.  ";
+        final String trimmedBeginEndSpaceString = beginEndSpaceString.trim();
+        StrutsMockBodyContent mockBodyContent;
+
+        tag.setName("foo");
+        tag.setValue(null);
+        // Do not set any value - default for tag should be true
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(beginEndSpaceString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(trimmedBeginEndSpaceString, context.get("foo"));
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setTrimBody(true);
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(beginEndSpaceString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(trimmedBeginEndSpaceString, context.get("foo"));
+
+        tag.setName("foo");
+        tag.setValue(null);
+        tag.setTrimBody(false);
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent.setString(beginEndSpaceString);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(beginEndSpaceString, context.get("foo"));
     }
 
     protected void setUp() throws Exception {

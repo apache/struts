@@ -28,13 +28,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class JacksonLibHandlerTest extends TestCase {
+public class JacksonJsonHandlerTest extends TestCase {
 
     public void testFromObject() throws IOException {
         Contact contact = new Contact("bob", true, 44);
 
         StringWriter writer = new StringWriter();
-        JacksonLibHandler handler = new JacksonLibHandler();
+        JacksonJsonHandler handler = new JacksonJsonHandler();
         handler.fromObject(new MockActionInvocation(), contact, "success", writer);
         String data = writer.toString();
         assertTrue(data.startsWith("{"));
@@ -47,7 +47,7 @@ public class JacksonLibHandlerTest extends TestCase {
         Contact contact = new Contact("bob", true, 44);
 
         StringWriter writer = new StringWriter();
-        JacksonLibHandler handler = new JacksonLibHandler();
+        JacksonJsonHandler handler = new JacksonJsonHandler();
         handler.fromObject(new MockActionInvocation(), Arrays.asList(contact), "success", writer);
 
         String data = writer.toString();
@@ -62,7 +62,7 @@ public class JacksonLibHandlerTest extends TestCase {
 
         Contact target = new Contact();
         StringReader reader = new StringReader("{\"age\":44,\"important\":true,\"name\":\"bob\"}");
-        JacksonLibHandler handler = new JacksonLibHandler();
+        JacksonJsonHandler handler = new JacksonJsonHandler();
         handler.toObject(new MockActionInvocation(), reader, target);
         assertEquals(contact, target);
     }
@@ -75,18 +75,18 @@ public class JacksonLibHandlerTest extends TestCase {
 
         List<Contact> target = new ArrayList<Contact>();
         StringReader reader = new StringReader("[{\"age\":44,\"important\":true,\"name\":\"bob\"},{\"age\":33,\"important\":false,\"name\":\"john\"}]");
-        JacksonLibHandler handler = new JacksonLibHandler();
+        JacksonJsonHandler handler = new JacksonJsonHandler();
         handler.toObject(new MockActionInvocation(), reader, target);
         assertEquals(source.size(), target.size());
     }
 
     public void testContentType() throws IOException {
-        JacksonLibHandler handler = new JacksonLibHandler();
+        JacksonJsonHandler handler = new JacksonJsonHandler();
         assertEquals(handler.getContentType(), "application/json;charset=ISO-8859-1");
     }
 
     public void testDefaultEncoding() throws IOException {
-        JacksonLibHandler handler = new JacksonLibHandler();
+        JacksonJsonHandler handler = new JacksonJsonHandler();
         handler.setDefaultEncoding("UTF-8");
         assertEquals(handler.getContentType(), "application/json;charset=UTF-8");
     }

@@ -83,6 +83,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class Set extends ContextBean {
     protected String scope;
     protected String value;
+    protected boolean trimBody = true;
 
     public Set(ValueStack stack) {
         super(stack);
@@ -134,6 +135,11 @@ public class Set extends ContextBean {
     @StrutsTagAttribute(description="The value that is assigned to the variable named <i>name</i>")
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @StrutsTagAttribute(description="Set to false to prevent the default whitespace-trim of this tag's body content", type="Boolean", defaultValue="true")
+    public void setTrimBody(boolean trimBody) {
+        this.trimBody = trimBody;
     }
 
     @Override

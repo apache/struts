@@ -24,7 +24,7 @@
   onreset="${parameters.onreset!'clearErrorMessages(this);clearErrorLabels(this);'}"
 <#else>
   <#if parameters.onreset??>
-  onreset="${parameters.onreset?html}"
+  onreset="${parameters.onreset}"
   </#if>
 </#if>
 >

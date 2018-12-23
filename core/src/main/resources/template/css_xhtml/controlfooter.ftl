@@ -40,7 +40,7 @@ ${parameters.after!}<#t/>
      errorFor="${parameters.id}"<#rt/>
     </#if>
     class="errorMessage">
-             ${error?html}
+             ${error}
     </div><#t/>
 </#list>
 </div><#t/>

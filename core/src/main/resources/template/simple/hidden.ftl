@@ -19,18 +19,18 @@
  */
 -->
 <input type="hidden"<#rt/>
- name="${(parameters.name!"")?html}"<#rt/>
+ name="${(parameters.name!"")}"<#rt/>
 <#if parameters.nameValue??>
  value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.id?has_content>
- id="${parameters.id?html}"<#rt/>
+ id="${parameters.id}"<#rt/>
 </#if>
 <#if parameters.cssClass?has_content>
- class="${parameters.cssClass?html}"<#rt/>
+ class="${parameters.cssClass}"<#rt/>
 </#if>
 <#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle?html}"<#rt/>
+ style="${parameters.cssStyle}"<#rt/>
 </#if>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>

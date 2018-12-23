@@ -31,7 +31,7 @@
 
 
 <input type="text"<#rt/>
- name="${parameters.name!""?html}_input"<#rt/>
+ name="${parameters.name!""}_input"<#rt/>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
@@ -39,19 +39,19 @@
  readonly="readonly"<#rt/>
 </#if>
 <#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex?html}"<#rt/>
+ tabindex="${parameters.tabindex}"<#rt/>
 </#if>
 <#if parameters.id?has_content>
- id="${parameters.id?html}_input"<#rt/>
+ id="${parameters.id}_input"<#rt/>
 </#if>
 <#if parameters.cssClass?has_content>
- class="${parameters.cssClass?html}"<#rt/>
+ class="${parameters.cssClass}"<#rt/>
 </#if>
 <#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle?html}"<#rt/>
+ style="${parameters.cssStyle}"<#rt/>
 </#if>
 <#if parameters.title?has_content>
- title="${parameters.title?html}"<#rt/>
+ title="${parameters.title}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
@@ -60,35 +60,35 @@
 
 </td>
 <td class="tdTransferSelect">
-	<#assign addLabel=(parameters.addLabel!"->")?html /><#t/>
+	<#assign addLabel=(parameters.addLabel!"->") /><#t/>
 	<input type="button"
 		<#if parameters.buttonCssClass?has_content><#t/>
-		 class="${parameters.buttonCssClass?html}"
+		 class="${parameters.buttonCssClass}"
 		</#if><#t/>
 		<#if parameters.buttonCssStyle?has_content>
-		 style="${parameters.buttonCssStyle?html}"
+		 style="${parameters.buttonCssStyle}"
 		</#if><#t/>
-		 value="${addLabel}" onclick="addOption(document.getElementById('${parameters.id?html}_input'), document.getElementById('${parameters.id?html}'))" /><br /><br />
+		 value="${addLabel}" onclick="addOption(document.getElementById('${parameters.id}_input'), document.getElementById('${parameters.id}'))" /><br /><br />
 	<#t/>
-	<#assign removeLabel=(parameters.removeLabel!"<-")?html /><#t/>
+	<#assign removeLabel=(parameters.removeLabel!"<-") /><#t/>
 	<input type="button"
   		<#if parameters.buttonCssClass?has_content><#t/>
-		 class="${parameters.buttonCssClass?html}"
+		 class="${parameters.buttonCssClass}"
 		</#if><#t/>
 		<#if parameters.buttonCssStyle?has_content>
-		 style="${parameters.buttonCssStyle?html}"
+		 style="${parameters.buttonCssStyle}"
 		</#if><#t/>
-		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${parameters.id?html}'))" /><br /><br />
+		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${parameters.id}'))" /><br /><br />
 	<#t/>
-	<#assign removeAllLabel=(parameters.removeAllLabel!"<<--")?html /><#t/>
+	<#assign removeAllLabel=(parameters.removeAllLabel!"<<--") /><#t/>
 	<input type="button"
 	    		<#if parameters.buttonCssClass?has_content><#t/>
-		 class="${parameters.buttonCssClass?html}"
+		 class="${parameters.buttonCssClass}"
 		</#if><#t/>
 		<#if parameters.buttonCssStyle?has_content>
-		 style="${parameters.buttonCssStyle?html}"
+		 style="${parameters.buttonCssStyle}"
 		</#if><#t/>
-		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${parameters.id?html}'))" /><br /><br />
+		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${parameters.id}'))" /><br /><br />
 </td>
 <td>
 <#if parameters.rightTitle?has_content><#t/>
@@ -103,7 +103,7 @@
 	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '');"
 </#if>
 <#if parameters.downLabel?has_content>
-	value="${parameters.downLabel?html}"
+	value="${parameters.downLabel}"
 </#if>
 />
 <input type="button" 
@@ -113,7 +113,7 @@
 	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '');"
 </#if>
 <#if parameters.upLabel?has_content>
-	value="${parameters.upLabel?html}"
+	value="${parameters.upLabel}"
 </#if>
 />
 </#if>

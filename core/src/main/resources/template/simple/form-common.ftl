@@ -27,41 +27,41 @@
 </#if>
 <form<#rt/>
 <#if parameters.id?has_content>
- id="${parameters.id?html}"<#rt/>
+ id="${parameters.id}"<#rt/>
 </#if>
 <#if parameters.name?has_content>
- name="${parameters.name?html}"<#rt/>
+ name="${parameters.name}"<#rt/>
 </#if>
 <#if parameters.onsubmit?has_content>
- onsubmit="${parameters.onsubmit?html}"<#rt/>
+ onsubmit="${parameters.onsubmit}"<#rt/>
 </#if>
 <#if parameters.onreset?has_content>
- onreset="${parameters.onreset?html}"<#rt/>
+ onreset="${parameters.onreset}"<#rt/>
 </#if>
 <#if parameters.action?has_content>
- action="${parameters.action?html}"<#rt/>
+ action="${parameters.action}"<#rt/>
 </#if>
 <#if parameters.target?has_content>
- target="${parameters.target?html}"<#rt/>
+ target="${parameters.target}"<#rt/>
 </#if>
 <#if parameters.method?has_content>
- method="${parameters.method?html}"<#rt/>
+ method="${parameters.method}"<#rt/>
 <#else>
  method="post"<#rt/>
 </#if>
 <#if parameters.enctype?has_content>
- enctype="${parameters.enctype?html}"<#rt/>
+ enctype="${parameters.enctype}"<#rt/>
 </#if>
 <#if parameters.cssClass?has_content>
- class="${parameters.cssClass?html}"<#rt/>
+ class="${parameters.cssClass}"<#rt/>
 </#if>
 <#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle?html}"<#rt/>
+ style="${parameters.cssStyle}"<#rt/>
 </#if>
 <#if parameters.title?has_content>
- title="${parameters.title?html}"<#rt/>
+ title="${parameters.title}"<#rt/>
 </#if>
 <#if parameters.acceptcharset?has_content>
- accept-charset="${parameters.acceptcharset?html}"<#rt/>
+ accept-charset="${parameters.acceptcharset}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />

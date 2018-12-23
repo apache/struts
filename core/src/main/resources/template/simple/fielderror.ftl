@@ -33,21 +33,21 @@
                     <#if (haveMatchedErrorField && (!doneStartUlTag))><#t/>
                     <ul<#rt/>
                         <#if parameters.id?has_content>
-                                id="${parameters.id?html}"<#rt/>
+                                id="${parameters.id}"<#rt/>
                         </#if>
                         <#if parameters.cssClass?has_content>
-                                class="${parameters.cssClass?html}"<#rt/>
+                                class="${parameters.cssClass}"<#rt/>
                             <#else>
                                 class="errorMessage"<#rt/>
                         </#if>
                         <#if parameters.cssStyle?has_content>
-                                style="${parameters.cssStyle?html}"<#rt/>
+                                style="${parameters.cssStyle}"<#rt/>
                         </#if>
                             >
                         <#assign doneStartUlTag=true><#t/>
                     </#if><#t/>
                     <#list eValue as eEachValue><#t/>
-                        <li><span><#if parameters.escape>${eEachValue!?html}<#else>${eEachValue!}</#if></span></li>
+                        <li><span><#if parameters.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span></li>
                     </#list><#t/>
                 </#if><#t/>
             </#list><#t/>
@@ -60,18 +60,18 @@
         <#if (eKeysSize > 0)><#t/>
         <ul<#rt/>
             <#if parameters.cssClass?has_content>
-                    class="${parameters.cssClass?html}"<#rt/>
+                    class="${parameters.cssClass}"<#rt/>
                 <#else>
                     class="errorMessage"<#rt/>
             </#if>
             <#if parameters.cssStyle?has_content>
-                    style="${parameters.cssStyle?html}"<#rt/>
+                    style="${parameters.cssStyle}"<#rt/>
             </#if>
                 >
             <#list eKeys as eKey><#t/>
                 <#assign eValue = fieldErrors[eKey]><#t/>
                 <#list eValue as eEachValue><#t/>
-                    <li><span><#if parameters.escape>${eEachValue!?html}<#else>${eEachValue!}</#if></span></li>
+                    <li><span><#if parameters.escape>${eEachValue!}<#else>${eEachValue!?no_esc}</#if></span></li>
                 </#list><#t/>
             </#list><#t/>
         </ul>

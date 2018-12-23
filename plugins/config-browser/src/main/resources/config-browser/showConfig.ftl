@@ -40,8 +40,8 @@
 
 <!-- URLTag is faulty -->
 <@s.url var="url" action="showConfig" includeParams="none">
-    <@s.param name="namespace">${namespace?html}</@s.param>
-    <@s.param name="actionName">${actionName?html}</@s.param>
+    <@s.param name="namespace">${namespace}</@s.param>
+    <@s.param name="actionName">${actionName}</@s.param>
 </@s.url>
 <#assign url = url + "&amp;detailView=">
 <!-- Set all to false -->

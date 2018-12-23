@@ -47,20 +47,20 @@
 	<#if optGroupInternalListUiBean.parameters.listTitle??>
 		<#assign optGroupItemTitle= stack.findString(optGroupInternalListUiBean.parameters.listTitle)!''/>
 	</#if>
-	<option value="${tmpKeyStr?html}"<#rt>
+	<option value="${tmpKeyStr}"<#rt>
 	<#if tag.contains(parameters.nameValue, tmpKey) == true>
 	selected="selected"<#rt>
 	</#if>
 	<#if optGroupItemCssClass?has_content>
-	class="${optGroupItemCssClass?html}"<#rt/>
+	class="${optGroupItemCssClass}"<#rt/>
 	</#if>
 	<#if optGroupItemCssStyle?has_content>
-	style="${optGroupItemCssStyle?html}"<#rt/>
+	style="${optGroupItemCssStyle}"<#rt/>
 	</#if>
 	<#if optGroupItemTitle?has_content>
-	title="${optGroupItemTitle?html}"<#rt/>
+	title="${optGroupItemTitle}"<#rt/>
 	</#if>
-	>${tmpValue?html}<#t>
+	>${tmpValue}<#t>
 	</option><#lt>
 <#assign trash=stack.pop() />
 </#list>

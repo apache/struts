@@ -33,7 +33,7 @@
 
 			<p>You have come to this page because you used an <strong>action</strong> prefix.<p/>
 
-			<p>The text you've entered is ${text!''?html}<p/>
+			<p>The text you've entered is ${text!''}<p/>
 
 			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back</@s.a>
 		</div>

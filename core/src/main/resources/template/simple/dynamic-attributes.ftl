@@ -27,6 +27,6 @@
   <#else>
       <#assign value = keyValue?string/>
   </#if>
- ${aKey}="${value?html}"<#rt/>
+ ${aKey}="${value}"<#rt/>
 </#list><#rt/>
 </#if><#rt/>

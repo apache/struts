@@ -3,16 +3,25 @@ sudo: false
 
 jdk:
   - openjdk7
-  - oraclejdk8
   - oraclejdk9
   - oraclejdk11
 
 install: true
+
+env:
+  - STRUTS_MAVEN_GOAL: test
+global:
+  - secure: iI7IpfDtS+LUyS2yNuRCR3KelNyvBHuoMQ3gb1UNmR5SSL7jO/p3olQWrQROs28FJ+dpE3lHyIjoHrebKQGJHHAgTG2XWxn+G3fDsf+wSSFSLoDGj0o2SgGXooBbR2dccnNZHCyQaOyE2cIPWaOxrQZFE4No70LQB4mrP/gdkoc=
+matrix:
+    include:
+       - jdk: oraclejdk8
+         env: STRUTS_MAVEN_GOAL=verify # include integration tests and their coverage with jdk8
+
 script:
    - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-      ./mvnw test -DskipAssembly -B;
+      ./mvnw $STRUTS_MAVEN_GOAL -DskipAssembly -B;
     else
-      ./mvnw test -DskipAssembly -Dupdate-impact -B;
+      ./mvnw $STRUTS_MAVEN_GOAL -DskipAssembly -Dupdate-impact -B;
     fi;
 after_success:
   # TODO delete following if statement after fix of https://github.com/cobertura/cobertura/issues/271
@@ -21,10 +30,6 @@ after_success:
     else
       echo "Not reporting coverage for $TRAVIS_JDK_VERSION due to incompatibility or to save performance";
     fi;
-
-env:
-  global:
-    - secure: iI7IpfDtS+LUyS2yNuRCR3KelNyvBHuoMQ3gb1UNmR5SSL7jO/p3olQWrQROs28FJ+dpE3lHyIjoHrebKQGJHHAgTG2XWxn+G3fDsf+wSSFSLoDGj0o2SgGXooBbR2dccnNZHCyQaOyE2cIPWaOxrQZFE4No70LQB4mrP/gdkoc=
 
 cache:
   directories:

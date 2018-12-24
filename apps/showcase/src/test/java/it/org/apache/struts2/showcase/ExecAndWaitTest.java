@@ -20,9 +20,17 @@
  */
 package it.org.apache.struts2.showcase;
 
+import com.gargoylesoftware.htmlunit.ThreadedRefreshHandler;
+import net.sourceforge.jwebunit.htmlunit.HtmlUnitTestingEngineImpl;
+
 public class ExecAndWaitTest extends ITBaseTest {
     public void testNodelay() throws InterruptedException {
-        beginAt("/wait/example1.jsp");
+        if (getTestingEngine() instanceof HtmlUnitTestingEngineImpl) {
+            HtmlUnitTestingEngineImpl engine = (HtmlUnitTestingEngineImpl) getTestingEngine();
+            engine.setRefreshHandler(new ThreadedRefreshHandler());
+        }
+
+        beginAt("/wait/example1.action");
 
         setTextField("time", "7000");
         submit();

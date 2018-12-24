@@ -27,14 +27,14 @@ public class FileDownloadTest extends ITBaseTest {
     public void testImage() throws InterruptedException, MalformedURLException {
         beginAt("/filedownload/download.action");
 
-        URL url = new URL("http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/src/main/webapp/images/struts.gif");
+        URL url = new URL("https://gitbox.apache.org/repos/asf?p=struts.git;a=blob_plain;f=apps/showcase/src/main/webapp/images/struts.gif;hb=HEAD");
         assertDownloadedFileEquals(url);
     }
 
      public void testZip() throws InterruptedException, MalformedURLException {
         beginAt("/filedownload/download2.action");
 
-        URL url = new URL("http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/src/main/webapp/images/struts-gif.zip");
+        URL url = new URL("https://gitbox.apache.org/repos/asf?p=struts.git;a=blob_plain;f=apps/showcase/src/main/webapp/images/struts-gif.zip;hb=HEAD");
         assertDownloadedFileEquals(url);
     }
 }

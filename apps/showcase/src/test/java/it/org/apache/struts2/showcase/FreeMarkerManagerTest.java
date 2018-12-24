@@ -39,6 +39,6 @@ public class FreeMarkerManagerTest extends ITBaseTest {
     public void testTags() {
         beginAt("/freemarker/standardTags.action");
         assertElementPresent("test_name");
-        assertElementPresent("test_");
+        assertElementPresent("test");
     }
 }

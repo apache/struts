@@ -38,9 +38,9 @@ public class ValidationTest extends ITBaseTest {
         assertTextPresent("Invalid field value for field \"integerValidatorField\"");
         assertTextPresent("required and must be string");
         assertTextPresent("must be a valid email if supplied");
-        assertTextPresent("must be a valid url if supplied ");
-        assertTextPresent("must be a String of a specific greater than 1 less than 5 if specified ");
-        assertTextPresent("regexValidatorField must match a regexp (.*\\.txt) if specified ");
-        assertTextPresent("must be the same as the Required Validator Field if specified ");
+        assertTextPresent("must be a valid url if supplied");
+        assertTextPresent("must be a String of a specific greater than 1 less than 5 if specified");
+        assertTextPresent("regexValidatorField must match a regexp (.*\\.txt) if specified");
+        assertTextPresent("must be the same as the Required Validator Field if specified");
     }
 }

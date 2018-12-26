@@ -180,7 +180,6 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.1</version>
                 <configuration>
-                    <argLine>${argLine}</argLine>
                     <includes>
                         <include>it.org.apache.struts2.showcase.*Test</include>
                     </includes>
@@ -235,7 +234,6 @@
                         </goals>
                         <configuration>
                             <waitForChild>false</waitForChild>
-                            <jvmArgs>${argLine}</jvmArgs>
                         </configuration>
                     </execution>
                     <execution>

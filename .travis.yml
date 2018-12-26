@@ -15,7 +15,7 @@ global:
 matrix:
     include:
        - jdk: oraclejdk8
-         dev: STRUTS_IT=true # do integration tests and coverage reports when jdk7,9 and 11 tests prospered
+         env: STRUTS_IT=true # do integration tests and coverage reports when jdk7,9 and 11 tests prospered
 
 script:
    - if [ $STRUTS_IT ]; then

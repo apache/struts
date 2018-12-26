@@ -9,16 +9,16 @@ jdk:
 install: true
 
 env:
-  - STRUTS_IT=no
+  - STRUTS_IT: false
 global:
   - secure: iI7IpfDtS+LUyS2yNuRCR3KelNyvBHuoMQ3gb1UNmR5SSL7jO/p3olQWrQROs28FJ+dpE3lHyIjoHrebKQGJHHAgTG2XWxn+G3fDsf+wSSFSLoDGj0o2SgGXooBbR2dccnNZHCyQaOyE2cIPWaOxrQZFE4No70LQB4mrP/gdkoc=
 matrix:
     include:
        - jdk: oraclejdk8
-         dev: STRUTS_IT=yes # do integration tests and coverage reports when jdk7,9 and 11 tests prospered
+         dev: STRUTS_IT=true # do integration tests and coverage reports when jdk7,9 and 11 tests prospered
 
 script:
-   - if [ "$STRUTS_IT" == "yes" ]; then
+   - if [ $STRUTS_IT ]; then
       ./mvnw clean verify org.jacoco:jacoco-maven-plugin:report org.eluder.coveralls:coveralls-maven-plugin:report -Ptravis-coveralls -DskipAssembly -B;
     else
       if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then

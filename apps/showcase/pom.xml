@@ -180,6 +180,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.1</version>
                 <configuration>
+                    <argLine>${argLine}</argLine>
                     <includes>
                         <include>it.org.apache.struts2.showcase.*Test</include>
                     </includes>
@@ -230,11 +231,11 @@
                         <goals>
                             <!-- stop any previous instance to free up the port -->
                             <goal>stop</goal>
-                            <goal>start</goal>
+                            <goal>run-forked</goal>
                         </goals>
                         <configuration>
-                            <scanIntervalSeconds>0</scanIntervalSeconds>
-                            <daemon>true</daemon>
+                            <waitForChild>false</waitForChild>
+                            <jvmArgs>${argLine}</jvmArgs>
                         </configuration>
                     </execution>
                     <execution>

@@ -24,7 +24,7 @@ public class AsyncTest extends ITBaseTest {
 
         setTextField("msg", "hello");
         submit();
-        Thread.sleep(1000);
+        Thread.sleep(4000);
         assertTextInElement("msgs", "hello");
     }
 }

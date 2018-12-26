@@ -9,26 +9,23 @@ jdk:
 install: true
 
 env:
-  - STRUTS_MAVEN_GOAL: test
+  - STRUTS_IT: false
 global:
   - secure: iI7IpfDtS+LUyS2yNuRCR3KelNyvBHuoMQ3gb1UNmR5SSL7jO/p3olQWrQROs28FJ+dpE3lHyIjoHrebKQGJHHAgTG2XWxn+G3fDsf+wSSFSLoDGj0o2SgGXooBbR2dccnNZHCyQaOyE2cIPWaOxrQZFE4No70LQB4mrP/gdkoc=
 matrix:
     include:
        - jdk: oraclejdk8
-         env: STRUTS_MAVEN_GOAL=verify # include integration tests and their coverage with jdk8
+         dev: STRUTS_IT=true # do integration tests and coverage reports when jdk7,9 and 11 tests prospered
 
 script:
-   - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-      ./mvnw $STRUTS_MAVEN_GOAL -DskipAssembly -B;
+   - if [ "$STRUTS_IT" == "true" ]; then
+      ./mvnw clean verify org.jacoco:jacoco-maven-plugin:report org.eluder.coveralls:coveralls-maven-plugin:report -Ptravis-coveralls -DskipAssembly -B;
     else
-      ./mvnw $STRUTS_MAVEN_GOAL -DskipAssembly -Dupdate-impact -B;
-    fi;
-after_success:
-  # TODO delete following if statement after fix of https://github.com/cobertura/cobertura/issues/271
-  - if [ "$TRAVIS_JDK_VERSION" == "openjdk8" ] || [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ]; then
-      mvn cobertura:cobertura-integration-test org.eluder.coveralls:coveralls-maven-plugin:report -Ptravis-coveralls -DskipAssembly -B;
-    else
-      echo "Not reporting coverage for $TRAVIS_JDK_VERSION due to incompatibility or to save performance";
+      if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+        ./mvnw test -DskipAssembly -B;
+      else
+        ./mvnw test -DskipAssembly -Dupdate-impact -B;
+      fi;
     fi;
 
 cache:

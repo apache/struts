@@ -211,7 +211,7 @@
                             <groupId>org.mortbay.jetty</groupId>
                             <artifactId>jetty-maven-plugin</artifactId>
                             <configuration>
-                                <argLine>${argLine}</argLine>
+                                <jvmArgs>${argLine}</jvmArgs>
                             </configuration>
                         </plugin>
                     </plugins>

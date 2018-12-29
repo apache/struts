@@ -18,7 +18,7 @@ matrix:
 
 script:
    - if [ "$STRUTS_IT" == "true" ]; then
-      ./mvnw clean verify org.jacoco:jacoco-maven-plugin:report org.eluder.coveralls:coveralls-maven-plugin:report -Ptravis-coveralls -DskipAssembly -B;
+      ./mvnw clean verify org.jacoco:jacoco-maven-plugin:report org.jacoco:jacoco-maven-plugin:report-integration org.eluder.coveralls:coveralls-maven-plugin:report -Ptravis-coveralls -DskipAssembly -B;
     else
       if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
         ./mvnw test -DskipAssembly -B;

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.5.19</version>
+        <version>2.5.20-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-portlet-plugin</artifactId>

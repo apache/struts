@@ -66,7 +66,7 @@
     <link href="<s:url value='/styles/bootstrap.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="all">
     <link href="<s:url value='/styles/main.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="all"/>
 
-    <script src="<s:url value='/js/jquery-1.8.2.min.js' encode='false' includeParams='none'/>"></script>
+    <script src="<s:url value='/js/jquery-2.1.4.min.js' encode='false' includeParams='none'/>"></script>
     <script src="<s:url value='/js/bootstrap.min.js' encode='false' includeParams='none'/>"></script>
     <script type="text/javascript">
         $(function () {

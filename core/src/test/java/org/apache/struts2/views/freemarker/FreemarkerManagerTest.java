@@ -19,9 +19,13 @@
 package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
+import freemarker.template.Configuration;
+import freemarker.template.Version;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
+
+import javax.servlet.ServletContext;
 
 /**
  * Test case for FreemarkerManager
@@ -54,6 +58,36 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
 
         // then
         assertTrue(true); // should pass
+    }
+
+    public void testIncompatibleImprovementsByOverriding() throws Exception {
+        // given
+        FreemarkerManager manager = new FreemarkerManager() {
+            @Override
+            protected Version getFreemarkerVersion(ServletContext servletContext) {
+                return Configuration.VERSION_2_3_0;
+            }
+        };
+        container.inject(manager);
+
+        // when
+        manager.init(servletContext);
+
+        // then
+        assertEquals(Configuration.VERSION_2_3_0, manager.config.getIncompatibleImprovements());
+    }
+
+    public void testIncompatibleImprovementsByServletContext() throws Exception {
+        // given
+        servletContext.setInitParameter("freemarker.incompatible_improvements", "2.3.0");
+        FreemarkerManager manager = new FreemarkerManager();
+        container.inject(manager);
+
+        // when
+        manager.init(servletContext);
+
+        // then
+        assertEquals(Configuration.VERSION_2_3_0, manager.config.getIncompatibleImprovements());
     }
 }
 

@@ -33,10 +33,10 @@
  name="${parameters.name}"<#rt/>
 </#if>
 <#if parameters.onsubmit?has_content>
- onsubmit="${parameters.onsubmit}"<#rt/>
+ onsubmit="<#outputformat 'JavaScript'>${parameters.onsubmit}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onreset?has_content>
- onreset="${parameters.onreset}"<#rt/>
+ onreset="<#outputformat 'JavaScript'>${parameters.onreset}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.action?has_content>
  action="${parameters.action}"<#rt/>

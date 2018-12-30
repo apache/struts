@@ -1,4 +1,3 @@
-<#ftl output_format="JavaScript">
 <#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,44 +19,44 @@
  */
 -->
 <#if parameters.onclick??>
- onclick="${parameters.onclick}"<#rt/>
+ onclick="<#outputformat 'JavaScript'>${parameters.onclick}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.ondblclick??>
- ondblclick="${parameters.ondblclick}"<#rt/>
+ ondblclick="<#outputformat 'JavaScript'>${parameters.ondblclick}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onmousedown??>
- onmousedown="${parameters.onmousedown}"<#rt/>
+ onmousedown="<#outputformat 'JavaScript'>${parameters.onmousedown}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onmouseup??>
- onmouseup="${parameters.onmouseup}"<#rt/>
+ onmouseup="<#outputformat 'JavaScript'>${parameters.onmouseup}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onmouseover??>
- onmouseover="${parameters.onmouseover}"<#rt/>
+ onmouseover="<#outputformat 'JavaScript'>${parameters.onmouseover}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onmousemove??>
- onmousemove="${parameters.onmousemove}"<#rt/>
+ onmousemove="<#outputformat 'JavaScript'>${parameters.onmousemove}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onmouseout??>
- onmouseout="${parameters.onmouseout}"<#rt/>
+ onmouseout="<#outputformat 'JavaScript'>${parameters.onmouseout}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onfocus??>
- onfocus="${parameters.onfocus}"<#rt/>
+ onfocus="<#outputformat 'JavaScript'>${parameters.onfocus}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onblur??>
- onblur="${parameters.onblur}"<#rt/>
+ onblur="<#outputformat 'JavaScript'>${parameters.onblur}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onkeypress??>
- onkeypress="${parameters.onkeypress}"<#rt/>
+ onkeypress="<#outputformat 'JavaScript'>${parameters.onkeypress}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onkeydown??>
- onkeydown="${parameters.onkeydown}"<#rt/>
+ onkeydown="<#outputformat 'JavaScript'>${parameters.onkeydown}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onkeyup??>
- onkeyup="${parameters.onkeyup}"<#rt/>
+ onkeyup="<#outputformat 'JavaScript'>${parameters.onkeyup}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onselect??>
- onselect="${parameters.onselect}"<#rt/>
+ onselect="<#outputformat 'JavaScript'>${parameters.onselect}</#outputformat>"<#rt/>
 </#if>
 <#if parameters.onchange??>
- onchange="${parameters.onchange}"<#rt/>
+ onchange="<#outputformat 'JavaScript'>${parameters.onchange}</#outputformat>"<#rt/>
 </#if>

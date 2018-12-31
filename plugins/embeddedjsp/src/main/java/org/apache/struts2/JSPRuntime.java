@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.HttpJspPage;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.struts2.views.util.DefaultUrlHelper;
 
 /**
  * Maintains a cache of jsp locations -&gt; servlet instances for those jsps. When a jsp is requested
@@ -49,11 +50,13 @@ public abstract class JSPRuntime {
     public static void handle(String location, boolean flush) throws Exception {
         final HttpServletResponse response = ServletActionContext.getResponse();
         final HttpServletRequest request = ServletActionContext.getRequest();
-        final UrlHelper urlHelper = ServletActionContext.getContext().getInstance(UrlHelper.class);
 
         int i = location.indexOf("?");
         if (i > 0) {
             //extract params from the url and add them to the request
+            final UrlHelper urlHelperGetInstance = ServletActionContext.getContext().getInstance(UrlHelper.class);
+            final UrlHelper contextUrlHelper = (urlHelperGetInstance != null ? urlHelperGetInstance : (UrlHelper) ServletActionContext.getContext().get(StrutsConstants.STRUTS_URL_HELPER));
+            final UrlHelper urlHelper = (contextUrlHelper != null ? contextUrlHelper : new DefaultUrlHelper());
             String query = location.substring(i + 1);
             Map<String, Object> queryParams = urlHelper.parseQueryString(query, true);
             if (queryParams != null && !queryParams.isEmpty()) {

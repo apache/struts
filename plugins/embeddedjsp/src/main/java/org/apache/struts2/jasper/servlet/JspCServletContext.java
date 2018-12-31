@@ -28,15 +28,23 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import javax.servlet.Filter;
+import javax.servlet.FilterRegistration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+import javax.servlet.SessionCookieConfig;
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.descriptor.JspConfigDescriptor;
 
 import org.apache.struts2.ServletActionContext;
 
@@ -421,6 +429,139 @@ public class JspCServletContext implements ServletContext {
 
     }
 
+    @Override
+    public int getEffectiveMajorVersion() {
+        return (2);
+    }
 
+    @Override
+    public int getEffectiveMinorVersion() {
+        return (3);
+    }
+
+    @Override
+    public boolean setInitParameter(String arg0, String arg1) {
+        return (false);
+    }
+
+    @Override
+    public ServletRegistration.Dynamic addServlet(String arg0, String arg1) {
+        return (null);
+    }
+
+    @Override
+    public ServletRegistration.Dynamic addServlet(String arg0, Servlet arg1) {
+        return (null);
+    }
+
+    @Override
+    public ServletRegistration.Dynamic addServlet(String arg0, Class<? extends Servlet> arg1) {
+        return (null);
+    }
+
+    @Override
+    public <T extends Servlet> T createServlet(Class<T> arg0) throws ServletException {
+        return (null);
+    }
+
+    @Override
+    public ServletRegistration getServletRegistration(String arg0) {
+        return (null);
+    }
+
+    @Override
+    public Map<String, ? extends ServletRegistration> getServletRegistrations() {
+        return (null);
+    }
+
+    @Override
+    public FilterRegistration.Dynamic addFilter(String arg0, String arg1) {
+        return (null);
+    }
+
+    @Override
+    public FilterRegistration.Dynamic addFilter(String arg0, Filter arg1) {
+        return (null);
+    }
+
+    @Override
+    public FilterRegistration.Dynamic addFilter(String arg0, Class<? extends Filter> arg1) {
+        return (null);
+    }
+
+    @Override
+    public <T extends Filter> T createFilter(Class<T> arg0) throws ServletException {
+        return (null);
+    }
+
+    @Override
+    public FilterRegistration getFilterRegistration(String arg0) {
+        return (null);
+    }
+
+    @Override
+    public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
+        return (null);
+    }
+
+    @Override
+    public SessionCookieConfig getSessionCookieConfig() {
+        return (null);
+    }
+
+    @Override
+    public void setSessionTrackingModes(Set<SessionTrackingMode> arg0) {
+        return;
+    }
+
+    @Override
+    public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
+        return (null);
+    }
+
+    @Override
+    public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
+        return (null);
+    }
+
+    @Override
+    public void addListener(String arg0) {
+        return;
+    }
+
+    @Override
+    public <T extends EventListener> void addListener(T arg0) {
+        return;
+    }
+
+    @Override
+    public void addListener(Class<? extends EventListener> arg0) {
+        return;
+    }
+
+    @Override
+    public <T extends EventListener> T createListener(Class<T> arg0) throws ServletException {
+        return (null);
+    }
+
+    @Override
+    public JspConfigDescriptor getJspConfigDescriptor() {
+        return (null);
+    }
+
+    @Override
+    public ClassLoader getClassLoader() {
+        return (null);
+    }
+
+    @Override
+    public void declareRoles(String... arg0) {
+        return;
+    }
+
+    @Override
+    public String getVirtualServerName() {
+        return ("JspCServletContext_VirtualServer");
+    }
 
 }

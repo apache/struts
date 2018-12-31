@@ -44,16 +44,16 @@ import java.util.Map;
  */
 public abstract class DefaultTypeConverter implements TypeConverter {
 
-    protected static String MILLISECOND_FORMAT = ".SSS";
+    protected static final String MILLISECOND_FORMAT = ".SSS";
 
     private static final String NULL_STRING = "null";
 
-    private static final Map<Class, Object> primitiveDefaults;
+    private static final Map<Class<?>, Object> baseTypeDefaults;
 
     private Container container;
 
     static {
-        Map<Class, Object> map = new HashMap<>();
+        Map<Class<?>, Object> map = new HashMap<>();
         map.put(Boolean.TYPE, Boolean.FALSE);
         map.put(Byte.TYPE, Byte.valueOf((byte) 0));
         map.put(Short.TYPE, Short.valueOf((short) 0));
@@ -62,9 +62,9 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         map.put(Long.TYPE, Long.valueOf(0L));
         map.put(Float.TYPE, new Float(0.0f));
         map.put(Double.TYPE, new Double(0.0));
-        map.put(BigInteger.class, new BigInteger("0"));
-        map.put(BigDecimal.class, new BigDecimal(0.0));
-        primitiveDefaults = Collections.unmodifiableMap(map);
+        map.put(BigInteger.class, BigInteger.ZERO);
+        map.put(BigDecimal.class, BigDecimal.ZERO);
+        baseTypeDefaults = Collections.unmodifiableMap(map);
     }
 
     @Inject
@@ -76,6 +76,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         return convertValue(value, toType);
     }
 
+    @Override
     public Object convertValue(Map<String, Object> context, Object target, Member member,
             String propertyName, Object value, Class toType) {
         return convertValue(context, value, toType);
@@ -118,7 +119,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
         if (value != null) {
             /* If array -> array then convert components of array individually */
             if (value.getClass().isArray() && toType.isArray()) {
-                Class componentType = toType.getComponentType();
+                final Class<?> componentType = toType.getComponentType();
 
                 result = Array.newInstance(componentType, Array
                         .getLength(value));
@@ -153,9 +154,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
                     result = enumValue(toType, value);
             }
         } else {
-            if (toType.isPrimitive()) {
-                result = primitiveDefaults.get(toType);
-            }
+            result = baseTypeDefaults.get(toType);
         }
         return result;
     }
@@ -172,7 +171,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     public static boolean booleanValue(Object value) {
         if (value == null)
             return false;
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c == Boolean.class)
             return (Boolean) value;
         // if ( c == String.class )
@@ -202,13 +201,11 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * @param value
      *            an object to interpret as a long integer
      * @return the long integer value implied by the given object
-     * @throws NumberFormatException
-     *             if the given object can't be understood as a long integer
      */
-    public static long longValue(Object value) throws NumberFormatException {
+    public static long longValue(Object value) {
         if (value == null)
             return 0L;
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c.getSuperclass() == Number.class)
             return ((Number) value).longValue();
         if (c == Boolean.class)
@@ -224,26 +221,19 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * @param value
      *            an object to interpret as a double
      * @return the double value implied by the given object
-     * @throws NumberFormatException
-     *             if the given object can't be understood as a double
      */
-    public static double doubleValue(Object value) throws NumberFormatException {
+    public static double doubleValue(Object value) {
         if (value == null)
             return 0.0;
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c.getSuperclass() == Number.class)
             return ((Number) value).doubleValue();
         if (c == Boolean.class)
             return (Boolean) value ? 1 : 0;
         if (c == Character.class)
             return (Character) value;
-        String s = stringValue(value, true);
-
+        final String s = stringValue(value, true);
         return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
-        /*
-         * For 1.1 parseDouble() is not available
-         */
-        // return Double.valueOf( value.toString() ).doubleValue();
     }
 
     /**
@@ -252,14 +242,11 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * @param value
      *            an object to interpret as a BigInteger
      * @return the BigInteger value implied by the given object
-     * @throws NumberFormatException
-     *             if the given object can't be understood as a BigInteger
      */
-    public static BigInteger bigIntValue(Object value)
-            throws NumberFormatException {
+    public static BigInteger bigIntValue(Object value) {
         if (value == null)
             return BigInteger.valueOf(0L);
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c == BigInteger.class)
             return (BigInteger) value;
         if (c == BigDecimal.class)
@@ -279,20 +266,17 @@ public abstract class DefaultTypeConverter implements TypeConverter {
      * @param value
      *            an object to interpret as a BigDecimal
      * @return the BigDecimal value implied by the given object
-     * @throws NumberFormatException
-     *             if the given object can't be understood as a BigDecimal
      */
-    public static BigDecimal bigDecValue(Object value)
-            throws NumberFormatException {
+    public static BigDecimal bigDecValue(Object value) {
         if (value == null)
             return BigDecimal.valueOf(0L);
-        Class c = value.getClass();
+        final Class<?> c = value.getClass();
         if (c == BigDecimal.class)
             return (BigDecimal) value;
         if (c == BigInteger.class)
             return new BigDecimal((BigInteger) value);
         if (c.getSuperclass() == Number.class)
-            return new BigDecimal(((Number) value).doubleValue());
+            return BigDecimal.valueOf(((Number) value).doubleValue());
         if (c == Boolean.class)
             return BigDecimal.valueOf((Boolean) value ? 1 : 0);
         if (c == Character.class)

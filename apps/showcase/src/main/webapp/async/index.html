@@ -26,6 +26,7 @@
             this.lastIndex = 0;
             this.sendMessage = function(message) {
                 $.ajax({
+                    async: false,
                     url: "sendMessage",
                     data: {
                         message: message

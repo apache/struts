@@ -20,25 +20,40 @@
  */
 package it.org.apache.struts2.showcase;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class FreeMarkerManagerTest extends ITBaseTest {
-    public void testCustomManager() {
-        beginAt("/freemarker/customFreemarkerManagerDemo.action");
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-        String date = getElementTextByXPath("//*[@id='todaysDate']");
-        assertNotNull(date);
-        assertTrue(date.length() > 0);
+public class FreeMarkerManagerTest {
+    @Test
+    public void testCustomManager() throws Exception {
+        try (final WebClient webClient = new WebClient()) {
+            final HtmlPage page = webClient
+                    .getPage(ParameterUtils.getBaseUrl() + "/freemarker/customFreemarkerManagerDemo.action");
 
-        String time = getElementTextByXPath("//*[@id='timeNow']");
-        assertNotNull(time);
-        assertTrue(time.length() > 0);
+            final DomElement date = page.getElementById("todaysDate");
+            Assert.assertNotNull(date);
+            Assert.assertTrue(date.asText().length() > 0);
+
+            final DomElement time = page.getElementById("timeNow");
+            Assert.assertNotNull(time);
+            Assert.assertTrue(time.asText().length() > 0);
+        }
     }
 
-    public void testTags() {
-        beginAt("/freemarker/standardTags.action");
-        assertElementPresent("test_name");
-        assertElementPresent("test_");
+    @Test
+    public void testTags() throws Exception {
+        try (final WebClient webClient = new WebClient()) {
+            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/freemarker/standardTags.action");
+
+            final DomElement date = page.getElementById("test_name");
+            Assert.assertNotNull(date);
+
+            final DomElement time = page.getElementById("test");
+            Assert.assertNotNull(time);
+        }
     }
 }

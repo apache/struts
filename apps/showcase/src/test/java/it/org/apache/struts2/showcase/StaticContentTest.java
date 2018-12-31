@@ -16,31 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package it.org.apache.struts2.showcase.staticcontent;
+package it.org.apache.struts2.showcase;
 
-import it.org.apache.struts2.showcase.ITBaseTest;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.io.IOException;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.WebClient;
 
-import net.sourceforge.jwebunit.exception.TestingEngineResponseException;
+public class StaticContentTest {
 
-public class StaticContentTest extends ITBaseTest {
-
-    public void testInvalidRersources1() throws IOException {
-        try {
-            beginAt("/struts..");
-            fail("Previous request should have failed");
-        } catch (TestingEngineResponseException ex) {
-            // ok
+    @Test
+    public void testInvalidRersources1() throws Exception {
+        try (final WebClient webClient = new WebClient()) {
+            try {
+                webClient.getPage(ParameterUtils.getBaseUrl() + "/struts..");
+                Assert.fail("Previous request should have failed");
+            } catch (FailingHttpStatusCodeException e) {
+            }
         }
     }
 
-    public void testInvalidRersources2() throws IOException {
-        try {
-            beginAt("/struts/..%252f");
-            fail("Previous request should have failed");
-        } catch (TestingEngineResponseException ex) {
-            // ok
+    public void testInvalidRersources2() throws Exception {
+        try (final WebClient webClient = new WebClient()) {
+            try {
+                webClient.getPage(ParameterUtils.getBaseUrl() + "/struts/..%252f");
+                Assert.fail("Previous request should have failed");
+            } catch (FailingHttpStatusCodeException e) {
+            }
         }
     }
 

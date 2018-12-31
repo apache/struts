@@ -160,6 +160,7 @@ public class ObjectFactory implements Serializable {
      */
     protected Object injectInternalBeans(Object obj) {
         if (obj != null && container != null) {
+            LOG.debug("Injecting internal beans into [{}]", obj.getClass().getSimpleName());
             container.inject(obj);
         }
         return obj;

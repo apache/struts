@@ -34,11 +34,15 @@ import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.jasper.runtime.InstanceHelper;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
+import org.apache.tomcat.InstanceManager;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.Servlet;
@@ -49,10 +53,12 @@ import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
+
 public class EmbeddedJSPResultTest extends TestCase {
     private HttpServletRequest request;
     private MockHttpServletResponse response;
     private MockServletContext context;
+    private MockServletConfig config;
     private EmbeddedJSPResult result;
 
     public void testScriptlet() throws Exception {
@@ -241,6 +247,56 @@ public class EmbeddedJSPResultTest extends TestCase {
         }
     }
 
+    public void testComplex() throws Exception {
+        result.setLocation("org/apache/struts2/complex0.jsp");
+        result.execute(null);
+
+        String responseString = response.getContentAsString();
+        assertNotNull("result is null?", responseString);
+        int titleIndex = responseString.indexOf("<title>Struts2 Embedded JSP Plugin - Complex Test Page</title>");
+        int responseLength = responseString.length();
+        int testValue1Index = responseString.indexOf("testvalue1 set/if worked.");
+        int testValue5Index = responseString.indexOf("testvalue5 set/if worked.");
+        int lastGroupIndex = responseString.indexOf("End include tests<br/>");
+        int lastHtmlIndex = responseString.indexOf("</html>");
+        assertTrue("Did not find title ?", titleIndex > 0);
+        assertTrue("Test value 1 not present or index not > title index ?", testValue1Index > titleIndex);
+        assertTrue("Test value 5 not present or index not > test value 1 index ?", testValue5Index > testValue1Index);
+        assertTrue("Last group index not present or index not > test value 5 index ?", lastGroupIndex > testValue5Index);
+        assertTrue("Last html index not present or index not > last group index ?", lastHtmlIndex > lastGroupIndex);
+        assertTrue("Response not at least length: 3400 ?", responseLength > 3400);
+    }
+
+    public void testInstanceHelper() throws Exception {
+        InstanceManager instanceManagerServlet = InstanceHelper.getServletInstanceManager(config);
+        InstanceManager instanceManagerClassLoader = InstanceHelper.getClassLoaderInstanceManager(context.getClassLoader());
+        assertNotNull("instanceManager (servlet) is null ?", instanceManagerServlet);
+        assertNotNull("instanceManager (classloader) is null ?", instanceManagerClassLoader);
+        assertEquals("instanceManager (servlet) is not equal to instanceManager (classloader) ?", instanceManagerServlet, instanceManagerClassLoader);
+        final Double instanceDouble = new Double(0);
+        final Long instanceLong = new Long(0);
+        final Object instanceObject = new Object();
+        final String instanceString = new String("test string");
+        final MockHttpServletRequest intanceMockHttpServletRequest = new MockHttpServletRequest();
+        intanceMockHttpServletRequest.setContextPath("context path");
+        InstanceHelper.postConstruct(instanceManagerServlet, instanceDouble);
+        InstanceHelper.postConstruct(instanceManagerServlet, instanceLong);
+        InstanceHelper.postConstruct(instanceManagerServlet, instanceObject);
+        InstanceHelper.postConstruct(instanceManagerServlet, instanceString);
+        InstanceHelper.postConstruct(instanceManagerServlet, intanceMockHttpServletRequest);
+        assertEquals("test string value changed after postConstruct ?", instanceString, "test string");
+        assertEquals("mock servlet request context path value changed after postConstruct ?",
+                intanceMockHttpServletRequest.getContextPath(), "context path");
+        InstanceHelper.preDestroy(instanceManagerServlet, instanceDouble);
+        InstanceHelper.preDestroy(instanceManagerServlet, instanceLong);
+        InstanceHelper.preDestroy(instanceManagerServlet, instanceObject);
+        InstanceHelper.preDestroy(instanceManagerServlet, instanceString);
+        InstanceHelper.preDestroy(instanceManagerServlet, intanceMockHttpServletRequest);
+        assertEquals("test string value changed after preDestroy ?", instanceString, "test string");
+        assertEquals("mock servlet request context path value changed after preDestroy ?",
+                intanceMockHttpServletRequest.getContextPath(), "context path");
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -250,6 +306,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         request = EasyMock.createNiceMock(HttpServletRequest.class);
         response = new MockHttpServletResponse();
         context = new MockServletContext();
+        config = new MockServletConfig(context);
 
         final Map params = new HashMap();
 

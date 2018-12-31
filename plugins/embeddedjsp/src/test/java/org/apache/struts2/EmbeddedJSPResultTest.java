@@ -259,12 +259,18 @@ public class EmbeddedJSPResultTest extends TestCase {
         int testValue5Index = responseString.indexOf("testvalue5 set/if worked.");
         int lastGroupIndex = responseString.indexOf("End include tests<br/>");
         int lastHtmlIndex = responseString.indexOf("</html>");
-        assertTrue("Did not find title ?", titleIndex > 0);
-        assertTrue("Test value 1 not present or index not > title index ?", testValue1Index > titleIndex);
-        assertTrue("Test value 5 not present or index not > test value 1 index ?", testValue5Index > testValue1Index);
-        assertTrue("Last group index not present or index not > test value 5 index ?", lastGroupIndex > testValue5Index);
-        assertTrue("Last html index not present or index not > last group index ?", lastHtmlIndex > lastGroupIndex);
-        assertTrue("Response not at least length: 3400 ?", responseLength > 3400);
+        assertTrue("Did not find title index (" + titleIndex + ") ?", titleIndex > 0);
+        assertTrue("Test value 1 not present or index (" + testValue1Index + ") not > title index (" + titleIndex + ") ?",
+                testValue1Index > titleIndex);
+        assertTrue("Test value 5 not present or index (" + testValue5Index + ") not > test value 1 index (" + testValue1Index + ") ?",
+                testValue5Index > testValue1Index);
+        assertTrue("Last group index not present or index (" + lastGroupIndex + ") not > test value 5 index (" + testValue5Index + ") ?",
+                lastGroupIndex > testValue5Index);
+        assertTrue("Last html index not present or index (" + lastHtmlIndex + ") not > last group index (" + lastGroupIndex + ") ?",
+                lastHtmlIndex > lastGroupIndex);
+        // complex0.jsp length 3439 in Windows and estimated 3221 in Linux/Unix (with 218 lines, Windows has around 218 additional
+        //   characters (crlf vs. lf).  Test length larger than the min(Windows,Linux)), rounded down to the nearest 100.
+        assertTrue("Response length (" + responseLength + ") not at least length: 3200 ?", responseLength > 3200);
     }
 
     public void testInstanceHelper() throws Exception {

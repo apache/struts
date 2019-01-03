@@ -90,7 +90,30 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     protected List<String> getCurrentBundleNames() {
-        return classLoaderMap.get(getCurrentThreadContextClassLoader().hashCode());
+        int currentKey = getCurrentThreadContextClassLoader().hashCode();
+
+        List<String> currentBundleName = classLoaderMap.get(currentKey);
+
+        if (currentBundleName == null) {
+            currentBundleName = getParentBundleNames(currentKey);
+        }
+
+        return currentBundleName;
+    }
+
+    private List<String> getParentBundleNames(int currentKey) {
+        List<String> parentBundleName = null;
+
+        ClassLoader parentCL = getCurrentThreadContextClassLoader().getParent();
+        if (parentCL != null) {
+            LOG.debug("No bundle name for current ClassLoader, trying with parent ClassLoader");
+            parentBundleName = classLoaderMap.get(parentCL.hashCode());
+            if (parentBundleName != null && !delegatedClassLoaderMap.containsKey(currentKey)) {
+                delegatedClassLoaderMap.put(currentKey, parentCL);
+            }
+        }
+
+        return parentBundleName;
     }
 
     protected ClassLoader getCurrentThreadContextClassLoader() {

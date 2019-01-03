@@ -66,7 +66,7 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.factory.ActionFactory;
 import com.opensymphony.xwork2.factory.ConverterFactory;
 import com.opensymphony.xwork2.factory.DefaultActionFactory;
-import com.opensymphony.xwork2.factory.DefaultConverterFactory;
+import com.opensymphony.xwork2.factory.StrutsConverterFactory;
 import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
 import com.opensymphony.xwork2.factory.DefaultResultFactory;
 import com.opensymphony.xwork2.factory.InterceptorFactory;
@@ -147,7 +147,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ResultFactory.class, DefaultResultFactory.class)
                 .factory(InterceptorFactory.class, DefaultInterceptorFactory.class)
                 .factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class)
-                .factory(ConverterFactory.class, DefaultConverterFactory.class)
+                .factory(ConverterFactory.class, StrutsConverterFactory.class)
                 .factory(UnknownHandlerFactory.class, DefaultUnknownHandlerFactory.class)
 
                 .factory(ActionProxyFactory.class, DefaultActionProxyFactory.class, Scope.SINGLETON)

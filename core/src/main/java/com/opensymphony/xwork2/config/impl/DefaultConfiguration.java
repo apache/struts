@@ -245,7 +245,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ResultFactory.class, DefaultResultFactory.class, Scope.SINGLETON);
         builder.factory(InterceptorFactory.class, DefaultInterceptorFactory.class, Scope.SINGLETON);
         builder.factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class, Scope.SINGLETON);
-        builder.factory(ConverterFactory.class, DefaultConverterFactory.class, Scope.SINGLETON);
+        builder.factory(ConverterFactory.class, StrutsConverterFactory.class, Scope.SINGLETON);
         builder.factory(UnknownHandlerFactory.class, DefaultUnknownHandlerFactory.class, Scope.SINGLETON);
 
         builder.factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON);

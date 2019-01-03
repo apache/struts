@@ -29,9 +29,9 @@ import java.util.Map;
 /**
  * Default implementation
  */
-public class DefaultConverterFactory implements ConverterFactory {
+public class StrutsConverterFactory implements ConverterFactory {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultConverterFactory.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsConverterFactory.class);
 
     private Container container;
 

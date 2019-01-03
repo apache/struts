@@ -36,14 +36,8 @@ public class StrutsTypeConverterCreator implements TypeConverterCreator {
     }
 
     public TypeConverter createTypeConverter(String className) throws Exception {
-        Class<?> classInstance = objectFactory.getClassInstance(className);
-
-        if (TypeConverter.class.isAssignableFrom(classInstance)) {
-            Class<? extends TypeConverter> converterClass = (Class<? extends TypeConverter>) classInstance;
-            return objectFactory.buildConverter(converterClass, null);
-        } else {
-            throw new IllegalArgumentException("Type converter class " + className + " doesn't implement " + TypeConverter.class.getName());
-        }
+        Class<?> clazz = objectFactory.getClassInstance(className);
+        return createTypeConverter(clazz);
     }
 
     public TypeConverter createTypeConverter(Class<?> clazz) throws Exception {

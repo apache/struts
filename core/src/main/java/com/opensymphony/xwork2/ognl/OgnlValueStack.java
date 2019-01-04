@@ -40,6 +40,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 /**
@@ -60,6 +61,10 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private static final long serialVersionUID = 370737852934925530L;
 
     private static final String MAP_IDENTIFIER_KEY = "com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";
+
+    private static final int MAX_DEVMODESET_WARNCOUNT = 250;
+
+    private static final AtomicInteger DEVMODESET_WARNCOUNT = new AtomicInteger(0);
 
     protected CompoundRoot root;
     protected transient Map<String, Object> context;
@@ -105,8 +110,19 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
         if (this.devMode) {
-            LOG.warn("Setting development mode [{}] affects the safety of your application!",
-                        this.devMode);
+            int devModeWarnCount = DEVMODESET_WARNCOUNT.get();
+            if (devModeWarnCount < MAX_DEVMODESET_WARNCOUNT) {
+                devModeWarnCount = DEVMODESET_WARNCOUNT.incrementAndGet();
+                LOG.warn("Setting development mode [{}] affects the safety of your application!",
+                            this.devMode);
+                if (devModeWarnCount >= MAX_DEVMODESET_WARNCOUNT) {
+                    LOG.warn("Last warning concerning development mode [{}]!  These messages will now be trace level only!",
+                                this.devMode);
+                }
+            } else {
+                LOG.trace("Setting development mode [{}] affects the safety of your application!",
+                            this.devMode);
+            }
         }
     }
 

@@ -69,7 +69,7 @@
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts" class="org.apache.struts2.factory.StrutsResultFactory" />
     <bean type="com.opensymphony.xwork2.factory.ActionFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultActionFactory" />
-    <bean type="com.opensymphony.xwork2.factory.ConverterFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultConverterFactory" />
+    <bean type="com.opensymphony.xwork2.factory.ConverterFactory" name="struts" class="com.opensymphony.xwork2.factory.StrutsConverterFactory" />
     <bean type="com.opensymphony.xwork2.factory.InterceptorFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultInterceptorFactory" />
     <bean type="com.opensymphony.xwork2.factory.ValidatorFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultValidatorFactory" />
     <bean type="com.opensymphony.xwork2.factory.UnknownHandlerFactory" name="struts" class="com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory" />
@@ -114,8 +114,8 @@
     <bean type="com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultConversionPropertiesProcessor" />
     <bean type="com.opensymphony.xwork2.conversion.ConversionFileProcessor" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor" />
     <bean type="com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor" />
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverterCreator" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterCreator" />
-    <bean type="com.opensymphony.xwork2.conversion.TypeConverterHolder" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterHolder" />
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverterCreator" name="struts" class="org.apache.struts2.conversion.StrutsTypeConverterCreator" />
+    <bean type="com.opensymphony.xwork2.conversion.TypeConverterHolder" name="struts" class="org.apache.struts2.conversion.StrutsTypeConverterHolder" />
 
     <bean class="com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter" />
 

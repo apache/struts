@@ -42,6 +42,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.conversion.StrutsTypeConverterHolder;
+import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 
 import java.util.*;
 
@@ -243,7 +245,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ResultFactory.class, DefaultResultFactory.class, Scope.SINGLETON);
         builder.factory(InterceptorFactory.class, DefaultInterceptorFactory.class, Scope.SINGLETON);
         builder.factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class, Scope.SINGLETON);
-        builder.factory(ConverterFactory.class, DefaultConverterFactory.class, Scope.SINGLETON);
+        builder.factory(ConverterFactory.class, StrutsConverterFactory.class, Scope.SINGLETON);
         builder.factory(UnknownHandlerFactory.class, DefaultUnknownHandlerFactory.class, Scope.SINGLETON);
 
         builder.factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON);
@@ -257,8 +259,8 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON);
         builder.factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON);
         builder.factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON);
-        builder.factory(TypeConverterCreator.class, DefaultTypeConverterCreator.class, Scope.SINGLETON);
-        builder.factory(TypeConverterHolder.class, DefaultTypeConverterHolder.class, Scope.SINGLETON);
+        builder.factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON);
+        builder.factory(TypeConverterHolder.class, StrutsTypeConverterHolder.class, Scope.SINGLETON);
 
         builder.factory(XWorkBasicConverter.class, Scope.SINGLETON);
         builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_COLLECTION,  CollectionConverter.class, Scope.SINGLETON);

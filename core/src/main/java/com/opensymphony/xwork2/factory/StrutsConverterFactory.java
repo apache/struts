@@ -29,9 +29,9 @@ import java.util.Map;
 /**
  * Default implementation
  */
-public class DefaultConverterFactory implements ConverterFactory {
+public class StrutsConverterFactory implements ConverterFactory {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultConverterFactory.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsConverterFactory.class);
 
     private Container container;
 
@@ -42,7 +42,7 @@ public class DefaultConverterFactory implements ConverterFactory {
 
     public TypeConverter buildConverter(Class<? extends TypeConverter> converterClass, Map<String, Object> extraContext) throws Exception {
         LOG.debug("Creating converter of type [{}]", converterClass.getCanonicalName());
-        return container.getInstance(converterClass);
+        return container.inject(converterClass);
     }
 
 }

@@ -56,8 +56,8 @@ import com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProces
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterCreator;
-import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverterHolder;
+import org.apache.struts2.conversion.StrutsTypeConverterCreator;
+import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
 import com.opensymphony.xwork2.conversion.impl.NumberConverter;
 import com.opensymphony.xwork2.conversion.impl.StringConverter;
@@ -66,7 +66,7 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.factory.ActionFactory;
 import com.opensymphony.xwork2.factory.ConverterFactory;
 import com.opensymphony.xwork2.factory.DefaultActionFactory;
-import com.opensymphony.xwork2.factory.DefaultConverterFactory;
+import com.opensymphony.xwork2.factory.StrutsConverterFactory;
 import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
 import com.opensymphony.xwork2.factory.DefaultResultFactory;
 import com.opensymphony.xwork2.factory.InterceptorFactory;
@@ -112,7 +112,6 @@ import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.factory.PrefixBasedActionProxyFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -148,7 +147,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ResultFactory.class, DefaultResultFactory.class)
                 .factory(InterceptorFactory.class, DefaultInterceptorFactory.class)
                 .factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class)
-                .factory(ConverterFactory.class, DefaultConverterFactory.class)
+                .factory(ConverterFactory.class, StrutsConverterFactory.class)
                 .factory(UnknownHandlerFactory.class, DefaultUnknownHandlerFactory.class)
 
                 .factory(ActionProxyFactory.class, DefaultActionProxyFactory.class, Scope.SINGLETON)
@@ -159,8 +158,8 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
                 .factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON)
                 .factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON)
                 .factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON)
-                .factory(TypeConverterCreator.class, DefaultTypeConverterCreator.class, Scope.SINGLETON)
-                .factory(TypeConverterHolder.class, DefaultTypeConverterHolder.class, Scope.SINGLETON)
+                .factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON)
+                .factory(TypeConverterHolder.class, StrutsTypeConverterHolder.class, Scope.SINGLETON)
 
                 .factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON)
                 .factory(FileManagerFactory.class, DefaultFileManagerFactory.class, Scope.SINGLETON)

@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<table class="${parameters.cssClass!'wwFormTable'?html}"<#rt/>
-<#if parameters.cssStyle??> style="${parameters.cssStyle?html}"<#rt/>
+<table class="${parameters.cssClass!'wwFormTable'}"<#rt/>
+<#if parameters.cssStyle??> style="${parameters.cssStyle}"<#rt/>
 </#if>
 >

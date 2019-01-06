@@ -887,7 +887,7 @@ public abstract class UIBean extends Component {
     protected String escape(String name) {
         // escape any possible values that can make the ID painful to work with in JavaScript
         if (name != null) {
-            return name.replaceAll("[\\/\\.\\[\\]]", "_");
+            return name.replaceAll("[\\/\\.\\[\\]\'\"]", "_");
         } else {
             return null;
         }
@@ -1002,7 +1002,7 @@ public abstract class UIBean extends Component {
         } else {
             tryId = generatedId;
         }
-        
+
         //fix for https://issues.apache.org/jira/browse/WW-4299
         //do not assign value to id if tryId is null
         if (tryId != null) {

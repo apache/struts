@@ -60,32 +60,32 @@
     </#if>
 <input type="radio"<#rt/>
 <#if parameters.name?has_content>
- name="${parameters.name?html}"<#rt/>
+ name="${parameters.name?no_esc}"<#rt/>
 </#if>
- id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
+ id="${parameters.id}${itemKeyStr?replace(".", "_")}"<#rt/>
 <#if tag.contains(parameters.nameValue!'', itemKey)>
  checked="checked"<#rt/>
 </#if>
 <#if itemKey??>
- value="${itemKeyStr?html}"<#rt/>
+ value="${itemKeyStr}"<#rt/>
 </#if>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
 <#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex?html}"<#rt/>
+ tabindex="${parameters.tabindex}"<#rt/>
 </#if>
 <#if itemCssClass?has_content>
- class="${itemCssClass?html}"<#rt/>
+ class="${itemCssClass}"<#rt/>
 </#if>
 <#if itemCssStyle?has_content>
- style="${itemCssStyle?html}"<#rt/>
+ style="${itemCssStyle}"<#rt/>
 </#if>
 <#if itemTitle?has_content>
- title="${itemTitle?html}"<#rt/>
+ title="${itemTitle}"<#rt/>
 <#else>
     <#if parameters.title?has_content>
- title="${parameters.title?html}"<#rt/>
+ title="${parameters.title}"<#rt/>
     </#if>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
@@ -93,7 +93,7 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 /><#rt/>
-<label for="${parameters.id?html}${itemKeyStr?html}"<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl"/>><#rt/>
+<label for="${parameters.id}${itemKeyStr?replace(".", "_")}"<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl"/>><#rt/>
     ${itemValue}<#t/>
 </label>
 </@s.iterator>

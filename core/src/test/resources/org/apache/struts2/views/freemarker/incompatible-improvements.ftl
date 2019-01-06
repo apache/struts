@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id: someFreeMarkerFile.ftl 590812 2007-10-31 20:32:54Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,28 +20,4 @@
  * under the License.
  */
 -->
-<#--include "/${parameters.templateDir}/css_xhtml/controlheader.ftl" /-->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
-<label<#rt/>
-<#if parameters.id??>
- id="${parameters.id}"<#rt/>
-</#if>
-<#if parameters.cssClass??>
- class="${parameters.cssClass}"<#rt/>
-</#if>
-<#if parameters.cssStyle??>
- style="${parameters.cssStyle}"<#rt/>
-</#if>
-<#if parameters.cssClass??>
- class="${parameters.cssClass}"<#rt/>
-</#if>
-<#if parameters.for??>
- for="${parameters.for}"<#rt/>
-</#if>
-><#rt/>
-<#if parameters.nameValue??>
-<@s.property value="parameters.nameValue"/><#t/>
-</#if>
-&nbsp;
-</label>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<input type="text" onclick="this.alert('${error}')"/>

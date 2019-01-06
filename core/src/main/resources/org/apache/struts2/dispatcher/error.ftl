@@ -63,17 +63,17 @@
             <ol>
                 <#list msgs as msg>
                     <#if (msg?is_method)>
-                        <li>${msg[0]?html}</li>
+                        <li>${msg[0]}</li>
                     <#else>
-                        <li>${msg?html}</li>
+                        <li>${msg}</li>
                     </#if>
                 </#list>
             </ol>
             <#elseif (msgs?size == 1)>
                 <#if (msgs[0]?is_method)>
-                    <li>${msgs[0][0]?html}</li>
+                    <li>${msgs[0][0]}</li>
                 <#else>
-                    <li>${msgs[0]?html}</li>
+                    <li>${msgs[0]}</li>
                 </#if>
             </#if>
         </td>
@@ -107,12 +107,12 @@
             <#list snippet as line>
                 <#if (line_index == 2)>
                 	<#if (rootloc.columnNumber >= 3)>
-                        <pre style="background:yellow">${(line[0..(rootloc.columnNumber-3)]?html)}<span style="background:red">${(line[(rootloc.columnNumber-2)]?html)}</span><#if ((rootloc.columnNumber)<line.length())>${(line[(rootloc.columnNumber-1)..]?html)}</#if></pre>
+                        <pre style="background:yellow">${(line[0..(rootloc.columnNumber-3)])}<span style="background:red">${(line[(rootloc.columnNumber-2)])}</span><#if ((rootloc.columnNumber)<line.length())>${(line[(rootloc.columnNumber-1)..])}</#if></pre>
                     <#else>
-                       	<pre style="background:yellow">${line?html}</pre>
+                       	<pre style="background:yellow">${line}</pre>
                     </#if>    
                 <#else>
-                    <pre>${line?html}</pre>
+                    <pre>${line}</pre>
                 </#if>    
             </#list>
         </div>
@@ -124,11 +124,11 @@
 <h3>Stacktraces</h3>
 <#list chain as ex>
 <div class="stacktrace" style="padding-left: ${ex_index * 2}em">
-    <strong>${ex?html}</strong>
+    <strong>${ex}</strong>
     <div>
     <pre>
     <#list ex.stackTrace as frame>
-    ${frame?html}
+    ${frame}
     </#list>
     </pre>
     </div>

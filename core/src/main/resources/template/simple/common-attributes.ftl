@@ -19,5 +19,5 @@
  */
 -->
 <#if parameters.accesskey?has_content>
- accesskey="${parameters.accesskey?html}" 
+ accesskey="${parameters.accesskey}"
 </#if>

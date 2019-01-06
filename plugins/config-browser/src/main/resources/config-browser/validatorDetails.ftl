@@ -23,7 +23,7 @@
 <#call startPage pageTitle="Validator Details"/>
 <table>
 <tr><td>Validated Class:</td><td>${action.stripPackage(clazz)}</td></tr>
-<tr><td>Context:</td><td>${context?html}</td></tr>
+<tr><td>Context:</td><td>${context}</td></tr>
 <tr><td>Validator Number:</td><td>${selected}</td></tr>
 <tr><td>Validator Type:</td><td>${action.stripPackage(selectedValidator.class)}</td></tr>
 </table>

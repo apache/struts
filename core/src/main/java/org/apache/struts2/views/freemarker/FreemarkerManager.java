@@ -25,6 +25,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import freemarker.cache.*;
+import freemarker.core.HTMLOutputFormat;
+import freemarker.core.OutputFormat;
 import freemarker.core.TemplateClassResolver;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
@@ -334,12 +336,15 @@ public class FreemarkerManager {
         configuration.setWhitespaceStripping(true);
         LOG.debug("Sets NewBuiltinClassResolver to TemplateClassResolver.SAFER_RESOLVER");
         configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
+        LOG.debug("Sets HTML as an output format and escaping policy");
+        configuration.setAutoEscapingPolicy(Configuration.ENABLE_IF_DEFAULT_AUTO_ESCAPING_POLICY);
+        configuration.setOutputFormat(HTMLOutputFormat.INSTANCE);
 
         return configuration;
     }
 
     protected Version getFreemarkerVersion(ServletContext servletContext) {
-        Version incompatibleImprovements = Configuration.VERSION_2_3_0;
+        Version incompatibleImprovements = Configuration.VERSION_2_3_28;
 
         String incompatibleImprovementsParam = servletContext.getInitParameter("freemarker." + Configuration.INCOMPATIBLE_IMPROVEMENTS_KEY_SNAKE_CASE);
         if (incompatibleImprovementsParam != null) {

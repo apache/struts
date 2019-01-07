@@ -40,7 +40,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 /**
@@ -61,12 +60,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private static final long serialVersionUID = 370737852934925530L;
 
     private static final String MAP_IDENTIFIER_KEY = "com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";
-
-    private static final String EXCEPTION_EVALUATING_EXPRESSION_STR = "Caught an exception while evaluating expression '{}' against value stack";
-
-    private static final String DEVMODE_SAFETY_STR = "Setting development mode [{}] affects the safety of your application!";
-
-    private static final AtomicBoolean INITIAL_WARNING_FOR_DEV_MODE = new AtomicBoolean(true);
 
     protected CompoundRoot root;
     protected transient Map<String, Object> context;
@@ -111,15 +104,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     @Inject(XWorkConstants.DEV_MODE)
     protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
-        if (this.devMode) {
-            final boolean initialWarningForDevMode = INITIAL_WARNING_FOR_DEV_MODE.get();
-            if (initialWarningForDevMode) {
-                INITIAL_WARNING_FOR_DEV_MODE.set(false);
-                LOG.warn(DEVMODE_SAFETY_STR, this.devMode);
-            } else {
-                LOG.trace(DEVMODE_SAFETY_STR, this.devMode);
-            }
-        }
     }
 
     @Inject(value = "logMissingProperties", required = false)
@@ -172,8 +156,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     public void setParameter(String expr, Object value) {
         setValue(expr, value, devMode);
     }
-
-    /**
 
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object)
@@ -396,10 +378,10 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      */
     private void logLookupFailure(String expr, Exception e) {
         if (devMode) {
-            LOG.warn(EXCEPTION_EVALUATING_EXPRESSION_STR, expr, e);
+            LOG.warn("Caught an exception while evaluating expression '{}' against value stack", expr, e);
             LOG.warn("NOTE: Previous warning message was issued due to devMode set to true.");
         } else {
-            LOG.debug(EXCEPTION_EVALUATING_EXPRESSION_STR, expr, e);
+            LOG.debug("Caught an exception while evaluating expression '{}' against value stack", expr, e);
         }
     }
 

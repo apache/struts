@@ -64,10 +64,6 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     @Inject(value="allowStaticMethodAccess", required=false)
     protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
         this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
-        if (this.allowStaticMethodAccess) {
-            LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
-                        this.allowStaticMethodAccess);
-        }
     }
 
     public ValueStack createValueStack() {

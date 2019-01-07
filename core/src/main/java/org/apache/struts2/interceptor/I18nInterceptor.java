@@ -261,6 +261,7 @@ public class I18nInterceptor extends AbstractInterceptor {
             super(invocation);
         }
 
+        @Override
         public Locale find() {
             Locale requestOnlyLocale = super.find();
 
@@ -281,15 +282,13 @@ public class I18nInterceptor extends AbstractInterceptor {
 
         @Override
         public Locale store(ActionInvocation invocation, Locale locale) {
-            HttpSession session = ServletActionContext.getRequest().getSession(false);
+            Map<String, Object> session = invocation.getInvocationContext().getSession();
 
             if (session != null) {
-                String sessionId = session.getId();
+                String sessionId = ServletActionContext.getRequest().getSession().getId();
                 synchronized (sessionId.intern()) {
-                    invocation.getInvocationContext().getSession().put(attributeName, locale);
+                    session.put(attributeName, locale);
                 }
-            } else {
-                LOG.debug("session creation avoided as it doesn't exist already");
             }
 
             return locale;

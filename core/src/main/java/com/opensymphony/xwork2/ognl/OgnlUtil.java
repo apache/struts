@@ -84,10 +84,6 @@ public class OgnlUtil {
     @Inject(XWorkConstants.DEV_MODE)
     protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
-        if (this.devMode) {
-            LOG.warn("Setting development mode [{}] affects the safety of your application!",
-                        this.devMode);
-        }
     }
 
     @Inject(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE)
@@ -178,20 +174,11 @@ public class OgnlUtil {
     @Inject(value = XWorkConstants.ALLOW_STATIC_METHOD_ACCESS, required = false)
     protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
         this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
-        if (this.allowStaticMethodAccess) {
-            LOG.warn("Setting allow static method access [{}] affects the safety of your application!",
-                        this.allowStaticMethodAccess);
-        }
     }
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
     protected void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
-
         this.disallowProxyMemberAccess = Boolean.parseBoolean(disallowProxyMemberAccess);
-        if (this.disallowProxyMemberAccess == false) {
-            LOG.warn("Setting disallow proxy member access [{}] should only be done intentionally!",
-                        this.disallowProxyMemberAccess);
-        }
     }
 
     public boolean isDisallowProxyMemberAccess() {

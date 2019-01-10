@@ -73,8 +73,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
         if (acceptedPatterns == null) {
             // Limit unwanted log entries (for 1st call, acceptedPatterns null)
             LOG.debug("Sets accepted patterns to [{}], note this impacts the safety of your application!", patterns);
-        }
-        else {
+        } else {
             LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
                         acceptedPatterns, patterns);
         }

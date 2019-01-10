@@ -103,10 +103,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
-        if (this.devMode) {
-            LOG.warn("Setting development mode [{}] affects the safety of your application!",
-                        this.devMode);
-        }
     }
 
     @Inject(value = "logMissingProperties", required = false)
@@ -159,8 +155,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     public void setParameter(String expr, Object value) {
         setValue(expr, value, devMode);
     }
-
-    /**
 
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object)

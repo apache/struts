@@ -50,8 +50,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
         if (excludedPatterns != null && excludedPatterns.size() > 0) {
             LOG.warn("Overriding excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
                         excludedPatterns, excludePatterns);
-        }
-        else {
+        } else {
             // Limit unwanted log entries (when excludedPatterns null/empty - usually 1st call)
             LOG.debug("Overriding excluded patterns with [{}]", excludePatterns);
         }
@@ -75,9 +74,6 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
             LOG.debug("DMI is disabled, adding DMI related excluded patterns");
             setAdditionalExcludePatterns("^(action|method):.*");
         }
-        else {
-            LOG.warn("DMI is enabled, *NOT* adding DMI related excluded patterns");
-        }
     }
 
     public void setExcludedPatterns(String commaDelimitedPatterns) {
@@ -92,8 +88,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
         if (excludedPatterns != null && excludedPatterns.size() > 0) {
             LOG.warn("Replacing excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
                         excludedPatterns, patterns);
-        }
-        else {
+        } else {
             // Limit unwanted log entries (when excludedPatterns null/empty - usually 1st call)
             LOG.debug("Sets excluded patterns to [{}]", patterns);
         }

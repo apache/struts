@@ -68,10 +68,6 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
-        if (this.devMode) {
-            LOG.warn("Setting development mode [{}] affects the safety of your application!",
-                        this.devMode);
-        }
     }
 
     public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {

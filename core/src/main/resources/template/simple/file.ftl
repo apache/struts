@@ -19,25 +19,25 @@
  */
 -->
 <input type="file"<#rt/>
- name="${(parameters.name!"")?html}"<#rt/>
+ name="${(parameters.name!"")}"<#rt/>
 <#if parameters.get("size")?has_content>
- size="${parameters.get("size")?html}"<#rt/>
+ size="${parameters.get("size")}"<#rt/>
 </#if>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
 <#if parameters.accept?has_content>
- accept="${parameters.accept?html}"<#rt/>
+ accept="${parameters.accept}"<#rt/>
 </#if>
 <#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex?html}"<#rt/>
+ tabindex="${parameters.tabindex}"<#rt/>
 </#if>
 <#if parameters.id?has_content>
- id="${parameters.id?html}"<#rt/>
+ id="${parameters.id}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
 <#if parameters.title?has_content>
- title="${parameters.title?html}"<#rt/>
+ title="${parameters.title}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />

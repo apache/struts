@@ -19,9 +19,18 @@
 package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.Version;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
+
+import javax.servlet.ServletContext;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Test case for FreemarkerManager
@@ -54,6 +63,54 @@ public class FreemarkerManagerTest extends StrutsInternalTestCase {
 
         // then
         assertTrue(true); // should pass
+    }
+
+    public void testIncompatibleImprovementsByOverriding() throws Exception {
+        // given
+        FreemarkerManager manager = new FreemarkerManager() {
+            @Override
+            protected Version getFreemarkerVersion(ServletContext servletContext) {
+                return Configuration.VERSION_2_3_0;
+            }
+        };
+        container.inject(manager);
+
+        // when
+        manager.init(servletContext);
+
+        // then
+        assertEquals(Configuration.VERSION_2_3_0, manager.config.getIncompatibleImprovements());
+    }
+
+    public void testIncompatibleImprovementsWithTemplate() throws Exception {
+        // given
+        FreemarkerManager manager = new FreemarkerManager();
+        container.inject(manager);
+        Configuration configuration = manager.getConfiguration(servletContext);
+        Template tpl = configuration.getTemplate("org/apache/struts2/views/freemarker/incompatible-improvements.ftl");
+
+        // when
+        Writer out = new StringWriter();
+        Map<String, String> model = new HashMap<>();                         
+        model.put("error", "It's an error message");
+
+        tpl.process(model, out);
+
+        // then
+        assertEquals("<input type=\"text\" onclick=\"this.alert('It&#39;s an error message')\"/>", out.toString());
+    }
+
+    public void testIncompatibleImprovementsByServletContext() throws Exception {
+        // given
+        servletContext.setInitParameter("freemarker.incompatible_improvements", "2.3.0");
+        FreemarkerManager manager = new FreemarkerManager();
+        container.inject(manager);
+
+        // when
+        manager.init(servletContext);
+
+        // then
+        assertEquals(Configuration.VERSION_2_3_0, manager.config.getIncompatibleImprovements());
     }
 }
 

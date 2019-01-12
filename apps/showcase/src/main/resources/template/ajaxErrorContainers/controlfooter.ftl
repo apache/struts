@@ -28,7 +28,7 @@ ${parameters.after!}<#t/>
     <td class="tdErrorMessage" colspan="2"><#rt/>
         <#if hasFieldErrors>
             <#list fieldErrors[parameters.name] as error>
-                <div class="errorMessage">${error?html}</div><#t/>
+                <div class="errorMessage">${error}</div><#t/>
             </#list>
         </#if>
     </td><#lt/>

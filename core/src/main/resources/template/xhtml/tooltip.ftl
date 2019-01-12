@@ -26,14 +26,14 @@
       	src='<@s.url value="/struts/tooltip.gif" includeParams="none" encode="false" />'
       </#if><#t/>
       <#if (parameters.jsTooltipEnabled!'false') == 'true'>
-          onmouseover="domTT_activate(this, event, 'content', '${parameters.tooltip}'<#t/>
+          onmouseover="domTT_activate(this, event, 'content', '<#outputformat 'JavaScript'>${parameters.tooltip}</#outputformat>'<#t/>
           <#if parameters.tooltipDelay??><#t/>
           	<#t/>,'delay', '${parameters.tooltipDelay}'<#t/>
           </#if><#t/>
           <#t/>,'styleClass', '${parameters.tooltipCssClass!"StrutsTTClassic"}'<#t/>
           <#t/>)" />
       <#else>
-      	title="${parameters.tooltip?html}"
-      	alt="${parameters.tooltip?html}" />
+      	title="${parameters.tooltip}"
+      	alt="${parameters.tooltip}" />
      </#if>
 </#if><#t/>

@@ -20,7 +20,7 @@
 -->
 <#include "tigris-macros.ftl">
 <@startPage pageTitle="Actions in namespace"/>
-<h3>Actions in <#if namespace == ""> default namespace <#else> ${namespace?html} </#if></h3>
+<h3>Actions in <#if namespace == ""> default namespace <#else> ${namespace} </#if></h3>
 <table>
 	<tr>
 		<td>

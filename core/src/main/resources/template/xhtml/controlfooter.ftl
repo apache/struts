@@ -27,7 +27,7 @@ ${parameters.after!}<#t/>
 <#list fieldErrors[parameters.name] as error>
 <tr errorFor="${parameters.id}">
     <td class="tdErrorMessage" colspan="2"><#rt/>
-        <span class="errorMessage">${error?html}</span><#t/>
+        <span class="errorMessage">${error}</span><#t/>
     </td><#lt/>
 </tr>
 </#list>

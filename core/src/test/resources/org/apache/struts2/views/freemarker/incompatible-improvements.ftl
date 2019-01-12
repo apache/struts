@@ -1,5 +1,6 @@
+<#--
 /*
- * $Id$
+ * $Id: someFreeMarkerFile.ftl 590812 2007-10-31 20:32:54Z apetrelli $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,13 +19,5 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package it.org.apache.struts2.showcase;
-
-import net.sourceforge.jwebunit.junit.WebTestCase;
-
-public abstract class ITBaseTest extends WebTestCase {
-
-    public void setUp() throws Exception {
-        getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
-    }
-}
+-->
+<input type="text" onclick="this.alert('${error}')"/>

@@ -82,7 +82,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     @Inject
-    public void setOgnlUtil(OgnlUtil ognlUtil) {
+    protected void setOgnlUtil(OgnlUtil ognlUtil) {
         this.ognlUtil = ognlUtil;
         securityMemberAccess.setExcludedClasses(ognlUtil.getExcludedClasses());
         securityMemberAccess.setExcludedPackageNamePatterns(ognlUtil.getExcludedPackageNamePatterns());
@@ -101,12 +101,12 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
-    public void setDevMode(String mode) {
+    protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
     @Inject(value = "logMissingProperties", required = false)
-    public void setLogMissingProperties(String logMissingProperties) {
+    protected void setLogMissingProperties(String logMissingProperties) {
         this.logMissingProperties = BooleanUtils.toBoolean(logMissingProperties);
     }
 
@@ -155,8 +155,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     public void setParameter(String expr, Object value) {
         setValue(expr, value, devMode);
     }
-
-    /**
 
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object)
@@ -378,7 +376,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      * @param e    The thrown exception.
      */
     private void logLookupFailure(String expr, Exception e) {
-        if (devMode && LOG.isWarnEnabled()) {
+        if (devMode) {
             LOG.warn("Caught an exception while evaluating expression '{}' against value stack", expr, e);
             LOG.warn("NOTE: Previous warning message was issued due to devMode set to true.");
         } else {
@@ -474,7 +472,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     @Inject
-    public void setXWorkConverter(final XWorkConverter converter) {
+    protected void setXWorkConverter(final XWorkConverter converter) {
         this.converter = converter;
     }
 }

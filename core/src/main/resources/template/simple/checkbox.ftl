@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<input type="checkbox" name="${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
+<input type="checkbox" name="${parameters.name}" value="${parameters.fieldValue}"<#rt/>
 <#if parameters.nameValue?? && parameters.nameValue>
  checked="checked"<#rt/>
 </#if>
@@ -26,21 +26,21 @@
  disabled="disabled"<#rt/>
 </#if>
 <#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex?html}"<#rt/>
+ tabindex="${parameters.tabindex}"<#rt/>
 </#if>
 <#if parameters.id?has_content>
- id="${parameters.id?html}"<#rt/>
+ id="${parameters.id}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
 <#if parameters.title?has_content>
- title="${parameters.title?html}"<#rt/>
+ title="${parameters.title}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 />
 <#if parameters.submitUnchecked!false>
-<input type="hidden" id="__checkbox_${parameters.id?html}" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
+<input type="hidden" id="__checkbox_${parameters.id}" name="__checkbox_${parameters.name}" value="${parameters.fieldValue}"<#rt/>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>

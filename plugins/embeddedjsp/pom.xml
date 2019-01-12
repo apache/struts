@@ -29,7 +29,7 @@
 
     <artifactId>struts2-embeddedjsp-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>Struts 2 Embedded JSP Plugin</name>
+    <name>DEPRECATED: Struts 2 Embedded JSP Plugin</name>
 
     <dependencies>
         <dependency>
@@ -68,7 +68,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
-            <artifactId>juli</artifactId>
+            <artifactId>tomcat-juli</artifactId>
         </dependency>
         <dependency>
             <groupId>taglibs</groupId>
@@ -82,7 +82,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
-            <artifactId>jasper</artifactId>
+            <artifactId>tomcat-jasper</artifactId>
             <scope>provided</scope>
         </dependency>
 

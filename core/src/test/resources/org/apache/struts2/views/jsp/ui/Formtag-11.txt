@@ -1,5 +1,4 @@
 <script type="text/javascript" src="/struts/xhtml/validation.js"></script>
-<script type="text/javascript" src="/struts/utils.js"></script>
 <form id="testAction" name="myForm" onsubmit="submitMe(); return validateForm_testAction();" action="/testAction.action" method="post" enctype="myEncType" title="mytitle" accept-charset="UTF-8" onreset="clearErrorMessages(this);clearErrorLabels(this);">
 <table class="wwFormTable"> <tr>
     <td class="tdLabel"></td>

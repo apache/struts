@@ -37,7 +37,7 @@ import org.apache.struts2.jasper.compiler.Localizer;
 import org.apache.struts2.jasper.security.SecurityUtil;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
-import org.apache.PeriodicEventListener;
+import org.apache.tomcat.PeriodicEventListener;
 
 /**
  * The JSP engine (a.k.a Jasper).

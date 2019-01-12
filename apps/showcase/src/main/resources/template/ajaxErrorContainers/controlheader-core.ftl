@@ -27,7 +27,7 @@
     <td class="tdErrorMessage" colspan="2" data-error-for-fieldname="${parameters.name}"><#rt/>
         <#if hasFieldErrors>
             <#list fieldErrors[parameters.name] as error>
-                <div class="errorMessage">${error?html}</div><#t/>
+                <div class="errorMessage">${error}</div><#t/>
             </#list>
         </#if>
     </td><#lt/>
@@ -51,7 +51,7 @@
 <#if parameters.label??>
     <label <#t/>
 <#if parameters.id??>
-        for="${parameters.id?html}" <#t/>
+        for="${parameters.id}" <#t/>
 </#if>
 <#if hasFieldErrors>
         class="errorLabel"<#t/>
@@ -62,11 +62,11 @@
 <#if parameters.required!false && parameters.requiredPosition!"right" != 'right'>
         <span class="required">*</span><#t/>
 </#if>
-${parameters.label?html}<#t/>
+${parameters.label}<#t/>
 <#if parameters.required!false && parameters.requiredPosition!"right" == 'right'>
  <span class="required">*</span><#t/>
 </#if>
-${parameters.labelseparator!":"?html}<#t/>
+${parameters.labelseparator!":"}<#t/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />
 </label><#t/>
 </#if>

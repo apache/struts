@@ -16,18 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.conversion.impl;
+package org.apache.struts2.conversion;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.TypeConverterCreator;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.ognl.XWorkTypeConverterWrapper;
 
 /**
  * Default implementation of {@link TypeConverterCreator}
  */
-public class DefaultTypeConverterCreator implements TypeConverterCreator {
+public class StrutsTypeConverterCreator implements TypeConverterCreator {
 
     private ObjectFactory objectFactory;
 
@@ -37,24 +36,16 @@ public class DefaultTypeConverterCreator implements TypeConverterCreator {
     }
 
     public TypeConverter createTypeConverter(String className) throws Exception {
-        Object obj = objectFactory.buildBean(className, null);
-        return getTypeConverter(obj);
+        Class<?> clazz = objectFactory.getClassInstance(className);
+        return createTypeConverter(clazz);
     }
 
     public TypeConverter createTypeConverter(Class<?> clazz) throws Exception {
-        Object obj = objectFactory.buildBean(clazz, null);
-        return getTypeConverter(obj);
-    }
-
-    protected TypeConverter getTypeConverter(Object obj) {
-        if (obj instanceof TypeConverter) {
-            return (TypeConverter) obj;
-
-            // For backwards compatibility
-        } else if (obj instanceof ognl.TypeConverter) {
-            return new XWorkTypeConverterWrapper((ognl.TypeConverter) obj);
+        if (TypeConverter.class.isAssignableFrom(clazz)) {
+            Class<? extends TypeConverter> converterClass = (Class<? extends TypeConverter>) clazz;
+            return objectFactory.buildConverter(converterClass, null);
         } else {
-            throw new IllegalArgumentException("Type converter class " + obj.getClass() + " doesn't implement com.opensymphony.xwork2.conversion.TypeConverter");
+            throw new IllegalArgumentException("Type converter class " + clazz.getName() + " doesn't implement " + TypeConverter.class.getName());
         }
     }
 

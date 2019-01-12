@@ -164,12 +164,12 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
         
         if (appContext.containsBean(beanName)) {
             o = appContext.getBean(beanName);
+            if (injectInternal) {
+                injectInternalBeans(o);
+            }
         } else {
             Class beanClazz = getClassInstance(beanName);
             o = buildBean(beanClazz, extraContext);
-        }
-        if (injectInternal) {
-            injectInternalBeans(o);
         }
         return o;
     }
@@ -224,9 +224,7 @@ public class SpringObjectFactory extends ObjectFactory implements ApplicationCon
         }
         injectApplicationContext(bean);
 
-        injectInternalBeans(bean);
-
-        return bean;
+        return injectInternalBeans(bean);
     }
 
     private void injectApplicationContext(Object bean) {

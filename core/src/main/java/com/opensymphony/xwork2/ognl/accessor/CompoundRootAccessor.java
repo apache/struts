@@ -63,10 +63,10 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
     private final static Logger LOG = LogManager.getLogger(CompoundRootAccessor.class);
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
     private static Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
-    private boolean devMode = false;
+    private boolean devMode;
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
-    public void setDevMode(String mode) {
+    protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 

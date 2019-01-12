@@ -36,8 +36,6 @@ import java.util.List;
  */
 public class ActionErrorTagTest extends AbstractUITagTest {
 
-    boolean shouldActionHaveError = false;
-
     public void testNoActionErrors() throws Exception {
         ActionErrorTag tag = new ActionErrorTag();
         ((InternalActionSupport)action).setHasActionErrors(false);

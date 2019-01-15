@@ -54,7 +54,7 @@ import com.opensymphony.xwork2.conversion.impl.CollectionConverter;
 import com.opensymphony.xwork2.conversion.impl.DateConverter;
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor;
-import com.opensymphony.xwork2.conversion.impl.DefaultConversionPropertiesProcessor;
+import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
@@ -155,7 +155,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
 
                 .factory(XWorkConverter.class, Scope.SINGLETON)
                 .factory(XWorkBasicConverter.class, Scope.SINGLETON)
-                .factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON)
+                .factory(ConversionPropertiesProcessor.class, StrutsConversionPropertiesProcessor.class, Scope.SINGLETON)
                 .factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON)
                 .factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON)
                 .factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON)

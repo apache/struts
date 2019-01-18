@@ -36,6 +36,7 @@ import ognl.*;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class OgnlUtilTest extends XWorkTestCase {
     
@@ -938,6 +939,169 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertNotNull(expected);
         assertSame(OgnlException.class, expected.getClass());
         assertEquals(expected.getMessage(), "It isn't a simple method which can be called!");
+    }
+
+    public void testXworkTestCaseOgnlUtilExclusions() throws Exception {
+        internalTestInitialEmptyOgnlUtilExclusions(ognlUtil);
+        internalTestOgnlUtilExclusionsImmutable(ognlUtil);
+    }
+
+    public void testDefaultOgnlUtilExclusions() throws Exception {
+        OgnlUtil basicOgnlUtil = new OgnlUtil();
+
+        internalTestInitialEmptyOgnlUtilExclusions(basicOgnlUtil);
+        internalTestOgnlUtilExclusionsImmutable(basicOgnlUtil);
+    }
+
+    public void testOgnlUtilExcludedAdditivity() throws Exception {
+        Set<Class<?>> excludedClasses;
+        Set<Pattern> excludedPackageNamePatterns;
+        Iterator<Pattern> excludedPackageNamePatternsIterator;
+        Set<String> excludedPackageNames;
+        Set<String> patternStrings = new HashSet<>();
+
+        ognlUtil.setExcludedClasses("java.lang.String,java.lang.Integer");
+        internalTestOgnlUtilExclusionsImmutable(ognlUtil);
+        excludedClasses = ognlUtil.getExcludedClasses();
+        assertNotNull("initial exluded classes null?", excludedClasses);
+        assertTrue("initial exluded classes size not 2 after adds?", excludedClasses.size() == 2);
+        assertTrue("String not in exclusions?", excludedClasses.contains(String.class));
+        assertTrue("Integer not in exclusions?", excludedClasses.contains(Integer.class));
+        ognlUtil.setExcludedClasses("java.lang.Boolean,java.lang.Double");
+        internalTestOgnlUtilExclusionsImmutable(ognlUtil);
+        excludedClasses = ognlUtil.getExcludedClasses();
+        assertNotNull("updated exluded classes null?", excludedClasses);
+        assertTrue("updated exluded classes size not 4 after adds?", excludedClasses.size() == 4);
+        assertTrue("String not in exclusions?", excludedClasses.contains(String.class));
+        assertTrue("Integer not in exclusions?", excludedClasses.contains(Integer.class));
+        assertTrue("String not in exclusions?", excludedClasses.contains(Boolean.class));
+        assertTrue("Integer not in exclusions?", excludedClasses.contains(Double.class));
+
+        ognlUtil.setExcludedPackageNamePatterns("fakepackage1.*,fakepackage2.*");
+        internalTestOgnlUtilExclusionsImmutable(ognlUtil);
+        excludedPackageNamePatterns = ognlUtil.getExcludedPackageNamePatterns();
+        assertNotNull("initial exluded package name patterns null?", excludedPackageNamePatterns);
+        assertTrue("initial exluded package name patterns size not 2 after adds?", excludedPackageNamePatterns.size() == 2);
+        excludedPackageNamePatternsIterator = excludedPackageNamePatterns.iterator();
+        patternStrings.clear();
+        while (excludedPackageNamePatternsIterator.hasNext()) {
+            Pattern pattern = excludedPackageNamePatternsIterator.next();
+            patternStrings.add(pattern.pattern());
+        }
+        assertTrue("fakepackage1.* not in exclusions?", patternStrings.contains("fakepackage1.*"));
+        assertTrue("fakepackage2.* not in exclusions?", patternStrings.contains("fakepackage2.*"));
+        ognlUtil.setExcludedPackageNamePatterns("fakepackage3.*,fakepackage4.*");
+        internalTestOgnlUtilExclusionsImmutable(ognlUtil);
+        excludedPackageNamePatterns = ognlUtil.getExcludedPackageNamePatterns();
+        assertNotNull("updated exluded package name patterns null?", excludedPackageNamePatterns);
+        assertTrue("updated exluded package name patterns size not 4 after adds?", excludedPackageNamePatterns.size() == 4);
+        excludedPackageNamePatternsIterator = excludedPackageNamePatterns.iterator();
+        patternStrings.clear();
+        while (excludedPackageNamePatternsIterator.hasNext()) {
+            Pattern pattern = excludedPackageNamePatternsIterator.next();
+            patternStrings.add(pattern.pattern());
+        }
+        assertTrue("fakepackage1.* not in exclusions?", patternStrings.contains("fakepackage1.*"));
+        assertTrue("fakepackage2.* not in exclusions?", patternStrings.contains("fakepackage2.*"));
+        assertTrue("fakepackage3.* not in exclusions?", patternStrings.contains("fakepackage3.*"));
+        assertTrue("fakepackage4.* not in exclusions?", patternStrings.contains("fakepackage4.*"));
+
+        ognlUtil.setExcludedPackageNames("fakepackage1.package,fakepackage2.package");
+        internalTestOgnlUtilExclusionsImmutable(ognlUtil);
+        excludedPackageNames = ognlUtil.getExcludedPackageNames();
+        assertNotNull("initial exluded package names null?", excludedPackageNames);
+        assertTrue("initial exluded package names not 2 after adds?", excludedPackageNames.size() == 2);
+        assertTrue("fakepackage1.package not in exclusions?", excludedPackageNames.contains("fakepackage1.package"));
+        assertTrue("fakepackage2.package not in exclusions?", excludedPackageNames.contains("fakepackage2.package"));
+        ognlUtil.setExcludedPackageNames("fakepackage3.package,fakepackage4.package");
+        internalTestOgnlUtilExclusionsImmutable(ognlUtil);
+        excludedPackageNames = ognlUtil.getExcludedPackageNames();
+        assertNotNull("updated exluded package names null?", excludedPackageNames);
+        assertTrue("updated exluded package names not 4 after adds?", excludedPackageNames.size() == 4);
+        assertTrue("fakepackage1.package not in exclusions?", excludedPackageNames.contains("fakepackage1.package"));
+        assertTrue("fakepackage2.package not in exclusions?", excludedPackageNames.contains("fakepackage2.package"));
+        assertTrue("fakepackage3.package not in exclusions?", excludedPackageNames.contains("fakepackage3.package"));
+        assertTrue("fakepackage4.package not in exclusions?", excludedPackageNames.contains("fakepackage4.package"));
+    }
+
+    private void internalTestInitialEmptyOgnlUtilExclusions(OgnlUtil ognlUtilParam) throws Exception {
+        Set<Class<?>> excludedClasses = ognlUtilParam.getExcludedClasses();
+        assertNotNull("parameter (default) exluded classes null?", excludedClasses);
+        assertTrue("parameter (default) exluded classes not empty?", excludedClasses.isEmpty());
+
+        Set<Pattern> excludedPackageNamePatterns = ognlUtilParam.getExcludedPackageNamePatterns();
+        assertNotNull("parameter (default) exluded package name patterns null?", excludedPackageNamePatterns);
+        assertTrue("parameter (default) exluded package name patterns not empty?", excludedPackageNamePatterns.isEmpty());
+
+        Set<String> excludedPackageNames = ognlUtilParam.getExcludedPackageNames();
+        assertNotNull("parameter (default) exluded package names null?", excludedPackageNames);
+        assertTrue("parameter (default) exluded package names not empty?", excludedPackageNames.isEmpty());
+    }
+
+    private void internalTestOgnlUtilExclusionsImmutable(OgnlUtil ognlUtilParam) throws Exception {
+        Pattern somePattern = Pattern.compile("SomeRegexPattern");
+        Set<Class<?>> excludedClasses = ognlUtilParam.getExcludedClasses();
+        assertNotNull("parameter exluded classes null?", excludedClasses);
+        try {
+            excludedClasses.clear();
+            fail("parameter excluded classes modifiable?");
+        } catch (UnsupportedOperationException uoe) {
+            // Expected failure
+        }
+        try {
+            excludedClasses.add(Integer.class);
+            fail("parameter excluded classes modifiable?");
+        } catch (UnsupportedOperationException uoe) {
+            // Expected failure
+        }
+        try {
+            excludedClasses.remove(Integer.class);
+            fail("parameter excluded classes modifiable?");
+        } catch (UnsupportedOperationException uoe) {
+            // Expected failure
+        }
+
+        Set<Pattern> excludedPackageNamePatterns = ognlUtilParam.getExcludedPackageNamePatterns();
+        assertNotNull("parameter exluded package name patterns null?", excludedPackageNamePatterns);
+        try {
+            excludedPackageNamePatterns.clear();
+            fail("parameter excluded package name patterns modifiable?");
+        } catch (UnsupportedOperationException uoe) {
+            // Expected failure
+        }
+        try {
+            excludedPackageNamePatterns.add(somePattern);
+            fail("parameter excluded package name patterns modifiable?");
+        } catch (UnsupportedOperationException uoe) {
+            // Expected failure
+        }
+        try {
+            excludedPackageNamePatterns.remove(somePattern);
+            fail("parameter excluded package name patterns modifiable?");
+        } catch (UnsupportedOperationException uoe) {
+            // Expected failure
+        }
+
+        Set<String> excludedPackageNames = ognlUtilParam.getExcludedPackageNames();
+        assertNotNull("parameter exluded package names null?", excludedPackageNames);
+        try {
+            excludedPackageNames.clear();
+            fail("parameter excluded package names modifiable?");
+        } catch (UnsupportedOperationException uoe) {
+            // Expected failure
+        }
+        try {
+            excludedPackageNames.add("somepackagename");
+            fail("parameter excluded package names modifiable?");
+        } catch (UnsupportedOperationException uoe) {
+            // Expected failure
+        }
+        try {
+            excludedPackageNames.remove("somepackagename");
+            fail("parameter excluded package names modifiable?");
+        } catch (UnsupportedOperationException uoe) {
+            // Expected failure
+        }
     }
 
     private void reloadTestContainerConfiguration(boolean devMode, boolean allowStatic) throws Exception {

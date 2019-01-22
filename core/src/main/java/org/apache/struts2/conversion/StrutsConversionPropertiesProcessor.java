@@ -16,19 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.conversion.impl;
+package org.apache.struts2.conversion;
 
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.conversion.TypeConverterCreator;
 import com.opensymphony.xwork2.conversion.TypeConverterHolder;
 import com.opensymphony.xwork2.inject.EarlyInitializable;
-import com.opensymphony.xwork2.inject.Initializable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.struts2.StrutsException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,9 +35,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-public class DefaultConversionPropertiesProcessor implements ConversionPropertiesProcessor, EarlyInitializable {
+public class StrutsConversionPropertiesProcessor implements ConversionPropertiesProcessor, EarlyInitializable {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultConversionPropertiesProcessor.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsConversionPropertiesProcessor.class);
+
+    private static final String STRUTS_DEFAULT_CONVERSION_PROPERTIES = "struts-default-conversion.properties";
+    private static final String XWORK_CONVERSION_PROPERTIES = "xwork-conversion.properties";
+    private static final String STRUTS_CONVERSION_PROPERTIES = "struts-conversion.properties";
 
     private TypeConverterCreator converterCreator;
     private TypeConverterHolder converterHolder;
@@ -56,8 +59,9 @@ public class DefaultConversionPropertiesProcessor implements ConversionPropertie
     @Override
     public void init() {
         LOG.debug("Processing default conversion properties files");
-        processRequired("struts-default-conversion.properties");
-        process("xwork-conversion.properties");
+        processRequired(STRUTS_DEFAULT_CONVERSION_PROPERTIES);
+        process(STRUTS_CONVERSION_PROPERTIES);
+        process(XWORK_CONVERSION_PROPERTIES);
     }
 
     public void process(String propsName) {
@@ -72,6 +76,10 @@ public class DefaultConversionPropertiesProcessor implements ConversionPropertie
         try {
             Iterator<URL> resources = ClassLoaderUtil.getResources(propsName, getClass(), true);
             while (resources.hasNext()) {
+                if (XWORK_CONVERSION_PROPERTIES.equals(propsName)) {
+                    LOG.warn("Instead of using deprecated {} please use the new file name {}",
+                        XWORK_CONVERSION_PROPERTIES, STRUTS_CONVERSION_PROPERTIES);
+                }
                 URL url = resources.next();
                 Properties props = new Properties();
                 props.load(url.openStream());
@@ -95,7 +103,7 @@ public class DefaultConversionPropertiesProcessor implements ConversionPropertie
             }
         } catch (IOException ex) {
             if (require) {
-                throw new XWorkException("Cannot load conversion properties file: "+propsName, ex);
+                throw new StrutsException("Cannot load conversion properties file: " + propsName, ex);
             } else {
                 LOG.debug("Cannot load conversion properties file: {}", propsName, ex);
             }

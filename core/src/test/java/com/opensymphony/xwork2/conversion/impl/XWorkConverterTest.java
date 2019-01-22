@@ -466,7 +466,7 @@ public class XWorkConverterTest extends XWorkTestCase {
             Thread.currentThread().setContextClassLoader(new ClassLoader(cl) {
                 @Override
                 public Enumeration<URL> getResources(String name) throws IOException {
-                    if ("xwork-conversion.properties".equals(name)) {
+                    if ("struts-conversion.properties".equals(name)) {
                         return new Enumeration<URL>() {
                             boolean done = false;
                             public boolean hasMoreElements() {
@@ -481,7 +481,7 @@ public class XWorkConverterTest extends XWorkTestCase {
                                 }
 
                                 done = true;
-                                return getClass().getResource("/com/opensymphony/xwork2/conversion/impl/test-xwork-conversion.properties");
+                                return getClass().getResource("/com/opensymphony/xwork2/conversion/impl/test-struts-conversion.properties");
                             }
                         };
                     } else {

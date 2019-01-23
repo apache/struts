@@ -475,7 +475,7 @@ public class DefaultClassFinder implements ClassFinder {
         private ClassFinder classFinder;
 
         public InfoBuildingVisitor(ClassFinder classFinder) {
-            super(Opcodes.ASM5);
+            super(Opcodes.ASM7);
             this.classFinder = classFinder;
         }
 
@@ -556,7 +556,7 @@ public class DefaultClassFinder implements ClassFinder {
         private Info info;
 
         public InfoBuildingMethodVisitor() {
-            super(Opcodes.ASM5);
+            super(Opcodes.ASM7);
         }
 
         public InfoBuildingMethodVisitor(Info info) {

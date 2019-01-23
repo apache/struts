@@ -22,6 +22,8 @@ import com.opensymphony.xwork2.XWorkTestCase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
 
@@ -82,4 +84,64 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
         assertTrue("Param with underscore wasn't accepted!", actual.isAccepted());
     }
 
+    public void testAcceptedPatternsImmutable() throws Exception {
+        AcceptedPatternsChecker checker = new DefaultAcceptedPatternsChecker();
+
+        Set<Pattern> acceptedPatternSet = checker.getAcceptedPatterns();
+        assertNotNull("default accepted patterns null?", acceptedPatternSet);
+        assertFalse("default accepted patterns empty?", acceptedPatternSet.isEmpty());
+        try {
+            acceptedPatternSet.add(Pattern.compile("SomeRegexPattern") );
+            fail ("accepted patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+        try {
+            acceptedPatternSet.clear();
+            fail ("accepted patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+
+        checker.setAcceptedPatterns(DefaultAcceptedPatternsChecker.ACCEPTED_PATTERNS);
+        acceptedPatternSet = checker.getAcceptedPatterns();
+        assertNotNull("replaced default accepted patterns null?", acceptedPatternSet);
+        assertFalse("replaced default accepted patterns empty?", acceptedPatternSet.isEmpty());
+        try {
+            acceptedPatternSet.add(Pattern.compile("SomeRegexPattern") );
+            fail ("replaced accepted patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+        try {
+            acceptedPatternSet.clear();
+            fail ("accepted patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+
+        String[] testPatternArray = {"exactmatch1", "exactmatch2", "exactmatch3", "exactmatch4"};
+        checker.setAcceptedPatterns(testPatternArray);
+        acceptedPatternSet = checker.getAcceptedPatterns();
+        assertNotNull("replaced default accepted patterns null?", acceptedPatternSet);
+        assertFalse("replaced default accepted patterns empty?", acceptedPatternSet.isEmpty());
+        assertTrue("replaced default accepted patterns not size " + testPatternArray.length + "?",
+                acceptedPatternSet.size() == testPatternArray.length);
+        for (String testPatternArray1 : testPatternArray) {
+            assertTrue(testPatternArray1 + " not accepted?", checker.isAccepted(testPatternArray1).isAccepted());
+        }
+        try {
+            acceptedPatternSet.add(Pattern.compile("SomeRegexPattern") );
+            fail ("replaced accepted patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+        try {
+            acceptedPatternSet.clear();
+            fail ("accepted patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+
+    }
 }

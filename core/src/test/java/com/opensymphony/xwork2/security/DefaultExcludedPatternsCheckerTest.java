@@ -23,6 +23,10 @@ import com.opensymphony.xwork2.XWorkTestCase;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.fail;
 
 public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
 
@@ -155,4 +159,63 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
         }
     }
 
+    public void testExcludedPatternsImmutable() throws Exception {
+        ExcludedPatternsChecker checker = new DefaultExcludedPatternsChecker();
+
+        Set<Pattern> excludedPatternSet = checker.getExcludedPatterns();
+        assertNotNull("default excluded patterns null?", excludedPatternSet);
+        assertFalse("default excluded patterns empty?", excludedPatternSet.isEmpty());
+        try {
+            excludedPatternSet.add(Pattern.compile("SomeRegexPattern") );
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+        try {
+            excludedPatternSet.clear();
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+
+        checker.setExcludedPatterns(DefaultExcludedPatternsChecker.EXCLUDED_PATTERNS);
+        excludedPatternSet = checker.getExcludedPatterns();
+        assertNotNull("default excluded patterns null?", excludedPatternSet);
+        assertFalse("default excluded patterns empty?", excludedPatternSet.isEmpty());
+        try {
+            excludedPatternSet.add(Pattern.compile("SomeRegexPattern") );
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+        try {
+            excludedPatternSet.clear();
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+
+        String[] testPatternArray = {"exactmatch1", "exactmatch2", "exactmatch3", "exactmatch4"};
+        checker.setExcludedPatterns(testPatternArray);
+        excludedPatternSet = checker.getExcludedPatterns();
+        assertNotNull("default excluded patterns null?", excludedPatternSet);
+        assertFalse("default excluded patterns empty?", excludedPatternSet.isEmpty());
+        assertTrue("replaced default accepted patterns not size " + testPatternArray.length + "?",
+                excludedPatternSet.size() == testPatternArray.length);
+        for (String testPatternArray1 : testPatternArray) {
+            assertTrue(testPatternArray1 + " not excluded?", checker.isExcluded(testPatternArray1).isExcluded());
+        }
+        try {
+            excludedPatternSet.add(Pattern.compile("SomeRegexPattern") );
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+        try {
+            excludedPatternSet.clear();
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+    }
 }

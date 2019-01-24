@@ -69,6 +69,9 @@ public class ProxyUtil {
      * @param object the object to check
      */
     public static boolean isProxy(Object object) {
+        if (object == null) {
+            return false;  // Cannot be a proxy
+        }
         Class<?> clazz = object.getClass();
         Boolean flag = isProxyCache.get(clazz);
         if (flag != null) {

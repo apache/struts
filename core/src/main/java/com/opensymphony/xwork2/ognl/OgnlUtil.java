@@ -53,7 +53,7 @@ public class OgnlUtil {
 
     private static final Logger LOG = LogManager.getLogger(OgnlUtil.class);
 
-    private ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<>();
     private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
     private TypeConverter defaultConverter;
 
@@ -73,6 +73,9 @@ public class OgnlUtil {
         excludedClasses = new HashSet<>();
         excludedPackageNamePatterns = new HashSet<>();
         excludedPackageNames = new HashSet<>();
+        excludedClasses = Collections.unmodifiableSet(excludedClasses);
+        excludedPackageNamePatterns = Collections.unmodifiableSet(excludedPackageNamePatterns);
+        excludedPackageNames = Collections.unmodifiableSet(excludedPackageNames);
     }
 
     @Inject

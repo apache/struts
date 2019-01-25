@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.conversion.NullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
@@ -31,11 +32,9 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -49,7 +48,6 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     protected CompoundRootAccessor compoundRootAccessor;
     protected TextProvider textProvider;
     protected Container container;
-    private boolean allowStaticMethodAccess;
 
     @Inject
     protected void setXWorkConverter(XWorkConverter converter) {
@@ -61,20 +59,17 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         this.textProvider = textProvider;
     }
     
-    @Inject(value="allowStaticMethodAccess", required=false)
-    protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
-        this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
-    }
-
     public ValueStack createValueStack() {
-        ValueStack stack = new OgnlValueStack(xworkConverter, compoundRootAccessor, textProvider, allowStaticMethodAccess);
+        String allowStaticMethodAccess = container.getInstance(String.class, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS);
+        ValueStack stack = new OgnlValueStack(xworkConverter, compoundRootAccessor, textProvider, Boolean.valueOf(allowStaticMethodAccess));
         container.inject(stack);
         stack.getContext().put(ActionContext.CONTAINER, container);
         return stack;
     }
 
     public ValueStack createValueStack(ValueStack stack) {
-        ValueStack result = new OgnlValueStack(stack, xworkConverter, compoundRootAccessor, allowStaticMethodAccess);
+        String allowStaticMethodAccess = container.getInstance(String.class, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS);
+        ValueStack result = new OgnlValueStack(stack, xworkConverter, compoundRootAccessor, Boolean.valueOf(allowStaticMethodAccess));
         container.inject(result);
         stack.getContext().put(ActionContext.CONTAINER, container);
         return result;
@@ -86,9 +81,6 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         for (String name : names) {
             Class cls = Class.forName(name);
             if (cls != null) {
-                if (Map.class.isAssignableFrom(cls)) {
-                    PropertyAccessor acc = container.getInstance(PropertyAccessor.class, name);
-                }
                 OgnlRuntime.setPropertyAccessor(cls, container.getInstance(PropertyAccessor.class, name));
                 if (compoundRootAccessor == null && CompoundRoot.class.isAssignableFrom(cls)) {
                     compoundRootAccessor = (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, name);

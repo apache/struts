@@ -49,7 +49,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     /**
      * SecurityMemberAccess
      *   - access decisions based on whether member is static (or not)
-     *   - block or allow access to properties (configureable-after-construction)
+     *   - block or allow access to properties (configurable-after-construction)
      * 
      * @param allowStaticMethodAccess
      */
@@ -104,7 +104,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         }
 
         boolean allow = true;
-        if (!checkStaticMethodAccess(member)) {
+        if (!checkStaticMemberAccess(member)) {
             LOG.warn("Access to static [{}] is blocked!", member);
             allow = false;
         }
@@ -118,10 +118,38 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         return super.isAccessible(context, target, member, propertyName) && isAcceptableProperty(propertyName);
     }
 
+    /**
+     * Retain backwards-compatibility for any implementations extending this class prior to 2.5.21.
+     * 
+     * Deprecated as of 2.5.21.
+     * 
+     * @param member
+     * 
+     * @return
+     */
+    @Deprecated
     protected boolean checkStaticMethodAccess(Member member) {
-        int modifiers = member.getModifiers();
+        return checkStaticMemberAccess(member);
+    }
+
+    /**
+     * Check access for static members
+     * 
+     * Static non-field access result is a logical and of allowStaticMethodAccess and public.
+     * Static field access result is true if-and-only-if the field is public.
+     * 
+     * @param member
+     * 
+     * @return
+     */
+    protected boolean checkStaticMemberAccess(Member member) {
+        final int modifiers = member.getModifiers();
         if (Modifier.isStatic(modifiers)) {
-            return allowStaticMethodAccess;
+            if (member instanceof Field) {
+                return Modifier.isPublic(modifiers);
+            } else {
+                return allowStaticMethodAccess && Modifier.isPublic(modifiers);
+            }
         } else {
             return true;
         }

@@ -343,7 +343,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         ActionConfig actionConfig = new ActionConfig.Builder("", "", "")
                 .addResultConfigs(results).build();
 
-        ActionContext ac = new ActionContext(Ognl.createDefaultContext(null, new SecurityMemberAccess(false)));
+        ActionContext ac = new ActionContext(Ognl.createDefaultContext(null, new SecurityMemberAccess(false, true)));
         ac.put(ServletActionContext.HTTP_REQUEST, requestMock.proxy());
         ac.put(ServletActionContext.HTTP_RESPONSE, responseMock.proxy());
         MockActionInvocation ai = new MockActionInvocation();

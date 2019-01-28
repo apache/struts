@@ -41,7 +41,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
     public void testJavaxServletPackageAccess() throws Exception {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        SecurityMemberAccess sma = new SecurityMemberAccess(false, true);
 
         Set<Pattern> excluded = new HashSet<Pattern>();
         excluded.add(Pattern.compile("^(?!javax\\.servlet\\..+)(javax\\..+)"));
@@ -59,7 +59,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
     public void testJavaxServletPackageExclusion() throws Exception {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        SecurityMemberAccess sma = new SecurityMemberAccess(false, true);
 
         Set<Pattern> excluded = new HashSet<Pattern>();
         excluded.add(Pattern.compile("^javax\\..+"));

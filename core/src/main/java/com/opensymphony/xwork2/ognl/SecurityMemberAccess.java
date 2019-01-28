@@ -24,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
@@ -40,6 +41,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
+    private final boolean allowStaticFieldAccess;
     private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();
     private Set<Pattern> acceptProperties = Collections.emptySet();
@@ -51,16 +53,22 @@ public class SecurityMemberAccess implements MemberAccess {
     /**
      * SecurityMemberAccess
      *   - access decisions based on whether member is static (or not)
-     *   - block or allow access to properties (configureable-after-construction)
+     *   - block or allow access to properties (configurable-after-construction)
      * 
      * @param allowStaticMethodAccess
+     * @param allowStaticFieldAccess
      */
-    public SecurityMemberAccess(boolean allowStaticMethodAccess) {
+    public SecurityMemberAccess(boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
         this.allowStaticMethodAccess = allowStaticMethodAccess;
+        this.allowStaticFieldAccess = allowStaticFieldAccess;
     }
 
     public boolean getAllowStaticMethodAccess() {
         return allowStaticMethodAccess;
+    }
+
+    public boolean getAllowStaticFieldAccess() {
+        return allowStaticFieldAccess;
     }
 
     @Override
@@ -102,12 +110,13 @@ public class SecurityMemberAccess implements MemberAccess {
             return true;
         }
 
-        if (!checkStaticMethodAccess(member)) {
+        if (!checkStaticMemberAccess(member)) {
             LOG.warn("Access to static [{}] is blocked!", member);
             return false;
         }
 
         final Class memberClass = member.getDeclaringClass();
+        final int memberModifiers = member.getModifiers();
 
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", member);
@@ -115,7 +124,7 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         // target can be null in case of accessing static fields, since OGNL 3.2.8
-        final Class targetClass = Modifier.isStatic(member.getModifiers()) ? memberClass : target.getClass();
+        final Class targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
             LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!", targetClass.getPackage(), targetClass,
@@ -133,16 +142,31 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        return Modifier.isPublic(member.getModifiers()) && isAcceptableProperty(propertyName);
+        return Modifier.isPublic(memberModifiers) && isAcceptableProperty(propertyName);
     }
 
-    protected boolean checkStaticMethodAccess(Member member) {
+    /**
+     * Check access for static members
+     * 
+     * Static non-field access result is a logical and of allowStaticMethodAccess and public.
+     * Static field access result is a logical and of allowStaticFieldAccess and public.
+     * Note: For non-static members, the result is always true.
+     * 
+     * @param member
+     * 
+     * @return
+     */
+    protected boolean checkStaticMemberAccess(Member member) {
         final int modifiers = member.getModifiers();
         if (Modifier.isStatic(modifiers)) {
-            if (allowStaticMethodAccess) {
-                LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
+            if (member instanceof Field) {
+                return allowStaticFieldAccess && Modifier.isPublic(modifiers);
+            } else {
+                if (allowStaticMethodAccess) {
+                    LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
+                }
+                return allowStaticMethodAccess && Modifier.isPublic(modifiers);
             }
-            return allowStaticMethodAccess;
         } else {
             return true;
         }

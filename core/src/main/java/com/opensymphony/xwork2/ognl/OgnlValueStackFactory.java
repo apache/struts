@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.Set;
+import org.apache.struts2.StrutsConstants;
 
 /**
  * Creates an Ognl value stack
@@ -49,7 +50,6 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     protected CompoundRootAccessor compoundRootAccessor;
     protected TextProvider textProvider;
     protected Container container;
-    private boolean allowStaticMethodAccess;
 
     @Inject
     protected void setXWorkConverter(XWorkConverter converter) {
@@ -60,21 +60,18 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     protected void setTextProvider(TextProvider textProvider) {
         this.textProvider = textProvider;
     }
-    
-    @Inject(value="allowStaticMethodAccess", required=false)
-    protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
-        this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
-    }
 
     public ValueStack createValueStack() {
-        ValueStack stack = new OgnlValueStack(xworkConverter, compoundRootAccessor, textProvider, allowStaticMethodAccess);
+        ValueStack stack = new OgnlValueStack(xworkConverter, compoundRootAccessor, textProvider,
+                containerAllowsStaticMethodAccess(), containerAllowsStaticFieldAccess());
         container.inject(stack);
         stack.getContext().put(ActionContext.CONTAINER, container);
         return stack;
     }
 
     public ValueStack createValueStack(ValueStack stack) {
-        ValueStack result = new OgnlValueStack(stack, xworkConverter, compoundRootAccessor, allowStaticMethodAccess);
+        ValueStack result = new OgnlValueStack(stack, xworkConverter, compoundRootAccessor,
+                containerAllowsStaticMethodAccess(), containerAllowsStaticFieldAccess());
         container.inject(result);
         stack.getContext().put(ActionContext.CONTAINER, container);
         return result;
@@ -116,4 +113,23 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         }
         this.container = container;
     }
+
+    /**
+     * Retrieve allowsStaticMethodAccess state from the container (allows for lazy fetching)
+     * 
+     * @return
+     */
+    protected boolean containerAllowsStaticMethodAccess() {
+        return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS));
+    }
+
+    /**
+     * Retrieve allowStaticFieldAccess state from the container (allows for lazy fetching)
+     * 
+     * @return
+     */
+    protected boolean containerAllowsStaticFieldAccess() {
+        return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS));
+    }
+
 }

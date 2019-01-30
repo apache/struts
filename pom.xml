@@ -354,6 +354,8 @@
                             <include>src/**</include>
                         </includes>
                         <excludes>
+                            <exclude>Jenkinsfile</exclude>
+                            <exclude>src/main/groovy/Jenkinsfile.gdsl</exclude>
                             <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
                             <exclude>src/site/resources/tags/**/*.html</exclude>
                             <exclude>src/main/resources/*LICENSE.txt</exclude>

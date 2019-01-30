@@ -63,11 +63,11 @@ public class SecurityMemberAccess implements MemberAccess {
         this.allowStaticFieldAccess = allowStaticFieldAccess;
     }
 
-    public boolean getAllowStaticMethodAccess() {
+    public final boolean getAllowStaticMethodAccess() {
         return allowStaticMethodAccess;
     }
 
-    public boolean getAllowStaticFieldAccess() {
+    public final boolean getAllowStaticFieldAccess() {
         return allowStaticFieldAccess;
     }
 
@@ -110,13 +110,18 @@ public class SecurityMemberAccess implements MemberAccess {
             return true;
         }
 
-        if (!checkStaticMemberAccess(member)) {
+        final int memberModifiers = member.getModifiers();
+        if (!checkStaticMemberAccess(member, memberModifiers)) {
             LOG.warn("Access to static [{}] is blocked!", member);
             return false;
         }
 
+        if (!checkPublicMemberAccess(memberModifiers)) {
+            LOG.trace("Access to non-public [{}] is blocked!", member);
+            return false;
+        }
+
         final Class memberClass = member.getDeclaringClass();
-        final int memberModifiers = member.getModifiers();
 
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", member);
@@ -142,37 +147,51 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        return Modifier.isPublic(memberModifiers) && isAcceptableProperty(propertyName);
+        return isAcceptableProperty(propertyName);
     }
 
     /**
-     * Check access for static members
+     * Check access for static members (via modifiers)
      * 
-     * Static non-field access result is a logical and of allowStaticMethodAccess and public.
-     * Static field access result is a logical and of allowStaticFieldAccess and public.
+     * Static non-field access result is allowStaticMethodAccess.
+     * Static field access result is allowStaticFieldAccess.
+     * 
      * Note: For non-static members, the result is always true.
      * 
      * @param member
+     * @param memberModifiers (minor optimization)
      * 
      * @return
      */
-    protected boolean checkStaticMemberAccess(Member member) {
-        final int modifiers = member.getModifiers();
-        if (Modifier.isStatic(modifiers)) {
+    protected final boolean checkStaticMemberAccess(Member member, int memberModifiers) {
+        if (Modifier.isStatic(memberModifiers)) {
             if (member instanceof Field) {
-                return allowStaticFieldAccess && Modifier.isPublic(modifiers);
+                return allowStaticFieldAccess;
             } else {
                 if (allowStaticMethodAccess) {
                     LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
                 }
-                return allowStaticMethodAccess && Modifier.isPublic(modifiers);
+                return allowStaticMethodAccess;
             }
         } else {
             return true;
         }
     }
 
-    protected boolean checkEnumAccess(Object target, Member member) {
+   /**
+     * Check access for public members (via modifiers)
+     * 
+     * Returns true if-and-only-if the member is public.
+     * 
+     * @param memberModifiers
+     * 
+     * @return
+     */
+    protected final boolean checkPublicMemberAccess(int memberModifiers) {
+        return Modifier.isPublic(memberModifiers);
+    }
+
+    protected final boolean checkEnumAccess(Object target, Member member) {
         if (target instanceof Class) {
             final Class clazz = (Class) target;
             if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values")) {

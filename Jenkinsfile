@@ -1,3 +1,4 @@
+#!groovy
 pipeline {
   agent {
     label 'ubuntu'
@@ -22,7 +23,7 @@ pipeline {
       steps {
         sh 'mvn --version'
         sh 'mvn clean source:jar javadoc:jar install deploy -DskipWiki -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2'
-       }
+      }
     }
   }
 }

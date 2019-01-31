@@ -66,6 +66,7 @@ public class OgnlUtil {
     private Set<String> excludedPackageNames;
 
     private Container container;
+    private boolean allowStaticFieldAccess = true;
     private boolean allowStaticMethodAccess;
     private boolean disallowProxyMemberAccess;
 
@@ -173,6 +174,11 @@ public class OgnlUtil {
         this.container = container;
     }
 
+    @Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, required = false)
+    protected void setAllowStaticFieldAccess(String allowStaticFieldAccess) {
+        this.allowStaticFieldAccess = BooleanUtils.toBoolean(allowStaticFieldAccess);
+    }
+
     @Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, required = false)
     protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
         this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
@@ -180,7 +186,7 @@ public class OgnlUtil {
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
     protected void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
-        this.disallowProxyMemberAccess = Boolean.parseBoolean(disallowProxyMemberAccess);
+        this.disallowProxyMemberAccess = BooleanUtils.toBoolean(disallowProxyMemberAccess);
     }
 
     public boolean isDisallowProxyMemberAccess() {
@@ -699,7 +705,7 @@ public class OgnlUtil {
             resolver = container.getInstance(CompoundRootAccessor.class);
         }
 
-        SecurityMemberAccess memberAccess = new SecurityMemberAccess(allowStaticMethodAccess);
+        SecurityMemberAccess memberAccess = new SecurityMemberAccess(allowStaticMethodAccess, allowStaticFieldAccess);
         memberAccess.setExcludedClasses(excludedClasses);
         memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
         memberAccess.setExcludedPackageNames(excludedPackageNames);

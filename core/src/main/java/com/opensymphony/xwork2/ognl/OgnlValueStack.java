@@ -72,13 +72,13 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private boolean devMode;
     private boolean logMissingProperties;
 
-    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticAccess) {
-        setRoot(xworkConverter, accessor, new CompoundRoot(), allowStaticAccess);
+    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
+        setRoot(xworkConverter, accessor, new CompoundRoot(), allowStaticMethodAccess, allowStaticFieldAccess);
         push(prov);
     }
 
-    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticAccess) {
-        setRoot(xworkConverter, accessor, new CompoundRoot(vs.getRoot()), allowStaticAccess);
+    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
+        setRoot(xworkConverter, accessor, new CompoundRoot(vs.getRoot()), allowStaticMethodAccess, allowStaticFieldAccess);
     }
 
     @Inject
@@ -91,9 +91,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot,
-                           boolean allowStaticMethodAccess) {
+                           boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
         this.root = compoundRoot;
-        this.securityMemberAccess = new SecurityMemberAccess(allowStaticMethodAccess);
+        this.securityMemberAccess = new SecurityMemberAccess(allowStaticMethodAccess, allowStaticFieldAccess);
         this.context = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
         context.put(VALUE_STACK, this);
         ((OgnlContext) context).setTraceEvaluations(false);
@@ -448,10 +448,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         XWorkConverter xworkConverter = cont.getInstance(XWorkConverter.class);
         CompoundRootAccessor accessor = (CompoundRootAccessor) cont.getInstance(PropertyAccessor.class, CompoundRoot.class.getName());
         TextProvider prov = cont.getInstance(TextProvider.class, "system");
-        boolean allow = BooleanUtils.toBoolean(cont.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS));
-        OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, allow);
+        final boolean allowStaticMethod = BooleanUtils.toBoolean(cont.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS));
+        final boolean allowStaticField = BooleanUtils.toBoolean(cont.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS));
+        OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, allowStaticMethod, allowStaticField);
         aStack.setOgnlUtil(cont.getInstance(OgnlUtil.class));
-        aStack.setRoot(xworkConverter, accessor, this.root, allow);
+        aStack.setRoot(xworkConverter, accessor, this.root, allowStaticMethod, allowStaticField);
 
         return aStack;
     }

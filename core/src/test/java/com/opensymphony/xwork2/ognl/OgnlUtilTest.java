@@ -39,7 +39,16 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class OgnlUtilTest extends XWorkTestCase {
-    
+    // Fields for static field access test
+    public static final String STATIC_FINAL_PUBLIC_ATTRIBUTE = "Static_Final_Public_Attribute";
+    static final String STATIC_FINAL_PACKAGE_ATTRIBUTE = "Static_Final_Package_Attribute";
+    protected static final String STATIC_FINAL_PROTECTED_ATTRIBUTE = "Static_Final_Protected_Attribute";
+    private static final String STATIC_FINAL_PRIVATE_ATTRIBUTE = "Static_Final_Private_Attribute";
+    public static String STATIC_PUBLIC_ATTRIBUTE = "Static_Public_Attribute";
+    static String STATIC_PACKAGE_ATTRIBUTE = "Static_Package_Attribute";
+    protected static String STATIC_PROTECTED_ATTRIBUTE = "Static_Protected_Attribute";
+    private static String STATIC_PRIVATE_ATTRIBUTE = "Static_Private_Attribute";
+
     private OgnlUtil ognlUtil;
     
     @Override
@@ -1038,6 +1047,127 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertTrue("fakepackage4.package not in exclusions?", excludedPackageNames.contains("fakepackage4.package"));
     }
 
+    /**
+     * Ensure getValue:
+     *   1) When allowStaticFieldAccess true - Permits public static field access,
+     *      prevents non-public static field access.
+     *   2) When allowStaticFieldAccess false - blocks all static field access,
+     */
+    public void testStaticFieldGetValue() {
+        OgnlContext context = null;
+        Object accessedValue;
+
+        try {
+            reloadTestContainerConfiguration(true);  // Test with allowStaticFieldAccess true
+            context = (OgnlContext) ognlUtil.createDefaultContext(null);
+        } catch (Exception ex) {
+            fail("unable to reload test configuration? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PUBLIC_ATTRIBUTE", context, null);
+            assertEquals("accessed field value not equal to actual?", accessedValue, STATIC_FINAL_PUBLIC_ATTRIBUTE);
+        } catch (Exception ex) {
+            fail("static final public field access failed ? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PUBLIC_ATTRIBUTE", context, null);
+            assertEquals("accessed field value not equal to actual?", accessedValue, STATIC_PUBLIC_ATTRIBUTE);
+        } catch (Exception ex) {
+            fail("static public field access failed ? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PACKAGE_ATTRIBUTE", context, null);
+            fail("static final package field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PACKAGE_ATTRIBUTE", context, null);
+            fail("static package field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PROTECTED_ATTRIBUTE", context, null);
+            fail("static final protected field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PROTECTED_ATTRIBUTE", context, null);
+            fail("static protected field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PRIVATE_ATTRIBUTE", context, null);
+            fail("static final private field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PRIVATE_ATTRIBUTE", context, null);
+            fail("static private field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+
+        try {
+            reloadTestContainerConfiguration(false);  // Re-test with allowStaticFieldAccess false
+            context = (OgnlContext) ognlUtil.createDefaultContext(null);
+        } catch (Exception ex) {
+            fail("unable to reload test configuration? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PUBLIC_ATTRIBUTE", context, null);
+            fail("static final public field access succeded ?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PUBLIC_ATTRIBUTE", context, null);
+            fail("static public field access succeded ?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PACKAGE_ATTRIBUTE", context, null);
+            fail("static final package field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PACKAGE_ATTRIBUTE", context, null);
+            fail("static package field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PROTECTED_ATTRIBUTE", context, null);
+            fail("static final protected field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PROTECTED_ATTRIBUTE", context, null);
+            fail("static protected field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PRIVATE_ATTRIBUTE", context, null);
+            fail("static final private field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PRIVATE_ATTRIBUTE", context, null);
+            fail("static private field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+    }
+
     private void internalTestInitialEmptyOgnlUtilExclusions(OgnlUtil ognlUtilParam) throws Exception {
         Set<Class<?>> excludedClasses = ognlUtilParam.getExcludedClasses();
         assertNotNull("parameter (default) exluded classes null?", excludedClasses);
@@ -1181,21 +1311,47 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
-    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStatic) throws Exception {
+    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStaticMethod) throws Exception {
         super.tearDown();
 
         ConfigurationProvider configurationProvider;
-        if (devMode == true && allowStatic == true) {
+        if (devMode == true && allowStaticMethod == true) {
             configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-devmode-true.xml", true);
         }
-        else if (devMode == true && allowStatic == false) {
+        else if (devMode == true && allowStaticMethod == false) {
             configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-devmode-true.xml", true);
         }
-        else if (devMode == false && allowStatic == true) {
+        else if (devMode == false && allowStaticMethod == true) {
             configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-true.xml", true);
         }
         else {  // devMode, allowStatic both false
             configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-devmode-false.xml", true);
+        }
+
+        configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
+        configurationManager.addContainerProvider(configurationProvider);
+        configuration = configurationManager.getConfiguration();
+        container = configuration.getContainer();
+        container.inject(configurationProvider);
+        configurationProvider.init(configuration);
+        actionProxyFactory = container.getInstance(ActionProxyFactory.class);
+
+        // Reset the value stack
+        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
+        stack.getContext().put(ActionContext.CONTAINER, container);
+        ActionContext.setContext(new ActionContext(stack.getContext()));
+
+        ognlUtil = container.getInstance(OgnlUtil.class);
+    }
+
+    private void reloadTestContainerConfiguration(boolean allowStaticField) throws Exception {
+        super.tearDown();
+
+        ConfigurationProvider configurationProvider;
+        if (allowStaticField) {
+            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-staticfield-true.xml", true);
+        } else {
+            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-staticfield-false.xml", true);
         }
 
         configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);

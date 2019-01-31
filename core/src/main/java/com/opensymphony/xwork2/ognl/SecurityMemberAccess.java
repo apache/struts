@@ -24,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
@@ -40,6 +41,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
+    private final boolean allowStaticFieldAccess;
     private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();
     private Set<Pattern> acceptProperties = Collections.emptySet();
@@ -51,16 +53,22 @@ public class SecurityMemberAccess implements MemberAccess {
     /**
      * SecurityMemberAccess
      *   - access decisions based on whether member is static (or not)
-     *   - block or allow access to properties (configureable-after-construction)
+     *   - block or allow access to properties (configurable-after-construction)
      * 
      * @param allowStaticMethodAccess
+     * @param allowStaticFieldAccess
      */
-    public SecurityMemberAccess(boolean allowStaticMethodAccess) {
+    public SecurityMemberAccess(boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
         this.allowStaticMethodAccess = allowStaticMethodAccess;
+        this.allowStaticFieldAccess = allowStaticFieldAccess;
     }
 
-    public boolean getAllowStaticMethodAccess() {
+    public final boolean getAllowStaticMethodAccess() {
         return allowStaticMethodAccess;
+    }
+
+    public final boolean getAllowStaticFieldAccess() {
+        return allowStaticFieldAccess;
     }
 
     @Override
@@ -102,8 +110,14 @@ public class SecurityMemberAccess implements MemberAccess {
             return true;
         }
 
-        if (!checkStaticMethodAccess(member)) {
+        final int memberModifiers = member.getModifiers();
+        if (!checkStaticMemberAccess(member, memberModifiers)) {
             LOG.warn("Access to static [{}] is blocked!", member);
+            return false;
+        }
+
+        if (!checkPublicMemberAccess(memberModifiers)) {
+            LOG.trace("Access to non-public [{}] is blocked!", member);
             return false;
         }
 
@@ -115,7 +129,7 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         // target can be null in case of accessing static fields, since OGNL 3.2.8
-        final Class targetClass = Modifier.isStatic(member.getModifiers()) ? memberClass : target.getClass();
+        final Class targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
             LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!", targetClass.getPackage(), targetClass,
@@ -133,22 +147,51 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        return Modifier.isPublic(member.getModifiers()) && isAcceptableProperty(propertyName);
+        return isAcceptableProperty(propertyName);
     }
 
-    protected boolean checkStaticMethodAccess(Member member) {
-        final int modifiers = member.getModifiers();
-        if (Modifier.isStatic(modifiers)) {
-            if (allowStaticMethodAccess) {
-                LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
+    /**
+     * Check access for static members (via modifiers)
+     * 
+     * Static non-field access result is allowStaticMethodAccess.
+     * Static field access result is allowStaticFieldAccess.
+     * 
+     * Note: For non-static members, the result is always true.
+     * 
+     * @param member
+     * @param memberModifiers (minor optimization)
+     * 
+     * @return
+     */
+    protected final boolean checkStaticMemberAccess(Member member, int memberModifiers) {
+        if (Modifier.isStatic(memberModifiers)) {
+            if (member instanceof Field) {
+                return allowStaticFieldAccess;
+            } else {
+                if (allowStaticMethodAccess) {
+                    LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
+                }
+                return allowStaticMethodAccess;
             }
-            return allowStaticMethodAccess;
         } else {
             return true;
         }
     }
 
-    protected boolean checkEnumAccess(Object target, Member member) {
+   /**
+     * Check access for public members (via modifiers)
+     * 
+     * Returns true if-and-only-if the member is public.
+     * 
+     * @param memberModifiers
+     * 
+     * @return
+     */
+    protected final boolean checkPublicMemberAccess(int memberModifiers) {
+        return Modifier.isPublic(memberModifiers);
+    }
+
+    protected final boolean checkEnumAccess(Object target, Member member) {
         if (target instanceof Class) {
             final Class clazz = (Class) target;
             if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values")) {

@@ -82,13 +82,14 @@ public class ProxyUtil {
     }
 
     /**
-     * Check whether the given member is a proxy member of a proxy object.
+     * Check whether the given member is a proxy member of a proxy object or is a static proxy member.
      * @param member the member to check
      * @param object the object to check
      */
     public static boolean isProxyMember(Member member, Object object) {
-        if (!isProxy(object))
+        if (!Modifier.isStatic(member.getModifiers()) && !isProxy(object)) {
             return false;
+        }
 
         Boolean flag = isProxyMemberCache.get(member);
         if (flag != null) {

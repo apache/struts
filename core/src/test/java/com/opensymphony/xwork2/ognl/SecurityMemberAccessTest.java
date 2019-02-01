@@ -19,15 +19,19 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
+import java.lang.reflect.Field;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Member;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 
 public class SecurityMemberAccessTest extends TestCase {
 
@@ -257,6 +261,129 @@ public class SecurityMemberAccessTest extends TestCase {
 
         // then
         assertTrue("Access to static is blocked!", actual);
+    }
+
+    public void testAccessStaticField() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        Member method = StaticTester.class.getField("MAX_VALUE");
+        boolean actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertTrue("Access to static field is blocked!", actual);
+    }
+
+    public void testBlockedStaticFieldWhenFlagIsFalse() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        Member method = StaticTester.class.getField("MAX_VALUE");
+        boolean actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertTrue("Access to public static field is blocked?", actual);
+
+        // public static final test
+        // given
+        sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.class.getField("MIN_VALUE");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertTrue("Access to public final static field is blocked?", actual);
+
+        // package static test
+        // given
+        sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("PACKAGE_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to package static field is allowed?", actual);
+
+        // package final static test
+        // given
+        sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("FINAL_PACKAGE_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to package final static field is allowed?", actual);
+
+        // protected static test
+        // given
+        sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("PROTECTED_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to protected static field is allowed?", actual);
+
+        // protected final static test
+        // given
+        sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("FINAL_PROTECTED_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to protected final static field is allowed?", actual);
+
+        // private static test
+        // given
+        sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("PRIVATE_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to private static field is allowed?", actual);
+
+        // private final static test
+        // given
+        sma = new SecurityMemberAccess(false);
+        sma.setExcludedClasses(new HashSet<Class<?>>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("FINAL_PRIVATE_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to private final static field is allowed?", actual);
+    }
+
+    public void testBlockedStaticFieldWhenClassIsExcluded() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        sma.setExcludedClasses(new HashSet<>(Arrays.asList(Class.class, StaticTester.class)));
+
+        // when
+        Member method = StaticTester.class.getField("MAX_VALUE");
+        boolean actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to static field isn't blocked!", actual);
     }
 
     public void testBlockStaticAccess() throws Exception {
@@ -503,8 +630,24 @@ enum MyValues {
 
 class StaticTester {
 
+    public static int MAX_VALUE = 0;
+    public static final int MIN_VALUE = 0;
+    static String PACKAGE_STRING = "package_string";
+    static final String FINAL_PACKAGE_STRING = "final_package_string";
+    static String PROTECTED_STRING = "protected_string";
+    static final String FINAL_PROTECTED_STRING = "final_protected_string";
+    static String PRIVATE_STRING = "private_string";
+    static final String FINAL_PRIVATE_STRING = "final_private_string";
+
     public static String sayHello() {
         return "Hello";
     }
 
+    protected static Field getFieldByName(String fieldName) throws NoSuchFieldException {
+        if (fieldName != null && fieldName.length() > 0) {
+            return StaticTester.class.getDeclaredField(fieldName);
+        } else {
+            throw new NoSuchFieldException("field: " + fieldName + " does not exist");
+        }
+    }
 }

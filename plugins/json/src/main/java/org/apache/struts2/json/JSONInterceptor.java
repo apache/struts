@@ -71,13 +71,6 @@ public class JSONInterceptor extends AbstractInterceptor {
     private String jsonContentType = "application/json";
     private String jsonRpcContentType = "application/json-rpc";
 
-    private JSONUtil jsonUtil;
-
-    @Inject
-    public void setJsonUtil(JSONUtil jsonUtil) {
-        this.jsonUtil = jsonUtil;
-    }
-
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
@@ -174,6 +167,8 @@ public class JSONInterceptor extends AbstractInterceptor {
                 rpcResponse.setError(new RPCError(message, RPCErrorCode.SMD_DISABLED));
                 result = rpcResponse;
             }
+
+            JSONUtil jsonUtil = invocation.getInvocationContext().getContainer().getInstance(JSONUtil.class);
 
             String json = jsonUtil.serialize(result, excludeProperties, getIncludeProperties(),
                     ignoreHierarchy, excludeNullProperties);

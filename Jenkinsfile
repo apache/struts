@@ -9,7 +9,7 @@ pipeline {
     disableConcurrentBuilds()
   }
   tools {
-    jdk 'JDK 1.7 (latest)'
+    jdk 'JDK 1.8 (latest)'
     maven 'Maven 3 (latest)'
   }
   triggers {

@@ -33,6 +33,7 @@
     <constant name="enableOGNLExpressionCache" value="true" />
     <constant name="enableOGNLEvalExpression" value="false" />
     <constant name="reloadXmlConfiguration" value="false" />
+    <constant name="allowStaticMethodAccess" value="false" />
     <constant name="struts.ognl.allowStaticMethodAccess" value="false" />
     <constant name="struts.enable.DynamicMethodInvocation" value="false" />
     <constant name="struts.dispatcher.errorHandler" value="struts" />

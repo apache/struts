@@ -39,7 +39,17 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class OgnlUtilTest extends XWorkTestCase {
-    
+
+    // Fields for static field access test
+    public static final String STATIC_FINAL_PUBLIC_ATTRIBUTE = "Static_Final_Public_Attribute";
+    static final String STATIC_FINAL_PACKAGE_ATTRIBUTE = "Static_Final_Package_Attribute";
+    protected static final String STATIC_FINAL_PROTECTED_ATTRIBUTE = "Static_Final_Protected_Attribute";
+    private static final String STATIC_FINAL_PRIVATE_ATTRIBUTE = "Static_Final_Private_Attribute";
+    public static String STATIC_PUBLIC_ATTRIBUTE = "Static_Public_Attribute";
+    static String STATIC_PACKAGE_ATTRIBUTE = "Static_Package_Attribute";
+    protected static String STATIC_PROTECTED_ATTRIBUTE = "Static_Protected_Attribute";
+    private static String STATIC_PRIVATE_ATTRIBUTE = "Static_Private_Attribute";
+
     private OgnlUtil ognlUtil;
     
     @Override
@@ -1022,6 +1032,124 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertTrue("fakepackage2.package not in exclusions?", excludedPackageNames.contains("fakepackage2.package"));
         assertTrue("fakepackage3.package not in exclusions?", excludedPackageNames.contains("fakepackage3.package"));
         assertTrue("fakepackage4.package not in exclusions?", excludedPackageNames.contains("fakepackage4.package"));
+    }
+
+    /**
+     * Ensure getValue permits public static field access, but prevents non-public static field access
+     */
+    public void testStaticFieldGetValue() {
+        OgnlContext context = null;
+        Object accessedValue;
+
+        try {
+            reloadTestContainerConfiguration(false, false);  // Test with allow static methods false
+            context = (OgnlContext) ognlUtil.createDefaultContext(null);
+        } catch (Exception ex) {
+            fail("unable to reload test configuration? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PUBLIC_ATTRIBUTE", context, null);
+            assertEquals("accessed field value not equal to actual?", accessedValue, STATIC_FINAL_PUBLIC_ATTRIBUTE);
+        } catch (Exception ex) {
+            fail("static final public field access failed ? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PUBLIC_ATTRIBUTE", context, null);
+            assertEquals("accessed field value not equal to actual?", accessedValue, STATIC_PUBLIC_ATTRIBUTE);
+        } catch (Exception ex) {
+            fail("static public field access failed ? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PACKAGE_ATTRIBUTE", context, null);
+            fail("static final package field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PACKAGE_ATTRIBUTE", context, null);
+            fail("static package field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PROTECTED_ATTRIBUTE", context, null);
+            fail("static final protected field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PROTECTED_ATTRIBUTE", context, null);
+            fail("static protected field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PRIVATE_ATTRIBUTE", context, null);
+            fail("static final private field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PRIVATE_ATTRIBUTE", context, null);
+            fail("static private field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+
+        try {
+            reloadTestContainerConfiguration(false, true);  // Re-test with allow static methods true
+            context = (OgnlContext) ognlUtil.createDefaultContext(null);
+        } catch (Exception ex) {
+            fail("unable to reload test configuration? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PUBLIC_ATTRIBUTE", context, null);
+            assertEquals("accessed value not equal to actual?", accessedValue, STATIC_FINAL_PUBLIC_ATTRIBUTE);
+        } catch (Exception ex) {
+            fail("static final public field access failed ? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PUBLIC_ATTRIBUTE", context, null);
+            assertEquals("accessed value not equal to actual?", accessedValue, STATIC_PUBLIC_ATTRIBUTE);
+        } catch (Exception ex) {
+            fail("static public field access failed ? Exception: " + ex);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PACKAGE_ATTRIBUTE", context, null);
+            fail("static final package field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PACKAGE_ATTRIBUTE", context, null);
+            fail("static package field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PROTECTED_ATTRIBUTE", context, null);
+            fail("static final protected field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PROTECTED_ATTRIBUTE", context, null);
+            fail("static protected field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PRIVATE_ATTRIBUTE", context, null);
+            fail("static final private field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
+        try {
+            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PRIVATE_ATTRIBUTE", context, null);
+            fail("static private field access succeeded?");
+        } catch (Exception ex) {
+            assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
+        }
     }
 
     private void internalTestInitialEmptyOgnlUtilExclusions(OgnlUtil ognlUtilParam) throws Exception {

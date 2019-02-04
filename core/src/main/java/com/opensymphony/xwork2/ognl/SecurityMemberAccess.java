@@ -49,7 +49,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     /**
      * SecurityMemberAccess
      *   - access decisions based on whether member is static (or not)
-     *   - block or allow access to properties (configureable-after-construction)
+     *   - block or allow access to properties (configurable-after-construction)
      * 
      * @param allowStaticMethodAccess
      */

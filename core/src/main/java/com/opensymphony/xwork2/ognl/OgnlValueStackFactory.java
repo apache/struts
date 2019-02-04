@@ -19,6 +19,7 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.conversion.NullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
@@ -61,7 +62,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         this.textProvider = textProvider;
     }
     
-    @Inject(value="allowStaticMethodAccess", required=false)
+    @Inject(value = XWorkConstants.ALLOW_STATIC_METHOD_ACCESS, required = false)
     protected void setAllowStaticMethodAccess(String allowStaticMethodAccess) {
         this.allowStaticMethodAccess = BooleanUtils.toBoolean(allowStaticMethodAccess);
     }

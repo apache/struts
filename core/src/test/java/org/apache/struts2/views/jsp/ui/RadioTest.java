@@ -196,6 +196,21 @@ public class RadioTest extends AbstractUITagTest {
         verify(RadioTag.class.getResource("Radio-7.txt"));
     }
 
+    public void testNotExistingListValueKey() throws Exception {
+        RadioTag tag = new RadioTag();
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setList("#{'a':'aaa', 'b':'bbb', 'c':'ccc'}");
+        tag.setListValueKey("notExistingProperty");
+
+        tag.setPageContext(pageContext);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(SelectTag.class.getResource("Radio-8.txt"));
+    }
+
     private void prepareTagGeneric(RadioTag tag) {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");

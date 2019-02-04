@@ -637,6 +637,21 @@ public class SelectTest extends AbstractUITagTest {
         verify(SelectTag.class.getResource("Select-13.txt"));
     }
 
+    public void testNotExistingListValueKey() throws Exception {
+        SelectTag tag = new SelectTag();
+        tag.setName("foo");
+        tag.setLabel("mylabel");
+        tag.setList("#{'a':'aaa', 'b':'bbb', 'c':'ccc'}");
+        tag.setListValueKey("notExistingProperty");
+
+        tag.setPageContext(pageContext);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(SelectTag.class.getResource("Select-16.txt"));
+    }
+
     public class IdName {
         private String name;
         private Integer id;

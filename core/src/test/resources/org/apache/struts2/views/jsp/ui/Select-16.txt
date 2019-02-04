@@ -1,0 +1,10 @@
+<tr>
+    <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
+    <td class="tdInput">
+        <select name="foo" id="foo">
+            <option value="a">notExistingProperty</option>
+            <option value="b">notExistingProperty</option>
+            <option value="c">notExistingProperty</option>
+        </select>
+    </td>
+</tr>

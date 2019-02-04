@@ -1,0 +1,8 @@
+<tr>
+    <td class="tdLabel"><label for="myname" class="label">mylabel:</label></td>
+    <td class="tdInput">
+        <input type="radio" name="myname" id="mynamea" value="a"/><label for="mynamea">notExistingProperty</label>
+        <input type="radio" name="myname" id="mynameb" value="b"/><label for="mynameb">notExistingProperty</label>
+        <input type="radio" name="myname" id="mynamec" value="c"/><label for="mynamec">notExistingProperty</label>
+    </td>
+</tr>

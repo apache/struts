@@ -70,8 +70,8 @@
         <#if parameters.listValueKey??>
           <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale file for it's 
              localized value.  This is then used as a label -->
-          <#assign valueKey = stack.findString(parameters.listValueKey) />
-          <#if valueKey??>
+          <#assign valueKey = stack.findString(parameters.listValueKey)!'' />
+          <#if valueKey?has_content>
               <#assign itemValue = struts.getText(valueKey) />
           <#else>
               <#assign itemValue = parameters.listValueKey />

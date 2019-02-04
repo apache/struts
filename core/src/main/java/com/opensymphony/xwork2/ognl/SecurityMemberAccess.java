@@ -108,7 +108,7 @@ public class SecurityMemberAccess implements MemberAccess {
         final int memberModifiers = member.getModifiers();
 
         if (!checkPublicMemberAccess(memberModifiers)) {
-            LOG.trace("Access to non-public [{}] is blocked!", member);
+            LOG.warn("Access to non-public [{}] is blocked!", member);
             return false;
         }
 

@@ -28,12 +28,15 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -220,11 +223,11 @@ public class Date extends ContextBean {
      * @param date the date
      * @return the date nicely
      */
-    public String formatTime(TextProvider tp, java.util.Date date) {
-        java.util.Date now = new java.util.Date();
+    public String formatTime(TextProvider tp, ZonedDateTime date) {
+        ZonedDateTime now = ZonedDateTime.now();
         StringBuilder sb = new StringBuilder();
-        List args = new ArrayList();
-        long secs = Math.abs((now.getTime() - date.getTime()) / 1000);
+        List<Object> args = new ArrayList<>();
+        long secs = Math.abs(now.toEpochSecond() - date.toEpochSecond());
         long mins = secs / 60;
         long sec = secs % 60;
         int min = (int) mins % 60;
@@ -267,7 +270,7 @@ public class Date extends ContextBean {
 
         args.clear();
         args.add(sb.toString());
-        if (date.before(now)) {
+        if (date.isBefore(now)) {
             // looks like this date is passed
             return tp.getText(DATETAG_PROPERTY_PAST, DATETAG_DEFAULT_PAST, args);
         } else {
@@ -275,54 +278,55 @@ public class Date extends ContextBean {
         }
     }
 
+    @Override
     public boolean end(Writer writer, String body) {
-        String msg;
-        java.util.Date date = null;
+        ZonedDateTime date = null;
+        final ZoneId tz = getTimeZone();
         // find the name on the valueStack
-        try {
-            //support Calendar also
-            Object dateObject = findValue(name);
-            if (dateObject instanceof java.util.Date) {
-                date = (java.util.Date) dateObject;
-            } else if (dateObject instanceof Calendar) {
-                date = ((Calendar) dateObject).getTime();
-            } else if (dateObject instanceof Long) {
-                date = new java.util.Date((long) dateObject);
-            } else {
-                if (devMode) {
-                    TextProvider tp = findProviderInStack();
-                    String developerNotification = "";
-                    if (tp != null) {
-                        developerNotification = findProviderInStack().getText(
-                                "devmode.notification",
-                                "Developer Notification:\n{0}",
-                                new String[]{
-                                        "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
-                                                + (dateObject != null ? dateObject.getClass() : "null") + ") isn't instance of java.util.Date nor java.util.Calendar nor long!"
-                                }
-                        );
-                    }
-                    LOG.warn(developerNotification);
-                } else {
-                    LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar nor long!",
-                            name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
+        Object dateObject = findValue(name);
+        if (dateObject instanceof java.util.Date) {
+            date = ((java.util.Date) dateObject).toInstant().atZone(tz);
+        } else if (dateObject instanceof Calendar) {
+            date = ((Calendar) dateObject).toInstant().atZone(tz);
+        } else if (dateObject instanceof Long) {
+            date = Instant.ofEpochMilli((long) dateObject).atZone(tz);
+        } else if (dateObject instanceof LocalDateTime) {
+            date = ((LocalDateTime) dateObject).atZone(tz);
+        } else if (dateObject instanceof Instant) {
+            date = ((Instant) dateObject).atZone(tz);
+        } else {
+            if (devMode) {
+                TextProvider tp = findProviderInStack();
+                String developerNotification = "";
+                if (tp != null) {
+                    developerNotification = findProviderInStack().getText(
+                            "devmode.notification",
+                            "Developer Notification:\n{0}",
+                            new String[]{
+                                    "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
+                                            + (dateObject != null ? dateObject.getClass() : "null") + ") isn't supported!"
+                            }
+                    );
                 }
+                LOG.warn(developerNotification);
+            } else {
+                LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't supported!",
+                        name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
             }
-        } catch (Exception e) {
-            LOG.error("Could not convert object with key '{}' to a java.util.Date instance", name);
         }
 
         //try to find the format on the stack
         if (format != null) {
             format = findString(format);
         }
+        String msg;
         if (date != null) {
             TextProvider tp = findProviderInStack();
             if (tp != null) {
                 if (nice) {
                     msg = formatTime(tp, date);
                 } else {
-                    TimeZone tz = getTimeZone();
+                    DateTimeFormatter dtf;
                     if (format == null) {
                         String globalFormat = null;
 
@@ -335,23 +339,15 @@ public class Date extends ContextBean {
                         // DATETAG_PROPERTY
                         if (globalFormat != null
                                 && !DATETAG_PROPERTY.equals(globalFormat)) {
-                            SimpleDateFormat sdf = new SimpleDateFormat(globalFormat,
-                                    ActionContext.getContext().getLocale());
-                            sdf.setTimeZone(tz);
-                            msg = sdf.format(date);
+                            dtf = DateTimeFormatter.ofPattern(globalFormat, ActionContext.getContext().getLocale());
                         } else {
-                            DateFormat df = DateFormat.getDateTimeInstance(
-                                    DateFormat.MEDIUM, DateFormat.MEDIUM,
-                                    ActionContext.getContext().getLocale());
-                            df.setTimeZone(tz);
-                            msg = df.format(date);
+                            dtf = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                                    .withLocale(ActionContext.getContext().getLocale());
                         }
                     } else {
-                        SimpleDateFormat sdf = new SimpleDateFormat(format, ActionContext
-                                .getContext().getLocale());
-                        sdf.setTimeZone(tz);
-                        msg = sdf.format(date);
+                        dtf = DateTimeFormatter.ofPattern(format, ActionContext.getContext().getLocale());
                     }
+                    msg = dtf.format(date);
                 }
                 if (msg != null) {
                     try {
@@ -369,15 +365,15 @@ public class Date extends ContextBean {
         return super.end(writer, "");
     }
 
-    private TimeZone getTimeZone() {
-        TimeZone tz = TimeZone.getDefault();
+    private ZoneId getTimeZone() {
+        ZoneId tz = ZoneId.systemDefault();
         if (timezone != null) {
             timezone = stripExpressionIfAltSyntax(timezone);
             String actualTimezone = (String) getStack().findValue(timezone, String.class);
             if (actualTimezone != null) {
                 timezone = actualTimezone;
             }
-            tz = TimeZone.getTimeZone(timezone);
+            tz = ZoneId.of(timezone);
         }
         return tz;
     }

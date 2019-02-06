@@ -19,11 +19,17 @@
 package org.apache.struts2.views.jsp.ui;
 
 import com.opensymphony.xwork2.ActionContext;
+
+import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractTagTest;
 import org.apache.struts2.views.jsp.DateTag;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -50,18 +56,33 @@ public class DateTagTest extends AbstractTagTest {
         assertEquals(formatted, writer.toString());
     }
 
+    public void testCustomGlobalFormatFormat() throws Exception {
+        String format = "yyyy/MM/dd hh:mm:ss";
+        Date now = new Date();
+        String formatted = new SimpleDateFormat(format).format(now);
+        context.put("myDate", now);
+
+        ((TestAction) action).setText(org.apache.struts2.components.Date.DATETAG_PROPERTY, format);
+
+        tag.setName("myDate");
+        tag.setNice(false);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(formatted, writer.toString());
+    }
+
     public void testCustomFormatWithTimezone() throws Exception {
         String format = "yyyy/MM/dd hh:mm:ss";
-        Date now = Calendar.getInstance(TimeZone.getTimeZone("UTC+1")).getTime();
+        Date now = Calendar.getInstance(TimeZone.getTimeZone("GMT+1")).getTime();
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+1"));
         String formatted = sdf.format(now);
         context.put("myDate", now);
 
         tag.setName("myDate");
         tag.setNice(false);
         tag.setFormat(format);
-        tag.setTimezone("UTC+1");
+        tag.setTimezone("GMT+1");
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(formatted, writer.toString());
@@ -69,12 +90,12 @@ public class DateTagTest extends AbstractTagTest {
 
     public void testCustomFormatWithTimezoneAsExpression() throws Exception {
         String format = "yyyy/MM/dd hh:mm:ss";
-        Date now = Calendar.getInstance(TimeZone.getTimeZone("UTC+2")).getTime();
+        Date now = Calendar.getInstance(TimeZone.getTimeZone("GMT+2")).getTime();
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC+2"));
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
         String formatted = sdf.format(now);
         context.put("myDate", now);
-        context.put("myTimezone", "UTC+2");
+        context.put("myTimezone", "GMT+2");
 
         tag.setName("myDate");
         tag.setNice(false);
@@ -105,6 +126,34 @@ public class DateTagTest extends AbstractTagTest {
         String formatted = new SimpleDateFormat(format).format(date);
         // long
         context.put("myDate", date.getTime());
+
+        tag.setName("myDate");
+        tag.setNice(false);
+        tag.setFormat(format);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(formatted, writer.toString());
+    }
+
+    public void testCustomFormatLocalDateTime() throws Exception {
+        String format = "yyyy/MM/dd hh:mm:ss";
+        LocalDateTime date = LocalDateTime.now();
+        String formatted = date.format(DateTimeFormatter.ofPattern(format));
+        context.put("myDate", date);
+
+        tag.setName("myDate");
+        tag.setNice(false);
+        tag.setFormat(format);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(formatted, writer.toString());
+    }
+
+    public void testCustomFormatInstant() throws Exception {
+        String format = "yyyy/MM/dd hh:mm:ss";
+        Instant date = Instant.now();
+        String formatted = DateTimeFormatter.ofPattern(format).format(date.atZone(ZoneId.systemDefault()));
+        context.put("myDate", date);
 
         tag.setName("myDate");
         tag.setNice(false);

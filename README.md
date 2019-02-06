@@ -17,7 +17,7 @@
 The Apache Struts web framework
 -------------------------------
 
-[![Build Status @ Jenkins](https://builds.apache.org/buildStatus/icon?job=Struts-master-JDK7)](https://builds.apache.org/view/S-Z/view/Struts/job/Struts-master-JDK7/)
+[![Build Status @ Jenkins](https://builds.apache.org/buildStatus/icon?job=Struts-master-JDK8)](https://builds.apache.org/view/S-Z/view/Struts/job/Struts-master-JDK8/)
 [![Build Status @ Travis](https://travis-ci.org/apache/struts.svg?branch=master)](https://travis-ci.org/apache/struts)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.struts/struts2-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.struts/struts2-core/)
 [![Javadocs](https://javadoc.io/badge/org.apache.struts/struts2-core.svg)](https://javadoc.io/doc/org.apache.struts/struts2-core)

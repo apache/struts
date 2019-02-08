@@ -66,13 +66,6 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
-        final int memberModifiers = member.getModifiers();
-
-        if (!checkPublicMemberAccess(memberModifiers)) {
-            LOG.trace("Access to non-public [{}] is blocked!", member);
-            return false;
-        }
-
         final Class memberClass = member.getDeclaringClass();
         Class targetClass = (target != null ? target.getClass() : memberClass);  // Note: target,propertyName may be null (static field checks OGNL 3.1.19+)
 
@@ -81,19 +74,11 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return true;
         }
 
-        if (!checkStaticMethodAccess(member, memberModifiers)) {
-            LOG.warn("Access to static method [{}] is blocked!", member);
-            return false;
-        }
-
-        if (isClassExcluded(memberClass)) {
-            LOG.warn("Declaring class of member type [{}] is excluded!", member);
-            return false;
-        } else {
-            if (Modifier.isStatic(memberModifiers) && allowStaticMethodAccess) {
-                LOG.trace("Support for accessing static methods [target: {}, targetClass: {}, member: {}, property: {}] is deprecated!",
+        if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
+            LOG.debug("Support for accessing static methods [target: {}, targetClass: {}, member: {}, property: {}] is deprecated!",
                         target, targetClass, member, propertyName);
-                targetClass = memberClass;  // Check above guarantees !isClassExcluded(memberClass) true
+            if (!isClassExcluded(memberClass)) {
+                targetClass = memberClass;
             }
         }
 
@@ -108,8 +93,24 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
         }
 
+        if (isClassExcluded(memberClass)) {
+            LOG.warn("Declaring class of member type [{}] is excluded!", member);
+            return false;
+        }
+
         if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
             LOG.warn("Access to proxy is blocked! Target class [{}] of target [{}], member [{}]", targetClass, target, member);
+            return false;
+        }
+
+        boolean allow = true;
+        if (!checkStaticMethodAccess(member)) {
+            LOG.warn("Access to static [{}] is blocked!", member);
+            allow = false;
+        }
+
+        //failed static test
+        if (!allow) {
             return false;
         }
 
@@ -117,38 +118,13 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         return super.isAccessible(context, target, member, propertyName) && isAcceptableProperty(propertyName);
     }
 
-    /**
-     * Check access for static method (via modifiers).
-     * 
-     * Note: For non-static members, the result is always true.
-     * 
-     * @param member
-     * @param memberModifiers
-     * 
-     * @return
-     */
-    protected boolean checkStaticMethodAccess(Member member, int memberModifiers) {
-        if (Modifier.isStatic(memberModifiers) && !(member instanceof Field)) {
-            if (allowStaticMethodAccess) {
-                LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
-            }
+    protected boolean checkStaticMethodAccess(Member member) {
+        int modifiers = member.getModifiers();
+        if (Modifier.isStatic(modifiers) && !(member instanceof Field)) {
             return allowStaticMethodAccess;
         } else {
             return true;
         }
-    }
-
-    /**
-     * Check access for public members (via modifiers)
-     * 
-     * Returns true if-and-only-if the member is public.
-     * 
-     * @param memberModifiers
-     * 
-     * @return
-     */
-    protected boolean checkPublicMemberAccess(int memberModifiers) {
-        return Modifier.isPublic(memberModifiers);
     }
 
     protected boolean checkEnumAccess(Object target, Member member) {

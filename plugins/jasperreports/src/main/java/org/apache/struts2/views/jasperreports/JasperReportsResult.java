@@ -352,7 +352,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
                 Map imagesMap = new HashMap();
                 request.getSession(true).setAttribute("IMAGES_MAP", imagesMap);
 
-                exporter = new JRHtmlExporter();
+                exporter = new HtmlExporter();
                 exporter.setParameter(JRHtmlExporterParameter.IMAGES_MAP, imagesMap);
                 exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, request.getContextPath() + imageServletUrl);
 

@@ -73,25 +73,31 @@
         <dependency>
             <groupId>net.sourceforge.jwebunit</groupId>
             <artifactId>jwebunit-core</artifactId>
-            <version>1.4.1</version>
+            <version>3.3</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>2.27</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>net.sourceforge.jwebunit</groupId>
             <artifactId>jwebunit-htmlunit-plugin</artifactId>
-            <version>1.4.1</version>
+            <version>3.3</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>xom</groupId>
                     <artifactId>xom</artifactId>
+                </exclusion>
+                <!-- not necessary to compile and it force dependency convergence issues -->
+                <exclusion>
+                    <groupId>net.sourceforge.htmlunit</groupId>
+                    <artifactId>htmlunit</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

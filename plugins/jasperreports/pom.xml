@@ -39,13 +39,17 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>6.0.3</version>
+            <version>6.7.0</version>
             <scope>provided</scope>
             <exclusions>
-                <!-- This is currently not found in Maven central, yet not needed at compile time -->
+                <!-- not necessary to compile and it force dependency convergence issues -->
                 <exclusion>
-                    <groupId>org.olap4j</groupId>
-                    <artifactId>olap4j</artifactId>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotation</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

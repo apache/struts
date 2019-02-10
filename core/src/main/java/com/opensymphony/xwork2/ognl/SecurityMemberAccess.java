@@ -105,19 +105,25 @@ public class SecurityMemberAccess implements MemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
+        final int memberModifiers = member.getModifiers();
+
+        if (!checkPublicMemberAccess(memberModifiers)) {
+            LOG.warn("Access to non-public [{}] is blocked!", member);
+            return false;
+        }
+
+        if (!checkStaticFieldAccess(member, memberModifiers)) {
+            LOG.warn("Access to static field [{}] is blocked!", member);
+            return false;
+        }
+
         if (checkEnumAccess(target, member)) {
             LOG.trace("Allowing access to enum: target [{}], member [{}]", target, member);
             return true;
         }
 
-        final int memberModifiers = member.getModifiers();
-        if (!checkStaticMemberAccess(member, memberModifiers)) {
-            LOG.warn("Access to static [{}] is blocked!", member);
-            return false;
-        }
-
-        if (!checkPublicMemberAccess(memberModifiers)) {
-            LOG.trace("Access to non-public [{}] is blocked!", member);
+        if (!checkStaticMethodAccess(member, memberModifiers)) {
+            LOG.warn("Access to static method [{}] is blocked!", member);
             return false;
         }
 
@@ -151,28 +157,39 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     /**
-     * Check access for static members (via modifiers)
-     * 
-     * Static non-field access result is allowStaticMethodAccess.
-     * Static field access result is allowStaticFieldAccess.
+     * Check access for static method (via modifiers).
      * 
      * Note: For non-static members, the result is always true.
      * 
      * @param member
-     * @param memberModifiers (minor optimization)
+     * @param memberModifiers
      * 
      * @return
      */
-    protected final boolean checkStaticMemberAccess(Member member, int memberModifiers) {
-        if (Modifier.isStatic(memberModifiers)) {
-            if (member instanceof Field) {
-                return allowStaticFieldAccess;
-            } else {
-                if (allowStaticMethodAccess) {
-                    LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
-                }
-                return allowStaticMethodAccess;
+    protected boolean checkStaticMethodAccess(Member member, int memberModifiers) {
+        if (Modifier.isStatic(memberModifiers) && !(member instanceof Field)) {
+            if (allowStaticMethodAccess) {
+                LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
             }
+            return allowStaticMethodAccess;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Check access for static field (via modifiers).
+     * 
+     * Note: For non-static members, the result is always true.
+     * 
+     * @param member
+     * @param memberModifiers
+     * 
+     * @return
+     */
+    protected boolean checkStaticFieldAccess(Member member, int memberModifiers) {
+        if (Modifier.isStatic(memberModifiers) && member instanceof Field) {
+            return allowStaticFieldAccess;
         } else {
             return true;
         }
@@ -187,11 +204,11 @@ public class SecurityMemberAccess implements MemberAccess {
      * 
      * @return
      */
-    protected final boolean checkPublicMemberAccess(int memberModifiers) {
+    protected boolean checkPublicMemberAccess(int memberModifiers) {
         return Modifier.isPublic(memberModifiers);
     }
 
-    protected final boolean checkEnumAccess(Object target, Member member) {
+    protected boolean checkEnumAccess(Object target, Member member) {
         if (target instanceof Class) {
             final Class clazz = (Class) target;
             if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values")) {

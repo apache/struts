@@ -21,26 +21,19 @@ package org.apache.struts2.views.jasperreports;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.HashMap;
-import java.util.Set;
 
 
 /**
  * Ported to Struts:
- *
  */
-public class ValueStackShadowMap extends HashMap {
+public class ValueStackShadowMap extends HashMap<String, Object> {
 
     private static final long serialVersionUID = -167109778490907240L;
 
     /**
      * valueStack reference
      */
-    ValueStack valueStack;
-
-    /**
-     * entries reference
-     */
-    Set entries;
+    transient ValueStack valueStack;
 
 
     /**
@@ -60,13 +53,11 @@ public class ValueStackShadowMap extends HashMap {
      * @return <tt>true</tt>, if contains key, <tt>false</tt> otherwise.
      * @see java.util.HashMap#containsKey
      */
-    public boolean containsKey(Object key) {
+    public boolean containsKey(String key) {
         boolean hasKey = super.containsKey(key);
 
-        if (!hasKey) {
-            if (valueStack.findValue((String) key) != null) {
-                hasKey = true;
-            }
+        if (!hasKey && valueStack.findValue(key) != null) {
+            hasKey = true;
         }
 
         return hasKey;
@@ -79,10 +70,10 @@ public class ValueStackShadowMap extends HashMap {
      * @return value - The object from HashMap or if null, from the valueStack.
      * @see java.util.HashMap#get
      */
-    public Object get(Object key) {
+    public Object get(String key) {
         Object value = super.get(key);
 
-        if ((value == null) && key instanceof String) {
+        if ((value == null)) {
             value = valueStack.findValue((String) key);
         }
 

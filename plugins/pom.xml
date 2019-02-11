@@ -51,7 +51,6 @@
         <module>portlet</module>
         <module>portlet-tiles</module>
         <module>rest</module>
-        <module>sitegraph</module>
         <module>sitemesh</module>
         <module>spring</module>
         <module>testng</module>

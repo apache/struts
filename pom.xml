@@ -366,7 +366,6 @@
                             <exclude>src/main/webapp/**/*.js</exclude>
                             <exclude>src/main/webapp/**/*.svg</exclude>
                             <exclude>src/main/webapp/**/*.txt</exclude>
-                            <exclude>src/main/resources/**/sitegraph-usage.txt</exclude>
                             <exclude>src/main/resources/**/docs-urls.txt</exclude>
                             <exclude>src/etc/header.txt</exclude>
                             <exclude>src/main/resources/static/css/**/*.css</exclude>
@@ -641,11 +640,6 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-rest-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-sitegraph-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

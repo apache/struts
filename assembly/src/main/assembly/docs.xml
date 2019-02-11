@@ -129,10 +129,6 @@
             <outputDirectory>docs/struts2-plugins/struts2-rest-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../plugins/sitegraph/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-sitegraph-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>../plugins/sitemesh/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin/apidocs</outputDirectory>
         </fileSet>

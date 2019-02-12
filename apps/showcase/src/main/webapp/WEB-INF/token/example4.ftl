@@ -50,7 +50,7 @@
 
 		<@s.form action="transfer4">
 			<@s.token/>
-			<@s.textfield label="Amount" name="amount" required="true" value="400"/>
+			<@s.textfield label="Amount" name="amount" required=true value="400"/>
 			<@s.submit value="Transfer money" cssClass="btn btn-primary"/>
 		</@s.form>
 		</div>

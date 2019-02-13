@@ -125,11 +125,17 @@ public class OgnlValueStackFactory implements ValueStackFactory {
 
     /**
      * Retrieve allowStaticFieldAccess state from the container (allows for lazy fetching)
+     * Note: Defaults to true when no state is defined in the container (same default behaviour as OgnlUtil)
      * 
      * @return
      */
     protected boolean containerAllowsStaticFieldAccess() {
-        return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS));
+        final String allowStaticFieldAcccess = container.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS);
+        if (allowStaticFieldAcccess == null) {
+            return true;
+        } else {
+            return BooleanUtils.toBoolean(allowStaticFieldAcccess);
+        }
     }
 
 }

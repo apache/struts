@@ -91,6 +91,7 @@ public class ConstantConfig {
     private BeanConfig localeProvider;
     private BeanConfig localeProviderFactory;
     private String mapperIdParameterName;
+    private Boolean ognlAllowStaticFieldAccess;
     private Boolean ognlAllowStaticMethodAccess;
     private BeanConfig actionValidatorManager;
     private BeanConfig valueStackFactory;
@@ -219,6 +220,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_LOCALE_PROVIDER, beanConfToString(localeProvider));
         map.put(StrutsConstants.STRUTS_LOCALE_PROVIDER_FACTORY, beanConfToString(localeProviderFactory));
         map.put(StrutsConstants.STRUTS_ID_PARAMETER_NAME, mapperIdParameterName);
+        map.put(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Objects.toString(ognlAllowStaticFieldAccess, null));
         map.put(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, Objects.toString(ognlAllowStaticMethodAccess, null));
         map.put(StrutsConstants.STRUTS_ACTIONVALIDATORMANAGER, beanConfToString(actionValidatorManager));
         map.put(StrutsConstants.STRUTS_VALUESTACKFACTORY, beanConfToString(valueStackFactory));
@@ -822,6 +824,14 @@ public class ConstantConfig {
 
     public void setMapperIdParameterName(String mapperIdParameterName) {
         this.mapperIdParameterName = mapperIdParameterName;
+    }
+
+    public Boolean getOgnlAllowStaticFieldAccess() {
+        return ognlAllowStaticFieldAccess;
+    }
+
+    public void setOgnlAllowStaticFieldAccess(Boolean ognlAllowStaticFieldAccess) {
+        this.ognlAllowStaticFieldAccess = ognlAllowStaticFieldAccess;
     }
 
     public Boolean getOgnlAllowStaticMethodAccess() {

@@ -125,7 +125,6 @@ public class OgnlValueStackFactory implements ValueStackFactory {
 
     /**
      * Retrieve allowStaticFieldAccess state from the container (allows for lazy fetching)
-     * Note: Defaults to true when no state is defined in the container (same default behaviour as OgnlUtil)
      * 
      * @return
      */

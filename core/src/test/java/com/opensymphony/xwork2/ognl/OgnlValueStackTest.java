@@ -972,39 +972,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals(null, stack.findValue("address.country.name", String.class));
     }
 
-    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStatic) throws Exception {
-        super.tearDown();
-
-        ConfigurationProvider configurationProvider;
-        if (devMode == true && allowStatic == true) {
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-devmode-true.xml", true);
-        }
-        else if (devMode == true && allowStatic == false) {
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-devmode-true.xml", true);
-        }
-        else if (devMode == false && allowStatic == true) {
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-true.xml", true);
-        }
-        else {  // devMode, allowStatic both false
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-devmode-false.xml", true);
-        }
-
-        configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
-        configurationManager.addContainerProvider(configurationProvider);
-        configuration = configurationManager.getConfiguration();
-        container = configuration.getContainer();
-        container.inject(configurationProvider);
-        configurationProvider.init(configuration);
-        actionProxyFactory = container.getInstance(ActionProxyFactory.class);
-
-        // Reset the value stack
-        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
-        stack.getContext().put(ActionContext.CONTAINER, container);
-        ActionContext.setContext(new ActionContext(stack.getContext()));
-
-        ognlUtil = container.getInstance(OgnlUtil.class);
-    }
-
     class BadJavaBean {
         private int count;
         private int count2;

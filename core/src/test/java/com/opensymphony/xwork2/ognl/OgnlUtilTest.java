@@ -19,19 +19,19 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ChainingInterceptor;
+import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.test.User;
 import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.*;
+import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -1312,61 +1312,25 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     private void reloadTestContainerConfiguration(boolean devMode, boolean allowStaticMethod) throws Exception {
-        super.tearDown();
-
-        ConfigurationProvider configurationProvider;
-        if (devMode == true && allowStaticMethod == true) {
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-devmode-true.xml", true);
-        }
-        else if (devMode == true && allowStaticMethod == false) {
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-devmode-true.xml", true);
-        }
-        else if (devMode == false && allowStaticMethod == true) {
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-true.xml", true);
-        }
-        else {  // devMode, allowStatic both false
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-allowstatic-devmode-false.xml", true);
-        }
-
-        configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
-        configurationManager.addContainerProvider(configurationProvider);
-        configuration = configurationManager.getConfiguration();
-        container = configuration.getContainer();
-        container.inject(configurationProvider);
-        configurationProvider.init(configuration);
-        actionProxyFactory = container.getInstance(ActionProxyFactory.class);
-
-        // Reset the value stack
-        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
-        stack.getContext().put(ActionContext.CONTAINER, container);
-        ActionContext.setContext(new ActionContext(stack.getContext()));
-
+        loadConfigurationProviders(new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder,
+                                 LocatableProperties props) throws ConfigurationException {
+                props.setProperty(StrutsConstants.STRUTS_DEVMODE, "" + devMode);
+                props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, "" + allowStaticMethod);
+            }
+        });
         ognlUtil = container.getInstance(OgnlUtil.class);
     }
 
     private void reloadTestContainerConfiguration(boolean allowStaticField) throws Exception {
-        super.tearDown();
-
-        ConfigurationProvider configurationProvider;
-        if (allowStaticField) {
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-staticfield-true.xml", true);
-        } else {
-            configurationProvider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-staticfield-false.xml", true);
-        }
-
-        configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
-        configurationManager.addContainerProvider(configurationProvider);
-        configuration = configurationManager.getConfiguration();
-        container = configuration.getContainer();
-        container.inject(configurationProvider);
-        configurationProvider.init(configuration);
-        actionProxyFactory = container.getInstance(ActionProxyFactory.class);
-
-        // Reset the value stack
-        ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
-        stack.getContext().put(ActionContext.CONTAINER, container);
-        ActionContext.setContext(new ActionContext(stack.getContext()));
-
+        loadConfigurationProviders(new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder,
+                                 LocatableProperties props) throws ConfigurationException {
+                props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, "" + allowStaticField);
+            }
+        });
         ognlUtil = container.getInstance(OgnlUtil.class);
     }
 

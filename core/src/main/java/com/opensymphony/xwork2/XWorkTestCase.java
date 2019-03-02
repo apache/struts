@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import junit.framework.TestCase;
+import org.apache.commons.lang3.ClassUtils;
 
 /**
  * Base JUnit TestCase to extend for XWork specific JUnit tests. Uses 
@@ -78,16 +79,20 @@ public abstract class XWorkTestCase extends TestCase {
             @Override
             public void register(ContainerBuilder builder,
                     LocatableProperties props) throws ConfigurationException {
-                builder.factory(type, name, new Factory() {
-                    public Object create(Context context) throws Exception {
-                        return impl;
-                    }
+                if (impl instanceof String || ClassUtils.isPrimitiveOrWrapper(impl.getClass())) {
+                    props.setProperty(name, "" + impl);
+                } else {
+                    builder.factory(type, name, new Factory() {
+                        public Object create(Context context) throws Exception {
+                            return impl;
+                        }
 
-                    @Override
-                    public Class type() {
-                        return impl.getClass();
-                    }
-                }, Scope.SINGLETON);
+                        @Override
+                        public Class type() {
+                            return impl.getClass();
+                        }
+                    }, Scope.SINGLETON);
+                }
             }
         });
     }

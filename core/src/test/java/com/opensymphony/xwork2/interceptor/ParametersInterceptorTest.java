@@ -32,6 +32,8 @@ import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+
+import org.apache.struts2.interceptor.ActionMappingParametersInterceptor;
 import org.junit.Assert;
 import ognl.OgnlContext;
 import ognl.PropertyAccessor;
@@ -729,6 +731,30 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertNotNull(action);
         assertNotNull(action.getBeanList());
         assertFalse(action.getBeanList().isEmpty());
+    }
+
+    public void testActionMappingContext() throws Exception {
+        ActionMappingParametersInterceptor ampi = new ActionMappingParametersInterceptor();
+        container.inject(ampi);
+
+        final Map<String, Object> actual = injectValueStackFactory(ampi);
+        ValueStack stack = injectValueStack(actual);
+
+        final Map<String, Object> expected = new HashMap<String, Object>() {
+            {
+                put("fooKey", "fooValue");
+            }
+        };
+
+        Map<String, Object> parameters = new HashMap<String, Object>() {
+            {
+                put("fooKey", "fooValue");
+            }
+        };
+        ampi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        assertEquals(expected, actual);
+
+        Assert.assertEquals("fooValue", ActionContext.getContext().getParameters().get("fooKey").getObject());
     }
 
     private ValueStack injectValueStack(Map<String, Object> actual) {

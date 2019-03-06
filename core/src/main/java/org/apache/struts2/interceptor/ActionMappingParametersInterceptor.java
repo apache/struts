@@ -100,12 +100,12 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
      *                  </p>
      */
     @Override
-    protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
+    protected void addParametersToContext(ActionContext ac, Map<String, Parameter> newParams) {
         HttpParameters previousParams = ac.getParameters();
 
-        // TODO can we just change the method signature to Map<String, Parameter>?
+        // have to unwrap from Parameter to Object since HttpParameters.Builder will re-wrap
         Map<String, Object> unwrappedParams = newParams.entrySet().stream().collect(Collectors.toMap(
-            Map.Entry::getKey, e -> ((Parameter) e.getValue()).getObject()));
+            Map.Entry::getKey, e -> e.getValue().getObject()));
 
         HttpParameters.Builder combinedParams = HttpParameters.create().withParent(previousParams).withExtraParams(unwrappedParams);
 

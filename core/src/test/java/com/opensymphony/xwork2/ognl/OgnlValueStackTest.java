@@ -21,9 +21,7 @@ package com.opensymphony.xwork2.ognl;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
-import com.opensymphony.xwork2.mock.DummyTextProvider;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.test.TestBean2;
@@ -62,7 +60,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public static Integer staticInteger100Method() {
-        return new Integer(100);
+        return 100;
     }
 
     private OgnlUtil ognlUtil;
@@ -89,49 +87,31 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     /**
-     * Create a default OgnlValueStackFactory instance (as configured by standard
-     * test setUp() configuration and XWorkConfigurationProvider).
-     * 
-     * @return
+     * @return current OgnlValueStackFactory instance from current container
      */
-    private OgnlValueStackFactory createDefaultValueStackFactory() {
-        return (OgnlValueStackFactory) container.getInstance(ValueStackFactory.class, Container.DEFAULT_NAME);
+    private OgnlValueStackFactory getValueStackFactory() {
+        return (OgnlValueStackFactory) container.getInstance(ValueStackFactory.class);
     }
 
     /**
-     * Create a new OgnlValueStackFactory instance that is independent of the test setUp() configuration.
+     * Reloads container and gets a new OgnlValueStackFactory with specified new configuration.
      * Intended for testing OgnlValueStack instance(s) that are minimally configured.
      * This should help ensure no underlying configuration/injection side-effects are responsible
      * for the behaviour of fundamental access control flags).
      * 
-     * @param devMode
-     * @param allowStaticMethod
-     * @param allowStaticField
-     * @param noStaticAccessFlagsSet (if true, clear static access flags, other parameters ignored)
-     * 
-     * @return
+     * @param allowStaticMethod new allowStaticMethod configuration
+     * @param allowStaticField new allowStaticField configuration
+     * @return a new OgnlValueStackFactory with specified new configuration
      */
-    private OgnlValueStackFactory createRawValueStackFactory (boolean devMode,
-            boolean allowStaticMethod, boolean allowStaticField, boolean noStaticAccessFlagsSet) {
-        OgnlValueStackFactory ognlValueStackFactory = new OgnlValueStackFactory();
-        DummyTextProvider dummyTextProvider = new DummyTextProvider();
-        XWorkConverter xWorkConverter = container.getInstance(XWorkConverter.class);
-
+    private OgnlValueStackFactory reloadValueStackFactory(Boolean allowStaticMethod, Boolean allowStaticField) {
         try {
-            if (noStaticAccessFlagsSet) {
-                reloadTestContainerConfigurationNoStaticAccessFlagsSet();
-            } else {
-                reloadTestContainerConfiguration(devMode, allowStaticMethod, allowStaticField);
-            }
-            ognlValueStackFactory.setContainer(container);
-            ognlValueStackFactory.setTextProvider(dummyTextProvider);
-            ognlValueStackFactory.setXWorkConverter(xWorkConverter);
+            reloadTestContainerConfiguration(allowStaticMethod, allowStaticField);
         }
         catch (Exception ex) {
             fail("Unable to reload container configuration and configure ognlValueStackFactory - exception: " + ex);
         }
 
-        return ognlValueStackFactory;
+        return getValueStackFactory();
     }
 
     public void testExpOverridesCanStackExpUp() throws Exception {
@@ -1050,7 +1030,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when a default configuration is used.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryDefaultConfig() {
-        OgnlValueStackFactory ognlValueStackFactory = createDefaultValueStackFactory();
+        OgnlValueStackFactory ognlValueStackFactory = getValueStackFactory();
         OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
@@ -1085,7 +1065,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when no static access flags are set (not present in configuration).
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryNoFlagsSet() {
-        OgnlValueStackFactory ognlValueStackFactory = createRawValueStackFactory(false, false, false, true);
+        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(null, null);
         OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
@@ -1123,7 +1103,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when both static access flags are set to false.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryNoStaticAccess() {
-        OgnlValueStackFactory ognlValueStackFactory = createRawValueStackFactory(false, false, false, false);
+        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(false, false);
         OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
@@ -1158,7 +1138,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when both static access flags are set to true.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryAllStaticAccess() {
-        OgnlValueStackFactory ognlValueStackFactory = createRawValueStackFactory(false, true, true, false);
+        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(true, true);
         OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
@@ -1194,7 +1174,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when static method access flag is true, static field access flag is false.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryOnlyStaticMethodAccess() {
-        OgnlValueStackFactory ognlValueStackFactory = createRawValueStackFactory(false, true, false, false);
+        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(true, false);
         OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
@@ -1230,7 +1210,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when static method access flag is false, static field access flag is true.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryOnlyStaticFieldAccess() {
-        OgnlValueStackFactory ognlValueStackFactory = createRawValueStackFactory(false, false, true, false);
+        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(false, true);
         OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
@@ -1260,32 +1240,24 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertNull("accessed private field (result not null) ?", accessedValue);
     }
 
-    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStaticMethod, boolean allowStaticField) throws Exception {
+    private void reloadTestContainerConfiguration(Boolean allowStaticMethod, Boolean allowStaticField) throws Exception {
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder,
                                  LocatableProperties props) throws ConfigurationException {
-                props.setProperty(StrutsConstants.STRUTS_DEVMODE, "" + devMode);
-                props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, "" + allowStaticMethod);
-                props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, "" + allowStaticField);
-            }
-        });
-        ognlUtil = container.getInstance(OgnlUtil.class);
-    }
-
-    private void reloadTestContainerConfigurationNoStaticAccessFlagsSet() throws Exception {
-        loadConfigurationProviders(new StubConfigurationProvider() {
-            @Override
-            public void register(ContainerBuilder builder,
-                                 LocatableProperties props) throws ConfigurationException {
-                // allowStaticFieldAccess, allowStaticMethodAccess both undefined (by removing).
-                // The default values should be true for allowStaticFieldAccess, false for allowStaticMethodAccess.
-                // Note: devMode is a required property (removing it results in injection dependency exception.
+                // null values simulate undefined (by removing).
+                // undefined values then should be evaluated to false
                 if (props.containsKey(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS)) {
                     props.remove(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS);
                 }
                 if (props.containsKey(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS)) {
                     props.remove(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS);
+                }
+                if (allowStaticMethod != null) {
+                    props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, "" + allowStaticMethod);
+                }
+                if (allowStaticField != null) {
+                    props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, "" + allowStaticField);
                 }
             }
         });

@@ -32,9 +32,9 @@ import java.io.File;
  */
 public class MultipleFileUploadUsingArrayAction extends ActionSupport {
 
-	private File[] uploads;
-	private String[] uploadFileNames;
-	private String[] uploadContentTypes;
+	private File[] uploads = new File[0];
+	private String[] uploadFileNames = new String[0];
+	private String[] uploadContentTypes = new String[0];
 
 
 	public String upload() throws Exception {

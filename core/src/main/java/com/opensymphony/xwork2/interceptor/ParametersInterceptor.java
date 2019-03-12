@@ -158,7 +158,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      *                  In subclasses both retrieveParameters() and addParametersToContext() should be overridden.
      *                  </p>
      */
-    protected void addParametersToContext(ActionContext ac, Map<String, Parameter> newParams) {
+    protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
     }
 
     protected void setParameters(final Object action, ValueStack stack, HttpParameters parameters) {

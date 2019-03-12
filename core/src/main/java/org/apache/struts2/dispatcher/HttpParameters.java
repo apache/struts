@@ -171,7 +171,13 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
 
         public Builder withExtraParams(Map<String, ?> params) {
             if (params != null) {
-                requestParameterMap.putAll(params);
+                for (Map.Entry<String, ?> kvp : params.entrySet()) {
+                    Object value = kvp.getValue();
+                    if (value instanceof Parameter) {
+                        value = ((Parameter) value).getObject();
+                    }
+                    requestParameterMap.put(kvp.getKey(), value);
+                }
             }
             return this;
         }
@@ -183,7 +189,7 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
 
         public HttpParameters build() {
             Map<String, Parameter> parameters = (parent == null)
-                    ? new HashMap<String, Parameter>()
+                    ? new HashMap<>()
                     : new HashMap<>(parent.parameters);
 
             for (Map.Entry<String, Object> entry : requestParameterMap.entrySet()) {

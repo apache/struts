@@ -22,11 +22,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -100,14 +98,9 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
      *                  </p>
      */
     @Override
-    protected void addParametersToContext(ActionContext ac, Map<String, Parameter> newParams) {
+    protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
         HttpParameters previousParams = ac.getParameters();
-
-        // have to unwrap from Parameter to Object since HttpParameters.Builder will re-wrap
-        Map<String, Object> unwrappedParams = newParams.entrySet().stream().collect(Collectors.toMap(
-            Map.Entry::getKey, e -> e.getValue().getObject()));
-
-        HttpParameters.Builder combinedParams = HttpParameters.create().withParent(previousParams).withExtraParams(unwrappedParams);
+        HttpParameters.Builder combinedParams = HttpParameters.create().withParent(previousParams).withExtraParams(newParams);
 
         ac.setParameters(combinedParams.build());
     }

@@ -126,11 +126,12 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
             params.remove(tokenName);
             params.remove(TokenHelper.TOKEN_NAME_FIELD);
 
-			String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+            String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
             ActionInvocation savedInvocation = InvocationSessionStore.loadInvocation(sessionTokenName, token);
 
             if (savedInvocation != null) {
                 // set the valuestack to the request scope
+                // Note: loadInvocation() restored invocation's PageContext (as savedInvocation's will already be closed)
                 ValueStack stack = savedInvocation.getStack();
                 request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
@@ -158,8 +159,8 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         // we know the token name and token must be there
         String key = TokenHelper.getTokenName();
         String token = TokenHelper.getToken(key);
-		String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(key);
-		InvocationSessionStore.storeInvocation(sessionTokenName, token, invocation);
+        String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(key);
+        InvocationSessionStore.storeInvocation(sessionTokenName, token, invocation);
 
         return invocation.invoke();
     }

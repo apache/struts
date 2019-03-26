@@ -112,6 +112,20 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         }
     }
 
+    /**
+     * Handles processing of invalid tokens.  If a previously stored invocation is
+     * available, the method will attempt to return and render its result.  Otherwise
+     * it will return INVALID_TOKEN_CODE.
+     * 
+     * Note: Because a stored (previously completed) invocation's PageContext will be closed,
+     *   this method must replace the stored PageContext with the current invocation's one (or a null).
+     *   See {@link org.apache.struts2.util.InvocationSessionStore#loadInvocation(String key, String token)} for details.
+     * 
+     * @param invocation
+     * 
+     * @return
+     * @throws Exception 
+     */
     @Override
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
@@ -126,11 +140,11 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
             params.remove(tokenName);
             params.remove(TokenHelper.TOKEN_NAME_FIELD);
 
-			String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+            String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
             ActionInvocation savedInvocation = InvocationSessionStore.loadInvocation(sessionTokenName, token);
 
             if (savedInvocation != null) {
-                // set the valuestack to the request scope
+                // set the savedInvocation's valuestack to the request scope
                 ValueStack stack = savedInvocation.getStack();
                 request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
@@ -153,13 +167,23 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         return INVALID_TOKEN_CODE;
     }
 
+    /**
+     * Handles processing of valid tokens.  Stores the current invocation for
+     * later use by {@link handleInvalidToken}.
+     * See {@link org.apache.struts2.util.InvocationSessionStore#storeInvocation(String key, String token, ActionInvocation invocation)} for details.
+     * 
+     * @param invocation
+     * 
+     * @return
+     * @throws Exception 
+     */
     @Override
     protected String handleValidToken(ActionInvocation invocation) throws Exception {
         // we know the token name and token must be there
         String key = TokenHelper.getTokenName();
         String token = TokenHelper.getToken(key);
-		String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(key);
-		InvocationSessionStore.storeInvocation(sessionTokenName, token, invocation);
+        String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(key);
+        InvocationSessionStore.storeInvocation(sessionTokenName, token, invocation);
 
         return invocation.invoke();
     }

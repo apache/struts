@@ -31,6 +31,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.struts.mock.MockPageContext;
+import org.apache.struts2.ServletActionContext;
 
 
 /**
@@ -98,6 +100,35 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
 
         ActionInvocation savedInvocation = InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
         assertNull(savedInvocation);//Currently we don't support invocation restore from serialized session
+    }
+
+    public void testStoreAndLoadPreservesPageContext() {
+        ActionContext actionContext = ActionContext.getContext();
+
+        // Create mock PageContext to put with the saved context (simulating a PageContext previously
+        // used and closed after generating JSP output).
+        MockPageContext mockSavedPageContext = new MockPageContext();
+        actionContext.put(ServletActionContext.PAGE_CONTEXT, mockSavedPageContext);
+        assertEquals(mockSavedPageContext, ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT));
+
+        InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
+
+        ActionContext actionContext2 = new ActionContext(new HashMap<String, Object>());
+        actionContext2.setSession(session);
+        ActionContext.setContext(actionContext2);
+        assertEquals(actionContext2, ActionContext.getContext());
+
+        // Create mock PageContext to put with the current context (simulating a PageContext 
+        // associated with the current (active) process flow).  In real-world processing it
+        // will usually be null, but if non-null it should be preserved/restored upon load of the
+        // saved context.
+        MockPageContext mockPreviousPageContext = new MockPageContext();
+        actionContext2.put(ServletActionContext.PAGE_CONTEXT, mockPreviousPageContext);
+        assertEquals(mockPreviousPageContext, ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT));
+
+        InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
+        assertEquals(actionContext, ActionContext.getContext());
+        assertEquals(mockPreviousPageContext, ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT));
     }
 
     protected void setUp() throws Exception {

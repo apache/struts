@@ -33,7 +33,7 @@ import java.util.TreeSet;
 @SuppressWarnings("unchecked")
 public class HttpParameters implements Map<String, Parameter>, Cloneable {
 
-    private Map<String, Parameter> parameters;
+    final private Map<String, Parameter> parameters;
 
     private HttpParameters(Map<String, Parameter> parameters) {
         this.parameters = parameters;
@@ -44,7 +44,7 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
     }
 
     public static Builder create() {
-        return new Builder(new HashMap<String, Object>());
+        return new Builder(new HashMap<>());
     }
 
     public HttpParameters remove(Set<String> paramsToRemove) {
@@ -183,13 +183,36 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
 
         public HttpParameters build() {
             Map<String, Parameter> parameters = (parent == null)
-                    ? new HashMap<String, Parameter>()
+                    ? new HashMap<>()
                     : new HashMap<>(parent.parameters);
 
             for (Map.Entry<String, Object> entry : requestParameterMap.entrySet()) {
                 String name = entry.getKey();
                 Object value = entry.getValue();
                 parameters.put(name, new Parameter.Request(name, value));
+            }
+
+            return new HttpParameters(parameters);
+        }
+
+        /**
+        * Alternate Builder method which avoids wrapping any parameters that are already
+        * a {@link Parameter} element within another {@link Parameter} wrapper.
+        *
+        * @return 
+         */
+        public HttpParameters buildNoNestedWrapping() {
+            Map<String, Parameter> parameters = (parent == null)
+                    ? new HashMap<>()
+                    : new HashMap<>(parent.parameters);
+
+            for (Map.Entry<String, Object> entry : requestParameterMap.entrySet()) {
+                String name = entry.getKey();
+                Object value = entry.getValue();
+                Parameter parameterValue = (value instanceof Parameter)
+                        ? (Parameter) value
+                        : new Parameter.Request(name, value);
+                parameters.put(name, parameterValue);
             }
 
             return new HttpParameters(parameters);

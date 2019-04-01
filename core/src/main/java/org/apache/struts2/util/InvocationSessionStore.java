@@ -20,6 +20,7 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import org.apache.struts2.ServletActionContext;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -55,11 +56,20 @@ public class InvocationSessionStore {
             return null;
         }
 
-        ActionInvocation savedInvocation = null;
-        if (invocationContext.invocation != null) {
-            savedInvocation = invocationContext.invocation;
-            ActionContext.setContext(savedInvocation.getInvocationContext());
-            ActionContext.getContext().setValueStack(savedInvocation.getStack());
+        final ActionInvocation savedInvocation = invocationContext.invocation;
+        if (savedInvocation != null) {
+            // WW-5026 - Preserve the previous PageContext (even if null) and restore it to the
+            // ActionContext after loading the savedInvocation context.  The saved context's PageContext
+            // would already be closed at this point (causing failures if used for output).
+            final ActionContext savedActionContext = savedInvocation.getInvocationContext();
+            final ActionContext previousActionContext = ActionContext.getContext();
+            ActionContext.setContext(savedActionContext);
+            savedActionContext.setValueStack(savedInvocation.getStack());
+            if (previousActionContext != null) {
+                savedActionContext.put(ServletActionContext.PAGE_CONTEXT, previousActionContext.get(ServletActionContext.PAGE_CONTEXT));
+            } else {
+                savedActionContext.put(ServletActionContext.PAGE_CONTEXT, null);
+            }
         }
 
         return savedInvocation;

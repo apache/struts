@@ -874,13 +874,16 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         if (allowedMethodsEls.getLength() > 0) {
             // user defined 'allowed-methods' so used them whatever Strict DMI was enabled or not
             allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
-
-            if (allowedMethodsEls.getLength() > 0) {
-                Node n = allowedMethodsEls.item(0).getFirstChild();
-                if (n != null) {
-                    String s = n.getNodeValue().trim();
-                    if (s.length() > 0) {
-                        allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(s));
+            // Fix for WW-5029 (concatenate all possible text node children)
+            Node allowedMethodsNode = allowedMethodsEls.item(0);
+            if (allowedMethodsNode != null) {
+                NodeList allowedMethodsChildren = allowedMethodsNode.getChildNodes();
+                for (int i = 0; i < allowedMethodsChildren.getLength(); i++) {
+                    Node allowedMethodsChildNode = allowedMethodsChildren.item(i);
+                    String childNodeValue = (allowedMethodsChildNode != null ? allowedMethodsChildNode.getNodeValue() : "");
+                    childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
+                    if (childNodeValue.length() > 0) {
+                        allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(childNodeValue));
                     }
                 }
             }
@@ -937,11 +940,17 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         if (globalAllowedMethodsElms.getLength() > 0) {
             Set<String> globalAllowedMethods = new HashSet<>();
-            Node n = globalAllowedMethodsElms.item(0).getFirstChild();
-            if (n != null) {
-                String s = n.getNodeValue().trim();
-                if (s.length() > 0) {
-                    globalAllowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+            // Fix for WW-5029 (concatenate all possible text node children)
+            Node globaAllowedMethodsNode = globalAllowedMethodsElms.item(0);
+            if (globaAllowedMethodsNode != null) {
+                NodeList globaAllowedMethodsChildren = globaAllowedMethodsNode.getChildNodes();
+                for (int i = 0; i < globaAllowedMethodsChildren.getLength(); i++) {
+                    Node globalAllowedMethodsChildNode = globaAllowedMethodsChildren.item(i);
+                    String childNodeValue = (globalAllowedMethodsChildNode != null ? globalAllowedMethodsChildNode.getNodeValue() : "");
+                    childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
+                    if (childNodeValue.length() > 0) {
+                        globalAllowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(childNodeValue));
+                    }
                 }
             }
             packageContext.addGlobalAllowedMethods(globalAllowedMethods);

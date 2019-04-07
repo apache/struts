@@ -30,11 +30,21 @@ import javax.servlet.ServletContext;
 
 public class StrutsTilesInitializer extends AbstractTilesInitializer {
 
+    public static final String STRUTS_TILES_ALTERNATE_FILERESOURCEHANDLING = "struts.tiles.alternatefileresourcehandling";
+
     private static final Logger LOG = LogManager.getLogger(StrutsTilesInitializer.class);
 
     @Override
     protected ApplicationContext createTilesApplicationContext(ApplicationContext preliminaryContext) {
         ServletContext servletContext = (ServletContext) preliminaryContext.getContext();
+
+        // Opt-in alternate file resource handling for WW-5011
+        if (Boolean.parseBoolean(servletContext.getInitParameter(STRUTS_TILES_ALTERNATE_FILERESOURCEHANDLING))) {
+            StrutsWildcardServletApplicationContext.setUseAlternateFileResourceHandling(true);
+        } else {
+            StrutsWildcardServletApplicationContext.setUseAlternateFileResourceHandling(false);
+        }
+        LOG.trace("Tiles alternate file resourcehandling: " + StrutsWildcardServletApplicationContext.isUseAlternateFileResourceHandling());
 
         if (servletContext.getInitParameter(DefinitionsFactory.DEFINITIONS_CONFIG) != null) {
             LOG.trace("Found definitions config in web.xml, using standard Servlet support ....");

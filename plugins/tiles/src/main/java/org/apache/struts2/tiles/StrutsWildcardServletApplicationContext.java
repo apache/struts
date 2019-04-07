@@ -43,7 +43,28 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
 
     private static final Logger LOG = LogManager.getLogger(StrutsWildcardServletApplicationContext.class);
 
+    private static volatile boolean useAlternateFileResourceHandling;  // WW-5011 opt-in handling
+
     private ResourceFinder finder;
+
+
+    /**
+     * Set alternate File resource handling logic state
+     * 
+     * @param useAlternateFileResourceHandling 
+     */
+    public static void setUseAlternateFileResourceHandling(boolean useAlternateFileResourceHandling) {
+        StrutsWildcardServletApplicationContext.useAlternateFileResourceHandling = useAlternateFileResourceHandling;
+    }
+
+    /**
+     * Check if alternate File resource handling logic is enabled or not
+     * 
+     * @return 
+     */
+    public static boolean isUseAlternateFileResourceHandling() {
+        return useAlternateFileResourceHandling;
+    }
 
     public StrutsWildcardServletApplicationContext(ServletContext context) {
         super(context);
@@ -101,7 +122,11 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
         File localFile = new File(localePath);
         if (localFile.exists()) {
             try {
-                return new StrutsApplicationResource(localFile.toURI().toURL());
+                if (isUseAlternateFileResourceHandling()) {
+                    return new StrutsApplicationResourceAlternate(localFile.toURI().toURL());
+                } else {
+                    return new StrutsApplicationResource(localFile.toURI().toURL());
+                }
             } catch (MalformedURLException e) {
                 LOG.warn("Cannot access [{}]", localePath, e);
                 return null;
@@ -118,9 +143,14 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
         Pattern pattern = WildcardUtil.compileWildcardPattern(path);
         Map<String, URL> matches = finder.getResourcesMap("");
 
+        final boolean alternateFileResourceHandling = isUseAlternateFileResourceHandling();
         for (Map.Entry<String, URL> entry : matches.entrySet()) {
             if (pattern.matcher(entry.getKey()).matches()) {
-                resources.add(new StrutsApplicationResource(entry.getValue()));
+                if (alternateFileResourceHandling) {
+                    resources.add(new StrutsApplicationResourceAlternate(entry.getValue()));
+                } else {
+                    resources.add(new StrutsApplicationResource(entry.getValue()));
+                }
             }
         }
 

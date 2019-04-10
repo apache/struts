@@ -875,16 +875,20 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             // user defined 'allowed-methods' so used them whatever Strict DMI was enabled or not
             allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
             // Fix for WW-5029 (concatenate all possible text node children)
-            Node allowedMethodsNode = allowedMethodsEls.item(0);
+            final Node allowedMethodsNode = allowedMethodsEls.item(0);
             if (allowedMethodsNode != null) {
-                NodeList allowedMethodsChildren = allowedMethodsNode.getChildNodes();
+                final NodeList allowedMethodsChildren = allowedMethodsNode.getChildNodes();
+                final StringBuilder allowedMethodsSB = new StringBuilder();
                 for (int i = 0; i < allowedMethodsChildren.getLength(); i++) {
                     Node allowedMethodsChildNode = allowedMethodsChildren.item(i);
                     String childNodeValue = (allowedMethodsChildNode != null ? allowedMethodsChildNode.getNodeValue() : "");
                     childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
                     if (childNodeValue.length() > 0) {
-                        allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(childNodeValue));
+                        allowedMethodsSB.append(childNodeValue);
                     }
+                }
+                if (allowedMethodsSB.length() > 0) {
+                    allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(allowedMethodsSB.toString()));
                 }
             }
         } else if (packageContext.isStrictMethodInvocation()) {
@@ -944,13 +948,17 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             Node globaAllowedMethodsNode = globalAllowedMethodsElms.item(0);
             if (globaAllowedMethodsNode != null) {
                 NodeList globaAllowedMethodsChildren = globaAllowedMethodsNode.getChildNodes();
+                final StringBuilder globalAllowedMethodsSB = new StringBuilder();
                 for (int i = 0; i < globaAllowedMethodsChildren.getLength(); i++) {
                     Node globalAllowedMethodsChildNode = globaAllowedMethodsChildren.item(i);
                     String childNodeValue = (globalAllowedMethodsChildNode != null ? globalAllowedMethodsChildNode.getNodeValue() : "");
                     childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
                     if (childNodeValue.length() > 0) {
-                        globalAllowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(childNodeValue));
+                        globalAllowedMethodsSB.append(childNodeValue);
                     }
+                }
+                if (globalAllowedMethodsSB.length() > 0) {
+                    globalAllowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(globalAllowedMethodsSB.toString()));
                 }
             }
             packageContext.addGlobalAllowedMethods(globalAllowedMethods);

@@ -614,8 +614,10 @@ public class Dispatcher {
             logConfigurationException(request, e);
             sendError(request, response, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
-            e.printStackTrace();
             if (handleException || devMode) {
+                if (devMode) {
+                    LOG.debug("Dispatcher serviceAction failed", e);
+                }
                 sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
             } else {
                 throw new ServletException(e);

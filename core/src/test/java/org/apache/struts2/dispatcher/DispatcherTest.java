@@ -367,6 +367,38 @@ public class DispatcherTest extends StrutsInternalTestCase {
         assertTrue("should execute previous proxy", actionProxy.isExecutedCalled());
     }
 
+    /**
+     * Verify proper default (true) handleExceptionState for Dispatcher and that
+     * it properly reflects a manually configured change to false.
+     *
+     * @throws Exception
+     */
+    public void testHandleException() throws Exception {
+        Dispatcher du = initDispatcher(new HashMap<String, String>());
+        assertTrue("Default Dispatcher handleException state not true ?", du.isHandleException());
+
+        Dispatcher du2 = initDispatcher(new HashMap<String, String>() {{
+            put(StrutsConstants.STRUTS_HANDLE_EXCEPTION, "false");
+        }});
+        assertFalse("Modified Dispatcher handleException state not false ?", du2.isHandleException());
+    }
+
+    /**
+     * Verify proper default (false) devMode for Dispatcher and that
+     * it properly reflects a manually configured change to true.
+     *
+     * @throws Exception
+     */
+    public void testDevMode() throws Exception {
+        Dispatcher du = initDispatcher(new HashMap<String, String>());
+        assertFalse("Default Dispatcher devMode state not false ?", du.isDevMode());
+
+        Dispatcher du2 = initDispatcher(new HashMap<String, String>() {{
+            put(StrutsConstants.STRUTS_DEVMODE, "true");
+        }});
+        assertTrue("Modified Dispatcher devMode state not true ?", du2.isDevMode());
+    }
+
     class InternalConfigurationManager extends ConfigurationManager {
     	public boolean destroyConfiguration = false;
 

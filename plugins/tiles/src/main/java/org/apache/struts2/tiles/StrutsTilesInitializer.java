@@ -30,7 +30,7 @@ import javax.servlet.ServletContext;
 
 public class StrutsTilesInitializer extends AbstractTilesInitializer {
 
-    public static final String STRUTS_TILES_ALTERNATE_FILERESOURCEHANDLING = "struts.tiles.alternatefileresourcehandling";
+    public static final String STRUTS_TILES_ALTERNATE_FILERESOURCEHANDLING = "struts.tiles.alternateFileResourceHandling";
 
     private static final Logger LOG = LogManager.getLogger(StrutsTilesInitializer.class);
 

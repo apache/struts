@@ -874,14 +874,21 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         if (allowedMethodsEls.getLength() > 0) {
             // user defined 'allowed-methods' so used them whatever Strict DMI was enabled or not
             allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
-
-            if (allowedMethodsEls.getLength() > 0) {
-                Node n = allowedMethodsEls.item(0).getFirstChild();
-                if (n != null) {
-                    String s = n.getNodeValue().trim();
-                    if (s.length() > 0) {
-                        allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(s));
+            // Fix for WW-5029 (concatenate all possible text node children)
+            final Node allowedMethodsNode = allowedMethodsEls.item(0);
+            if (allowedMethodsNode != null) {
+                final NodeList allowedMethodsChildren = allowedMethodsNode.getChildNodes();
+                final StringBuilder allowedMethodsSB = new StringBuilder();
+                for (int i = 0; i < allowedMethodsChildren.getLength(); i++) {
+                    Node allowedMethodsChildNode = allowedMethodsChildren.item(i);
+                    String childNodeValue = (allowedMethodsChildNode != null ? allowedMethodsChildNode.getNodeValue() : "");
+                    childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
+                    if (childNodeValue.length() > 0) {
+                        allowedMethodsSB.append(childNodeValue);
                     }
+                }
+                if (allowedMethodsSB.length() > 0) {
+                    allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(allowedMethodsSB.toString()));
                 }
             }
         } else if (packageContext.isStrictMethodInvocation()) {
@@ -937,11 +944,21 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         if (globalAllowedMethodsElms.getLength() > 0) {
             Set<String> globalAllowedMethods = new HashSet<>();
-            Node n = globalAllowedMethodsElms.item(0).getFirstChild();
-            if (n != null) {
-                String s = n.getNodeValue().trim();
-                if (s.length() > 0) {
-                    globalAllowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+            // Fix for WW-5029 (concatenate all possible text node children)
+            Node globaAllowedMethodsNode = globalAllowedMethodsElms.item(0);
+            if (globaAllowedMethodsNode != null) {
+                NodeList globaAllowedMethodsChildren = globaAllowedMethodsNode.getChildNodes();
+                final StringBuilder globalAllowedMethodsSB = new StringBuilder();
+                for (int i = 0; i < globaAllowedMethodsChildren.getLength(); i++) {
+                    Node globalAllowedMethodsChildNode = globaAllowedMethodsChildren.item(i);
+                    String childNodeValue = (globalAllowedMethodsChildNode != null ? globalAllowedMethodsChildNode.getNodeValue() : "");
+                    childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
+                    if (childNodeValue.length() > 0) {
+                        globalAllowedMethodsSB.append(childNodeValue);
+                    }
+                }
+                if (globalAllowedMethodsSB.length() > 0) {
+                    globalAllowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(globalAllowedMethodsSB.toString()));
                 }
             }
             packageContext.addGlobalAllowedMethods(globalAllowedMethods);

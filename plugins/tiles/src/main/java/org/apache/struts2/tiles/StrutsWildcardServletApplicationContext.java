@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tiles.request.ApplicationResource;
+import org.apache.tiles.request.locale.URLApplicationResource;
 import org.apache.tiles.request.servlet.ServletApplicationContext;
 
 import javax.servlet.ServletContext;
@@ -101,7 +102,7 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
         File localFile = new File(localePath);
         if (localFile.exists()) {
             try {
-                return new StrutsApplicationResource(localFile.toURI().toURL());
+                return new URLApplicationResource(localePath, localFile.toURI().toURL());
             } catch (MalformedURLException e) {
                 LOG.warn("Cannot access [{}]", localePath, e);
                 return null;
@@ -120,7 +121,8 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
 
         for (Map.Entry<String, URL> entry : matches.entrySet()) {
             if (pattern.matcher(entry.getKey()).matches()) {
-                resources.add(new StrutsApplicationResource(entry.getValue()));
+                URL url = entry.getValue();
+                resources.add(new URLApplicationResource(url.toExternalForm(), url));
             }
         }
 

@@ -341,6 +341,27 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         req.setContentType("multipart/form-data; boundary=---------------------------207103069210263;charset=UTF-16LE");
         assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data;boundary=---------------------------207103069210263;charset=UTF-16LE");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data;boundary=---------------------------207103069210263; charset=UTF-16LE");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data;boundary=---------------------------207103069210263 ;charset=UTF-16LE");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data;boundary=---------------------------207103069210263 ; charset=UTF-16LE");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data ;boundary=---------------------------207103069210263;charset=UTF-16LE");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("multipart/form-data ; boundary=---------------------------207103069210263;charset=UTF-16LE");
+        assertTrue(du.isMultipartRequest(req));
+
+        req.setContentType("Multipart/Form-Data ; boundary=---------------------------207103069210263;charset=UTF-16LE");
+        assertTrue(du.isMultipartRequest(req));
     }
 
     public void testServiceActionResumePreviousProxy() throws Exception {

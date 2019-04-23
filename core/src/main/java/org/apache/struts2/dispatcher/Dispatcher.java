@@ -86,7 +86,7 @@ public class Dispatcher {
      */
     public static final String REQUEST_POST_METHOD = "POST";
 
-    public static final String MULTIPART_FORM_DATA_REGEX = "^multipart/form-data(; boundary=[0-9a-zA-Z'()+_,\\-./:=?]{1,70})?(;charset=[a-zA-Z\\-0-9]{3,14})?";
+    public static final String MULTIPART_FORM_DATA_REGEX = "^multipart/form-data(?:\\s*;\\s*boundary=[0-9a-zA-Z'()+_,\\-./:=?]{1,70})?(?:\\s*;\\s*charset=[a-zA-Z\\-0-9]{3,14})?";
 
     /**
      * Provide a thread local instance.

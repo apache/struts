@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 public class StrutsApplicationResource extends PostfixedApplicationResource {
@@ -37,20 +36,19 @@ public class StrutsApplicationResource extends PostfixedApplicationResource {
     private static String getExistedPath(URL url) throws MalformedURLException {
         String path;
         try {
+            //workarounds WW-5011 because includes ref in path
             path = url.toURI().getPath();
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
+            // fallback solution
             path = url.getPath();
+
+            if (url.getRef() != null && !new File(path).exists()) {
+                // it's like WW-5011
+                path += "#" + url.getRef();
+            }
         }
 
-        if (url.getRef() == null || new File(path).exists()) {
-            // no ref or not like WW-5011 so no need to workaround WW-5011, behave as before
-            return path;
-        }
-
-        path += "#" + url.getRef();
-
-        File file = new File(path);
-        if (!file.exists()) {
+        if (!new File(path).exists()) {
             // throw known exception type to ServletApplicationContext.getResource
             throw new MalformedURLException(path + " doesn't exist!");
         }

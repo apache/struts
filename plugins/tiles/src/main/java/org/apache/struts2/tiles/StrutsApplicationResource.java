@@ -23,14 +23,43 @@ import org.apache.tiles.request.locale.PostfixedApplicationResource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class StrutsApplicationResource extends PostfixedApplicationResource {
 
     private final URL url;
 
-    public StrutsApplicationResource(URL url) {
-        super(url.getPath());
+    /**
+     * workarounds WW-5011
+     */
+    private static String getExistedPath(URL url) throws MalformedURLException {
+        String path;
+        try {
+            path = url.toURI().getPath();
+        } catch (URISyntaxException e) {
+            path = url.getPath();
+        }
+
+        if (url.getRef() == null || new File(path).exists()) {
+            // no ref or not like WW-5011 so no need to workaround WW-5011, behave as before
+            return path;
+        }
+
+        path += "#" + url.getRef();
+
+        File file = new File(path);
+        if (!file.exists()) {
+            // throw known exception type to ServletApplicationContext.getResource
+            throw new MalformedURLException(path + " doesn't exist!");
+        }
+
+        return path;
+    }
+
+    public StrutsApplicationResource(URL url) throws MalformedURLException {
+        super(getExistedPath(url));
         this.url = url;
     }
 
@@ -41,7 +70,7 @@ public class StrutsApplicationResource extends PostfixedApplicationResource {
 
     @Override
     public long getLastModified() throws IOException {
-        File file = new File(url.getPath());
+        File file = new File(super.getLocalePath());
         if (file.exists()) {
             return file.lastModified();
         }

@@ -120,7 +120,11 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
 
         for (Map.Entry<String, URL> entry : matches.entrySet()) {
             if (pattern.matcher(entry.getKey()).matches()) {
-                resources.add(new StrutsApplicationResource(entry.getValue()));
+                try {
+                    resources.add(new StrutsApplicationResource(entry.getValue()));
+                } catch (MalformedURLException e) {
+                    LOG.warn("Cannot access [{}]", entry.getValue(), e);
+                }
             }
         }
 

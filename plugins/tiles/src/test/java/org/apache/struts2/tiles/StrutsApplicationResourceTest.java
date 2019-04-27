@@ -27,7 +27,7 @@ import java.net.URL;
 public class StrutsApplicationResourceTest {
 
     @Test
-    public void testWW5011workaround() throws Exception {
+    public void testWW5011fix() throws Exception {
         URL resource = getClass().getClassLoader().getResource("emptyTiles.xml");
         ApplicationResource ar = new StrutsApplicationResource(resource);
         Assert.assertNotEquals(0, ar.getLastModified());

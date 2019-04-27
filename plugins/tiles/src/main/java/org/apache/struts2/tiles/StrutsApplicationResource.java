@@ -19,46 +19,47 @@
 package org.apache.struts2.tiles;
 
 import org.apache.tiles.request.locale.PostfixedApplicationResource;
+import org.apache.tiles.request.locale.URLApplicationResource;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 public class StrutsApplicationResource extends PostfixedApplicationResource {
 
     private final URL url;
+    private final File file;
 
     /**
-     * workarounds WW-5011
+     * fixes WW-5011
+     * @return file path for "file" protocol elsewhere url path as before to keep backward-compatibility
+     * @see URLApplicationResource#getFile(URL)
      */
-    private static String getExistedPath(URL url) throws MalformedURLException {
-        String path;
+    private static String getFilePath(URL url) {
+        String path = url.getPath();
+        if (!"file".equals(url.getProtocol())) {
+            return path;
+        }
         try {
-            //workarounds WW-5011 because includes ref in path
-            path = url.toURI().getPath();
+            // fixes WW-5011 because includes ref in path - like URLApplicationResource#getFile(URL)
+            path = (new URI(url.toExternalForm())).getSchemeSpecificPart();
         } catch (Exception e) {
             // fallback solution
-            path = url.getPath();
-
             if (url.getRef() != null && !new File(path).exists()) {
                 // it's like WW-5011
                 path += "#" + url.getRef();
             }
         }
 
-        if (!new File(path).exists()) {
-            // throw known exception type to ServletApplicationContext.getResource
-            throw new MalformedURLException(path + " doesn't exist!");
-        }
-
         return path;
     }
 
-    public StrutsApplicationResource(URL url) throws MalformedURLException {
-        super(getExistedPath(url));
+    public StrutsApplicationResource(URL url) {
+        super(getFilePath(url));
         this.url = url;
+        this.file = new File(getFilePath(url));
     }
 
     @Override
@@ -68,7 +69,6 @@ public class StrutsApplicationResource extends PostfixedApplicationResource {
 
     @Override
     public long getLastModified() throws IOException {
-        File file = new File(super.getLocalePath());
         if (file.exists()) {
             return file.lastModified();
         }

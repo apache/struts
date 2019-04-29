@@ -93,12 +93,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     private String configFileName;
     private ObjectFactory objectFactory;
 
-    private Set<String> loadedFileUrls = new HashSet<>();
+    private final Set<String> loadedFileUrls = new HashSet<>();
     private boolean errorIfMissing;
     private Map<String, String> dtdMappings;
     private Configuration configuration;
     private boolean throwExceptionOnDuplicateBeans = true;
-    private Map<String, Element> declaredPackages = new HashMap<>();
+    private final Map<String, Element> declaredPackages = new HashMap<>();
 
     private FileManager fileManager;
     private ValueSubstitutor valueSubstitutor;
@@ -881,10 +881,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 final StringBuilder allowedMethodsSB = new StringBuilder();
                 for (int i = 0; i < allowedMethodsChildren.getLength(); i++) {
                     Node allowedMethodsChildNode = allowedMethodsChildren.item(i);
-                    String childNodeValue = (allowedMethodsChildNode != null ? allowedMethodsChildNode.getNodeValue() : "");
-                    childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
-                    if (childNodeValue.length() > 0) {
-                        allowedMethodsSB.append(childNodeValue);
+                    if (allowedMethodsChildNode != null && allowedMethodsChildNode.getNodeType() == Node.TEXT_NODE) {
+                        String childNodeValue = allowedMethodsChildNode.getNodeValue();
+                        childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
+                        if (childNodeValue.length() > 0) {
+                            allowedMethodsSB.append(childNodeValue);
+                        }
                     }
                 }
                 if (allowedMethodsSB.length() > 0) {
@@ -951,10 +953,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 final StringBuilder globalAllowedMethodsSB = new StringBuilder();
                 for (int i = 0; i < globaAllowedMethodsChildren.getLength(); i++) {
                     Node globalAllowedMethodsChildNode = globaAllowedMethodsChildren.item(i);
-                    String childNodeValue = (globalAllowedMethodsChildNode != null ? globalAllowedMethodsChildNode.getNodeValue() : "");
-                    childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
-                    if (childNodeValue.length() > 0) {
-                        globalAllowedMethodsSB.append(childNodeValue);
+                    if (globalAllowedMethodsChildNode != null && globalAllowedMethodsChildNode.getNodeType() == Node.TEXT_NODE) {
+                        String childNodeValue = globalAllowedMethodsChildNode.getNodeValue();
+                        childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
+                        if (childNodeValue.length() > 0) {
+                            globalAllowedMethodsSB.append(childNodeValue);
+                        }
                     }
                 }
                 if (globalAllowedMethodsSB.length() > 0) {

@@ -34,9 +34,12 @@ import ognl.PropertyAccessor;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.struts2.StrutsConstants;
 
 
@@ -603,6 +606,37 @@ public class OgnlValueStackTest extends XWorkTestCase {
             fail("Expected an exception for mismatched getter and setter");
         } catch (XWorkException e) {
             //expected
+        }
+    }
+
+    public void testLogMissingProperties() {
+        OgnlValueStack vs = createValueStack();
+        vs.setDevMode("true");
+        vs.setLogMissingProperties("true");
+
+        BadJavaBean bean = new BadJavaBean();
+        vs.push(bean);
+
+        TestAppender testAppender = new TestAppender();
+        Logger logger = (Logger) LogManager.getLogger(OgnlValueStack.class);
+        logger.addAppender(testAppender);
+        testAppender.start();
+
+        try {
+            vs.setValue("count2", "a", false);
+            vs.findValue("count3", false);
+            vs.findValue("count4", Integer.class, false);
+
+            assertEquals(3, testAppender.logEvents.size());
+            assertEquals("Error setting expression 'count2' with value 'a'",
+                    testAppender.logEvents.get(0).getMessage().getFormattedMessage());
+            assertEquals("Could not find property [count3]!",
+                    testAppender.logEvents.get(1).getMessage().getFormattedMessage());
+            assertEquals("Could not find property [count4]!",
+                    testAppender.logEvents.get(2).getMessage().getFormattedMessage());
+        } finally {
+            testAppender.stop();
+            logger.removeAppender(testAppender);
         }
     }
 
@@ -1291,6 +1325,19 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         public void setDisplayName(String displayName) {
             this.displayName = displayName;
+        }
+    }
+
+    class TestAppender extends AbstractAppender {
+        List<LogEvent> logEvents = new ArrayList<>();
+
+        TestAppender() {
+            super("TestAppender", null, null, false, null);
+        }
+
+        @Override
+        public void append(LogEvent logEvent) {
+            logEvents.add(logEvent);
         }
     }
 }

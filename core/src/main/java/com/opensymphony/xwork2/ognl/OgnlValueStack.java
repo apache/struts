@@ -234,7 +234,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      */
     public Object findValue(String expr, boolean throwExceptionOnFailure) {
         try {
-            setupExceptionOnFailure(throwExceptionOnFailure);
+            setupExceptionOnFailure(true);  // ask ognl to throw exception to us for a customized handling
             return tryFindValueWhenExpressionIsNotNull(expr);
         } catch (OgnlException e) {
             return handleOgnlException(expr, throwExceptionOnFailure, e);
@@ -305,7 +305,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      */
     public Object findValue(String expr, Class asType, boolean throwExceptionOnFailure) {
         try {
-            setupExceptionOnFailure(throwExceptionOnFailure);
+            setupExceptionOnFailure(true);  // ask ognl to throw exception to us for a customized handling
             return tryFindValueWhenExpressionIsNotNull(expr, asType);
         } catch (OgnlException e) {
             final Object value = handleOgnlException(expr, throwExceptionOnFailure, e);

@@ -217,6 +217,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
             return null;
         }
 
+        Throwable reason = null;
         for (Object o : root) {
             if (o == null) {
                 continue;
@@ -233,22 +234,20 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
             if ((argTypes == null) || !invalidMethods.containsKey(mc)) {
                 try {
-                    Object value = OgnlRuntime.callMethod((OgnlContext) context, o, name, objects);
-
-                    if (value != null) {
-                        return value;
-                    }
+                    return OgnlRuntime.callMethod((OgnlContext) context, o, name, objects);
                 } catch (OgnlException e) {
                     // try the next one
-                    Throwable reason = e.getReason();
+                    reason = e.getReason();
 
-                    if (!context.containsKey(OgnlValueStack.THROW_EXCEPTION_ON_FAILURE) && (mc != null) && (reason != null) && (reason.getClass() == NoSuchMethodException.class)) {
+                    if ((mc != null) && (reason != null) && (reason.getClass() == NoSuchMethodException.class)) {
                         invalidMethods.put(mc, Boolean.TRUE);
-                    } else if (reason != null) {
-                        throw new MethodFailedException(o, name, e.getReason());
                     }
                 }
             }
+        }
+
+        if (context.containsKey(OgnlValueStack.THROW_EXCEPTION_ON_FAILURE)) {
+            throw new MethodFailedException(target, name, reason);
         }
 
         return null;

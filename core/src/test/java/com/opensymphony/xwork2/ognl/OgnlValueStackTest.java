@@ -34,9 +34,16 @@ import ognl.PropertyAccessor;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.struts2.StrutsConstants;
 
 
@@ -235,6 +242,37 @@ public class OgnlValueStackTest extends XWorkTestCase {
             fail("Failed to throw exception on EL missing property");
         } catch (Exception ex) {
             //ok
+        }
+    }
+
+    public void testLogMissingProperties() {
+        OgnlValueStack vs = createValueStack();
+        vs.setDevMode("true");
+        vs.setLogMissingProperties("true");
+
+        Dog dog = new Dog();
+        vs.push(dog);
+
+        TestAppender testAppender = new TestAppender();
+        Logger logger = (Logger) LogManager.getLogger(OgnlValueStack.class);
+        logger.addAppender(testAppender);
+        testAppender.start();
+
+        try {
+            vs.setValue("missingProp1", "missingProp1Value", false);
+            vs.findValue("missingProp2", false);
+            vs.findValue("missingProp3", Integer.class, false);
+
+            assertEquals(3, testAppender.logEvents.size());
+            assertEquals("Error setting value [missingProp1Value] with expression [missingProp1]",
+                    testAppender.logEvents.get(0).getMessage().getFormattedMessage());
+            assertEquals("Could not find property [missingProp2]!",
+                    testAppender.logEvents.get(1).getMessage().getFormattedMessage());
+            assertEquals("Could not find property [missingProp3]!",
+                    testAppender.logEvents.get(2).getMessage().getFormattedMessage());
+        } finally {
+            testAppender.stop();
+            logger.removeAppender(testAppender);
         }
     }
 
@@ -1291,6 +1329,19 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         public void setDisplayName(String displayName) {
             this.displayName = displayName;
+        }
+    }
+
+    class TestAppender extends AbstractAppender {
+        List<LogEvent> logEvents = new ArrayList<>();
+
+        TestAppender() {
+            super("TestAppender", null, null, false, null);
+        }
+
+        @Override
+        public void append(LogEvent logEvent) {
+            logEvents.add(logEvent);
         }
     }
 }

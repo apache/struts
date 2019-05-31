@@ -277,6 +277,43 @@ public class OgnlValueStackTest extends XWorkTestCase {
         }
     }
 
+    public void testNotLogUserExceptionsAsMissingProperties() {
+        OgnlValueStack vs = createValueStack();
+        vs.setDevMode("true");
+        vs.setLogMissingProperties("true");
+
+        Dog dog = new Dog();
+        vs.push(dog);
+
+        TestAppender testAppender = new TestAppender();
+        Logger logger = (Logger) LogManager.getLogger(OgnlValueStack.class);
+        logger.addAppender(testAppender);
+        testAppender.start();
+
+        try {
+            vs.setValue("exception", "exceptionValue", false);
+            vs.findValue("exception", false);
+            vs.findValue("exception", String.class, false);
+            vs.findValue("getException()", false);
+            vs.findValue("getException()", String.class, false);
+            vs.findValue("bite", false);
+            vs.findValue("bite", void.class, false);
+            vs.findValue("getBite()", false);
+            vs.findValue("getBite()", void.class, false);
+
+            assertEquals(8, testAppender.logEvents.size());
+            for (int i = 0; i < testAppender.logEvents.size(); i += 2) {
+                assertTrue(testAppender.logEvents.get(i).getMessage().getFormattedMessage()
+                        .startsWith("Caught an exception while evaluating expression '"));
+                assertEquals("NOTE: Previous warning message was issued due to devMode set to true.",
+                        testAppender.logEvents.get(i + 1).getMessage().getFormattedMessage());
+            }
+        } finally {
+            testAppender.stop();
+            logger.removeAppender(testAppender);
+        }
+    }
+
     public void testFailOnMissingMethod() {
         OgnlValueStack vs = createValueStack();
 

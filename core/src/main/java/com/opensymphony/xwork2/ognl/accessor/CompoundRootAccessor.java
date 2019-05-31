@@ -218,13 +218,13 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
         }
 
         Throwable reason = null;
+        Class[] argTypes = getArgTypes(objects);
         for (Object o : root) {
             if (o == null) {
                 continue;
             }
 
             Class clazz = o.getClass();
-            Class[] argTypes = getArgTypes(objects);
 
             MethodCall mc = null;
 
@@ -236,12 +236,17 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
                 try {
                     return OgnlRuntime.callMethod((OgnlContext) context, o, name, objects);
                 } catch (OgnlException e) {
-                    // try the next one
                     reason = e.getReason();
 
-                    if ((mc != null) && (reason != null) && (reason.getClass() == NoSuchMethodException.class)) {
+                    if (reason != null && !(reason instanceof NoSuchMethodException)) {
+                        // method has found but thrown an exception
+                        break;
+                    }
+
+                    if ((mc != null) && (reason != null)) {
                         invalidMethods.put(mc, Boolean.TRUE);
                     }
+                    // continue and try the next one
                 }
             }
         }

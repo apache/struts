@@ -340,7 +340,8 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     protected boolean shouldLogMissingPropertyWarning(OgnlException e) {
-        return (e instanceof NoSuchPropertyException || e instanceof MethodFailedException)
+        return (e instanceof NoSuchPropertyException ||
+                (e instanceof MethodFailedException && e.getReason() instanceof NoSuchMethodException))
         		&& devMode && logMissingProperties;
     }
 

@@ -247,7 +247,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testLogMissingProperties() {
         OgnlValueStack vs = createValueStack();
-        vs.setDevMode("true");
         vs.setLogMissingProperties("true");
 
         Dog dog = new Dog();
@@ -278,7 +277,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testNotLogUserExceptionsAsMissingProperties() {
         OgnlValueStack vs = createValueStack();
-        vs.setDevMode("true");
         vs.setLogMissingProperties("true");
 
         Dog dog = new Dog();
@@ -300,13 +298,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
             vs.findValue("getBite()", false);
             vs.findValue("getBite()", void.class, false);
 
-            assertEquals(8, testAppender.logEvents.size());
-            for (int i = 0; i < testAppender.logEvents.size(); i += 2) {
-                assertTrue(testAppender.logEvents.get(i).getMessage().getFormattedMessage()
-                        .startsWith("Caught an exception while evaluating expression '"));
-                assertEquals("NOTE: Previous warning message was issued due to devMode set to true.",
-                        testAppender.logEvents.get(i + 1).getMessage().getFormattedMessage());
-            }
+            assertEquals(0, testAppender.logEvents.size());
         } finally {
             testAppender.stop();
             logger.removeAppender(testAppender);

@@ -954,6 +954,33 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertNull(vs.findValue("@com.nothing.here.Nothing@BLAH"));
     }
 
+    /**
+     * Fails on 2.5.20 and earlier - tested on 2.5 (5/5/2016) and failed
+     * @since 2.5.21
+     */
+    public void testNotThrowExceptionOnTopMissingProperty() {
+        OgnlValueStack vs = createValueStack();
+
+        Dog dog = new Dog();
+        dog.setName("Rover");
+        vs.push(dog);
+
+        Cat cat = new Cat();
+        vs.push(cat);
+
+        vs.setValue("age", 12, true);
+
+        assertEquals(12, vs.findValue("age", true));
+        assertEquals(12, vs.findValue("age", Integer.class, true));
+        assertEquals(12, vs.findValue("getAge()", true));
+        assertEquals(12, vs.findValue("getAge()", Integer.class, true));
+
+        assertNull(vs.findValue("name", true));
+        assertNull(vs.findValue("name", String.class, true));
+        assertNull(vs.findValue("getName()", true));
+        assertNull(vs.findValue("getName()", String.class, true));
+    }
+
     public void testTop() {
         OgnlValueStack vs = createValueStack();
 

@@ -245,9 +245,18 @@ public class OgnlValueStackTest extends XWorkTestCase {
         }
     }
 
+    /**
+     * monitors the resolution of WW-4999
+     * @since 2.5.21
+     */
     public void testLogMissingProperties() {
+        testLogMissingProperties(true);
+        testLogMissingProperties(false);
+    }
+
+    private void testLogMissingProperties(boolean logMissingProperties) {
         OgnlValueStack vs = createValueStack();
-        vs.setLogMissingProperties("true");
+        vs.setLogMissingProperties("" + logMissingProperties);
 
         Dog dog = new Dog();
         vs.push(dog);
@@ -262,19 +271,27 @@ public class OgnlValueStackTest extends XWorkTestCase {
             vs.findValue("missingProp2", false);
             vs.findValue("missingProp3", Integer.class, false);
 
-            assertEquals(3, testAppender.logEvents.size());
-            assertEquals("Error setting value [missingProp1Value] with expression [missingProp1]",
-                    testAppender.logEvents.get(0).getMessage().getFormattedMessage());
-            assertEquals("Could not find property [missingProp2]!",
-                    testAppender.logEvents.get(1).getMessage().getFormattedMessage());
-            assertEquals("Could not find property [missingProp3]!",
-                    testAppender.logEvents.get(2).getMessage().getFormattedMessage());
+            if (logMissingProperties) {
+                assertEquals(3, testAppender.logEvents.size());
+                assertEquals("Error setting value [missingProp1Value] with expression [missingProp1]",
+                        testAppender.logEvents.get(0).getMessage().getFormattedMessage());
+                assertEquals("Could not find property [missingProp2]!",
+                        testAppender.logEvents.get(1).getMessage().getFormattedMessage());
+                assertEquals("Could not find property [missingProp3]!",
+                        testAppender.logEvents.get(2).getMessage().getFormattedMessage());
+            } else {
+                assertEquals(0, testAppender.logEvents.size());
+            }
         } finally {
             testAppender.stop();
             logger.removeAppender(testAppender);
         }
     }
 
+    /**
+     * tests the correctness of distinguishing between user exception and NoSuchMethodException
+     * @since 2.5.21
+     */
     public void testNotLogUserExceptionsAsMissingProperties() {
         OgnlValueStack vs = createValueStack();
         vs.setLogMissingProperties("true");
@@ -288,6 +305,18 @@ public class OgnlValueStackTest extends XWorkTestCase {
         testAppender.start();
 
         try {
+            vs.setValue("exception", "exceptionValue", false);
+            vs.findValue("exception", false);
+            vs.findValue("exception", String.class, false);
+            vs.findValue("getException()", false);
+            vs.findValue("getException()", String.class, false);
+            vs.findValue("bite", false);
+            vs.findValue("bite", void.class, false);
+            vs.findValue("getBite()", false);
+            vs.findValue("getBite()", void.class, false);
+
+            vs.setLogMissingProperties("false");
+
             vs.setValue("exception", "exceptionValue", false);
             vs.findValue("exception", false);
             vs.findValue("exception", String.class, false);
@@ -966,7 +995,23 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals(12, vs.findValue("age", Integer.class, true));
         assertEquals(12, vs.findValue("getAge()", true));
         assertEquals(12, vs.findValue("getAge()", Integer.class, true));
+    }
 
+    /**
+     * Fails on 2.5.20 and earlier - tested on 2.5 (5/5/2016) and failed
+     * @since 2.5.21
+     */
+    public void testNotSkipUserReturnedNullValues() {
+        OgnlValueStack vs = createValueStack();
+
+        Dog dog = new Dog();
+        dog.setName("Rover");
+        vs.push(dog);
+
+        Cat cat = new Cat();
+        vs.push(cat);
+
+        // should not skip returned null values from cat.name
         assertNull(vs.findValue("name", true));
         assertNull(vs.findValue("name", String.class, true));
         assertNull(vs.findValue("getName()", true));

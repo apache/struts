@@ -1518,7 +1518,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         List<LogEvent> logEvents = new ArrayList<>();
 
         TestAppender() {
-            super("TestAppender", null, null, false, null);
+            super("TestAppender", null, null, false);
         }
 
         @Override

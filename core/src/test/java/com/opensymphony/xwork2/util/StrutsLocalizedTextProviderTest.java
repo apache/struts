@@ -249,6 +249,73 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         assertEquals("Hallo", rbGermany.getString("hello"));
     }
 
+    /**
+     * Unit test to confirm expected behaviour of "clearing methods" provided to
+     *   StrutsLocalizedTextProvider (from AbstractLocalizedTextProvider).
+     *
+     * @since 2.6
+     */
+    public void testLocalizedTextProviderClearingMethods() {
+        TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
+        assertTrue("testStrutsLocalizedTextProvider not instance of AbstractLocalizedTextProvider ?",
+                testStrutsLocalizedTextProvider instanceof AbstractLocalizedTextProvider);
+        assertEquals("testStrutsLocalizedTextProvider starting default bundle map size not 0 before any retrievals ?",
+                0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+
+        // Access the two default bundles to populate their cache entries and test bundle map size.
+        ResourceBundle tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+                TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
+        assertNotNull("XWORK_MESSAGES_BUNDLE retrieval null ?", tempBundle);
+        tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+                TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
+        assertNotNull("STRUTS_MESSAGES_BUNDLE retrieval null ?", tempBundle);
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after retrievals ?",
+                2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+
+        // Add and then access four test bundles to populate their cache entries and test bundle map size.
+        testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
+        testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/util/FindMe");
+        testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/SimpleAction");
+        testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/test");
+        tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+                "com/opensymphony/xwork2/util/LocalizedTextUtilTest", Locale.ENGLISH);
+        assertNotNull("com/opensymphony/xwork2/util/LocalizedTextUtilTest retrieval null ?", tempBundle);
+        tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+                "com/opensymphony/xwork2/util/FindMe", Locale.ENGLISH);
+        assertNotNull("com/opensymphony/xwork2/util/FindMe retrieval null ?", tempBundle);
+        tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+                "com/opensymphony/xwork2/SimpleAction", Locale.ENGLISH);
+        assertNotNull("com/opensymphony/xwork2/SimpleAction retrieval null ?", tempBundle);
+        tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+                "com/opensymphony/xwork2/test", Locale.ENGLISH);
+        assertNotNull("com/opensymphony/xwork2/test retrieval null ?", tempBundle);
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 6 after retrievals ?",
+                6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+
+        // Expect the call to be ineffective due to deprecation and change to a "no-op" (but shouldn't throw an Exception or cause failure).
+        testStrutsLocalizedTextProvider.callClearBundleNoLocale("com/opensymphony/xwork2/test");
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 6 after non-locale clear call ?",
+                6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+
+        // Expect the call to function with bundle name + locale.  Remove all four of the non-default
+        //   bundles and confirm the bundle map size changes.
+        testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/test", Locale.ENGLISH);
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 5 after locale clear call ?",
+                5, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+        testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/SimpleAction", Locale.ENGLISH);
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 4 after locale clear call ?",
+                4, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+        testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/util/FindMe", Locale.ENGLISH);
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 3 after locale clear call ?",
+                3, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+        testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/util/LocalizedTextUtilTest", Locale.ENGLISH);
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after locale clear call ?",
+                2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+
+        // Confirm the missing bundles cache clearing method does not produce any Exceptions or failures.
+        testStrutsLocalizedTextProvider.callClearMissingBundlesCache();
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -267,4 +334,27 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         localizedTextProvider = null;
     }
 
+    /**
+     * Basic test class to allow specific testing of StrutsLocalizedTextProvider.
+     *
+     * @since 2.6
+     */
+    class TestStrutsLocalizedTextProvider extends StrutsLocalizedTextProvider {
+
+        public void callClearBundleNoLocale(String bundleName) {
+            super.clearBundle(bundleName);
+}
+
+        public void callClearBundleWithLocale(String bundleName, Locale locale) {
+            super.clearBundle(bundleName, locale);
+        }
+
+        public void callClearMissingBundlesCache() {
+            super.clearMissingBundlesCache();
+        }
+
+        public int currentBundlesMapSize() {
+            return super.bundlesMap.size();
+        }
+    }
 }

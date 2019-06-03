@@ -53,7 +53,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     public static final String STRUTS_MESSAGES_BUNDLE = "org/apache/struts2/struts-messages";
 
     private static final String TOMCAT_RESOURCE_ENTRIES_FIELD = "resourceEntries";
-    private final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextProvider.reloaded";
+    private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextProvider.reloaded";
 
     protected final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
     protected boolean devMode = false;
@@ -225,10 +225,50 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
-     * @param bundleName Removes the bundle from any cached "misses"
+     * Clear a specific bundle from the <code>bundlesMap</code>.
+     *
+     * Warning: This method is <b>now a "no-op"</b>.  It <b>was ineffective</b> due
+     *   to the way the <code>bundlesMap</code> is used in combination with locale.
+     *   Descendants should use the method {@link #clearBundle(java.lang.String, java.util.Locale)} instead.
+     *
+     * @param bundleName The bundle to remove from the bundle map
+     *
+     * @deprecated A "no-op" since 2.6.  Use {@link #clearBundle(java.lang.String, java.util.Locale)} instead.
      */
     public void clearBundle(final String bundleName) {
-        bundlesMap.remove(getCurrentThreadContextClassLoader().hashCode() + bundleName);
+        LOG.debug("No-op.  Did NOT clear resource bundle [{}], result: false.", bundleName);
+    }
+
+    /**
+     * Clear a specific bundle + locale combination from the <code>bundlesMap</code>.
+     *   Intended for descendants to use clear a bundle + locale combination.
+     *
+     * @param bundleName The bundle (combined with locale) to remove from the bundle map
+     * @param locale     Provides the locale to combine with the bundle to get the key
+     *
+     * @since 2.6
+     */
+    protected void clearBundle(final String bundleName, Locale locale) {
+        final String key = createMissesKey(String.valueOf(getCurrentThreadContextClassLoader().hashCode()), bundleName, locale);
+        final ResourceBundle removedBundle = bundlesMap.remove(key);
+        LOG.debug("Clearing resource bundle [{}], locale [{}], result: [{}].", bundleName, locale, Boolean.valueOf(removedBundle != null));
+    }
+
+    /**
+     * Clears the <code>missingBundles</code> contents.  This allows descendants to
+     *   clear the <b>"missing bundles cache"</b> when desired (or needed).
+     *
+     * Note: This method may be used when the <code>bundlesMap</code> state has changed
+     *   in such a way that bundles that were previously "missing" may now be available
+     *   (e.g. after calling {@link #addDefaultResourceBundle(java.lang.String)} when the
+     *   {@link AbstractLocalizedTextProvider} has already been used for failed bundle
+     *   lookups of a given key, or some transitory state made a bundle lookup fail.
+     *
+     * @since 2.6
+     */
+    protected void clearMissingBundlesCache() {
+        missingBundles.clear();
+        LOG.debug("Cleared the missing bundles cache.");
     }
 
     protected void reloadBundles() {

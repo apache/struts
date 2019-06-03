@@ -217,13 +217,14 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
             return null;
         }
 
+        Throwable reason = null;
+        Class[] argTypes = getArgTypes(objects);
         for (Object o : root) {
             if (o == null) {
                 continue;
             }
 
             Class clazz = o.getClass();
-            Class[] argTypes = getArgTypes(objects);
 
             MethodCall mc = null;
 
@@ -233,22 +234,25 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
             if ((argTypes == null) || !invalidMethods.containsKey(mc)) {
                 try {
-                    Object value = OgnlRuntime.callMethod((OgnlContext) context, o, name, objects);
-
-                    if (value != null) {
-                        return value;
-                    }
+                    return OgnlRuntime.callMethod((OgnlContext) context, o, name, objects);
                 } catch (OgnlException e) {
-                    // try the next one
-                    Throwable reason = e.getReason();
+                    reason = e.getReason();
 
-                    if (!context.containsKey(OgnlValueStack.THROW_EXCEPTION_ON_FAILURE) && (mc != null) && (reason != null) && (reason.getClass() == NoSuchMethodException.class)) {
-                        invalidMethods.put(mc, Boolean.TRUE);
-                    } else if (reason != null) {
-                        throw new MethodFailedException(o, name, e.getReason());
+                    if (reason != null && !(reason instanceof NoSuchMethodException)) {
+                        // method has found but thrown an exception
+                        break;
                     }
+
+                    if ((mc != null) && (reason != null)) {
+                        invalidMethods.put(mc, Boolean.TRUE);
+                    }
+                    // continue and try the next one
                 }
             }
+        }
+
+        if (context.containsKey(OgnlValueStack.THROW_EXCEPTION_ON_FAILURE)) {
+            throw new MethodFailedException(target, name, reason);
         }
 
         return null;

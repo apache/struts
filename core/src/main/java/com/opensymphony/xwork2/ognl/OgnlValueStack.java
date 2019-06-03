@@ -182,7 +182,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     private void trySetValue(String expr, Object value, boolean throwExceptionOnFailure, Map<String, Object> context) throws OgnlException {
         context.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, expr);
-        context.put(REPORT_ERRORS_ON_NO_PROP, (throwExceptionOnFailure) ? Boolean.TRUE : Boolean.FALSE);
+        context.put(REPORT_ERRORS_ON_NO_PROP, throwExceptionOnFailure || logMissingProperties ? Boolean.TRUE : Boolean.FALSE);
         ognlUtil.setValue(expr, context, root, value);
     }
 
@@ -246,7 +246,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     protected void setupExceptionOnFailure(boolean throwExceptionOnFailure) {
-        if (throwExceptionOnFailure) {
+        if (throwExceptionOnFailure || logMissingProperties) {
             context.put(THROW_EXCEPTION_ON_FAILURE, true);
         }
     }
@@ -339,8 +339,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     protected boolean shouldLogMissingPropertyWarning(OgnlException e) {
-        return (e instanceof NoSuchPropertyException || e instanceof MethodFailedException)
-        		&& devMode && logMissingProperties;
+        return (e instanceof NoSuchPropertyException ||
+                (e instanceof MethodFailedException && e.getReason() instanceof NoSuchMethodException))
+        		&& logMissingProperties;
     }
 
     private Object tryFindValue(String expr, Class asType) throws OgnlException {

@@ -34,9 +34,16 @@ import ognl.PropertyAccessor;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.struts2.StrutsConstants;
 
 
@@ -235,6 +242,95 @@ public class OgnlValueStackTest extends XWorkTestCase {
             fail("Failed to throw exception on EL missing property");
         } catch (Exception ex) {
             //ok
+        }
+    }
+
+    /**
+     * monitors the resolution of WW-4999
+     * @since 2.5.21
+     */
+    public void testLogMissingProperties() {
+        testLogMissingProperties(true);
+        testLogMissingProperties(false);
+    }
+
+    private void testLogMissingProperties(boolean logMissingProperties) {
+        OgnlValueStack vs = createValueStack();
+        vs.setLogMissingProperties("" + logMissingProperties);
+
+        Dog dog = new Dog();
+        vs.push(dog);
+
+        TestAppender testAppender = new TestAppender();
+        Logger logger = (Logger) LogManager.getLogger(OgnlValueStack.class);
+        logger.addAppender(testAppender);
+        testAppender.start();
+
+        try {
+            vs.setValue("missingProp1", "missingProp1Value", false);
+            vs.findValue("missingProp2", false);
+            vs.findValue("missingProp3", Integer.class, false);
+
+            if (logMissingProperties) {
+                assertEquals(3, testAppender.logEvents.size());
+                assertEquals("Error setting value [missingProp1Value] with expression [missingProp1]",
+                        testAppender.logEvents.get(0).getMessage().getFormattedMessage());
+                assertEquals("Could not find property [missingProp2]!",
+                        testAppender.logEvents.get(1).getMessage().getFormattedMessage());
+                assertEquals("Could not find property [missingProp3]!",
+                        testAppender.logEvents.get(2).getMessage().getFormattedMessage());
+            } else {
+                assertEquals(0, testAppender.logEvents.size());
+            }
+        } finally {
+            testAppender.stop();
+            logger.removeAppender(testAppender);
+        }
+    }
+
+    /**
+     * tests the correctness of distinguishing between user exception and NoSuchMethodException
+     * @since 2.5.21
+     */
+    public void testNotLogUserExceptionsAsMissingProperties() {
+        OgnlValueStack vs = createValueStack();
+        vs.setLogMissingProperties("true");
+
+        Dog dog = new Dog();
+        vs.push(dog);
+
+        TestAppender testAppender = new TestAppender();
+        Logger logger = (Logger) LogManager.getLogger(OgnlValueStack.class);
+        logger.addAppender(testAppender);
+        testAppender.start();
+
+        try {
+            vs.setValue("exception", "exceptionValue", false);
+            vs.findValue("exception", false);
+            vs.findValue("exception", String.class, false);
+            vs.findValue("getException()", false);
+            vs.findValue("getException()", String.class, false);
+            vs.findValue("bite", false);
+            vs.findValue("bite", void.class, false);
+            vs.findValue("getBite()", false);
+            vs.findValue("getBite()", void.class, false);
+
+            vs.setLogMissingProperties("false");
+
+            vs.setValue("exception", "exceptionValue", false);
+            vs.findValue("exception", false);
+            vs.findValue("exception", String.class, false);
+            vs.findValue("getException()", false);
+            vs.findValue("getException()", String.class, false);
+            vs.findValue("bite", false);
+            vs.findValue("bite", void.class, false);
+            vs.findValue("getBite()", false);
+            vs.findValue("getBite()", void.class, false);
+
+            assertEquals(0, testAppender.logEvents.size());
+        } finally {
+            testAppender.stop();
+            logger.removeAppender(testAppender);
         }
     }
 
@@ -879,6 +975,49 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertNull(vs.findValue("@com.nothing.here.Nothing@BLAH"));
     }
 
+    /**
+     * Fails on 2.5.20 and earlier - tested on 2.5 (5/5/2016) and failed
+     * @since 2.5.21
+     */
+    public void testNotThrowExceptionOnTopMissingProperty() {
+        OgnlValueStack vs = createValueStack();
+
+        Dog dog = new Dog();
+        dog.setName("Rover");
+        vs.push(dog);
+
+        Cat cat = new Cat();
+        vs.push(cat);
+
+        vs.setValue("age", 12, true);
+
+        assertEquals(12, vs.findValue("age", true));
+        assertEquals(12, vs.findValue("age", Integer.class, true));
+        assertEquals(12, vs.findValue("getAge()", true));
+        assertEquals(12, vs.findValue("getAge()", Integer.class, true));
+    }
+
+    /**
+     * Fails on 2.5.20 and earlier - tested on 2.5 (5/5/2016) and failed
+     * @since 2.5.21
+     */
+    public void testNotSkipUserReturnedNullValues() {
+        OgnlValueStack vs = createValueStack();
+
+        Dog dog = new Dog();
+        dog.setName("Rover");
+        vs.push(dog);
+
+        Cat cat = new Cat();
+        vs.push(cat);
+
+        // should not skip returned null values from cat.name
+        assertNull(vs.findValue("name", true));
+        assertNull(vs.findValue("name", String.class, true));
+        assertNull(vs.findValue("getName()", true));
+        assertNull(vs.findValue("getName()", String.class, true));
+    }
+
     public void testTop() {
         OgnlValueStack vs = createValueStack();
 
@@ -1291,6 +1430,19 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         public void setDisplayName(String displayName) {
             this.displayName = displayName;
+        }
+    }
+
+    class TestAppender extends AbstractAppender {
+        List<LogEvent> logEvents = new ArrayList<>();
+
+        TestAppender() {
+            super("TestAppender", null, null, false, null);
+        }
+
+        @Override
+        public void append(LogEvent logEvent) {
+            logEvents.add(logEvent);
         }
     }
 }

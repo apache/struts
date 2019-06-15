@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.test.User;
 import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import java.beans.IntrospectionException;
 import ognl.*;
 import org.apache.struts2.StrutsConstants;
 
@@ -109,6 +110,84 @@ public class OgnlUtilTest extends XWorkTestCase {
         Object expr0 = ognlUtil.compile("test");
         Object expr2 = ognlUtil.compile("test");
         assertSame(expr0, expr2);
+    }
+
+    public void testClearExpressionCache() throws OgnlException {
+        ognlUtil.setEnableExpressionCache("true");
+        // Test that the expression cache is functioning as expected.
+        Object expr0 = ognlUtil.compile("test");
+        Object expr1 = ognlUtil.compile("test");
+        Object expr2 = ognlUtil.compile("test");
+        // Cache in effect, so expr0, expr1, expr2 should be the same.
+        assertSame(expr0, expr1);
+        assertSame(expr0, expr2);
+        assertTrue("Expression cache empty before clear ?", ognlUtil.expressionCacheSize() > 0);
+        // Clear the Epxression cache and confirm subsequent requests are new.
+        ognlUtil.clearExpressionCache();
+        assertTrue("Expression cache not empty after clear ?", ognlUtil.expressionCacheSize() == 0);
+        Object expr3 = ognlUtil.compile("test");
+        Object expr4 = ognlUtil.compile("test");
+        Object expr5 = ognlUtil.compile("test");
+        // Cache cleared, expr3 should be a new instance.
+        assertNotSame(expr0, expr3);
+        // Cache still in effect, so expr3, expr4, expr5 should be the same.
+        assertSame(expr3, expr4);
+        assertSame(expr3, expr5);
+        assertTrue("Expression cache empty after usage ?", ognlUtil.expressionCacheSize() > 0);
+    }
+
+    public void testClearBeanInfoCache() throws IntrospectionException {
+        final TestBean1 testBean1 = new TestBean1();
+        final TestBean2 testBean2 = new TestBean2();
+        // Test that the BeanInfo cache is functioning as expected.
+        Object beanInfo1_1 = ognlUtil.getBeanInfo(testBean1);
+        Object beanInfo1_2 = ognlUtil.getBeanInfo(testBean1);
+        Object beanInfo1_3 = ognlUtil.getBeanInfo(testBean1);
+        // Cache in effect, so beanInfo1_1, beanInfo1_2, beanInfo1_3 should be the same.
+        assertSame(beanInfo1_1, beanInfo1_2);
+        assertSame(beanInfo1_1, beanInfo1_3);
+        Object beanInfo2_1 = ognlUtil.getBeanInfo(testBean2);
+        Object beanInfo2_2 = ognlUtil.getBeanInfo(testBean2);
+        Object beanInfo2_3 = ognlUtil.getBeanInfo(testBean2);
+        // Cache in effect, so beanInfo2_1, beanInfo2_2, beanInfo2_3 should be the same.
+        assertSame(beanInfo2_1, beanInfo2_2);
+        assertSame(beanInfo2_1, beanInfo2_3);
+        // BeanInfo for TestBean1 and TestBean2 should always be different.
+        assertNotSame(beanInfo1_1, beanInfo2_1);
+        assertTrue("BeanInfo cache empty before clear ?", ognlUtil.beanInfoCacheSize() > 0);
+        // Clear the BeanInfo cache and confirm subsequent requests are new.
+        ognlUtil.clearBeanInfoCache();
+        assertTrue("BeanInfo cache not empty after clear ?", ognlUtil.beanInfoCacheSize() == 0);
+        Object beanInfo1_4 = ognlUtil.getBeanInfo(testBean1);
+        Object beanInfo1_5 = ognlUtil.getBeanInfo(testBean1);
+        Object beanInfo1_6 = ognlUtil.getBeanInfo(testBean1);
+        // Cache in effect, so beanInfo1_4, beanInfo1_5, beanInfo1_6 should be the same.
+        assertSame(beanInfo1_4, beanInfo1_5);
+        assertSame(beanInfo1_4, beanInfo1_6);
+        // Cache was cleared in-between, so beanInfo1_1/beanInfo1_2/beanInfo1_3 should differ
+        // from beanInfo1_4/beanInfo1_5/beanInfo1_6.
+        assertNotSame(beanInfo1_1, beanInfo1_4);
+        assertNotSame(beanInfo1_2, beanInfo1_5);
+        assertNotSame(beanInfo1_3, beanInfo1_6);
+        Object beanInfo2_4 = ognlUtil.getBeanInfo(testBean2);
+        Object beanInfo2_5 = ognlUtil.getBeanInfo(testBean2);
+        Object beanInfo2_6 = ognlUtil.getBeanInfo(testBean2);
+        // Cache in effect, so beanInfo2_4, beanInfo2_5, beanInfo2_6 should be the same.
+        assertSame(beanInfo2_4, beanInfo2_5);
+        assertSame(beanInfo2_4, beanInfo2_6);
+        // Cache was cleared in-between, so beanInfo2_1/beanInfo2_2/beanInfo2_3 should differ
+        // from beanInfo2_4/beanInfo2_5/beanInfo2_6.
+        assertNotSame(beanInfo2_1, beanInfo2_4);
+        assertNotSame(beanInfo2_2, beanInfo2_5);
+        assertNotSame(beanInfo2_3, beanInfo2_6);
+        // BeanInfo for TestBean1 and TestBean2 should always be different.
+        assertNotSame(beanInfo1_4, beanInfo2_4);
+        assertTrue("BeanInfo cache empty after usage ?", ognlUtil.beanInfoCacheSize() > 0);
+    }
+
+    public void testClearRuntimeCache() {
+        // Confirm that no exceptions or failures arise when calling the convenience global clear method.
+        OgnlUtil.clearRuntimeCache();
     }
 
      public void testCacheDisabled() throws OgnlException {
@@ -1421,4 +1500,37 @@ public class OgnlUtilTest extends XWorkTestCase {
     	}
     	
     }
+
+    class TestBean1 {
+        private String testBeanProperty;
+
+        public TestBean1() {
+            testBeanProperty = "defaultTestBean1Property";
+        }
+
+        public String getTestBeanProperty() {
+            return testBeanProperty;
+        }
+
+        public void setTestBeanProperty(String testBeanProperty) {
+            this.testBeanProperty = testBeanProperty;
+        }
+    }
+
+    class TestBean2 {
+        private String testBeanProperty;
+
+        public TestBean2() {
+            testBeanProperty = "defaultTestBean2Property";
+        }
+
+        public String getTestBeanProperty() {
+            return testBeanProperty;
+        }
+
+        public void setTestBeanProperty(String testBeanProperty) {
+            this.testBeanProperty = testBeanProperty;
+        }
+    }
+
 }

@@ -194,6 +194,76 @@ public class OgnlUtil {
     }
 
     /**
+     * Convenience mechanism to clear the OGNL Runtime Cache via OgnlUtil.  May be utilized
+     * by applications that generate many unique OGNL expressions over time.
+     *
+     * Note: This call affects the global OGNL cache, see ({@link ognl.OgnlRuntime#clearCache()} for details.
+     *
+     * Warning: Frequent calling if this method may negatively impact performance, but may be required
+     *          to avoid memory exhaustion (resource leak) with too many OGNL expressions being cached.
+     *
+     * @since 2.5.21
+     */
+    public static void clearRuntimeCache() {
+        OgnlRuntime.clearCache();
+    }
+
+    /**
+     * Provide a mechanism to clear the OGNL expression cache.  May be utilized by applications
+     * that generate many unique OGNL expressions over time.
+     *
+     * Note: This call affects the current OgnlUtil instance.  For Struts this is often a Singleton
+     *       instance so it can be "effectively global".
+     *
+     * Warning: Frequent calling if this method may negatively impact performance, but may be required
+     *          to avoid memory exhaustion (resource leak) with too many OGNL expressions being cached.
+     *
+     * @since 2.5.21
+     */
+    public void clearExpressionCache() {
+        expressions.clear();
+    }
+
+    /**
+     * Check the size of the expression cache (current number of elements).
+     *
+     * @return current number of elements in the expression cache.
+     *
+     * @since 2.5.21
+     */
+    public int expressionCacheSize() {
+        return expressions.size();
+    }
+
+    /**
+     * Provide a mechanism to clear the BeanInfo cache.  May be utilized by applications
+     * that request BeanInfo and/or PropertyDescriptors for many unique classes or objects over time
+     * (especially dynamic objects).
+     *
+     * Note: This call affects the current OgnlUtil instance.  For Struts this is often a Singleton
+     *       instance so it can be "effectively global".
+     *
+     * Warning: Frequent calling if this method may negatively impact performance, but may be required
+     *          to avoid memory exhaustion (resource leak) with too many BeanInfo elements being cached.
+     *
+     * @since 2.5.21
+     */
+    public void clearBeanInfoCache() {
+        beanInfoCache.clear();
+    }
+
+    /**
+     * Check the size of the BeanInfo cache (current number of elements).
+     *
+     * @return current number of elements in the BeanInfo cache.
+     *
+     * @since 2.5.21
+     */
+    public int beanInfoCacheSize() {
+        return beanInfoCache.size();
+    }
+
+    /**
      * Sets the object's properties using the default type converter, defaulting to not throw
      * exceptions for problems setting the properties.
      *

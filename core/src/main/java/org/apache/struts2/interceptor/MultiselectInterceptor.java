@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * Just as the CheckboxInterceptor checks that if only the hidden field is present, so too does this interceptor. If
  * the "__multiselect_" request parameter is present and its visible counterpart is not, set a new request parameter to an
- * empty Sting.
+ * empty String.
  */
 public class MultiselectInterceptor extends AbstractInterceptor {
     private static final long serialVersionUID = 1L;
@@ -37,7 +37,7 @@ public class MultiselectInterceptor extends AbstractInterceptor {
     /**
      * Just as the CheckboxInterceptor checks that if only the hidden field is present, so too does this interceptor.
      * If the "__multiselect_" request parameter is present and its visible counterpart is not, set a new request parameter
-     * to an empty Sting.
+     * to an empty String.
      *
      * @param ai ActionInvocation
      * @return the result of the action

@@ -104,7 +104,9 @@
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
         <log4j2.version>2.11.1</log4j2.version>
-        <jackson.version>2.9.8</jackson.version>
+        <jackson.version>2.9.9</jackson.version>
+        <!-- FIXME: drop once a new 2.9.10 will be out and all packages will be in sync -->
+        <jackson-databind.version>2.9.9.3</jackson-databind.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.7</fluido-skin.version>
@@ -1134,12 +1136,20 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson-databind.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- FIXME: Workaround for jackson-dataformat-xml issue #340 of forgetting to update stax2-api  -->
+            <!-- https://github.com/FasterXML/jackson-dataformat-xml/issues/340 -->
+            <dependency>
+                <groupId>org.codehaus.woodstox</groupId>
+                <artifactId>stax2-api</artifactId>
+                <version>4.1</version>
             </dependency>
 
             <dependency>

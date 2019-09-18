@@ -222,10 +222,10 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         } catch (IOException e1) {
             // we're already sending an error, not much else we can do if more stuff breaks
-            LOG.info("Unable to send error response, code: " + HttpServletResponse.SC_NOT_FOUND + "! (IOException): " + e1);
+            LOG.warn("Unable to send error response, code: {}! (IOException): {}", HttpServletResponse.SC_NOT_FOUND, e1.toString());
         } catch (IllegalStateException ise) {
             // Log illegalstate instead of passing unrecoverable exception to calling thread
-            LOG.info("Unable to send error response, code: " + HttpServletResponse.SC_NOT_FOUND + "! isCommited: " + response.isCommitted() + " (IllegalStateException): " + ise);
+            LOG.warn("Unable to send error response, code: {}! isCommited: {}. (IllegalStateException): {}", HttpServletResponse.SC_NOT_FOUND, response.isCommitted(), ise.toString());
         }
     }
 

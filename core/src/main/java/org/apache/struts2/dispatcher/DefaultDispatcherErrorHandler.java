@@ -97,10 +97,10 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
             response.sendError(code, e.getMessage());
         } catch (IOException e1) {
             // we're already sending an error, not much else we can do if more stuff breaks
-            LOG.info("Unable to send error response, code: " + code + "! (IOException): " + e1);
+            LOG.warn("Unable to send error response, code: {}! (IOException): {}", code, e1.toString());
         } catch (IllegalStateException ise) {
             // Log illegalstate instead of passing unrecoverable exception to calling thread
-            LOG.info("Unable to send error response, code: " + code + "! isCommited: " + response.isCommitted() + " (IllegalStateException): " + ise);
+            LOG.warn("Unable to send error response, code: {}! isCommited: {}. (IllegalStateException): {}", code, response.isCommitted(), ise.toString());
         }
     }
 
@@ -126,10 +126,10 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
                 response.sendError(code, "Unable to show problem report:\n" + exp + "\n\n" + LocationUtils.getLocation(exp));
             } catch (IOException ex) {
                 // we're already sending an error, not much else we can do if more stuff breaks
-                LOG.info("Unable to send error response, code: " + code + "! (IOException): ", ex);  // Stacktrace with DevMode
+                LOG.warn("Unable to send error response, code: {}! (IOException): {}", code, ex);  // Stacktrace with DevMode
             } catch (IllegalStateException ise) {
                 // Log illegalstate instead of passing unrecoverable exception to calling thread
-                LOG.info("Unable to send error response, code: " + code + "! isCommited: " + response.isCommitted() + " (IllegalStateException): ", ise);  // Stacktrace with DevMode
+                LOG.warn("Unable to send error response, code: {}! isCommited: {}. (IllegalStateException): {}", code, response.isCommitted(), ise);  // Stacktrace with DevMode
             }
         }
     }

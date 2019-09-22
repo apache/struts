@@ -18,11 +18,22 @@
  */
 package org.apache.struts2.dispatcher;
 
+import java.io.IOException;
 import org.apache.struts2.StrutsInternalTestCase;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
 
 public class DefaultStaticContentLoaderTest extends StrutsInternalTestCase {
+    private HttpServletRequest requestMock;
+    private HttpServletResponse responseMock;
+    private HostConfig hostConfigMock;
+    private DefaultStaticContentLoader defaultStaticContentLoader;
 
     public void testParsePackages() throws Exception {
 
@@ -50,4 +61,55 @@ public class DefaultStaticContentLoaderTest extends StrutsInternalTestCase {
         assertEquals(result4.get(3), "foo/bar/package4/");
     }
 
+    /**
+     * Test to exercise the code path and prove findStaticResource() will output 
+     * the desired log warning when an IOException is thrown.
+     */
+    public void testFindStaticResourceIOException() {
+        expect(requestMock.getDateHeader("If-Modified-Since")).andStubReturn(0L);
+        try {
+            responseMock.sendError(HttpServletResponse.SC_NOT_FOUND);
+            expectLastCall().andStubThrow(new IOException("Fake IO Exception (SC_NOT_FOUND)"));
+            replay(responseMock);
+        } catch (IOException ioe) {
+            fail("Mock sendError call setup failed.  Ex: " + ioe);
+        }
+        try {
+            defaultStaticContentLoader.findStaticResource("/static/fake.html", requestMock, responseMock);
+        } catch (IOException ioe) {
+            fail("DefaultStaticContentLoader.findStaticResource() call failed.  Ex: " + ioe);
+        }
+    }
+
+    /**
+     * Test to exercise the code path and prove findStaticResource() will output 
+     * the desired log warning when an IllegalStateException is thrown.
+     */
+    public void testFindStaticResourceIllegalStateException() {
+        expect(requestMock.getDateHeader("If-Modified-Since")).andStubReturn(0L);
+        try {
+            expect(responseMock.isCommitted()).andStubReturn(Boolean.TRUE);
+            responseMock.sendError(HttpServletResponse.SC_NOT_FOUND);
+            expectLastCall().andStubThrow(new IllegalStateException("Fake IllegalState Exception (SC_NOT_FOUND)"));
+            replay(responseMock);
+        } catch (IOException ioe) {
+            fail("Mock sendError call setup failed.  Ex: " + ioe);
+        }
+        try {
+            defaultStaticContentLoader.findStaticResource("/static/fake.html", requestMock, responseMock);
+        } catch (IOException ioe) {
+            fail("DefaultStaticContentLoader.findStaticResource() call failed.  Ex: " + ioe);
+        }
+    }
+
+    protected void setUp() {
+        requestMock = (HttpServletRequest) createMock(HttpServletRequest.class);
+        responseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
+        hostConfigMock = (HostConfig) createMock(HostConfig.class);
+        expect(hostConfigMock.getInitParameter("packages")).andStubReturn(null);
+        expect(hostConfigMock.getInitParameter("loggerFactory")).andStubReturn(null);
+        defaultStaticContentLoader = new DefaultStaticContentLoader();
+        defaultStaticContentLoader.setHostConfig(hostConfigMock);
+        defaultStaticContentLoader.setEncoding("UTF-8");
+    }
 }

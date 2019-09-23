@@ -97,6 +97,10 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
             response.sendError(code, e.getMessage());
         } catch (IOException e1) {
             // we're already sending an error, not much else we can do if more stuff breaks
+            LOG.warn("Unable to send error response, code: {};", code, e1);
+        } catch (IllegalStateException ise) {
+            // Log illegalstate instead of passing unrecoverable exception to calling thread
+            LOG.warn("Unable to send error response, code: {}; isCommited: {};", code, response.isCommitted(), ise);
         }
     }
 
@@ -122,6 +126,10 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
                 response.sendError(code, "Unable to show problem report:\n" + exp + "\n\n" + LocationUtils.getLocation(exp));
             } catch (IOException ex) {
                 // we're already sending an error, not much else we can do if more stuff breaks
+                LOG.warn("Unable to send error response, code: {};", code, ex);
+            } catch (IllegalStateException ise) {
+                // Log illegalstate instead of passing unrecoverable exception to calling thread
+                LOG.warn("Unable to send error response, code: {}; isCommited: {};", code, response.isCommitted(), ise);
             }
         }
     }

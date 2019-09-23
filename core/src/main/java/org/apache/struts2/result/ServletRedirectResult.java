@@ -263,11 +263,11 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
                 }
             }
         } catch (IOException ioe) {
-            LOG.warn("Unable to redirect to: {}, code: {}! (IOException): {}", finalLocation, statusCode, ioe.toString());
-            throw ioe;  // Re-throw required to preserve existing default behaviour
+            LOG.warn("Unable to redirect to: {}, code: {}; {}", finalLocation, statusCode, ioe);
+            throw ioe;  // Re-throw required to preserve existing default behaviour (no stacktrace in above warn for this reason)
         } catch (IllegalStateException ise) {
-            LOG.warn("Unable to redirect to: {}, code: {}! isCommited: {}. (IllegalStateException): {}", finalLocation, statusCode, response.isCommitted(), ise.toString());
-            throw ise;  // Re-throw required to preserve existing default behaviour
+            LOG.warn("Unable to redirect to: {}, code: {}; isCommited: {}; {}", finalLocation, statusCode, response.isCommitted(), ise);
+            throw ise;  // Re-throw required to preserve existing default behaviour (no stacktrace in above warn for this reason)
         }
 
     }

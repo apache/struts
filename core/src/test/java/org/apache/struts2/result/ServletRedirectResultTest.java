@@ -21,9 +21,12 @@ package org.apache.struts2.result;
 import static javax.servlet.http.HttpServletResponse.SC_SEE_OTHER;
 import static org.easymock.EasyMock.createControl;
 import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -320,6 +323,122 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         result.execute(mockInvocation);
         assertEquals("/myNamespace/myAction.action?param=value+1&param=value+2", res.getRedirectedUrl());
         control.verify();
+    }
+
+    /**
+     * Test to exercise the code path and prove sendRedirect() will output 
+     * the desired log warning when an IOException is thrown for statusCode SC_FOUND.
+     */
+    public void testSendRedirectSCFoundIOException() {
+        HttpServletResponse httpServletResponseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
+        boolean ioeCaught = false;
+        view.setLocation("/bar/foo.jsp");
+        view.setStatusCode(HttpServletResponse.SC_FOUND);
+        try {
+            httpServletResponseMock.sendRedirect(view.getLocation());
+            expectLastCall().andStubThrow(new IOException("Fake IO Exception (SC_FOUND)"));
+            replay(httpServletResponseMock);
+        } catch (IOException ioe) {
+            fail("Mock sendRedirect call setup failed.  Ex: " + ioe);
+        }
+        try {
+            view.sendRedirect(httpServletResponseMock, view.getLocation());
+        } catch (IOException ioe) {
+            ioeCaught = true;  // Verify expected exception was thrown
+        }
+        if (!ioeCaught) {
+            fail("sendRedirect (SC_FOUND) with forced IOException did not propagate from setLocation!");
+        }
+    }
+
+    /**
+     * Test to exercise the code path and prove sendRedirect() will output 
+     * the desired log warning when an IOException is thrown for statusCode SC_MOVED_PERMANENTLY.
+     */
+    public void testSendRedirectSCMovedPermanentlyIOException() {
+        HttpServletResponse httpServletResponseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
+        boolean ioeCaught = false;
+        view.setLocation("/bar/foo.jsp");
+        view.setStatusCode(HttpServletResponse.SC_MOVED_PERMANENTLY);  // Any non SC_FOUND will suffice
+        try {
+            httpServletResponseMock.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            expectLastCall();
+            httpServletResponseMock.setHeader("Location", view.getLocation());
+            expectLastCall();
+            expect(httpServletResponseMock.getWriter()).andStubThrow(new IOException("Fake IO Exception (SC_MOVED_PERMANENTLY)"));
+            replay(httpServletResponseMock);
+        } catch (IOException ioe) {
+            fail("Mock getWriter call setup failed.  Ex: " + ioe);
+        }
+        try {
+            view.sendRedirect(httpServletResponseMock, view.getLocation());
+        } catch (IOException ioe) {
+            ioeCaught = true;  // Verify expected exception was thrown
+        }
+        if (!ioeCaught) {
+            fail("sendRedirect (SC_MOVED_PERMANENTLY) with forced IOException did not propagate from setLocation!");
+        }
+    }
+
+    /**
+     * Test to exercise the code path and prove sendRedirect() will output 
+     * the desired log warning when an IllegalStateException is thrown for statusCode SC_FOUND.
+     */
+    public void testSendRedirectSCFoundIllegalStateException() {
+        HttpServletResponse httpServletResponseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
+        boolean iseCaught = false;
+        view.setLocation("/bar/foo.jsp");
+        view.setStatusCode(HttpServletResponse.SC_FOUND);
+        try {
+            httpServletResponseMock.sendRedirect(view.getLocation());
+            expectLastCall().andStubThrow(new IllegalStateException("Fake IllegalState Exception (SC_FOUND)"));
+            expect(httpServletResponseMock.isCommitted()).andStubReturn(Boolean.TRUE);
+            replay(httpServletResponseMock);
+        } catch (IOException ioe) {
+            fail("Mock sendRedirect call setup failed.  Ex: " + ioe);
+        }
+        try {
+            view.sendRedirect(httpServletResponseMock, view.getLocation());
+        } catch (IOException ioe) {
+            iseCaught = false;
+        } catch (IllegalStateException ise) {
+            iseCaught = true;  // Verify expected exception was thrown
+        }
+        if (!iseCaught) {
+            fail("sendRedirect (SC_FOUND) with forced IllegalStateException did not propagate from setLocation!");
+        }
+    }
+
+    /**
+     * Test to exercise the code path and prove sendRedirect() will output 
+     * the desired log warning when an IllegalStateException is thrown for statusCode SC_MOVED_PERMANENTLY.
+     */
+    public void testSendRedirectSCMovedPermanentlyIllegalStateException() {
+        HttpServletResponse httpServletResponseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
+        boolean iseCaught = false;
+        view.setLocation("/bar/foo.jsp");
+        view.setStatusCode(HttpServletResponse.SC_MOVED_PERMANENTLY);  // Any non SC_FOUND will suffice
+        try {
+            httpServletResponseMock.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            expectLastCall();
+            httpServletResponseMock.setHeader("Location", view.getLocation());
+            expectLastCall();
+            expect(httpServletResponseMock.getWriter()).andStubThrow(new IllegalStateException("Fake IllegalState Exception (SC_MOVED_PERMANENTLY)"));
+            expect(httpServletResponseMock.isCommitted()).andStubReturn(Boolean.TRUE);
+            replay(httpServletResponseMock);
+        } catch (IOException ioe) {
+            fail("Mock getWriter call setup failed.  Ex: " + ioe);
+        }
+        try {
+            view.sendRedirect(httpServletResponseMock, view.getLocation());
+        } catch (IOException ioe) {
+            iseCaught = false;
+        } catch (IllegalStateException ise) {
+            iseCaught = true;  // Verify expected exception was thrown
+        }
+        if (!iseCaught) {
+            fail("sendRedirect (SC_MOVED_PERMANENTLY) with forced IllegalStateException did not propagate from setLocation!");
+        }
     }
 
     protected void setUp() throws Exception {

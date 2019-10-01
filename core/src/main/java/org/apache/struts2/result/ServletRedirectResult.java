@@ -250,13 +250,24 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
      * @throws IOException in case of IO errors
      */
     protected void sendRedirect(HttpServletResponse response, String finalLocation) throws IOException {
-        if (SC_FOUND == statusCode) {
-            response.sendRedirect(finalLocation);
-        } else {
-            response.setStatus(statusCode);
-            response.setHeader("Location", finalLocation);
-            response.getWriter().write(finalLocation);
-            response.getWriter().close();
+        try {
+            if (SC_FOUND == statusCode) {
+                response.sendRedirect(finalLocation);
+            } else {
+                response.setStatus(statusCode);
+                response.setHeader("Location", finalLocation);
+                try {
+                    response.getWriter().write(finalLocation);
+                } finally {
+                    response.getWriter().close();
+                }
+            }
+        } catch (IOException ioe) {
+            LOG.warn("Unable to redirect to: {}, code: {}; {}", finalLocation, statusCode, ioe);
+            throw ioe;  // Re-throw required to preserve existing default behaviour (no stacktrace in above warn for this reason)
+        } catch (IllegalStateException ise) {
+            LOG.warn("Unable to redirect to: {}, code: {}; isCommited: {}; {}", finalLocation, statusCode, response.isCommitted(), ise);
+            throw ise;  // Re-throw required to preserve existing default behaviour (no stacktrace in above warn for this reason)
         }
 
     }

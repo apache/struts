@@ -203,6 +203,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     protected void handleOgnlException(String expr, Object value, boolean throwExceptionOnFailure, OgnlException e) {
+        if (e.getReason() instanceof SecurityException) {
+            LOG.warn("Could not evaluate this expression due to security constraints: [{}]", expr, e);
+        }
     	boolean shouldLog = shouldLogMissingPropertyWarning(e);
     	String msg = null;
     	if (throwExceptionOnFailure || shouldLog) {
@@ -325,7 +328,12 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     protected Object handleOgnlException(String expr, boolean throwExceptionOnFailure, OgnlException e) {
-        Object ret = findInContext(expr);
+        Object ret = null;
+        if (e.getReason() instanceof SecurityException) {
+            LOG.warn("Could not evaluate this expression due to security constraints: [{}]", expr, e);
+        } else {
+            ret = findInContext(expr);
+        }
         if (ret == null) {
             if (shouldLogMissingPropertyWarning(e)) {
                 LOG.warn("Could not find property [{}]!", expr, e);

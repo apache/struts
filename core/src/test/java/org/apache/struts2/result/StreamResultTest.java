@@ -246,12 +246,19 @@ public class StreamResultTest extends StrutsInternalTestCase {
 
     public class MyImageAction implements Action {
 
-        public InputStream getStreamForImage() throws Exception {
+        FileInputStream streamForImage;
+        long contentLength;
+
+        public MyImageAction() throws Exception {
             // just use src/test/log4j2.xml as test file
             URL url = ClassLoaderUtil.getResource("log4j2.xml", StreamResultTest.class);
             File file = new File(new URI(url.toString()));
-            FileInputStream fis = new FileInputStream(file);
-            return fis;
+            streamForImage = new FileInputStream(file);
+            contentLength = file.length();
+        }
+
+        public InputStream getStreamForImage() throws Exception {
+            return streamForImage;
         }
 
         public String execute() throws Exception {
@@ -259,9 +266,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
         }
 
         public long getContentLength() throws Exception {
-            URL url = ClassLoaderUtil.getResource("log4j2.xml", StreamResultTest.class);
-            File file = new File(new URI(url.toString()));
-            return file.length();
+            return contentLength;
         }
 
         public String getStreamForImageAsString() {

@@ -29,6 +29,7 @@ import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.Foo;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import ognl.OgnlException;
 import ognl.PropertyAccessor;
 
 import java.io.*;
@@ -39,11 +40,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.DefaultPropertiesProvider;
 
 
 /**
@@ -346,6 +349,38 @@ public class OgnlValueStackTest extends XWorkTestCase {
         } catch (Exception ex) {
             //ok
         }
+    }
+
+    public void testFailOnTooLongExpressionWithDefaultProperties() {
+        loadConfigurationProviders(new DefaultPropertiesProvider());
+        Integer repeat = Integer.parseInt(
+                container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
+
+        OgnlValueStack vs = createValueStack();
+        try {
+            vs.findValue(StringUtils.repeat('.', repeat + 1), true);
+            fail("Failed to throw exception on too long expression");
+        } catch (Exception ex) {
+            assertTrue(ex.getCause() instanceof OgnlException);
+            assertTrue(((OgnlException) ex.getCause()).getReason() instanceof SecurityException);
+        }
+    }
+
+    public void testNotFailOnTooLongValueWithDefaultProperties() {
+        loadConfigurationProviders(new DefaultPropertiesProvider());
+        Integer repeat = Integer.parseInt(
+                container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
+
+        OgnlValueStack vs = createValueStack();
+
+        Dog dog = new Dog();
+        vs.push(dog);
+
+        String value = StringUtils.repeat('.', repeat + 1);
+
+        vs.setValue("name", value);
+
+        assertEquals(value, dog.getName());
     }
 
     public void testFailsOnMethodThatThrowsException() {

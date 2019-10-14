@@ -40,4 +40,4 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
->${parameters.body}</a>
+>${tag.escapeHtmlBody()?then(parameters.body, parameters.body?no_esc)}</a>

@@ -260,4 +260,56 @@ public class SubmitTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
+    /**
+     * Test that by default submit tag body is HTML-escaped.
+     * 
+     * @throws Exception 
+     */
+    public void testSubmitWithBodyHTMLEscaped() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setTheme("simple");
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("yoyoyoyoy");
+        tag.setValue("%{foo}");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("should HTML escape: < & >");
+        tag.setBodyContent(body);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-11.txt"));
+    }
+
+    /**
+     * Test that with htmlEscapeBody false submit tag body is not HTML-escaped.
+     * 
+     * @throws Exception 
+     */
+    public void testSubmitWithBodyNotHTMLEscaped() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setTheme("simple");
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("yoyoyoyoy");
+        tag.setValue("%{foo}");
+        tag.setEscapeHtmlBody(false);
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("should not HTML escape: < & >");
+        tag.setBodyContent(body);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-12.txt"));
+    }
 }

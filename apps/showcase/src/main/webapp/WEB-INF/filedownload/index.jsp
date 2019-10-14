@@ -39,7 +39,7 @@
 			    </div>
 
 			    <s:url var="url" action="download"/>
-			    <s:a href="%{url}" cssClass="btn btn-large btn-info"><i class="icon-picture"></i> Download image file.</s:a>
+                            <s:a href="%{url}" cssClass="btn btn-large btn-info" escapeHtmlBody="false"><i class="icon-picture"></i> Download image file.</s:a>
 		    </div>
 		    <div class="col-md-6" style="text-align: center;">
 			    <div class="alert alert-info">
@@ -47,7 +47,7 @@
 			    </div>
 
 			    <s:url var="url" action="download2"/>
-			    <s:a href="%{url}" cssClass="btn btn-large btn-info"><i class="icon-download-alt"></i> Download ZIP file.</s:a>
+                            <s:a href="%{url}" cssClass="btn btn-large btn-info" escapeHtmlBody="false"><i class="icon-download-alt"></i> Download ZIP file.</s:a>
 		    </div>
 	    </div>
     </div>

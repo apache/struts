@@ -1,0 +1,1 @@
+<a id="mylink" href="a">should HTML escape: &lt; &amp; &gt;</a>

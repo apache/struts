@@ -1,0 +1,1 @@
+<button type="submit" id="myname" name="myname" value="bar">should not HTML escape: < & ></button>

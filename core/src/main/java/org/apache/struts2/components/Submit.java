@@ -54,6 +54,7 @@ public class Submit extends FormButton {
     final public static String OPEN_TEMPLATE = "submit";
     final public static String TEMPLATE = "submit-close";
     protected String src;
+    protected boolean escapeHtmlBody = true;
 
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -100,10 +101,26 @@ public class Submit extends FormButton {
         this.src = src;
     }
 
+    @StrutsTagAttribute(required = false, description = "Specifies whether to HTML-escape the tag body or not", type = "Boolean", defaultValue = "true")
+    public void setEscapeHtmlBody(boolean escapeHtmlBody) {
+        this.escapeHtmlBody = escapeHtmlBody;
+    }
 
     @Override
     public boolean usesBody() {
         return true;
+    }
+
+    /**
+     * Override to set if body content should be HTML-escaped.
+     * 
+     * @return true if body should be HTML-escaped, false otherwise.
+     * 
+     * @since 2.6
+     */
+    @Override
+    public boolean escapeHtmlBody() {
+        return escapeHtmlBody;
     }
 
     /**

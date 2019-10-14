@@ -479,7 +479,6 @@ public class ComponentTest extends AbstractTagTest {
         }
     }
 
-
     // updownselect
     public void testUpDownSelectDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
@@ -504,5 +503,43 @@ public class ComponentTest extends AbstractTagTest {
             e.printStackTrace();
             fail(e.toString());
         }
+    }
+
+    /**
+     * Test the expected default behaviour for component body state methods.
+      */
+    public void testComponentDefaultBodyStates() {
+        Component component = new Component(stack);
+        // Test expected default results for: usesBody(), escapeHtmlBody().
+        assertFalse("Component default usesBody not false ?", component.usesBody());
+        assertTrue("Component default htmlEscapeBody not true ?", component.escapeHtmlBody());
+    }
+
+    /**
+     * Test the behaviour for Anchor body state methods.
+      */
+    public void testAnchorBodyStates() {
+        Anchor anchor = new Anchor(stack, request, response);
+        // Test expected default results for: usesBody(), escapeHtmlBody().
+        assertTrue("Anchor default usesBody not true ?", anchor.usesBody());
+        assertTrue("Anchor default htmlEscapeBody not true ?", anchor.escapeHtmlBody());
+        anchor.setEscapeHtmlBody(false);
+        assertFalse("Anchor htmlEscapeBody not false after set false ?", anchor.escapeHtmlBody());
+        anchor.setEscapeHtmlBody(true);
+        assertTrue("Anchor htmlEscapeBody not true after set true ?", anchor.escapeHtmlBody());
+    }
+
+    /**
+     * Test the behaviour for Submit body state methods.
+      */
+    public void testAnchortBodyStates() {
+        Submit submit = new Submit(stack, request, response);
+        // Test expected default results for: usesBody(), escapeHtmlBody().
+        assertTrue("Submit default usesBody not true ?", submit.usesBody());
+        assertTrue("Submit default htmlEscapeBody not true ?", submit.escapeHtmlBody());
+        submit.setEscapeHtmlBody(false);
+        assertFalse("Submit htmlEscapeBody not false after set false ?", submit.escapeHtmlBody());
+        submit.setEscapeHtmlBody(true);
+        assertTrue("Submit htmlEscapeBody not true after set true ?", submit.escapeHtmlBody());
     }
 }

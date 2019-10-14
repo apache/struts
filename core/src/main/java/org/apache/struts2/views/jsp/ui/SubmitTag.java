@@ -37,6 +37,7 @@ public class SubmitTag extends AbstractClosingTag {
     protected String method;
     protected String type;
     protected String src;
+    protected boolean escapeHtmlBody = true;  // Default - escape HTML body
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Submit(stack, req, res);
@@ -50,6 +51,7 @@ public class SubmitTag extends AbstractClosingTag {
         submit.setMethod(method);
         submit.setType(type);
         submit.setSrc(src);
+        submit.setEscapeHtmlBody(escapeHtmlBody);
     }
 
     public void setAction(String action) {
@@ -70,5 +72,16 @@ public class SubmitTag extends AbstractClosingTag {
 
     public void setSrc(String src) {
         this.src = src;
+    }
+
+    /**
+     * Set via parameter to control if body content should be HTML-escaped.
+     * 
+     * @param escapeHtmlBody 
+     * 
+     * @since 2.6
+     */
+    public void setEscapeHtmlBody(boolean escapeHtmlBody) {
+        this.escapeHtmlBody = escapeHtmlBody;
     }
 }

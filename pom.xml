@@ -105,6 +105,7 @@
         <tiles-request.version>1.0.7</tiles-request.version>
         <log4j2.version>2.12.1</log4j2.version>
         <jackson.version>2.10.0</jackson.version>
+        <slf4j.version>1.7.28</slf4j.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.8</fluido-skin.version>
@@ -1068,12 +1069,12 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.28</version>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
-                <version>1.7.28</version>
+                <version>${slf4j.version}</version>
             </dependency>
 
             <dependency>

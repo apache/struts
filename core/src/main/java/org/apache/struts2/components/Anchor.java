@@ -69,6 +69,7 @@ public class Anchor extends ClosingUIBean {
     protected UrlProvider urlProvider;
     protected UrlRenderer urlRenderer;
     protected boolean processingTagBody = false;
+    protected boolean escapeHtmlBody = true;
     
     //these params are passed by the Param tag
     protected Map urlParameters = new LinkedHashMap();
@@ -93,6 +94,18 @@ public class Anchor extends ClosingUIBean {
     @Override
     public boolean usesBody() {
         return true;
+    }
+
+    /**
+     * Override to set if body content should be HTML-escaped.
+     * 
+     * @return true if body should be HTML-escaped, false otherwise.
+     * 
+     * @since 2.6
+     */
+    @Override
+    public boolean escapeHtmlBody() {
+        return escapeHtmlBody;
     }
 
     @Override
@@ -261,5 +274,10 @@ public class Anchor extends ClosingUIBean {
     @StrutsTagAttribute(description = "Specifies whether to force the addition of scheme, host and port or not", type = "Boolean", defaultValue = "false")
     public void setForceAddSchemeHostAndPort(boolean forceAddSchemeHostAndPort) {
         urlProvider.setForceAddSchemeHostAndPort(forceAddSchemeHostAndPort);
+    }
+
+    @StrutsTagAttribute(required = false, description = "Specifies whether to HTML-escape the tag body or not", type = "Boolean", defaultValue = "true")
+    public void setEscapeHtmlBody(boolean escapeHtmlBody) {
+        this.escapeHtmlBody = escapeHtmlBody;
     }
 }

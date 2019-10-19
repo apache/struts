@@ -107,7 +107,7 @@
 
         <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><s:a value="%{home}"><i class="glyphicon glyphicon-home"></i> Home</s:a></li>
+                    <li><s:a value="%{home}" escapeHtmlBody="false"><i class="glyphicon glyphicon-home"></i> Home</s:a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="glyphicon glyphicon-cog"></i> Configuration
@@ -233,7 +233,7 @@
                             </li>
                             <li><s:a value="/person/index.html">Person Manager</s:a></li>
                             <li><s:a value="/skill/index.html">CRUD</s:a></li>
-                            <li><s:a value="/wait/index.html">Execute &amp; Wait</s:a></li>
+                            <li><s:a value="/wait/index.html" escapeHtmlBody="false">Execute &amp; Wait</s:a></li>
                             <li><s:a value="/token/index.html">Token</s:a></li>
                             <li><s:url var="url" namespace="/modelDriven" action="modelDriven"/><s:a
                                     href="%{url}">Model Driven</s:a></li>

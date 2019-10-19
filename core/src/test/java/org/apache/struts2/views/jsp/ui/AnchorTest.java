@@ -101,4 +101,67 @@ public class AnchorTest extends AbstractUITagTest {
         return tag;
     }
 
+    /**
+     * Test anchor tag body supported
+     * 
+     * @throws Exception 
+     */
+    public void testSimpleWithBody() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setHref("a");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("normal body text with nothing to escape");
+        tag.setBodyContent(body);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-3.txt");
+    }
+
+    /**
+     * Test that by default anchor tag body is HTML-escaped.
+     * 
+     * @throws Exception 
+     */
+    public void testSimpleWithBodyHTMLEscaped() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setHref("a");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("should HTML escape: < & >");
+        tag.setBodyContent(body);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-4.txt");
+    }
+
+    /**
+     * Test that with htmlEscapeBody false anchor tag body is not HTML-escaped.
+     * 
+     * @throws Exception 
+     */
+    public void testSimpleWithBodyNotHTMLEscaped() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setHref("a");
+        tag.setEscapeHtmlBody(false);
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("should not HTML escape: < & >");
+        tag.setBodyContent(body);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-5.txt");
+    }
 }

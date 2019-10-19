@@ -522,6 +522,17 @@ public class Component {
     }
 
     /**
+     * Override to set if body content should be HTML-escaped.
+     * 
+     * @return always true (default) for this component.
+     * 
+     * @since 2.6
+     */
+    public boolean escapeHtmlBody() {
+        return true;
+    }
+
+    /**
      * Checks if provided name is a valid tag's attribute
      *
      * @param attrName String name of attribute

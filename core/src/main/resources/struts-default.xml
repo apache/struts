@@ -55,13 +55,18 @@
     <constant name="struts.excludedPackageNames"
               value="
                 ognl.,
+                java.io.,
                 javax.,
                 freemarker.core.,
                 freemarker.template.,
+                freemarker.ext.jsp.,
                 freemarker.ext.rhino.,
                 sun.reflect.,
                 javassist.,
+                org.apache.velocity.,
                 org.objectweb.asm.,
+                org.springframework.context.,
+                com.opensymphony.xwork2.inject.,
                 com.opensymphony.xwork2.ognl.,
                 com.opensymphony.xwork2.security.,
                 com.opensymphony.xwork2.util." />

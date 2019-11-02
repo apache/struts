@@ -1247,6 +1247,40 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
+    /**
+     * Test OGNL Expression Max Length feature setting via OgnlUtil.
+     * 
+     * @since 2.5.21
+     */
+    public void testApplyExpressionMaxLength() {
+        try {
+            ognlUtil.applyExpressionMaxLength(null);
+        } catch (Exception ex) {
+            fail ("applyExpressionMaxLength did not accept null maxlength string ?");
+        }
+        try {
+            ognlUtil.applyExpressionMaxLength("");
+        } catch (Exception ex) {
+            fail ("applyExpressionMaxLength did not accept empty maxlength string ?");
+        }
+        try {
+            ognlUtil.applyExpressionMaxLength("-1");
+            fail ("applyExpressionMaxLength accepted negative maxlength string ?");
+        } catch (IllegalArgumentException iae) {
+            // Expected rejection of -ive length.
+        }
+        try {
+            ognlUtil.applyExpressionMaxLength("0");
+        } catch (Exception ex) {
+            fail ("applyExpressionMaxLength did not accept maxlength string 0 ?");
+        }
+        try {
+            ognlUtil.applyExpressionMaxLength(Integer.toString(Integer.MAX_VALUE, 10));
+        } catch (Exception ex) {
+            fail ("applyExpressionMaxLength did not accept MAX_VALUE maxlength string ?");
+        }
+    }
+
     private void internalTestInitialEmptyOgnlUtilExclusions(OgnlUtil ognlUtilParam) throws Exception {
         Set<Class<?>> excludedClasses = ognlUtilParam.getExcludedClasses();
         assertNotNull("parameter (default) exluded classes null?", excludedClasses);

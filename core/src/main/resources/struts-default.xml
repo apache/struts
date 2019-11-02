@@ -45,6 +45,7 @@
                 java.lang.ClassLoader,
                 java.lang.Shutdown,
                 java.lang.ProcessBuilder,
+                sun.misc.Unsafe,
                 com.opensymphony.xwork2.ActionContext" />
 
     <!-- this must be valid regex, each '.' in package name must be escaped! -->
@@ -56,11 +57,14 @@
               value="
                 ognl.,
                 java.io.,
+                java.net.,
+                java.nio.,
                 javax.,
                 freemarker.core.,
                 freemarker.template.,
                 freemarker.ext.jsp.,
                 freemarker.ext.rhino.,
+                sun.misc.,
                 sun.reflect.,
                 javassist.,
                 org.apache.velocity.,

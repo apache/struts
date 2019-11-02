@@ -194,11 +194,16 @@ public class OgnlUtil {
      */
     @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH, required = false)
     protected void applyExpressionMaxLength(String maxLength) {
-        if (maxLength == null || maxLength.isEmpty()) {
-            // user is going to disable this functionality
-            Ognl.applyExpressionMaxLength(null);
-        } else {
-            Ognl.applyExpressionMaxLength(Integer.parseInt(maxLength));
+        try {
+            if (maxLength == null || maxLength.isEmpty()) {
+                // user is going to disable this functionality
+                Ognl.applyExpressionMaxLength(null);
+            } else {
+                Ognl.applyExpressionMaxLength(Integer.parseInt(maxLength));
+            }
+        } catch (Exception ex) {
+            LOG.warn("Unable to set OGNL Expression Max Length {}.", maxLength);  // Help configuration debugging.
+            throw ex;
         }
     }
 

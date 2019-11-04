@@ -99,3 +99,11 @@ not want Struts. This is a different approach which promises to reduce the amoun
 and to create reusable components for the view layer. Projects like Wicket and Tapestry serve this purpose very well. 
 As with every framework, you need to decide if it makes sense for you to build components or if you prefer 
 the Struts approach.
+
+## Commercial Support
+
+The Apache Struts community does not offer commercial support by itself.
+
+Some Apache Struts maintainers are working with [Tidelift](https://tidelift.com/) to provide commercial support and
+invest paid working time in the improvement of the Apache Struts framework. For more information, visit 
+the [Tidelift resources regarding Apache Struts](https://tidelift.com/subscription/pkg/maven-org-apache-struts-struts2-core?utm_source=maven-org-apache-struts-struts2-core&utm_medium=referral&utm_campaign=readme)

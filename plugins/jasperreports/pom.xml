@@ -39,7 +39,7 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>6.7.0</version>
+            <version>6.10.0</version>
             <scope>provided</scope>
             <exclusions>
                 <!-- not necessary to compile and it force dependency convergence issues -->
@@ -49,7 +49,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-annotation</artifactId>
+                    <artifactId>jackson-annotations</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

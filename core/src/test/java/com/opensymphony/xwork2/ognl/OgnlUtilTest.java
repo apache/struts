@@ -1233,6 +1233,27 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     /**
+     * Test OGNL Expression Max Length feature setting via OgnlUtil is disabled by default (in default.properties).
+     * 
+     * @since 2.5.21
+     */
+    public void testDefaultExpressionMaxLengthDisabled() {
+        final String LONG_OGNL_EXPRESSION = "true == ThisIsAReallyLongOGNLExpressionOfRepeatedGarbageText." + new String(new char[65535]).replace('\0', 'A');  // Expression larger than 64KB.
+        try {
+            Object compileResult = ognlUtil.compile(LONG_OGNL_EXPRESSION);
+            assertNotNull("Long OGNL expression compilation produced a null result ?", compileResult);
+        } catch (OgnlException oex) {
+             if (oex.getReason() instanceof SecurityException) {
+                 fail ("Unable to compile expression (unexpected).  'struts.ognl.expressionMaxLength' may have accidentally been enabled by default.  Exception: " + oex);
+             } else {
+                 fail ("Unable to compile expression (unexpected).  Exception: " + oex);
+             }
+        } catch (Exception ex) {
+            fail ("Unable to compile expression (unexpected).  Exception: " + ex);
+        }
+    }
+
+    /**
      * Test OGNL Expression Max Length feature setting via OgnlUtil.
      * 
      * @since 2.5.21
@@ -1241,12 +1262,12 @@ public class OgnlUtilTest extends XWorkTestCase {
         try {
             ognlUtil.applyExpressionMaxLength(null);
         } catch (Exception ex) {
-            fail ("applyExpressionMaxLength did not accept null maxlength string ?");
+            fail ("applyExpressionMaxLength did not accept null maxlength string (disable feature) ?");
         }
         try {
             ognlUtil.applyExpressionMaxLength("");
         } catch (Exception ex) {
-            fail ("applyExpressionMaxLength did not accept empty maxlength string ?");
+            fail ("applyExpressionMaxLength did not accept empty maxlength string (disable feature) ?");
         }
         try {
             ognlUtil.applyExpressionMaxLength("-1");
@@ -1263,6 +1284,12 @@ public class OgnlUtilTest extends XWorkTestCase {
             ognlUtil.applyExpressionMaxLength(Integer.toString(Integer.MAX_VALUE, 10));
         } catch (Exception ex) {
             fail ("applyExpressionMaxLength did not accept MAX_VALUE maxlength string ?");
+        }
+        // Reset expressionMaxLength value to default (disabled)
+        try {
+            ognlUtil.applyExpressionMaxLength(null);
+        } catch (Exception ex) {
+            fail ("applyExpressionMaxLength did not accept null maxlength string (disable feature) ?");
         }
     }
 

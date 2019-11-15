@@ -1277,25 +1277,9 @@ public class OgnlUtilTest extends XWorkTestCase {
                 // Expected rejection of -ive length.
             }
             try {
-                assertTrue(OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH + " is not > 0 ?", OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH > 0);
                 ognlUtil.applyExpressionMaxLength("0");
-                fail ("applyExpressionMaxLength accepted maxlength string 0 when minimum maxlength is " + OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH + " ?");
             } catch (Exception ex) {
-                // Expected rejection of length 0 < MININUM_OGNL_EXPRESSION_MAXLENGTH
-            }
-            try {
-                assertTrue(OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH + " is not > " + (OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH - 1) + " ?",
-                        OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH > (OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH - 1));
-                ognlUtil.applyExpressionMaxLength(Integer.valueOf(OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH - 1).toString());
-                fail ("applyExpressionMaxLength accepted maxlength string " + (OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH - 1) + " when minimum maxlength is " +
-                        OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH + " ?");
-            } catch (Exception ex) {
-                // Expected rejection of length (MININUM_OGNL_EXPRESSION_MAXLENGTH - 1) < MININUM_OGNL_EXPRESSION_MAXLENGTH
-            }
-            try {
-                ognlUtil.applyExpressionMaxLength(Integer.valueOf(OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH).toString());
-            } catch (Exception ex) {
-                fail ("applyExpressionMaxLength did not accept maxlength string " + OgnlUtil.MININUM_OGNL_EXPRESSION_MAXLENGTH + " ?");
+                fail ("applyExpressionMaxLength did not accept maxlength string 0 ?");
             }
             try {
                 ognlUtil.applyExpressionMaxLength(Integer.toString(Integer.MAX_VALUE, 10));

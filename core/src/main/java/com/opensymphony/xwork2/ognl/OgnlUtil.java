@@ -52,7 +52,6 @@ import java.util.regex.Pattern;
  */
 public class OgnlUtil {
 
-    protected static final int MININUM_OGNL_EXPRESSION_MAXLENGTH = 128;  // Minimum permitted value for STRUTS_OGNL_EXPRESSION_MAX_LENGTH
     private static final Logger LOG = LogManager.getLogger(OgnlUtil.class);
 
     private final ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<>();
@@ -195,14 +194,10 @@ public class OgnlUtil {
                 // user is going to disable this functionality
                 Ognl.applyExpressionMaxLength(null);
             } else {
-                final Integer maxLengthInteger = Integer.parseInt(maxLength);
-                if (maxLengthInteger < MININUM_OGNL_EXPRESSION_MAXLENGTH) {
-                    throw new IllegalArgumentException("OGNL Expression Max Length less than " + MININUM_OGNL_EXPRESSION_MAXLENGTH + " not permitted.");
-                }
-                Ognl.applyExpressionMaxLength(maxLengthInteger);
+                Ognl.applyExpressionMaxLength(Integer.parseInt(maxLength));
             }
         } catch (Exception ex) {
-            LOG.warn("Unable to set OGNL Expression Max Length {}.", maxLength);  // Help configuration debugging.
+            LOG.error("Unable to set OGNL Expression Max Length {}.", maxLength);  // Help configuration debugging.
             throw ex;
         }
     }

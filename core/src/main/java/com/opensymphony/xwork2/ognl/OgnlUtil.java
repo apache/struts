@@ -197,7 +197,7 @@ public class OgnlUtil {
                 Ognl.applyExpressionMaxLength(Integer.parseInt(maxLength));
             }
         } catch (Exception ex) {
-            LOG.warn("Unable to set OGNL Expression Max Length {}.", maxLength);  // Help configuration debugging.
+            LOG.error("Unable to set OGNL Expression Max Length {}.", maxLength);  // Help configuration debugging.
             throw ex;
         }
     }

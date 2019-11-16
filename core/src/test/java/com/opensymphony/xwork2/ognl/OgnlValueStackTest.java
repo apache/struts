@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import ognl.ParseException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -350,36 +351,94 @@ public class OgnlValueStackTest extends XWorkTestCase {
         }
     }
 
-    public void testFailOnTooLongExpressionWithDefaultProperties() {
+    public void testFailOnTooLongExpressionLongerThan192_ViaOverriddenProperty() {
+        try {
+            loadConfigurationProviders(new StubConfigurationProvider() {
+                @Override
+                public void register(ContainerBuilder builder,
+                                     LocatableProperties props) throws ConfigurationException {
+                    props.setProperty(StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH, "192");
+                }
+            });
+            Integer repeat = Integer.parseInt(
+                    container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
+
+            OgnlValueStack vs = createValueStack();
+            try {
+                vs.findValue(StringUtils.repeat('.', repeat + 1), true);
+                fail("Failed to throw exception on too long expression");
+            } catch (Exception ex) {
+                assertTrue(ex.getCause() instanceof OgnlException);
+                assertTrue(((OgnlException) ex.getCause()).getReason() instanceof SecurityException);
+            }
+        } finally {
+            // Reset expressionMaxLength value to default (disabled)
+            ognlUtil.applyExpressionMaxLength(null);
+        }
+    }
+
+    public void testNotFailOnTooLongExpressionWithDefaultProperties() {
         loadConfigurationProviders(new DefaultPropertiesProvider());
-        Integer repeat = Integer.parseInt(
-                container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
+
+        Object defaultMaxLengthFromConfiguration = container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH);
+        if (defaultMaxLengthFromConfiguration != null) {
+            assertTrue("non-null defaultMaxLengthFromConfiguration not a String ?", defaultMaxLengthFromConfiguration instanceof String);
+            assertTrue("non-null defaultMaxLengthFromConfiguration not empty string by default ?", ((String) defaultMaxLengthFromConfiguration).length() == 0);
+        } else {
+            assertNull("defaultMaxLengthFromConfiguration not null ?", defaultMaxLengthFromConfiguration);
+        }
+        // Original test logic was to confirm failure of exceeding the default value.  Now the feature should be disabled by default,
+        // so this test's expectations are now changed.
+        Integer repeat = Integer.valueOf(256);  // Since maxlength is disabled by default, just choose an arbitrary value for test
 
         OgnlValueStack vs = createValueStack();
         try {
             vs.findValue(StringUtils.repeat('.', repeat + 1), true);
-            fail("Failed to throw exception on too long expression");
+            fail("findValue did not throw any exception (should either fail as invalid expression syntax or security exception) ?");
         } catch (Exception ex) {
+            // If STRUTS_OGNL_EXPRESSION_MAX_LENGTH feature is disabled (default), the parse should fail due to a reason of invalid expression syntax
+            // with ParseException.  Previously when it was enabled the reason for the failure would have been SecurityException.
             assertTrue(ex.getCause() instanceof OgnlException);
-            assertTrue(((OgnlException) ex.getCause()).getReason() instanceof SecurityException);
+            assertTrue(((OgnlException) ex.getCause()).getReason() instanceof ParseException);
         }
     }
 
     public void testNotFailOnTooLongValueWithDefaultProperties() {
-        loadConfigurationProviders(new DefaultPropertiesProvider());
-        Integer repeat = Integer.parseInt(
-                container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
+        try {
+            loadConfigurationProviders(new DefaultPropertiesProvider());
 
-        OgnlValueStack vs = createValueStack();
+            Object defaultMaxLengthFromConfiguration = container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH);
+            if (defaultMaxLengthFromConfiguration != null) {
+                assertTrue("non-null defaultMaxLengthFromConfiguration not a String ?", defaultMaxLengthFromConfiguration instanceof String);
+                assertTrue("non-null defaultMaxLengthFromConfiguration not empty string by default ?", ((String) defaultMaxLengthFromConfiguration).length() == 0);
+            } else {
+                assertNull("defaultMaxLengthFromConfiguration not null ?", defaultMaxLengthFromConfiguration);
+            }
+            // Original test logic is unchanged (testing that values can be larger than maximum expression length), but since the feature is disabled by
+            // default we will now have to enable it with an arbitrary value, test, and reset it to disabled.
+            Integer repeat = Integer.valueOf(256);  // Since maxlength is disabled by default, just choose an arbitrary value for test
 
-        Dog dog = new Dog();
-        vs.push(dog);
+            // Apply a non-default value for expressionMaxLength (as it should be disabled by default)
+            try {
+                ognlUtil.applyExpressionMaxLength(repeat.toString());
+            } catch (Exception ex) {
+                fail ("applyExpressionMaxLength did not accept maxlength string " + repeat.toString() + " ?");
+            }
 
-        String value = StringUtils.repeat('.', repeat + 1);
+            OgnlValueStack vs = createValueStack();
 
-        vs.setValue("name", value);
+            Dog dog = new Dog();
+            vs.push(dog);
 
-        assertEquals(value, dog.getName());
+            String value = StringUtils.repeat('.', repeat + 1);
+
+            vs.setValue("name", value);
+
+            assertEquals(value, dog.getName());
+        } finally {
+            // Reset expressionMaxLength value to default (disabled)
+            ognlUtil.applyExpressionMaxLength(null);
+        }
     }
 
     public void testFailsOnMethodThatThrowsException() {

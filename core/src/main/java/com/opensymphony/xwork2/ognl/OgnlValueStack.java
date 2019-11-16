@@ -204,7 +204,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     protected void handleOgnlException(String expr, Object value, boolean throwExceptionOnFailure, OgnlException e) {
         if (e != null && e.getReason() instanceof SecurityException) {
-            LOG.warn("Could not evaluate this expression due to security constraints: [{}]", expr, e);
+            LOG.error("Could not evaluate this expression due to security constraints: [{}]", expr, e);
         }
     	boolean shouldLog = shouldLogMissingPropertyWarning(e);
     	String msg = null;
@@ -330,7 +330,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     protected Object handleOgnlException(String expr, boolean throwExceptionOnFailure, OgnlException e) {
         Object ret = null;
         if (e != null && e.getReason() instanceof SecurityException) {
-            LOG.warn("Could not evaluate this expression due to security constraints: [{}]", expr, e);
+            LOG.error("Could not evaluate this expression due to security constraints: [{}]", expr, e);
         } else {
             ret = findInContext(expr);
         }

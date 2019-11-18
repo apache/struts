@@ -27,7 +27,6 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.impl.MockConfiguration;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.sun.org.apache.xerces.internal.dom.ElementImpl;
 import org.w3c.dom.Document;
 
 import java.io.File;

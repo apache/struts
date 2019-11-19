@@ -27,7 +27,6 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.impl.MockConfiguration;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.sun.org.apache.xerces.internal.dom.ElementImpl;
 import org.w3c.dom.Document;
 
 import java.io.File;
@@ -326,8 +325,8 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         //      tag body (as reported with WW-5029).
         final String fakeBodyString = "allowedMethod1,allowedMethod2,allowedMethod3";
         PackageConfig.Builder testPackageConfigBuilder = new PackageConfig.Builder("allowedMethodsPackage");
-        List<String> singleStringList = new ArrayList(1);
-        List<String> multipleStringList = new ArrayList(4);
+        List<String> singleStringList = new ArrayList<>(1);
+        List<String> multipleStringList = new ArrayList<>(4);
         singleStringList.add(fakeBodyString);
         multipleStringList.add("allowedMethod1,");
         multipleStringList.add("allowed");
@@ -380,8 +379,8 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         //      tag body (as reported with WW-5029).
         final String fakeBodyString = "allowedMethod1,allowedMethod2,allowedMethod3";
         PackageConfig.Builder testPackageConfigBuilder = new PackageConfig.Builder("globalAllowedMethodsPackage");
-        List<String> singleStringList = new ArrayList(1);
-        List<String> multipleStringList = new ArrayList(4);
+        List<String> singleStringList = new ArrayList<>(1);
+        List<String> multipleStringList = new ArrayList<>(4);
         singleStringList.add(fakeBodyString);
         multipleStringList.add("allowedMethod4,");
         multipleStringList.add("allowed");
@@ -448,10 +447,10 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         resultTypeConfigBuilder.defaultResultParam(resultParam);
         ResultTypeConfig resultTypeConfig = resultTypeConfigBuilder.build();
         testPackageConfigBuilder.addResultTypeConfig(resultTypeConfig);
-        List<String> singleStringList = new ArrayList(1);
-        List<String> singleStringList2 = new ArrayList(1);
-        List<String> multipleStringList = new ArrayList(4);
-        List<String> multipleStringList2 = new ArrayList(4);
+        List<String> singleStringList = new ArrayList<>(1);
+        List<String> singleStringList2 = new ArrayList<>(1);
+        List<String> multipleStringList = new ArrayList<>(4);
+        List<String> multipleStringList2 = new ArrayList<>(4);
         singleStringList.add(fakeBodyString);
         singleStringList2.add(fakeBodyString2);
         multipleStringList.add("/SomePath");
@@ -539,10 +538,10 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         resultTypeConfigBuilder.defaultResultParam(resultParam);
         ResultTypeConfig resultTypeConfig = resultTypeConfigBuilder.build();
         testPackageConfigBuilder.addResultTypeConfig(resultTypeConfig);
-        List<String> singleStringList = new ArrayList(1);
-        List<String> singleStringList2 = new ArrayList(1);
-        List<String> multipleStringList = new ArrayList(4);
-        List<String> multipleStringList2 = new ArrayList(4);
+        List<String> singleStringList = new ArrayList<>(1);
+        List<String> singleStringList2 = new ArrayList<>(1);
+        List<String> multipleStringList = new ArrayList<>(4);
+        List<String> multipleStringList2 = new ArrayList<>(4);
         singleStringList.add(fakeBodyString);
         singleStringList2.add(fakeBodyString2);
         multipleStringList.add("/SomePath");
@@ -664,7 +663,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         List<Node> nodeList;
 
         public MockNodeList() {
-            this.nodeList = new ArrayList(0);
+            this.nodeList = new ArrayList<>(0);
         }
 
         /**
@@ -676,24 +675,24 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         public MockNodeList(List<String> stringList) {
             if (stringList != null) {
                 final int nodeListLength = stringList.size();
-                this.nodeList = new ArrayList(nodeListLength);
+                this.nodeList = new ArrayList<>(nodeListLength);
                 for (int index = 0; index < nodeListLength; index++) {
                     this.nodeList.add(new MockNode("node" + index, stringList.get(index), Node.TEXT_NODE, null, null));
                 }
             } else {
-                this.nodeList = new ArrayList(0);
+                this.nodeList = new ArrayList<>(0);
             }
         }
 
         public MockNodeList(NodeList nodeList) {
             if (nodeList != null) {
                 final int nodeListLength = nodeList.getLength();
-                this.nodeList = new ArrayList(nodeListLength);
+                this.nodeList = new ArrayList<>(nodeListLength);
                 for (int index = 0; index < nodeListLength; index++) {
                     this.nodeList.add(nodeList.item(index));
                 }
             } else {
-                this.nodeList = new ArrayList(0);
+                this.nodeList = new ArrayList<>(0);
             }
         }
 
@@ -704,7 +703,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
                     this.nodeList.add(nodeList.get(index));
                 }
             } else {
-                this.nodeList = new ArrayList(0);
+                this.nodeList = new ArrayList<>(0);
             }
         }
 

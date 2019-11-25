@@ -16,12 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.components.template;
+package org.apache.struts2.views.velocity.template;
 
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.components.template.BaseTemplateEngine;
+import org.apache.struts2.components.template.Template;
+import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
@@ -29,7 +32,6 @@ import org.apache.velocity.context.Context;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;

@@ -53,21 +53,14 @@ import java.util.*;
  * Manages the environment for Velocity result types
  */
 public class VelocityManager {
+
     private static final Logger LOG = LogManager.getLogger(VelocityManager.class);
+
     public static final String STRUTS = "struts";
+
     private ObjectFactory objectFactory;
 
     public static final String KEY_VELOCITY_STRUTS_CONTEXT = ".KEY_velocity.struts2.context";
-
-    /**
-     * the parent JSP tag
-     */
-    public static final String PARENT = "parent";
-
-    /**
-     * the current JSP tag
-     */
-    public static final String TAG = "tag";
 
     private VelocityEngine velocityEngine;
 
@@ -76,7 +69,6 @@ public class VelocityManager {
      */
     protected ToolboxManager toolboxManager = null;
     private String toolBoxLocation;
-
 
     /**
      * Names of contexts that will be chained on every request
@@ -137,8 +129,8 @@ public class VelocityManager {
         VelocityContext[] chainedContexts = prepareChainedContexts(req, res, stack.getContext());
         StrutsVelocityContext context = new StrutsVelocityContext(chainedContexts, stack);
         Map standardMap = ContextUtil.getStandardContext(stack, req, res);
-        for (Iterator iterator = standardMap.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
+        for (Object o : standardMap.entrySet()) {
+            Map.Entry entry = (Map.Entry) o;
             context.put((String) entry.getKey(), entry.getValue());
         }
         context.put(STRUTS, new VelocityStrutsUtil(velocityEngine, context, stack, req, res));
@@ -236,13 +228,13 @@ public class VelocityManager {
 
         String defaultUserDirective = properties.getProperty("userdirective");
 
-        /**
-         * if the user has specified an external velocity configuration file, we'll want to search for it in the
-         * following order
-         *
-         * 1. relative to the context path
-         * 2. relative to /WEB-INF
-         * 3. in the class path
+        /*
+          if the user has specified an external velocity configuration file, we'll want to search for it in the
+          following order
+
+          1. relative to the context path
+          2. relative to /WEB-INF
+          3. in the class path
          */
         String configfile;
 
@@ -301,16 +293,15 @@ public class VelocityManager {
             if (in != null) {
                 try {
                     in.close();
-                } catch (IOException e) {
+                } catch (IOException ignore) {
                 }
             }
         }
 
         // overide with programmatically set properties
         if (this.velocityProperties != null) {
-            Iterator keys = this.velocityProperties.keySet().iterator();
-            while (keys.hasNext()) {
-                String key = (String) keys.next();
+            for (Object o : this.velocityProperties.keySet()) {
+                String key = (String) o;
                 properties.setProperty(key, this.velocityProperties.getProperty(key));
             }
         }
@@ -330,8 +321,8 @@ public class VelocityManager {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Initializing Velocity with the following properties ...");
 
-            for (Iterator iter = properties.keySet().iterator(); iter.hasNext(); ) {
-                String key = (String) iter.next();
+            for (Object o : properties.keySet()) {
+                String key = (String) o;
                 String value = properties.getProperty(key);
                 LOG.debug("    '{}' = '{}'", key, value);
             }
@@ -393,9 +384,6 @@ public class VelocityManager {
             Velocity.info("VelocityViewServlet: No toolbox entry in configuration.");
         }
     }
-
-
-
 
     /**
      * <p>
@@ -488,11 +476,11 @@ public class VelocityManager {
         } else {
             // remove strutsfile from resource loader property
             String prop = properties.getProperty(Velocity.RESOURCE_LOADER);
-            if (prop.indexOf("strutsfile,") != -1) {
+            if (prop.contains("strutsfile,")) {
                 prop = replace(prop, "strutsfile,", "");
-            } else if (prop.indexOf(", strutsfile") != -1) {
+            } else if (prop.contains(", strutsfile")) {
                 prop = replace(prop, ", strutsfile", "");
-            } else if (prop.indexOf("strutsfile") != -1) {
+            } else if (prop.contains("strutsfile")) {
                 prop = replace(prop, "strutsfile", "");
             }
 
@@ -536,7 +524,7 @@ public class VelocityManager {
         sb.append(clazz.getName()).append(",");
     }
 
-    private static final String replace(String string, String oldString, String newString) {
+    private String replace(String string, String oldString, String newString) {
         if (string == null) {
             return null;
         }

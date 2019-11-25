@@ -185,7 +185,6 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY, freemarkerTemplatesCacheUpdateDelay);
         map.put(StrutsConstants.STRUTS_FREEMARKER_BEANWRAPPER_CACHE, Objects.toString(freemarkerBeanwrapperCache, null));
         map.put(StrutsConstants.STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE, Objects.toString(freemarkerMruMaxStrongSize, null));
-        map.put(StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME, beanConfToString(velocityManagerClassname));
         map.put(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE, velocityConfigfile);
         map.put(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION, velocityToolboxlocation);
         map.put(StrutsConstants.STRUTS_VELOCITY_CONTEXTS, StringUtils.join(velocityContexts, ','));

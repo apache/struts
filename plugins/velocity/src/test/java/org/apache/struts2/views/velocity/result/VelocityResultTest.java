@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.result;
+package org.apache.struts2.views.velocity.result;
 
-import org.apache.struts2.StrutsInternalTestCase;
+import com.opensymphony.xwork2.XWorkTestCase;
+import junit.framework.TestCase;
 import org.apache.struts2.result.StrutsResultSupport;
-import org.apache.struts2.result.VelocityResult;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;
@@ -36,7 +36,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  *
  */
-public class VelocityResultTest extends StrutsInternalTestCase {
+public class VelocityResultTest extends XWorkTestCase {
 
     ActionInvocation actionInvocation;
     Mock mockActionProxy;
@@ -56,11 +56,11 @@ public class VelocityResultTest extends StrutsInternalTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(bean);
 
-        assertEquals(location, stack.findValue("location"));
+        TestCase.assertEquals(location, stack.findValue("location"));
 
         result.setLocation("${location}");
         result.execute(actionInvocation);
-        assertEquals(location, result.finalLocation);
+        TestCase.assertEquals(location, result.finalLocation);
     }
 
     public void testCanResolveLocationUsingStaticExpression() throws Exception {
@@ -68,15 +68,15 @@ public class VelocityResultTest extends StrutsInternalTestCase {
         String location = "/any.action";
         result.setLocation("${'" + location + "'}");
         result.execute(actionInvocation);
-        assertEquals(location, result.finalLocation);
+        TestCase.assertEquals(location, result.finalLocation);
     }
 
     public void testResourcesFoundUsingAbsolutePath() throws Exception {
         String location = "/WEB-INF/views/registration.vm";
 
         Template template = result.getTemplate(stack, velocity, actionInvocation, location, "UTF-8");
-        assertNotNull(template);
-        assertEquals("expect absolute locations to be handled as is", location, velocity.templateName);
+        TestCase.assertNotNull(template);
+        TestCase.assertEquals("expect absolute locations to be handled as is", location, velocity.templateName);
     }
 
     public void testResourcesFoundUsingNames() throws Exception {
@@ -84,8 +84,8 @@ public class VelocityResultTest extends StrutsInternalTestCase {
         String expectedTemplateName = namespace + "/" + location;
 
         Template template = result.getTemplate(stack, velocity, actionInvocation, location, "UTF-8");
-        assertNotNull(template);
-        assertEquals("expect the prefix to be appended to the path when the location is not absolute", expectedTemplateName, velocity.templateName);
+        TestCase.assertNotNull(template);
+        TestCase.assertEquals("expect the prefix to be appended to the path when the location is not absolute", expectedTemplateName, velocity.templateName);
     }
 
     protected void setUp() throws Exception {

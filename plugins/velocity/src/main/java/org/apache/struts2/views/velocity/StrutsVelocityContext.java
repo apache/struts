@@ -24,10 +24,8 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 public class StrutsVelocityContext extends VelocityContext {
 
-    private static final long serialVersionUID = 8497212428904436963L;
     ValueStack stack;
     VelocityContext[] chainedContexts;
-
 
     public StrutsVelocityContext(ValueStack stack) {
         this(null, stack);
@@ -37,7 +35,6 @@ public class StrutsVelocityContext extends VelocityContext {
         this.chainedContexts = chainedContexts;
         this.stack = stack;
     }
-
 
     public boolean internalContainsKey(Object key) {
         boolean contains = super.internalContainsKey(key);
@@ -63,8 +60,8 @@ public class StrutsVelocityContext extends VelocityContext {
 
         // if we still haven't found it, le's search through our chained contexts
         if (chainedContexts != null) {
-            for (int index = 0; index < chainedContexts.length; index++) {
-                if (chainedContexts[index].containsKey(key)) {
+            for (VelocityContext chainedContext : chainedContexts) {
+                if (chainedContext.containsKey(key)) {
                     return true;
                 }
             }
@@ -97,9 +94,9 @@ public class StrutsVelocityContext extends VelocityContext {
 
         // finally, if we're chained to other contexts, let's look in them
         if (chainedContexts != null) {
-            for (int index = 0; index < chainedContexts.length; index++) {
-                if (chainedContexts[index].containsKey(key)) {
-                    return chainedContexts[index].internalGet(key);
+            for (VelocityContext chainedContext : chainedContexts) {
+                if (chainedContext.containsKey(key)) {
+                    return chainedContext.internalGet(key);
                 }
             }
         }

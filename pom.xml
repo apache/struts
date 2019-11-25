@@ -691,6 +691,11 @@
                 <artifactId>struts2-osgi-demo-bundle</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-velocity-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.freemarker</groupId>
@@ -731,7 +736,6 @@
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity</artifactId>
                 <version>1.7</version>
-                <optional>true</optional>
             </dependency>
 
             <dependency>

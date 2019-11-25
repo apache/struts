@@ -67,7 +67,6 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.util.ContentTypeMatcher;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.util.UrlHelper;
-import org.apache.struts2.views.velocity.VelocityManager;
 
 /**
  * Selects the implementations of key framework extension points, using the loaded
@@ -367,8 +366,6 @@ import org.apache.struts2.views.velocity.VelocityManager;
  */
 public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultBeanSelectionProvider.class);
-
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
         alias(ActionFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_ACTIONFACTORY, builder, props);
@@ -404,7 +401,6 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         alias(ActionMapper.class, StrutsConstants.STRUTS_MAPPER_CLASS, builder, props);
         alias(MultiPartRequest.class, StrutsConstants.STRUTS_MULTIPART_PARSER, builder, props, Scope.PROTOTYPE);
         alias(FreemarkerManager.class, StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME, builder, props);
-        alias(VelocityManager.class, StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME, builder, props);
         alias(UrlRenderer.class, StrutsConstants.STRUTS_URL_RENDERER, builder, props);
         alias(ActionValidatorManager.class, StrutsConstants.STRUTS_ACTIONVALIDATORMANAGER, builder, props);
         alias(ValueStackFactory.class, StrutsConstants.STRUTS_VALUESTACKFACTORY, builder, props);

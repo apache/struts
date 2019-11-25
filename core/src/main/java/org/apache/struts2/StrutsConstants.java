@@ -102,9 +102,6 @@ public final class StrutsConstants {
     
     /** Maximum strong sizing for MruCacheStorage for freemarker */
     public static final String STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE = "struts.freemarker.mru.max.strong.size";
-    
-    /** org.apache.struts2.views.velocity.VelocityManager implementation class */
-    public static final String STRUTS_VELOCITY_MANAGER_CLASSNAME = "struts.velocity.manager.classname";
 
     /** The Velocity configuration file path */
     public static final String STRUTS_VELOCITY_CONFIGFILE = "struts.velocity.configfile";

@@ -16,26 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views;
+package org.apache.struts2.views.velocity;
 
-import java.util.List;
+public final class VelocityConstants {
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.ValueStack;
-
-/**
- * Provides Velocity implementation classes for a tag library
- */
-public interface TagLibraryDirectiveProvider {
-
-    /**
-     * Gets a list of Velocity directive classes for the tag library.  Called once on framework
-     * startup when initializing Velocity.
-     * 
-     * @return A list of Velocity directive classes
-     */
-    List<Class> getDirectiveClasses();
+    /** org.apache.struts2.views.velocity.VelocityManager implementation class */
+    public static final String STRUTS_VELOCITY_MANAGER_CLASSNAME = "struts.velocity.manager.classname";
 
 }

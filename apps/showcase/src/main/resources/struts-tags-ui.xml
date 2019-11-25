@@ -24,7 +24,7 @@
 	"http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-    <package name="ui-tags" extends="struts-default" namespace="/tags/ui">
+    <package name="ui-tags" extends="velocity-default" namespace="/tags/ui">
         <action name="example" class="org.apache.struts2.showcase.UITagExample">
             <result>/WEB-INF/tags/ui/example.jsp</result>
             <result name="input">/WEB-INF/tags/ui/example.jsp</result>

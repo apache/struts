@@ -23,60 +23,56 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.struts</groupId>
-        <artifactId>struts2-parent</artifactId>
+        <artifactId>struts2-plugins</artifactId>
         <version>2.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>struts2-plugins</artifactId>
-    <packaging>pom</packaging>
-    <name>Struts 2 Plugins</name>
-
-    <modules>
-        <module>async</module>
-        <module>bean-validation</module>
-        <module>cdi</module>
-        <module>config-browser</module>
-        <module>convention</module>
-        <module>dwr</module>
-        <module>embeddedjsp</module>
-        <module>gxp</module>
-        <module>jasperreports</module>
-        <module>javatemplates</module>
-        <module>jfreechart</module>
-        <module>json</module>
-        <module>junit</module>
-        <module>osgi</module>
-        <module>oval</module>
-        <module>pell-multipart</module>
-        <module>plexus</module>
-        <module>portlet</module>
-        <module>portlet-tiles</module>
-        <module>rest</module>
-        <module>sitemesh</module>
-        <module>spring</module>
-        <module>testng</module>
-        <module>tiles</module>
-        <module>velocity</module>
-    </modules>
+    <artifactId>struts2-velocity-plugin</artifactId>
+    <packaging>jar</packaging>
+    <name>Struts 2 Velocity Plugin</name>
 
     <dependencies>
 
+        <!-- Velocity -->
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-core</artifactId>
         </dependency>
 
-        <!-- Test dependencies -->
+        <!-- Velocity -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-tools</artifactId>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+        </dependency>
+
+        <!-- The Servlet API mocks in Spring Framework 4.0 support Servlet 3.0 and higher
+           So this is only necessary in tests-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-core</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

@@ -97,16 +97,13 @@
     <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="jakarta" class="org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest" scope="prototype"/>
     <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="jakarta-stream" class="org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest" scope="prototype"/>
 
-    <bean type="org.apache.struts2.views.TagLibraryDirectiveProvider" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
     <bean type="org.apache.struts2.views.TagLibraryModelProvider" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
 
     <bean class="org.apache.struts2.views.freemarker.FreemarkerThemeTemplateLoader" />
     <bean class="org.apache.struts2.views.freemarker.FreemarkerManager" name="struts" />
-    <bean class="org.apache.struts2.views.velocity.VelocityManager" name="struts" optional="true" />
 
     <bean class="org.apache.struts2.components.template.TemplateEngineManager" />
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="ftl" class="org.apache.struts2.components.template.FreemarkerTemplateEngine" />
-    <bean type="org.apache.struts2.components.template.TemplateEngine" name="vm" class="org.apache.struts2.components.template.VelocityTemplateEngine" />
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="jsp" class="org.apache.struts2.components.template.JspTemplateEngine" />
 
     <bean type="com.opensymphony.xwork2.conversion.impl.XWorkConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" />
@@ -192,7 +189,6 @@
             <result-type name="redirect" class="org.apache.struts2.result.ServletRedirectResult"/>
             <result-type name="redirectAction" class="org.apache.struts2.result.ServletActionRedirectResult"/>
             <result-type name="stream" class="org.apache.struts2.result.StreamResult"/>
-            <result-type name="velocity" class="org.apache.struts2.result.VelocityResult"/>
             <result-type name="xslt" class="org.apache.struts2.views.xslt.XSLTResult"/>
             <result-type name="plainText" class="org.apache.struts2.result.PlainTextResult" />
             <result-type name="postback" class="org.apache.struts2.result.PostbackResult" />

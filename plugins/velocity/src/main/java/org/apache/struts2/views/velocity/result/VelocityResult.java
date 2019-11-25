@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.result;
+package org.apache.struts2.views.velocity.result;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.Template;

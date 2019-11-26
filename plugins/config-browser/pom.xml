@@ -34,4 +34,11 @@
     <properties>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-velocity-plugin</artifactId>
+        </dependency>
+    </dependencies>
 </project>

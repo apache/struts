@@ -35,12 +35,6 @@
 
         <!-- Velocity -->
         <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-        </dependency>
-
-        <!-- Velocity -->
-        <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
         </dependency>

@@ -219,7 +219,21 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
                     final String nodeName = child.getNodeName();
 
-                    if ("bean".equals(nodeName)) {
+                    if ("bean-provider".equals(nodeName)) {
+                        String name = child.getAttribute("name");
+                        String impl = child.getAttribute("class");
+                        try {
+                            Class classImpl = ClassLoaderUtil.loadClass(impl, getClass());
+                            if (classImpl.isAssignableFrom(ConfigurationProvider.class)) {
+                                ConfigurationProvider provider = (ConfigurationProvider) classImpl.newInstance();
+                                provider.register(containerBuilder, props);
+                            } else {
+                                throw new ConfigurationException("The bean-provider: name:" + name + " class:" + impl + " doesnt implement " + ConfigurationProvider.class.getName(), childNode);
+                            }
+                        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                            throw new ConfigurationException("Unable to load bean-provider: name:" + name + " class:" + impl, e, childNode);
+                        }
+                    } else if ("bean".equals(nodeName)) {
                         String type = child.getAttribute("type");
                         String name = child.getAttribute("name");
                         String impl = child.getAttribute("class");
@@ -233,8 +247,6 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                             scope = Scope.REQUEST;
                         } else if ("session".equals(scopeStr)) {
                             scope = Scope.SESSION;
-                        } else if ("singleton".equals(scopeStr)) {
-                            scope = Scope.SINGLETON;
                         } else if ("thread".equals(scopeStr)) {
                             scope = Scope.THREAD;
                         }

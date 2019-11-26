@@ -116,6 +116,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         this.errorIfMissing = errorIfMissing;
 
         Map<String, String> mappings = new HashMap<>();
+        mappings.put("-//Apache Struts//XWork 2.6//EN", "xwork-2.6.dtd");
         mappings.put("-//Apache Struts//XWork 2.5//EN", "xwork-2.5.dtd");
         mappings.put("-//Apache Struts//XWork 2.3//EN", "xwork-2.3.dtd");
         mappings.put("-//Apache Struts//XWork 2.1.3//EN", "xwork-2.1.3.dtd");
@@ -224,7 +225,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                         String impl = child.getAttribute("class");
                         try {
                             Class classImpl = ClassLoaderUtil.loadClass(impl, getClass());
-                            if (classImpl.isAssignableFrom(ConfigurationProvider.class)) {
+                            if (ConfigurationProvider.class.isAssignableFrom(classImpl)) {
                                 ConfigurationProvider provider = (ConfigurationProvider) classImpl.newInstance();
                                 provider.register(containerBuilder, props);
                             } else {

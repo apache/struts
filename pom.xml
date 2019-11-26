@@ -75,9 +75,9 @@
     <modules>
         <module>bom</module>
         <module>core</module>
-        <module>apps</module>
         <module>plugins</module>
         <module>bundles</module>
+        <module>apps</module>
     </modules>
 
     <licenses>

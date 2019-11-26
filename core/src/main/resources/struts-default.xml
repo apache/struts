@@ -23,8 +23,8 @@
 <!--
     When declaring beans in this file you must either use name="struts" or don't name the bean at all.
 
-    The name="struts" must be used when alias was defined in {@link org.apache.struts2.config.DefaultBeanSelectionProvider} -
-    it is then the default bean's name and {@link org.apache.struts2.config.DefaultBeanSelectionProvider} links name "struts"
+    The name="struts" must be used when alias was defined in {@link org.apache.struts2.config.StrutsBeanSelectionProvider} -
+    it is then the default bean's name and {@link org.apache.struts2.config.StrutsBeanSelectionProvider} links name "struts"
     with "default" (aliasing it)
 
     If name won't be defined then the "default" value will be used {@link com.opensymphony.xwork2.inject.Container#DEFAULT_NAME}

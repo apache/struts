@@ -364,7 +364,7 @@ import org.apache.struts2.views.util.UrlHelper;
  *   <li><code>struts.configuration.xml.reload = true</code></li>
  * </ul>
  */
-public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider {
+public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
 
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);

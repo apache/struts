@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.dispatcher;
 
+import org.apache.struts2.config.StrutsBeanSelectionProvider;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,7 +31,7 @@ import java.io.IOException;
  * &lt;bean name="myContentLoader" type="org.apache.struts2.dispatcher" class="com.company.struts.MyContentLoader"/&gt;
  * &lt;constant name="struts.staticContentLoader" value="myContentLoader"/&gt;
  *
- * Check {@link org.apache.struts2.config.DefaultBeanSelectionProvider} for more details.
+ * Check {@link StrutsBeanSelectionProvider} for more details.
  */
 public interface StaticContentLoader {
 

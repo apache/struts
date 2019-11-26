@@ -29,7 +29,7 @@ import org.apache.struts2.StrutsConstants;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
-public class DefaultBeanSelectionProviderTest extends XWorkTestCase {
+public class StrutsBeanSelectionProviderTest extends XWorkTestCase {
 
     public void testRegister() {
         LocalizedTextProvider localizedTextProvider = container.getInstance(LocalizedTextProvider.class);

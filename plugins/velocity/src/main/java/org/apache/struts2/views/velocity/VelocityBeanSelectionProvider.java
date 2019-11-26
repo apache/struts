@@ -22,9 +22,10 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.config.AbstractBeanSelectionProvider;
+import org.apache.struts2.config.StrutsBeanSelectionProvider;
 
 /**
- * Please see {@link org.apache.struts2.config.DefaultBeanSelectionProvider} for more details.
+ * Please see {@link StrutsBeanSelectionProvider} for more details.
  *
  * <p>
  * The following is a list of the allowed extension points:

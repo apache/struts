@@ -25,9 +25,7 @@
     
 <struts>
 
-    <bean-provider name="velocityBeans" class="org.apache.struts2.views.velocity.VelocityBeanSelectionProvider"/>
-
-    <bean class="org.apache.struts2.views.velocity.VelocityManager" />
+    <bean name="struts" class="org.apache.struts2.views.velocity.VelocityManager" />
 
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="vm"
           class="org.apache.struts2.views.velocity.template.VelocityTemplateEngine" />
@@ -40,5 +38,7 @@
             <result-type name="velocity" class="org.apache.struts2.views.velocity.result.VelocityResult"/>
         </result-types>
     </package>
+
+    <bean-provider name="velocityBeans" class="org.apache.struts2.views.velocity.VelocityBeanSelectionProvider"/>
 
 </struts>

@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.BeanSelectionProvider;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -225,11 +226,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                         String impl = child.getAttribute("class");
                         try {
                             Class classImpl = ClassLoaderUtil.loadClass(impl, getClass());
-                            if (ConfigurationProvider.class.isAssignableFrom(classImpl)) {
-                                ConfigurationProvider provider = (ConfigurationProvider) classImpl.newInstance();
+                            if (BeanSelectionProvider.class.isAssignableFrom(classImpl)) {
+                                BeanSelectionProvider provider = (BeanSelectionProvider) classImpl.newInstance();
                                 provider.register(containerBuilder, props);
                             } else {
-                                throw new ConfigurationException("The bean-provider: name:" + name + " class:" + impl + " doesnt implement " + ConfigurationProvider.class.getName(), childNode);
+                                throw new ConfigurationException("The bean-provider: name:" + name + " class:" + impl + " does not implement " + BeanSelectionProvider.class.getName(), childNode);
                             }
                         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                             throw new ConfigurationException("Unable to load bean-provider: name:" + name + " class:" + impl, e, childNode);

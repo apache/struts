@@ -30,7 +30,7 @@
 	"http://struts.apache.org/dtds/xwork-2.6.dtd">
 -->
 
-<!ELEMENT xwork ((package|include|bean-provider|bean|constant)*, unknown-handler-stack?)>
+<!ELEMENT xwork ((package|include|bean|constant)*, bean-provider?, unknown-handler-stack?)>
 <!ATTLIST xwork
     order CDATA #IMPLIED
 >
@@ -125,12 +125,6 @@
     file CDATA #REQUIRED
 >
 
-<!ELEMENT bean-provider (#PCDATA)>
-<!ATTLIST bean-provider
-    name CDATA #IMPLIED
-    class CDATA #IMPLIED
->
-
 <!ELEMENT bean (#PCDATA)>
 <!ATTLIST bean
     type CDATA #IMPLIED
@@ -139,6 +133,12 @@
     scope CDATA #IMPLIED
     static CDATA #IMPLIED
     optional CDATA #IMPLIED
+>
+
+<!ELEMENT bean-provider (#PCDATA)>
+<!ATTLIST bean-provider
+    name CDATA #IMPLIED
+    class CDATA #IMPLIED
 >
 
 <!ELEMENT constant (#PCDATA)>

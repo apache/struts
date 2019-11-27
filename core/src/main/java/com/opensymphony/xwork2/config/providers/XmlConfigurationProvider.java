@@ -221,7 +221,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
                     final String nodeName = child.getNodeName();
 
-                    if ("bean-provider".equals(nodeName)) {
+                    if ("bean-selection".equals(nodeName)) {
                         String name = child.getAttribute("name");
                         String impl = child.getAttribute("class");
                         try {

@@ -39,6 +39,6 @@
         </result-types>
     </package>
 
-    <bean-provider name="velocityBeans" class="org.apache.struts2.views.velocity.VelocityBeanSelectionProvider"/>
+    <bean-selection name="velocityBeans" class="org.apache.struts2.views.velocity.VelocityBeanSelectionProvider"/>
 
 </struts>

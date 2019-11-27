@@ -30,7 +30,7 @@
 	"http://struts.apache.org/dtds/struts-2.6.dtd">
 -->
 
-<!ELEMENT struts ((package|include|bean|constant)*,bean-provider?, unknown-handler-stack?)>
+<!ELEMENT struts ((package|include|bean|constant)*,bean-selection?, unknown-handler-stack?)>
 <!ATTLIST struts
     order CDATA #IMPLIED
 >
@@ -135,8 +135,8 @@
     optional CDATA #IMPLIED
 >
 
-<!ELEMENT bean-provider (#PCDATA)>
-<!ATTLIST bean-provider
+<!ELEMENT bean-selection (#PCDATA)>
+<!ATTLIST bean-selection
     name CDATA #IMPLIED
     class CDATA #IMPLIED
 >

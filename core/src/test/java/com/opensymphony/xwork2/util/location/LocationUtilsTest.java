@@ -19,9 +19,11 @@
 package com.opensymphony.xwork2.util.location;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.struts2.config.StrutsJavaConfiguration;
 import org.apache.struts2.config.entities.BeanConfig;
+import org.apache.struts2.config.entities.BeanSelectionConfig;
 import org.apache.struts2.config.entities.ConstantConfig;
 
 import junit.framework.TestCase;
@@ -73,6 +75,10 @@ public class LocationUtilsTest extends TestCase {
             @Override
             public List<BeanConfig> beans() {
                 return null;
+            }
+            @Override
+            public Optional<BeanSelectionConfig> beanSelection() {
+                return Optional.empty();
             }
         };
         Location loc = LocationUtils.getLocation(conf, null);

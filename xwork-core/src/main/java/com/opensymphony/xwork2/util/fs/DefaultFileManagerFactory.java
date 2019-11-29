@@ -19,6 +19,7 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultFileManagerFactory.class);
 
     private boolean reloadingConfigs;
+    private FileManagerHolder fileManagerHolder;
     private FileManager systemFileManager;
     private Container container;
 
@@ -38,28 +39,33 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
     }
 
     public FileManager getFileManager() {
+        if (fileManagerHolder != null) {
+            FileManager fileManager = fileManagerHolder.getFileManager();
+            if (fileManager != null) {
+                fileManager.setReloadingConfigs(reloadingConfigs);  // Set current reloading state (required to pass test suite)
+                return fileManager;
+            }
+        }
+
         FileManager fileManager = lookupFileManager();
         if (fileManager != null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Using FileManager implementation [#0]", fileManager.getClass().getSimpleName());
-            }
+            LOG.debug("Using FileManager implementation [{}]", fileManager.getClass().getSimpleName());
             fileManager.setReloadingConfigs(reloadingConfigs);
+            fileManagerHolder = new FileManagerHolder(fileManager);
             return fileManager;
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Using default implementation of FileManager provided under name [system]: #0", systemFileManager.getClass().getSimpleName());
-        }
+
+        LOG.debug("Using default implementation of FileManager provided under name [system]: {}", systemFileManager.getClass().getSimpleName());
         systemFileManager.setReloadingConfigs(reloadingConfigs);
+        fileManagerHolder = new FileManagerHolder(systemFileManager);
         return systemFileManager;
     }
 
     private FileManager lookupFileManager() {
         Set<String> names = container.getInstanceNames(FileManager.class);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Found following implementations of FileManager interface: #0", names.toString());
-        }
-        Set<FileManager> internals = new HashSet<FileManager>();
-        Set<FileManager> users = new HashSet<FileManager>();
+        LOG.debug("Found following implementations of FileManager interface: {}", names);
+        Set<FileManager> internals = new HashSet();
+        Set<FileManager> users = new HashSet();
         for (String fmName : names) {
             FileManager fm = container.getInstance(FileManager.class, fmName);
             if (fm.internal()) {
@@ -70,21 +76,30 @@ public class DefaultFileManagerFactory implements FileManagerFactory {
         }
         for (FileManager fm : users) {
             if (fm.support()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Using FileManager implementation [#0]", fm.getClass().getSimpleName());
-                }
+                LOG.debug("Using FileManager implementation [{}]", fm.getClass().getSimpleName());
                 return fm;
             }
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("No user defined FileManager, looking up for internal implementations!");
-        }
+        LOG.debug("No user defined FileManager, looking up for internal implementations!");
         for (FileManager fm : internals) {
             if (fm.support()) {
                 return fm;
             }
         }
         return null;
+    }
+
+    private static class FileManagerHolder {
+
+        private final FileManager fileManager;
+
+        public FileManagerHolder(FileManager fileManager) {
+            this.fileManager = fileManager;
+}
+
+        public FileManager getFileManager() {
+            return fileManager;
+        }
     }
 
 }

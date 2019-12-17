@@ -23,6 +23,13 @@
 
     <display-name>Struts Showcase Application</display-name>
 
+    <context-param>
+        <param-name>org.apache.tiles.definition.DefinitionsFactory.DEFINITIONS_CONFIG</param-name>
+        <param-value>
+            /WEB-INF/tiles.xml
+        </param-value>
+    </context-param>
+
     <filter>
         <filter-name>async</filter-name>
         <filter-class>org.apache.struts2.showcase.async.AsyncFilter</filter-class>

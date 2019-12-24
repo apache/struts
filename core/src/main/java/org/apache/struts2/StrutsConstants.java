@@ -264,6 +264,9 @@ public final class StrutsConstants {
     /** Enables evaluation of OGNL expressions */
     public static final String STRUTS_ENABLE_OGNL_EVAL_EXPRESSION = "struts.ognl.enableOGNLEvalExpression";
 
+    /** The maximum length of an expression (OGNL) */
+    public static final String STRUTS_OGNL_EXPRESSION_MAX_LENGTH = "struts.ognl.expressionMaxLength";
+
     /** Disables {@link org.apache.struts2.dispatcher.StrutsRequestWrapper} request attribute value stack lookup (JSTL accessibility) */
     public static final String STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP = "struts.disableRequestAttributeValueStackLookup";
 

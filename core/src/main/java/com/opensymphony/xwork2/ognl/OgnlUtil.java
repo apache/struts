@@ -189,6 +189,25 @@ public class OgnlUtil {
         this.disallowProxyMemberAccess = BooleanUtils.toBoolean(disallowProxyMemberAccess);
     }
 
+    /**
+     * @param maxLength Injects the Struts OGNL expression maximum length.
+     */
+    @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH, required = false)
+    protected void applyExpressionMaxLength(String maxLength) {
+        try {
+            if (maxLength == null || maxLength.isEmpty()) {
+                Ognl.applyExpressionMaxLength(null);
+                LOG.info("OGNL Expression Max Length disabled.");
+            } else {
+                Ognl.applyExpressionMaxLength(Integer.parseInt(maxLength));
+                LOG.info("OGNL Expression Max Length enabled with {}.", maxLength);
+            }
+        } catch (Exception ex) {
+            LOG.error("Unable to set OGNL Expression Max Length {}.", maxLength);  // Help configuration debugging.
+            throw ex;
+        }
+    }
+
     public boolean isDisallowProxyMemberAccess() {
         return disallowProxyMemberAccess;
     }
@@ -754,6 +773,9 @@ public class OgnlUtil {
             setValue(name, context, o, value);
         } catch (OgnlException e) {
             Throwable reason = e.getReason();
+            if (reason instanceof SecurityException) {
+                LOG.error("Could not evaluate this expression due to security constraints: [{}]", name, e);
+            }
             String msg = "Caught OgnlException while setting property '" + name + "' on type '" + o.getClass().getName() + "'.";
             Throwable exception = (reason == null) ? e : reason;
 

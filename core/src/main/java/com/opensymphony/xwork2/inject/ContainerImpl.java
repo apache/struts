@@ -155,6 +155,11 @@ class ContainerImpl implements Container {
         return Modifier.isStatic(member.getModifiers());
     }
 
+    private static boolean isNotPublic(Member member) {
+        return !Modifier.isPublic(member.getModifiers()) ||
+                !Modifier.isPublic(member.getDeclaringClass().getModifiers());
+    }
+
     static class FieldInjector implements Injector {
 
         final Field field;
@@ -164,7 +169,7 @@ class ContainerImpl implements Container {
         public FieldInjector(ContainerImpl container, Field field, String name)
                 throws MissingDependencyException {
             this.field = field;
-            if (!field.isAccessible()) {
+            if (isNotPublic(field) && !field.isAccessible()) {
                 SecurityManager sm = System.getSecurityManager();
                 try {
                     if (sm != null) {
@@ -256,7 +261,7 @@ class ContainerImpl implements Container {
 
         public MethodInjector(ContainerImpl container, Method method, String name) throws MissingDependencyException {
             this.method = method;
-            if (!method.isAccessible()) {
+            if (isNotPublic(method) && !method.isAccessible()) {
                 SecurityManager sm = System.getSecurityManager();
                 try {
                     if (sm != null) {
@@ -306,7 +311,7 @@ class ContainerImpl implements Container {
             this.implementation = implementation;
 
             constructor = findConstructorIn(implementation);
-            if (!constructor.isAccessible()) {
+            if (isNotPublic(constructor) && !constructor.isAccessible()) {
                 SecurityManager sm = System.getSecurityManager();
                 try {
                     if (sm != null) {

@@ -48,7 +48,7 @@ public class OgnlTool {
             return ognlUtil.getValue(expr, ActionContext.getContext().getContextMap(), context);
         } catch (OgnlException e) {
             if (e.getReason() instanceof SecurityException) {
-                LOG.warn("Could not evaluate this expression due to security constraints: [{}]", expr, e);
+                LOG.error("Could not evaluate this expression due to security constraints: [{}]", expr, e);
             }
             return null;
         }

@@ -774,7 +774,7 @@ public class OgnlUtil {
         } catch (OgnlException e) {
             Throwable reason = e.getReason();
             if (reason instanceof SecurityException) {
-                LOG.warn("Could not evaluate this expression due to security constraints: [{}]", name, e);
+                LOG.error("Could not evaluate this expression due to security constraints: [{}]", name, e);
             }
             String msg = "Caught OgnlException while setting property '" + name + "' on type '" + o.getClass().getName() + "'.";
             Throwable exception = (reason == null) ? e : reason;

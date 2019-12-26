@@ -30,7 +30,7 @@
 	"http://struts.apache.org/dtds/xwork-2.6.dtd">
 -->
 
-    <!ELEMENT xwork ((package|include|bean|constant)*, bean-selection?, unknown-handler-stack?)>
+<!ELEMENT xwork ((package|include|bean|constant)*, bean-selection?, unknown-handler-stack?)>
 <!ATTLIST xwork
     order CDATA #IMPLIED
 >

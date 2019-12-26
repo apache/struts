@@ -524,7 +524,7 @@ public class VelocityManager {
         sb.append(clazz.getName()).append(",");
     }
 
-    private String replace(String string, String oldString, String newString) {
+    private static final String replace(String string, String oldString, String newString) {
         if (string == null) {
             return null;
         }

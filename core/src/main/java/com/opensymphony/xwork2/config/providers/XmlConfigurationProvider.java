@@ -242,15 +242,19 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                         String onlyStatic = child.getAttribute("static");
                         String scopeStr = child.getAttribute("scope");
                         boolean optional = "true".equals(child.getAttribute("optional"));
-                        Scope scope = Scope.SINGLETON;
+                        Scope scope;
                         if ("prototype".equals(scopeStr)) {
                             scope = Scope.PROTOTYPE;
                         } else if ("request".equals(scopeStr)) {
                             scope = Scope.REQUEST;
                         } else if ("session".equals(scopeStr)) {
                             scope = Scope.SESSION;
+                        } else if ("singleton".equals(scopeStr)) {
+                            scope = Scope.SINGLETON;
                         } else if ("thread".equals(scopeStr)) {
                             scope = Scope.THREAD;
+                        } else {
+                            scope = Scope.SINGLETON;
                         }
 
                         if (StringUtils.isEmpty(name)) {

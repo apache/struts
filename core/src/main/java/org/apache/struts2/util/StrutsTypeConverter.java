@@ -38,7 +38,7 @@ import com.opensymphony.xwork2.conversion.impl.DefaultTypeConverter;
  * failed. By default it just ask its super class (Ognl's DefaultTypeConverter) to do the conversion.
  * </p>
  *
- * <p> To allow the framework to recognize that a conversion error has occurred, throw an XWorkException or
+ * <p> To allow the framework to recognize that a conversion error has occurred, throw an StrutsException or
  * preferable a TypeConversionException.
  * </p>
  * <!-- END SNIPPET: javadoc -->

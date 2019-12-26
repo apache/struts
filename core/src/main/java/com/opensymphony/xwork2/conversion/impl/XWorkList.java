@@ -20,10 +20,10 @@ package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -188,7 +188,7 @@ public class XWorkList extends ArrayList {
             try {
                 this.add(getObjectFactory().buildBean(clazz, ActionContext.getContext().getContextMap()));
             } catch (Exception e) {
-                throw new XWorkException(e);
+                throw new StrutsException(e);
             }
         }
 

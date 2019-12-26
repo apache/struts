@@ -39,7 +39,7 @@
 
         <global-exception-mappings>
             <exception-mapping exception="java.lang.RuntimeException" result="runForDeeHillz"/>
-            <exception-mapping exception="com.opensymphony.xwork2.XworkException" result="xworkNaughty"/>
+            <exception-mapping exception="com.opensymphony.xwork2.StrutsException" result="xworkNaughty"/>
         </global-exception-mappings>
 
         <action name="Bar" class="com.opensymphony.xwork2.SimpleAction">

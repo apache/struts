@@ -18,9 +18,9 @@
  */
 package com.opensymphony.xwork2.util.reflection;
 
-import com.opensymphony.xwork2.XWorkException;
+import org.apache.struts2.StrutsException;
 
-public class ReflectionException extends XWorkException {
+public class ReflectionException extends StrutsException {
 
     public ReflectionException() {
         // TODO Auto-generated constructor stub

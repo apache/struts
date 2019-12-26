@@ -21,9 +21,9 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.StrutsException;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -127,7 +127,7 @@ public class ScopedModelDrivenInterceptor extends AbstractInterceptor {
                         Class cls = method.getReturnType();
                         cName = cls.getName();
                     } catch (NoSuchMethodException e) {
-                        throw new XWorkException("The " + GET_MODEL + "() is not defined in action " + action.getClass() + "", config);
+                        throw new StrutsException("The " + GET_MODEL + "() is not defined in action " + action.getClass() + "", config);
                     }
                 }
                 String modelName = name;

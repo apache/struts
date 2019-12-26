@@ -21,10 +21,10 @@ package com.opensymphony.xwork2.util.classloader;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.XWorkException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 
 import java.io.File;
 import java.io.InputStream;
@@ -66,10 +66,10 @@ public class ReloadingClassLoader extends ClassLoader {
             if (root != null) {
                 stores = new ResourceStore[]{new FileResourceStore(new File(root.toURI()))};
             } else {
-                throw new XWorkException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false");
+                throw new StrutsException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false");
             }
         } catch (URISyntaxException e) {
-            throw new XWorkException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false", e);
+            throw new StrutsException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false", e);
         } catch (RuntimeException e) {
             // see WW-3121
             // TODO: Fix this for a reloading mechanism to be marked as stable

@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -52,6 +51,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -1080,7 +1080,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
                     docs.add(DomHelper.parse(in, dtdMappings));
                     loadedFileUrls.add(url.toString());
-                } catch (XWorkException e) {
+                } catch (StrutsException e) {
                     if (includeElement != null) {
                         throw new ConfigurationException("Unable to load " + url, e, includeElement);
                     } else {

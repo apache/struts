@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 
 import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
@@ -72,7 +73,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     private ConventionsService conventionsService;
     private String nameSeparator;
 
-    protected Set<String> allowedMethods = new HashSet<>();
+    protected Set<String> allowedMethods;
 
     /**
      * Constructs the unknown handler.
@@ -114,7 +115,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     }
 
     public ActionConfig handleUnknownAction(String namespace, String actionName)
-            throws XWorkException {
+            throws StrutsException {
         // Strip the namespace if it is just a slash
         if (namespace == null || "/".equals(namespace)) {
             namespace = "";
@@ -217,7 +218,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
         params.put(resultTypeConfig.getDefaultResultParam(), path);
 
         PackageConfig pkg = configuration.getPackageConfig(defaultParentPackageName);
-        List<InterceptorMapping> interceptors = InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(), Collections.<String, String>emptyMap(), null, objectFactory);
+        List<InterceptorMapping> interceptors = InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(), Collections.emptyMap(), null, objectFactory);
         ResultConfig config = new ResultConfig.Builder(Action.SUCCESS, resultTypeConfig.getClassName()).
                 addParams(params).build();
         results.put(Action.SUCCESS, config);
@@ -265,7 +266,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     }
 
     public Result handleUnknownResult(ActionContext actionContext, String actionName,
-                                      ActionConfig actionConfig, String resultCode) throws XWorkException {
+                                      ActionConfig actionConfig, String resultCode) throws StrutsException {
 
         PackageConfig pkg = configuration.getPackageConfig(actionConfig.getPackageName());
         String ns = pkg.getNamespace();
@@ -351,7 +352,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
         try {
             return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
         } catch (Exception e) {
-            throw new XWorkException("Unable to build convention result", e, resultConfig);
+            throw new StrutsException("Unable to build convention result", e, resultConfig);
         }
     }
 

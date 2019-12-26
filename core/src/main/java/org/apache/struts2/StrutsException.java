@@ -18,16 +18,16 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.location.Locatable;
+import com.opensymphony.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.location.LocationUtils;
 
 /**
  * A generic runtime exception that optionally contains Location information
  */
-public class StrutsException extends XWorkException implements Locatable {
+public class StrutsException extends RuntimeException implements Locatable {
 
-    private static final long serialVersionUID = 888724366243600135L;
-
+    private Location location;
 
     /**
      * Constructs a <code>StrutsException</code> with no detail message.
@@ -96,6 +96,45 @@ public class StrutsException extends XWorkException implements Locatable {
      * @param target The target of the exception
      */
     public StrutsException(String s, Throwable cause, Object target) {
-        super(s, cause, target);
+        super(s, cause);
+
+        this.location = LocationUtils.getLocation(target);
+        if (this.location == Location.UNKNOWN) {
+            this.location = LocationUtils.getLocation(cause);
+        }
+    }
+
+    /**
+     * Gets the location of the error, if available
+     *
+     * @return the location, <tt>null</tt> if not available
+     */
+    public Location getLocation() {
+        return this.location;
+    }
+
+    /**
+     * Returns a short description of this throwable object, including the
+     * location. If no detailed message is available, it will use the message
+     * of the underlying exception if available.
+     *
+     * @return a string representation of this <code>Throwable</code>.
+     */
+    @Override
+    public String toString() {
+        String msg = getMessage();
+        if (msg == null && getCause() != null) {
+            msg = getCause().getMessage();
+        }
+
+        if (location != null) {
+            if (msg != null) {
+                return msg + " - " + location.toString();
+            } else {
+                return location.toString();
+            }
+        } else {
+            return msg;
+        }
     }
 }

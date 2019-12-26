@@ -21,13 +21,13 @@ package org.apache.struts2.convention;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.finder.ClassFinder;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.Test;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -445,10 +445,10 @@ public class DefaultClassFinder implements ClassFinder {
                     classReader.accept(new InfoBuildingVisitor(this), ClassReader.SKIP_DEBUG);
                 }
             } else {
-                throw new XWorkException("Could not load " + className);
+                throw new StrutsException("Could not load " + className);
             }
         } catch (IOException e) {
-            throw new XWorkException("Could not load " + className, e);
+            throw new StrutsException("Could not load " + className, e);
         }
 
     }

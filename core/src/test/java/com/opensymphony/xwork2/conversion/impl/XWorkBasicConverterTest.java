@@ -19,9 +19,9 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.test.annotations.Person;
+import org.apache.struts2.StrutsException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -45,15 +45,15 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testDateConversionWithEmptyValue() {
         Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "", Date.class);
-        // we must not get XWorkException as that will caused a conversion error
+        // we must not get StrutsException as that will caused a conversion error
         assertNull(convertedObject);
     }
 
     public void testDateConversionWithInvalidValue() throws Exception {
         try {
             basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "asdsd", Date.class);
-            fail("XWorkException expected - conversion error occurred");
-        } catch (XWorkException e) {
+            fail("StrutsException expected - conversion error occurred");
+        } catch (StrutsException e) {
             // we MUST get this exception as this is a conversion error
         }
     }
@@ -119,7 +119,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testEmptyArrayConversion() throws Exception {
         Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, new Object[]{}, Object[].class);
-        // we must not get XWorkException as that will caused a conversion error
+        // we must not get StrutsException as that will caused a conversion error
         assertEquals(Object[].class, convertedObject.getClass());
         Object[] obj = (Object[]) convertedObject;
         assertEquals(0, obj.length);
@@ -127,7 +127,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testNullArrayConversion() throws Exception {
         Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, null, Object[].class);
-        // we must not get XWorkException as that will caused a conversion error
+        // we must not get StrutsException as that will caused a conversion error
         assertNull(convertedObject);
     }
 

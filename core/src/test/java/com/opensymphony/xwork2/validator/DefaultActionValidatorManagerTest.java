@@ -25,7 +25,6 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.test.DataAware2;
@@ -34,6 +33,7 @@ import com.opensymphony.xwork2.test.SimpleAction3;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
+import org.apache.struts2.StrutsException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,7 +111,7 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
                 C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/TestBean-badtest-validation.xml")),
                 new ConfigurationException());
             List validatorList = actionValidatorManager.getValidators(TestBean.class, "badtest");
-        } catch (XWorkException ex) {
+        } catch (StrutsException ex) {
             pass = true;
         }
         mockValidatorFileParser.verify();

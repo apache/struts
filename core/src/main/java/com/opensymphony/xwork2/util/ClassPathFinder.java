@@ -18,7 +18,7 @@
  */
 package com.opensymphony.xwork2.util;
 
-import com.opensymphony.xwork2.XWorkException;
+import org.apache.struts2.StrutsException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -178,7 +178,7 @@ public class ClassPathFinder {
             try {
                 urls = Collections.list(loader.getResources("")).toArray(new URL[0]);
             } catch (IOException e) {
-                throw new XWorkException("unable to get ClassLoader URLs", e);
+                throw new StrutsException("unable to get ClassLoader URLs", e);
             }
         }
 

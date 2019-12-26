@@ -20,11 +20,11 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.HttpParameters;
 import com.opensymphony.xwork2.mock.MockResult;
 
 import java.util.HashMap;
-
 
 /**
  * @author $Author$
@@ -51,12 +51,12 @@ public class ActionInvocationTest extends XWorkTestCase {
     public void testCommandInvocationUnknownHandler() throws Exception {
 
         UnknownHandler unknownHandler = new UnknownHandler() {
-			public ActionConfig handleUnknownAction(String namespace, String actionName) throws XWorkException {
+			public ActionConfig handleUnknownAction(String namespace, String actionName) throws StrutsException {
                 return new ActionConfig.Builder("test", actionName, ActionSupport.class.getName())
                         .addAllowedMethod("unknownmethod")
                         .build();
             }
-			public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws XWorkException {
+			public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws StrutsException {
 				return new MockResult();
 			}
 			public Object handleUnknownActionMethod(Object action, String methodName) {
@@ -84,7 +84,7 @@ public class ActionInvocationTest extends XWorkTestCase {
     public void testResultReturnInvocationAndWired() throws Exception {
         ActionProxy baseActionProxy = actionProxyFactory.createActionProxy(
                 "baz", "resultAction", null, null);
-        assertEquals(null, baseActionProxy.execute());
+        assertNull(baseActionProxy.execute());
         assertTrue(SimpleAction.resultCalled);
     }
 

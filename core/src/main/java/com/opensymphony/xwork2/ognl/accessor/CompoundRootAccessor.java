@@ -18,7 +18,6 @@
  */
 package com.opensymphony.xwork2.ognl.accessor;
 
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
@@ -28,6 +27,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -111,7 +111,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
             final String msg = format("No object in the CompoundRoot has a publicly accessible property named '%s' " +
                     "(no setter could be found).", name);
             if (reportError) {
-                throw new XWorkException(msg);
+                throw new StrutsException(msg);
             } else {
                 LOG.warn(msg);
             }
@@ -146,7 +146,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
                 } catch (OgnlException e) {
                     if (e.getReason() != null) {
                         final String msg = "Caught an Ognl exception while getting property " + name;
-                        throw new XWorkException(msg, e);
+                        throw new StrutsException(msg, e);
                     }
                 } catch (IntrospectionException e) {
                     // this is OK if this happens, we'll just keep trying the next

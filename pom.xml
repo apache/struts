@@ -520,6 +520,7 @@
                 <artifactId>dependency-check-maven</artifactId>
                 <configuration>
                     <name>Dependency Check</name>
+                    <failBuildOnCVSS>11</failBuildOnCVSS>
                 </configuration>
                 <reportSets>
                     <reportSet>

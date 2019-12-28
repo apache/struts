@@ -22,6 +22,7 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import junit.framework.TestCase;
+import org.apache.struts2.StrutsException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -113,7 +114,7 @@ public class ChainResultTest extends XWorkTestCase {
         try {
             proxy.execute();
             fail("did not detected repeated chain to an action");
-        } catch (XWorkException e) {
+        } catch (StrutsException e) {
             assertTrue(true);
         }
     }

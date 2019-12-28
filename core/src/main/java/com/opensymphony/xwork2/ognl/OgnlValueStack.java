@@ -20,7 +20,6 @@ package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
@@ -35,6 +34,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -196,7 +196,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
             String message = ErrorMessageBuilder.create()
                     .errorSettingExpressionWithValue(expr, value)
                     .build();
-            throw new XWorkException(message, re);
+            throw new StrutsException(message, re);
         } else {
             LOG.warn("Error setting value [{}] with expression [{}]", value, expr, re);
         }
@@ -216,7 +216,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     	}
     	
         if (throwExceptionOnFailure) {
-            throw new XWorkException(msg, e);
+            throw new StrutsException(msg, e);
         }
     }
 
@@ -264,7 +264,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         logLookupFailure(expr, e);
 
         if (throwExceptionOnFailure)
-            throw new XWorkException(e);
+            throw new StrutsException(e);
 
         return findInContext(expr);
     }
@@ -339,7 +339,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
                 LOG.warn("Could not find property [{}]!", expr, e);
             }
             if (throwExceptionOnFailure) {
-                throw new XWorkException(e);
+                throw new StrutsException(e);
             }
         }
         return ret;

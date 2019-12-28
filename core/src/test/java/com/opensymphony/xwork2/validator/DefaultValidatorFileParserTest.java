@@ -20,10 +20,10 @@ package com.opensymphony.xwork2.validator;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.validator.validators.*;
 import junit.framework.TestCase;
+import org.apache.struts2.StrutsException;
 
 import java.io.InputStream;
 import java.util.List;
@@ -123,7 +123,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
         boolean pass = false;
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileName3);
-        } catch (XWorkException ex) {
+        } catch (StrutsException ex) {
             assertTrue("Wrong line number", 24 == ex.getLocation().getLineNumber());
             pass = true;
         }
@@ -136,7 +136,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
         boolean pass = false;
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileName4);
-        } catch (XWorkException ex) {
+        } catch (StrutsException ex) {
             assertTrue("Wrong line number: " + ex.getLocation(), 34 == ex.getLocation().getLineNumber());
             pass = true;
         }
@@ -149,7 +149,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
         boolean pass = false;
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileNameFail);
-        } catch (XWorkException ex) {
+        } catch (StrutsException ex) {
             assertTrue("Wrong line number: " + ex.getLocation(), 28 == ex.getLocation().getLineNumber());
             pass = true;
         }
@@ -162,7 +162,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
         boolean pass = false;
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileName5);
-        } catch (XWorkException ex) {
+        } catch (StrutsException ex) {
             assertTrue("Wrong line number", 24 == ex.getLocation().getLineNumber());
             pass = true;
         }

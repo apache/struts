@@ -21,6 +21,7 @@ package com.opensymphony.xwork2;
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.io.Serializable;
@@ -323,7 +324,7 @@ public class ActionContext implements Serializable {
         if (cont != null) {
             return cont.getInstance(type);
         } else {
-            throw new XWorkException("Cannot find an initialized container for this request.");
+            throw new StrutsException("Cannot find an initialized container for this request.");
         }
     }
 

@@ -18,7 +18,7 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.XWorkException;
+import org.apache.struts2.StrutsException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
@@ -90,11 +90,11 @@ public class DateConverter extends DefaultTypeConverter {
                         Constructor constructor = toType.getConstructor(new Class[]{long.class});
                         return constructor.newInstance(new Object[]{Long.valueOf(result.getTime())});
                     } catch (Exception e) {
-                        throw new XWorkException("Couldn't create class " + toType + " using default (long) constructor", e);
+                        throw new StrutsException("Couldn't create class " + toType + " using default (long) constructor", e);
                     }
                 }
             } catch (ParseException e) {
-                throw new XWorkException("Could not parse date", e);
+                throw new StrutsException("Could not parse date", e);
             }
         } else if (Date.class.isAssignableFrom(value.getClass())) {
             result = (Date) value;

@@ -19,7 +19,6 @@
 package com.opensymphony.xwork2.ognl.accessor;
 
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
@@ -29,6 +28,7 @@ import ognl.ListPropertyAccessor;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 
 import java.util.Collection;
 import java.util.List;
@@ -121,7 +121,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
                 try {
                     list.add(index, result = objectFactory.buildBean(beanClass, context));
                 } catch (Exception exc) {
-                    throw new XWorkException(exc);
+                    throw new StrutsException(exc);
                 }
                 return result;
             } else if (list.get(index) == null) {
@@ -129,7 +129,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
                 try {
                     list.set(index, result = objectFactory.buildBean(beanClass, context));
                 } catch (Exception exc) {
-                    throw new XWorkException(exc);
+                    throw new StrutsException(exc);
                 }
                 return result;
             }

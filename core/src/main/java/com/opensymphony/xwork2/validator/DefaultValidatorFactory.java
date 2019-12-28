@@ -20,13 +20,13 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Initializable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -75,7 +75,7 @@ public class DefaultValidatorFactory implements ValidatorFactory, Initializable 
             validator = objectFactory.buildValidator(className, cfg.getParams(), ActionContext.getContext().getContextMap());
         } catch (Exception e) {
             final String msg = "There was a problem creating a Validator of type " + className + " : caused by " + e.getMessage();
-            throw new XWorkException(msg, e, cfg);
+            throw new StrutsException(msg, e, cfg);
         }
 
         // set other configured properties

@@ -20,11 +20,11 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationAttributes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -105,7 +105,7 @@ public class DomHelper {
         try {
             parser = factory.newSAXParser();
         } catch (Exception ex) {
-            throw new XWorkException("Unable to create SAX parser", ex);
+            throw new StrutsException("Unable to create SAX parser", ex);
         }
         
         
@@ -117,7 +117,7 @@ public class DomHelper {
         try {
             parser.parse(inputSource, new StartHandler(locationHandler, dtdMappings));
         } catch (Exception ex) {
-            throw new XWorkException(ex);
+            throw new StrutsException(ex);
         }
         
         return builder.getDocument();
@@ -212,7 +212,7 @@ public class DomHelper {
                 }
                 handler.setResult(this.result);
             } catch (javax.xml.transform.TransformerException local) {
-                throw new XWorkException("Fatal-Error: Unable to get transformer handler", local);
+                throw new StrutsException("Fatal-Error: Unable to get transformer handler", local);
             }
         }
     

@@ -19,7 +19,6 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
@@ -33,6 +32,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import java.beans.IntrospectionException;
 import ognl.*;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -1537,7 +1537,7 @@ public class OgnlUtilTest extends XWorkTestCase {
                 try {
                     this.add(clazz.newInstance());
                 } catch (Exception e) {
-                    throw new XWorkException(e);
+                    throw new StrutsException(e);
                 }
             }
 

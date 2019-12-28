@@ -19,6 +19,7 @@
 package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.StrutsException;
 
 /**
  * Handles cases when the result or action is unknown.
@@ -36,9 +37,9 @@ public interface UnknownHandler {
      * @param namespace The namespace
      * @param actionName The action name
      * @return An generated ActionConfig, can return <tt>null</tt>
-     * @throws XWorkException in case of errors
+     * @throws StrutsException in case of errors
      */
-    ActionConfig handleUnknownAction(String namespace, String actionName) throws XWorkException;
+    ActionConfig handleUnknownAction(String namespace, String actionName) throws StrutsException;
     
     /**
      * Handles the case when a result cannot be found for an action and result code. 
@@ -48,9 +49,9 @@ public interface UnknownHandler {
      * @param actionConfig The action config
      * @param resultCode The returned result code
      * @return A result to be executed, can return <tt>null</tt>
-     * @throws XWorkException in case of errors
+     * @throws StrutsException in case of errors
      */
-    Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws XWorkException;
+    Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws StrutsException;
     
     /**
      * Handles the case when an action method cannot be found.  This method is responsible both for finding the method and executing it.

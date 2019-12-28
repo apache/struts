@@ -47,6 +47,7 @@ import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 
 
@@ -774,7 +775,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         try {
             vs.setValue("count2", "a", true);
             fail("Expected an exception for mismatched getter and setter");
-        } catch (XWorkException e) {
+        } catch (StrutsException e) {
             //expected
         }
     }
@@ -792,7 +793,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         try {
             vs.setValue("count2", "a", true);
             fail("Expected an exception for mismatched getter and setter");
-        } catch (XWorkException e) {
+        } catch (StrutsException e) {
             //expected
         }
     }
@@ -874,7 +875,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         try {
             stack.setValue("bean", "foobar", true);
             fail("Should have thrown a type conversion exception");
-        } catch (XWorkException e) {
+        } catch (StrutsException e) {
             // expected
         }
 
@@ -1172,7 +1173,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         try {
             stack.setValue("count", "a", true);
             fail("Should have thrown a type conversion exception");
-        } catch (XWorkException e) {
+        } catch (StrutsException e) {
             // expected
         }
 

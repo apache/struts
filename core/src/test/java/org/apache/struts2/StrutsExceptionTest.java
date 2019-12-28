@@ -16,33 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2;
 
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.location.Location;
 
-public class XWorkExceptionTest extends XWorkTestCase {
+public class StrutsExceptionTest extends XWorkTestCase {
 
-    public void testUnknown() throws Exception {
-        XWorkException e = new XWorkException("testXXX", this);
+    public void testUnknown() {
+        StrutsException e = new StrutsException("testXXX", this);
         assertEquals(Location.UNKNOWN, e.getLocation());
     }
 
     public void testThrowable() {
-        XWorkException e = new XWorkException("testThrowable", new IllegalArgumentException("Arg is null"));
-        assertEquals("com/opensymphony/xwork2/XWorkExceptionTest.java", e.getLocation().getURI());
+        StrutsException e = new StrutsException("testThrowable", new IllegalArgumentException("Arg is null"));
+        assertEquals("org/apache/struts2/StrutsExceptionTest.java", e.getLocation().getURI());
         String s = e.getLocation().toString();
         assertTrue(s.contains("Method: testThrowable"));
     }
 
     public void testCauseAndTarget() {
-        XWorkException e = new XWorkException(new IllegalArgumentException("Arg is null"), this);
-        assertEquals("com/opensymphony/xwork2/XWorkExceptionTest.java", e.getLocation().getURI());
+        StrutsException e = new StrutsException(new IllegalArgumentException("Arg is null"), this);
+        assertEquals("org/apache/struts2/StrutsExceptionTest.java", e.getLocation().getURI());
         String s = e.getLocation().toString();
         assertTrue(s.contains("Method: testCauseAndTarget"));
     }
 
     public void testDefaultConstructor() {
-        XWorkException e = new XWorkException();
+        StrutsException e = new StrutsException();
 
         assertNull(e.getCause());
         assertNull(e.getMessage());
@@ -52,7 +53,7 @@ public class XWorkExceptionTest extends XWorkTestCase {
     }
 
     public void testMessageOnly() {
-        XWorkException e = new XWorkException("Hello World");
+        StrutsException e = new StrutsException("Hello World");
 
         assertNull(e.getCause());
         assertEquals("Hello World", e.getMessage());
@@ -60,22 +61,22 @@ public class XWorkExceptionTest extends XWorkTestCase {
     }
 
     public void testCauseOnly() {
-        XWorkException e = new XWorkException(new IllegalArgumentException("Arg is null"));
+        StrutsException e = new StrutsException(new IllegalArgumentException("Arg is null"));
 
         assertNotNull(e.getCause());
         assertNotNull(e.getLocation());
-        assertEquals("com/opensymphony/xwork2/XWorkExceptionTest.java", e.getLocation().getURI());
+        assertEquals("org/apache/struts2/StrutsExceptionTest.java", e.getLocation().getURI());
         String s = e.getLocation().toString();
         assertTrue(s.contains("Method: testCauseOnly"));
         assertTrue(e.toString().contains("Arg is null"));
     }
 
     public void testCauseOnlyNoMessage() {
-        XWorkException e = new XWorkException(new IllegalArgumentException());
+        StrutsException e = new StrutsException(new IllegalArgumentException());
 
         assertNotNull(e.getCause());
         assertNotNull(e.getLocation());
-        assertEquals("com/opensymphony/xwork2/XWorkExceptionTest.java", e.getLocation().getURI());
+        assertEquals("org/apache/struts2/StrutsExceptionTest.java", e.getLocation().getURI());
         String s = e.getLocation().toString();
         assertTrue(s.contains("Method: testCauseOnly"));
         assertTrue(e.toString().contains("Method: testCauseOnly"));

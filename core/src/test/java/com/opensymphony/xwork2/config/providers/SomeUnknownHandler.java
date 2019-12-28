@@ -21,14 +21,14 @@ package com.opensymphony.xwork2.config.providers;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.UnknownHandler;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.struts2.StrutsException;
 
 public class SomeUnknownHandler implements UnknownHandler{
     private ActionConfig actionConfig;
     private String actionMethodResult;
 
-    public ActionConfig handleUnknownAction(String namespace, String actionName) throws XWorkException {
+    public ActionConfig handleUnknownAction(String namespace, String actionName) throws StrutsException {
         return actionConfig;
     }
 
@@ -37,7 +37,7 @@ public class SomeUnknownHandler implements UnknownHandler{
     }
 
     public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig,
-            String resultCode) throws XWorkException {
+            String resultCode) throws StrutsException {
         return null;
     }
 

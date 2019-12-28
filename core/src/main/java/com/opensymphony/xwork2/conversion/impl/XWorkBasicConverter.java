@@ -18,11 +18,11 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 
 import java.lang.reflect.Member;
 import java.util.Calendar;
@@ -130,7 +130,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
             }
 
             if (result == null && value != null && !"".equals(value)) {
-                throw new XWorkException("Cannot create type " + toType + " from value " + value);
+                throw new StrutsException("Cannot create type " + toType + " from value " + value);
             }
         }
 
@@ -170,7 +170,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
             try {
                 clazz = Class.forName((String) value);
             } catch (ClassNotFoundException e) {
-                throw new XWorkException(e.getLocalizedMessage(), e);
+                throw new StrutsException(e.getLocalizedMessage(), e);
             }
         }
         return clazz;
@@ -179,7 +179,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToCollection(Map<String, Object> context, Object o, Member member, String prop, Object value, Class toType) {
         TypeConverter converter = container.getInstance(CollectionConverter.class);
         if (converter == null) {
-            throw new XWorkException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_COLLECTION);
+            throw new StrutsException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_COLLECTION);
         }
         return converter.convertValue(context, o, member, prop, value, toType);
     }
@@ -187,7 +187,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToArray(Map<String, Object> context, Object o, Member member, String prop, Object value, Class toType) {
         TypeConverter converter = container.getInstance(ArrayConverter.class);
         if (converter == null) {
-            throw new XWorkException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_ARRAY);
+            throw new StrutsException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_ARRAY);
         }
         return converter.convertValue(context, o, member, prop, value, toType);
     }
@@ -195,7 +195,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToDate(Map<String, Object> context, Object value, Class toType) {
         TypeConverter converter = container.getInstance(DateConverter.class);
         if (converter == null) {
-            throw new XWorkException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_DATE);
+            throw new StrutsException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_DATE);
         }
         return converter.convertValue(context, null, null, null, value, toType);
     }
@@ -203,7 +203,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToNumber(Map<String, Object> context, Object value, Class toType) {
         TypeConverter converter = container.getInstance(NumberConverter.class);
         if (converter == null) {
-            throw new XWorkException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_NUMBER);
+            throw new StrutsException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_NUMBER);
         }
         return converter.convertValue(context, null, null, null, value, toType);
     }
@@ -211,7 +211,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToString(Map<String, Object> context, Object value) {
         TypeConverter converter = container.getInstance(StringConverter.class);
         if (converter == null) {
-            throw new XWorkException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_STRING);
+            throw new StrutsException("TypeConverter with name [#0] must be registered first!", StrutsConstants.STRUTS_CONVERTER_STRING);
         }
         return converter.convertValue(context, null, null, null, value, null);
     }

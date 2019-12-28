@@ -19,10 +19,10 @@
 package com.opensymphony.xwork2.interceptor.annotations;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.struts2.StrutsException;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -191,7 +191,7 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
                 try {
                     MethodUtils.invokeMethod(action, true, m.getName());
                 } catch (Exception e) {
-                    throw new XWorkException(e);
+                    throw new StrutsException(e);
                 }
             }
         }

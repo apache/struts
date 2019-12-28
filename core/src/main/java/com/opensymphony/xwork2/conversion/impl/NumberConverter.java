@@ -18,9 +18,9 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.XWorkException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 
 import java.lang.reflect.Member;
 import java.math.BigDecimal;
@@ -51,7 +51,7 @@ public class NumberConverter extends DefaultTypeConverter {
                 Object convertedValue = super.convertValue(context, value, toType);
 
                 if (!isInRange((Number) convertedValue, stringValue, toType))
-                    throw new XWorkException("Overflow or underflow casting: \"" + stringValue + "\" into class " + convertedValue.getClass().getName());
+                    throw new StrutsException("Overflow or underflow casting: \"" + stringValue + "\" into class " + convertedValue.getClass().getName());
 
                 return convertedValue;
             } else {
@@ -67,11 +67,11 @@ public class NumberConverter extends DefaultTypeConverter {
                 Number number = numFormat.parse(stringValue, parsePos);
 
                 if (parsePos.getIndex() != stringValue.length()) {
-                    throw new XWorkException("Unparseable number: \"" + stringValue + "\" at position "
-                            + parsePos.getIndex());
+                    throw new StrutsException("Unparseable number: \"" + stringValue + "\" at position "
+                        + parsePos.getIndex());
                 } else {
                     if (!isInRange(number, stringValue, toType))
-                        throw new XWorkException("Overflow or underflow casting: \"" + stringValue + "\" into class " + number.getClass().getName());
+                        throw new StrutsException("Overflow or underflow casting: \"" + stringValue + "\" into class " + number.getClass().getName());
 
                     value = super.convertValue(context, number, toType);
                 }
@@ -103,7 +103,7 @@ public class NumberConverter extends DefaultTypeConverter {
         Number number = format.parse(stringValue, parsePosition);
 
         if (parsePosition.getIndex() != stringValue.length()) {
-            throw new XWorkException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
+            throw new StrutsException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
         }
 
         return number;
@@ -123,11 +123,11 @@ public class NumberConverter extends DefaultTypeConverter {
         Number number = format.parse(stringValue, parsePosition);
 
         if (parsePosition.getIndex() != stringValue.length()) {
-            throw new XWorkException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
+            throw new StrutsException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
         }
 
         if (!isInRange(number, stringValue, Double.class)) {
-            throw new XWorkException("Overflow or underflow converting: \"" + stringValue + "\" into class " + number.getClass().getName());
+            throw new StrutsException("Overflow or underflow converting: \"" + stringValue + "\" into class " + number.getClass().getName());
         }
 
         if (number != null) {
@@ -151,11 +151,11 @@ public class NumberConverter extends DefaultTypeConverter {
         Number number = format.parse(stringValue, parsePosition);
 
         if (parsePosition.getIndex() != stringValue.length()) {
-            throw new XWorkException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
+            throw new StrutsException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
         }
 
         if (!isInRange(number, stringValue, Float.class)) {
-            throw new XWorkException("Overflow or underflow converting: \"" + stringValue + "\" into class " + number.getClass().getName());
+            throw new StrutsException("Overflow or underflow converting: \"" + stringValue + "\" into class " + number.getClass().getName());
         }
 
         if (number != null) {

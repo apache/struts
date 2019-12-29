@@ -24,9 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.opensymphony.xwork2.config.BeanSelectionProvider;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.config.entities.BeanConfig;
+import org.apache.struts2.config.entities.BeanSelectionConfig;
 import org.apache.struts2.config.entities.ConstantConfig;
 
 import com.opensymphony.xwork2.config.Configuration;
@@ -91,6 +94,20 @@ public class StrutsJavaConfigurationProvider implements ConfigurationProvider {
             }
         }
 
+        // bean-selection
+        javaConfig.beanSelection().ifPresent(beanSelectionConfig -> {
+            try {
+                LOG.debug("Registering bean selection provider {} of type {}",
+                    beanSelectionConfig.getName(), beanSelectionConfig.getClazz().getName());
+
+                BeanSelectionProvider provider = beanSelectionConfig.getClazz().newInstance();
+                provider.register(builder, props);
+            } catch (IllegalAccessException | InstantiationException e) {
+                throw new ConfigurationException("Unable to load : name:" + beanSelectionConfig.getName()
+                    + " class:" + beanSelectionConfig.getClazz().getName());
+            }
+        });
+
         // unknown-handler-stack
         List<String> unknownHandlers = javaConfig.unknownHandlerStack();
         if (unknownHandlers != null) {
@@ -125,10 +142,10 @@ public class StrutsJavaConfigurationProvider implements ConfigurationProvider {
             } else {
                 if (containerBuilder.contains(beanConf.getType(), beanConf.getName())) {
                     Location loc = LocationUtils
-                            .getLocation(loadedBeans.get(beanConf.getType().getName() + beanConf.getName()));
+                        .getLocation(loadedBeans.get(beanConf.getType().getName() + beanConf.getName()));
                     if (throwExceptionOnDuplicateBeans) {
                         throw new ConfigurationException("Bean type " + beanConf.getType() + " with the name "
-                                + beanConf.getName() + " has already been loaded by " + loc, javaConfig);
+                            + beanConf.getName() + " has already been loaded by " + loc, javaConfig);
                     }
                 }
 
@@ -137,17 +154,21 @@ public class StrutsJavaConfigurationProvider implements ConfigurationProvider {
                 beanConf.getClazz().getDeclaredConstructors();
 
                 LOG.debug("Loaded type: {} name: {} clazz: {}", beanConf.getType(), beanConf.getName(),
-                        beanConf.getClazz());
+                    beanConf.getClazz());
+
                 containerBuilder.factory(
-                        beanConf.getType(), beanConf.getName(), new LocatableFactory(beanConf.getName(),
-                                beanConf.getType(), beanConf.getClazz(), beanConf.getScope(), javaConfig),
-                        beanConf.getScope());
+                    beanConf.getType(),
+                    beanConf.getName(),
+                    new LocatableFactory(
+                        beanConf.getName(), beanConf.getType(), beanConf.getClazz(), beanConf.getScope(), javaConfig
+                    ),
+                    beanConf.getScope());
             }
             loadedBeans.put(beanConf.getType().getName() + beanConf.getName(), javaConfig);
         } catch (Throwable ex) {
             if (!beanConf.isOptional()) {
                 throw new ConfigurationException(
-                        "Unable to load bean: type:" + beanConf.getType() + " class:" + beanConf.getClazz(), ex);
+                    "Unable to load bean: type:" + beanConf.getType() + " class:" + beanConf.getClazz(), ex);
             } else {
                 LOG.debug("Unable to load optional class: {}", beanConf.getClazz());
             }

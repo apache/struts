@@ -32,6 +32,7 @@
     <name>Struts 2 Plugins</name>
 
     <modules>
+        <module>async</module>
         <module>bean-validation</module>
         <module>cdi</module>
         <module>config-browser</module>
@@ -55,7 +56,7 @@
         <module>spring</module>
         <module>testng</module>
         <module>tiles</module>
-        <module>async</module>
+        <module>velocity</module>
     </modules>
 
     <dependencies>

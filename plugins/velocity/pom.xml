@@ -27,18 +27,51 @@
         <version>2.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>struts2-config-browser-plugin</artifactId>
+    <artifactId>struts2-velocity-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>Struts 2 Configuration Browser Plugin</name>
+    <name>Struts 2 Velocity Plugin</name>
+
+    <dependencies>
+
+        <!-- Velocity -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-tools</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+        </dependency>
+
+        <!-- The Servlet API mocks in Spring Framework 4.0 support Servlet 3.0 and higher
+           So this is only necessary in tests-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
     <properties>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-velocity-plugin</artifactId>
-        </dependency>
-    </dependencies>
 </project>

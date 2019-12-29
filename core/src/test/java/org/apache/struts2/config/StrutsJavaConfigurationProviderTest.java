@@ -19,10 +19,14 @@
 package org.apache.struts2.config;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.entities.BeanConfig;
+import org.apache.struts2.config.entities.BeanSelectionConfig;
 import org.apache.struts2.config.entities.ConstantConfig;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,18 +50,26 @@ public class StrutsJavaConfigurationProviderTest {
         StrutsJavaConfiguration javaConfig = new StrutsJavaConfiguration() {
             @Override
             public List<String> unknownHandlerStack() {
-                return Arrays.asList(expectedUnknownHandler);
+                return Collections.singletonList(expectedUnknownHandler);
             }
 
             @Override
             public List<ConstantConfig> constants() {
-                return Arrays.asList(constantConfig);
+                return Collections.singletonList(constantConfig);
             }
 
             @Override
             public List<BeanConfig> beans() {
-                return Arrays.asList(new BeanConfig(TestBean.class),
-                        new BeanConfig(TestBean.class, "testBean", TestBean.class, Scope.PROTOTYPE, true, true));
+                return Arrays.asList(
+                    new BeanConfig(TestBean.class, "struts"),
+                    new BeanConfig(TestBean.class, "struts.static", TestBean.class, Scope.PROTOTYPE, true, true),
+                    new BeanConfig(TestBean.class, "struts.test.bean", TestBean.class)
+                );
+            }
+
+            @Override
+            public Optional<BeanSelectionConfig> beanSelection() {
+                return Optional.of(new BeanSelectionConfig(TestBeanSelectionProvider.class, "testBeans"));
             }
         };
         StrutsJavaConfigurationProvider provider = new StrutsJavaConfigurationProvider(javaConfig);
@@ -83,5 +95,13 @@ public class StrutsJavaConfigurationProviderTest {
         Container container = builder.create(true);
         TestBean testBean = container.getInstance(TestBean.class);
         Assert.assertNotNull(testBean);
+
+        testBean = container.getInstance(TestBean.class, "struts");
+        Assert.assertNotNull(testBean);
+
+        // bean selection
+        Set<String> names = container.getInstanceNames(TestBean.class);
+        Assert.assertTrue(names.contains("struts"));
+        Assert.assertTrue(names.contains("struts.test.bean"));
     }
 }

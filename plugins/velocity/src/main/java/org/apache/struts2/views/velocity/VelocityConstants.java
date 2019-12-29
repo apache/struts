@@ -16,21 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.config;
+package org.apache.struts2.views.velocity;
 
-import java.util.List;
-import java.util.Optional;
+public final class VelocityConstants {
 
-import org.apache.struts2.config.entities.BeanConfig;
-import org.apache.struts2.config.entities.BeanSelectionConfig;
-import org.apache.struts2.config.entities.ConstantConfig;
+    /** org.apache.struts2.views.velocity.VelocityManager implementation class */
+    public static final String STRUTS_VELOCITY_MANAGER_CLASSNAME = "struts.velocity.manager.classname";
 
-public interface StrutsJavaConfiguration {
-    List<BeanConfig> beans();
-
-    List<ConstantConfig> constants();
-
-    default Optional<BeanSelectionConfig> beanSelection() { return Optional.empty();}
-
-    List<String> unknownHandlerStack();
 }

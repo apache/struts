@@ -36,16 +36,11 @@
             <groupId>opensymphony</groupId>
             <artifactId>sitemesh</artifactId>
         </dependency>
+
         <!-- Velocity -->
         <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-tools</artifactId>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-velocity-plugin</artifactId>
             <optional>true</optional>
         </dependency>
 

@@ -16,21 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.config;
+package org.apache.struts2.config.entities;
 
-import java.util.List;
-import java.util.Optional;
+import com.opensymphony.xwork2.config.BeanSelectionProvider;
+import com.opensymphony.xwork2.inject.Container;
 
-import org.apache.struts2.config.entities.BeanConfig;
-import org.apache.struts2.config.entities.BeanSelectionConfig;
-import org.apache.struts2.config.entities.ConstantConfig;
+public class BeanSelectionConfig {
 
-public interface StrutsJavaConfiguration {
-    List<BeanConfig> beans();
+    private final Class<? extends BeanSelectionProvider> clazz;
+    private final String name;
 
-    List<ConstantConfig> constants();
+    public BeanSelectionConfig(Class<? extends BeanSelectionProvider> clazz) {
+        this(clazz, Container.DEFAULT_NAME);
+    }
 
-    default Optional<BeanSelectionConfig> beanSelection() { return Optional.empty();}
+    public BeanSelectionConfig(Class<? extends BeanSelectionProvider> clazz, String name) {
+        this.clazz = clazz;
+        this.name = name;
+    }
 
-    List<String> unknownHandlerStack();
+    public Class<? extends BeanSelectionProvider> getClazz() {
+        return clazz;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

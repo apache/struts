@@ -44,7 +44,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.config.DefaultBeanSelectionProvider;
+import org.apache.struts2.config.StrutsBeanSelectionProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.PropertiesConfigurationProvider;
 import org.apache.struts2.config.StrutsJavaConfiguration;
@@ -481,7 +481,7 @@ public class Dispatcher {
     }
 
     private void init_AliasStandardObjects() {
-        configurationManager.addContainerProvider(new DefaultBeanSelectionProvider());
+        configurationManager.addContainerProvider(new StrutsBeanSelectionProvider());
     }
 
     private Container init_PreloadConfiguration() {

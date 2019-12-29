@@ -18,19 +18,16 @@
  */
 package org.apache.struts2.config;
 
-import java.util.List;
-import java.util.Optional;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
-import org.apache.struts2.config.entities.BeanConfig;
-import org.apache.struts2.config.entities.BeanSelectionConfig;
-import org.apache.struts2.config.entities.ConstantConfig;
+public class TestBeanSelectionProvider extends AbstractBeanSelectionProvider {
 
-public interface StrutsJavaConfiguration {
-    List<BeanConfig> beans();
+    @Override
+    public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+        alias(TestBean.class, "struts.test.bean", builder, props);
+    }
 
-    List<ConstantConfig> constants();
-
-    default Optional<BeanSelectionConfig> beanSelection() { return Optional.empty();}
-
-    List<String> unknownHandlerStack();
 }

@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import org.apache.logging.log4j.LogManager;
@@ -145,18 +146,20 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         boolean devMode = devModeOverride != null ? devModeOverride : this.devMode;
         if (devMode) {
             final ActionContext ctx = ActionContext.getContext();
-            String type = getParameter(DEBUG_PARAM);
-            ctx.getParameters().remove(DEBUG_PARAM);
-            if (XML_MODE.equals(type)) {
-                inv.addPreResultListener(
+            ctx.getInstance(OgnlUtil.class).avoidAccessControl();;
+            try {
+                String type = getParameter(DEBUG_PARAM);
+                ctx.getParameters().remove(DEBUG_PARAM);
+                if (XML_MODE.equals(type)) {
+                    inv.addPreResultListener(
                         new PreResultListener() {
                             public void beforeResult(ActionInvocation inv, String result) {
                                 printContext();
                             }
                         });
-            } else if (CONSOLE_MODE.equals(type)) {
-                consoleEnabled = true;
-                inv.addPreResultListener(
+                } else if (CONSOLE_MODE.equals(type)) {
+                    consoleEnabled = true;
+                    inv.addPreResultListener(
                         new PreResultListener() {
                             public void beforeResult(ActionInvocation inv, String actionResult) {
                                 String xml = "";
@@ -183,64 +186,67 @@ public class DebuggingInterceptor extends AbstractInterceptor {
 
                             }
                         });
-            } else if (COMMAND_MODE.equals(type)) {
-                ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
-                if (stack == null) {
-                    //allows it to be embedded on another page
-                    stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
-                    ctx.getSession().put(SESSION_KEY, stack);
-                }
-                String cmd = getParameter(EXPRESSION_PARAM);
+                } else if (COMMAND_MODE.equals(type)) {
+                    ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
+                    if (stack == null) {
+                        //allows it to be embedded on another page
+                        stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
+                        ctx.getSession().put(SESSION_KEY, stack);
+                    }
+                    String cmd = getParameter(EXPRESSION_PARAM);
 
-                ServletActionContext.getRequest().setAttribute("decorator", "none");
-                HttpServletResponse res = ServletActionContext.getResponse();
-                res.setContentType("text/plain");
+                    ServletActionContext.getRequest().setAttribute("decorator", "none");
+                    HttpServletResponse res = ServletActionContext.getResponse();
+                    res.setContentType("text/plain");
 
-                try (PrintWriter writer =
-                            ServletActionContext.getResponse().getWriter()) {
-                    writer.print(stack.findValue(cmd));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                cont = false;
-            } else if (BROWSER_MODE.equals(type)) {
-                actionOnly = true;
-                inv.addPreResultListener(
-                    new PreResultListener() {
-                        public void beforeResult(ActionInvocation inv, String actionResult) {
-                            String rootObjectExpression = getParameter(OBJECT_PARAM);
-                            if (rootObjectExpression == null)
-                                rootObjectExpression = "#context";
-                            String decorate = getParameter(DECORATE_PARAM);
-                            ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
-                            Object rootObject = stack.findValue(rootObjectExpression);
-                            
-                            try (StringWriter writer = new StringWriter()) {
-                                ObjectToHTMLWriter htmlWriter = new ObjectToHTMLWriter(writer);
-                                htmlWriter.write(reflectionProvider, rootObject, rootObjectExpression);
-                                String html = writer.toString();
-                                writer.close();
-                                
-                                stack.set("debugHtml", html);
-                                
-                                //on the first request, response can be decorated
-                                //but we need plain text on the other ones
-                                if ("false".equals(decorate))
-                                    ServletActionContext.getRequest().setAttribute("decorator", "none");
-                                
-                                FreemarkerResult result = new FreemarkerResult();
-                                result.setFreemarkerManager(freemarkerManager);
-                                result.setContentType("text/html");
-                                result.setLocation("/org/apache/struts2/interceptor/debugging/browser.ftl");
-                                result.execute(inv);
-                            } catch (Exception ex) {
-                                LOG.error("Unable to create debugging console", ex);
+                    try (PrintWriter writer =
+                             ServletActionContext.getResponse().getWriter()) {
+                        writer.print(stack.findValue(cmd));
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    cont = false;
+                } else if (BROWSER_MODE.equals(type)) {
+                    actionOnly = true;
+                    inv.addPreResultListener(
+                        new PreResultListener() {
+                            public void beforeResult(ActionInvocation inv, String actionResult) {
+                                String rootObjectExpression = getParameter(OBJECT_PARAM);
+                                if (rootObjectExpression == null)
+                                    rootObjectExpression = "top";
+                                String decorate = getParameter(DECORATE_PARAM);
+                                ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
+                                Object rootObject = stack.findValue(rootObjectExpression);
+
+                                try (StringWriter writer = new StringWriter()) {
+                                    ObjectToHTMLWriter htmlWriter = new ObjectToHTMLWriter(writer);
+                                    htmlWriter.write(reflectionProvider, rootObject, rootObjectExpression);
+                                    String html = writer.toString();
+                                    writer.close();
+
+                                    stack.set("debugHtml", html);
+
+                                    //on the first request, response can be decorated
+                                    //but we need plain text on the other ones
+                                    if ("false".equals(decorate))
+                                        ServletActionContext.getRequest().setAttribute("decorator", "none");
+
+                                    FreemarkerResult result = new FreemarkerResult();
+                                    result.setFreemarkerManager(freemarkerManager);
+                                    result.setContentType("text/html");
+                                    result.setLocation("/org/apache/struts2/interceptor/debugging/browser.ftl");
+                                    result.execute(inv);
+                                } catch (Exception ex) {
+                                    LOG.error("Unable to create debugging console", ex);
+                                }
+
                             }
-
-                        }
-                    });
+                        });
+                }
+            } finally {
+                ctx.getInstance(OgnlUtil.class).restoreAccessControl();
             }
-        } 
+        }
         if (cont) {
             try {
                 if (actionOnly) {

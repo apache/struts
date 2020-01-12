@@ -65,6 +65,10 @@ public class OgnlUtil {
     private Set<Pattern> excludedPackageNamePatterns;
     private Set<String> excludedPackageNames;
 
+    private Set<Class<?>> excludedClassesCopy;
+    private Set<Pattern> excludedPackageNamePatternsCopy;
+    private Set<String> excludedPackageNamesCopy;
+
     private Container container;
     private boolean allowStaticFieldAccess = true;
     private boolean allowStaticMethodAccess;
@@ -109,6 +113,33 @@ public class OgnlUtil {
         excludedClasses.addAll(this.excludedClasses);
         excludedClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
         this.excludedClasses = Collections.unmodifiableSet(excludedClasses);
+    }
+
+    public void avoidAccessControl() {
+        if (devMode) {
+            LOG.warn("Cleans up excluded classes and packages in devMode");
+            excludedClassesCopy = new HashSet<>(excludedClasses);
+            excludedClasses = Collections.unmodifiableSet(new HashSet<>());
+
+            excludedPackageNamePatternsCopy = new HashSet<>(excludedPackageNamePatterns);
+            excludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
+
+            excludedPackageNamesCopy = new HashSet<>(excludedPackageNames);
+            excludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
+        }
+    }
+    public void restoreAccessControl() {
+        if (devMode) {
+            LOG.warn("Restores excluded classes and packages in devMode");
+            excludedClasses = Collections.unmodifiableSet(excludedClassesCopy);
+            excludedClassesCopy = null;
+
+            excludedPackageNamePatterns = Collections.unmodifiableSet(excludedPackageNamePatternsCopy);
+            excludedPackageNamePatternsCopy = null;
+
+            excludedPackageNames = Collections.unmodifiableSet(excludedPackageNamesCopy);
+            excludedPackageNamesCopy = null;
+        }
     }
 
     private Set<Class<?>> parseExcludedClasses(String commaDelimitedClasses) {
@@ -339,7 +370,7 @@ public class OgnlUtil {
      *                                problems setting the properties
      */
     public void setProperties(Map<String, ?> properties, Object o, boolean throwPropertyExceptions) {
-        Map context = createDefaultContext(o, null);
+        Map context = createDefaultContext(o);
         setProperties(properties, o, context, throwPropertyExceptions);
     }
 
@@ -608,8 +639,8 @@ public class OgnlUtil {
             return;
         }
 
-        final Map contextFrom = createDefaultContext(from, null);
-        final Map contextTo = createDefaultContext(to, null);
+        final Map contextFrom = createDefaultContext(from);
+        final Map contextTo = createDefaultContext(to);
 
         PropertyDescriptor[] fromPds;
         PropertyDescriptor[] toPds;
@@ -719,7 +750,7 @@ public class OgnlUtil {
      */
     public Map<String, Object> getBeanMap(final Object source) throws IntrospectionException, OgnlException {
         Map<String, Object> beanMap = new HashMap<>();
-        final Map sourceMap = createDefaultContext(source, null);
+        final Map sourceMap = createDefaultContext(source);
         PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(source);
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
             final String propertyName = propertyDescriptor.getDisplayName();

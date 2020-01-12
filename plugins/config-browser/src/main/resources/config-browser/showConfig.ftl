@@ -39,11 +39,11 @@
 </table>
 
 <!-- URLTag is faulty -->
-<@s.url var="url" action="showConfig" includeParams="none">
+<@s.url var="url" action="showConfig" includeParams="none" escapeAmp="false">
     <@s.param name="namespace">${namespace}</@s.param>
     <@s.param name="actionName">${actionName}</@s.param>
 </@s.url>
-<#assign url = url + "&amp;detailView=">
+<#assign url = url + "&detailView=">
 <!-- Set all to false -->
 <#assign detailsSelected = false>
 <#assign exceptionsSelected = false>

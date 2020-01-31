@@ -54,7 +54,7 @@ public class OgnlUtil {
     private static final Logger LOG = LogManager.getLogger(OgnlUtil.class);
 
     private final ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<>();
-    private final ConcurrentMap<Class, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Class<?>, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
     private TypeConverter defaultConverter;
 
     private boolean devMode;
@@ -64,10 +64,6 @@ public class OgnlUtil {
     private Set<Class<?>> excludedClasses;
     private Set<Pattern> excludedPackageNamePatterns;
     private Set<String> excludedPackageNames;
-
-    private Set<Class<?>> excludedClassesCopy;
-    private Set<Pattern> excludedPackageNamePatternsCopy;
-    private Set<String> excludedPackageNamesCopy;
 
     private Container container;
     private boolean allowStaticFieldAccess = true;
@@ -113,33 +109,6 @@ public class OgnlUtil {
         excludedClasses.addAll(this.excludedClasses);
         excludedClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
         this.excludedClasses = Collections.unmodifiableSet(excludedClasses);
-    }
-
-    public void avoidAccessControl() {
-        if (devMode) {
-            LOG.warn("Cleans up excluded classes and packages in devMode");
-            excludedClassesCopy = new HashSet<>(excludedClasses);
-            excludedClasses = Collections.unmodifiableSet(new HashSet<>());
-
-            excludedPackageNamePatternsCopy = new HashSet<>(excludedPackageNamePatterns);
-            excludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
-
-            excludedPackageNamesCopy = new HashSet<>(excludedPackageNames);
-            excludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
-        }
-    }
-    public void restoreAccessControl() {
-        if (devMode) {
-            LOG.warn("Restores excluded classes and packages in devMode");
-            excludedClasses = Collections.unmodifiableSet(excludedClassesCopy);
-            excludedClassesCopy = null;
-
-            excludedPackageNamePatterns = Collections.unmodifiableSet(excludedPackageNamePatternsCopy);
-            excludedPackageNamePatternsCopy = null;
-
-            excludedPackageNames = Collections.unmodifiableSet(excludedPackageNamesCopy);
-            excludedPackageNamesCopy = null;
-        }
     }
 
     private Set<Class<?>> parseExcludedClasses(String commaDelimitedClasses) {
@@ -370,7 +339,7 @@ public class OgnlUtil {
      *                                problems setting the properties
      */
     public void setProperties(Map<String, ?> properties, Object o, boolean throwPropertyExceptions) {
-        Map context = createDefaultContext(o);
+        Map<String, Object> context = createDefaultContext(o);
         setProperties(properties, o, context, throwPropertyExceptions);
     }
 
@@ -818,21 +787,25 @@ public class OgnlUtil {
         }
     }
 
-    protected Map createDefaultContext(Object root) {
+    protected Map<String, Object> createDefaultContext(Object root) {
         return createDefaultContext(root, null);
     }
 
-    protected Map createDefaultContext(Object root, ClassResolver classResolver) {
+    protected Map<String, Object> createDefaultContext(Object root, ClassResolver classResolver) {
         ClassResolver resolver = classResolver;
         if (resolver == null) {
             resolver = container.getInstance(CompoundRootAccessor.class);
         }
 
         SecurityMemberAccess memberAccess = new SecurityMemberAccess(allowStaticMethodAccess, allowStaticFieldAccess);
-        memberAccess.setExcludedClasses(excludedClasses);
-        memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
-        memberAccess.setExcludedPackageNames(excludedPackageNames);
-        memberAccess.setDisallowProxyMemberAccess(disallowProxyMemberAccess);
+        if (devMode) {
+            LOG.warn("Working in devMode, ignoring internal security");
+        } else {
+            memberAccess.setExcludedClasses(excludedClasses);
+            memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
+            memberAccess.setExcludedPackageNames(excludedPackageNames);
+            memberAccess.setDisallowProxyMemberAccess(disallowProxyMemberAccess);
+        }
 
         return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);
     }

@@ -89,7 +89,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
         // we can get these now that velocity is initialized
         defaultContentType = getVelocityProperty(VelocityView.CONTENT_TYPE_KEY, VelocityView.DEFAULT_CONTENT_TYPE);
 
-        String encoding = getVelocityProperty(RuntimeConstants.OUTPUT_ENCODING, VelocityView.DEFAULT_OUTPUT_ENCODING);
+        String encoding = getVelocityProperty(RuntimeConstants.ENCODING_DEFAULT, VelocityView.DEFAULT_OUTPUT_ENCODING);
 
         // For non Latin-1 encodings, ensure that the charset is
         // included in the Content-Type header.

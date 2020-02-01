@@ -36,6 +36,6 @@ public interface TagLibraryDirectiveProvider {
      * 
      * @return A list of Velocity directive classes
      */
-    List<Class> getDirectiveClasses();
+    List<Class<?>> getDirectiveClasses();
 
 }

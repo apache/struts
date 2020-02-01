@@ -70,19 +70,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!-- Velocity -->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-tools</artifactId>
-            <optional>true</optional>
-        </dependency>
-
         <!-- Portlet -->
         <dependency>
             <groupId>javax.portlet</groupId>

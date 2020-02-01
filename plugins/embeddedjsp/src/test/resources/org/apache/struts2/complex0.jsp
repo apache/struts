@@ -27,12 +27,11 @@
 <%@ page import="com.opensymphony.xwork2.util.TextParseUtil" %>
 <%@ page import="com.opensymphony.xwork2.util.WildcardUtil" %>
 <%@ page import="org.apache.struts2.StrutsConstants" %>
-<%@ page import="org.apache.struts2.StrutsConstants" %>
 <%@ page import="org.apache.struts2.util.ComponentUtils" %>
 <%@ page import="org.apache.struts2.util.ContainUtil" %>
 <%@ page import="org.apache.struts2.util.StrutsUtil" %>
 <%@ page import="org.apache.struts2.util.URLDecoderUtil" %>
-<%@ page import="org.apache.struts2.util.VelocityStrutsUtil" %>
+<%@ page import="org.apache.struts2.views.velocity.VelocityStrutsUtil" %>
 <%@ taglib prefix="r" uri="http://jakarta.apache.org/taglibs/request-1.0" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>

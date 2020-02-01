@@ -371,11 +371,11 @@ public class VelocityManager {
      */
     protected void initToolbox(ServletContext servletContext) {
         if (StringUtils.isNotBlank(toolBoxLocation)) {
-            LOG.info("Configuring Velocity ToolManager with {}", toolBoxLocation);
+            LOG.debug("Configuring Velocity ToolManager with {}", toolBoxLocation);
             toolboxManager = new ToolManager();
             toolboxManager.configure(toolBoxLocation);
         } else {
-            LOG.info("Skipping TooManager initialisation, {} was not defined", StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION);
+            LOG.debug("Skipping ToolManager initialisation, [{}] was not defined", StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION);
         }
     }
 

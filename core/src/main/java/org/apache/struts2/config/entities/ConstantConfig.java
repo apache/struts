@@ -129,6 +129,9 @@ public class ConstantConfig {
     private Set<Class<?>> excludedClasses;
     private List<Pattern> excludedPackageNamePatterns;
     private Set<String> excludedPackageNames;
+    private Set<Class<?>> devModeExcludedClasses;
+    private List<Pattern> devModeExcludedPackageNamePatterns;
+    private Set<String> devModeExcludedPackageNames;
     private BeanConfig excludedPatternsChecker;
     private BeanConfig acceptedPatternsChecker;
     private Set<Pattern> overrideExcludedPatterns;
@@ -257,6 +260,9 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_EXCLUDED_CLASSES, classesToString(excludedClasses));
         map.put(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, StringUtils.join(excludedPackageNamePatterns, ','));
         map.put(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, StringUtils.join(excludedPackageNames, ','));
+        map.put(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, classesToString(devModeExcludedClasses));
+        map.put(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS, StringUtils.join(devModeExcludedPackageNamePatterns, ','));
+        map.put(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, StringUtils.join(devModeExcludedPackageNames, ','));
         map.put(StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER, beanConfToString(excludedPatternsChecker));
         map.put(StrutsConstants.STRUTS_ACCEPTED_PATTERNS_CHECKER, beanConfToString(acceptedPatternsChecker));
         map.put(StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, StringUtils.join(overrideExcludedPatterns, ','));
@@ -1207,6 +1213,30 @@ public class ConstantConfig {
 
     public void setExcludedPackageNames(Set<String> excludedPackageNames) {
         this.excludedPackageNames = excludedPackageNames;
+    }
+
+    public Set<Class<?>> getDevModeExcludedClasses() {
+        return devModeExcludedClasses;
+    }
+
+    public void setDevModeExcludedClasses(Set<Class<?>> devModeExcludedClasses) {
+        this.devModeExcludedClasses = devModeExcludedClasses;
+    }
+
+    public List<Pattern> getDevModeExcludedPackageNamePatterns() {
+        return devModeExcludedPackageNamePatterns;
+    }
+
+    public void setDevModeExcludedPackageNamePatterns(List<Pattern> devModeExcludedPackageNamePatterns) {
+        this.devModeExcludedPackageNamePatterns = devModeExcludedPackageNamePatterns;
+    }
+
+    public Set<String> getDevModeExcludedPackageNames() {
+        return devModeExcludedPackageNames;
+    }
+
+    public void setDevModeExcludedPackageNames(Set<String> devModeExcludedPackageNames) {
+        this.devModeExcludedPackageNames = devModeExcludedPackageNames;
     }
 
     public BeanConfig getExcludedPatternsChecker() {

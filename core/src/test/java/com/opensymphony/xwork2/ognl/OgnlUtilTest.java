@@ -26,20 +26,42 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ChainingInterceptor;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.test.User;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.Bar;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.Foo;
+import com.opensymphony.xwork2.util.Owner;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import java.beans.IntrospectionException;
-import ognl.*;
+import ognl.InappropriateExpressionException;
+import ognl.MethodFailedException;
+import ognl.NoSuchPropertyException;
+import ognl.NullHandler;
+import ognl.Ognl;
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.SimpleNode;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 
+import java.beans.IntrospectionException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class OgnlUtilTest extends XWorkTestCase {
+
     // Fields for static field access test
     public static final String STATIC_FINAL_PUBLIC_ATTRIBUTE = "Static_Final_Public_Attribute";
     static final String STATIC_FINAL_PACKAGE_ATTRIBUTE = "Static_Final_Package_Attribute";
@@ -51,13 +73,13 @@ public class OgnlUtilTest extends XWorkTestCase {
     private static String STATIC_PRIVATE_ATTRIBUTE = "Static_Private_Attribute";
 
     private OgnlUtil ognlUtil;
-    
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
         ognlUtil = container.getInstance(OgnlUtil.class);
     }
-    
+
     public void testCanSetADependentObject() {
         String dogName = "fido";
 
@@ -78,11 +100,11 @@ public class OgnlUtilTest extends XWorkTestCase {
                     if (!getter.equals(name) || (method.getParameterTypes().length != 1)) {
                         continue;
                     } else {
-                        Class clazz = method.getParameterTypes()[0];
+                        Class<?> clazz = method.getParameterTypes()[0];
 
                         try {
                             Object param = clazz.newInstance();
-                            method.invoke(o, new Object[]{param});
+                            method.invoke(o, param);
 
                             return param;
                         } catch (Exception e) {
@@ -96,8 +118,8 @@ public class OgnlUtilTest extends XWorkTestCase {
         });
 
         Owner owner = new Owner();
-        Map context = ognlUtil.createDefaultContext(owner);
-        Map props = new HashMap();
+        Map<String, Object> context = ognlUtil.createDefaultContext(owner);
+        Map<String, Object> props = new HashMap<>();
         props.put("dog.name", dogName);
 
         ognlUtil.setProperties(props, owner, context);
@@ -124,7 +146,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertTrue("Expression cache empty before clear ?", ognlUtil.expressionCacheSize() > 0);
         // Clear the Epxression cache and confirm subsequent requests are new.
         ognlUtil.clearExpressionCache();
-        assertTrue("Expression cache not empty after clear ?", ognlUtil.expressionCacheSize() == 0);
+        assertEquals("Expression cache not empty after clear ?", 0, ognlUtil.expressionCacheSize());
         Object expr3 = ognlUtil.compile("test");
         Object expr4 = ognlUtil.compile("test");
         Object expr5 = ognlUtil.compile("test");
@@ -157,7 +179,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertTrue("BeanInfo cache empty before clear ?", ognlUtil.beanInfoCacheSize() > 0);
         // Clear the BeanInfo cache and confirm subsequent requests are new.
         ognlUtil.clearBeanInfoCache();
-        assertTrue("BeanInfo cache not empty after clear ?", ognlUtil.beanInfoCacheSize() == 0);
+        assertEquals("BeanInfo cache not empty after clear ?", 0, ognlUtil.beanInfoCacheSize());
         Object beanInfo1_4 = ognlUtil.getBeanInfo(testBean1);
         Object beanInfo1_5 = ognlUtil.getBeanInfo(testBean1);
         Object beanInfo1_6 = ognlUtil.getBeanInfo(testBean1);
@@ -190,7 +212,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         OgnlUtil.clearRuntimeCache();
     }
 
-     public void testCacheDisabled() throws OgnlException {
+    public void testCacheDisabled() throws OgnlException {
         ognlUtil.setEnableExpressionCache("false");
         Object expr0 = ognlUtil.compile("test");
         Object expr2 = ognlUtil.compile("test");
@@ -201,7 +223,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         EmailAction action = new EmailAction();
         Map<String, Object> context = ognlUtil.createDefaultContext(action);
 
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         props.put("email[0].address", "addr1");
         props.put("email[1].address", "addr2");
         props.put("email[2].address", "addr3");
@@ -217,7 +239,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo1 = new Foo();
         Foo foo2 = new Foo();
 
-        Map context = ognlUtil.createDefaultContext(foo1);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo1);
 
         Calendar cal = Calendar.getInstance();
         cal.clear();
@@ -265,7 +287,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Map<String, Object> context = ognlUtil.createDefaultContext(foo1);
 
-        List<String> excludes = new ArrayList<String>();
+        List<String> excludes = new ArrayList<>();
         excludes.add("title");
         excludes.add("number");
 
@@ -287,13 +309,13 @@ public class OgnlUtilTest extends XWorkTestCase {
         b1.setSomethingElse(10);
 
 
-        b1.setId(new Long(1));
+        b1.setId(1L);
 
         b2.setTitle("");
-        b2.setId(new Long(2));
+        b2.setId(2L);
 
         context = ognlUtil.createDefaultContext(b1);
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
         includes.add("title");
         includes.add("somethingElse");
 
@@ -364,7 +386,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
-        Map<String, Object> props = new HashMap();
+        Map<String, Object> props = new HashMap<>();
         props.put("bar.title", "i am barbaz");
         ognlUtil.setProperties(props, foo, context);
 
@@ -372,8 +394,8 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testNoExceptionForUnmatchedGetterAndSetterWithThrowPropertyException() {
-        Map<String, Object> props = new HashMap<String, Object>();
-        props.put("myIntegerProperty", new Integer(1234));
+        Map<String, Object> props = new HashMap<>();
+        props.put("myIntegerProperty", 1234);
 
         TestObject testObject = new TestObject();
 
@@ -383,7 +405,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testExceptionForWrongPropertyNameWithThrowPropertyException() {
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         props.put("myStringProperty", "testString");
 
         TestObject testObject = new TestObject();
@@ -400,7 +422,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo = new Foo();
         Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         props.put("aLong", "123a");
 
         ognlUtil.setProperties(props, foo, context);
@@ -421,7 +443,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         stack.push(user);
 
         // indexed string w/ existing array
-        user.setList(new ArrayList<String>());
+        user.setList(new ArrayList<>());
         user.getList().add("");
 
         String[] foo = new String[]{"asdf"};
@@ -435,27 +457,27 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesBoolean() {
         Foo foo = new Foo();
 
-        Map context = ognlUtil.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
-        Map props = new HashMap();
+        Map<String, Object> props = new HashMap<>();
         props.put("useful", "true");
         ognlUtil.setProperties(props, foo, context);
 
-        assertEquals(true, foo.isUseful());
+        assertTrue(foo.isUseful());
 
-        props = new HashMap();
+        props = new HashMap<>();
         props.put("useful", "false");
         ognlUtil.setProperties(props, foo, context);
 
-        assertEquals(false, foo.isUseful());
+        assertFalse(foo.isUseful());
     }
 
     public void testSetPropertiesDate() {
         Foo foo = new Foo();
 
-        Map context = ognlUtil.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
-        Map props = new HashMap();
+        Map<String, Object> props = new HashMap<>();
         props.put("birthday", "02/12/1982");
         // US style test
         context.put(ActionContext.LOCALE, Locale.US);
@@ -481,7 +503,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Date eventTime = cal.getTime();
         String formatted = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK)
-                .format(eventTime);
+            .format(eventTime);
         props.put("event", formatted);
 
         cal = Calendar.getInstance(Locale.UK);
@@ -494,7 +516,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Date meetingTime = cal.getTime();
         formatted = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK)
-                .format(meetingTime);
+            .format(meetingTime);
         props.put("meeting", formatted);
 
         context.put(ActionContext.LOCALE, Locale.UK);
@@ -504,12 +526,12 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(eventTime, foo.getEvent());
 
         assertEquals(meetingTime, foo.getMeeting());
-        
+
         //test RFC 3339 date format for JSON
         props.put("event", "1996-12-19T16:39:57Z");
         context.put(ActionContext.LOCALE, Locale.US);
         ognlUtil.setProperties(props, foo, context);
-        
+
         cal = Calendar.getInstance(Locale.US);
         cal.clear();
         cal.set(Calendar.MONTH, Calendar.DECEMBER);
@@ -518,9 +540,9 @@ public class OgnlUtilTest extends XWorkTestCase {
         cal.set(Calendar.HOUR_OF_DAY, 16);
         cal.set(Calendar.MINUTE, 39);
         cal.set(Calendar.SECOND, 57);
-        
+
         assertEquals(cal.getTime(), foo.getEvent());
-        
+
         //test setting a calendar property
         props.put("calendar", "1996-12-19T16:39:57Z");
         context.put(ActionContext.LOCALE, Locale.US);
@@ -531,9 +553,9 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesInt() {
         Foo foo = new Foo();
 
-        Map context = ognlUtil.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
-        Map props = new HashMap();
+        Map<String, Object> props = new HashMap<>();
         props.put("number", "2");
         ognlUtil.setProperties(props, foo, context);
 
@@ -543,9 +565,9 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesLongArray() {
         Foo foo = new Foo();
 
-        Map context = ognlUtil.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
-        Map props = new HashMap();
+        Map<String, Object> props = new HashMap<>();
         props.put("points", new String[]{"1", "2"});
         ognlUtil.setProperties(props, foo, context);
 
@@ -558,9 +580,9 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testSetPropertiesString() {
         Foo foo = new Foo();
 
-        Map context = ognlUtil.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
-        Map props = new HashMap();
+        Map<String, Object> props = new HashMap<>();
         props.put("title", "this is a title");
         ognlUtil.setProperties(props, foo, context);
 
@@ -569,7 +591,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testSetProperty() {
         Foo foo = new Foo();
-        Map context = ognlUtil.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
         assertFalse(123456 == foo.getNumber());
         ognlUtil.setProperty("number", "123456", foo, context);
         assertEquals(123456, foo.getNumber());
@@ -580,13 +602,10 @@ public class OgnlUtilTest extends XWorkTestCase {
         ChainingInterceptor foo = new ChainingInterceptor();
         ChainingInterceptor foo2 = new ChainingInterceptor();
 
-        OgnlContext context = (OgnlContext) ognlUtil.createDefaultContext(null);
+        Map<String, Object> context = ognlUtil.createDefaultContext(null);
         SimpleNode expression = (SimpleNode) Ognl.parseExpression("{'a','ruby','b','tom'}");
 
-
         Ognl.getValue(expression, context, "aksdj");
-
-        final ValueStack stack = ActionContext.getContext().getValueStack();
 
         Object result = Ognl.getValue(ognlUtil.compile("{\"foo\",'ruby','b','tom'}"), context, foo);
         foo.setIncludesCollection((Collection) result);
@@ -622,9 +641,9 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testStringToLong() {
         Foo foo = new Foo();
 
-        Map context = ognlUtil.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
-        Map props = new HashMap();
+        Map<String, Object> props = new HashMap<>();
         props.put("ALong", "123");
 
         ognlUtil.setProperties(props, foo, context);
@@ -641,52 +660,52 @@ public class OgnlUtilTest extends XWorkTestCase {
         Foo foo = new Foo();
         foo.setALong(88);
 
-        Map context = ognlUtil.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
         ognlUtil.setProperties(null, foo, context);
         assertEquals(88, foo.getALong());
 
-        Map props = new HashMap();
+        Map<String, Object> props = new HashMap<>();
         props.put("ALong", "99");
         ognlUtil.setProperties(props, foo, context);
         assertEquals(99, foo.getALong());
     }
-    
+
     public void testCopyNull() {
         Foo foo = new Foo();
-        Map context = ognlUtil.createDefaultContext(foo);
-   		ognlUtil.copy(null, null, context);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        ognlUtil.copy(null, null, context);
 
-   		ognlUtil.copy(foo, null, context);
-   		ognlUtil.copy(null, foo, context);
+        ognlUtil.copy(foo, null, context);
+        ognlUtil.copy(null, foo, context);
     }
-    
+
     public void testGetTopTarget() throws Exception {
         Foo foo = new Foo();
-        Map context = ognlUtil.createDefaultContext(foo);
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
         CompoundRoot root = new CompoundRoot();
         Object top = ognlUtil.getRealTarget("top", context, root);
         assertEquals(root, top); // top should be root
-        
+
         root.push(foo);
         Object val = ognlUtil.getRealTarget("unknown", context, root);
         assertNull(val); // not found
     }
-    
+
     public void testGetBeanMap() throws Exception {
-    	Bar bar = new Bar();
-    	bar.setTitle("I have beer");
-        
-    	Foo foo = new Foo();
+        Bar bar = new Bar();
+        bar.setTitle("I have beer");
+
+        Foo foo = new Foo();
         foo.setALong(123);
         foo.setNumber(44);
         foo.setBar(bar);
         foo.setTitle("Hello Santa");
         foo.setUseful(true);
-        
+
         // just do some of the 15 tests
-        Map beans = ognlUtil.getBeanMap(foo);
+        Map<String, Object> beans = ognlUtil.getBeanMap(foo);
         assertNotNull(beans);
         assertEquals(22, beans.size());
         assertEquals("Hello Santa", beans.get("title"));
@@ -697,21 +716,21 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testGetBeanMapNoReadMethod() throws Exception {
-    	MyWriteBar bar = new MyWriteBar();
-    	bar.setBar("Sams");
-    	
-    	Map beans = ognlUtil.getBeanMap(bar);
-    	assertEquals(2, beans.size());
-    	assertEquals(new Integer("1"), beans.get("id"));
-    	assertEquals("There is no read method for bar", beans.get("bar"));
+        MyWriteBar bar = new MyWriteBar();
+        bar.setBar("Sams");
+
+        Map<String, Object> beans = ognlUtil.getBeanMap(bar);
+        assertEquals(2, beans.size());
+        assertEquals(new Integer("1"), beans.get("id"));
+        assertEquals("There is no read method for bar", beans.get("bar"));
     }
 
     /**
-	 * XW-281
-	 */
+     * XW-281
+     */
     public void testSetBigIndexedValue() {
         ValueStack stack = ActionContext.getContext().getValueStack();
-        Map stackContext = stack.getContext();
+        Map<String, Object> stackContext = stack.getContext();
         stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
         stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
         stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
@@ -720,39 +739,33 @@ public class OgnlUtilTest extends XWorkTestCase {
         stack.push(user);
 
         // indexed string w/ existing array
-        user.setList(new ArrayList());
+        user.setList(new ArrayList<>());
 
         String[] foo = new String[]{"asdf"};
-        ((OgnlValueStack)stack).setDevMode("true");
+        ((OgnlValueStack) stack).setDevMode("true");
         try {
             stack.setValue("list.1114778947765", foo);
-            fail("non-valid expression: list.1114778947765"); 
+            fail("non-valid expression: list.1114778947765");
+        } catch (RuntimeException ex) {
+            // it's oke
         }
-        catch(RuntimeException ex) {
-            ; // it's oke
-        }
-        
+
         try {
             stack.setValue("1114778947765", foo);
-            fail("non-valid expression: 1114778947765"); 
+            fail("non-valid expression: 1114778947765");
+        } catch (RuntimeException ignore) {
         }
-        catch(RuntimeException ex) {
-            ;
-        }
-        
+
         try {
             stack.setValue("1234", foo);
             fail("non-valid expression: 1234");
+        } catch (RuntimeException ignore) {
         }
-        catch(RuntimeException ex) {
-            ;
-        }
-        
-        ((OgnlValueStack)stack).setDevMode("false");
+
+        ((OgnlValueStack) stack).setDevMode("false");
         try {
             reloadTestContainerConfiguration(false, false);  // Set dev mode false (above set now refused)
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Unable to reload container configuration - exception: " + ex);
         }
 
@@ -768,17 +781,16 @@ public class OgnlUtilTest extends XWorkTestCase {
         stack.setValue("1234", foo);
     }
 
-    public void testStackValueDevModeChange() throws Exception {
+    public void testStackValueDevModeChange() {
 
         try {
             reloadTestContainerConfiguration(false, false);  // Set dev mode false
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Unable to reload container configuration - exception: " + ex);
         }
 
         ValueStack stack = ActionContext.getContext().getValueStack();
-        Map stackContext = stack.getContext();
+        Map<String, Object> stackContext = stack.getContext();
         stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
         stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
         stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
@@ -792,8 +804,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         try {
             reloadTestContainerConfiguration(true, false);  // Set dev mode true
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Unable to reload container configuration - exception: " + ex);
         }
 
@@ -807,38 +818,34 @@ public class OgnlUtilTest extends XWorkTestCase {
         try {
             stack.setValue("list.1114778947765", foo);
             fail("non-valid expression: list.1114778947765");
-        }
-        catch(RuntimeException ex) {
+        } catch (RuntimeException ex) {
             // Expected with dev mode true
         }
         try {
             stack.setValue("1114778947765", foo);
             fail("non-valid expression: 1114778947765");
-        }
-        catch(RuntimeException ex) {
+        } catch (RuntimeException ex) {
             // Expected with dev mode true
         }
         try {
             stack.setValue("1234", foo);
             fail("non-valid expression: 1234");
-        }
-        catch(RuntimeException ex) {
+        } catch (RuntimeException ex) {
             // Expected with dev mode true
         }
 
     }
 
-    public void testDevModeChange() throws Exception {
+    public void testDevModeChange() {
 
         try {
             reloadTestContainerConfiguration(false, false);  // Set dev mode false
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Unable to reload container configuration - exception: " + ex);
         }
 
         ValueStack stack = ActionContext.getContext().getValueStack();
-        Map stackContext = stack.getContext();
+        Map<String, Object> stackContext = stack.getContext();
         stackContext.put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.FALSE);
         stackContext.put(ReflectionContextState.DENY_METHOD_EXECUTION, Boolean.TRUE);
         stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
@@ -852,8 +859,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         try {
             reloadTestContainerConfiguration(true, false);  // Set dev mode true
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Unable to reload container configuration - exception: " + ex);
         }
 
@@ -867,28 +873,25 @@ public class OgnlUtilTest extends XWorkTestCase {
         try {
             stack.setValue("list.1114778947765", foo);
             fail("non-valid expression: list.1114778947765");
-        }
-        catch(RuntimeException ex) {
+        } catch (RuntimeException ex) {
             // Expected with dev mode true
         }
         try {
             stack.setValue("1114778947765", foo);
             fail("non-valid expression: 1114778947765");
-        }
-        catch(RuntimeException ex) {
+        } catch (RuntimeException ex) {
             // Expected with dev mode true
         }
         try {
             stack.setValue("1234", foo);
             fail("non-valid expression: 1234");
-        }
-        catch(RuntimeException ex) {
+        } catch (RuntimeException ex) {
             // Expected with dev mode true
         }
 
     }
 
-    public void testAvoidCallingMethodsOnObjectClass() throws Exception {
+    public void testAvoidCallingMethodsOnObjectClass() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -904,7 +907,41 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals("com.opensymphony.xwork2.util.Foo.class", expected.getMessage());
     }
 
-    public void testAvoidCallingMethodsOnObjectClassUpperCased() throws Exception {
+    public void testAllowCallingMethodsOnObjectClassInDevModeTrue() {
+        Exception expected = null;
+        try {
+            ognlUtil.setExcludedClasses(Foo.class.getName());
+            ognlUtil.setDevModeExcludedClasses("");
+            ognlUtil.setDevMode(Boolean.TRUE.toString());
+
+            Foo foo = new Foo();
+            String result = (String) ognlUtil.getValue("toString", ognlUtil.createDefaultContext(foo), foo, String.class);
+            assertEquals("Foo", result);
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNull(expected);
+    }
+
+    public void testAllowCallingMethodsOnObjectClassInDevModeFalse() {
+        Exception expected = null;
+        try {
+            ognlUtil.setExcludedClasses(Foo.class.getName());
+            ognlUtil.setDevModeExcludedClasses("");
+            ognlUtil.setDevMode(Boolean.FALSE.toString());
+
+            Foo foo = new Foo();
+            String result = (String) ognlUtil.getValue("toString", ognlUtil.createDefaultContext(foo), foo, String.class);
+            assertEquals("Foo", result);
+        } catch (OgnlException e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertSame(NoSuchPropertyException.class, expected.getClass());
+        assertEquals("com.opensymphony.xwork2.util.Foo.toString", expected.getMessage());
+    }
+
+    public void testAvoidCallingMethodsOnObjectClassUpperCased() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -920,7 +957,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals("com.opensymphony.xwork2.util.Foo.Class", expected.getMessage());
     }
 
-    public void testAvoidCallingMethodsOnObjectClassAsMap() throws Exception {
+    public void testAvoidCallingMethodsOnObjectClassAsMap() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -936,7 +973,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals("com.opensymphony.xwork2.util.Foo.class", expected.getMessage());
     }
 
-    public void testAvoidCallingMethodsOnObjectClassAsMap2() throws Exception {
+    public void testAvoidCallingMethodsOnObjectClassAsMap2() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -951,7 +988,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals("com.opensymphony.xwork2.util.Foo.foo", expected.getMessage());
     }
 
-    public void testAvoidCallingMethodsOnObjectClassAsMapWithQuotes() throws Exception {
+    public void testAvoidCallingMethodsOnObjectClassAsMapWithQuotes() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -967,7 +1004,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals("com.opensymphony.xwork2.util.Foo.class", expected.getMessage());
     }
 
-    public void testAvoidCallingToString() throws Exception {
+    public void testAvoidCallingToString() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -982,7 +1019,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals("toString", expected.getMessage());
     }
 
-    public void testAvoidCallingMethodsWithBraces() throws Exception {
+    public void testAvoidCallingMethodsWithBraces() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -997,7 +1034,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(expected.getMessage(), "Inappropriate OGNL expression: toString()");
     }
 
-    public void testAvoidCallingSomeClasses() throws Exception {
+    public void testAvoidCallingSomeClasses() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -1013,7 +1050,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(expected.getMessage(), "Method \"getRuntime\" failed for object class java.lang.Runtime");
     }
 
-    public void testBlockSequenceOfExpressions() throws Exception {
+    public void testBlockSequenceOfExpressions() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -1028,7 +1065,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(expected.getMessage(), "Eval expressions/chained expressions have been disabled!");
     }
 
-    public void testCallMethod() throws Exception {
+    public void testCallMethod() {
         Foo foo = new Foo();
 
         Exception expected = null;
@@ -1043,37 +1080,36 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(expected.getMessage(), "It isn't a simple method which can be called!");
     }
 
-    public void testXworkTestCaseOgnlUtilExclusions() throws Exception {
+    public void testXworkTestCaseOgnlUtilExclusions() {
         internalTestInitialEmptyOgnlUtilExclusions(ognlUtil);
         internalTestOgnlUtilExclusionsImmutable(ognlUtil);
     }
 
-    public void testDefaultOgnlUtilExclusions() throws Exception {
+    public void testDefaultOgnlUtilExclusions() {
         OgnlUtil basicOgnlUtil = new OgnlUtil();
 
         internalTestInitialEmptyOgnlUtilExclusions(basicOgnlUtil);
         internalTestOgnlUtilExclusionsImmutable(basicOgnlUtil);
     }
 
-    public void testOgnlUtilExcludedAdditivity() throws Exception {
+    public void testOgnlUtilExcludedAdditivity() {
         Set<Class<?>> excludedClasses;
         Set<Pattern> excludedPackageNamePatterns;
         Iterator<Pattern> excludedPackageNamePatternsIterator;
         Set<String> excludedPackageNames;
-        Set<String> patternStrings = new HashSet<>();
 
         ognlUtil.setExcludedClasses("java.lang.String,java.lang.Integer");
         internalTestOgnlUtilExclusionsImmutable(ognlUtil);
         excludedClasses = ognlUtil.getExcludedClasses();
-        assertNotNull("initial exluded classes null?", excludedClasses);
-        assertTrue("initial exluded classes size not 2 after adds?", excludedClasses.size() == 2);
+        assertNotNull("initial excluded classes null?", excludedClasses);
+        assertEquals("initial excluded classes size not 2 after adds?", 2, excludedClasses.size());
         assertTrue("String not in exclusions?", excludedClasses.contains(String.class));
         assertTrue("Integer not in exclusions?", excludedClasses.contains(Integer.class));
         ognlUtil.setExcludedClasses("java.lang.Boolean,java.lang.Double");
         internalTestOgnlUtilExclusionsImmutable(ognlUtil);
         excludedClasses = ognlUtil.getExcludedClasses();
-        assertNotNull("updated exluded classes null?", excludedClasses);
-        assertTrue("updated exluded classes size not 4 after adds?", excludedClasses.size() == 4);
+        assertNotNull("updated excluded classes null?", excludedClasses);
+        assertEquals("updated excluded classes size not 4 after adds?", 4, excludedClasses.size());
         assertTrue("String not in exclusions?", excludedClasses.contains(String.class));
         assertTrue("Integer not in exclusions?", excludedClasses.contains(Integer.class));
         assertTrue("String not in exclusions?", excludedClasses.contains(Boolean.class));
@@ -1082,10 +1118,10 @@ public class OgnlUtilTest extends XWorkTestCase {
         ognlUtil.setExcludedPackageNamePatterns("fakepackage1.*,fakepackage2.*");
         internalTestOgnlUtilExclusionsImmutable(ognlUtil);
         excludedPackageNamePatterns = ognlUtil.getExcludedPackageNamePatterns();
-        assertNotNull("initial exluded package name patterns null?", excludedPackageNamePatterns);
-        assertTrue("initial exluded package name patterns size not 2 after adds?", excludedPackageNamePatterns.size() == 2);
+        assertNotNull("initial excluded package name patterns null?", excludedPackageNamePatterns);
+        assertEquals("initial excluded package name patterns size not 2 after adds?", 2, excludedPackageNamePatterns.size());
         excludedPackageNamePatternsIterator = excludedPackageNamePatterns.iterator();
-        patternStrings.clear();
+        Set<String> patternStrings = new HashSet<>();
         while (excludedPackageNamePatternsIterator.hasNext()) {
             Pattern pattern = excludedPackageNamePatternsIterator.next();
             patternStrings.add(pattern.pattern());
@@ -1095,10 +1131,10 @@ public class OgnlUtilTest extends XWorkTestCase {
         ognlUtil.setExcludedPackageNamePatterns("fakepackage3.*,fakepackage4.*");
         internalTestOgnlUtilExclusionsImmutable(ognlUtil);
         excludedPackageNamePatterns = ognlUtil.getExcludedPackageNamePatterns();
-        assertNotNull("updated exluded package name patterns null?", excludedPackageNamePatterns);
-        assertTrue("updated exluded package name patterns size not 4 after adds?", excludedPackageNamePatterns.size() == 4);
+        assertNotNull("updated excluded package name patterns null?", excludedPackageNamePatterns);
+        assertEquals("updated excluded package name patterns size not 4 after adds?", 4, excludedPackageNamePatterns.size());
         excludedPackageNamePatternsIterator = excludedPackageNamePatterns.iterator();
-        patternStrings.clear();
+        patternStrings = new HashSet<>();
         while (excludedPackageNamePatternsIterator.hasNext()) {
             Pattern pattern = excludedPackageNamePatternsIterator.next();
             patternStrings.add(pattern.pattern());
@@ -1112,14 +1148,14 @@ public class OgnlUtilTest extends XWorkTestCase {
         internalTestOgnlUtilExclusionsImmutable(ognlUtil);
         excludedPackageNames = ognlUtil.getExcludedPackageNames();
         assertNotNull("initial exluded package names null?", excludedPackageNames);
-        assertTrue("initial exluded package names not 2 after adds?", excludedPackageNames.size() == 2);
+        assertEquals("initial exluded package names not 2 after adds?", 2, excludedPackageNames.size());
         assertTrue("fakepackage1.package not in exclusions?", excludedPackageNames.contains("fakepackage1.package"));
         assertTrue("fakepackage2.package not in exclusions?", excludedPackageNames.contains("fakepackage2.package"));
         ognlUtil.setExcludedPackageNames("fakepackage3.package,fakepackage4.package");
         internalTestOgnlUtilExclusionsImmutable(ognlUtil);
         excludedPackageNames = ognlUtil.getExcludedPackageNames();
         assertNotNull("updated exluded package names null?", excludedPackageNames);
-        assertTrue("updated exluded package names not 4 after adds?", excludedPackageNames.size() == 4);
+        assertEquals("updated exluded package names not 4 after adds?", 4, excludedPackageNames.size());
         assertTrue("fakepackage1.package not in exclusions?", excludedPackageNames.contains("fakepackage1.package"));
         assertTrue("fakepackage2.package not in exclusions?", excludedPackageNames.contains("fakepackage2.package"));
         assertTrue("fakepackage3.package not in exclusions?", excludedPackageNames.contains("fakepackage3.package"));
@@ -1128,17 +1164,17 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     /**
      * Ensure getValue:
-     *   1) When allowStaticFieldAccess true - Permits public static field access,
-     *      prevents non-public static field access.
-     *   2) When allowStaticFieldAccess false - blocks all static field access,
+     * 1) When allowStaticFieldAccess true - Permits public static field access,
+     * prevents non-public static field access.
+     * 2) When allowStaticFieldAccess false - blocks all static field access,
      */
     public void testStaticFieldGetValue() {
-        OgnlContext context = null;
+        Map<String, Object> context = null;
         Object accessedValue;
 
         try {
             reloadTestContainerConfiguration(true);  // Test with allowStaticFieldAccess true
-            context = (OgnlContext) ognlUtil.createDefaultContext(null);
+            context = ognlUtil.createDefaultContext(null);
         } catch (Exception ex) {
             fail("unable to reload test configuration? Exception: " + ex);
         }
@@ -1155,37 +1191,37 @@ public class OgnlUtilTest extends XWorkTestCase {
             fail("static public field access failed ? Exception: " + ex);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PACKAGE_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PACKAGE_ATTRIBUTE", context, null);
             fail("static final package field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PACKAGE_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PACKAGE_ATTRIBUTE", context, null);
             fail("static package field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PROTECTED_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PROTECTED_ATTRIBUTE", context, null);
             fail("static final protected field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PROTECTED_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PROTECTED_ATTRIBUTE", context, null);
             fail("static protected field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PRIVATE_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PRIVATE_ATTRIBUTE", context, null);
             fail("static final private field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PRIVATE_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PRIVATE_ATTRIBUTE", context, null);
             fail("static private field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
@@ -1193,54 +1229,54 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         try {
             reloadTestContainerConfiguration(false);  // Re-test with allowStaticFieldAccess false
-            context = (OgnlContext) ognlUtil.createDefaultContext(null);
+            context = ognlUtil.createDefaultContext(null);
         } catch (Exception ex) {
             fail("unable to reload test configuration? Exception: " + ex);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PUBLIC_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PUBLIC_ATTRIBUTE", context, null);
             fail("static final public field access succeded ?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PUBLIC_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PUBLIC_ATTRIBUTE", context, null);
             fail("static public field access succeded ?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PACKAGE_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PACKAGE_ATTRIBUTE", context, null);
             fail("static final package field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PACKAGE_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PACKAGE_ATTRIBUTE", context, null);
             fail("static package field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PROTECTED_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PROTECTED_ATTRIBUTE", context, null);
             fail("static final protected field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PROTECTED_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PROTECTED_ATTRIBUTE", context, null);
             fail("static protected field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PRIVATE_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PRIVATE_ATTRIBUTE", context, null);
             fail("static final private field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
         }
         try {
-            accessedValue = ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PRIVATE_ATTRIBUTE", context, null);
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PRIVATE_ATTRIBUTE", context, null);
             fail("static private field access succeeded?");
         } catch (Exception ex) {
             assertTrue("Exception not an OgnlException?", ex instanceof OgnlException);
@@ -1249,7 +1285,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     /**
      * Test OGNL Expression Max Length feature setting via OgnlUtil is disabled by default (in default.properties).
-     * 
+     *
      * @since 2.5.21
      */
     public void testDefaultExpressionMaxLengthDisabled() {
@@ -1258,19 +1294,19 @@ public class OgnlUtilTest extends XWorkTestCase {
             Object compileResult = ognlUtil.compile(LONG_OGNL_EXPRESSION);
             assertNotNull("Long OGNL expression compilation produced a null result ?", compileResult);
         } catch (OgnlException oex) {
-             if (oex.getReason() instanceof SecurityException) {
-                 fail ("Unable to compile expression (unexpected).  'struts.ognl.expressionMaxLength' may have accidentally been enabled by default.  Exception: " + oex);
-             } else {
-                 fail ("Unable to compile expression (unexpected).  Exception: " + oex);
-             }
+            if (oex.getReason() instanceof SecurityException) {
+                fail("Unable to compile expression (unexpected).  'struts.ognl.expressionMaxLength' may have accidentally been enabled by default.  Exception: " + oex);
+            } else {
+                fail("Unable to compile expression (unexpected).  Exception: " + oex);
+            }
         } catch (Exception ex) {
-            fail ("Unable to compile expression (unexpected).  Exception: " + ex);
+            fail("Unable to compile expression (unexpected).  Exception: " + ex);
         }
     }
 
     /**
      * Test OGNL Expression Max Length feature setting via OgnlUtil.
-     * 
+     *
      * @since 2.5.21
      */
     public void testApplyExpressionMaxLength() {
@@ -1278,28 +1314,28 @@ public class OgnlUtilTest extends XWorkTestCase {
             try {
                 ognlUtil.applyExpressionMaxLength(null);
             } catch (Exception ex) {
-                fail ("applyExpressionMaxLength did not accept null maxlength string (disable feature) ?");
+                fail("applyExpressionMaxLength did not accept null maxlength string (disable feature) ?");
             }
             try {
                 ognlUtil.applyExpressionMaxLength("");
             } catch (Exception ex) {
-                fail ("applyExpressionMaxLength did not accept empty maxlength string (disable feature) ?");
+                fail("applyExpressionMaxLength did not accept empty maxlength string (disable feature) ?");
             }
             try {
                 ognlUtil.applyExpressionMaxLength("-1");
-                fail ("applyExpressionMaxLength accepted negative maxlength string ?");
+                fail("applyExpressionMaxLength accepted negative maxlength string ?");
             } catch (IllegalArgumentException iae) {
                 // Expected rejection of -ive length.
             }
             try {
                 ognlUtil.applyExpressionMaxLength("0");
             } catch (Exception ex) {
-                fail ("applyExpressionMaxLength did not accept maxlength string 0 ?");
+                fail("applyExpressionMaxLength did not accept maxlength string 0 ?");
             }
             try {
                 ognlUtil.applyExpressionMaxLength(Integer.toString(Integer.MAX_VALUE, 10));
             } catch (Exception ex) {
-                fail ("applyExpressionMaxLength did not accept MAX_VALUE maxlength string ?");
+                fail("applyExpressionMaxLength did not accept MAX_VALUE maxlength string ?");
             }
         } finally {
             // Reset expressionMaxLength value to default (disabled)
@@ -1307,7 +1343,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
-    private void internalTestInitialEmptyOgnlUtilExclusions(OgnlUtil ognlUtilParam) throws Exception {
+    private void internalTestInitialEmptyOgnlUtilExclusions(OgnlUtil ognlUtilParam) {
         Set<Class<?>> excludedClasses = ognlUtilParam.getExcludedClasses();
         assertNotNull("parameter (default) exluded classes null?", excludedClasses);
         assertTrue("parameter (default) exluded classes not empty?", excludedClasses.isEmpty());
@@ -1321,7 +1357,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertTrue("parameter (default) exluded package names not empty?", excludedPackageNames.isEmpty());
     }
 
-    private void internalTestOgnlUtilExclusionsImmutable(OgnlUtil ognlUtilParam) throws Exception {
+    private void internalTestOgnlUtilExclusionsImmutable(OgnlUtil ognlUtilParam) {
         Pattern somePattern = Pattern.compile("SomeRegexPattern");
         Set<Class<?>> excludedClasses = ognlUtilParam.getExcludedClasses();
         assertNotNull("parameter exluded classes null?", excludedClasses);
@@ -1406,18 +1442,17 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testGetExcludedPackageNames() {
-      // Getter should return an immutable collection
-      OgnlUtil util = new OgnlUtil();
-      util.setExcludedPackageNames("java.lang,java.awt");
-      assertEquals(util.getExcludedPackageNames().size(), 2);
-      try {
-          util.getExcludedPackageNames().clear();
-      }
-      catch (Exception ex) {
-          assertTrue(ex instanceof UnsupportedOperationException);
-      } finally {
-          assertEquals(util.getExcludedPackageNames().size(), 2);
-      }
+        // Getter should return an immutable collection
+        OgnlUtil util = new OgnlUtil();
+        util.setExcludedPackageNames("java.lang,java.awt");
+        assertEquals(util.getExcludedPackageNames().size(), 2);
+        try {
+            util.getExcludedPackageNames().clear();
+        } catch (Exception ex) {
+            assertTrue(ex instanceof UnsupportedOperationException);
+        } finally {
+            assertEquals(util.getExcludedPackageNames().size(), 2);
+        }
     }
 
     public void testGetExcludedClasses() {
@@ -1427,8 +1462,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(util.getExcludedClasses().size(), 3);
         try {
             util.getExcludedClasses().clear();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             assertTrue(ex instanceof UnsupportedOperationException);
         } finally {
             assertEquals(util.getExcludedClasses().size(), 3);
@@ -1442,15 +1476,14 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
         try {
             util.getExcludedPackageNamePatterns().clear();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             assertTrue(ex instanceof UnsupportedOperationException);
         } finally {
             assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
         }
     }
 
-    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStaticMethod) throws Exception {
+    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStaticMethod) {
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder,
@@ -1462,7 +1495,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         ognlUtil = container.getInstance(OgnlUtil.class);
     }
 
-    private void reloadTestContainerConfiguration(boolean allowStaticField) throws Exception {
+    private void reloadTestContainerConfiguration(boolean allowStaticField) {
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder,
@@ -1516,23 +1549,23 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
-    class EmailAction {
-        public List email = new OgnlList(Email.class);
+    static class EmailAction {
+        public List<Email> email = new OgnlList<>(Email.class);
 
-        public List getEmail() {
+        public List<Email> getEmail() {
             return this.email;
         }
     }
 
-    class OgnlList extends ArrayList {
-        private Class clazz;
+    static class OgnlList<T> extends ArrayList<T> {
+        private Class<T> clazz;
 
-        public OgnlList(Class clazz) {
+        public OgnlList(Class<T> clazz) {
             this.clazz = clazz;
         }
 
         @Override
-        public synchronized Object get(int index) {
+        public synchronized T get(int index) {
             while (index >= this.size()) {
                 try {
                     this.add(clazz.newInstance());
@@ -1544,24 +1577,24 @@ public class OgnlUtilTest extends XWorkTestCase {
             return super.get(index);
         }
     }
-    
-    private class MyWriteBar {
-    	private int id;
-    	
-    	public int getId() {
-    		return id;
-    	}
-    	
-    	public void setBar(String name) {
-    		if ("Sams".equals(name))
-    			id = 1;
-    		else
-    			id = 999;
-    	}
-    	
+
+    private static class MyWriteBar {
+        private int id;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setBar(String name) {
+            if ("Sams".equals(name))
+                id = 1;
+            else
+                id = 999;
+        }
+
     }
 
-    class TestBean1 {
+    static class TestBean1 {
         private String testBeanProperty;
 
         public TestBean1() {
@@ -1577,7 +1610,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
-    class TestBean2 {
+    static class TestBean2 {
         private String testBeanProperty;
 
         public TestBean2() {

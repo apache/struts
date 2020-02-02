@@ -152,7 +152,7 @@ public class ConstantConfig {
     private String classesToString(Set<Class<?>> classes) {
         List<String> list = null;
         if (classes != null && !classes.isEmpty()) {
-            list = new ArrayList<String>();
+            list = new ArrayList<>();
             for (Class<?> c : classes) {
                 list.add(c.getName());
             }

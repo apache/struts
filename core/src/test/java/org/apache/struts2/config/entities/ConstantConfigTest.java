@@ -18,6 +18,13 @@
  */
 package org.apache.struts2.config.entities;
 
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.inject.Container;
+import org.apache.struts2.StrutsConstants;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -25,20 +32,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.struts2.StrutsConstants;
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.inject.Container;
-
 public class ConstantConfigTest {
+
     @Test
-    public void testBeanConfToString() throws Exception {
+    public void testBeanConfToString() {
         ConstantConfig constantConfig = new ConstantConfig();
 
         String actual = constantConfig.beanConfToString(null);
-        Assert.assertEquals(null, actual);
+        Assert.assertNull(actual);
 
         actual = constantConfig.beanConfToString(new BeanConfig(TestBean.class));
         Assert.assertEquals(Container.DEFAULT_NAME, actual);
@@ -49,7 +50,7 @@ public class ConstantConfigTest {
     }
 
     @Test
-    public void testGetAllAsStringsMap() throws Exception {
+    public void testGetAllAsStringsMap() {
         ConstantConfig constantConfig = new ConstantConfig();
 
         boolean expectedDevMode = true;
@@ -65,22 +66,32 @@ public class ConstantConfigTest {
 
         Assert.assertEquals(String.valueOf(expectedDevMode), map.get(StrutsConstants.STRUTS_DEVMODE));
         Assert.assertEquals(expectedActionExtensions, map.get(StrutsConstants.STRUTS_ACTION_EXTENSION));
-        Assert.assertEquals(null, map.get(StrutsConstants.STRUTS_I18N_RELOAD));
+        Assert.assertNull(map.get(StrutsConstants.STRUTS_I18N_RELOAD));
         Assert.assertEquals(expectedLanguage, map.get(StrutsConstants.STRUTS_LOCALE));
     }
 
     @Test
-    public void testEmptyClassesToString() throws Exception {
+    public void testEmptyClassesToString() {
         ConstantConfig constantConfig = new ConstantConfig();
 
-        constantConfig.setExcludedClasses(new HashSet<Class<?>>());
+        constantConfig.setExcludedClasses(null);
+        constantConfig.setExcludedPackageNamePatterns(null);
+        constantConfig.setExcludedPackageNames(null);
+        constantConfig.setDevModeExcludedClasses(null);
+        constantConfig.setDevModeExcludedPackageNamePatterns(null);
+        constantConfig.setDevModeExcludedPackageNames(null);
 
         Map<String, String> map = constantConfig.getAllAsStringsMap();
-        Assert.assertEquals(null, map.get(StrutsConstants.STRUTS_EXCLUDED_CLASSES));
+        Assert.assertNull(map.get(StrutsConstants.STRUTS_EXCLUDED_CLASSES));
+        Assert.assertNull(map.get(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS));
+        Assert.assertNull(map.get(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES));
+        Assert.assertNull(map.get(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES));
+        Assert.assertNull(map.get(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS));
+        Assert.assertNull(map.get(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES));
     }
 
     @Test
-    public void testClassesToString() throws Exception {
+    public void testClassesToString() {
         ConstantConfig constantConfig = new ConstantConfig();
 
         Set<Class<?>> excludedClasses = new LinkedHashSet<>();
@@ -89,9 +100,13 @@ public class ConstantConfigTest {
         excludedClasses.add(System.class);
 
         constantConfig.setExcludedClasses(excludedClasses);
+        constantConfig.setDevModeExcludedClasses(excludedClasses);
 
         Map<String, String> map = constantConfig.getAllAsStringsMap();
         Assert.assertEquals("java.lang.Object,java.lang.Runtime,java.lang.System",
-                map.get(StrutsConstants.STRUTS_EXCLUDED_CLASSES));
+            map.get(StrutsConstants.STRUTS_EXCLUDED_CLASSES));
+        Assert.assertEquals("java.lang.Object,java.lang.Runtime,java.lang.System",
+            map.get(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES));
     }
+
 }

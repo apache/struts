@@ -110,7 +110,7 @@
 		     <tr>
 		        <td>Non Favourite Sports:</td>
 		        <td>
-		            <s:iterator value="nonfavouriteSports" status="stat">
+		            <s:iterator value="nonFavouriteSports" status="stat">
 		                <s:property value="%{#stat.count}" />.<s:property />&nbsp;
 		            </s:iterator>
 		        </td>

@@ -35,7 +35,7 @@
 	
 			<p>The text you've enter is ${text!''}<p/>
 
-			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back</@s.a>
+			<@s.a href="javascript:history.back();" cssClass="btn btn-info" escapeHtmlBody="false"><i class="icon icon-arrow-left"></i> Back</@s.a>
 		</div>
 	</div>
 </div>

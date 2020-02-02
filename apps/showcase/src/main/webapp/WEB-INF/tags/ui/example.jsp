@@ -38,7 +38,7 @@
 			<s:fielderror  cssClass="alert alert-error"/>
 
 
-			<s:form action="exampleSubmit" enctype="multipart/form-data" javascriptTooltip="true">
+			<s:form action="exampleSubmit" enctype="multipart/form-data" method="POST" javascriptTooltip="true">
 			    <s:textfield
 			            label="Name"
 			            name="name"
@@ -97,7 +97,7 @@
 			            cssErrorClass="foo" />
 
 			    <s:checkbox
-			            tooltip="Confirmed that your are Over 18"
+			            tooltip="Confirm that you are Over 18"
 			            label="Age 18+"
 			            name="legalAge"/>
 
@@ -114,8 +114,8 @@
 			            emptyOption="true" />
 
 			    <s:doubleselect
-			            tooltip="Choose your Vehical"
-			            label="Favourite Vehical"
+			            tooltip="Choose your Vehicle"
+			            label="Favourite Vehicle"
 			            name="favouriteVehicalType"
 			            list="vehicalTypeList"
 			            listKey="key"
@@ -136,7 +136,7 @@
 
 			    <s:optiontransferselect
 			            tooltip="Select Your Favourite Cartoon Characters"
-			            label="Favourite Cartoons Characters"
+			            label="Favourite Cartoon Characters"
 			            name="leftSideCartoonCharacters"
 			            leftTitle="Left Title"
 			            rightTitle="Right Title"
@@ -153,7 +153,7 @@
 			            doubleMultiple="true" />
 
 			    <s:textarea
-			            label="Your Thougths"
+			            label="Your Thoughts"
 			            name="thoughts"
 			            tooltip="Enter your thoughts here" />
 

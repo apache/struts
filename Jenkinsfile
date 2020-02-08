@@ -11,6 +11,7 @@ pipeline {
     buildDiscarder logRotator(daysToKeepStr: '14', numToKeepStr: '10')
     timeout(80)
     disableConcurrentBuilds()
+    skipStagesAfterUnstable()
   }
   triggers {
     pollSCM 'H/15 * * * *'
@@ -28,7 +29,8 @@ pipeline {
       }
       post {
         always {
-          junit '**/target/surefire-reports/*.xml'
+          junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+          junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
         }
       }
     }
@@ -37,8 +39,8 @@ pipeline {
         branch 'master'
       }
       steps {
-        withSonarQubeEnv('ASF Sonar Analysis') {
-          sh 'mvn -P${JENKINS_PROFILE} sonar:sonar'
+        withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
+          sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
         }
       }
     }
@@ -73,6 +75,55 @@ pipeline {
         }
         unstash name: 'struts2-build-snapshots'
         sh 'mvn -f jenkins.pom -X -P deploy-snapshots wagon:upload'
+      }
+    }
+  }
+  post {
+    // If this build failed, send an email to the list.
+    failure {
+      script {
+        emailext(
+            subject: "[BUILD-FAILURE]: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]'",
+            body: """
+              BUILD-FAILURE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
+               
+              Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]</a>"
+            """.stripMargin(),
+            to: "dev@struts.apache.org",
+            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        )
+      }
+    }
+
+    // If this build didn't fail, but there were failing tests, send an email to the list.
+    unstable {
+      script {
+        emailext(
+            subject: "[BUILD-UNSTABLE]: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]'",
+            body: """
+              BUILD-UNSTABLE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
+               
+              Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]</a>"
+            """.stripMargin(),
+            to: "dev@struts.apache.org",
+            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        )
+      }
+    }
+
+    // Send an email, if the last build was not successful and this one is.
+    fixed {
+      script {
+        emailext(
+            subject: "[BUILD-STABLE]: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]'",
+            body: """
+              BUILD-STABLE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
+               
+              Is back to normal.
+            """.stripMargin(),
+            to: "dev@struts.apache.org",
+            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        )
       }
     }
   }

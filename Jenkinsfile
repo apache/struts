@@ -11,13 +11,12 @@ pipeline {
     buildDiscarder logRotator(daysToKeepStr: '14', numToKeepStr: '10')
     timeout(80)
     disableConcurrentBuilds()
-    jiraIssueSelector(issueSelector: [$class: 'DefaultIssueSelector'])
-    tool name: 'JDK 1.8 (latest)', type: 'jdk'
   }
   triggers {
     pollSCM 'H/15 * * * *'
   }
   stages {
+    jiraIssueSelector(issueSelector: [$class: 'DefaultIssueSelector'])
     stage('Build') {
       steps {
         sh './mvnw -B -DskipTests -DskipAssembly clean package'

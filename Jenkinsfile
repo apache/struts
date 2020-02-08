@@ -16,7 +16,6 @@ pipeline {
     pollSCM 'H/15 * * * *'
   }
   stages {
-    jiraIssueSelector(issueSelector: [$class: 'DefaultIssueSelector'])
     stage('Build') {
       steps {
         sh './mvnw -B -DskipTests -DskipAssembly clean package'
@@ -24,7 +23,9 @@ pipeline {
     }
     stage('Test') {
       steps {
-        sh './mvnw -B test'
+        jiraIssueSelector(issueSelector: [$class: 'DefaultIssueSelector']) {
+          sh './mvnw -B test'
+        }
       }
       post {
         always {

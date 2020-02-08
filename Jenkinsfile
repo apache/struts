@@ -32,14 +32,24 @@ pipeline {
         }
       }
     }
+    stage('Code Quality') {
+      when {
+        branch 'master'
+      }
+      steps {
+        withSonarQubeEnv('ASF Sonar Analysis') {
+          sh 'mvn -P${JENKINS_PROFILE} sonar:sonar'
+        }
+      }
+    }
     stage('Build Source & JavaDoc') {
       when {
         branch 'master'
       }
-      dir("local-snapshots-dir/") {
-        deleteDir()
-      }
       steps {
+        dir("local-snapshots-dir/") {
+          deleteDir()
+        }
         sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
       }
     }

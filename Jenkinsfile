@@ -36,19 +36,33 @@ pipeline {
       when {
         branch 'master'
       }
+      dir("local-snapshots-dir/") {
+        deleteDir()
+      }
       steps {
         sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
       }
     }
+    // see https://cwiki.apache.org/confluence/display/INFRA/Multibranch+Pipeline+recipes#MultibranchPipelinerecipes-DeployingArtifacts
     stage('Deploy Snapshot') {
       when {
         branch 'master'
       }
       steps {
-        withCredentials([usernamePassword(credentialsId: 'lukaszlenart-access-token-repository', passwordVariable: 'REPO_PASSWORD', usernameVariable: 'REPO_USERNAME')]) {
-          sh 'cat /root/.m2/settings.xml'
-          sh 'mvn -B deploy -Dusername=\${REPO_USERNAME} -Dpassword=\${REPO_PASSWORD}'
+        sh 'mvn -DaltDeploymentRepository=snapshot-repo::default::file:./local-snapshots-dir deploy'
+        stash name: 'struts2-build-snapshots', includes: 'local-snapshots-dir/**'
+      }
+    }
+    stage('Upload Snapshot') {
+      when {
+        branch 'master'
+      }
+      steps {
+        dir("local-snapshots-dir/") {
+          deleteDir()
         }
+        unstash name: 'struts2-build-snapshots'
+        sh 'mvn -f jenkins.pom -X -P deploy-snapshots wagon:upload'
       }
     }
   }

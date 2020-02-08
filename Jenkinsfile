@@ -24,6 +24,7 @@ pipeline {
     stage('Test') {
       steps {
         sh 'mvn -B test'
+        step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
       }
       post {
         always {
@@ -45,6 +46,7 @@ pipeline {
       }
       steps {
         withCredentials([usernamePassword(credentialsId: 'lukaszlenart-access-token-repository', passwordVariable: 'REPO_PASSWORD', usernameVariable: 'REPO_USERNAME')]) {
+          sh 'cat /root/.m2/settings.xml'
           sh 'mvn -B deploy -Dusername=\${REPO_USERNAME} -Dpassword=\${REPO_PASSWORD}'
         }
       }

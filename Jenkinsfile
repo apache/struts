@@ -18,14 +18,12 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh './mvnw -B -DskipTests -DskipAssembly clean package'
+        sh './mvnw -B clean package -DskipTests -DskipAssembly'
       }
     }
     stage('Test') {
       steps {
-        jiraIssueSelector(issueSelector: [$class: 'DefaultIssueSelector']) {
-          sh './mvnw -B test'
-        }
+        sh './mvnw -B test'
       }
       post {
         always {
@@ -38,7 +36,7 @@ pipeline {
         branch 'master'
       }
       steps {
-        sh './mvnw -B source:jar javadoc:jar -DskipWiki'
+        sh './mvnw -B source:jar javadoc:jar -DskipAssembbly'
       }
     }
     stage('Deploy Snapshot') {

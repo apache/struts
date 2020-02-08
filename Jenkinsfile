@@ -11,6 +11,8 @@ pipeline {
     buildDiscarder logRotator(daysToKeepStr: '14', numToKeepStr: '10')
     timeout(80)
     disableConcurrentBuilds()
+    jiraIssueSelector(issueSelector: [$class: 'DefaultIssueSelector'])
+    tool name: 'JDK 1.8 (latest)', type: 'jdk'
   }
   triggers {
     pollSCM 'H/15 * * * *'
@@ -18,12 +20,12 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'mvn -B -DskipTests -DskipAssembly clean package'
+        sh './mvnw -B -DskipTests -DskipAssembly clean package'
       }
     }
     stage('Test') {
       steps {
-        sh 'mvn -B test'
+        sh './mvnw -B test'
       }
       post {
         always {
@@ -31,12 +33,22 @@ pipeline {
         }
       }
     }
+    stage('Build Source & JavaDoc') {
+      when {
+        branch 'master'
+      }
+      steps {
+        sh './mvnw -B source:jar javadoc:jar -DskipWiki'
+      }
+    }
     stage('Deploy Snapshot') {
       when {
         branch 'master'
       }
       steps {
-        sh 'mvn -B deploy'
+        withCredentials([usernamePassword(credentialsId: 'lukaszlenart-access-token-repository', passwordVariable: 'REPO_PASSWORD', usernameVariable: 'REPO_USERNAME')]) {
+          sh './mvnw -B deploy -Dusername=\${REPO_USERNAME} -Dpassword=\${REPO_PASSWORD}'
+        }
       }
     }
   }

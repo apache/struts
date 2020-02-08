@@ -23,7 +23,7 @@ pipeline {
     }
     stage('Test') {
       steps {
-        sh 'mvw -B test'
+        sh 'mvn -B test'
       }
       post {
         always {
@@ -36,7 +36,7 @@ pipeline {
         branch 'master'
       }
       steps {
-        sh 'mvw -B source:jar javadoc:jar -DskipAssembbly'
+        sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
       }
     }
     stage('Deploy Snapshot') {
@@ -45,7 +45,7 @@ pipeline {
       }
       steps {
         withCredentials([usernamePassword(credentialsId: 'lukaszlenart-access-token-repository', passwordVariable: 'REPO_PASSWORD', usernameVariable: 'REPO_USERNAME')]) {
-          sh 'mvw -B deploy -Dusername=\${REPO_USERNAME} -Dpassword=\${REPO_PASSWORD}'
+          sh 'mvn -B deploy -Dusername=\${REPO_USERNAME} -Dpassword=\${REPO_PASSWORD}'
         }
       }
     }

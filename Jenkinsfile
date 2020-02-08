@@ -55,6 +55,7 @@ pipeline {
         sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
       }
     }
+/*
     // see https://cwiki.apache.org/confluence/display/INFRA/Multibranch+Pipeline+recipes#MultibranchPipelinerecipes-DeployingArtifacts
     stage('Deploy Snapshot') {
       when {
@@ -77,6 +78,7 @@ pipeline {
         sh 'mvn -f jenkins.pom -X -P deploy-snapshots wagon:upload'
       }
     }
+*/
   }
   post {
     // If this build failed, send an email to the list.

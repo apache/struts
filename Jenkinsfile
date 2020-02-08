@@ -16,26 +16,27 @@ pipeline {
     pollSCM 'H/15 * * * *'
   }
   stages {
-    stage('Maven version') {
-      steps {
-        sh 'mvn -v'
-      }
-    }
-
     stage('Build') {
       steps {
         sh 'mvn -B -DskipTests -DskipAssembly clean package'
       }
     }
-
     stage('Test') {
       steps {
-        sh 'mvn test'
+        sh 'mvn -B test'
       }
       post {
         always {
           junit '**/target/surefire-reports/*.xml'
         }
+      }
+    }
+    stage('Deploy Snapshot') {
+      when {
+        branch 'master'
+      }
+      steps {
+        sh 'mvn -B deploy'
       }
     }
   }

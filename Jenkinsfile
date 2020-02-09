@@ -5,6 +5,7 @@ pipeline {
       label 'ubuntu'
       image 'maven:3-jdk-8'
       args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+      reuseNode true
     }
   }
   options {
@@ -55,31 +56,18 @@ pipeline {
         sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
       }
     }
-/*
-    // see https://cwiki.apache.org/confluence/display/INFRA/Multibranch+Pipeline+recipes#MultibranchPipelinerecipes-DeployingArtifacts
     stage('Deploy Snapshot') {
       when {
         branch 'master'
       }
       steps {
-        sh 'mvn -DaltDeploymentRepository=snapshot-repo::default::file:./local-snapshots-dir deploy'
-        stash name: 'struts2-build-snapshots', includes: 'local-snapshots-dir/**'
-      }
-    }
-    stage('Upload Snapshot') {
-      when {
-        branch 'master'
-      }
-      steps {
-        dir("local-snapshots-dir/") {
-          deleteDir()
+        withCredentials([file(credentialsId: 'struts-custom-settings_xml', variable: 'CUSTOM_SETTINGS')]) {
+          sh 'mvn -s \${CUSTOM_SETTINGS} deploy'
         }
-        unstash name: 'struts2-build-snapshots'
-        sh 'mvn -f jenkins.pom -X -P deploy-snapshots wagon:upload'
       }
     }
-*/
   }
+/*
   post {
     // If this build failed, send an email to the list.
     failure {
@@ -129,4 +117,5 @@ pipeline {
       }
     }
   }
+ */
 }

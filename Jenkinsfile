@@ -1,4 +1,11 @@
 #!groovy
+var statusMessage = 'Build passed normally'
+
+def stageF(name, block) {
+  statusMessage = "Build failed in $name stage"
+  return stage(name, block)
+}
+
 pipeline {
   agent {
     docker {
@@ -18,12 +25,12 @@ pipeline {
     pollSCM 'H/15 * * * *'
   }
   stages {
-    stage('Build') {
+    stageF('Build') {
       steps {
         sh 'mvn -B clean package -DskipTests -DskipAssembly'
       }
     }
-    stage('Test') {
+    stageF('Test') {
       steps {
         sh 'mvn -B test'
         step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
@@ -35,8 +42,7 @@ pipeline {
         }
       }
     }
-/*
-    stage('Code Quality') {
+    stageF('Code Quality') {
       when {
         branch 'master'
       }
@@ -46,7 +52,7 @@ pipeline {
         }
       }
     }
-    stage('Build Source & JavaDoc') {
+    stageF('Build Source & JavaDoc') {
       when {
         branch 'master'
       }
@@ -57,19 +63,17 @@ pipeline {
         sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
       }
     }
- */
-    stage('Deploy Snapshot') {
+    stageF('Deploy Snapshot') {
       when {
         branch 'master'
       }
       steps {
         withCredentials([file(credentialsId: 'struts-custom-settings_xml', variable: 'CUSTOM_SETTINGS')]) {
-          sh 'mvn -s \${CUSTOM_SETTINGS} deploy'
+          sh 'mvn -s \${CUSTOM_SETTINGS} deploy -skipAssembly'
         }
       }
     }
   }
-/*
   post {
     // If this build failed, send an email to the list.
     failure {
@@ -80,6 +84,8 @@ pipeline {
               BUILD-FAILURE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
                
               Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]</a>"
+
+              Status: ${statusMessage}
             """.stripMargin(),
             to: "dev@struts.apache.org",
             recipientProviders: [[$class: 'DevelopersRecipientProvider']]
@@ -96,6 +102,8 @@ pipeline {
               BUILD-UNSTABLE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
                
               Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]</a>"
+
+              Status: ${statusMessage}
             """.stripMargin(),
             to: "dev@struts.apache.org",
             recipientProviders: [[$class: 'DevelopersRecipientProvider']]
@@ -112,6 +120,8 @@ pipeline {
               BUILD-STABLE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
                
               Is back to normal.
+
+              Status: ${statusMessage}
             """.stripMargin(),
             to: "dev@struts.apache.org",
             recipientProviders: [[$class: 'DevelopersRecipientProvider']]
@@ -119,5 +129,4 @@ pipeline {
       }
     }
   }
- */
 }

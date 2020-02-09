@@ -11,7 +11,7 @@ pipeline {
   options {
     buildDiscarder logRotator(daysToKeepStr: '14', numToKeepStr: '10')
     timeout(80)
-    disableConcurrentBuilds()
+    // disableConcurrentBuilds()
     skipStagesAfterUnstable()
   }
   triggers {
@@ -35,6 +35,7 @@ pipeline {
         }
       }
     }
+/*
     stage('Code Quality') {
       when {
         branch 'master'
@@ -56,6 +57,7 @@ pipeline {
         sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
       }
     }
+ */
     stage('Deploy Snapshot') {
       when {
         branch 'master'

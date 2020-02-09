@@ -35,16 +35,6 @@ pipeline {
         }
       }
     }
-    stage('Code Quality') {
-      when {
-        branch 'master'
-      }
-      steps {
-        withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-          sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
-        }
-      }
-    }
     stage('Build Source & JavaDoc') {
       when {
         branch 'master'
@@ -63,6 +53,16 @@ pipeline {
       steps {
         withCredentials([file(credentialsId: 'struts-custom-settings_xml', variable: 'CUSTOM_SETTINGS')]) {
           sh 'mvn -s \${CUSTOM_SETTINGS} deploy -skipAssembly'
+        }
+      }
+    }
+    stage('Code Quality') {
+      when {
+        branch 'master'
+      }
+      steps {
+        withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
+          sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
         }
       }
     }

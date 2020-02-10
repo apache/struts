@@ -19,22 +19,22 @@ pipeline {
           args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
           reuseNode true
         }
-        stages {
-          stage('Build') {
-            steps {
-              sh 'mvn -B clean package -DskipTests -DskipAssembly'
-            }
+      }
+      stages {
+        stage('Build') {
+          steps {
+            sh 'mvn -B clean package -DskipTests -DskipAssembly'
           }
-          stage('Test') {
-            steps {
-              sh 'mvn -B test'
-              step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
-            }
-            post {
-              always {
-                junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
-                junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
-              }
+        }
+        stage('Test') {
+          steps {
+            sh 'mvn -B test'
+            step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
+          }
+          post {
+            always {
+              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
             }
           }
         }
@@ -48,22 +48,22 @@ pipeline {
           args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
           reuseNode true
         }
-        stages {
-          stage('Build') {
-            steps {
-              sh 'mvn -B clean package -DskipTests -DskipAssembly'
-            }
+      }
+      stages {
+        stage('Build') {
+          steps {
+            sh 'mvn -B clean package -DskipTests -DskipAssembly'
           }
-          stage('Test') {
-            steps {
-              sh 'mvn -B test'
-              step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
-            }
-            post {
-              always {
-                junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
-                junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
-              }
+        }
+        stage('Test') {
+          steps {
+            sh 'mvn -B test'
+            step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
+          }
+          post {
+            always {
+              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
             }
           }
         }

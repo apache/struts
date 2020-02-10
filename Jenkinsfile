@@ -78,51 +78,53 @@ pipeline {
           reuseNode true
         }
       }
-      stage('Build') {
-        steps {
-          sh 'mvn -B clean package -DskipTests -DskipAssembly'
-        }
-      }
-      stage('Test') {
-        steps {
-          sh 'mvn -B test'
-          step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
-        }
-        post {
-          always {
-            junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
-            junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
+      stages {
+        stage('Build') {
+          steps {
+            sh 'mvn -B clean package -DskipTests -DskipAssembly'
           }
         }
-      }
-      stage('Build Source & JavaDoc') {
-        when {
-          branch 'master'
-        }
-        steps {
-          dir("local-snapshots-dir/") {
-            deleteDir()
+        stage('Test') {
+          steps {
+            sh 'mvn -B test'
+            step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
           }
-          sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
-        }
-      }
-      stage('Deploy Snapshot') {
-        when {
-          branch 'master'
-        }
-        steps {
-          withCredentials([file(credentialsId: 'struts-custom-settings_xml', variable: 'CUSTOM_SETTINGS')]) {
-            sh 'mvn -s \${CUSTOM_SETTINGS} deploy -skipAssembly'
+          post {
+            always {
+              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
+            }
           }
         }
-      }
-      stage('Code Quality') {
-        when {
-          branch 'master'
+        stage('Build Source & JavaDoc') {
+          when {
+            branch 'master'
+          }
+          steps {
+            dir("local-snapshots-dir/") {
+              deleteDir()
+            }
+            sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
+          }
         }
-        steps {
-          withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-            sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
+        stage('Deploy Snapshot') {
+          when {
+            branch 'master'
+          }
+          steps {
+            withCredentials([file(credentialsId: 'struts-custom-settings_xml', variable: 'CUSTOM_SETTINGS')]) {
+              sh 'mvn -s \${CUSTOM_SETTINGS} deploy -skipAssembly'
+            }
+          }
+        }
+        stage('Code Quality') {
+          when {
+            branch 'master'
+          }
+          steps {
+            withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
+              sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
+            }
           }
         }
       }

@@ -1,13 +1,6 @@
 #!groovy
 pipeline {
-  agent {
-    docker {
-      label 'ubuntu'
-      image 'maven:3-jdk-8'
-      args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
-      reuseNode true
-    }
-  }
+  agent none
   options {
     buildDiscarder logRotator(daysToKeepStr: '14', numToKeepStr: '10')
     timeout(80)
@@ -18,51 +11,119 @@ pipeline {
     pollSCM 'H/15 * * * *'
   }
   stages {
-    stage('Build') {
-      steps {
-        sh 'mvn -B clean package -DskipTests -DskipAssembly'
-      }
-    }
-    stage('Test') {
-      steps {
-        sh 'mvn -B test'
-        step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
-      }
-      post {
-        always {
-          junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
-          junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
+    stage('JDK 11') {
+      agent {
+        docker {
+          label 'ubuntu'
+          image 'maven:3-jdk-11'
+          args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+          reuseNode true
+        }
+        stages {
+          stage('Build') {
+            steps {
+              sh 'mvn -B clean package -DskipTests -DskipAssembly'
+            }
+          }
+          stage('Test') {
+            steps {
+              sh 'mvn -B test'
+              step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
+            }
+            post {
+              always {
+                junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+                junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
+              }
+            }
+          }
         }
       }
     }
-    stage('Build Source & JavaDoc') {
-      when {
-        branch 'master'
-      }
-      steps {
-        dir("local-snapshots-dir/") {
-          deleteDir()
+    stage('JDK 9') {
+      agent {
+        docker {
+          label 'ubuntu'
+          image 'maven:3-jdk-9'
+          args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+          reuseNode true
         }
-        sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
+        stages {
+          stage('Build') {
+            steps {
+              sh 'mvn -B clean package -DskipTests -DskipAssembly'
+            }
+          }
+          stage('Test') {
+            steps {
+              sh 'mvn -B test'
+              step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
+            }
+            post {
+              always {
+                junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+                junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
+              }
+            }
+          }
+        }
       }
     }
-    stage('Deploy Snapshot') {
-      when {
-        branch 'master'
-      }
-      steps {
-        withCredentials([file(credentialsId: 'struts-custom-settings_xml', variable: 'CUSTOM_SETTINGS')]) {
-          sh 'mvn -s \${CUSTOM_SETTINGS} deploy -skipAssembly'
+    stage('JDK 8') {
+      agent {
+        docker {
+          label 'ubuntu'
+          image 'maven:3-jdk-8'
+          args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+          reuseNode true
         }
       }
-    }
-    stage('Code Quality') {
-      when {
-        branch 'master'
+      stage('Build') {
+        steps {
+          sh 'mvn -B clean package -DskipTests -DskipAssembly'
+        }
       }
-      steps {
-        withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-          sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
+      stage('Test') {
+        steps {
+          sh 'mvn -B test'
+          step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
+        }
+        post {
+          always {
+            junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+            junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
+          }
+        }
+      }
+      stage('Build Source & JavaDoc') {
+        when {
+          branch 'master'
+        }
+        steps {
+          dir("local-snapshots-dir/") {
+            deleteDir()
+          }
+          sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
+        }
+      }
+      stage('Deploy Snapshot') {
+        when {
+          branch 'master'
+        }
+        steps {
+          withCredentials([file(credentialsId: 'struts-custom-settings_xml', variable: 'CUSTOM_SETTINGS')]) {
+            sh 'mvn -s \${CUSTOM_SETTINGS} deploy -skipAssembly'
+          }
+        }
+      }
+      stage('Code Quality') {
+        when {
+          branch 'master'
+        }
+        steps {
+          withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
+            sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
+          }
         }
       }
     }

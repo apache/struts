@@ -7,7 +7,7 @@ pipeline {
   options {
     buildDiscarder logRotator(daysToKeepStr: '14', numToKeepStr: '10')
     timeout(80)
-    // disableConcurrentBuilds()
+    disableConcurrentBuilds()
     skipStagesAfterUnstable()
   }
   triggers {

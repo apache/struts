@@ -1,4 +1,7 @@
 #!groovy
+
+dockerArgs = '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=root -u root'
+
 pipeline {
   agent none
   options {
@@ -18,7 +21,7 @@ pipeline {
             docker {
               label 'ubuntu'
               image 'maven:3-jdk-11'
-              args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+              args "$dockerArgs"
               reuseNode true
             }
           }
@@ -47,7 +50,7 @@ pipeline {
             docker {
               label 'ubuntu'
               image 'maven:3-jdk-9'
-              args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+              args "$dockerArgs"
               reuseNode true
             }
           }
@@ -76,7 +79,7 @@ pipeline {
             docker {
               label 'ubuntu'
               image 'maven:3-jdk-8'
-              args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+              args "$dockerArgs"
               reuseNode true
             }
           }

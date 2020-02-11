@@ -247,33 +247,6 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>update-impact</id>
-            <activation>
-                <jdk>1.8</jdk>
-                <property>
-                    <name>update-impact</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.updateimpact</groupId>
-                        <artifactId>updateimpact-maven-plugin</artifactId>
-                        <version>1.0.12</version>
-                        <executions>
-                            <execution>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>submit</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-
-            </build>
-        </profile>
     </profiles>
 
     <build>

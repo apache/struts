@@ -11,7 +11,7 @@ pipeline {
     pollSCM 'H/15 * * * *'
   }
   stages {
-    stage('Build of various JDKs') {
+    stage('Build on various JDKs') {
       parallel {
         stage('JDK 11') {
           agent {

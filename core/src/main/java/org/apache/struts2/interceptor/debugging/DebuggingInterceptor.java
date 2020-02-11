@@ -71,7 +71,7 @@ import java.util.Map;
  * <li> <code>command</code> - Tests an OGNL expression and returns the
  * string result. Only used by the OGNL console.</li>
  * <li><code>browser</code> Shows field values of an object specified in the
- * <code>object</code> parameter (#context by default). When the <code>object</code>
+ * <code>object</code> parameter (action by default). When the <code>object</code>
  * parameters is set, the '#' character needs to be escaped to '%23'. Like
  * debug=browser&amp;object=%23parameters</li>
  * </ul>
@@ -214,8 +214,9 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                     new PreResultListener() {
                         public void beforeResult(ActionInvocation inv, String actionResult) {
                             String rootObjectExpression = getParameter(OBJECT_PARAM);
-                            if (rootObjectExpression == null)
-                                rootObjectExpression = "top";
+                            if (rootObjectExpression == null) {
+                                rootObjectExpression = "action";
+                            }
                             String decorate = getParameter(DECORATE_PARAM);
                             ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
                             Object rootObject = stack.findValue(rootObjectExpression);

@@ -9,6 +9,7 @@ pipeline {
     timeout(80)
     disableConcurrentBuilds()
     skipStagesAfterUnstable()
+    quietPeriod(30)
   }
   triggers {
     pollSCM 'H/15 * * * *'
@@ -20,7 +21,6 @@ pipeline {
           label 'ubuntu'
           image 'maven:3-jdk-11'
           args "$dockerArgs"
-          reuseNode true
         }
       }
       stages {
@@ -49,7 +49,6 @@ pipeline {
           label 'ubuntu'
           image 'maven:3-jdk-9'
           args "$dockerArgs"
-          reuseNode true
         }
       }
       stages {
@@ -78,7 +77,6 @@ pipeline {
           label 'ubuntu'
           image 'maven:3-jdk-8'
           args "$dockerArgs"
-          reuseNode true
         }
       }
       stages {

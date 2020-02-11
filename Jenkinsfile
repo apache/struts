@@ -1,6 +1,6 @@
 #!groovy
 
-dockerArgs = '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=root -u root'
+dockerArgs = '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
 
 pipeline {
   agent none
@@ -26,7 +26,7 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh 'mvn -B clean package -DskipTests -DskipAssembly'
+            sh 'mvn -B package -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
@@ -54,7 +54,7 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh 'mvn -B clean package -DskipTests -DskipAssembly'
+            sh 'mvn -B package -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
@@ -82,7 +82,7 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh 'mvn -B clean package -DskipTests -DskipAssembly'
+            sh 'mvn -B package -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {

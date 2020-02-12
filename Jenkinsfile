@@ -6,13 +6,18 @@ pipeline {
     buildDiscarder logRotator(daysToKeepStr: '14', numToKeepStr: '10')
     timeout(80)
     disableConcurrentBuilds()
-    // skipStagesAfterUnstable()
+    skipStagesAfterUnstable()
     quietPeriod(30)
   }
   triggers {
     pollSCM 'H/15 * * * *'
   }
   stages {
+    stage('Cleanup') {
+      steps {
+        cleanWs()
+      }
+    }
     stage('JDK 11') {
       agent {
         docker {
@@ -22,20 +27,15 @@ pipeline {
         }
       }
       stages {
-        stage('Cleanup') {
-          steps {
-            step([$class: 'WsCleanup'])
-          }
-        }
         stage('Build') {
           steps {
-            sh 'mvn -B package -DskipTests -DskipAssembly'
+            sh 'mvn -B clean package -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
           steps {
             sh 'mvn -B test'
-            step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
+            // step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
           }
           post {
             always {
@@ -55,20 +55,15 @@ pipeline {
         }
       }
       stages {
-        stage('Cleanup') {
-          steps {
-            step([$class: 'WsCleanup'])
-          }
-        }
         stage('Build') {
           steps {
-            sh 'mvn -B package -DskipTests -DskipAssembly'
+            sh 'mvn -B clean package -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
           steps {
             sh 'mvn -B test'
-            step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
+            // step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
           }
           post {
             always {
@@ -88,20 +83,15 @@ pipeline {
         }
       }
       stages {
-        stage('Cleanup') {
-          steps {
-            step([$class: 'WsCleanup'])
-          }
-        }
         stage('Build') {
           steps {
-            sh 'mvn -B package -DskipTests -DskipAssembly'
+            sh 'mvn -B clean package -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
           steps {
             sh 'mvn -B test'
-            step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
+            // step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
           }
           post {
             always {

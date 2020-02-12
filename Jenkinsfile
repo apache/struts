@@ -23,7 +23,9 @@ pipeline {
       }
       stages {
         stage('Cleanup') {
-          step([$class: 'WsCleanup'])
+          steps {
+            step([$class: 'WsCleanup'])
+          }
         }
         stage('Build') {
           steps {
@@ -54,7 +56,9 @@ pipeline {
       }
       stages {
         stage('Cleanup') {
-          step([$class: 'WsCleanup'])
+          steps {
+            step([$class: 'WsCleanup'])
+          }
         }
         stage('Build') {
           steps {
@@ -85,7 +89,9 @@ pipeline {
       }
       stages {
         stage('Cleanup') {
-          step([$class: 'WsCleanup'])
+          steps {
+            step([$class: 'WsCleanup'])
+          }
         }
         stage('Build') {
           steps {

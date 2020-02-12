@@ -90,6 +90,12 @@ public class ClassPathFinder {
             } catch (URISyntaxException e) {
                 continue;
             }
+
+            // debug docker build for JDK 9+
+            if (entryURI.getRawQuery() != null) {
+                throw new StrutsException("Currently URI with query component isn't supported: " + entryURI.toString());
+            }
+
             File entry = new File(entryURI);
             if (entry.isFile() && entry.toString().endsWith(".jar")) {
                 try(ZipInputStream zip = new ZipInputStream(new FileInputStream(entry))) {

@@ -1,7 +1,5 @@
 #!groovy
 
-dockerArgs = "-v ${env.WORKSPACE}/.m2:/root/.m2 -e MAVEN_OPTS=\"-Xmx1024m\" -e USER=${env.USER}"
-
 pipeline {
   agent none
   options {
@@ -20,7 +18,7 @@ pipeline {
         docker {
           label 'ubuntu'
           image 'maven:3-jdk-11'
-          args "$dockerArgs"
+          args "-v ${env.HOME}/.m2:/root/.m2 -e MAVEN_OPTS=\"-Xmx1024m\" -e USER=${env.USER}"
         }
       }
       stages {
@@ -48,7 +46,7 @@ pipeline {
         docker {
           label 'ubuntu'
           image 'maven:3-jdk-9'
-          args "$dockerArgs"
+          args "-v ${env.HOME}/.m2:/root/.m2 -e MAVEN_OPTS=\"-Xmx1024m\" -e USER=${env.USER}"
         }
       }
       stages {
@@ -76,7 +74,7 @@ pipeline {
         docker {
           label 'ubuntu'
           image 'maven:3-jdk-8'
-          args "$dockerArgs"
+          args "-v ${env.HOME}/.m2:/root/.m2 -e MAVEN_OPTS=\"-Xmx1024m\" -e USER=${env.USER}"
         }
       }
       stages {

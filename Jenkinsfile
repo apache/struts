@@ -18,7 +18,7 @@ pipeline {
         docker {
           label 'ubuntu'
           image 'maven:3-jdk-11'
-          args "-v ${env.HOME}/.m2:/root/.m2 -e MAVEN_OPTS=\"-Xmx1024m\" -e USER=${env.USER}"
+          args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
         }
       }
       stages {
@@ -46,7 +46,7 @@ pipeline {
         docker {
           label 'ubuntu'
           image 'maven:3-jdk-9'
-          args "-v ${env.HOME}/.m2:/root/.m2 -e MAVEN_OPTS=\"-Xmx1024m\" -e USER=${env.USER}"
+          args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
         }
       }
       stages {
@@ -74,7 +74,7 @@ pipeline {
         docker {
           label 'ubuntu'
           image 'maven:3-jdk-8'
-          args "-v ${env.HOME}/.m2:/root/.m2 -e MAVEN_OPTS=\"-Xmx1024m\" -e USER=${env.USER}"
+          args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
         }
       }
       stages {

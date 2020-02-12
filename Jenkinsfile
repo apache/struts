@@ -13,11 +13,6 @@ pipeline {
     pollSCM 'H/15 * * * *'
   }
   stages {
-    stage('Cleanup') {
-      steps {
-        cleanWs()
-      }
-    }
     stage('JDK 11') {
       agent {
         docker {
@@ -27,9 +22,14 @@ pipeline {
         }
       }
       stages {
+        stage('Clean Up') {
+          steps {
+            cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+          }
+        }
         stage('Build') {
           steps {
-            sh 'mvn -B clean package -DskipTests -DskipAssembly'
+            sh 'mvn -B package -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
@@ -55,6 +55,11 @@ pipeline {
         }
       }
       stages {
+        stage('Clean Up') {
+          steps {
+            cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+          }
+        }
         stage('Build') {
           steps {
             sh 'mvn -B clean package -DskipTests -DskipAssembly'
@@ -83,6 +88,11 @@ pipeline {
         }
       }
       stages {
+        stage('Clean Up') {
+          steps {
+            cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+          }
+        }
         stage('Build') {
           steps {
             sh 'mvn -B clean package -DskipTests -DskipAssembly'

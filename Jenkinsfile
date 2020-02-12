@@ -1,6 +1,6 @@
 #!groovy
 
-dockerArgs = '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+dockerArgs = '-v $WORKSPACE/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
 
 pipeline {
   agent none

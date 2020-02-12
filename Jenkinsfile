@@ -22,6 +22,9 @@ pipeline {
         }
       }
       stages {
+        stage('Cleanup') {
+          step([$class: 'WsCleanup'])
+        }
         stage('Build') {
           steps {
             sh 'mvn -B package -DskipTests -DskipAssembly'
@@ -50,6 +53,9 @@ pipeline {
         }
       }
       stages {
+        stage('Cleanup') {
+          step([$class: 'WsCleanup'])
+        }
         stage('Build') {
           steps {
             sh 'mvn -B package -DskipTests -DskipAssembly'
@@ -78,6 +84,9 @@ pipeline {
         }
       }
       stages {
+        stage('Cleanup') {
+          step([$class: 'WsCleanup'])
+        }
         stage('Build') {
           steps {
             sh 'mvn -B package -DskipTests -DskipAssembly'

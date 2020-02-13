@@ -158,6 +158,7 @@ pipeline {
       }
     }
   }
+/*
   post {
     // If this build failed, send an email to the list.
     failure {
@@ -207,4 +208,5 @@ pipeline {
       }
     }
   }
+ */
 }

@@ -15,11 +15,14 @@ pipeline {
   stages {
     stage('JDK 11') {
       agent {
-        docker {
-          label 'ubuntu'
-          image 'maven:3-jdk-11'
-          args '-e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
-        }
+        label 'ubuntu'
+      }
+      tools {
+        jdk 'JDK 11 (latest)'
+        maven 'Maven (latest)'
+      }
+      environment {
+        MAVEN_OPTS = "-Xmx1024m"
       }
       stages {
         stage('Clean Up') {
@@ -48,11 +51,14 @@ pipeline {
     }
     stage('JDK 9') {
       agent {
-        docker {
-          label 'ubuntu'
-          image 'maven:3-jdk-9'
-          args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
-        }
+        label 'ubuntu'
+      }
+      tools {
+        jdk 'JDK 1.9 (latest)'
+        maven 'Maven (latest)'
+      }
+      environment {
+        MAVEN_OPTS = "-Xmx1024m"
       }
       stages {
         stage('Clean Up') {
@@ -81,11 +87,14 @@ pipeline {
     }
     stage('JDK 8') {
       agent {
-        docker {
-          label 'ubuntu'
-          image 'maven:3-jdk-8'
-          args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
-        }
+        label 'ubuntu'
+      }
+      tools {
+        jdk 'JDK 1.8 (latest)'
+        maven 'Maven (latest)'
+      }
+      environment {
+        MAVEN_OPTS = "-Xmx1024m"
       }
       stages {
         stage('Clean Up') {

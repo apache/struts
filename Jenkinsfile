@@ -15,7 +15,8 @@ pipeline {
   stages {
     stage('Prepare') {
       agent {
-        node('ubuntu') {
+        node {
+          label 'ubuntu'
           stages {
             stage('Clean Up') {
               steps {

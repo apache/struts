@@ -23,11 +23,6 @@ pipeline {
             cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
           }
         }
-        stage('Checkout') {
-          steps {
-            checkout scm
-          }
-        }
       }
     }
     stage('JDK 11') {

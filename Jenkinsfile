@@ -15,19 +15,17 @@ pipeline {
   stages {
     stage('Prepare') {
       agent {
-        node {
-          label 'ubuntu'
-          stages {
-            stage('Clean Up') {
-              steps {
-                cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
-              }
-            }
-            stage('Checkout') {
-              steps {
-                checkout scm
-              }
-            }
+        label 'ubuntu'
+      }
+      stages {
+        stage('Clean up') {
+          steps {
+            cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']
+          }
+        }
+        stage('Checkout') {
+          steps {
+            checkout scm
           }
         }
       }

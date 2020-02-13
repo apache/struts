@@ -13,11 +13,6 @@ pipeline {
     pollSCM 'H/15 * * * *'
   }
   stages {
-    stage('Clean Up') {
-      steps {
-        cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
-      }
-    }
     stage('JDK 11') {
       agent {
         label 'ubuntu'
@@ -30,6 +25,11 @@ pipeline {
         MAVEN_OPTS = "-Xmx1024m"
       }
       stages {
+        stage('Clean Up') {
+          steps {
+            cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+          }
+        }
         stage('Build') {
           steps {
             sh 'mvn -B package -DskipTests -DskipAssembly'

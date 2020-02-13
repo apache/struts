@@ -24,6 +24,12 @@ pipeline {
       stages {
         stage('Clean Up') {
           steps {
+            sh 'echo $USER'
+            sh "echo ${env.USER}"
+            sh "echo $USER"
+            sh 'echo $WORKSPACE'
+            sh "echo ${env.WORKSPACE}"
+            sh "echo $WORKSPACE"
             cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
           }
         }

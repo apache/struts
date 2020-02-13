@@ -18,18 +18,12 @@ pipeline {
         docker {
           label 'ubuntu'
           image 'maven:3-jdk-11'
-          args '-v $HOME/.m2:/root/.m2 -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+          args "-v $HOME/.m2:$HOME/.m2 -e MAVEN_OPTS=\"-Xmx1024m\" -e USER=$USER"
         }
       }
       stages {
         stage('Clean Up') {
           steps {
-            sh 'echo $USER'
-            sh "echo ${env.USER}"
-            sh "echo $USER"
-            sh 'echo $WORKSPACE'
-            sh "echo ${env.WORKSPACE}"
-            sh "echo $WORKSPACE"
             cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
           }
         }

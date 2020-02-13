@@ -18,7 +18,7 @@ pipeline {
         docker {
           label 'ubuntu'
           image 'maven:3-jdk-11'
-          args '-v $HOME/.m2:$HOME/.m2:rw,z -e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
+          args '-e MAVEN_OPTS="-Xmx1024m" -e USER=$USER'
         }
       }
       stages {

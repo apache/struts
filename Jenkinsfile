@@ -20,7 +20,7 @@ pipeline {
       stages {
         stage('Clean up') {
           steps {
-            cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']
+            cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
           }
         }
         stage('Checkout') {

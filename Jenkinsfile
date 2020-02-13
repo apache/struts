@@ -151,10 +151,10 @@ pipeline {
           }
         }
       }
-    }
-    post {
-      always {
-        cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+      post {
+        always {
+          cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+        }
       }
     }
   }

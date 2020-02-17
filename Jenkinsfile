@@ -142,7 +142,7 @@ pipeline {
             branch 'master'
           }
           steps {
-            withCredentials([file(credentialsId: 'struts-custom-settings_xml', variable: 'CUSTOM_SETTINGS')]) {
+            withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
               sh 'mvn -s \${CUSTOM_SETTINGS} deploy -skipAssembly'
             }
           }

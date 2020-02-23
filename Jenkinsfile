@@ -17,15 +17,10 @@ pipeline {
       agent {
         label 'ubuntu'
       }
-      tools {
-        jdk 'JDK 1.8 (latest)'
-        maven 'Maven (latest)'
-      }
       stages {
         stage('Clean up') {
           steps {
             cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
-            sh 'mvn -B dependency:purge-local-repository'
           }
         }
       }

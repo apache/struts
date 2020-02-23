@@ -86,6 +86,6 @@
     </script>
 
 <body>
-    ${debugHtml}
+    ${debugHtml?no_esc}
 </body>
 </html>

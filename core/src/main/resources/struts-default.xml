@@ -48,12 +48,46 @@
                 sun.misc.Unsafe,
                 com.opensymphony.xwork2.ActionContext" />
 
+    <constant name="struts.devMode.excludedClasses"
+              value="
+                java.lang.Object,
+                java.lang.Runtime,
+                java.lang.System,
+                java.lang.Class,
+                java.lang.ClassLoader,
+                java.lang.Shutdown,
+                java.lang.ProcessBuilder,
+                sun.misc.Unsafe" />
+
     <!-- this must be valid regex, each '.' in package name must be escaped! -->
     <!-- it's more flexible but slower than simple string comparison -->
     <!-- constant name="struts.excludedPackageNamePatterns" value="^java\.lang\..*,^ognl.*,^(?!javax\.servlet\..+)(javax\..+)" / -->
+    <!-- constant name="struts.devMode.excludedPackageNamePatterns" value="^java\.lang\..*,^ognl.*,^(?!javax\.servlet\..+)(javax\..+)" / -->
 
     <!-- this is simpler version of the above used with string comparison -->
     <constant name="struts.excludedPackageNames"
+              value="
+                ognl.,
+                java.io.,
+                java.net.,
+                java.nio.,
+                javax.,
+                freemarker.core.,
+                freemarker.template.,
+                freemarker.ext.jsp.,
+                freemarker.ext.rhino.,
+                sun.misc.,
+                sun.reflect.,
+                javassist.,
+                org.apache.velocity.,
+                org.objectweb.asm.,
+                org.springframework.context.,
+                com.opensymphony.xwork2.inject.,
+                com.opensymphony.xwork2.ognl.,
+                com.opensymphony.xwork2.security.,
+                com.opensymphony.xwork2.util." />
+
+    <constant name="struts.devMode.excludedPackageNames"
               value="
                 ognl.,
                 java.io.,

@@ -252,4 +252,9 @@ public class Foo {
     public void setAnimalMap(Map<MyNumber, Animal> animalMap) {
         this.animalMap = animalMap;
     }
+
+    @Override
+    public String toString() {
+        return "Foo";
+    }
 }

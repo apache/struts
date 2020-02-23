@@ -22,6 +22,8 @@ import org.apache.velocity.VelocityContext;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StrutsVelocityContext extends VelocityContext {
@@ -29,13 +31,33 @@ public class StrutsVelocityContext extends VelocityContext {
     private ValueStack stack;
     private List<VelocityContext> chainedContexts;
 
-    public StrutsVelocityContext(ValueStack stack) {
-        this(null, stack);
-    }
-
+    /**
+     * Creates a content with link to the ValueStack and any other Velocity contexts
+     *
+     * @param chainedContexts Existing Velocity contexts to chain to
+     * @param stack Struts ValueStack
+     * @since 2.6
+     */
     public StrutsVelocityContext(List<VelocityContext> chainedContexts, ValueStack stack) {
         this.chainedContexts = chainedContexts;
         this.stack = stack;
+    }
+
+    /**
+     * @deprecated please use newly added {@link StrutsVelocityContext(List<VelocityContext)} constructor instead
+     * and pass {null} or empty list if no chained contexts were defined
+     */
+    @Deprecated
+    public StrutsVelocityContext(ValueStack stack) {
+        this((List<VelocityContext>) null, stack);
+    }
+
+    /**
+     * @deprecated please use newly added {@link StrutsVelocityContext(List<VelocityContext)} constructor instead
+     */
+    @Deprecated()
+    public StrutsVelocityContext(VelocityContext[] chainedContexts, ValueStack stack) {
+        this(new ArrayList<>(Arrays.asList(chainedContexts)), stack);
     }
 
     public boolean internalContainsKey(String key) {

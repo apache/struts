@@ -167,7 +167,7 @@ public class VelocityManager {
      * @param servletRequest  the servlet request object
      * @param servletResponse the servlet response object
      * @param extraContext    map with extra context
-     * @return an VelocityContext[] of contexts to chain
+     * @return a List of contexts to chain or an empty list
      */
     protected List<VelocityContext> prepareChainedContexts(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Map<String, Object> extraContext) {
         List<VelocityContext> contextList = new ArrayList<>();

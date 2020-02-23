@@ -21,6 +21,7 @@ pipeline {
         stage('Clean up') {
           steps {
             cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+            sh 'mvn dependency:purge-local-repository'
           }
         }
       }

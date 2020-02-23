@@ -18,7 +18,7 @@ pipeline {
         label 'ubuntu'
       }
       tools {
-        jdk 'JDK 8 (latest)'
+        jdk 'JDK 1.8 (latest)'
         maven 'Maven (latest)'
       }
       stages {

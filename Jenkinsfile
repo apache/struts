@@ -174,7 +174,7 @@ pipeline {
             body: """
               BUILD-FAILURE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
                
-              Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]</a>"
+              Check console output at ${env.BUILD_URL}
             """.stripMargin(),
             to: "dev@struts.apache.org",
             recipientProviders: [[$class: 'DevelopersRecipientProvider']]
@@ -190,7 +190,7 @@ pipeline {
             body: """
               BUILD-UNSTABLE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
                
-              Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]</a>"
+              Check console output at ${env.BUILD_URL}
             """.stripMargin(),
             to: "dev@struts.apache.org",
             recipientProviders: [[$class: 'DevelopersRecipientProvider']]

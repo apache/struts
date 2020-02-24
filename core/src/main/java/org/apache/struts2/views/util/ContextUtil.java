@@ -41,9 +41,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class ContextUtil {
     public static final String REQUEST = "request";
-    public static final String REQUEST2 = "request";
     public static final String RESPONSE = "response";
-    public static final String RESPONSE2 = "response";
     public static final String SESSION = "session";
     public static final String BASE = "base";
     public static final String STACK = "stack";
@@ -51,12 +49,10 @@ public class ContextUtil {
     public static final String STRUTS = "struts";
     public static final String ACTION = "action";
     
-    public static Map getStandardContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
-        HashMap map = new HashMap();
+    public static Map<String, Object> getStandardContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        HashMap<String, Object> map = new HashMap<>();
         map.put(REQUEST, req);
-        map.put(REQUEST2, req);
         map.put(RESPONSE, res);
-        map.put(RESPONSE2, res);
         map.put(SESSION, req.getSession(false));
         map.put(BASE, req.getContextPath());
         map.put(STACK, stack);

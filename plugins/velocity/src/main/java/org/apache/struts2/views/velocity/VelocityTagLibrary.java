@@ -61,8 +61,8 @@ import java.util.List;
 public class VelocityTagLibrary implements TagLibraryDirectiveProvider {
 
     @Override
-    public List<Class> getDirectiveClasses() {
-        Class[] directives = new Class[] {
+    public List<Class<?>> getDirectiveClasses() {
+        Class<?>[] directives = new Class[] {
             ActionDirective.class,
             BeanDirective.class,
             CheckBoxDirective.class,
@@ -106,7 +106,7 @@ public class VelocityTagLibrary implements TagLibraryDirectiveProvider {
      * @deprecated please use {#getDirectiveClasses}
      */
     @Deprecated()
-    public List<Class> getVelocityDirectiveClasses() {
+    public List<Class<?>> getVelocityDirectiveClasses() {
         return getDirectiveClasses();
     }
 

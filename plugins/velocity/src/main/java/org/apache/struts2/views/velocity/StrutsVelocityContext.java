@@ -22,21 +22,45 @@ import org.apache.velocity.VelocityContext;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class StrutsVelocityContext extends VelocityContext {
 
-    ValueStack stack;
-    VelocityContext[] chainedContexts;
+    private ValueStack stack;
+    private List<VelocityContext> chainedContexts;
 
-    public StrutsVelocityContext(ValueStack stack) {
-        this(null, stack);
-    }
-
-    public StrutsVelocityContext(VelocityContext[] chainedContexts, ValueStack stack) {
+    /**
+     * Creates a content with link to the ValueStack and any other Velocity contexts
+     *
+     * @param chainedContexts Existing Velocity contexts to chain to
+     * @param stack Struts ValueStack
+     * @since 2.6
+     */
+    public StrutsVelocityContext(List<VelocityContext> chainedContexts, ValueStack stack) {
         this.chainedContexts = chainedContexts;
         this.stack = stack;
     }
 
-    public boolean internalContainsKey(Object key) {
+    /**
+     * @deprecated please use newly added {@link StrutsVelocityContext(List<VelocityContext)} constructor instead
+     * and pass {null} or empty list if no chained contexts were defined
+     */
+    @Deprecated
+    public StrutsVelocityContext(ValueStack stack) {
+        this((List<VelocityContext>) null, stack);
+    }
+
+    /**
+     * @deprecated please use newly added {@link StrutsVelocityContext(List<VelocityContext)} constructor instead
+     */
+    @Deprecated()
+    public StrutsVelocityContext(VelocityContext[] chainedContexts, ValueStack stack) {
+        this(new ArrayList<>(Arrays.asList(chainedContexts)), stack);
+    }
+
+    public boolean internalContainsKey(String key) {
         boolean contains = super.internalContainsKey(key);
 
         // first let's check to see if we contain the requested key
@@ -46,13 +70,13 @@ public class StrutsVelocityContext extends VelocityContext {
 
         // if not, let's search for the key in the ognl value stack
         if (stack != null) {
-            Object o = stack.findValue(key.toString());
+            Object o = stack.findValue(key);
 
             if (o != null) {
                 return true;
             }
 
-            o = stack.getContext().get(key.toString());
+            o = stack.getContext().get(key);
             if (o != null) {
                 return true;
             }

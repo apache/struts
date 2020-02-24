@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.views.velocity;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -24,6 +24,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.util.StrutsUtil;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.exception.MethodInvocationException;

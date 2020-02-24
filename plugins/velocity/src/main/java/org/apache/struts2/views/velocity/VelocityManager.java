@@ -28,7 +28,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.util.VelocityStrutsUtil;
 import org.apache.struts2.views.TagLibraryDirectiveProvider;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.ContextUtil;
@@ -36,9 +35,9 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
-import org.apache.velocity.tools.view.ToolboxManager;
-import org.apache.velocity.tools.view.context.ChainedContext;
-import org.apache.velocity.tools.view.servlet.ServletToolboxManager;
+import org.apache.velocity.tools.ToolContext;
+import org.apache.velocity.tools.ToolManager;
+import org.apache.velocity.tools.ToolboxFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +46,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * Manages the environment for Velocity result types
@@ -67,7 +72,7 @@ public class VelocityManager {
     /**
      * A reference to the toolbox manager.
      */
-    protected ToolboxManager toolboxManager = null;
+    protected ToolManager toolboxManager = null;
     private String toolBoxLocation;
 
     /**
@@ -98,7 +103,7 @@ public class VelocityManager {
 
     /**
      * @return a reference to the VelocityEngine used by <b>all</b> struts velocity thingies with the exception of
-     *         directly accessed *.vm pages
+     * directly accessed *.vm pages
      */
     public VelocityEngine getVelocityEngine() {
         return velocityEngine;
@@ -120,21 +125,18 @@ public class VelocityManager {
      * </ul>
      *
      * @param stack the current {@link ValueStack}
-     * @param req the current HttpServletRequest
-     * @param res the current HttpServletResponse
+     * @param req   the current HttpServletRequest
+     * @param res   the current HttpServletResponse
      * @return a new StrutsVelocityContext
      */
     public Context createContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
-        Context result = null;
-        VelocityContext[] chainedContexts = prepareChainedContexts(req, res, stack.getContext());
+        List<VelocityContext> chainedContexts = prepareChainedContexts(req, res, stack.getContext());
         StrutsVelocityContext context = new StrutsVelocityContext(chainedContexts, stack);
-        Map standardMap = ContextUtil.getStandardContext(stack, req, res);
-        for (Object o : standardMap.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            context.put((String) entry.getKey(), entry.getValue());
+        Map<String, Object> standardMap = ContextUtil.getStandardContext(stack, req, res);
+        for (Map.Entry<String, Object> entry : standardMap.entrySet()) {
+            context.put(entry.getKey(), entry.getValue());
         }
         context.put(STRUTS, new VelocityStrutsUtil(velocityEngine, context, stack, req, res));
-
 
         ServletContext ctx = null;
         try {
@@ -144,9 +146,10 @@ public class VelocityManager {
             LOG.debug("internal toolbox context ignored");
         }
 
+        Context result;
         if (toolboxManager != null && ctx != null) {
-            ChainedContext chained = new ChainedContext(context, velocityEngine, req, res, ctx);
-            chained.setToolbox(toolboxManager.getToolbox(chained));
+            ToolContext chained = new ToolContext(velocityEngine);
+            chained.addToolbox(toolboxManager.getToolboxFactory().createToolbox(ToolboxFactory.DEFAULT_SCOPE));
             result = chained;
         } else {
             result = context;
@@ -161,32 +164,24 @@ public class VelocityManager {
      * perform any initialization of the contexts.  All that must be done in the
      * context itself.
      *
-     * @param servletRequest the servlet request object
+     * @param servletRequest  the servlet request object
      * @param servletResponse the servlet response object
-     * @param extraContext map with extra context
-     * @return an VelocityContext[] of contexts to chain
+     * @param extraContext    map with extra context
+     * @return a List of contexts to chain or an empty list
      */
-    protected VelocityContext[] prepareChainedContexts(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Map extraContext) {
-        if (this.chainedContextNames == null) {
-            return null;
-        }
-        List contextList = new ArrayList();
-        for (int i = 0; i < chainedContextNames.length; i++) {
-            String className = chainedContextNames[i];
-            try {
-                VelocityContext velocityContext = (VelocityContext) objectFactory.buildBean(className, null);
-                contextList.add(velocityContext);
-            } catch (Exception e) {
-                LOG.warn("Warning. {} caught while attempting to instantiate a chained VelocityContext, {} -- skipping", e.getClass().getName(), className);
+    protected List<VelocityContext> prepareChainedContexts(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Map<String, Object> extraContext) {
+        List<VelocityContext> contextList = new ArrayList<>();
+        if (this.chainedContextNames != null) {
+            for (String className : chainedContextNames) {
+                try {
+                    VelocityContext velocityContext = (VelocityContext) objectFactory.buildBean(className, extraContext);
+                    contextList.add(velocityContext);
+                } catch (Exception e) {
+                    LOG.warn("Warning. {} caught while attempting to instantiate a chained VelocityContext, {} -- skipping", e.getClass().getName(), className);
+                }
             }
         }
-        if (contextList.size() > 0) {
-            VelocityContext[] extraContexts = new VelocityContext[contextList.size()];
-            contextList.toArray(extraContexts);
-            return extraContexts;
-        } else {
-            return null;
-        }
+        return contextList;
     }
 
     /**
@@ -341,7 +336,7 @@ public class VelocityManager {
         this.toolBoxLocation = toolboxLocation;
     }
 
-    public ToolboxManager getToolboxManager() {
+    public ToolManager getToolboxManager() {
         return toolboxManager;
     }
 
@@ -373,15 +368,14 @@ public class VelocityManager {
     /**
      * Initializes the ServletToolboxManager for this servlet's
      * toolbox (if any).
-     *
-     * @param context the servlet context
      */
-    protected void initToolbox(ServletContext context) {
-        /* if we have a toolbox, get a manager for it */
+    protected void initToolbox(ServletContext servletContext) {
         if (StringUtils.isNotBlank(toolBoxLocation)) {
-            toolboxManager = ServletToolboxManager.getInstance(context, toolBoxLocation);
+            LOG.debug("Configuring Velocity ToolManager with {}", toolBoxLocation);
+            toolboxManager = new ToolManager();
+            toolboxManager.configure(toolBoxLocation);
         } else {
-            Velocity.info("VelocityViewServlet: No toolbox entry in configuration.");
+            LOG.debug("Skipping ToolManager initialisation, [{}] was not defined", StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION);
         }
     }
 
@@ -411,7 +405,6 @@ public class VelocityManager {
      * </ul>
      *
      * @param context the current ServletContext. may <b>not</b> be null
-     *
      * @return the new velocity engine
      */
     protected VelocityEngine newVelocityEngine(ServletContext context) {
@@ -428,7 +421,7 @@ public class VelocityManager {
         //  Set the velocity attribute for the servlet context
         //  if this is not set the webapp loader WILL NOT WORK
         velocityEngine.setApplicationAttribute(ServletContext.class.getName(),
-                context);
+            context);
 
         try {
             velocityEngine.init(p);
@@ -447,21 +440,18 @@ public class VelocityManager {
      * <li>we need to define the various Struts custom user directives such as #param, #tag, and #bodytag</li>
      * </ul>
      *
-     * @param context the servlet context
+     * @param context    the servlet context
      * @param properties velocity properties
      */
     private void applyDefaultConfiguration(ServletContext context, Properties properties) {
         // ensure that caching isn't overly aggressive
 
-        /**
-         * Load a default resource loader definition if there isn't one present.
-         * Ben Hall (22/08/2003)
-         */
+        LOG.debug("Load a default resource loader definition if there isn't one present.");
         if (properties.getProperty(Velocity.RESOURCE_LOADER) == null) {
             properties.setProperty(Velocity.RESOURCE_LOADER, "strutsfile, strutsclass");
         }
 
-        /**
+        /*
          * If there's a "real" path add it for the strutsfile resource loader.
          * If there's no real path and they haven't configured a loader then we change
          * resource loader property to just use the strutsclass loader
@@ -487,11 +477,10 @@ public class VelocityManager {
             properties.setProperty(Velocity.RESOURCE_LOADER, prop);
         }
 
-        /**
+        /*
          * Refactored the Velocity templates for the Struts taglib into the classpath from the web path.  This will
          * enable Struts projects to have access to the templates by simply including the Struts jar file.
          * Unfortunately, there does not appear to be a macro for the class loader keywords
-         * Matt Ho - Mon Mar 17 00:21:46 PST 2003
          */
         properties.setProperty("strutsclass.resource.loader.description", "Velocity Classpath Resource Loader");
         properties.setProperty("strutsclass.resource.loader.class", "org.apache.struts2.views.velocity.StrutsResourceLoader");
@@ -502,8 +491,8 @@ public class VelocityManager {
         StringBuilder sb = new StringBuilder();
 
         for (TagLibraryDirectiveProvider tagLibrary : tagLibraries) {
-            List<Class> directives = tagLibrary.getDirectiveClasses();
-            for (Class directive : directives) {
+            List<Class<?>> directives = tagLibrary.getDirectiveClasses();
+            for (Class<?> directive : directives) {
                 addDirective(sb, directive);
             }
         }
@@ -520,11 +509,11 @@ public class VelocityManager {
         properties.setProperty("userdirective", userdirective);
     }
 
-    private void addDirective(StringBuilder sb, Class clazz) {
+    private void addDirective(StringBuilder sb, Class<?> clazz) {
         sb.append(clazz.getName()).append(",");
     }
 
-    private static final String replace(String string, String oldString, String newString) {
+    private static String replace(String string, String oldString, String newString) {
         if (string == null) {
             return null;
         }

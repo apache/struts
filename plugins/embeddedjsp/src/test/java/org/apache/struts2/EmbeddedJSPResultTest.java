@@ -25,8 +25,8 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.OgnlTextParser;
+import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
@@ -39,7 +39,6 @@ import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 import org.apache.tomcat.InstanceManager;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -49,7 +48,11 @@ import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
@@ -205,7 +208,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         CyclicBarrier startBarrier = new CyclicBarrier(numThreads + 1);
         CyclicBarrier endBarrier = new CyclicBarrier(numThreads + 1);
 
-        List<ServletGetRunnable> runnables = new ArrayList<ServletGetRunnable>(numThreads);
+        List<ServletGetRunnable> runnables = new ArrayList<>(numThreads);
 
         //create the threads
         for (int i = 0; i < numThreads; i++) {
@@ -261,13 +264,13 @@ public class EmbeddedJSPResultTest extends TestCase {
         int lastHtmlIndex = responseString.indexOf("</html>");
         assertTrue("Did not find title index (" + titleIndex + ") ?", titleIndex > 0);
         assertTrue("Test value 1 not present or index (" + testValue1Index + ") not > title index (" + titleIndex + ") ?",
-                testValue1Index > titleIndex);
+            testValue1Index > titleIndex);
         assertTrue("Test value 5 not present or index (" + testValue5Index + ") not > test value 1 index (" + testValue1Index + ") ?",
-                testValue5Index > testValue1Index);
+            testValue5Index > testValue1Index);
         assertTrue("Last group index not present or index (" + lastGroupIndex + ") not > test value 5 index (" + testValue5Index + ") ?",
-                lastGroupIndex > testValue5Index);
+            lastGroupIndex > testValue5Index);
         assertTrue("Last html index not present or index (" + lastHtmlIndex + ") not > last group index (" + lastGroupIndex + ") ?",
-                lastHtmlIndex > lastGroupIndex);
+            lastHtmlIndex > lastGroupIndex);
         // complex0.jsp length 3439 in Windows and estimated 3221 in Linux/Unix (with 218 lines, Windows has around 218 additional
         //   characters (crlf vs. lf).  Test length larger than the min(Windows,Linux)), rounded down to the nearest 100.
         assertTrue("Response length (" + responseLength + ") not at least length: 3200 ?", responseLength > 3200);
@@ -279,10 +282,10 @@ public class EmbeddedJSPResultTest extends TestCase {
         assertNotNull("instanceManager (servlet) is null ?", instanceManagerServlet);
         assertNotNull("instanceManager (classloader) is null ?", instanceManagerClassLoader);
         assertEquals("instanceManager (servlet) is not equal to instanceManager (classloader) ?", instanceManagerServlet, instanceManagerClassLoader);
-        final Double instanceDouble = new Double(0);
-        final Long instanceLong = new Long(0);
+        final Double instanceDouble = (double) 0;
+        final Long instanceLong = 0L;
         final Object instanceObject = new Object();
-        final String instanceString = new String("test string");
+        final String instanceString = "test string";
         final MockHttpServletRequest intanceMockHttpServletRequest = new MockHttpServletRequest();
         intanceMockHttpServletRequest.setContextPath("context path");
         InstanceHelper.postConstruct(instanceManagerServlet, instanceDouble);
@@ -292,7 +295,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         InstanceHelper.postConstruct(instanceManagerServlet, intanceMockHttpServletRequest);
         assertEquals("test string value changed after postConstruct ?", instanceString, "test string");
         assertEquals("mock servlet request context path value changed after postConstruct ?",
-                intanceMockHttpServletRequest.getContextPath(), "context path");
+            intanceMockHttpServletRequest.getContextPath(), "context path");
         InstanceHelper.preDestroy(instanceManagerServlet, instanceDouble);
         InstanceHelper.preDestroy(instanceManagerServlet, instanceLong);
         InstanceHelper.preDestroy(instanceManagerServlet, instanceObject);
@@ -300,7 +303,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         InstanceHelper.preDestroy(instanceManagerServlet, intanceMockHttpServletRequest);
         assertEquals("test string value changed after preDestroy ?", instanceString, "test string");
         assertEquals("mock servlet request context path value changed after preDestroy ?",
-                intanceMockHttpServletRequest.getContextPath(), "context path");
+            intanceMockHttpServletRequest.getContextPath(), "context path");
     }
 
     @Override
@@ -321,24 +324,19 @@ public class EmbeddedJSPResultTest extends TestCase {
 
         EasyMock.expect(request.getSession()).andReturn(session).anyTimes();
         EasyMock.expect(request.getParameterMap()).andReturn(params).anyTimes();
-        EasyMock.expect(request.getParameter("username")).andAnswer(new IAnswer<String>() {
-            public String answer() throws Throwable {
-                return ActionContext.getContext().getParameters().get("username").getValue();
-            }
-        });
+        EasyMock.expect(request.getParameter("username")).andAnswer(() -> ActionContext.getContext().getParameters().get("username").getValue());
         EasyMock.expect(request.getAttribute("something")).andReturn("somethingelse").anyTimes();
 
         EasyMock.replay(request);
 
-        ActionContext actionContext = new ActionContext(new HashMap<String, Object>());
-        ActionContext.setContext(actionContext);
+        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
         actionContext.setParameters(HttpParameters.create(params).build());
-        ServletActionContext.setRequest(request);
-        ServletActionContext.setResponse(response);
-        ServletActionContext.setServletContext(context);
+        actionContext.setServletRequest(request);
+        actionContext.setServletResponse(response);
+        actionContext.setServletContext(context);
 
         //mock value stack
-        Map stackContext = new HashMap();
+        Map<String, Object> stackContext = new HashMap<>();
         ValueStack valueStack = EasyMock.createNiceMock(ValueStack.class);
         EasyMock.expect(valueStack.getContext()).andReturn(stackContext).anyTimes();
         EasyMock.replay(valueStack);
@@ -354,7 +352,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         EasyMock.expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
         TextParser parser = new OgnlTextParser();
         EasyMock.expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();
-        EasyMock.expect(container.getInstanceNames(FileManager.class)).andReturn(new HashSet<String>()).anyTimes();
+        EasyMock.expect(container.getInstanceNames(FileManager.class)).andReturn(new HashSet<>()).anyTimes();
         EasyMock.expect(container.getInstance(FileManager.class)).andReturn(fileManager).anyTimes();
 
         UrlHelper urlHelper = new DefaultUrlHelper();
@@ -408,7 +406,7 @@ class ServletGetRunnable implements Runnable {
     }
 
     public void run() {
-        ActionContext.setContext(actionContext);
+        actionContext = ActionContext.bound(actionContext);
         //wait to start all threads at once..or try at least
         try {
             startBarrier.await();
@@ -432,7 +430,7 @@ class ServletGetRunnable implements Runnable {
 }
 
 class CountingClassLoaderInterface extends ClassLoaderInterfaceDelegate {
-    public Map<String, Integer> counters = new HashMap<String, Integer>();
+    public Map<String, Integer> counters = new HashMap<>();
 
     public CountingClassLoaderInterface(ClassLoader classLoader) {
         super(classLoader);

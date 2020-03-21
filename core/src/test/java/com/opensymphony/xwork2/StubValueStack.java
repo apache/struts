@@ -35,6 +35,11 @@ public class StubValueStack implements ValueStack {
         return ctx;
     }
 
+    @Override
+    public ActionContext getActionContext() {
+        return ActionContext.ofAndBound(ctx);
+    }
+
     public void setDefaultType(Class defaultType) {
     }
 

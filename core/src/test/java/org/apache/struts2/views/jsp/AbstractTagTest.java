@@ -49,8 +49,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public abstract class AbstractTagTest extends StrutsInternalTestCase {
     protected Action action;
-    protected Map context;
-    protected Map session;
+    protected Map<String, Object> context;
+    protected Map<String, Object> session;
     protected ValueStack stack;
 
     /**
@@ -75,13 +75,10 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        /**
-         * create our standard mock objects
-         */
         createMocks();
     }
 
-    protected void createMocks() throws Exception {
+    protected void createMocks() {
         action = this.getAction();
         container.inject(action);
 
@@ -109,10 +106,10 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         pageContext.setServletContext(servletContext);
 
         mockContainer = new Mock(Container.class);
-        MockDispatcher du = new MockDispatcher(pageContext.getServletContext(), new HashMap<String, String>(), configurationManager);
+        MockDispatcher du = new MockDispatcher(pageContext.getServletContext(), new HashMap<>(), configurationManager);
         du.init();
         Dispatcher.setInstance(du);
-        session = new SessionMap(request);
+        session = new SessionMap<>(request);
         Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
                 HttpParameters.create(request.getParameterMap()).build(),
                 session,
@@ -124,11 +121,10 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         extraContext.remove(ActionContext.LOCALE);
         stack.getContext().putAll(extraContext);
 
-        context.put(ServletActionContext.HTTP_REQUEST, request);
-        context.put(ServletActionContext.HTTP_RESPONSE, response);
-        context.put(ServletActionContext.SERVLET_CONTEXT, servletContext);
-
-        ActionContext.setContext(new ActionContext(context));
+        ActionContext actionContext = ActionContext.ofAndBound(context);
+        actionContext.setServletRequest(request);
+        actionContext.setServletResponse(response);
+        actionContext.setServletContext(servletContext);
     }
 
     protected void tearDown() throws Exception {

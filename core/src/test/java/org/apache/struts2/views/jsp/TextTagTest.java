@@ -104,10 +104,10 @@ public class TextTagTest extends AbstractTagTest {
     public void testMessageFormatWorks() throws Exception {
         String key = "messageFormatKey";
         String pattern = "Params are {0} {1} {2}";
-        Object param1 = new Integer(12);
+        Object param1 = 12;
         Object param2 = new Date();
         Object param3 = "StringVal";
-        List params = new ArrayList();
+        List<Object> params = new ArrayList<>();
         params.add(param1);
         params.add(param2);
         params.add(param3);
@@ -255,7 +255,7 @@ public class TextTagTest extends AbstractTagTest {
     }
 
     public void testPutId() throws Exception {
-        assertEquals(null, stack.findString("myId")); // nothing in stack
+        assertNull(stack.findString("myId")); // nothing in stack
         tag.setVar("myId");
         tag.setName("bar.baz");
         tag.doStartTag();
@@ -286,7 +286,7 @@ public class TextTagTest extends AbstractTagTest {
 
     public void testEscapeJavaScript() throws Exception {
         final String key = "foo.escape.javascript";
-        final String value = "\\t\\b\\n\\f\\r\\\"\\\'\\/\\\\";
+        final String value = "\\t\\b\\n\\f\\r\\\"\\'\\/\\\\";
         tag.setName(key);
         tag.setEscapeJavaScript(true);
         tag.doStartTag();
@@ -304,16 +304,11 @@ public class TextTagTest extends AbstractTagTest {
         assertEquals(value, writer.toString());
     }
 
-    /**
-     * todo remove ActionContext set after LocalizedTextUtil is fixed to not use ThreadLocal
-     *
-     * @throws Exception
-     */
     protected void setUp() throws Exception {
         super.setUp();
         tag = new TextTag();
         tag.setPageContext(pageContext);
-        ActionContext.setContext(new ActionContext(stack.getContext()));
+        ActionContext.ofAndBound(stack.getContext());
     }
 
     protected void tearDown() throws Exception {

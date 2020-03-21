@@ -68,7 +68,6 @@
     <constant name="struts.excludedPackageNames"
               value="
                 ognl.,
-                java.io.,
                 java.net.,
                 java.nio.,
                 javax.,

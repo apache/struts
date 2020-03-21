@@ -101,10 +101,7 @@ public class TwoFilterIntegrationTest extends TestCase {
     }
 
     private MockHttpServletResponse run(String uri, final Filter... filters) throws ServletException, IOException {
-        return run(uri, null, filters);
-    }
-    private MockHttpServletResponse run(String uri, ActionContext existingContext, final Filter... filters) throws ServletException, IOException {
-        final LinkedList<Filter> filterList = new LinkedList<Filter>(Arrays.asList(filters));
+        final LinkedList<Filter> filterList = new LinkedList<>(Arrays.asList(filters));
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterConfig filterConfig = new MockFilterConfig();
@@ -115,31 +112,21 @@ public class TwoFilterIntegrationTest extends TestCase {
                 if (next != null) {
                     try {
                         next.doFilter(req, res, this);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (ServletException e) {
+                    } catch (IOException | ServletException e) {
                         throw new RuntimeException(e);
                     }
                 }
             }
         };
 
-        if (existingContext != null) {
-            request.setAttribute(PrepareOperations.CLEANUP_RECURSION_COUNTER, 1);
-        }
         request.setRequestURI(uri);
         for (Filter filter : filters) {
             filter.init(filterConfig);
         }
 
-        ActionContext.setContext(existingContext);
         filterList.removeFirst().doFilter(request, response, filterChain);
-        if (existingContext == null) {
-            assertNull(ActionContext.getContext());
-            assertNull(Dispatcher.getInstance());
-        } else {
-            assertEquals(Integer.valueOf(1), request.getAttribute(PrepareOperations.CLEANUP_RECURSION_COUNTER));
-        }
+        assertNull(ActionContext.getContext());
+        assertNull(Dispatcher.getInstance());
         return response;
     }
 

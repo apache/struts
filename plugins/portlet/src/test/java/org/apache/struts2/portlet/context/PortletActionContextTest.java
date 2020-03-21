@@ -67,7 +67,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
 
     PortletConfig portletConfig;
 
-    Map<String, Object> context = new HashMap<String, Object>();
+    Map<String, Object> context = new HashMap<>();
 
     public void setUp() throws Exception {
         super.setUp();
@@ -84,7 +84,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
         portletConfig = (PortletConfig)mockPortletConfig.proxy();
 
 
-        ActionContext.setContext(new ActionContext(context));
+        ActionContext.ofAndBound(context);
     }
 
     public void testGetPhase() {
@@ -200,7 +200,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
     }
 
     public void tearDown() throws Exception {
-        ActionContext.setContext(null);
+        ActionContext.clear();
         super.tearDown();
     }
 

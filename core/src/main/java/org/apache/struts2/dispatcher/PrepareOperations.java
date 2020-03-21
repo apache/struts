@@ -68,7 +68,7 @@ public class PrepareOperations {
      */
     public ActionContext createActionContext(HttpServletRequest request, HttpServletResponse response) {
         ActionContext ctx;
-        Integer counter = 1;
+        int counter = 1;
         Integer oldCounter = (Integer) request.getAttribute(CLEANUP_RECURSION_COUNTER);
         if (oldCounter != null) {
             counter = oldCounter + 1;
@@ -77,17 +77,16 @@ public class PrepareOperations {
         ActionContext oldContext = ActionContext.getContext();
         if (oldContext != null) {
             // detected existing context, so we are probably in a forward
-            ctx = new ActionContext(new HashMap<>(oldContext.getContextMap()));
+            ctx = ActionContext.ofAndBound(new HashMap<>(oldContext.getContextMap()));
         } else {
             ctx = ServletActionContext.getActionContext(request);   //checks if we are probably in an async
             if (ctx == null) {
                 ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
                 stack.getContext().putAll(dispatcher.createContextMap(request, response, null));
-                ctx = new ActionContext(stack.getContext());
+                ctx = ActionContext.ofAndBound(stack.getContext());
             }
         }
         request.setAttribute(CLEANUP_RECURSION_COUNTER, counter);
-        ActionContext.setContext(ctx);
         return ctx;
     }
 
@@ -110,7 +109,7 @@ public class PrepareOperations {
         try {
             dispatcher.cleanUpRequest(request);
         } finally {
-            ActionContext.setContext(null);
+            ActionContext.clear();
             Dispatcher.setInstance(null);
             devModeOverride.remove();
         }
@@ -208,7 +207,7 @@ public class PrepareOperations {
             try {
                 dispatcher.cleanup();
             } finally {
-                ActionContext.setContext(null);
+                ActionContext.clear();
             }
         }
     }

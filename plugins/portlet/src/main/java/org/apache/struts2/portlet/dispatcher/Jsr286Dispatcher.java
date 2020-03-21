@@ -53,7 +53,7 @@ public class Jsr286Dispatcher extends Jsr168Dispatcher {
                     portletNamespace, PortletPhase.EVENT_PHASE);
             if (LOG.isDebugEnabled()) LOG.debug("Leaving processEvent");
         } finally {
-            ActionContext.setContext(null);
+            ActionContext.clear();
         }
     }
 
@@ -70,7 +70,7 @@ public class Jsr286Dispatcher extends Jsr168Dispatcher {
                     getSessionMap(request), getApplicationMap(),
                     portletNamespace, PortletPhase.SERVE_RESOURCE_PHASE);
         } finally {
-            ActionContext.setContext(null);
+            ActionContext.clear();
         }
     }
 

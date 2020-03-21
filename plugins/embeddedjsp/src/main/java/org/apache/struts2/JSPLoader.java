@@ -182,11 +182,11 @@ public class JSPLoader {
         List<URL> urls = urlSet.getUrls();
 
         if (urls != null && urls.size() > 0) {
-            final FileManagerFactory fileManagerFactoryGetInstance = ServletActionContext.getContext().getInstance(FileManagerFactory.class);
-            final FileManagerFactory contextFileManagerFactory = (fileManagerFactoryGetInstance != null ? fileManagerFactoryGetInstance : (FileManagerFactory) ServletActionContext.getContext().get(StrutsConstants.STRUTS_FILE_MANAGER_FACTORY)); 
+            final FileManagerFactory fileManagerFactoryGetInstance = ServletActionContext.getActionContext().getInstance(FileManagerFactory.class);
+            final FileManagerFactory contextFileManagerFactory = (fileManagerFactoryGetInstance != null ? fileManagerFactoryGetInstance : (FileManagerFactory) ServletActionContext.getActionContext().get(StrutsConstants.STRUTS_FILE_MANAGER_FACTORY));
             final FileManagerFactory fileManagerFactory = (contextFileManagerFactory != null ? contextFileManagerFactory : new DefaultFileManagerFactory());
             final FileManager fileManagerGetInstance = fileManagerFactory.getFileManager();
-            final FileManager contextFileManager = (fileManagerGetInstance != null ? fileManagerGetInstance : (FileManager) ServletActionContext.getContext().get(StrutsConstants.STRUTS_FILE_MANAGER));
+            final FileManager contextFileManager = (fileManagerGetInstance != null ? fileManagerGetInstance : (FileManager) ServletActionContext.getActionContext().get(StrutsConstants.STRUTS_FILE_MANAGER));
             final FileManager fileManager = (contextFileManager != null ? contextFileManager : new DefaultFileManager());
             for (URL url : urls) {
                 URL normalizedUrl = fileManager.normalizeToFileProtocol(url);

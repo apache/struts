@@ -68,10 +68,10 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
     	// get the various items required from the stack
         ValueStack stack = templateContext.getStack();
-        Map context = stack.getContext();
-        ServletContext servletContext = (ServletContext) context.get(ServletActionContext.SERVLET_CONTEXT);
-        HttpServletRequest req = (HttpServletRequest) context.get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse res = (HttpServletResponse) context.get(ServletActionContext.HTTP_RESPONSE);
+        ActionContext context = stack.getActionContext();
+        ServletContext servletContext = context.getServletContext();
+        HttpServletRequest req = context.getServletRequest();
+        HttpServletResponse res = context.getServletResponse();
 
         // prepare freemarker
         Configuration config = freemarkerManager.getConfiguration(servletContext);

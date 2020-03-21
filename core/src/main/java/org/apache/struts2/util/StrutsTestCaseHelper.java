@@ -48,14 +48,14 @@ public class StrutsTestCaseHelper {
         Container container = du.getContainer();
         ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
         stack.getContext().put(ActionContext.CONTAINER, container);
-        ActionContext.setContext(new ActionContext(stack.getContext()));
+        ActionContext.ofAndBound(stack.getContext());
         
         return du;
     }
 
     public static void tearDown() throws Exception {
         Dispatcher.setInstance(null);
-        ActionContext.setContext(null);
+        ActionContext.clear();
     }
 
     private static class DispatcherWrapper extends Dispatcher {

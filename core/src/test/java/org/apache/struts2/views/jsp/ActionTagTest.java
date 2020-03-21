@@ -107,7 +107,7 @@ public class ActionTagTest extends AbstractTagTest {
         this.testSimple();
     }
 
-    public void testSimpleWithctionMethodInOriginalURI() {
+    public void testSimpleWithActionMethodInOriginalURI() {
         request.setupGetServletPath("/foo!foo.action");
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", "testAction");
@@ -310,7 +310,6 @@ public class ActionTagTest extends AbstractTagTest {
     }
 
     protected void tearDown() throws Exception {
-
         super.tearDown();
     }
 }

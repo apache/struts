@@ -66,7 +66,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
 
     public void init() throws ServletException {
         try {
-            Dispatcher dispatcher = (Dispatcher) getServletContext().getAttribute(StrutsStatics.SERVLET_DISPATCHER);
+            Dispatcher dispatcher = Dispatcher.getInstance(getServletContext());
             if (dispatcher == null) {
                 throw new IllegalStateException("Unable to find the Dispatcher in the Servlet Context. Is '" + StrutsListener.class.getName() + "' missing in web.xml?");
             }

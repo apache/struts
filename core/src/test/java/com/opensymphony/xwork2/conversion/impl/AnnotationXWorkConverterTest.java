@@ -478,6 +478,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        ActionContext.setContext(null);
+        super.tearDown();
+        ActionContext.clear();
     }
 }

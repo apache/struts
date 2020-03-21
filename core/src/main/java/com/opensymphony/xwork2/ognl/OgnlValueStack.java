@@ -117,6 +117,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return context;
     }
 
+    @Override
+    public ActionContext getActionContext() {
+        return ActionContext.of(context);
+    }
+
     /**
      * @see com.opensymphony.xwork2.util.ValueStack#setDefaultType(java.lang.Class)
      */

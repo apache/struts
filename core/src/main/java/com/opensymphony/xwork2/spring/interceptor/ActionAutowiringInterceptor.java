@@ -64,9 +64,8 @@ import org.springframework.web.context.WebApplicationContext;
  * @author Eric Hauser
  */
 public class ActionAutowiringInterceptor extends AbstractInterceptor implements ApplicationContextAware {
-    private static final Logger LOG = LogManager.getLogger(ActionAutowiringInterceptor.class);
 
-    public static final String APPLICATION_CONTEXT = "com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor.applicationContext";
+    private static final Logger LOG = LogManager.getLogger(ActionAutowiringInterceptor.class);
 
     private boolean initialized = false;
     private ApplicationContext context;
@@ -121,8 +120,6 @@ public class ActionAutowiringInterceptor extends AbstractInterceptor implements 
         if (factory != null) {
             Object bean = invocation.getAction();
             factory.autoWireBean(bean);
-    
-            ActionContext.getContext().put(APPLICATION_CONTEXT, context);
         }
         return invocation.invoke();
     }

@@ -137,7 +137,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 	}
 
     private String createDefaultUrl(UrlProvider urlComponent) {
-        ActionInvocation ai = (ActionInvocation) urlComponent.getStack().getContext().get(ActionContext.ACTION_INVOCATION);
+        ActionInvocation ai = urlComponent.getStack().getActionContext().getActionInvocation();
         String action = ai.getProxy().getActionName();
         return portletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getParameters(),
                 urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());

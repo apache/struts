@@ -205,7 +205,7 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        ActionContext.setContext(null);
+        ActionContext.clear();
     }
 
     private void validate(String context) throws ValidationException {

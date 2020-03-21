@@ -307,7 +307,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
                     portletNamespace, PortletPhase.ACTION_PHASE);
             if (LOG.isDebugEnabled()) LOG.debug("Leaving processAction");
         } finally {
-            ActionContext.setContext(null);
+            ActionContext.clear();
         }
     }
 
@@ -348,7 +348,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
      *  Reset the action context.
      */
     void resetActionContext() {
-        ActionContext.setContext(null);
+        ActionContext.clear();
     }
 
     /**

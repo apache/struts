@@ -145,7 +145,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
     public String execute() throws Exception {
         ActionContext nestedContext = ActionContext.getContext();
-        ActionContext.setContext(invocation.getInvocationContext());
+        ActionContext.bound(invocation.getInvocationContext());
 
         String retCode = null;
 
@@ -153,7 +153,7 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
             retCode = invocation.invoke();
         } finally {
             if (cleanupContext) {
-                ActionContext.setContext(nestedContext);
+                ActionContext.bound(nestedContext);
             }
         }
 

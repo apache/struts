@@ -178,10 +178,10 @@ public class ActionComponent extends ContextBean {
     protected Map createExtraContext() {
         HttpParameters newParams = createParametersForContext();
 
-        ActionContext ctx = new ActionContext(stack.getContext());
-        PageContext pageContext = (PageContext) ctx.get(ServletActionContext.PAGE_CONTEXT);
-        Map session = ctx.getSession();
-        Map application = ctx.getApplication();
+        ActionContext ctx = stack.getActionContext();
+        PageContext pageContext = ctx.getPageContext();
+        Map<String, Object> session = ctx.getSession();
+        Map<String, Object> application = ctx.getApplication();
 
         Dispatcher du = Dispatcher.getInstance();
         Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
@@ -210,7 +210,7 @@ public class ActionComponent extends ContextBean {
         HttpParameters parentParams = null;
 
         if (!ignoreContextParams) {
-            parentParams = new ActionContext(getStack().getContext()).getParameters();
+            parentParams = getStack().getActionContext().getParameters();
         }
 
         HttpParameters.Builder builder = HttpParameters.create();

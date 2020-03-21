@@ -32,7 +32,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.struts2.ServletActionContext;
 
 
 /**
@@ -72,9 +71,9 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
         ActionContext actionContext = ActionContext.getContext();
         InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
 
-        ActionContext actionContext2 = new ActionContext(new HashMap<String, Object>());
+        ActionContext actionContext2 = ActionContext.ofAndBound(new HashMap<>());
         actionContext2.setSession(session);
-        ActionContext.setContext(actionContext2);
+
         assertEquals(actionContext2, ActionContext.getContext());
 
         InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
@@ -88,12 +87,12 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(session);//WW-4873 invocation is not serializable but we should not fail at this line
         oos.close();
-        byte b[] = baos.toByteArray();
+        byte[] b = baos.toByteArray();
         baos.close();
 
         ByteArrayInputStream bais = new ByteArrayInputStream(b);
         ObjectInputStream ois = new ObjectInputStream(bais);
-        session = (Map) ois.readObject();
+        session = (Map<String, Object>) ois.readObject();
         ActionContext.getContext().setSession(session);
         ois.close();
         bais.close();
@@ -108,14 +107,14 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
         // Create mock PageContext to put with the saved context (simulating a PageContext previously
         // used and closed after generating JSP output).
         MockPageContext mockSavedPageContext = new MockPageContext();
-        actionContext.put(ServletActionContext.PAGE_CONTEXT, mockSavedPageContext);
-        assertEquals(mockSavedPageContext, ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT));
+        actionContext.setPageContext(mockSavedPageContext);
+        assertEquals(mockSavedPageContext, ActionContext.getContext().getPageContext());
 
         InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
 
-        ActionContext actionContext2 = new ActionContext(new HashMap<String, Object>());
+        ActionContext actionContext2 = ActionContext.ofAndBound(new HashMap<>());
         actionContext2.setSession(session);
-        ActionContext.setContext(actionContext2);
+
         assertEquals(actionContext2, ActionContext.getContext());
 
         // Create mock PageContext to put with the current context (simulating a PageContext 
@@ -123,20 +122,19 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
         // will usually be null, but if non-null it should be preserved/restored upon load of the
         // saved context.
         MockPageContext mockPreviousPageContext = new MockPageContext();
-        actionContext2.put(ServletActionContext.PAGE_CONTEXT, mockPreviousPageContext);
-        assertEquals(mockPreviousPageContext, ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT));
+        actionContext2.setPageContext(mockPreviousPageContext);
+        assertEquals(mockPreviousPageContext, ActionContext.getContext().getPageContext());
 
         InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
         assertEquals(actionContext, ActionContext.getContext());
-        assertEquals(mockPreviousPageContext, ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT));
+        assertEquals(mockPreviousPageContext, ActionContext.getContext().getPageContext());
     }
 
     protected void setUp() throws Exception {
         super.setUp();
         stack = ActionContext.getContext().getValueStack();
 
-        ActionContext actionContext = new ActionContext(stack.getContext());
-        ActionContext.setContext(actionContext);
+        ActionContext actionContext = ActionContext.ofAndBound(stack.getContext());
 
         session = new HashMap<>();
         actionContext.setSession(session);

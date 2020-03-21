@@ -159,7 +159,7 @@ public class ActionSupportTest extends XWorkTestCase {
         ActionContext.getContext().setLocale(Locale.ITALY);
         assertEquals(Locale.ITALY, as.getLocale());
 
-        ActionContext.setContext(new ActionContext(new HashMap<String, Object>()));
+        ActionContext.ofAndBound(new HashMap<>());
         assertEquals(defLocale, as.getLocale()); // ActionContext will create a new context, when it was set to null before
     }
 
@@ -167,9 +167,9 @@ public class ActionSupportTest extends XWorkTestCase {
         assertEquals("santa", mas.execute());
         assertNotNull(mas.getTexts());
 
-        assertEquals(false, mas.hasActionMessages());
+        assertFalse(mas.hasActionMessages());
         mas.validate();
-        assertEquals(true, mas.hasActionMessages());
+        assertTrue(mas.hasActionMessages());
     }
 
     public void testSimpleGetTexts() throws Exception {

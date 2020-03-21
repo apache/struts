@@ -44,13 +44,15 @@ public class PortletAwareInterceptorTest extends TestCase {
 
     public void testPortletRequestIsSet() throws Exception {
         PortletRequest request = EasyMock.createMock(PortletRequest.class);
-        Map<String, Object> ctx = new HashMap<String, Object>();
+        Map<String, Object> ctx = new HashMap<>();
         ctx.put(PortletConstants.REQUEST, request);
+        ActionContext actionContext = ActionContext.ofAndBound(ctx);
+
         PortletRequestAware action = EasyMock.createMock(PortletRequestAware.class);
         action.setPortletRequest(request);
 
         ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
-        EasyMock.expect(invocation.getInvocationContext()).andReturn(new ActionContext(ctx));
+        EasyMock.expect(invocation.getInvocationContext()).andReturn(actionContext);
         EasyMock.expect(invocation.getAction()).andReturn(action);
 
         EasyMock.replay(action);
@@ -64,12 +66,13 @@ public class PortletAwareInterceptorTest extends TestCase {
     public void testActionPortletRequestAware() throws Exception {
         PortletRequest request = EasyMock.createMock(PortletRequest.class);
         Map<String, Object> ctx = new HashMap<>();
+        ActionContext actionContext = ActionContext.ofAndBound(ctx);
         ctx.put(PortletConstants.REQUEST, request);
         org.apache.struts2.portlet.action.PortletRequestAware action = EasyMock.createMock(org.apache.struts2.portlet.action.PortletRequestAware.class);
         action.withPortletRequest(request);
 
         ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
-        EasyMock.expect(invocation.getInvocationContext()).andReturn(new ActionContext(ctx));
+        EasyMock.expect(invocation.getInvocationContext()).andReturn(actionContext);
         EasyMock.expect(invocation.getAction()).andReturn(action);
 
         EasyMock.replay(action);
@@ -84,11 +87,12 @@ public class PortletAwareInterceptorTest extends TestCase {
         PortletResponse response = EasyMock.createMock(PortletResponse.class);
         Map<String, Object> ctx = new HashMap<>();
         ctx.put(PortletConstants.RESPONSE, response);
+        ActionContext actionContext = ActionContext.ofAndBound(ctx);
         org.apache.struts2.portlet.action.PortletResponseAware action = EasyMock.createMock(org.apache.struts2.portlet.action.PortletResponseAware.class);
         action.withPortletResponse(response);
 
         ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
-        EasyMock.expect(invocation.getInvocationContext()).andReturn(new ActionContext(ctx));
+        EasyMock.expect(invocation.getInvocationContext()).andReturn(actionContext);
         EasyMock.expect(invocation.getAction()).andReturn(action);
 
         EasyMock.replay(action);

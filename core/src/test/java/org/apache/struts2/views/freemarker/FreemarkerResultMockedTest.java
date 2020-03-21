@@ -22,13 +22,10 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import freemarker.template.Configuration;
-import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
@@ -39,8 +36,6 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
 
@@ -119,15 +114,15 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         dispatcher.serviceAction(request, response, mapping);
 
         String expectedJDK17 =
-                "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
-                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
-                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
-                        + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
+            "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
+                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
+                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
+                + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
         String expectedJDK18 =
-                "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
-                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
-                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
-                        + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
+            "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
+                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
+                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
+                + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
 
         String result = stringWriter.toString();
 
@@ -169,10 +164,10 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
         String expected = "<input type=\"radio\" name=\"client\" id=\"client_foo\" value=\"foo\"/><label for=\"client_foo\">foo</label>\n"
-                + "<input type=\"radio\" name=\"client\" id=\"client_bar\" value=\"bar\"/><label for=\"client_bar\">bar</label>\n"
-                + "\n"
-                + "<input type=\"radio\" name=\"car\" id=\"carford\" value=\"ford\"/><label for=\"carford\">Ford Motor Co</label>\n"
-                + "<input type=\"radio\" name=\"car\" id=\"cartoyota\" value=\"toyota\"/><label for=\"cartoyota\">Toyota</label>\n";
+            + "<input type=\"radio\" name=\"client\" id=\"client_bar\" value=\"bar\"/><label for=\"client_bar\">bar</label>\n"
+            + "\n"
+            + "<input type=\"radio\" name=\"car\" id=\"carford\" value=\"ford\"/><label for=\"carford\">Ford Motor Co</label>\n"
+            + "<input type=\"radio\" name=\"car\" id=\"cartoyota\" value=\"toyota\"/><label for=\"cartoyota\">Toyota</label>\n";
         assertEquals(normalize(expected), normalize(stringWriter.toString()));
     }
 
@@ -243,7 +238,7 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         assertTrue(result.contains("<option value=\"2\">2</option>"));
     }
 
-    private void init() throws MalformedURLException, URISyntaxException {
+    private void init() {
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         response = new StrutsMockHttpServletResponse();
@@ -251,14 +246,11 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         request = new MockHttpServletRequest();
         stack = ActionContext.getContext().getValueStack();
 
-        context = new ActionContext(stack.getContext());
-        context.put(StrutsStatics.HTTP_RESPONSE, response);
-        context.put(StrutsStatics.HTTP_REQUEST, request);
-        context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
+        context = ActionContext.ofAndBound(stack.getContext());
+        context.setServletResponse(response);
+        context.setServletRequest(request);
+        context.setServletContext(servletContext);
 
-        ServletActionContext.setServletContext(servletContext);
-        ServletActionContext.setRequest(request);
-        ServletActionContext.setResponse(response);
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
 
         invocation = new MockActionInvocation();

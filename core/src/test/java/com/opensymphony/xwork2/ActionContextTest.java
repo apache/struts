@@ -57,8 +57,7 @@ public class ActionContextTest extends XWorkTestCase {
         extraContext.put(ActionContext.SESSION, session);
         extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
         extraContext.put(ActionContext.ACTION_NAME, ACTION_NAME);
-        context = new ActionContext(extraContext);
-        ActionContext.setContext(context);
+        context = ActionContext.ofAndBound(extraContext);
     }
 
     public void testContextParams() {
@@ -88,7 +87,7 @@ public class ActionContextTest extends XWorkTestCase {
 
     public void testContextMap() {
         Map<String, Object> map = new HashMap<>();
-        ActionContext.setContext(new ActionContext(map));
+        ActionContext.ofAndBound(map);
 
         assertEquals(map, ActionContext.getContext().getContextMap());
     }
@@ -111,10 +110,9 @@ public class ActionContextTest extends XWorkTestCase {
     public void testStaticMethods() {
         assertEquals(context, ActionContext.getContext());
 
-        ActionContext context2 = new ActionContext(null);
-        ActionContext.setContext(context2);
+        ActionContext.clear();
 
-        assertEquals(context2, ActionContext.getContext());
+        assertNull(ActionContext.getContext());
     }
 
 }

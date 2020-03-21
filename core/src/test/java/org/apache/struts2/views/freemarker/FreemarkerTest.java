@@ -71,6 +71,6 @@ public class FreemarkerTest extends StrutsInternalTestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        ActionContext.setContext(null);
+        ActionContext.clear();
     }
 }

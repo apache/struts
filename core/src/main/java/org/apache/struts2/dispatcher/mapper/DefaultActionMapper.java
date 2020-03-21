@@ -564,7 +564,7 @@ public class DefaultActionMapper implements ActionMapper {
             // Look for the current extension, if available
             ActionContext context = ActionContext.getContext();
             if (context != null) {
-                ActionMapping orig = (ActionMapping) context.get(ServletActionContext.ACTION_MAPPING);
+                ActionMapping orig = context.getActionMapping();
                 if (orig != null) {
                     extension = orig.getExtension();
                 }

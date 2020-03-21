@@ -192,7 +192,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                 ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
                 if (stack == null) {
                     //allows it to be embedded on another page
-                    stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
+                    stack = ctx.getValueStack();
                     ctx.getSession().put(SESSION_KEY, stack);
                 }
                 String cmd = getParameter(EXPRESSION_PARAM);
@@ -218,7 +218,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                                 rootObjectExpression = "action";
                             }
                             String decorate = getParameter(DECORATE_PARAM);
-                            ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
+                            ValueStack stack = ctx.getValueStack();
                             Object rootObject = stack.findValue(rootObjectExpression);
 
                             try (StringWriter writer = new StringWriter()) {
@@ -258,7 +258,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             } finally {
                 if (devMode && consoleEnabled) {
                     final ActionContext ctx = ActionContext.getContext();
-                    ctx.getSession().put(SESSION_KEY, ctx.get(ActionContext.VALUE_STACK));
+                    ctx.getSession().put(SESSION_KEY, ctx.getValueStack());
                 }
             }
         } else {

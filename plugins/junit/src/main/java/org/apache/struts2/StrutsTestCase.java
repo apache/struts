@@ -39,8 +39,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,7 +122,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         initSession(actionContext);
         applyAdditionalParams(actionContext);
         // set the action context to the one used by the proxy
-        ActionContext.setContext(actionContext);
+        ActionContext.bound(actionContext);
     }
 
     protected void initSession(ActionContext actionContext) {

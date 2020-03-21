@@ -251,7 +251,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        ActionContext.setContext(null);
+        ActionContext.clear();
     }
 
     /**

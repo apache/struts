@@ -202,7 +202,7 @@ public class ActionChainResult implements Result {
      * @param invocation the DefaultActionInvocation calling the action call stack
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        ValueStack stack = ActionContext.getContext().getValueStack();
+        ValueStack stack = invocation.getInvocationContext().getValueStack();
         String finalNamespace = this.namespace != null
                 ? TextParseUtil.translateVariables(namespace, stack)
                 : invocation.getProxy().getNamespace();
@@ -216,14 +216,14 @@ public class ActionChainResult implements Result {
             throw new StrutsException("Infinite recursion detected: " + ActionChainResult.getChainHistory().toString());
         }
 
-        if (ActionChainResult.getChainHistory().isEmpty() && invocation != null && invocation.getProxy() != null) {
+        if (ActionChainResult.getChainHistory().isEmpty() && invocation.getProxy() != null) {
             addToHistory(finalNamespace, invocation.getProxy().getActionName(), invocation.getProxy().getMethod());
         }
         addToHistory(finalNamespace, finalActionName, finalMethodName);
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.VALUE_STACK, ActionContext.getContext().getValueStack());
-        extraContext.put(ActionContext.PARAMETERS, ActionContext.getContext().getParameters());
+        extraContext.put(ActionContext.VALUE_STACK, invocation.getInvocationContext().getValueStack());
+        extraContext.put(ActionContext.PARAMETERS, invocation.getInvocationContext().getParameters());
         extraContext.put(CHAIN_HISTORY, ActionChainResult.getChainHistory());
 
         LOG.debug("Chaining to action {}", finalActionName);

@@ -34,7 +34,7 @@ public class PrepareOperationsTest extends StrutsInternalTestCase {
 
         PrepareOperations prepare = new PrepareOperations(null);
 
-        ActionContext.setContext(null);
+        ActionContext.clear();
         ActionContext actionContext = prepare.createActionContext(req, null);
 
         assertEquals(stack.getContext(), actionContext.getContextMap());

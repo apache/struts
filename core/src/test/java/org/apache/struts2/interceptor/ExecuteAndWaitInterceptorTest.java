@@ -220,9 +220,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
     }
 
     protected void tearDown() throws Exception {
-        configurationManager.clearContainerProviders();
-        configurationManager.destroyConfiguration();
-        ActionContext.setContext(null);
+        super.tearDown();
     }
 
     private class WaitConfigurationProvider implements ConfigurationProvider {

@@ -21,10 +21,7 @@ package org.apache.struts2.interceptor;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts2.StrutsInternalTestCase;
-import org.jmock.Mock;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
@@ -35,12 +32,10 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 public class ClearSessionInterceptorTest extends StrutsInternalTestCase {
 
     public void testCreateSession() throws Exception {
-        Mock httpServletRequestMock = new Mock(HttpServletRequest.class);
-
         ClearSessionInterceptor interceptor = new ClearSessionInterceptor();
         MockActionInvocation invocation = new MockActionInvocation();
-        ActionContext context = new ActionContext(new HashMap());
-        Map session = new HashMap();
+        ActionContext context = ActionContext.ofAndBound(new HashMap<>());
+        Map<String, Object> session = new HashMap<>();
         session.put("Test1", "Test1");
         session.put("Test2", "Test2");
         session.put("Test3", "Test3");

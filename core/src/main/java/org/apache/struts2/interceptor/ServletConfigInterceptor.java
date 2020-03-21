@@ -125,22 +125,22 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
         final ActionContext context = invocation.getInvocationContext();
 
         if (action instanceof ServletRequestAware) {
-            HttpServletRequest request = (HttpServletRequest) context.get(HTTP_REQUEST);
+            HttpServletRequest request = context.getServletRequest();
             ((ServletRequestAware) action).setServletRequest(request);
         }
 
         if (action instanceof org.apache.struts2.action.ServletRequestAware) {
-            HttpServletRequest request = (HttpServletRequest) context.get(HTTP_REQUEST);
+            HttpServletRequest request = context.getServletRequest();
             ((org.apache.struts2.action.ServletRequestAware) action).withServletRequest(request);
         }
 
         if (action instanceof ServletResponseAware) {
-            HttpServletResponse response = (HttpServletResponse) context.get(HTTP_RESPONSE);
+            HttpServletResponse response = context.getServletResponse();
             ((ServletResponseAware) action).setServletResponse(response);
         }
 
         if (action instanceof org.apache.struts2.action.ServletResponseAware) {
-            HttpServletResponse response = (HttpServletResponse) context.get(HTTP_RESPONSE);
+            HttpServletResponse response = context.getServletResponse();
             ((org.apache.struts2.action.ServletResponseAware) action).withServletResponse(response);
         }
 
@@ -177,7 +177,7 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
         }
 
         if (action instanceof PrincipalAware) {
-            HttpServletRequest request = (HttpServletRequest) context.get(HTTP_REQUEST);
+            HttpServletRequest request = context.getServletRequest();
             if(request != null) {
                 // We are in servtlet environment, so principal information resides in HttpServletRequest
                 ((PrincipalAware) action).setPrincipalProxy(new ServletPrincipalProxy(request));
@@ -185,7 +185,7 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
         }
 
         if (action instanceof org.apache.struts2.action.PrincipalAware) {
-            HttpServletRequest request = (HttpServletRequest) context.get(HTTP_REQUEST);
+            HttpServletRequest request = context.getServletRequest();
             if(request != null) {
                 // We are in servlet environment, so principal information resides in HttpServletRequest
                 ((org.apache.struts2.action.PrincipalAware) action).withPrincipalProxy(new ServletPrincipalProxy(request));
@@ -193,12 +193,12 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
         }
 
         if (action instanceof ServletContextAware) {
-            ServletContext servletContext = (ServletContext) context.get(SERVLET_CONTEXT);
+            ServletContext servletContext = context.getServletContext();
             ((ServletContextAware) action).setServletContext(servletContext);
         }
 
         if (action instanceof org.apache.struts2.action.ServletContextAware) {
-            ServletContext servletContext = (ServletContext) context.get(SERVLET_CONTEXT);
+            ServletContext servletContext = context.getServletContext();
             ((org.apache.struts2.action.ServletContextAware) action).withServletContext(servletContext);
         }
 

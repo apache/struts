@@ -22,8 +22,14 @@ import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
@@ -99,7 +105,7 @@ public class ActionContext implements Serializable {
      * Constant for the container
      */
     public static final String CONTAINER = "com.opensymphony.xwork2.ActionContext.container";
-    
+
     private Map<String, Object> context;
 
     /**
@@ -107,10 +113,65 @@ public class ActionContext implements Serializable {
      *
      * @param context a context map.
      */
-    public ActionContext(Map<String, Object> context) {
+    private ActionContext(Map<String, Object> context) {
         this.context = context;
     }
 
+    /**
+     * Creates a new ActionContext based on passed in Map
+     * and assign this instance to the current thread
+     *
+     * @param context a map with context values
+     * @return new ActionContext
+     */
+    public static ActionContext of(Map<String, Object> context) {
+        return new ActionContext(context);
+    }
+
+    public static ActionContext bound(ActionContext actionContext) {
+        ActionContext.setContext(actionContext);
+        return ActionContext.getContext();
+    }
+
+    public static ActionContext ofAndBound(Map<String, Object> context) {
+        return bound(of(context));
+    }
+
+    /**
+     * Creates a new ActionContext based on passed in ActionContext
+     * and assign this instance to the current thread
+     *
+     * @param actionContext ActionContext to be used for current thread
+     * @return new ActionContext
+     */
+    public static ActionContext ofAndBound(ActionContext actionContext) {
+        return bound(actionContext);
+    }
+
+    /**
+     * Wipes out current ActionContext, use wisely!
+     */
+    public static void clear() {
+        actionContext.remove();
+    }
+
+    /**
+     * Sets the action context for the current thread.
+     *
+     * @param context the action context.
+     */
+    private static void setContext(ActionContext context) {
+        actionContext.set(context);
+    }
+
+    /**
+     * Returns the ActionContext specific to the current thread.
+     *
+     * @return the ActionContext for the current thread, is never <tt>null</tt>.
+     */
+    public static ActionContext getContext() {
+        return actionContext.get();
+    }
 
     /**
      * Sets the action invocation (the execution state).
@@ -149,24 +210,6 @@ public class ActionContext implements Serializable {
     }
 
     /**
-     * Sets the action context for the current thread.
-     *
-     * @param context the action context.
-     */
-    public static void setContext(ActionContext context) {
-        actionContext.set(context);
-    }
-
-    /**
-     * Returns the ActionContext specific to the current thread.
-     *
-     * @return the ActionContext for the current thread, is never <tt>null</tt>.
-     */
-    public static ActionContext getContext() {
-        return actionContext.get();
-    }
-
-    /**
      * Gets the context map.
      *
      * @return the context map.
@@ -188,7 +231,7 @@ public class ActionContext implements Serializable {
      * Gets the map of conversion errors which occurred when executing the action.
      *
      * @return the map of conversion errors which occurred when executing the action or an empty map if
-     *         there were no errors.
+     * there were no errors.
      */
     public Map<String, ConversionData> getConversionErrors() {
         Map<String, ConversionData> errors = (Map) get(CONVERSION_ERRORS);
@@ -259,7 +302,7 @@ public class ActionContext implements Serializable {
      * parameters otherwise.
      *
      * @return a Map of HttpServletRequest parameters or a multipart map when in a servlet environment, or a
-     *         generic Map of parameters otherwise.
+     * generic Map of parameters otherwise.
      */
     public HttpParameters getParameters() {
         return (HttpParameters) get(PARAMETERS);
@@ -268,7 +311,7 @@ public class ActionContext implements Serializable {
     /**
      * Sets a map of action session values.
      *
-     * @param session  the session values.
+     * @param session the session values.
      */
     public void setSession(Map<String, Object> session) {
         put(SESSION, session);
@@ -300,25 +343,25 @@ public class ActionContext implements Serializable {
     public ValueStack getValueStack() {
         return (ValueStack) get(VALUE_STACK);
     }
-    
+
     /**
      * Gets the container for this request
-     * 
+     *
      * @param cont The container
      */
     public void setContainer(Container cont) {
         put(CONTAINER, cont);
     }
-    
+
     /**
      * Sets the container for this request
-     * 
+     *
      * @return The container
      */
     public Container getContainer() {
         return (Container) get(CONTAINER);
     }
-    
+
     public <T> T getInstance(Class<T> type) {
         Container cont = getContainer();
         if (cont != null) {
@@ -346,5 +389,45 @@ public class ActionContext implements Serializable {
      */
     public void put(String key, Object value) {
         context.put(key, value);
+    }
+
+    public ServletContext getServletContext() {
+        return (ServletContext) get(StrutsStatics.SERVLET_CONTEXT);
+    }
+
+    public HttpServletRequest getServletRequest() {
+        return (HttpServletRequest) get(StrutsStatics.HTTP_REQUEST);
+    }
+
+    public HttpServletResponse getServletResponse() {
+        return (HttpServletResponse) get(StrutsStatics.HTTP_RESPONSE);
+    }
+
+    public void setServletContext(ServletContext servletContext) {
+        put(StrutsStatics.SERVLET_CONTEXT, servletContext);
+    }
+
+    public void setServletRequest(HttpServletRequest request) {
+        put(StrutsStatics.HTTP_REQUEST, request);
+    }
+
+    public void setServletResponse(HttpServletResponse response) {
+        put(StrutsStatics.HTTP_RESPONSE, response);
+    }
+
+    public PageContext getPageContext() {
+        return (PageContext) get(StrutsStatics.PAGE_CONTEXT);
+    }
+
+    public void setPageContext(PageContext pageContext) {
+        put(StrutsStatics.PAGE_CONTEXT, pageContext);
+    }
+
+    public ActionMapping getActionMapping() {
+        return (ActionMapping) get(StrutsStatics.ACTION_MAPPING);
+    }
+
+    public void setActionMapping(ActionMapping actionMapping) {
+        put(StrutsStatics.ACTION_MAPPING, actionMapping);
     }
 }

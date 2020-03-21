@@ -74,7 +74,7 @@ public class ServletUrlRenderer implements UrlRenderer {
         }
 
         String result;
-        ActionInvocation ai = (ActionInvocation) ActionContext.getContext().get(ActionContext.ACTION_INVOCATION);
+        ActionInvocation ai = ActionContext.getContext().getActionInvocation();
         if (urlComponent.getValue() == null && urlComponent.getAction() != null) {
             result = urlComponent.determineActionURL(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getHttpServletRequest(), urlComponent.getHttpServletResponse(), urlComponent.getParameters(), scheme, urlComponent.isIncludeContext(), urlComponent.isEncode(), urlComponent.isForceAddSchemeHostAndPort(), urlComponent.isEscapeAmp());
         } else if (urlComponent.getValue() == null && urlComponent.getAction() == null && ai != null) {

@@ -51,7 +51,7 @@ public class JuneauXmlHandlerTest extends XWorkTestCase {
             "</object>";
         handler = new JuneauXmlHandler();
         ai = new MockActionInvocation();
-        ActionContext context = new ActionContext(new HashMap<String, Object>());
+        ActionContext context = ActionContext.ofAndBound(new HashMap<>());
         context.setLocale(Locale.US);
         ((MockActionInvocation) ai).setInvocationContext(context);
     }

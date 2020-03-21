@@ -20,7 +20,6 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.struts2.ServletActionContext;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -63,12 +62,12 @@ public class InvocationSessionStore {
             // would already be closed at this point (causing failures if used for output).
             final ActionContext savedActionContext = savedInvocation.getInvocationContext();
             final ActionContext previousActionContext = ActionContext.getContext();
-            ActionContext.setContext(savedActionContext);
+            ActionContext.bound(savedActionContext);
             savedActionContext.setValueStack(savedInvocation.getStack());
             if (previousActionContext != null) {
-                savedActionContext.put(ServletActionContext.PAGE_CONTEXT, previousActionContext.get(ServletActionContext.PAGE_CONTEXT));
+                savedActionContext.setPageContext(previousActionContext.getPageContext());
             } else {
-                savedActionContext.put(ServletActionContext.PAGE_CONTEXT, null);
+                savedActionContext.setPageContext(null);
             }
         }
 

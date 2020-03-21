@@ -213,7 +213,7 @@ public class DefaultConfiguration implements Configuration {
             rebuildRuntimeConfiguration();
         } finally {
             if (oldContext == null) {
-                ActionContext.setContext(null);
+                ActionContext.clear();
             }
         }
         return packageProviders;
@@ -223,8 +223,7 @@ public class DefaultConfiguration implements Configuration {
         ActionContext context = ActionContext.getContext();
         if (context == null) {
             ValueStack vs = cont.getInstance(ValueStackFactory.class).createValueStack();
-            context = new ActionContext(vs.getContext());
-            ActionContext.setContext(context);
+            context = ActionContext.ofAndBound(vs.getContext());
         }
         return context;
     }

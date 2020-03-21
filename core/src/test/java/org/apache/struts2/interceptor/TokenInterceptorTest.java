@@ -104,6 +104,8 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
     }
 
     protected void setUp() throws Exception {
+        super.setUp();
+
         loadConfigurationProviders(new TestConfigurationProvider());
 
         session = new TreeMap<>();
@@ -120,8 +122,7 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
 
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().putAll(extraContext);
-        oldContext = new ActionContext(stack.getContext());
-        ActionContext.setContext(oldContext);
+        oldContext = ActionContext.ofAndBound(stack.getContext());
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {

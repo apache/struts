@@ -130,8 +130,8 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
 
-        HttpServletRequest request = (HttpServletRequest) ac.get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) ac.get(ServletActionContext.HTTP_RESPONSE);
+        HttpServletRequest request = ac.getServletRequest();
+        HttpServletResponse response = ac.getServletResponse();
         String tokenName = TokenHelper.getTokenName();
         String token = TokenHelper.getToken(tokenName);
 
@@ -169,7 +169,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
 
     /**
      * Handles processing of valid tokens.  Stores the current invocation for
-     * later use by {@link handleInvalidToken}.
+     * later use by {@see #handleValidToken(ActionInvocation)}.
      * See {@link org.apache.struts2.util.InvocationSessionStore#storeInvocation(String key, String token, ActionInvocation invocation)} for details.
      * 
      * @param invocation

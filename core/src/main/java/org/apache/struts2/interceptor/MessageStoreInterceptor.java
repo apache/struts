@@ -233,7 +233,7 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
             Object action = invocation.getAction();
             if (action instanceof ValidationAware) {
                 // retrieve error / message from session
-                Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
+                Map<String, Object> session = invocation.getInvocationContext().getSession();
 
                 if (session == null) {
                     LOG.debug("Session is not open, no errors / messages could be retrieve for action [{}]", action);

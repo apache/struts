@@ -41,10 +41,10 @@ import java.util.Map;
 
 public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
 
-    public void testSessionWasInvalidated() throws Exception {
+    public void testSessionWasInvalidated() {
         // given
-        ActionContext actionContext = new ActionContext(new HashMap());
-        actionContext.put(ActionContext.PARAMETERS, new LinkedHashMap());
+        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        actionContext.setParameters(HttpParameters.create().build());
 
         ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
 
@@ -82,10 +82,10 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         EasyMock.verify(mockedResponse);
     }
 
-    public void testResponseWasComitted() throws Exception {
+    public void testResponseWasComitted() {
         // given
-        ActionContext actionContext = new ActionContext(new HashMap());
-        actionContext.put(ActionContext.PARAMETERS, new LinkedHashMap());
+        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        actionContext.setParameters(HttpParameters.create().build());
 
         ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
 
@@ -114,14 +114,14 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         EasyMock.verify(mockedResponse);
     }
 
-    public void testAutomatic() throws Exception {
+    public void testAutomatic() {
         MessageStoreInterceptor interceptor = new MessageStoreInterceptor();
         interceptor.setOperationMode(MessageStoreInterceptor.AUTOMATIC_MODE);
 
         MessageStorePreResultListener listener = new MessageStorePreResultListener();
         listener.init(interceptor);
 
-        Map sessionMap = new LinkedHashMap();
+        Map<String, Object> sessionMap = new LinkedHashMap<>();
 
         ActionSupport action = new ActionSupport();
         action.addActionError("some action error 1");
@@ -131,9 +131,9 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         action.addFieldError("field1", "some field error 1");
         action.addFieldError("field2", "some field error 2");
 
-        ActionContext actionContext = new ActionContext(new HashMap());
+        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
         actionContext.setParameters(HttpParameters.create().build());
-        actionContext.put(ActionContext.SESSION, sessionMap);
+        actionContext.setSession(sessionMap);
 
         HttpSession mockedSession = EasyMock.createControl().createMock(HttpSession.class);
         HttpServletRequest mockedRequest = EasyMock.createControl().createMock(HttpServletRequest.class);
@@ -194,7 +194,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         EasyMock.verify(mockActionInvocation);
     }
 
-    public void testStoreMessage() throws Exception {
+    public void testStoreMessage() {
         MessageStoreInterceptor interceptor = new MessageStoreInterceptor();
         interceptor.setAllowRequestParameterSwitch(true);
         interceptor.setOperationMode(MessageStoreInterceptor.STORE_MODE);
@@ -202,7 +202,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         MessageStorePreResultListener listener = new MessageStorePreResultListener();
         listener.init(interceptor);
 
-        Map sessionMap = new LinkedHashMap();
+        Map<String, Object> sessionMap = new LinkedHashMap<>();
 
         ActionSupport action = new ActionSupport();
         action.addActionError("some action error 1");
@@ -212,7 +212,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         action.addFieldError("field1", "some field error 1");
         action.addFieldError("field2", "some field error 2");
 
-        ActionContext actionContext = new ActionContext(new HashMap());
+        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
         actionContext.setParameters(HttpParameters.create().build());
         actionContext.setSession(sessionMap);
 

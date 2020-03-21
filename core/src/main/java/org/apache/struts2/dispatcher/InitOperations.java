@@ -19,7 +19,6 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.*;
@@ -81,8 +80,8 @@ public class InitOperations {
      */
     protected Dispatcher createDispatcher(HostConfig filterConfig) {
         Map<String, String> params = new HashMap<>();
-        for ( Iterator e = filterConfig.getInitParameterNames(); e.hasNext(); ) {
-            String name = (String) e.next();
+        for ( Iterator<String> parameterNames = filterConfig.getInitParameterNames(); parameterNames.hasNext(); ) {
+            String name = parameterNames.next();
             String value = filterConfig.getInitParameter(name);
             params.put(name, value);
         }
@@ -90,7 +89,7 @@ public class InitOperations {
     }
 
     public void cleanup() {
-        ActionContext.setContext(null);
+        ActionContext.clear();
     }
 
     /**

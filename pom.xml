@@ -571,6 +571,11 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-junit-portlet-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-convention-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>

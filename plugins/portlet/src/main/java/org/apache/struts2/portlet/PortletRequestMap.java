@@ -20,6 +20,7 @@ package org.apache.struts2.portlet;
 
 import javax.portlet.PortletRequest;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -49,9 +50,14 @@ public class PortletRequestMap extends AbstractMap<String, Object> {
     public void clear() {
         entries = null;
         Enumeration keys = request.getAttributeNames();
-
+        ArrayList<String> keyStrings = new ArrayList<>();
+        // Depending on the underlying collection, a ConcurrentModificationException may occur if we attempt
+        // to remove attributes while iterating over the keys Enumeration.  Instead use an interim collection to
+        // gather all the keys and then remove them.
         while (keys.hasMoreElements()) {
-            String key = (String) keys.nextElement();
+            keyStrings.add((String) keys.nextElement());
+        }
+        for (String key : keyStrings){
             request.removeAttribute(key);
         }
     }

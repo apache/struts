@@ -45,6 +45,7 @@
         <module>jfreechart</module>
         <module>json</module>
         <module>junit</module>
+        <module>junit-portlet</module>
         <module>osgi</module>
         <module>oval</module>
         <module>pell-multipart</module>

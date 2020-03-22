@@ -42,6 +42,12 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-junit-portlet-plugin</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-velocity-plugin</artifactId>
         </dependency>
 

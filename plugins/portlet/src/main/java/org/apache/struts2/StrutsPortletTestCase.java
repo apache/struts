@@ -23,11 +23,11 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.portlet.PortletPhase;
-import org.springframework.mock.web.portlet.MockPortletContext;
-import org.springframework.mock.web.portlet.MockPortletRequest;
-import org.springframework.mock.web.portlet.MockPortletResponse;
-import org.springframework.mock.web.portlet.MockPortletSession;
-import org.springframework.mock.web.portlet.MockStateAwareResponse;
+import org.apache.struts2.mock.web.portlet.MockPortletContext;
+import org.apache.struts2.mock.web.portlet.MockPortletRequest;
+import org.apache.struts2.mock.web.portlet.MockPortletResponse;
+import org.apache.struts2.mock.web.portlet.MockPortletSession;
+import org.apache.struts2.mock.web.portlet.MockStateAwareResponse;
 
 import javax.portlet.PortletMode;
 import java.util.HashMap;

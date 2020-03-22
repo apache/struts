@@ -25,7 +25,7 @@ import java.util.Set;
 import javax.portlet.PortletRequest;
 
 import org.jmock.MockObjectTestCase;
-import org.springframework.mock.web.portlet.MockPortletRequest;
+import org.apache.struts2.mock.web.portlet.MockPortletRequest;
 
 
 /**

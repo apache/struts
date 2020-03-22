@@ -1465,7 +1465,15 @@ public class StrutsSpringPortletMockObjectsTest extends StrutsSpringTestCase {
         assertNull("ServletWrappingPortletContext resource stream for /ThisDoesNotExist not null ?", servletWrappingPortletContext.getResourceAsStream("/ThisDoesNotExist"));
         assertTrue("ServletWrappingPortletContext major version not >= 2 ?", servletWrappingPortletContext.getMajorVersion() >= 2);
         assertTrue("ServletWrappingPortletContext minor version not >= 0 ?", servletWrappingPortletContext.getMajorVersion() >= 0);
-        assertNull("ServletWrappingPortletContext MIME type for / not null ?", servletWrappingPortletContext.getMimeType("/"));
+        try {
+            assertNull("ServletWrappingPortletContext MIME type for / not null ?", servletWrappingPortletContext.getMimeType("/"));
+        } catch (NoClassDefFoundError ncdfe) {
+            // If compiled with Spring 4.x the MockServletContext has a dependency on javax.activation.  This will cause a runtime failure running under JDK 9+ due to removal
+            // of the javax.activation module.  For that reason we will ignore the NoClassDefFoundError failure provided it is for the known FileTypeMap dependency.
+            if (!ncdfe.getMessage().contains("javax/activation/FileTypeMap")) {
+                fail("Unexpected exception: " + ncdfe);
+            }
+        }
         assertNotNull("ServletWrappingPortletContext real path for / null ?", servletWrappingPortletContext.getRealPath("/"));
         assertNull("ServletWrappingPortletContext real path for /ThisDoesNotExist not null ? ?", servletWrappingPortletContext.getRealPath("/ThisDoesNotExist"));
         assertNull("ServletWrappingPortletContext resource paths for / not null ?", servletWrappingPortletContext.getResourcePaths("/"));

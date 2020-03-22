@@ -2,7 +2,6 @@ package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.TypeConversionException;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsInternalTestCase;
 
 import java.sql.Time;

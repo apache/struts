@@ -49,6 +49,7 @@ import javax.portlet.WindowState;
 import javax.security.auth.Subject;
 import javax.servlet.http.Cookie;
 import javax.xml.namespace.QName;
+import junit.framework.TestCase;
 import org.apache.struts2.mock.web.portlet.MockActionRequest;
 import org.apache.struts2.mock.web.portlet.MockActionResponse;
 import org.apache.struts2.mock.web.portlet.MockCacheControl;
@@ -84,7 +85,7 @@ import org.w3c.dom.Element;
  * Basic test class for Portlet Mock Object testing
  * 
  */
-public class StrutsSpringPortletMockObjectsTest extends StrutsSpringTestCase {
+public class StrutsSpringPortletMockObjectsTest extends TestCase {
 
     /**
      * An empty preferences validator for code coverage only
@@ -96,14 +97,6 @@ public class StrutsSpringPortletMockObjectsTest extends StrutsSpringTestCase {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-    }
-
-    public void testApplicationContext() {
-        assertNotNull(applicationContext);
-    }
-
-    public void testContextLocations() {
-        assertNotNull(getContextLocations());
     }
 
     public void testMockActionRequest() {

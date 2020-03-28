@@ -566,12 +566,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-junit-plugin</artifactId>
+                <artifactId>struts2-portlet-mocks-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-junit-portlet-plugin</artifactId>
+                <artifactId>struts2-junit-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -27,9 +27,9 @@
         <version>2.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>struts2-junit-portlet-plugin</artifactId>
+    <artifactId>struts2-portlet-mocks-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>Struts 2 JUnit Portlet Plugin</name>
+    <name>Struts 2 Portlet Mocks Plugin</name>
 
     <dependencies>
         <dependency>
@@ -38,33 +38,12 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-junit-plugin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-spring-plugin</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- Portlet -->

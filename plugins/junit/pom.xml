@@ -70,7 +70,20 @@
         <dependency>
             <groupId>javax.portlet</groupId>
             <artifactId>portlet-api</artifactId>
-            <scope>test</scope>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-portlet-plugin</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-portlet-mocks-plugin</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- The Servlet API mocks in Spring Framework 4.x only supports Servlet 3.0 and higher.

@@ -18,20 +18,30 @@
  */
 package org.apache.struts2;
 
+
 import com.opensymphony.xwork2.ActionContext;
+import java.util.HashMap;
+import java.util.Map;
+import javax.portlet.PortletMode;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.apache.struts2.portlet.PortletConstants;
-import org.apache.struts2.portlet.PortletPhase;
 import org.apache.struts2.mock.web.portlet.MockPortletContext;
 import org.apache.struts2.mock.web.portlet.MockPortletRequest;
 import org.apache.struts2.mock.web.portlet.MockPortletResponse;
 import org.apache.struts2.mock.web.portlet.MockPortletSession;
 import org.apache.struts2.mock.web.portlet.MockStateAwareResponse;
+import org.apache.struts2.portlet.PortletConstants;
+import org.apache.struts2.portlet.PortletPhase;
 
-import javax.portlet.PortletMode;
-import java.util.HashMap;
-import java.util.Map;
+/*
+ * Changes:  This is a copy of org.apache.struts2.StrutsPortletTestCase from the Struts 2 portlet-plugin, moved
+ *           into the junit-plugin (same package org.apache.struts2).
+ *           The import order above was changed to alphabetical.
+ *
+ * Note:     The assumption is that anyone utilizing StrutsPortletTestCase currently from the portlet-plugin will almost
+ *           certainly be using the junit-plugin.  Under that assumption, the refactored-move of StrutsPortletTestCase
+ *           should not cause issues for pre-existing usage of StrutsPortletTestCase.
+ */
 
 /**
  * Base class used to test action in portlet environment

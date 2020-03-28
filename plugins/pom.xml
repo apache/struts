@@ -45,12 +45,12 @@
         <module>jfreechart</module>
         <module>json</module>
         <module>junit</module>
-        <module>junit-portlet</module>
         <module>osgi</module>
         <module>oval</module>
         <module>pell-multipart</module>
         <module>plexus</module>
         <module>portlet</module>
+        <module>portlet-mocks</module>
         <module>portlet-tiles</module>
         <module>rest</module>
         <module>sitemesh</module>

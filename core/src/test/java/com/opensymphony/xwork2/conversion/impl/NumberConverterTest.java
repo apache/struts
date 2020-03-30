@@ -180,25 +180,24 @@ public class NumberConverterTest extends XWorkTestCase {
         assertEquals(1234.4F, value);
     }
     
-    public void testExceptionWhenPrimitiveIsOutOfRange(){
+    public void testExceptionWhenPrimitiveIsOutOfRange() {
         // given
         NumberConverter converter = new NumberConverter();
         Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, LOCALE_MEXICO);
         
         // when
-        try{
+        try {
             Object value = converter.convertValue(context, null, null, null, INTEGER_OUT_OF_RANGE, int.class);
             fail(MSG_TEST_FAILS_OUT_OF_RANGE);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             // then
             assertEquals(TypeConversionException.class, ex.getClass());
             assertTrue(ex.getMessage().startsWith(MSG_OUT_OF_RANGE_CASTING));
         }
-        
     }
     
-    public void testExceptionWhenANotPrimitiveIsUnparsable(){
+    public void testExceptionWhenANotPrimitiveIsUnparsable() {
         // given
         NumberConverter converter = new NumberConverter();
         Map<String, Object> context = new HashMap<>();
@@ -206,18 +205,17 @@ public class NumberConverterTest extends XWorkTestCase {
         context.put(ActionContext.LOCALE, LOCALE_MEXICO);
         
         // when
-        try{
+        try {
             Object value = converter.convertValue(context, null, null, null, strValue, Byte.class);
             fail(MSG_TEST_FAILS_UNPARSEABLE_NUMBER);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             // then
             assertEquals(TypeConversionException.class, ex.getClass());
             assertTrue(ex.getMessage().startsWith(MSG_UNPARSEABLE_NUMBER));
         }
-        
     }
     
-    public void testExceptionWhenANotPrimitiveIsOutOfRange(){
+    public void testExceptionWhenANotPrimitiveIsOutOfRange() {
         // given
         NumberConverter converter = new NumberConverter();
         Map<String, Object> context = new HashMap<>();
@@ -225,18 +223,17 @@ public class NumberConverterTest extends XWorkTestCase {
         context.put(ActionContext.LOCALE, LOCALE_MEXICO);
         
         // when
-        try{
+        try {
             Object value = converter.convertValue(context, null, null, null, strValue, Byte.class);
             fail(MSG_TEST_FAILS_OUT_OF_RANGE);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             // then
             assertEquals(TypeConversionException.class, ex.getClass());
             assertTrue(ex.getMessage().startsWith(MSG_OUT_OF_RANGE_CASTING));
         }
-        
     }
     
-    public void testExceptionWhenUnparseableInConvertToBigDecimal(){
+    public void testExceptionWhenUnparseableInConvertToBigDecimal() {
         // given
         NumberConverter converter = new NumberConverter();
         Map<String, Object> context = new HashMap<>();
@@ -244,18 +241,17 @@ public class NumberConverterTest extends XWorkTestCase {
         context.put(ActionContext.LOCALE, LOCALE_MEXICO);
         
         // when
-        try{
+        try {
             Object value = converter.convertValue(context, null, null, null, strValue, BigDecimal.class);
             fail(MSG_TEST_FAILS_UNPARSEABLE_NUMBER);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             // then
             assertEquals(TypeConversionException.class, ex.getClass());
             assertTrue(ex.getMessage().startsWith(MSG_UNPARSEABLE_NUMBER));
         }
-        
     }
     
-    public void testExceptionWhenUnparseableInConvertToDouble(){
+    public void testExceptionWhenUnparseableInConvertToDouble() {
         // given
         NumberConverter converter = new NumberConverter();
         Map<String, Object> context = new HashMap<>();
@@ -263,54 +259,51 @@ public class NumberConverterTest extends XWorkTestCase {
         context.put(ActionContext.LOCALE, LOCALE_MEXICO);
         
         // when
-        try{
+        try {
             Object value = converter.convertValue(context, null, null, null, strValue, Double.class);
             fail(MSG_TEST_FAILS_UNPARSEABLE_NUMBER);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             // then
             assertEquals(TypeConversionException.class, ex.getClass());
             assertTrue(ex.getMessage().startsWith(MSG_UNPARSEABLE_NUMBER));
         }
-        
     }
     
-    public void testExceptionWhenOutOfRangeInConvertToDouble(){
+    public void testExceptionWhenOutOfRangeInConvertToDouble() {
         // given
         NumberConverter converter = new NumberConverter();
         Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, LOCALE_MEXICO);
         
         // when
-        try{
+        try {
             Object value = converter.convertValue(context, null, null, null, DOUBLE_OUT_OF_RANGE, Double.class);
             fail(MSG_TEST_FAILS_OUT_OF_RANGE);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             // then
             assertEquals(TypeConversionException.class, ex.getClass());
             assertTrue(ex.getMessage().startsWith(MSG_OUT_OF_RANGE_CONVERTING));
         }
-        
     }
     
-    public void testExceptionWhenOutOfRangeInConvertToFloat(){
+    public void testExceptionWhenOutOfRangeInConvertToFloat() {
         // given
         NumberConverter converter = new NumberConverter();
         Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.LOCALE, LOCALE_MEXICO);
-    
+        
         // when
-        try{
+        try {
             Object value = converter.convertValue(context, null, null, null, FLOAT_OUT_OF_RANGE, Float.class);
             fail(MSG_TEST_FAILS_OUT_OF_RANGE);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             // then
             assertEquals(TypeConversionException.class, ex.getClass());
             assertTrue(ex.getMessage().startsWith(MSG_OUT_OF_RANGE_CONVERTING));
         }
-        
     }
     
-    public void testExceptionWhenUnparseableInConvertToFloat(){
+    public void testExceptionWhenUnparseableInConvertToFloat() {
         // given
         NumberConverter converter = new NumberConverter();
         Map<String, Object> context = new HashMap<>();
@@ -318,15 +311,14 @@ public class NumberConverterTest extends XWorkTestCase {
         context.put(ActionContext.LOCALE, LOCALE_MEXICO);
         
         // when
-        try{
+        try {
             Object value = converter.convertValue(context, null, null, null, strValue, Float.class);
             fail(MSG_TEST_FAILS_UNPARSEABLE_NUMBER);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             // then
             assertEquals(TypeConversionException.class, ex.getClass());
             assertTrue(ex.getMessage().startsWith(MSG_UNPARSEABLE_NUMBER));
         }
-        
     }
     
 }

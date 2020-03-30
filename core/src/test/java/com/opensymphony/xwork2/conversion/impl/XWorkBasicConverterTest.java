@@ -310,7 +310,6 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
             assertEquals(TypeConversionException.class, ex.getClass());
             assertTrue(ex.getMessage().startsWith("Cannot create type"));
         }
-        
     }
     
     public void testExceptionInDoConvertToClass() {
@@ -395,6 +394,5 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         super.tearDown();
         ActionContext.setContext(null);
     }
-
-
+    
 }

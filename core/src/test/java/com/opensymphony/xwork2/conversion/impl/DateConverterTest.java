@@ -21,7 +21,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 	private final static String MESSAGE_PARSE_ERROR = "Could not parse date";
 	private final static String MESSAGE_DEFAULT_CONSTRUCTOR_ERROR = "Couldn't create class null using default (long) constructor";
 	
-	public void  testSqlTimeType(){
+	public void testSqlTimeType() {
 		DateConverter converter = new DateConverter();
 		
 		Map<String, Object> context = new HashMap<>();
@@ -29,10 +29,9 @@ public class DateConverterTest extends StrutsInternalTestCase {
 		
 		Object value = converter.convertValue(context, null, null, null, TIME_00_59_10, Time.class);
 		assertEquals(Time.valueOf(TIME_00_59_10), value);
-		
 	}
 	
-	public void  testSqlTimestampType(){
+	public void testSqlTimestampType() {
 		DateConverter converter = new DateConverter();
 		
 		Map<String, Object> context = new HashMap<>();
@@ -40,50 +39,46 @@ public class DateConverterTest extends StrutsInternalTestCase {
 		
 		Object value = converter.convertValue(context, null, null, null, TIMESTAMP_STR, Timestamp.class);
 		assertEquals(Timestamp.valueOf(TIMESTAMP_STR), value);
-		
 	}
 	
-	public void  testDateType(){
+	public void testDateType() {
 		DateConverter converter = new DateConverter();
 		
 		Map<String, Object> context = new HashMap<>();
 		context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
 		
 		Object value = converter.convertValue(context, null, null, null, DATE_STR, Date.class);
-		assertEquals(DATE_CONVERTED, ((Date)value).toString());
-		
+		assertEquals(DATE_CONVERTED, ((Date) value).toString());
 	}
-
-    public void  testTypeConversionExceptionWhenParseError(){
-    	DateConverter converter = new DateConverter();
 	
-			Map<String, Object> context = new HashMap<>();
-			context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
-	
-			try{
-				Object value = converter.convertValue(context, null, null, null, INVALID_DATE, Date.class);
-				fail("TypeConversionException expected - Conversion error occurred");
-			}catch(Exception ex){
-				assertEquals(TypeConversionException.class, ex.getClass());
-				assertEquals(MESSAGE_PARSE_ERROR, ex.getMessage());
-			}
-			
-		}
-	
-	public void  testTypeConversionExceptionWhenUsingLongConstructor(){
+	public void testTypeConversionExceptionWhenParseError() {
 		DateConverter converter = new DateConverter();
 		
 		Map<String, Object> context = new HashMap<>();
 		context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
 		
-		try{
+		try {
+			Object value = converter.convertValue(context, null, null, null, INVALID_DATE, Date.class);
+			fail("TypeConversionException expected - Conversion error occurred");
+		} catch (Exception ex) {
+			assertEquals(TypeConversionException.class, ex.getClass());
+			assertEquals(MESSAGE_PARSE_ERROR, ex.getMessage());
+		}
+	}
+	
+	public void testTypeConversionExceptionWhenUsingLongConstructor() {
+		DateConverter converter = new DateConverter();
+		
+		Map<String, Object> context = new HashMap<>();
+		context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
+		
+		try {
 			Object value = converter.convertValue(context, null, null, null, "01-10-10", null);
 			fail("TypeConversionException expected - Error using default (long) constructor");
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			assertEquals(TypeConversionException.class, ex.getClass());
 			assertEquals(MESSAGE_DEFAULT_CONSTRUCTOR_ERROR, ex.getMessage());
 		}
-		
 	}
 	
 }

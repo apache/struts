@@ -34,7 +34,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 	private final static String TIME_00_59_10 = "00:59:10";
 	private final static String TIMESTAMP_STR = "2020-03-20 00:59:10";
 	private final static String DATE_STR = "2020-03-20";
-	private final static String DATE_CONVERTED = "Fri Mar 20 00:00:00 CST 2020";
+	private final static String DATE_CONVERTED = "Fri Mar 20 00:00:00";
 	private final static String INVALID_DATE = "99/99/2010";
 	private final static String MESSAGE_PARSE_ERROR = "Could not parse date";
 	private final static String MESSAGE_DEFAULT_CONSTRUCTOR_ERROR = "Couldn't create class null using default (long) constructor";
@@ -66,7 +66,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 		context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
 		
 		Object value = converter.convertValue(context, null, null, null, DATE_STR, Date.class);
-		assertEquals(DATE_CONVERTED, ((Date) value).toString());
+		assertTrue(((Date) value).toString().startsWith(DATE_CONVERTED));
 	}
 	
 	public void testTypeConversionExceptionWhenParseError() {

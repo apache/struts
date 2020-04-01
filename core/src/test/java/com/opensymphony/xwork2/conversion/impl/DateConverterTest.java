@@ -24,6 +24,8 @@ import org.apache.struts2.StrutsInternalTestCase;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -31,8 +33,8 @@ import java.util.Map;
 
 public class DateConverterTest extends StrutsInternalTestCase {
 	
-	private final static String TIME_00_59_10 = "00:59:10";
-	private final static String TIMESTAMP_STR = "2020-03-20 00:59:10";
+	private final static String TIME_01_59_10 = "01:59:10 AM";
+	private final static String TIMESTAMP_STR = "03/03/2020 00:00:00.000";
 	private final static String DATE_STR = "2020-03-20";
 	private final static String DATE_CONVERTED = "Fri Mar 20 00:00:00";
 	private final static String INVALID_DATE = "99/99/2010";
@@ -45,8 +47,8 @@ public class DateConverterTest extends StrutsInternalTestCase {
 		Map<String, Object> context = new HashMap<>();
 		context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
 		
-		Object value = converter.convertValue(context, null, null, null, TIME_00_59_10, Time.class);
-		assertEquals(Time.valueOf(TIME_00_59_10), value);
+		Object value = converter.convertValue(context, null, null, null, TIME_01_59_10, Time.class);
+		assertEquals("01:59:10", value.toString());
 	}
 	
 	public void testSqlTimestampType() {
@@ -56,7 +58,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 		context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
 		
 		Object value = converter.convertValue(context, null, null, null, TIMESTAMP_STR, Timestamp.class);
-		assertEquals(Timestamp.valueOf(TIMESTAMP_STR), value);
+		assertEquals("2020-03-03 00:00:00.0", value.toString());
 	}
 	
 	public void testDateType() {
@@ -91,7 +93,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
 		context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
 		
 		try {
-			Object value = converter.convertValue(context, null, null, null, "01-10-10", null);
+			Object value = converter.convertValue(context, null, null, null, "03/31/20", null);
 			fail("TypeConversionException expected - Error using default (long) constructor");
 		} catch (Exception ex) {
 			assertEquals(TypeConversionException.class, ex.getClass());

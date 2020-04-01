@@ -25,7 +25,6 @@ import org.apache.struts2.StrutsInternalTestCase;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -33,8 +32,11 @@ import java.util.Map;
 
 public class DateConverterTest extends StrutsInternalTestCase {
 	
+	private String INPUT_TIME_STAMP_STR;
+	private String INPUT_WHEN_LONG_CONSTRUCTOR_STR;
+	private Locale mxLocale = new Locale("es_MX", "MX");
+	private final static String RES_TIME_STAMP_STR = "2020-03-20 00:00:00.0";
 	private final static String TIME_01_59_10 = "01:59:10 AM";
-	private final static String TIMESTAMP_STR = "03/03/2020 00:00:00.000";
 	private final static String DATE_STR = "2020-03-20";
 	private final static String DATE_CONVERTED = "Fri Mar 20 00:00:00";
 	private final static String INVALID_DATE = "99/99/2010";
@@ -53,12 +55,11 @@ public class DateConverterTest extends StrutsInternalTestCase {
 	
 	public void testSqlTimestampType() {
 		DateConverter converter = new DateConverter();
-		
 		Map<String, Object> context = new HashMap<>();
-		context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
+		context.put(ActionContext.LOCALE, mxLocale);
 		
-		Object value = converter.convertValue(context, null, null, null, TIMESTAMP_STR, Timestamp.class);
-		assertEquals("2020-03-03 00:00:00.0", value.toString());
+		Object value = converter.convertValue(context, null, null, null, INPUT_TIME_STAMP_STR, Timestamp.class);
+		assertEquals(RES_TIME_STAMP_STR, value.toString());
 	}
 	
 	public void testDateType() {
@@ -93,11 +94,24 @@ public class DateConverterTest extends StrutsInternalTestCase {
 		context.put(ActionContext.LOCALE, new Locale("es_MX", "MX"));
 		
 		try {
-			Object value = converter.convertValue(context, null, null, null, "03/31/20", null);
+			Object value = converter.convertValue(context, null, null, null, INPUT_WHEN_LONG_CONSTRUCTOR_STR, null);
 			fail("TypeConversionException expected - Error using default (long) constructor");
 		} catch (Exception ex) {
 			assertEquals(TypeConversionException.class, ex.getClass());
 			assertEquals(MESSAGE_DEFAULT_CONSTRUCTOR_ERROR, ex.getMessage());
+		}
+	}
+	
+	@Override
+	protected void setUp() {
+		//Due to JEP 252: Use CLDR Locale Data by Default
+		DateFormat dFormat = DateFormat.getDateInstance(DateFormat.SHORT, mxLocale);
+		if(dFormat.format(new Date()).contains("-")){ 			// Format when Java 9 or greater
+			INPUT_TIME_STAMP_STR = "2020-03-20 00:00:00.000";
+			INPUT_WHEN_LONG_CONSTRUCTOR_STR = "2020-03-20";
+		}else{ 																							// Format when Java 8 or lower
+			INPUT_TIME_STAMP_STR = "03/20/2020 00:00:00.000";
+			INPUT_WHEN_LONG_CONSTRUCTOR_STR = "03/31/20";
 		}
 	}
 	

@@ -39,7 +39,7 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh 'mvn -B package -DskipTests -DskipAssembly'
+            sh 'mvn -B clean install -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
@@ -75,7 +75,7 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh 'mvn -B clean package -DskipTests -DskipAssembly'
+            sh 'mvn -B clean install -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
@@ -111,7 +111,7 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh 'mvn -B clean package -DskipTests -DskipAssembly'
+            sh 'mvn -B clean install -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {

@@ -27,9 +27,9 @@
         <version>2.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>struts2-junit-plugin</artifactId>
+    <artifactId>struts2-portlet-mocks-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>Struts 2 JUnit Plugin</name>
+    <name>Struts 2 Portlet Mocks Plugin</name>
 
     <dependencies>
         <dependency>
@@ -38,31 +38,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-spring-plugin</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <scope>provided</scope>
+            <artifactId>spring-web</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-        </dependency>
-
-        <!-- Convention Plugin tests -->
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-convention-plugin</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -70,20 +50,7 @@
         <dependency>
             <groupId>javax.portlet</groupId>
             <artifactId>portlet-api</artifactId>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-portlet-plugin</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-portlet-mocks-plugin</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!-- The Servlet API mocks in Spring Framework 4.x only supports Servlet 3.0 and higher.
@@ -96,6 +63,6 @@
         </dependency>
     </dependencies>
     <properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

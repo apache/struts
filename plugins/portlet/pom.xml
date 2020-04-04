@@ -33,10 +33,11 @@
 
     <dependencies>
         <!-- junit and related JARs are needed for 'compile'! -->
-        <!-- Due to StrutsPortletTestCase shall be distributed to applications. -->
+
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-junit-plugin</artifactId>
+            <artifactId>struts2-portlet-mocks-plugin</artifactId>
+            <scope>test</scope>
             <optional>true</optional>
         </dependency>
 

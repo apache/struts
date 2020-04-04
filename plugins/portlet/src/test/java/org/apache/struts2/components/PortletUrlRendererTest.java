@@ -22,11 +22,11 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsTestCasePortletTests;
 import org.apache.struts2.portlet.PortletConstants;
-import org.springframework.mock.web.portlet.MockMimeResponse;
-import org.springframework.mock.web.portlet.MockPortletContext;
-import org.springframework.mock.web.portlet.MockPortletRequest;
+import org.apache.struts2.mock.web.portlet.MockMimeResponse;
+import org.apache.struts2.mock.web.portlet.MockPortletContext;
+import org.apache.struts2.mock.web.portlet.MockPortletRequest;
 
 import javax.portlet.PortletContext;
 import javax.portlet.PortletMode;
@@ -35,7 +35,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collections;
 
-public class PortletUrlRendererTest extends StrutsTestCase {
+public class PortletUrlRendererTest extends StrutsTestCasePortletTests {
 
     private ValueStack stack;
 

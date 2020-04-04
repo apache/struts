@@ -22,7 +22,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsTestCasePortletTests;
 import org.apache.struts2.dispatcher.DefaultActionSupport;
 import org.apache.struts2.portlet.PortletPhase;
 import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
@@ -39,7 +39,7 @@ import static org.apache.struts2.portlet.PortletConstants.REQUEST;
 import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
 import static org.apache.struts2.portlet.PortletConstants.STACK_FROM_EVENT_PHASE;
 
-public class PortletStateInterceptorTest extends StrutsTestCase {
+public class PortletStateInterceptorTest extends StrutsTestCasePortletTests {
 
 	private PortletStateInterceptor interceptor;
 	

@@ -30,8 +30,8 @@ import org.easymock.EasyMock;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
-import org.springframework.mock.web.portlet.MockPortletConfig;
-import org.springframework.mock.web.portlet.MockPortletContext;
+import org.apache.struts2.mock.web.portlet.MockPortletConfig;
+import org.apache.struts2.mock.web.portlet.MockPortletContext;
 
 import javax.portlet.*;
 import java.util.*;

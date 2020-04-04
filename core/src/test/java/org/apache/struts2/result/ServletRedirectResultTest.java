@@ -461,7 +461,6 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         MockActionInvocation ai = new MockActionInvocation();
         ai.setInvocationContext(ac);
         ai.setResultCode("myResult");
-        ai.setInvocationContext(ac);
 
         ActionProxy mockActionProxy = createNiceMock(ActionProxy.class);
         ai.setProxy(mockActionProxy);

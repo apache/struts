@@ -308,7 +308,7 @@ public class TextTagTest extends AbstractTagTest {
         super.setUp();
         tag = new TextTag();
         tag.setPageContext(pageContext);
-        ActionContext.ofAndBound(stack.getContext());
+        ActionContext.ofAndBind(stack.getContext());
     }
 
     protected void tearDown() throws Exception {

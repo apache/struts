@@ -329,7 +329,7 @@ public class EmbeddedJSPResultTest extends TestCase {
 
         EasyMock.replay(request);
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setParameters(HttpParameters.create(params).build());
         actionContext.setServletRequest(request);
         actionContext.setServletResponse(response);
@@ -406,7 +406,7 @@ class ServletGetRunnable implements Runnable {
     }
 
     public void run() {
-        actionContext = ActionContext.bound(actionContext);
+        actionContext = ActionContext.bind(actionContext);
         //wait to start all threads at once..or try at least
         try {
             startBarrier.await();

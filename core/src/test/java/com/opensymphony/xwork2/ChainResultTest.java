@@ -104,7 +104,7 @@ public class ChainResultTest extends XWorkTestCase {
         invocationMock.matchAndReturn("getInvocationContext", ActionContext.getContext());
         try {
 
-            ActionContext.bound(stack.getActionContext());
+            ActionContext.bind(stack.getActionContext());
             result.execute((ActionInvocation) invocationMock.proxy());
             actionProxyMock.verify();
         } finally {

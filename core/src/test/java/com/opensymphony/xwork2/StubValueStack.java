@@ -37,7 +37,7 @@ public class StubValueStack implements ValueStack {
 
     @Override
     public ActionContext getActionContext() {
-        return ActionContext.ofAndBound(ctx);
+        return ActionContext.ofAndBind(ctx);
     }
 
     public void setDefaultType(Class defaultType) {

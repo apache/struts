@@ -36,7 +36,7 @@ public class StrutsActionProxy extends DefaultActionProxy {
 
     public String execute() throws Exception {
         ActionContext previous = ActionContext.getContext();
-        ActionContext.bound(invocation.getInvocationContext());
+        ActionContext.bind(invocation.getInvocationContext());
         try {
 // This is for the new API:
 //            return RequestContextImpl.callInContext(invocation, new Callable<String>() {
@@ -48,7 +48,7 @@ public class StrutsActionProxy extends DefaultActionProxy {
             return invocation.invoke();
         } finally {
             if (cleanupContext)
-                ActionContext.bound(previous);
+                ActionContext.bind(previous);
         }
     }
 

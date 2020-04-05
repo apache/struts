@@ -48,7 +48,7 @@ public class StrutsTestCaseHelper {
         Container container = du.getContainer();
         ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
         stack.getContext().put(ActionContext.CONTAINER, container);
-        ActionContext.ofAndBound(stack.getContext());
+        ActionContext.ofAndBind(stack.getContext());
         
         return du;
     }

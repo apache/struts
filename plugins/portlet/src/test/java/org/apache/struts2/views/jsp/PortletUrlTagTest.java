@@ -153,7 +153,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         contextMap.put(PortletConstants.DEFAULT_ACTION_MAP, actionMap);
         contextMap.put(STRUTS_PORTLET_CONTEXT, mockCtx.proxy());
 
-        ActionContext ctx = ActionContext.ofAndBound(contextMap);
+        ActionContext ctx = ActionContext.ofAndBind(contextMap);
         ctx.setValueStack(stack);
         ctx.setContainer(dispatcher.getContainer());
 

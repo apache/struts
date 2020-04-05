@@ -67,7 +67,7 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         actionValidatorManager.setValidatorFactory((ValidatorFactory)mockValidatorFactory.proxy());
 
         stubValueStack = new StubValueStack();
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setValueStack(stubValueStack);
 
         DefaultFileManagerFactory factory = new DefaultFileManagerFactory();

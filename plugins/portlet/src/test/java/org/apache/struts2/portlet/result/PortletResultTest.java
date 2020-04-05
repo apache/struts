@@ -65,7 +65,7 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
 
         Map<String, Object> sessionMap = new HashMap<>();
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setSession(sessionMap);
         actionContext.setParameters(HttpParameters.create().build());
         actionContext.put(STRUTS_PORTLET_CONTEXT, mockCtx.proxy());

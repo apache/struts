@@ -84,7 +84,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
         portletConfig = (PortletConfig)mockPortletConfig.proxy();
 
 
-        ActionContext.ofAndBound(context);
+        ActionContext.ofAndBind(context);
     }
 
     public void testGetPhase() {

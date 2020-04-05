@@ -128,7 +128,7 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
     }
 
     private ActionContext createActionContext() {
-        ActionContext ac = ActionContext.ofAndBound(stack.getContext());
+        ActionContext ac = ActionContext.ofAndBind(stack.getContext());
         ac.setConversionErrors(conversionErrors);
         ac.setValueStack(stack);
         return ac;
@@ -141,7 +141,7 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
         mockInvocation = new Mock(ActionInvocation.class);
         invocation = (ActionInvocation) mockInvocation.proxy();
         stack = ActionContext.getContext().getValueStack();
-        context = ActionContext.ofAndBound(stack.getContext());
+        context = ActionContext.ofAndBind(stack.getContext());
         conversionErrors = new HashMap<>();
         context.setConversionErrors(conversionErrors);
         mockInvocation.matchAndReturn("getInvocationContext", context);

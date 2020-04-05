@@ -138,7 +138,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         actionContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
         initSession(actionContext);
         // set the action context to the one used by the proxy
-        ActionContext.bound(actionContext);
+        ActionContext.bind(actionContext);
     }
 
     protected void initSession(ActionContext actionContext) {

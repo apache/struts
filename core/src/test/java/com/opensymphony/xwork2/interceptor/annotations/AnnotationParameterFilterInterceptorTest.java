@@ -55,7 +55,7 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
         parameterMap.put("job", "Baker");
         parameterMap.put("name", "Martin");
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setParameters(HttpParameters.create(parameterMap).build());
 
         Action action = new BlockingByDefaultAction();
@@ -92,7 +92,7 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
         parameterMap.put("job", "Baker");
         parameterMap.put("name", "Martin");
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setParameters(HttpParameters.create(parameterMap).build());
 
         Action action = new AllowingByDefaultAction();
@@ -131,7 +131,7 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
         parameterMap.put("m1", "s1");
         parameterMap.put("m2", "s2");
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setParameters(HttpParameters.create(parameterMap).build());
         stack.push(new BlockingByDefaultModel());
 
@@ -170,7 +170,7 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
         parameterMap.put("m1", "s1");
         parameterMap.put("m2", "s2");
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setParameters(HttpParameters.create(parameterMap).build());
         stack.push(new AllowingByDefaultModel());
 

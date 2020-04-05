@@ -121,7 +121,7 @@ public abstract class AbstractTest extends TestCase {
         replay(stack);
         replay(container);
 
-        ActionContext actionContext = ActionContext.ofAndBound(stackContext);
+        ActionContext actionContext = ActionContext.ofAndBind(stackContext);
         actionContext.setServletRequest(request);
     }
 

@@ -89,7 +89,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        ActionContext context = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext context = ActionContext.ofAndBind(new HashMap<>());
         context.setContainer(new DummyContainer());
     }
 
@@ -691,7 +691,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
         ObjectFactory workingFactory = configuration.getContainer().getInstance(ObjectFactory.class);
         ConventionUnknownHandler uh = new ConventionUnknownHandler(configuration, workingFactory, context, mockContainer, "struts-default", null, "-");
-        ActionContext actionContext = ActionContext.ofAndBound(Collections.emptyMap());
+        ActionContext actionContext = ActionContext.ofAndBind(Collections.emptyMap());
 
         Result result = uh.handleUnknownResult(actionContext, "foo", pkgConfig.getActionConfigs().get("foo"), "bar");
         assertNotNull(result);

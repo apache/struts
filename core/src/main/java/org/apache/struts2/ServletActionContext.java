@@ -49,7 +49,7 @@ public class ServletActionContext implements StrutsStatics {
     public static ActionContext getActionContext(HttpServletRequest req) {
         ValueStack vs = getValueStack(req);
         if (vs != null) {
-            return ActionContext.ofAndBound(vs.getContext());
+            return ActionContext.ofAndBind(vs.getContext());
         } else {
             return null;
         }

@@ -50,7 +50,7 @@ public class TokenTest extends AbstractTest {
         super.setUp();
         this.tag = new Token(stack, request, response);
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setSession(new HashMap<>());
     }
 

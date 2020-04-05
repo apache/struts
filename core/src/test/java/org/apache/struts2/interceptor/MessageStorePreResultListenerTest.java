@@ -43,7 +43,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
 
     public void testSessionWasInvalidated() {
         // given
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setParameters(HttpParameters.create().build());
 
         ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
@@ -84,7 +84,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
 
     public void testResponseWasComitted() {
         // given
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setParameters(HttpParameters.create().build());
 
         ActionInvocation mockActionInvocation = EasyMock.createControl().createMock(ActionInvocation.class);
@@ -131,7 +131,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         action.addFieldError("field1", "some field error 1");
         action.addFieldError("field2", "some field error 2");
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setParameters(HttpParameters.create().build());
         actionContext.setSession(sessionMap);
 
@@ -212,7 +212,7 @@ public class MessageStorePreResultListenerTest extends StrutsInternalTestCase {
         action.addFieldError("field1", "some field error 1");
         action.addFieldError("field2", "some field error 2");
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setParameters(HttpParameters.create().build());
         actionContext.setSession(sessionMap);
 

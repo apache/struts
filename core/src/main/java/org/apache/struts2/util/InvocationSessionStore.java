@@ -62,7 +62,7 @@ public class InvocationSessionStore {
             // would already be closed at this point (causing failures if used for output).
             final ActionContext savedActionContext = savedInvocation.getInvocationContext();
             final ActionContext previousActionContext = ActionContext.getContext();
-            ActionContext.bound(savedActionContext);
+            ActionContext.bind(savedActionContext);
             savedActionContext.setValueStack(savedInvocation.getStack());
             if (previousActionContext != null) {
                 savedActionContext.setPageContext(previousActionContext.getPageContext());

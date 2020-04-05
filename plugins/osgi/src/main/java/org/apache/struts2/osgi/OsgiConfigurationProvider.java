@@ -101,7 +101,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
     }
 
     protected ActionContext createActionContext() {
-        return ActionContext.ofAndBound(new HashMap<>());
+        return ActionContext.ofAndBind(new HashMap<>());
     }
 
     /**

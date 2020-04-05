@@ -69,7 +69,7 @@ public class PortletUrlHelperTest extends TestCase {
         modeNamespaceMap.put("edit", "/edit");
         modeNamespaceMap.put("help", "/help");
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.put(REQUEST, renderRequest);
         actionContext.put(RESPONSE, renderResponse);
         actionContext.put(PHASE, PortletPhase.RENDER_PHASE);

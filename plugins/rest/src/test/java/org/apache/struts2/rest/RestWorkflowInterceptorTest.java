@@ -51,7 +51,7 @@ public class RestWorkflowInterceptorTest extends TestCase {
         }, null);
         wf.setContentTypeHandlerManager((ContentTypeHandlerManager) mockContentTypeHandlerManager.proxy());
 
-        ActionContext actionContext = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
         actionContext.setActionMapping(new ActionMapping());
 
         wf.doIntercept((ActionInvocation) mockActionInvocation.proxy());

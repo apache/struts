@@ -69,7 +69,7 @@ public class TagUtils {
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
             // also tie this stack/context to the ThreadLocal
-            ActionContext.ofAndBound(stack.getContext());
+            ActionContext.ofAndBind(stack.getContext());
         } else {
             // let's make sure that the current page context is in the action context
             // TODO: refactor this to stop using put()

@@ -87,7 +87,7 @@ public class TokenHelperTest extends TestCase {
     protected void setUp() throws Exception {
         session = new HashMap<>();
         Map<String, Object> ctxMap = new TreeMap<>();
-        ActionContext ctx = ActionContext.ofAndBound(ctxMap);
+        ActionContext ctx = ActionContext.ofAndBind(ctxMap);
         ctx.setSession(session);
         ctx.setParameters(HttpParameters.create().build());
     }

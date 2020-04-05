@@ -128,13 +128,13 @@ public class ActionContext implements Serializable {
         return new ActionContext(context);
     }
 
-    public static ActionContext bound(ActionContext actionContext) {
+    public static ActionContext bind(ActionContext actionContext) {
         ActionContext.setContext(actionContext);
         return ActionContext.getContext();
     }
 
-    public static ActionContext ofAndBound(Map<String, Object> context) {
-        return bound(of(context));
+    public static ActionContext ofAndBind(Map<String, Object> context) {
+        return bind(of(context));
     }
 
     /**
@@ -144,8 +144,8 @@ public class ActionContext implements Serializable {
      * @param actionContext ActionContext to be used for current thread
      * @return new ActionContext
      */
-    public static ActionContext ofAndBound(ActionContext actionContext) {
-        return bound(actionContext);
+    public static ActionContext ofAndBind(ActionContext actionContext) {
+        return bind(actionContext);
     }
 
     /**

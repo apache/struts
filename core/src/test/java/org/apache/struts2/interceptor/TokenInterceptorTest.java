@@ -122,7 +122,7 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
 
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().putAll(extraContext);
-        oldContext = ActionContext.ofAndBound(stack.getContext());
+        oldContext = ActionContext.ofAndBind(stack.getContext());
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {

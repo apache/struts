@@ -34,7 +34,7 @@ public class ClearSessionInterceptorTest extends StrutsInternalTestCase {
     public void testCreateSession() throws Exception {
         ClearSessionInterceptor interceptor = new ClearSessionInterceptor();
         MockActionInvocation invocation = new MockActionInvocation();
-        ActionContext context = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext context = ActionContext.ofAndBind(new HashMap<>());
         Map<String, Object> session = new HashMap<>();
         session.put("Test1", "Test1");
         session.put("Test2", "Test2");

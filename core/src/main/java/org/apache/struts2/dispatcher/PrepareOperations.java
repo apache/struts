@@ -77,13 +77,13 @@ public class PrepareOperations {
         ActionContext oldContext = ActionContext.getContext();
         if (oldContext != null) {
             // detected existing context, so we are probably in a forward
-            ctx = ActionContext.ofAndBound(new HashMap<>(oldContext.getContextMap()));
+            ctx = ActionContext.ofAndBind(new HashMap<>(oldContext.getContextMap()));
         } else {
             ctx = ServletActionContext.getActionContext(request);   //checks if we are probably in an async
             if (ctx == null) {
                 ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
                 stack.getContext().putAll(dispatcher.createContextMap(request, response, null));
-                ctx = ActionContext.ofAndBound(stack.getContext());
+                ctx = ActionContext.ofAndBind(stack.getContext());
             }
         }
         request.setAttribute(CLEANUP_RECURSION_COUNTER, counter);

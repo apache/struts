@@ -71,7 +71,7 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
         ActionContext actionContext = ActionContext.getContext();
         InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
 
-        ActionContext actionContext2 = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext2 = ActionContext.ofAndBind(new HashMap<>());
         actionContext2.setSession(session);
 
         assertEquals(actionContext2, ActionContext.getContext());
@@ -112,7 +112,7 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
 
         InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
 
-        ActionContext actionContext2 = ActionContext.ofAndBound(new HashMap<>());
+        ActionContext actionContext2 = ActionContext.ofAndBind(new HashMap<>());
         actionContext2.setSession(session);
 
         assertEquals(actionContext2, ActionContext.getContext());
@@ -134,7 +134,7 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
         super.setUp();
         stack = ActionContext.getContext().getValueStack();
 
-        ActionContext actionContext = ActionContext.ofAndBound(stack.getContext());
+        ActionContext actionContext = ActionContext.ofAndBind(stack.getContext());
 
         session = new HashMap<>();
         actionContext.setSession(session);

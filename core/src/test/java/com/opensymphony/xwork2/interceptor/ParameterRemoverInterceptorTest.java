@@ -45,7 +45,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         contextMap = new LinkedHashMap<>();
-        context = ActionContext.ofAndBound(contextMap);
+        context = ActionContext.ofAndBind(contextMap);
 
         actionInvocation = createMock(ActionInvocation.class);
         expect(actionInvocation.getAction()).andStubReturn(new SampleAction());

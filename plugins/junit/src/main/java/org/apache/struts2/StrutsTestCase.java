@@ -122,7 +122,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         initSession(actionContext);
         applyAdditionalParams(actionContext);
         // set the action context to the one used by the proxy
-        ActionContext.bound(actionContext);
+        ActionContext.bind(actionContext);
     }
 
     protected void initSession(ActionContext actionContext) {

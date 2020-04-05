@@ -122,7 +122,7 @@ public abstract class AbstractTest extends TestCase {
         replay(container);
 
         ActionContext actionContext = ActionContext.of(stackContext).bind();
-        actionContext.setServletRequest(request);
+        actionContext.withServletRequest(request);
     }
 
     protected static String s(String input) {

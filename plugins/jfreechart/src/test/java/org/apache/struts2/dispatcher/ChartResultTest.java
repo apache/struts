@@ -153,8 +153,6 @@ public class ChartResultTest extends StrutsTestCase {
 
 
         stack = ActionContext.getContext().getValueStack();
-        ActionContext.getContext().setValueStack(stack);
-
 
         mockActionProxy = EasyMock.createNiceMock(ActionProxy.class);
         EasyMock.expect(mockActionProxy.getNamespace()).andReturn("/html");

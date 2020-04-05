@@ -128,11 +128,11 @@ public class VelocityResult extends StrutsResultSupport {
         velocityManager.init(servletContext);
 
         boolean usedJspFactory = false;
-        PageContext pageContext = (PageContext) ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT);
+        PageContext pageContext = (PageContext) ActionContext.getContext().getPageContext();
 
         if (pageContext == null && servlet != null) {
             pageContext = jspFactory.getPageContext(servlet, request, response, null, true, 8192, true);
-            ActionContext.getContext().put(ServletActionContext.PAGE_CONTEXT, pageContext);
+            ActionContext.getContext().withPageContext(pageContext);
             usedJspFactory = true;
         }
 

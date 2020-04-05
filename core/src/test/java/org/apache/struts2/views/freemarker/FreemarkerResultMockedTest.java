@@ -246,10 +246,11 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         request = new MockHttpServletRequest();
         stack = ActionContext.getContext().getValueStack();
 
-        context = ActionContext.of(stack.getContext()).bind();
-        context.setServletResponse(response);
-        context.setServletRequest(request);
-        context.setServletContext(servletContext);
+        context = ActionContext.of(stack.getContext())
+            .withServletResponse(response)
+            .withServletRequest(request)
+            .withServletContext(servletContext)
+            .bind();
 
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
 

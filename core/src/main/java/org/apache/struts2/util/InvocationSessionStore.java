@@ -60,15 +60,13 @@ public class InvocationSessionStore {
             // WW-5026 - Preserve the previous PageContext (even if null) and restore it to the
             // ActionContext after loading the savedInvocation context.  The saved context's PageContext
             // would already be closed at this point (causing failures if used for output).
-            final ActionContext savedActionContext = savedInvocation.getInvocationContext();
             final ActionContext previousActionContext = ActionContext.getContext();
-            ActionContext.bind(savedActionContext);
-            savedActionContext.setValueStack(savedInvocation.getStack());
-            if (previousActionContext != null) {
-                savedActionContext.setPageContext(previousActionContext.getPageContext());
-            } else {
-                savedActionContext.setPageContext(null);
-            }
+
+            savedInvocation
+                .getInvocationContext()
+                .withPageContextOrClear(previousActionContext)
+                .withValueStack(savedInvocation.getStack())
+                .bind();
         }
 
         return savedInvocation;
@@ -84,13 +82,13 @@ public class InvocationSessionStore {
      */
     public static void storeInvocation(String key, String token, ActionInvocation invocation) {
         InvocationContext invocationContext = new InvocationContext(invocation, token);
-        Map invocationMap = getInvocationMap();
+        Map<String, Object> invocationMap = getInvocationMap();
         invocationMap.put(key, invocationContext);
         setInvocationMap(invocationMap);
     }
 
-    static void setInvocationMap(Map invocationMap) {
-        Map session = ActionContext.getContext().getSession();
+    static void setInvocationMap(Map<String, Object> invocationMap) {
+        Map<String, Object> session = ActionContext.getContext().getSession();
 
         if (session == null) {
             throw new IllegalStateException("Unable to access the session.");
@@ -99,17 +97,17 @@ public class InvocationSessionStore {
         session.put(INVOCATION_MAP_KEY, invocationMap);
     }
 
-    static Map getInvocationMap() {
-        Map session = ActionContext.getContext().getSession();
+    static Map<String, Object> getInvocationMap() {
+        Map<String, Object> session = ActionContext.getContext().getSession();
 
         if (session == null) {
             throw new IllegalStateException("Unable to access the session.");
         }
 
-        Map invocationMap = (Map) session.get(INVOCATION_MAP_KEY);
+        Map<String, Object> invocationMap = (Map<String, Object>) session.get(INVOCATION_MAP_KEY);
 
         if (invocationMap == null) {
-            invocationMap = new HashMap();
+            invocationMap = new HashMap<>();
             setInvocationMap(invocationMap);
         }
 

@@ -93,7 +93,7 @@ public class CreateSessionInterceptor extends AbstractInterceptor {
         if (httpSession == null) {
             LOG.debug("Creating new HttpSession and new SessionMap in ServletActionContext");
             servletRequest.getSession(true);
-            invocation.getInvocationContext().setSession(new SessionMap<>(servletRequest));
+            invocation.getInvocationContext().withSession(new SessionMap<>(servletRequest));
         }
         return invocation.invoke();
     }

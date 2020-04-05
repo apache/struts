@@ -88,7 +88,6 @@ public class RepopulateConversionErrorFieldValidatorSupportTest extends XWorkTes
 		ValueStack stack = ActionContext.getContext().getValueStack();
 		MockActionInvocation invocation = new MockActionInvocation();
 		invocation.setStack(stack);
-		ActionContext.getContext().setValueStack(stack);
 		ActionContext.getContext().setActionInvocation(invocation);
 		
 		String[] conversionErrorValue = new String[] { "some value" };

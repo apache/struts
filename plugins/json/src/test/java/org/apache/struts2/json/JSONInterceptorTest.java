@@ -22,7 +22,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -517,15 +516,15 @@ public class JSONInterceptorTest extends StrutsTestCase {
         this.request = new MockHttpServletRequest();
         this.response = new MockHttpServletResponse();
 
-        ActionContext context = ActionContext.getContext();
-        ValueStack stack = context.getValueStack();
-
-        context.setServletRequest(request);
-        context.setServletResponse(response);
-
         MockServletContext servletContext = new MockServletContext();
 
-        context.setServletContext(servletContext);
+        ActionContext context = ActionContext.getContext()
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(servletContext);
+
+        ValueStack stack = context.getValueStack();
+
         this.invocation = new MockActionInvocationEx();
         this.invocation.setInvocationContext(context);
         this.invocation.setStack(stack);

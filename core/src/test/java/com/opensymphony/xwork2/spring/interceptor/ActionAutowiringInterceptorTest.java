@@ -77,12 +77,13 @@ public class ActionAutowiringInterceptorTest extends XWorkTestCase {
     }
 
     protected void loadSpringApplicationContextIntoApplication(ApplicationContext appContext) {
-        Map<String, Object> context = new HashMap<>();
-        ActionContext actionContext = ActionContext.of(context).bind();
-
         Map<String, Object> application = new HashMap<>();
         application.put(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, appContext);
-        actionContext.setApplication(application);
+
+        Map<String, Object> context = new HashMap<>();
+        ActionContext.of(context)
+            .withApplication(application)
+            .bind();
     }
 
     public void testLoadsApplicationContextUsingWebApplicationContextUtils() throws Exception {
@@ -104,10 +105,9 @@ public class ActionAutowiringInterceptorTest extends XWorkTestCase {
     }
 
     public void testIfApplicationContextIsNullThenBeanWillNotBeWiredUp() throws Exception {
-        Map<String, Object> context = new HashMap<>();
-        ActionContext actionContext = ActionContext.of(context).bind();
-
-        actionContext.setApplication(new HashMap<>());
+        ActionContext.of(new HashMap<>())
+            .withApplication(new HashMap<>())
+            .bind();
 
         ActionAutowiringInterceptor interceptor = new ActionAutowiringInterceptor();
         interceptor.init();

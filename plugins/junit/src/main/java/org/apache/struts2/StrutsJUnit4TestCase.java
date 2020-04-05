@@ -143,7 +143,7 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
 
     protected void initSession(ActionContext actionContext) {
         if (actionContext.getSession() == null) {
-            actionContext.setSession(new HashMap<String, Object>());
+            actionContext.withSession(new HashMap<>());
             request.setSession(new MockHttpSession(servletContext));
         }
     }

@@ -121,10 +121,11 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         extraContext.remove(ActionContext.LOCALE);
         stack.getContext().putAll(extraContext);
 
-        ActionContext actionContext = ActionContext.of(context).bind();
-        actionContext.setServletRequest(request);
-        actionContext.setServletResponse(response);
-        actionContext.setServletContext(servletContext);
+        ActionContext actionContext = ActionContext.of(context)
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(servletContext)
+            .bind();
     }
 
     protected void tearDown() throws Exception {

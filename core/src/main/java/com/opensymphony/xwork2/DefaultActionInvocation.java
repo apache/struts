@@ -395,8 +395,8 @@ public class DefaultActionInvocation implements ActionInvocation {
             contextMap.put("action", action);
         }
 
-        invocationContext = ActionContext.of(contextMap);
-        invocationContext.setName(proxy.getActionName());
+        invocationContext = ActionContext.of(contextMap)
+            .withActionName(proxy.getActionName());
 
         createInterceptors(proxy);
 

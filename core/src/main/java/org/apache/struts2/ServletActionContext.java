@@ -102,7 +102,7 @@ public class ServletActionContext implements StrutsStatics {
      * @param request the HTTP servlet request object.
      */
     public static void setRequest(HttpServletRequest request) {
-        ActionContext.getContext().setServletRequest(request);
+        ActionContext.getContext().withServletRequest(request);
     }
 
     /**
@@ -120,7 +120,7 @@ public class ServletActionContext implements StrutsStatics {
      * @param response the HTTP servlet response object.
      */
     public static void setResponse(HttpServletResponse response) {
-        ActionContext.getContext().setServletResponse(response);
+        ActionContext.getContext().withServletResponse(response);
     }
 
     /**
@@ -147,6 +147,6 @@ public class ServletActionContext implements StrutsStatics {
      * @param servletContext The servlet context to use
      */
     public static void setServletContext(ServletContext servletContext) {
-        ActionContext.getContext().setServletContext(servletContext);
+        ActionContext.getContext().withServletContext(servletContext);
     }
 }

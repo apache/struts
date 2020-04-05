@@ -195,12 +195,12 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testApplicationAware() throws Exception {
-        ApplicationAware mock = (ApplicationAware) createMock(ApplicationAware.class);
+        ApplicationAware mock = createMock(ApplicationAware.class);
 
         MockActionInvocation mai = createActionInvocation(mock);
 
         Map<String, Object> app = new HashMap<String, Object>();
-        mai.getInvocationContext().setApplication(app);
+        mai.getInvocationContext().withApplication(app);
 
         mock.setApplication(app);
         expectLastCall().times(1);
@@ -216,7 +216,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         MockActionInvocation mai = createActionInvocation(mock);
 
         Map<String, Object> app = new HashMap<>();
-        mai.getInvocationContext().setApplication(app);
+        mai.getInvocationContext().withApplication(app);
 
         mock.withApplication(app);
         expectLastCall().times(1);

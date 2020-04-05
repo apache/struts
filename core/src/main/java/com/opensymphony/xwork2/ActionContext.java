@@ -21,6 +21,7 @@ package com.opensymphony.xwork2;
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -62,7 +63,10 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the name of the action being executed.
+     *
+     * @deprecated used helper methods instead
      */
+    @Deprecated
     public static final String ACTION_NAME = "com.opensymphony.xwork2.ActionContext.name";
 
     /**
@@ -196,7 +200,9 @@ public class ActionContext implements Serializable {
      * Sets the action's application context.
      *
      * @param application the action's application context.
+     * @deprecated use {@link #withApplication(Map)} instead
      */
+    @Deprecated
     public void setApplication(Map<String, Object> application) {
         put(APPLICATION, application);
     }
@@ -223,7 +229,9 @@ public class ActionContext implements Serializable {
      * Sets conversion errors which occurred when executing the action.
      *
      * @param conversionErrors a Map of errors which occurred when executing the action.
+     * @deprecated use {@link #withConversionErrors(Map)} instead
      */
+    @Deprecated
     public void setConversionErrors(Map<String, ConversionData> conversionErrors) {
         put(CONVERSION_ERRORS, conversionErrors);
     }
@@ -238,8 +246,7 @@ public class ActionContext implements Serializable {
         Map<String, ConversionData> errors = (Map) get(CONVERSION_ERRORS);
 
         if (errors == null) {
-            errors = new HashMap<>();
-            setConversionErrors(errors);
+            errors = withConversionErrors(new HashMap<>()).getConversionErrors();
         }
 
         return errors;
@@ -275,7 +282,9 @@ public class ActionContext implements Serializable {
      * Sets the name of the current Action in the ActionContext.
      *
      * @param name the name of the current action.
+     * @deprecated use {@link #withActionName(String)} instead
      */
+    @Deprecated
     public void setName(String name) {
         put(ACTION_NAME, name);
     }
@@ -286,6 +295,15 @@ public class ActionContext implements Serializable {
      * @return the name of the current action.
      */
     public String getName() {
+        return (String) get(ACTION_NAME);
+    }
+
+    /**
+     * Gets the name of the current Action.
+     *
+     * @return the name of the current action.
+     */
+    public String getActionName() {
         return (String) get(ACTION_NAME);
     }
 
@@ -313,7 +331,9 @@ public class ActionContext implements Serializable {
      * Sets a map of action session values.
      *
      * @param session the session values.
+     * @deprecated use {@link #withSession(Map)} instead
      */
+    @Deprecated
     public void setSession(Map<String, Object> session) {
         put(SESSION, session);
     }
@@ -331,7 +351,9 @@ public class ActionContext implements Serializable {
      * Sets the OGNL value stack.
      *
      * @param stack the OGNL value stack.
+     * @deprecated Use {@link #withValueStack(ValueStack)} instead
      */
+    @Deprecated
     public void setValueStack(ValueStack stack) {
         put(VALUE_STACK, stack);
     }
@@ -404,31 +426,86 @@ public class ActionContext implements Serializable {
         return (HttpServletResponse) get(StrutsStatics.HTTP_RESPONSE);
     }
 
-    public void setServletContext(ServletContext servletContext) {
+    public ActionContext withServletContext(ServletContext servletContext) {
         put(StrutsStatics.SERVLET_CONTEXT, servletContext);
+        return this;
     }
 
-    public void setServletRequest(HttpServletRequest request) {
+    public ActionContext withServletRequest(HttpServletRequest request) {
         put(StrutsStatics.HTTP_REQUEST, request);
+        return this;
     }
 
-    public void setServletResponse(HttpServletResponse response) {
+    public ActionContext withServletResponse(HttpServletResponse response) {
         put(StrutsStatics.HTTP_RESPONSE, response);
+        return this;
     }
 
     public PageContext getPageContext() {
         return (PageContext) get(StrutsStatics.PAGE_CONTEXT);
     }
 
-    public void setPageContext(PageContext pageContext) {
-        put(StrutsStatics.PAGE_CONTEXT, pageContext);
-    }
-
     public ActionMapping getActionMapping() {
         return (ActionMapping) get(StrutsStatics.ACTION_MAPPING);
     }
 
-    public void setActionMapping(ActionMapping actionMapping) {
+    public ActionContext withActionMapping(ActionMapping actionMapping) {
         put(StrutsStatics.ACTION_MAPPING, actionMapping);
+        return this;
     }
+
+    public ActionContext withApplication(Map<String, Object> application) {
+        put(APPLICATION, application);
+        return this;
+    }
+
+    public ActionContext withSession(Map<String, Object> session) {
+        put(SESSION, session);
+        return this;
+    }
+
+    public ActionContext withParameters(HttpParameters parameters) {
+        put(PARAMETERS, parameters);
+        return this;
+    }
+
+    public ActionContext withActionName(String actionName) {
+        put(ACTION_NAME, actionName);
+        return this;
+    }
+
+    public ActionContext withValueStack(ValueStack valueStack) {
+        put(VALUE_STACK, valueStack);
+        return this;
+    }
+
+    public ActionContext withPageContext(PageContext pageContext) {
+        put(StrutsStatics.PAGE_CONTEXT, pageContext);
+        return this;
+    }
+
+    public ActionContext withPageContextOrClear(ActionContext actionContext) {
+        if (actionContext == null) {
+            put(StrutsStatics.PAGE_CONTEXT, null);
+        } else {
+            put(StrutsStatics.PAGE_CONTEXT, actionContext.getPageContext());
+        }
+        return this;
+    }
+
+    public ActionContext withConversionErrors(Map<String, ConversionData> conversionErrors) {
+        put(CONVERSION_ERRORS, conversionErrors);
+        return this;
+    }
+
+    public ActionContext withContainer(Container container) {
+        put(CONTAINER, container);
+        return this;
+    }
+
+    public ActionContext withActionInvocation(ActionInvocation actionInvocation) {
+        put(ACTION_INVOCATION, actionInvocation);
+        return this;
+    }
+
 }

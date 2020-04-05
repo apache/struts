@@ -49,11 +49,13 @@ public class ConversionErrorFieldValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
         ValueStack stack = ActionContext.getContext().getValueStack();
-        ActionContext context = ActionContext.of(stack.getContext()).bind();
 
         Map<String, ConversionData> conversionErrors = new HashMap<>();
         conversionErrors.put("foo", new ConversionData("bar", Integer.class));
-        context.setConversionErrors(conversionErrors);
+        ActionContext.of(stack.getContext())
+            .withConversionErrors(conversionErrors)
+            .bind();
+
         validator = new ConversionErrorFieldValidator();
         validationAware = new ValidationAwareSupport();
 

@@ -60,9 +60,7 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
     public void testValueStackReset() {
         ActionContext actionContext = ActionContext.getContext();
         assertEquals(stack, actionContext.getValueStack());
-        InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
-        actionContext.setValueStack(null);
-        assertNull(actionContext.getValueStack());
+
         InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
         assertEquals(stack, actionContext.getValueStack());
     }
@@ -102,27 +100,30 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
     }
 
     public void testStoreAndLoadPreservesPageContext() {
-        ActionContext actionContext = ActionContext.getContext();
-
-        // Create mock PageContext to put with the saved context (simulating a PageContext previously
-        // used and closed after generating JSP output).
-        MockPageContext mockSavedPageContext = new MockPageContext();
-        actionContext.setPageContext(mockSavedPageContext);
-        assertEquals(mockSavedPageContext, ActionContext.getContext().getPageContext());
-
-        InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
-
-        ActionContext actionContext2 = ActionContext.of(new HashMap<>()).bind();
-        actionContext2.setSession(session);
-
-        assertEquals(actionContext2, ActionContext.getContext());
-
-        // Create mock PageContext to put with the current context (simulating a PageContext 
+        // Create mock PageContext to put with the current context (simulating a PageContext
         // associated with the current (active) process flow).  In real-world processing it
         // will usually be null, but if non-null it should be preserved/restored upon load of the
         // saved context.
         MockPageContext mockPreviousPageContext = new MockPageContext();
-        actionContext2.setPageContext(mockPreviousPageContext);
+
+        // Create mock PageContext to put with the saved context (simulating a PageContext previously
+        // used and closed after generating JSP output).
+        MockPageContext mockSavedPageContext = new MockPageContext();
+        ActionContext actionContext = ActionContext.getContext()
+            .withPageContext(mockSavedPageContext);
+
+        assertEquals(mockSavedPageContext, ActionContext.getContext().getPageContext());
+
+        InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
+
+        ActionContext actionContext2 = ActionContext.of(new HashMap<>())
+            .withSession(session)
+            .withPageContext(mockPreviousPageContext)
+            .bind();
+
+        assertEquals(actionContext2, ActionContext.getContext());
+
+        actionContext2.withPageContext(mockPreviousPageContext);
         assertEquals(mockPreviousPageContext, ActionContext.getContext().getPageContext());
 
         InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
@@ -134,16 +135,16 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
         super.setUp();
         stack = ActionContext.getContext().getValueStack();
 
-        ActionContext actionContext = ActionContext.of(stack.getContext()).bind();
-
         session = new HashMap<>();
-        actionContext.setSession(session);
+
+        ActionContext actionContext = ActionContext.of(stack.getContext())
+            .withSession(session)
+            .withValueStack(stack)
+            .bind();
 
         invocationMock = new Mock(ActionInvocation.class);
         invocation = (ActionInvocation) invocationMock.proxy();
         invocationMock.matchAndReturn("getInvocationContext", actionContext);
-
-        actionContext.setValueStack(stack);
         invocationMock.matchAndReturn("getStack", stack);
 
         Mock proxyMock = new Mock(ActionProxy.class);

@@ -329,12 +329,6 @@ public class EmbeddedJSPResultTest extends TestCase {
 
         EasyMock.replay(request);
 
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.setParameters(HttpParameters.create(params).build());
-        actionContext.setServletRequest(request);
-        actionContext.setServletResponse(response);
-        actionContext.setServletContext(context);
-
         //mock value stack
         Map<String, Object> stackContext = new HashMap<>();
         ValueStack valueStack = EasyMock.createNiceMock(ValueStack.class);
@@ -362,9 +356,15 @@ public class EmbeddedJSPResultTest extends TestCase {
 
         EasyMock.replay(container);
         stackContext.put(ActionContext.CONTAINER, container);
-        actionContext.setContainer(container);
 
-        actionContext.setValueStack(valueStack);
+        ActionContext.of(new HashMap<>())
+            .withParameters(HttpParameters.create(params).build())
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(context)
+            .withContainer(container)
+            .withValueStack(valueStack)
+            .bind();
     }
 
 }

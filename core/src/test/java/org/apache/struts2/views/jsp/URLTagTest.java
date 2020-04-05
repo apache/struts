@@ -556,11 +556,11 @@ public class URLTagTest extends AbstractUITagTest {
         extraContext.remove(ActionContext.LOCALE);
         stack.getContext().putAll(extraContext);
 
-        ActionContext actionContext = ActionContext.of(context).bind();
-        actionContext.setServletRequest(request);
-        actionContext.setServletResponse(response);
-        actionContext.setServletContext(servletContext);
-
+        ActionContext actionContext = ActionContext.of(context)
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(servletContext)
+            .bind();
 
         // Make sure we have an action invocation available
         ActionContext.getContext().setActionInvocation(new DefaultActionInvocation(null, true));

@@ -341,8 +341,6 @@ public class FormTagTest extends AbstractUITagTest {
     }
 
     private void prepareMockInvocation() throws Exception {
-        ActionContext.getContext().setValueStack(stack);
-
         ActionConfig config = new ActionConfig.Builder("", "name", "").build();
         ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
         ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);

@@ -59,8 +59,8 @@ public class ContentTypeHandlerManagerTest extends TestCase {
         mockRequest = new MockHttpServletRequest();
         mockRequest.setMethod("GET");
         ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.setServletRequest(mockRequest);
-        actionContext.setServletResponse(mockResponse);
+        actionContext.withServletRequest(mockRequest);
+        actionContext.withServletResponse(mockResponse);
 
         invocation = new MockActionInvocation();
         invocation.setProxy(new MockActionProxy());

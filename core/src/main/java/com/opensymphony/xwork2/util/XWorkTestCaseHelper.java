@@ -40,7 +40,7 @@ public class XWorkTestCaseHelper {
         // Reset the value stack
         ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
         stack.getContext().put(ActionContext.CONTAINER, container);
-        ActionContext.ofAndBind(stack.getContext());
+        ActionContext.of(stack.getContext()).bind();
     
         // clear out localization
         //container.getInstance(LocalizedTextUtil.class).reset();
@@ -80,7 +80,7 @@ public class XWorkTestCaseHelper {
         // Reset the value stack
         ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
         stack.getContext().put(ActionContext.CONTAINER, container);
-        ActionContext.ofAndBind(stack.getContext());
+        ActionContext.of(stack.getContext()).bind();
         
         return configurationManager;
     }

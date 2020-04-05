@@ -129,7 +129,7 @@ public class DefaultTextProviderTest extends XWorkTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        ActionContext ctx = ActionContext.ofAndBind(new HashMap<>());
+        ActionContext ctx = ActionContext.of(new HashMap<>()).bind();
         ctx.setLocale(Locale.CANADA);
 
         container.getInstance(LocalizedTextProvider.class).addDefaultResourceBundle(DefaultTextProviderTest.class.getName());

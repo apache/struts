@@ -57,7 +57,7 @@ public class ActionContextTest extends XWorkTestCase {
         extraContext.put(ActionContext.SESSION, session);
         extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
         extraContext.put(ActionContext.ACTION_NAME, ACTION_NAME);
-        context = ActionContext.ofAndBind(extraContext);
+        context = ActionContext.of(extraContext).bind();
     }
 
     public void testContextParams() {
@@ -87,7 +87,7 @@ public class ActionContextTest extends XWorkTestCase {
 
     public void testContextMap() {
         Map<String, Object> map = new HashMap<>();
-        ActionContext.ofAndBind(map);
+        ActionContext.of(map).bind();
 
         assertEquals(map, ActionContext.getContext().getContextMap());
     }

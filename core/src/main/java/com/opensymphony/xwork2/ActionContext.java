@@ -128,24 +128,25 @@ public class ActionContext implements Serializable {
         return new ActionContext(context);
     }
 
+    /**
+     * Binds the provided context with the current thread
+     *
+     * @param actionContext context to bind to the thread
+     * @return context which was bound to the thread
+     */
     public static ActionContext bind(ActionContext actionContext) {
         ActionContext.setContext(actionContext);
         return ActionContext.getContext();
     }
 
-    public static ActionContext ofAndBind(Map<String, Object> context) {
-        return bind(of(context));
-    }
-
     /**
-     * Creates a new ActionContext based on passed in ActionContext
-     * and assign this instance to the current thread
+     * Binds this context with the current thread
      *
-     * @param actionContext ActionContext to be used for current thread
-     * @return new ActionContext
+     * @return this context which was bound to the thread
      */
-    public static ActionContext ofAndBind(ActionContext actionContext) {
-        return bind(actionContext);
+    public ActionContext bind() {
+        ActionContext.setContext(this);
+        return ActionContext.getContext();
     }
 
     /**

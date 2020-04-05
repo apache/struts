@@ -54,7 +54,7 @@ public class ServletActionContextTest extends TestCase implements StrutsStatics 
         extraContext.put(HTTP_RESPONSE, response);
         extraContext.put(SERVLET_CONTEXT, servletContext);
 
-        actionContext = ActionContext.ofAndBind(extraContext);
+        actionContext = ActionContext.of(extraContext).bind();
     }
 
     public void testContextParams() {

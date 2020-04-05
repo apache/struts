@@ -121,7 +121,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         extraContext.remove(ActionContext.LOCALE);
         stack.getContext().putAll(extraContext);
 
-        ActionContext actionContext = ActionContext.ofAndBind(context);
+        ActionContext actionContext = ActionContext.of(context).bind();
         actionContext.setServletRequest(request);
         actionContext.setServletResponse(response);
         actionContext.setServletContext(servletContext);

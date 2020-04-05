@@ -83,7 +83,7 @@ public class StrutsConversionErrorInterceptorTest extends StrutsInternalTestCase
         mockInvocation = new Mock(ActionInvocation.class);
         invocation = (ActionInvocation) mockInvocation.proxy();
         stack = ActionContext.getContext().getValueStack();
-        context = ActionContext.ofAndBind(stack.getContext());
+        context = ActionContext.of(stack.getContext()).bind();
         conversionErrors = new HashMap<>();
         context.setConversionErrors(conversionErrors);
         mockInvocation.matchAndReturn("getInvocationContext", context);

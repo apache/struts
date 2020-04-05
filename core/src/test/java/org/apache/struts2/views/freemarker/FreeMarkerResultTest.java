@@ -134,7 +134,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         servletContext = new StrutsMockServletContext();
         stack = ActionContext.getContext().getValueStack();
 
-        context = ActionContext.ofAndBind(stack.getContext());
+        context = ActionContext.of(stack.getContext()).bind();
         context.setServletResponse(response);
         context.setServletRequest(request);
         context.setServletContext(servletContext);

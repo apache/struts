@@ -183,7 +183,7 @@ public class DefaultWorkflowInterceptorTest extends XWorkTestCase {
         EasyMock.replay(action);
         EasyMock.replay(proxy);
 
-        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
+        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
         actionContext.setActionInvocation(invocation);
     }
 

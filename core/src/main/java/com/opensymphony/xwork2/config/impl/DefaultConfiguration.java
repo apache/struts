@@ -223,7 +223,7 @@ public class DefaultConfiguration implements Configuration {
         ActionContext context = ActionContext.getContext();
         if (context == null) {
             ValueStack vs = cont.getInstance(ValueStackFactory.class).createValueStack();
-            context = ActionContext.ofAndBind(vs.getContext());
+            context = ActionContext.of(vs.getContext()).bind();
         }
         return context;
     }

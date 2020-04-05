@@ -159,7 +159,7 @@ public class ActionSupportTest extends XWorkTestCase {
         ActionContext.getContext().setLocale(Locale.ITALY);
         assertEquals(Locale.ITALY, as.getLocale());
 
-        ActionContext.ofAndBind(new HashMap<>());
+        ActionContext.of(new HashMap<>()).bind();
         assertEquals(defLocale, as.getLocale()); // ActionContext will create a new context, when it was set to null before
     }
 

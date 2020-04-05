@@ -69,6 +69,6 @@ public class LocaleAwareTest extends XWorkTestCase {
 
         ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
         stack.getActionContext().setContainer(container);
-        ActionContext.ofAndBind(stack.getContext());
+        ActionContext.of(stack.getContext()).bind();
     }
 }

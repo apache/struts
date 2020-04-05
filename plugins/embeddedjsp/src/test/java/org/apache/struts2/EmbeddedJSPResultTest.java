@@ -329,7 +329,7 @@ public class EmbeddedJSPResultTest extends TestCase {
 
         EasyMock.replay(request);
 
-        ActionContext actionContext = ActionContext.ofAndBind(new HashMap<>());
+        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
         actionContext.setParameters(HttpParameters.create(params).build());
         actionContext.setServletRequest(request);
         actionContext.setServletResponse(response);

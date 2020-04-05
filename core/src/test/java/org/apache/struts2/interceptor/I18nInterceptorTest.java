@@ -256,7 +256,7 @@ public class I18nInterceptorTest extends TestCase {
         interceptor.init();
         session = new HashMap<>();
 
-        ac = ActionContext.ofAndBind(new HashMap<>());
+        ac = ActionContext.of(new HashMap<>()).bind();
         ac.setSession(session);
         ac.setParameters(HttpParameters.create().build());
 

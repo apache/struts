@@ -38,7 +38,7 @@ public class ActionContextThreadLocalTest extends TestCase {
     }
 
     public void testSetContext() {
-        ActionContext context = ActionContext.ofAndBind(new HashMap<>());
+        ActionContext context = ActionContext.of(new HashMap<>()).bind();
 
         assertEquals(context, ActionContext.getContext());
     }

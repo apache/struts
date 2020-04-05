@@ -154,7 +154,7 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         mockInvocation = new Mock(ActionInvocation.class);
         mockInvocation.expectAndReturn("getStack", stack);
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
-        mockInvocation.expectAndReturn("getInvocationContext", ActionContext.ofAndBind(new HashMap<>()));
+        mockInvocation.expectAndReturn("getInvocationContext", ActionContext.of(new HashMap<>()).bind());
         mockInvocation.expectAndReturn("getResult", new ActionChainResult());
         invocation = (ActionInvocation) mockInvocation.proxy();
         interceptor = new ChainingInterceptor();

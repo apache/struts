@@ -100,7 +100,7 @@ public abstract class OldDecorator2NewStrutsDecorator extends BaseWebAppDecorato
                 // put in a dummy ActionSupport so basic functionality still works
                 ActionSupport action = new ActionSupport();
                 vs.push(action);
-                ctx.setActionInvocation(new DummyActionInvocation(action));
+                ctx.withActionInvocation(new DummyActionInvocation(action));
             }
         }
 

@@ -368,7 +368,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
 
         MockActionInvocation mai = new MockActionInvocation();
-        ActionContext.getContext().setActionInvocation(mai);
+        ActionContext.getContext().withActionInvocation(mai);
 
         MockActionProxy actionProxy = new MockActionProxy();
         actionProxy.setInvocation(mai);

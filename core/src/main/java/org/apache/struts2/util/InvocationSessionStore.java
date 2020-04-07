@@ -64,7 +64,7 @@ public class InvocationSessionStore {
 
             savedInvocation
                 .getInvocationContext()
-                .withPageContextOrClear(previousActionContext)
+                .usePageContextOrClear(previousActionContext)
                 .withValueStack(savedInvocation.getStack())
                 .bind();
         }

@@ -354,7 +354,7 @@ public class FormTagTest extends AbstractUITagTest {
         EasyMock.replay(invocation);
         EasyMock.replay(proxy);
 
-        ActionContext.getContext().setActionInvocation(invocation);
+        ActionContext.getContext().withActionInvocation(invocation);
     }
 
     /**

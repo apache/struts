@@ -385,7 +385,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         ActionContext actionContext = ActionContext.getContext();
 
         if (actionContext != null) {
-            actionContext.setActionInvocation(this);
+            actionContext.withActionInvocation(this);
         }
 
         createAction(contextMap);

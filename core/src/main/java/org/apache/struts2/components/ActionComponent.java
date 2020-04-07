@@ -293,7 +293,7 @@ public class ActionComponent extends ContextBean {
             // set the old stack back on the request
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
             if (inv != null) {
-                ActionContext.getContext().setActionInvocation(inv);
+                ActionContext.getContext().withActionInvocation(inv);
             }
         }
 

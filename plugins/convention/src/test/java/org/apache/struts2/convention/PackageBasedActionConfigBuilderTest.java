@@ -89,8 +89,9 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        ActionContext context = ActionContext.of(new HashMap<>()).bind();
-        context.setContainer(new DummyContainer());
+        ActionContext.of(new HashMap<>())
+            .withContainer(new DummyContainer())
+            .bind();
     }
 
     public void testActionPackages() throws MalformedURLException {

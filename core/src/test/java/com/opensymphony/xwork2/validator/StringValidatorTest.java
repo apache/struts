@@ -218,7 +218,7 @@ public class StringValidatorTest extends XWorkTestCase {
         EasyMock.replay(invocation);
         EasyMock.replay(proxy);
 
-        ActionContext.getContext().setActionInvocation(invocation);
+        ActionContext.getContext().withActionInvocation(invocation);
 
         tpf = container.getInstance(TextProviderFactory.class);
     }

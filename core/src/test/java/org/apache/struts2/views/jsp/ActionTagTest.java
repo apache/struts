@@ -188,7 +188,7 @@ public class ActionTagTest extends AbstractTagTest {
         tag.setNamespace("");
         tag.setName("testActionTagAction");
         tag.setExecuteResult(true);
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInv.proxy());
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInv.proxy());
 
         ActionInvocation oldInvocation = ActionContext.getContext().getActionInvocation();
         assertNotNull(oldInvocation);
@@ -199,7 +199,7 @@ public class ActionTagTest extends AbstractTagTest {
         ActionComponent component = (ActionComponent) tag.getComponent();
 
         tag.doEndTag();
-        assertTrue(oldInvocation == ActionContext.getContext().getActionInvocation());
+         assertSame(oldInvocation, ActionContext.getContext().getActionInvocation());
     }
 
     public void testIngoreContextParamsFalse() throws Exception {

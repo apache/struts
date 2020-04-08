@@ -21,12 +21,11 @@ package org.apache.struts2.rest;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import java.util.HashMap;
@@ -62,7 +61,7 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  * <!-- END SNIPPET: description -->
  *
  * <p><u>Interceptor parameters:</u></p>
- *
+ * <p>
  * <!-- START SNIPPET: parameters -->
  *
  * <ul>
@@ -71,11 +70,11 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  * an action / field error is found.</li>
  *
  * </ul>
- *
+ * <p>
  * <!-- END SNIPPET: parameters -->
  *
  * <p><u>Extending the interceptor:</u></p>
- *
+ * <p>
  * <!-- START SNIPPET: extending -->
  * <p>
  * There are no known extension points for this interceptor.
@@ -86,14 +85,14 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * 
+ *
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
  *     &lt;interceptor-ref name="params"/&gt;
  *     &lt;interceptor-ref name="validation"/&gt;
  *     &lt;interceptor-ref name="workflow"/&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- * 
+ *
  * &lt;-- In this case myMethod as well as mySecondMethod of the action class
  *        will not pass through the workflow process --&gt;
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
@@ -114,8 +113,8 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  *     &lt;interceptor-ref name="validation"/&gt;
  *     &lt;interceptor-ref name="workflow"&gt;
  *        &lt;param name="inputResultName"&gt;error&lt;/param&gt;
-*         &lt;param name="excludeMethods"&gt;*&lt;/param&gt;
-*         &lt;param name="includeMethods"&gt;myWorkflowMethod&lt;/param&gt;
+ *         &lt;param name="excludeMethods"&gt;*&lt;/param&gt;
+ *         &lt;param name="includeMethods"&gt;myWorkflowMethod&lt;/param&gt;
  *     &lt;/interceptor-ref&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
@@ -130,14 +129,14 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  * @author tm_jee
  */
 public class RestWorkflowInterceptor extends MethodFilterInterceptor {
-	
-	private static final long serialVersionUID = 7563014655616490865L;
 
-	private static final Logger LOG = LogManager.getLogger(RestWorkflowInterceptor.class);
-	
-	private String inputResultName = Action.INPUT;
-	
-	private ContentTypeHandlerManager manager;
+    private static final long serialVersionUID = 7563014655616490865L;
+
+    private static final Logger LOG = LogManager.getLogger(RestWorkflowInterceptor.class);
+
+    private String inputResultName = Action.INPUT;
+
+    private ContentTypeHandlerManager manager;
 
     private String postMethodName = "create";
     private String editMethodName = "edit";
@@ -172,26 +171,26 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
     }
 
     @Inject
-	public void setContentTypeHandlerManager(ContentTypeHandlerManager mgr) {
-	    this.manager = mgr;
-	}
-	
-	/**
-	 * Set the <code>inputResultName</code> (result name to be returned when 
-	 * a action / field error is found registered). Default to {@link Action#INPUT}
-	 * 
-	 * @param inputResultName what result name to use when there was validation error(s).
-	 */
-	public void setInputResultName(String inputResultName) {
-		this.inputResultName = inputResultName;
-	}
-	
-	/**
-	 * Intercept {@link ActionInvocation} and processes the errors using the {@link org.apache.struts2.rest.handler.ContentTypeHandler}
-	 * appropriate for the request.  
-	 * 
-	 * @return String result name
-	 */
+    public void setContentTypeHandlerManager(ContentTypeHandlerManager mgr) {
+        this.manager = mgr;
+    }
+
+    /**
+     * Set the <code>inputResultName</code> (result name to be returned when
+     * a action / field error is found registered). Default to {@link Action#INPUT}
+     *
+     * @param inputResultName what result name to use when there was validation error(s).
+     */
+    public void setInputResultName(String inputResultName) {
+        this.inputResultName = inputResultName;
+    }
+
+    /**
+     * Intercept {@link ActionInvocation} and processes the errors using the {@link org.apache.struts2.rest.handler.ContentTypeHandler}
+     * appropriate for the request.
+     *
+     * @return String result name
+     */
     protected String doIntercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
 
@@ -199,26 +198,26 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
             ValidationAware validationAwareAction = (ValidationAware) action;
 
             if (validationAwareAction.hasErrors()) {
-          		LOG.debug("Errors on action {}, returning result name 'input'", validationAwareAction);
-            	ActionMapping mapping = (ActionMapping) ActionContext.getContext().get(ServletActionContext.ACTION_MAPPING);
-            	String method = inputResultName;
+                LOG.debug("Errors on action {}, returning result name 'input'", validationAwareAction);
+                ActionMapping mapping = ActionContext.getContext().getActionMapping();
+                String method = inputResultName;
                 if (postMethodName.equals(mapping.getMethod())) {
-                   method = newMethodName;
+                    method = newMethodName;
                 } else if (putMethodName.equals(mapping.getMethod())) {
-                   method = editMethodName;
+                    method = editMethodName;
                 }
-                
-                
-            	HttpHeaders info = new DefaultHttpHeaders()
-            	    .disableCaching()
-            	    .renderResult(method)
-            	    .withStatus(validationFailureStatusCode);
-            	
-            	Map<String, Object> errors = new HashMap<>();
-            	
-            	errors.put("actionErrors", validationAwareAction.getActionErrors());
-            	errors.put("fieldErrors", validationAwareAction.getFieldErrors());
-            	return manager.handleResult(invocation, info, errors);
+
+
+                HttpHeaders info = new DefaultHttpHeaders()
+                    .disableCaching()
+                    .renderResult(method)
+                    .withStatus(validationFailureStatusCode);
+
+                Map<String, Object> errors = new HashMap<>();
+
+                errors.put("actionErrors", validationAwareAction.getActionErrors());
+                errors.put("fieldErrors", validationAwareAction.getFieldErrors());
+                return manager.handleResult(invocation, info, errors);
             }
         }
 

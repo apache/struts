@@ -18,7 +18,12 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.ProxyObjectFactory;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
@@ -31,7 +36,7 @@ import java.util.Map;
 public class ScopedModelDrivenInterceptorTest extends XWorkTestCase {
 
     protected ScopedModelDrivenInterceptor inter = null;
-    
+
     /**
      * Set up instance variables required by this test case.
      */
@@ -45,24 +50,23 @@ public class ScopedModelDrivenInterceptorTest extends XWorkTestCase {
     }
 
     public void testResolveModel() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        ctx.setSession(new HashMap<String, Object>());
+        ActionContext ctx = ActionContext.getContext().withSession(new HashMap<>());
 
         ObjectFactory factory = ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
         Object obj = inter.resolveModel(factory, ctx, "java.lang.String", "request", "foo");
         assertNotNull(obj);
         assertTrue(obj instanceof String);
-        assertTrue(obj == ctx.get("foo"));
+        assertSame(obj, ctx.get("foo"));
 
         obj = inter.resolveModel(factory, ctx, "java.lang.String", "session", "foo");
         assertNotNull(obj);
         assertTrue(obj instanceof String);
-        assertTrue(obj == ctx.getSession().get("foo"));
+        assertSame(obj, ctx.getSession().get("foo"));
 
         obj = inter.resolveModel(factory, ctx, "java.lang.String", "session", "foo");
         assertNotNull(obj);
         assertTrue(obj instanceof String);
-        assertTrue(obj == ctx.getSession().get("foo"));
+        assertSame(obj, ctx.getSession().get("foo"));
     }
 
     public void testScopedModelDrivenAction() throws Exception {

@@ -32,13 +32,13 @@ import java.nio.charset.Charset;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p>
  * A result that send the content out as plain text. Useful typically when needed
  * to display the raw content of a JSP or Html file for example.
- *
+ * <p>
  * <!-- END SNIPPET: description -->
- *
- *
+ * <p>
+ * <p>
  * <!-- START SNIPPET: params -->
  *
  * <ul>
@@ -47,7 +47,7 @@ import java.nio.charset.Charset;
  *  response type (eg. Content-Type=text/plain; charset=UTF-8) and when reading
  *  using a Reader. Some example of charSet would be UTF-8, ISO-8859-1 etc.
  * </ul>
- *
+ * <p>
  * <!-- END SNIPPET: params -->
  *
  *
@@ -68,7 +68,6 @@ import java.nio.charset.Charset;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
- *
  */
 public class PlainTextResult extends StrutsResultSupport {
 
@@ -113,22 +112,22 @@ public class PlainTextResult extends StrutsResultSupport {
         // verify charset
         Charset charset = readCharset();
 
-        HttpServletResponse response = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
 
         applyCharset(charset, response);
         applyAdditionalHeaders(response);
         String location = adjustLocation(finalLocation);
 
         try (PrintWriter writer = response.getWriter();
-                InputStream resourceAsStream = readStream(invocation, location);
-                InputStreamReader reader = new InputStreamReader(resourceAsStream, charset == null ? Charset.defaultCharset() : charset)) {
+             InputStream resourceAsStream = readStream(invocation, location);
+             InputStreamReader reader = new InputStreamReader(resourceAsStream, charset == null ? Charset.defaultCharset() : charset)) {
             logWrongStream(finalLocation, resourceAsStream);
             sendStream(writer, reader);
         }
     }
 
     protected InputStream readStream(ActionInvocation invocation, String location) {
-        ServletContext servletContext = (ServletContext) invocation.getInvocationContext().get(SERVLET_CONTEXT);
+        ServletContext servletContext = invocation.getInvocationContext().getServletContext();
         return servletContext.getResourceAsStream(location);
     }
 
@@ -141,7 +140,7 @@ public class PlainTextResult extends StrutsResultSupport {
     protected void sendStream(PrintWriter writer, InputStreamReader reader) throws IOException {
         char[] buffer = new char[BUFFER_SIZE];
         int charRead;
-        while((charRead = reader.read(buffer)) != -1) {
+        while ((charRead = reader.read(buffer)) != -1) {
             writer.write(buffer, 0, charRead);
         }
     }

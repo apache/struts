@@ -23,8 +23,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
@@ -33,6 +31,8 @@ import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.result.StrutsResultSupport;
@@ -68,7 +68,7 @@ public class FreemarkerResult extends StrutsResultSupport {
      */
     protected String location;
     private String pContentType = "text/html";
-    private static final String PARENT_TEMPLATE_WRITER = FreemarkerResult.class.getName() +  ".parentWriter";
+    private static final String PARENT_TEMPLATE_WRITER = FreemarkerResult.class.getName() + ".parentWriter";
 
     public FreemarkerResult() {
         super();
@@ -77,7 +77,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     public FreemarkerResult(String location) {
         super(location);
     }
-    
+
     @Inject
     public void setFreemarkerManager(FreemarkerManager mgr) {
         this.freemarkerManager = mgr;
@@ -109,9 +109,8 @@ public class FreemarkerResult extends StrutsResultSupport {
      * </p>
      *
      * @param locationArg location argument
-     * @param invocation the action invocation
-     *
-     * @throws IOException in case of IO errors
+     * @param invocation  the action invocation
+     * @throws IOException       in case of IO errors
      * @throws TemplateException in case of freemarker template errors
      */
     public void doExecute(String locationArg, ActionInvocation invocation) throws IOException, TemplateException {
@@ -121,12 +120,12 @@ public class FreemarkerResult extends StrutsResultSupport {
         this.wrapper = getObjectWrapper();
 
         ActionContext ctx = invocation.getInvocationContext();
-        HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
+        HttpServletRequest req = ctx.getServletRequest();
 
         String absoluteLocation;
         if (location.startsWith("/")) {
-            absoluteLocation = location; 
-        } else { 
+            absoluteLocation = location;
+        } else {
             String namespace = invocation.getProxy().getNamespace();
             if (namespace == null || namespace.length() == 0 || namespace.equals("/")) {
                 absoluteLocation = "/" + location;
@@ -152,7 +151,7 @@ public class FreemarkerResult extends StrutsResultSupport {
 
                 // Process the template
                 Writer writer = getWriter();
-                if (willWriteIfCompleted){
+                if (willWriteIfCompleted) {
                     CharArrayWriter parentCharArrayWriter = (CharArrayWriter) req.getAttribute(PARENT_TEMPLATE_WRITER);
                     boolean isTopTemplate;
                     if (isTopTemplate = (parentCharArrayWriter == null)) {
@@ -242,7 +241,7 @@ public class FreemarkerResult extends StrutsResultSupport {
      * @throws IOException in case of IO errors
      */
     protected Writer getWriter() throws IOException {
-        if(writer != null) {
+        if (writer != null) {
             return writer;
         }
         return ServletActionContext.getResponse().getWriter();
@@ -278,7 +277,7 @@ public class FreemarkerResult extends StrutsResultSupport {
         ValueStack stack = ActionContext.getContext().getValueStack();
 
         Object action = null;
-        if(invocation!= null ) action = invocation.getAction(); //Added for NullPointException
+        if (invocation != null) action = invocation.getAction(); //Added for NullPointException
         return freemarkerManager.buildTemplateModel(stack, action, servletContext, request, response, wrapper);
     }
 
@@ -301,8 +300,7 @@ public class FreemarkerResult extends StrutsResultSupport {
      * the default implementation of postTemplateProcess applies the contentType parameter
      *
      * @param template the freemarker template
-     * @param model the template model
-     *
+     * @param model    the template model
      * @throws IOException in case of IO errors
      */
     protected void postTemplateProcess(Template template, TemplateModel model) throws IOException {
@@ -316,7 +314,7 @@ public class FreemarkerResult extends StrutsResultSupport {
      * objects into the model root
      *
      * @param template the freemarker template
-     * @param model the template model
+     * @param model    the template model
      * @return true to process the template, false to suppress template processing.
      * @throws IOException in case of IO errors
      */
@@ -342,8 +340,8 @@ public class FreemarkerResult extends StrutsResultSupport {
 
                 response.setContentType(contentType);
             }
-        } else if(isInsideActionTag()){
-             //trigger com.opensymphony.module.sitemesh.filter.PageResponseWrapper.deactivateSiteMesh()
+        } else if (isInsideActionTag()) {
+            //trigger com.opensymphony.module.sitemesh.filter.PageResponseWrapper.deactivateSiteMesh()
             response.setContentType(response.getContentType());
         }
 

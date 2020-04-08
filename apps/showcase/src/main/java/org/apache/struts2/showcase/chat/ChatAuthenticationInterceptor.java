@@ -25,27 +25,28 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.apache.struts2.dispatcher.SessionMap;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
 
 public class ChatAuthenticationInterceptor extends AbstractInterceptor {
 
-	private static final long serialVersionUID = 1L;
-	private static final Logger LOG = LogManager.getLogger(ChatAuthenticationInterceptor.class);
-	public static final String USER_SESSION_KEY = "chatUserSessionKey";
+    private static final long serialVersionUID = 1L;
+    private static final Logger LOG = LogManager.getLogger(ChatAuthenticationInterceptor.class);
+    public static final String USER_SESSION_KEY = "chatUserSessionKey";
 
-	public String intercept(ActionInvocation invocation) throws Exception {
+    public String intercept(ActionInvocation invocation) throws Exception {
 
-		LOG.debug("Authenticating chat user");
+        LOG.debug("Authenticating chat user");
 
-		SessionMap session = (SessionMap) ActionContext.getContext().get(ActionContext.SESSION);
-		User user = (User) session.get(USER_SESSION_KEY);
+        Map<String, Object> session = ActionContext.getContext().getSession();
+        User user = (User) session.get(USER_SESSION_KEY);
 
-		if (user == null) {
-			return Action.LOGIN;
-		}
-		return invocation.invoke();
-	}
+        if (user == null) {
+            return Action.LOGIN;
+        }
+        return invocation.invoke();
+    }
 
 }

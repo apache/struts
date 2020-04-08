@@ -64,10 +64,10 @@ import java.io.OutputStream;
  * of evaluating the expression will be used. If not set, then no charset will be set on
  * the header</li>
  * </ul>
- * 
+ *
  * <p>These parameters can also be set by exposing a similarly named getter method on your Action.  For example, you can
  * provide <code>getContentType()</code> to override that parameter for the current action.</p>
- *
+ * <p>
  * <!-- END SNIPPET: params -->
  * <p>
  * <b>Example:</b>
@@ -81,7 +81,6 @@ import java.io.OutputStream;
  *   &lt;param name="bufferSize"&gt;1024&lt;/param&gt;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
- *
  */
 public class StreamResult extends StrutsResultSupport {
 
@@ -94,7 +93,7 @@ public class StreamResult extends StrutsResultSupport {
     protected String contentType = "text/plain";
     protected String contentLength;
     protected String contentDisposition = "inline";
-    protected String contentCharSet ;
+    protected String contentCharSet;
     protected String inputName = "inputStream";
     protected InputStream inputStream;
     protected int bufferSize = 1024;
@@ -108,7 +107,7 @@ public class StreamResult extends StrutsResultSupport {
         this.inputStream = in;
     }
 
-     /**
+    /**
      * @return Returns the whether or not the client should be requested to allow caching of the data stream.
      */
     public boolean getAllowCaching() {
@@ -232,11 +231,11 @@ public class StreamResult extends StrutsResultSupport {
             }
 
 
-            HttpServletResponse oResponse = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
+            HttpServletResponse oResponse = invocation.getInvocationContext().getServletResponse();
 
             LOG.debug("Set the content type: {};charset{}", contentType, contentCharSet);
-            if (contentCharSet != null && ! contentCharSet.equals("")) {
-                oResponse.setContentType(conditionalParse(contentType, invocation)+";charset="+conditionalParse(contentCharSet, invocation));
+            if (contentCharSet != null && !contentCharSet.equals("")) {
+                oResponse.setContentType(conditionalParse(contentType, invocation) + ";charset=" + conditionalParse(contentCharSet, invocation));
             } else {
                 oResponse.setContentType(conditionalParse(contentType, invocation));
             }
@@ -250,7 +249,7 @@ public class StreamResult extends StrutsResultSupport {
                     if (_contentLengthAsInt >= 0) {
                         oResponse.setContentLength(_contentLengthAsInt);
                     }
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     LOG.warn("failed to recognize {} as a number, contentLength header will not be set", _contentLength, e);
                 }
             }
@@ -269,16 +268,16 @@ public class StreamResult extends StrutsResultSupport {
             oOutput = oResponse.getOutputStream();
 
             LOG.debug("Streaming result [{}] type=[{}] length=[{}] content-disposition=[{}] charset=[{}]",
-                    inputName, contentType, contentLength, contentDisposition, contentCharSet);
+                inputName, contentType, contentLength, contentDisposition, contentCharSet);
 
-        	LOG.debug("Streaming to output buffer +++ START +++");
+            LOG.debug("Streaming to output buffer +++ START +++");
             byte[] oBuff = new byte[bufferSize];
             int iSize;
             while (-1 != (iSize = inputStream.read(oBuff))) {
                 LOG.debug("Sending stream ... {}", iSize);
                 oOutput.write(oBuff, 0, iSize);
             }
-        	LOG.debug("Streaming to output buffer +++ END +++");
+            LOG.debug("Streaming to output buffer +++ END +++");
 
             // Flush
             oOutput.flush();

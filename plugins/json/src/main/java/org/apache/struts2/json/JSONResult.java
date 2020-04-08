@@ -18,29 +18,26 @@
  */
 package org.apache.struts2.json;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.json.smd.SMDGenerator;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.WildcardUtil;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.json.smd.SMDGenerator;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -101,15 +98,15 @@ public class JSONResult implements Result {
     private String wrapSuffix;
     private boolean devMode = false;
     private JSONUtil jsonUtil;
-    
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setDefaultEncoding(String val) {
         this.defaultEncoding = val;
     }
-    
-    @Inject(StrutsConstants.STRUTS_DEVMODE) 
+
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String val) {
-    	this.devMode = BooleanUtils.toBoolean(val);
+        this.devMode = BooleanUtils.toBoolean(val);
     }
 
     @Inject
@@ -188,12 +185,12 @@ public class JSONResult implements Result {
 
     public void execute(ActionInvocation invocation) throws Exception {
         ActionContext actionContext = invocation.getInvocationContext();
-        HttpServletRequest request = (HttpServletRequest) actionContext.get(StrutsStatics.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) actionContext.get(StrutsStatics.HTTP_RESPONSE);
-        
+        HttpServletRequest request = actionContext.getServletRequest();
+        HttpServletResponse response = actionContext.getServletResponse();
+
         // only permit caching bean information when struts devMode = false
         cacheBeanInfo = !devMode;
-        
+
         try {
             Object rootObject;
             rootObject = readRootObject(invocation);
@@ -224,7 +221,7 @@ public class JSONResult implements Result {
 
     protected String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
         String json = jsonUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
-                                         enumAsBean, excludeNullProperties, defaultDateFormat, cacheBeanInfo);
+            enumAsBean, excludeNullProperties, defaultDateFormat, cacheBeanInfo);
         json = addCallbackIfApplicable(request, json);
         return json;
     }
@@ -235,8 +232,8 @@ public class JSONResult implements Result {
 
     protected void writeToResponse(HttpServletResponse response, String json, boolean gzip) throws IOException {
         JSONUtil.writeJSONToResponse(new SerializationParams(response, getEncoding(), isWrapWithComments(),
-                json, false, gzip, noCache, statusCode, errorCode, prefix, contentType, wrapPrefix,
-                wrapSuffix));
+            json, false, gzip, noCache, statusCode, errorCode, prefix, contentType, wrapPrefix,
+            wrapSuffix));
     }
 
     @SuppressWarnings("unchecked")
@@ -248,7 +245,7 @@ public class JSONResult implements Result {
      * Retrieve the encoding
      *
      * @return The encoding associated with this template (defaults to the value
-     *         of param 'encoding', if empty default to 'struts.i18n.encoding' property)
+     * of param 'encoding', if empty default to 'struts.i18n.encoding' property)
      */
     protected String getEncoding() {
         String encoding = this.encoding;
@@ -327,9 +324,9 @@ public class JSONResult implements Result {
     }
 
     /**
-     * @param ignoreInterfaces  Controls whether interfaces should be inspected for method annotations
-     * You may need to set to this true if your action is a proxy as annotations
-     * on methods are not inherited
+     * @param ignoreInterfaces Controls whether interfaces should be inspected for method annotations
+     *                         You may need to set to this true if your action is a proxy as annotations
+     *                         on methods are not inherited
      */
     public void setIgnoreInterfaces(boolean ignoreInterfaces) {
         this.ignoreInterfaces = ignoreInterfaces;
@@ -337,8 +334,8 @@ public class JSONResult implements Result {
 
     /**
      * @param enumAsBean Controls how Enum's are serialized : If true, an Enum is serialized as a
-     * name=value pair (name=name()) (default) If false, an Enum is serialized
-     * as a bean with a special property _name=name()
+     *                   name=value pair (name=name()) (default) If false, an Enum is serialized
+     *                   as a bean with a special property _name=name()
      */
     public void setEnumAsBean(boolean enumAsBean) {
         this.enumAsBean = enumAsBean;
@@ -423,7 +420,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * @param wrapPrefix  Text to be inserted at the begining of the response
+     * @param wrapPrefix Text to be inserted at the begining of the response
      */
     public void setWrapPrefix(String wrapPrefix) {
         this.wrapPrefix = wrapPrefix;
@@ -434,7 +431,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * @param wrapSuffix  Text to be inserted at the end of the response
+     * @param wrapSuffix Text to be inserted at the end of the response
      */
     public void setWrapSuffix(String wrapSuffix) {
         this.wrapSuffix = wrapSuffix;
@@ -443,7 +440,7 @@ public class JSONResult implements Result {
     /**
      * If defined will be used instead of {@link #defaultEncoding}, you can define it with result
      * &lt;result name=&quot;success&quot; type=&quot;json&quot;&gt;
-     *     &lt;param name=&quot;encoding&quot;&gt;UTF-8&lt;/param&gt;
+     * &lt;param name=&quot;encoding&quot;&gt;UTF-8&lt;/param&gt;
      * &lt;/result&gt;
      *
      * @param encoding valid encoding string

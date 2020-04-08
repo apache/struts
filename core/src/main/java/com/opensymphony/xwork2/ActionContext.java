@@ -116,7 +116,7 @@ public class ActionContext implements Serializable {
      *
      * @param context a context map.
      */
-    private ActionContext(Map<String, Object> context) {
+    protected ActionContext(Map<String, Object> context) {
         this.context = context;
     }
 

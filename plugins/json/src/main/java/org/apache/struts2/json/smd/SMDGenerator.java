@@ -20,9 +20,8 @@ package org.apache.struts2.json.smd;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.apache.struts2.StrutsStatics;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.json.JSONUtil;
 import org.apache.struts2.json.annotations.SMD;
 import org.apache.struts2.json.annotations.SMDMethod;
@@ -51,15 +50,15 @@ public class SMDGenerator {
 
     public org.apache.struts2.json.smd.SMD generate(ActionInvocation actionInvocation) {
         ActionContext actionContext = actionInvocation.getInvocationContext();
-        HttpServletRequest request = (HttpServletRequest) actionContext.get(StrutsStatics.HTTP_REQUEST);
+        HttpServletRequest request = actionContext.getServletRequest();
 
-        Class clazz = rootObject.getClass();
+        Class<?> clazz = rootObject.getClass();
         org.apache.struts2.json.smd.SMD smd = new org.apache.struts2.json.smd.SMD();
         // URL
         smd.setServiceUrl(request.getRequestURI());
 
         // customize SMD
-        org.apache.struts2.json.annotations.SMD smdAnnotation = (SMD) clazz.getAnnotation(SMD.class);
+        org.apache.struts2.json.annotations.SMD smdAnnotation = clazz.getAnnotation(SMD.class);
         if (smdAnnotation != null) {
             smd.setObjectName(smdAnnotation.objectName());
             smd.setServiceType(smdAnnotation.serviceType());
@@ -87,7 +86,7 @@ public class SMDGenerator {
             // find params for this method
             processMethodsParameters(method, smdMethod);
 
-        } else if(LOG.isDebugEnabled()) {
+        } else if (LOG.isDebugEnabled()) {
             LOG.debug("Ignoring property " + method.getName());
         }
     }
@@ -137,7 +136,7 @@ public class SMDGenerator {
      * Find an SMDethodParameter annotation on this array
      */
     private org.apache.struts2.json.annotations.SMDMethodParameter getSMDMethodParameterAnnotation(
-            Annotation[] annotations) {
+        Annotation[] annotations) {
         for (Annotation annotation : annotations) {
             if (annotation instanceof org.apache.struts2.json.annotations.SMDMethodParameter)
                 return (org.apache.struts2.json.annotations.SMDMethodParameter) annotation;

@@ -39,7 +39,6 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.result.StrutsResultSupport;
 
 import javax.servlet.ServletContext;
@@ -252,10 +251,8 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
         LOG.debug("Creating JasperReport for dataSource = {}, format = {}", dataSource, format);
 
-        HttpServletRequest request = (HttpServletRequest) invocation.getInvocationContext()
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) invocation.getInvocationContext()
-                .get(ServletActionContext.HTTP_RESPONSE);
+        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
 
         // Handle IE special case: it sends a "contype" request first.
         // TODO Set content type to config settings?
@@ -290,8 +287,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Determine the directory that the report file is in and set the reportDirectory parameter
         // For WW 2.1.7:
         //  ServletContext servletContext = ((ServletConfig) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONFIG)).getServletContext();
-        ServletContext servletContext = (ServletContext) invocation.getInvocationContext()
-                .get(ServletActionContext.SERVLET_CONTEXT);
+        ServletContext servletContext = invocation.getInvocationContext().getServletContext();
         String systemId = servletContext.getRealPath(finalLocation);
         Map<String, Object> parameters = new ValueStackShadowMap(stack);
         File directory = new File(systemId.substring(0, systemId.lastIndexOf(File.separator)));

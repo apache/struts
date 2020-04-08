@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.util.WildcardHelper;
+import org.apache.struts2.util.RegexPatternMatcher;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -140,6 +141,46 @@ public class ActionConfigMatcherTest extends XWorkTestCase {
         assertTrue("Class hasn't been replaced", "package-class".equals(m.getPackageName()));
         assertTrue("Method hasn't been replaced", "".equals(m.getParams().get("first")));
         
+    }
+
+    /**
+     * Test to make sure the {@link AbstractMatcher#replaceParameters(Map, Map)} method isn't adding values to the
+     * return value.
+     */
+    public void testReplaceParameters() {
+        Map<String, ActionConfig> map = new HashMap<>();
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("first", "{1}");
+
+        ActionConfig config = new ActionConfig.Builder("package", "foo/{one}/{two}/{three}", "foo.bar.Action")
+                .addParams(params)
+                .addExceptionMapping(new ExceptionMappingConfig.Builder("foo{1}", "java.lang.{2}Exception", "success{1}")
+                        .addParams(new HashMap<>(params))
+                        .build())
+                .addResultConfig(new ResultConfig.Builder("success{1}", "foo.{2}").addParams(params).build())
+                .setStrictMethodInvocation(false)
+                .build();
+        map.put("foo/{one}/{two}/{three}", config);
+        ActionConfigMatcher replaceMatcher = new ActionConfigMatcher(new RegexPatternMatcher(), map, false);
+        ActionConfig matched = replaceMatcher.match("foo/paramOne/paramTwo/paramThree");
+        assertNotNull("ActionConfig should be matched", matched);
+
+        // Verify all The ActionConfig, ExceptionConfig, and ResultConfig have the correct number of params
+        assertTrue("The ActionConfig should have the correct number of params",
+                matched.getParams().size() == 1);
+        assertTrue("The ExceptionMappingConfigs should have the correct number of params",
+                matched.getExceptionMappings().get(0).getParams().size() == 1);
+        assertTrue("The ResultConfigs should have the correct number of params",
+                matched.getResults().get("successparamOne").getParams().size() == 1);
+
+        // Verify the params are still getting their values replaced correctly
+        assertTrue("The ActionConfig params have replaced values",
+                "paramOne".equals(matched.getParams().get("first")));
+        assertTrue("The ActionConfig params have replaced values",
+                "paramOne".equals(matched.getExceptionMappings().get(0).getParams().get("first")));
+        assertTrue("The ActionConfig params have replaced values",
+                "paramOne".equals(matched.getResults().get("successparamOne").getParams().get("first")));
     }
 
     private Map<String,ActionConfig> buildActionConfigMap() {

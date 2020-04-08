@@ -158,14 +158,6 @@ public abstract class AbstractMatcher<E> implements Serializable {
             map.put(entry.getKey(), convertParam(entry.getValue(), vars));
         }
         
-        //the values map will contain entries like name->"Lex Luthor" and 1->"Lex Luthor"
-        //now add the non-numeric values
-        for (Map.Entry<String,String> entry: vars.entrySet()) {
-            if (!NumberUtils.isCreatable(entry.getKey())) {
-                map.put(entry.getKey(), entry.getValue());
-            }
-        }
-        
         return map;
     }
 

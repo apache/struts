@@ -63,7 +63,7 @@ public class ActionContext implements Serializable {
     /**
      * Constant for the name of the action being executed.
      *
-     * @deprecated used helper methods instead
+     * @deprecated use helper methods instead
      */
     @Deprecated
     public static final String ACTION_NAME = "com.opensymphony.xwork2.ActionContext.name";
@@ -100,16 +100,17 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the map of type conversion errors.
+     * @deprecated use helper method instead
      */
+    @Deprecated
     public static final String CONVERSION_ERRORS = "com.opensymphony.xwork2.ActionContext.conversionErrors";
-
 
     /**
      * Constant for the container
      */
     public static final String CONTAINER = "com.opensymphony.xwork2.ActionContext.container";
 
-    private Map<String, Object> context;
+    private final Map<String, Object> context;
 
     /**
      * Creates a new ActionContext initialized with another context.
@@ -128,6 +129,9 @@ public class ActionContext implements Serializable {
      * @return new ActionContext
      */
     public static ActionContext of(Map<String, Object> context) {
+        if (context == null) {
+            throw new IllegalArgumentException("Context cannot be null!");
+        }
         return new ActionContext(context);
     }
 
@@ -223,6 +227,7 @@ public class ActionContext implements Serializable {
      *
      * @return a Map of ServletContext or generic application level Map
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Object> getApplication() {
         return (Map<String, Object>) get(APPLICATION);
     }
@@ -258,8 +263,9 @@ public class ActionContext implements Serializable {
      * @return the map of conversion errors which occurred when executing the action or an empty map if
      * there were no errors.
      */
+    @SuppressWarnings("unchecked")
     public Map<String, ConversionData> getConversionErrors() {
-        Map<String, ConversionData> errors = (Map) get(CONVERSION_ERRORS);
+        Map<String, ConversionData> errors = (Map<String, ConversionData>) get(CONVERSION_ERRORS);
 
         if (errors == null) {
             errors = withConversionErrors(new HashMap<>()).getConversionErrors();
@@ -374,6 +380,7 @@ public class ActionContext implements Serializable {
      *
      * @return the Map of HttpSession values when in a servlet environment or a generic session map otherwise.
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Object> getSession() {
         return (Map<String, Object>) get(SESSION);
     }

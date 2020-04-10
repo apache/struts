@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
@@ -849,11 +850,11 @@ public class OgnlValueStackTest extends XWorkTestCase {
             assertTrue(true);
         }
 
-        Map conversionErrors = (Map) stack.getContext().get(ActionContext.CONVERSION_ERRORS);
+        Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
         assertTrue(conversionErrors.containsKey("bar"));
     }
 
-    public void testPrimitiveSettingWithInvalidValueAddsFieldErrorInNonDevMode() throws Exception {
+    public void testPrimitiveSettingWithInvalidValueAddsFieldErrorInNonDevMode() {
         SimpleAction action = new SimpleAction();
         OgnlValueStack stack = createValueStack();
         stack.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
@@ -861,7 +862,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         stack.push(action);
         stack.setValue("bar", "3x");
 
-        Map conversionErrors = (Map) stack.getContext().get(ActionContext.CONVERSION_ERRORS);
+        Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
         assertTrue(conversionErrors.containsKey("bar"));
     }
 
@@ -879,7 +880,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
             // expected
         }
 
-        Map conversionErrors = (Map) stack.getContext().get(ActionContext.CONVERSION_ERRORS);
+        Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
         assertTrue(conversionErrors.containsKey("bean"));
         assertNotNull(action.getBean());
     }
@@ -978,8 +979,8 @@ public class OgnlValueStackTest extends XWorkTestCase {
         vs.setValue("animalMap[6].name", "Cat Six by interface");
         assertNotNull(foo.getAnimalMap());
         assertEquals(2, foo.getAnimalMap().size());
-        assertEquals("Cat Three by interface", foo.getAnimalMap().get(new Long(3)).getName());
-        assertEquals("Cat Six by interface", foo.getAnimalMap().get(new Long(6)).getName());
+        assertEquals("Cat Three by interface", foo.getAnimalMap().get(3L).getName());
+        assertEquals("Cat Six by interface", foo.getAnimalMap().get(6L).getName());
 
         vs.setValue("annotatedCats[0].name", "Cat One By Annotation");
         vs.setValue("annotatedCats[1].name", "Cat Two By Annotation");
@@ -1057,7 +1058,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         vs.setValue("male", "false");
 
-        assertEquals(false, dog.isMale());
+        assertFalse(dog.isMale());
     }
 
     public void testStatics() {
@@ -1074,7 +1075,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals("Canine", vs.findValue("@vs@SCIENTIFIC_NAME"));
         assertEquals("Canine", vs.findValue("@vs1@SCIENTIFIC_NAME"));
         assertEquals("Feline", vs.findValue("@vs2@SCIENTIFIC_NAME"));
-        assertEquals(new Integer(BigDecimal.ROUND_HALF_DOWN), vs.findValue("@java.math.BigDecimal@ROUND_HALF_DOWN"));
+        assertEquals(BigDecimal.ROUND_HALF_DOWN, vs.findValue("@java.math.BigDecimal@ROUND_HALF_DOWN"));
         assertNull(vs.findValue("@vs3@BLAH"));
         assertNull(vs.findValue("@com.nothing.here.Nothing@BLAH"));
     }
@@ -1177,7 +1178,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
             // expected
         }
 
-        Map conversionErrors = (Map) stack.getContext().get(ActionContext.CONVERSION_ERRORS);
+        Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
         assertTrue(conversionErrors.containsKey("count"));
     }
 
@@ -1202,11 +1203,11 @@ public class OgnlValueStackTest extends XWorkTestCase {
         stack.push("Hello World");
 
         assertEquals("Hello World", stack.findValue("top"));
-        assertEquals(null, stack.findValue(null));
+        assertNull(stack.findValue(null));
 
         stack.setDefaultType(Integer.class);
-        stack.push(new Integer(123));
-        assertEquals(new Integer(123), stack.findValue("top"));
+        stack.push(123);
+        assertEquals(123, stack.findValue("top"));
     }
 
     public void testFindString() {
@@ -1215,11 +1216,11 @@ public class OgnlValueStackTest extends XWorkTestCase {
         stack.push("Hello World");
 
         assertEquals("Hello World", stack.findString("top"));
-        assertEquals(null, stack.findString(null));
+        assertNull(stack.findString(null));
     }
 
     public void testExpOverrides() {
-        Map overrides = new HashMap();
+        Map<Object, Object> overrides = new HashMap<>();
         overrides.put("claus", "top");
 
         OgnlValueStack stack = createValueStack();
@@ -1236,7 +1237,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         stack.getContext().put("santa", "Hello Santa");
         assertEquals("Hello Santa", stack.findValue("santa", String.class));
-        assertEquals(null, stack.findValue("unknown", String.class));
+        assertNull(stack.findValue("unknown", String.class));
     }
 
     public void testWarnAboutInvalidProperties() {
@@ -1247,16 +1248,16 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         // how to test the warning was logged?
         assertEquals("Don", stack.findValue("name", String.class));
-        assertEquals(null, stack.findValue("address", String.class));
+        assertNull(stack.findValue("address", String.class));
         // should log warning
-        assertEquals(null, stack.findValue("address.invalidProperty", String.class));
+        assertNull(stack.findValue("address.invalidProperty", String.class));
 
         // if country is null, OGNL throws an exception
         /*action.setAddress(new Address());
         stack.push(action);*/
         // should log warning
-        assertEquals(null, stack.findValue("address.country.id", String.class));
-        assertEquals(null, stack.findValue("address.country.name", String.class));
+        assertNull(stack.findValue("address.country.id", String.class));
+        assertNull(stack.findValue("address.country.name", String.class));
     }
 
    /**
@@ -1498,7 +1499,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         ognlUtil = container.getInstance(OgnlUtil.class);
     }
 
-    class BadJavaBean {
+    static class BadJavaBean {
         private int count;
         private int count2;
 
@@ -1519,7 +1520,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         }
     }
 
-    class MyAction {
+    static class MyAction {
         private Long id;
         private String name;
         private Address address;
@@ -1549,7 +1550,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         }
     }
 
-    class Address {
+    static class Address {
         private String address;
         private Country country;
         private String city;
@@ -1579,7 +1580,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         }
     }
 
-    class Country {
+    static class Country {
         private String iso;
         private String name;
         private String displayName;
@@ -1609,7 +1610,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         }
     }
 
-    class TestAppender extends AbstractAppender {
+    static class TestAppender extends AbstractAppender {
         List<LogEvent> logEvents = new ArrayList<>();
 
         TestAppender() {

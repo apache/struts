@@ -216,8 +216,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             }
         }
 
-        if (clearableStack && (stack.getContext() != null) && (newStack.getContext() != null))
-            stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
+        if (clearableStack) {
+            stack.getActionContext().withConversionErrors(newStack.getActionContext().getConversionErrors());
+        }
 
         addParametersToContext(ActionContext.getContext(), acceptableParameters);
     }

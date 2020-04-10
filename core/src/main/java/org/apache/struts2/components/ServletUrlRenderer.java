@@ -137,8 +137,7 @@ public class ServletUrlRenderer implements UrlRenderer {
         } else {
             // no action supplied? ok, then default to the current request
             // (action or general URL)
-            ActionInvocation ai = (ActionInvocation) formComponent.getStack().getContext().get(
-                    ActionContext.ACTION_INVOCATION);
+            ActionInvocation ai = formComponent.getStack().getActionContext().getActionInvocation();
             if (ai != null) {
                 action = ai.getProxy().getActionName();
                 namespace = ai.getProxy().getNamespace();

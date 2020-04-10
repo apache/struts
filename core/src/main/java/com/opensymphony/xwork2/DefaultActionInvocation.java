@@ -324,9 +324,10 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     protected Map<String, Object> createContextMap() {
-        Map<String, Object> contextMap;
+        ActionContext oldContext = ActionContext.getContext();
+        ActionContext actionContext;
 
-        if ((extraContext != null) && (extraContext.containsKey(ActionContext.VALUE_STACK))) {
+        if (extraContext != null && extraContext.containsKey(ActionContext.VALUE_STACK)) {
             // In case the ValueStack was passed in
             stack = (ValueStack) extraContext.get(ActionContext.VALUE_STACK);
 
@@ -334,26 +335,30 @@ public class DefaultActionInvocation implements ActionInvocation {
                 throw new IllegalStateException("There was a null Stack set into the extra params.");
             }
 
-            contextMap = stack.getContext();
+            actionContext = stack.getActionContext();
         } else {
             // create the value stack
             // this also adds the ValueStack to its context
             stack = valueStackFactory.createValueStack();
 
             // create the action context
-            contextMap = stack.getContext();
+            actionContext = stack.getActionContext();
         }
 
-        // put extraContext in
-        if (extraContext != null) {
-            contextMap.putAll(extraContext);
+        try {
+            return actionContext
+                .bind()
+                .withExtraContext(extraContext)
+                .withActionInvocation(this)
+                .withContainer(container)
+                .getContextMap();
+        } finally {
+            ActionContext.clear();
+            if (oldContext != null) {
+                LOG.debug("Re-binding the old context");
+                oldContext.bind();
+            }
         }
-
-        //put this DefaultActionInvocation into the context map
-        contextMap.put(ActionContext.ACTION_INVOCATION, this);
-        contextMap.put(ActionContext.CONTAINER, container);
-
-        return contextMap;
     }
 
     /**

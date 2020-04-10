@@ -21,6 +21,7 @@
 
 package org.apache.struts2.views.java.simple;
 
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
@@ -101,11 +102,13 @@ public abstract class AbstractTest extends TestCase {
 
         context = new TemplateRenderingContext(template, writer, stack, map, null);
         stackContext.put(Component.COMPONENT_STACK, new Stack());
+        ActionContext actionContext = ActionContext.of(stackContext).bind();
 
         request = createNiceMock(HttpServletRequest.class);
         expect(request.getContextPath()).andReturn("/some/path").anyTimes();
         response = createNiceMock(HttpServletResponse.class);
 
+        expect(stack.getActionContext()).andReturn(actionContext).anyTimes();
         expect(stack.getContext()).andReturn(stackContext).anyTimes();
 
         Container container = createNiceMock(Container.class);
@@ -114,15 +117,12 @@ public abstract class AbstractTest extends TestCase {
         expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
         TextParser parser = new OgnlTextParser();
         expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();
-        stackContext.put(ActionContext.CONTAINER, container);
-
 
         replay(request);
         replay(stack);
         replay(container);
 
-        ActionContext actionContext = ActionContext.of(stackContext).bind();
-        actionContext.withServletRequest(request);
+        actionContext.withContainer(container).withServletRequest(request);
     }
 
     protected static String s(String input) {

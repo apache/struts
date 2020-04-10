@@ -44,7 +44,7 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
     public int doStartTag() throws JspException {
         ValueStack stack = getStack();
         component = getBean(stack, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
-        Container container = (Container) stack.getContext().get(ActionContext.CONTAINER);
+        Container container = stack.getActionContext().getContainer();
         container.inject(component);
         
         populateParams();

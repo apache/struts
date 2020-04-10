@@ -110,6 +110,6 @@ public class DebugTagTest extends AbstractUITagTest {
 
         configurationManager.reload();
         container = configurationManager.getConfiguration().getContainer();
-        stack.getContext().put(ActionContext.CONTAINER, container);
+        stack.getActionContext().withContainer(container);
     }
 }

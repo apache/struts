@@ -61,9 +61,9 @@ public class StrutsUtil {
         this.stack = stack;
         this.request = request;
         this.response = response;
-        this.ognl = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(OgnlTool.class);
-        this.urlHelper = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(UrlHelper.class);
-        this.objectFactory = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(ObjectFactory.class);
+        this.ognl = stack.getActionContext().getContainer().getInstance(OgnlTool.class);
+        this.urlHelper = stack.getActionContext().getContainer().getInstance(UrlHelper.class);
+        this.objectFactory = stack.getActionContext().getContainer().getInstance(ObjectFactory.class);
     }
 
     public Object bean(Object aName) throws Exception {

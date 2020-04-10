@@ -330,9 +330,8 @@ public class EmbeddedJSPResultTest extends TestCase {
         EasyMock.replay(request);
 
         //mock value stack
-        Map<String, Object> stackContext = new HashMap<>();
         ValueStack valueStack = EasyMock.createNiceMock(ValueStack.class);
-        EasyMock.expect(valueStack.getContext()).andReturn(stackContext).anyTimes();
+        EasyMock.expect(valueStack.getActionContext()).andReturn(ActionContext.getContext()).anyTimes();
         EasyMock.replay(valueStack);
 
         //mock converter
@@ -355,7 +354,6 @@ public class EmbeddedJSPResultTest extends TestCase {
         EasyMock.expect(container.getInstance(FileManagerFactory.class)).andReturn(fileManagerFactory).anyTimes();
 
         EasyMock.replay(container);
-        stackContext.put(ActionContext.CONTAINER, container);
 
         ActionContext.of(new HashMap<>())
             .withParameters(HttpParameters.create(params).build())

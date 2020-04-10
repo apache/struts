@@ -63,7 +63,7 @@ public class ActionContext implements Serializable {
     /**
      * Constant for the name of the action being executed.
      *
-     * @deprecated use helper methods instead
+     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
     @Deprecated
     public static final String ACTION_NAME = "com.opensymphony.xwork2.ActionContext.name";
@@ -95,19 +95,23 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the action's {@link com.opensymphony.xwork2.ActionInvocation invocation} context.
+     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
+    @Deprecated
     public static final String ACTION_INVOCATION = "com.opensymphony.xwork2.ActionContext.actionInvocation";
 
     /**
      * Constant for the map of type conversion errors.
-     * @deprecated use helper method instead
+     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
     @Deprecated
     public static final String CONVERSION_ERRORS = "com.opensymphony.xwork2.ActionContext.conversionErrors";
 
     /**
      * Constant for the container
+     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
+    @Deprecated
     public static final String CONTAINER = "com.opensymphony.xwork2.ActionContext.container";
 
     private final Map<String, Object> context;
@@ -518,4 +522,15 @@ public class ActionContext implements Serializable {
         return this;
     }
 
+    public ActionContext withExtraContext(Map<String, Object> extraContext) {
+        if (extraContext != null) {
+            getContext().context.putAll(extraContext);
+        }
+        return this;
+    }
+
+    public ActionContext withLocale(Locale locale) {
+        put(LOCALE, locale);
+        return this;
+    }
 }

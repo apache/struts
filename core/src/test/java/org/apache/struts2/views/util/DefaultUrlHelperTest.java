@@ -427,7 +427,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
     public void setUp() throws Exception {
         super.setUp();
         stubContainer = new StubContainer(container);
-        ActionContext.getContext().put(ActionContext.CONTAINER, stubContainer);
+        ActionContext.getContext().withContainer(stubContainer);
         urlHelper = new DefaultUrlHelper();
     }
     

@@ -165,7 +165,7 @@ public class PortletUrlRenderer implements UrlRenderer {
         if (formComponent.action != null) {
             action = formComponent.findString(formComponent.action);
         } else {
-            ActionInvocation ai = (ActionInvocation) formComponent.getStack().getContext().get(ActionContext.ACTION_INVOCATION);
+            ActionInvocation ai = formComponent.getStack().getActionContext().getActionInvocation();
             action = ai.getProxy().getActionName();
         }
 

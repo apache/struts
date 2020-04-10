@@ -56,10 +56,10 @@ public class ContextUtil {
         map.put(SESSION, req.getSession(false));
         map.put(BASE, req.getContextPath());
         map.put(STACK, stack);
-        map.put(OGNL, ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(OgnlTool.class));
+        map.put(OGNL, stack.getActionContext().getContainer().getInstance(OgnlTool.class));
         map.put(STRUTS, new StrutsUtil(stack, req, res));
 
-        ActionInvocation invocation = (ActionInvocation) stack.getContext().get(ActionContext.ACTION_INVOCATION);
+        ActionInvocation invocation = stack.getActionContext().getActionInvocation();
         if (invocation != null) {
             map.put(ACTION, invocation.getAction());
         }
@@ -71,22 +71,23 @@ public class ContextUtil {
      * @param context stack's context
      * @return boolean
      */
-    public static boolean isUseAltSyntax(Map context) {
+    public static boolean isUseAltSyntax(Map<String, Object> context) {
         // We didn't make altSyntax static cause, if so, struts.configuration.xml.reload will not work
         // plus the Configuration implementation should cache the properties, which the framework's
         // configuration implementation does
-        return "true".equals(((Container)context.get(ActionContext.CONTAINER)).getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX)) ||(
+        String tagAltSytnax = ActionContext.of(context).getContainer().getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX);
+        return "true".equals(tagAltSytnax) ||(
                 (context.containsKey("useAltSyntax") &&
                         context.get("useAltSyntax") != null &&
                         "true".equals(context.get("useAltSyntax").toString())));
     }
-    
+
     /**
      * Returns a String for overriding the default templateSuffix if templateSuffix is on the stack
      * @param context stack's context
      * @return String
      */
-    public static String getTemplateSuffix(Map context) {
+    public static String getTemplateSuffix(Map<String, Object> context) {
         return context.containsKey("templateSuffix") ? (String) context.get("templateSuffix") : null;
     }
 }

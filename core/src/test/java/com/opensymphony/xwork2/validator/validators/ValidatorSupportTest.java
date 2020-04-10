@@ -28,10 +28,9 @@ public class ValidatorSupportTest extends XWorkTestCase {
 
     public void testConditionalParseExpression() {
         OgnlValueStack stack = (OgnlValueStack) container.getInstance(ValueStackFactory.class).createValueStack();
-        stack.getContext().put(ActionContext.CONTAINER, container);
         stack.getContext().put("something", "somevalue");
 
-        ActionContext.of(stack.getContext()).bind();
+        ActionContext.of(stack.getContext()).withContainer(container).bind();
 
         ValidatorSupport validator = new ValidatorSupport() {
             public void validate(Object object) throws ValidationException {

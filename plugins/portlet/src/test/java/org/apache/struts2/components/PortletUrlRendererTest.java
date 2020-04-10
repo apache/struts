@@ -43,7 +43,7 @@ public class PortletUrlRendererTest extends StrutsTestCasePortletTests {
         super.setUp();
 
         ActionProxy actionProxy = getActionProxy("/portlettest/test"); // creates new empty ActionContext
-        ActionContext.getContext().put(ActionContext.ACTION_INVOCATION, actionProxy.getInvocation());
+        ActionContext.getContext().withActionInvocation(actionProxy.getInvocation());
 
         PortletContext portletCtx = new MockPortletContext();
         ActionContext.getContext().put(StrutsStatics.STRUTS_PORTLET_CONTEXT, portletCtx);

@@ -21,7 +21,7 @@ package com.opensymphony.xwork2.conversion.impl;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.SimpleFooAction;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.conversion.TypeConversionException;
+import org.apache.struts2.conversion.TypeConversionException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;

@@ -18,7 +18,7 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.conversion.TypeConversionException;
+import org.apache.struts2.conversion.TypeConversionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

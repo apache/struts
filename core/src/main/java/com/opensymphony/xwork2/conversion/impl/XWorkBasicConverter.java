@@ -18,7 +18,7 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.conversion.TypeConversionException;
+import org.apache.struts2.conversion.TypeConversionException;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;

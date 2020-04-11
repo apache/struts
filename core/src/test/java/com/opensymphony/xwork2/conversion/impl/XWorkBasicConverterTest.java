@@ -20,11 +20,10 @@ package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.conversion.TypeConversionException;
+import org.apache.struts2.conversion.TypeConversionException;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.test.annotations.Person;
 import org.apache.struts2.StrutsException;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;

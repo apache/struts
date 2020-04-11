@@ -18,7 +18,7 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.conversion.TypeConversionException;
+import org.apache.struts2.conversion.TypeConversionException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;

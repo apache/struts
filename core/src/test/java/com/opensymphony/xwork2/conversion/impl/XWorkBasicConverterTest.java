@@ -20,8 +20,11 @@ package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
+import org.apache.struts2.conversion.TypeConversionException;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.test.annotations.Person;
 import org.apache.struts2.StrutsException;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,6 +40,9 @@ import java.util.*;
 public class XWorkBasicConverterTest extends XWorkTestCase {
 
     private XWorkBasicConverter basicConverter;
+    private Container mockedContainer;
+    private final static String MSG_EXCEPTION_EXPECTED = "TypeConversionException expected";
+    private final static String MSG_TYPE_CONVERTER_EXCEPTION = "TypeConverter with name";
 
     // TODO: test for every possible conversion
     // take into account of empty string
@@ -294,11 +300,92 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         Class toType = String.class;
         basicConverter.convertValue(context, value, null, s, value, toType);
     }
+    
+    public void testExceptionWhenCantCreateTypeFromValue() {
+        try{
+            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, 4, Date.class);
+            fail(MSG_EXCEPTION_EXPECTED);
+        }catch(Exception ex){
+            assertEquals(TypeConversionException.class, ex.getClass());
+            assertTrue(ex.getMessage().startsWith("Cannot create type"));
+        }
+    }
+    
+    public void testExceptionInDoConvertToClass() {
+        try{
+            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", Class.class);
+            fail(MSG_EXCEPTION_EXPECTED);
+        }catch(Exception ex){
+            assertEquals(TypeConversionException.class, ex.getClass());
+        }
+    }
+    
+    public void testExceptionInDoConvertToCollection() {
+        try{
+            Mockito.when(mockedContainer.getInstanceNames(CollectionConverter.class)).thenReturn(null);
+            basicConverter.setContainer(mockedContainer);
+            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", ArrayList.class);
+            fail(MSG_EXCEPTION_EXPECTED);
+        }catch(Exception ex){
+            assertEquals(TypeConversionException.class, ex.getClass());
+            assertTrue(ex.getMessage().startsWith(MSG_TYPE_CONVERTER_EXCEPTION));
+        }
+    }
+    
+    public void testExceptionInDoConvertToArray() {
+        try{
+            int[] arrayInt = new int[1];
+            Mockito.when(mockedContainer.getInstanceNames(ArrayConverter.class)).thenReturn(null);
+            basicConverter.setContainer(mockedContainer);
+            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", arrayInt.getClass());
+            fail(MSG_EXCEPTION_EXPECTED);
+        }catch(Exception ex){
+            assertEquals(TypeConversionException.class, ex.getClass());
+            assertTrue(ex.getMessage().startsWith(MSG_TYPE_CONVERTER_EXCEPTION));
+        }
+    }
+    
+    public void testExceptionInDoConvertToDate() {
+        try{
+            Mockito.when(mockedContainer.getInstanceNames(DateConverter.class)).thenReturn(null);
+            basicConverter.setContainer(mockedContainer);
+            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", Date.class);
+            fail(MSG_EXCEPTION_EXPECTED);
+        }catch(Exception ex){
+            assertEquals(TypeConversionException.class, ex.getClass());
+            assertTrue(ex.getMessage().startsWith(MSG_TYPE_CONVERTER_EXCEPTION));
+        }
+    }
+    
+    public void testExceptionInDoConvertToNumber() {
+        try{
+            Mockito.when(mockedContainer.getInstanceNames(NumberConverter.class)).thenReturn(null);
+            basicConverter.setContainer(mockedContainer);
+            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", int.class);
+            fail(MSG_EXCEPTION_EXPECTED);
+        }catch(Exception ex){
+            assertEquals(TypeConversionException.class, ex.getClass());
+            assertTrue(ex.getMessage().startsWith(MSG_TYPE_CONVERTER_EXCEPTION));
+        }
+    }
+    
+    public void testExceptionInDoConvertToString() {
+        try{
+            Mockito.when(mockedContainer.getInstanceNames(StringConverter.class)).thenReturn(null);
+            basicConverter.setContainer(mockedContainer);
+            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, 1, String.class);
+            fail(MSG_EXCEPTION_EXPECTED);
+        }catch(Exception ex){
+            assertEquals(TypeConversionException.class, ex.getClass());
+            assertTrue(ex.getMessage().startsWith(MSG_TYPE_CONVERTER_EXCEPTION));
+        }
+    }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         basicConverter = container.getInstance(XWorkBasicConverter.class);
+        mockedContainer = Mockito.mock(Container.class);
     }
 
     @Override
@@ -306,6 +393,5 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         super.tearDown();
         ActionContext.setContext(null);
     }
-
-
+    
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.conversion;
+package org.apache.struts2.conversion;
 
 import org.apache.struts2.StrutsException;
 

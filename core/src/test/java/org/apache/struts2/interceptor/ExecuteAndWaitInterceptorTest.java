@@ -18,7 +18,12 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -52,9 +57,9 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
 
     private StrutsMockHttpServletRequest request;
     private HttpSession httpSession;
-    private Map context;
-    private Map params;
-    private Map session;
+    private Map<String, Object> context;
+    private Map<String, Object> params;
+    private Map<String, Object> session;
     private ExecuteAndWaitInterceptor waitInterceptor;
     private ParametersInterceptor parametersInterceptor;
 
@@ -175,13 +180,13 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(session);//WW-4900 action1 and invocation are not serializable but we should not fail at this line
         oos.close();
-        byte b[] = baos.toByteArray();
+        byte[] b = baos.toByteArray();
         baos.close();
 
         ByteArrayInputStream bais = new ByteArrayInputStream(b);
         ObjectInputStream ois = new ObjectInputStream(bais);
-        session = (Map) ois.readObject();
-        context.put(ActionContext.SESSION, session);
+        session = (Map<String, Object>) ois.readObject();
+        context = ActionContext.of(context).withSession(session).getContextMap();
         ois.close();
         bais.close();
 
@@ -203,19 +208,24 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
     }
 
     protected void setUp() throws Exception {
+        super.setUp();
         loadConfigurationProviders(new WaitConfigurationProvider());
 
-        session = new HashMap();
-        params = new HashMap();
-        context = new HashMap();
-        context.put(ActionContext.SESSION, session);
-        context.put(ActionContext.PARAMETERS, HttpParameters.create().build());
+        session = new HashMap<>();
+        params = new HashMap<>();
+        context = new HashMap<>();
 
         request = new StrutsMockHttpServletRequest();
         httpSession = new StrutsMockHttpSession();
         request.setSession(httpSession);
         request.setParameterMap(params);
-        context.put(ServletActionContext.HTTP_REQUEST, request);
+
+        context = ActionContext.of(context)
+            .withSession(session)
+            .withParameters(HttpParameters.create().build())
+            .withServletRequest(request)
+            .getContextMap();
+
         container.inject(parametersInterceptor);
     }
 
@@ -226,6 +236,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
     private class WaitConfigurationProvider implements ConfigurationProvider {
 
         Configuration configuration;
+
         public void destroy() {
             waitInterceptor.destroy();
         }
@@ -250,8 +261,8 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
                     .addResultConfig(new ResultConfig.Builder(ExecuteAndWaitInterceptor.WAIT, MockResult.class.getName()).build())
                     .addInterceptor(new InterceptorMapping("params", parametersInterceptor))
                     .addInterceptor(new InterceptorMapping("execAndWait", waitInterceptor))
-                .build())
-            .build();
+                    .build())
+                .build();
             configuration.addPackageConfig("", wait);
         }
 

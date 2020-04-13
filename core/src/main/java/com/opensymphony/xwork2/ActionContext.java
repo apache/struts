@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 
@@ -70,22 +71,30 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the {@link com.opensymphony.xwork2.util.ValueStack OGNL value stack}.
+     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
+    @Deprecated
     public static final String VALUE_STACK = ValueStack.VALUE_STACK;
 
     /**
      * Constant for the action's session.
+     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
+    @Deprecated
     public static final String SESSION = "com.opensymphony.xwork2.ActionContext.session";
 
     /**
      * Constant for the action's application context.
+     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
+    @Deprecated
     public static final String APPLICATION = "com.opensymphony.xwork2.ActionContext.application";
 
     /**
      * Constant for the action's parameters.
+     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
+    @Deprecated
     public static final String PARAMETERS = "com.opensymphony.xwork2.ActionContext.parameters";
 
     /**
@@ -148,6 +157,10 @@ public class ActionContext implements Serializable {
     public static ActionContext bind(ActionContext actionContext) {
         ActionContext.setContext(actionContext);
         return ActionContext.getContext();
+    }
+
+    public static boolean containsValueStack(Map<String, Object> context) {
+        return context != null && context.containsKey(VALUE_STACK);
     }
 
     /**
@@ -531,6 +544,11 @@ public class ActionContext implements Serializable {
 
     public ActionContext withLocale(Locale locale) {
         put(LOCALE, locale);
+        return this;
+    }
+
+    public ActionContext with(String key, Object value) {
+        put(key, value);
         return this;
     }
 }

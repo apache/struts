@@ -326,9 +326,9 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected Map<String, Object> createContextMap() {
         ActionContext actionContext;
 
-        if (extraContext != null && extraContext.containsKey(ActionContext.VALUE_STACK)) {
+        if (ActionContext.containsValueStack(extraContext)) {
             // In case the ValueStack was passed in
-            stack = (ValueStack) extraContext.get(ActionContext.VALUE_STACK);
+            stack = ActionContext.of(extraContext).getValueStack();
 
             if (stack == null) {
                 throw new IllegalStateException("There was a null Stack set into the extra params.");

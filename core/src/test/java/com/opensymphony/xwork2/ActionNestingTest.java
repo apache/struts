@@ -29,13 +29,14 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * ActionNestingTest
  *
  * @author Jason Carreira
- *         Created Mar 5, 2003 2:02:01 PM
+ * Created Mar 5, 2003 2:02:01 PM
  */
 public class ActionNestingTest extends XWorkTestCase {
 
@@ -56,7 +57,8 @@ public class ActionNestingTest extends XWorkTestCase {
         return VALUE;
     }
 
-    @Override public void setUp() throws Exception {
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
         loadConfigurationProviders(new NestedTestConfigurationProvider());
 
@@ -64,7 +66,8 @@ public class ActionNestingTest extends XWorkTestCase {
         context.getValueStack().push(this);
     }
 
-    @Override protected void tearDown() throws Exception {
+    @Override
+    protected void tearDown() throws Exception {
         super.tearDown();
     }
 
@@ -90,8 +93,9 @@ public class ActionNestingTest extends XWorkTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         assertEquals(VALUE, stack.findValue(KEY));
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.VALUE_STACK, stack);
+        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+            .withValueStack(stack)
+            .getContextMap();
 
         ActionProxy proxy = actionProxyFactory.createActionProxy(NAMESPACE, STACK_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -105,30 +109,32 @@ public class ActionNestingTest extends XWorkTestCase {
 
     class NestedTestConfigurationProvider implements ConfigurationProvider {
         private Configuration configuration;
+
         public void destroy() {
         }
+
         public void init(Configuration configuration) {
             this.configuration = configuration;
         }
 
         public void register(ContainerBuilder builder, LocatableProperties props) {
         }
-        
+
         public void loadPackages() {
-            
+
             PackageConfig packageContext = new PackageConfig.Builder("nestedActionTest")
                 .addActionConfig(SIMPLE_ACTION_NAME, new ActionConfig.Builder("nestedActionTest", SIMPLE_ACTION_NAME, SimpleAction.class.getName())
-                        .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
-                        .addResultConfig(new ResultConfig.Builder(Action.ERROR, MockResult.class.getName()).build())
-                        .build())
+                    .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
+                    .addResultConfig(new ResultConfig.Builder(Action.ERROR, MockResult.class.getName()).build())
+                    .build())
                 .addActionConfig(NO_STACK_ACTION_NAME, new ActionConfig.Builder("nestedActionTest", NO_STACK_ACTION_NAME, NestedAction.class.getName())
-                        .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
-                        .methodName("noStack")
-                        .build())
+                    .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
+                    .methodName("noStack")
+                    .build())
                 .addActionConfig(STACK_ACTION_NAME, new ActionConfig.Builder("nestedActionTest", STACK_ACTION_NAME, NestedAction.class.getName())
-                        .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
-                        .methodName("stack")
-                        .build())
+                    .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
+                    .methodName("stack")
+                    .build())
                 .namespace(NAMESPACE)
                 .build();
             configuration.addPackageConfig("nestedActionTest", packageContext);

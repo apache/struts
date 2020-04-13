@@ -304,14 +304,12 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         writer.startNode(DEBUG_PARAM);
         serializeIt(ctx.getParameters(), "parameters", writer, new ArrayList<>());
         writer.startNode("context");
-        String key;
-        Map ctxMap = ctx.getContextMap();
-        for (Object o : ctxMap.keySet()) {
-            key = o.toString();
+        Map<String, Object> ctxMap = ctx.getContextMap();
+        for (String key : ctxMap.keySet()) {
             boolean print = !ignoreKeys.contains(key);
 
-            for (String ignorePrefixe : ignorePrefixes) {
-                if (key.startsWith(ignorePrefixe)) {
+            for (String ignorePrefix : ignorePrefixes) {
+                if (key.startsWith(ignorePrefix)) {
                     print = false;
                     break;
                 }
@@ -321,11 +319,11 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             }
         }
         writer.endNode();
-        Map requestMap = (Map) ctx.get("request");
+        Map<String, Object> requestMap = (Map<String, Object>) ctx.get("request");
         serializeIt(requestMap, "request", writer, filterValueStack(requestMap));
         serializeIt(ctx.getSession(), "session", writer, new ArrayList<>());
 
-        ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
+        ValueStack stack = ctx.getValueStack();
         serializeIt(stack.getRoot(), "valueStack", writer, new ArrayList<>());
         writer.endNode();
     }

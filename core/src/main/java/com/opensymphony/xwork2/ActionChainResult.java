@@ -221,10 +221,11 @@ public class ActionChainResult implements Result {
         }
         addToHistory(finalNamespace, finalActionName, finalMethodName);
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.VALUE_STACK, invocation.getInvocationContext().getValueStack());
-        extraContext.put(ActionContext.PARAMETERS, invocation.getInvocationContext().getParameters());
-        extraContext.put(CHAIN_HISTORY, ActionChainResult.getChainHistory());
+        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+            .withValueStack(invocation.getInvocationContext().getValueStack())
+            .withParameters(invocation.getInvocationContext().getParameters())
+            .with(CHAIN_HISTORY, ActionChainResult.getChainHistory())
+            .getContextMap();
 
         LOG.debug("Chaining to action {}", finalActionName);
 

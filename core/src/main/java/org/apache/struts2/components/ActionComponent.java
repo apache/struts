@@ -175,7 +175,7 @@ public class ActionComponent extends ContextBean {
         return end;
     }
 
-    protected Map createExtraContext() {
+    protected Map<String, Object> createExtraContext() {
         HttpParameters newParams = createParametersForContext();
 
         ActionContext ctx = stack.getActionContext();
@@ -184,7 +184,8 @@ public class ActionComponent extends ContextBean {
         Map<String, Object> application = ctx.getApplication();
 
         Dispatcher du = Dispatcher.getInstance();
-        Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
+        Map<String, Object> extraContext = du.createContextMap(
+            new RequestMap(req),
                 newParams,
                 session,
                 application,
@@ -192,12 +193,12 @@ public class ActionComponent extends ContextBean {
                 res);
 
         ValueStack newStack = valueStackFactory.createValueStack(stack);
-        extraContext.put(ActionContext.VALUE_STACK, newStack);
 
-        // add page context, such that ServletDispatcherResult will do an include
-        extraContext.put(ServletActionContext.PAGE_CONTEXT, pageContext);
-
-        return extraContext;
+        return ActionContext.of(extraContext)
+            .withValueStack(newStack)
+            // add page context, such that ServletDispatcherResult will do an include
+            .withPageContext(pageContext)
+            .getContextMap();
     }
 
     /**

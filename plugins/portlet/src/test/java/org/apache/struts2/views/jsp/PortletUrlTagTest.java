@@ -144,14 +144,15 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         actionMap.put(PortletMode.HELP, new ActionMapping("defaultHelp", "/help", "execute", new HashMap<>()));
         actionMap.put(PortletMode.EDIT, new ActionMapping("defaultEdit", "/edit", "execute", new HashMap<>()));
 
-        Map<String, Object> contextMap = stack.getContext();
-        contextMap.put(ActionContext.SESSION, new HashMap<String, Object>());
-        contextMap.put(PortletConstants.REQUEST, mockPortletReq.proxy());
-        contextMap.put(PortletConstants.RESPONSE, mockPortletRes.proxy());
-        contextMap.put(PortletConstants.PHASE, PortletPhase.RENDER_PHASE);
-        contextMap.put(PortletConstants.MODE_NAMESPACE_MAP, modeMap);
-        contextMap.put(PortletConstants.DEFAULT_ACTION_MAP, actionMap);
-        contextMap.put(STRUTS_PORTLET_CONTEXT, mockCtx.proxy());
+        Map<String, Object> contextMap = stack.getActionContext()
+            .withSession(new HashMap<>())
+            .with(PortletConstants.REQUEST, mockPortletReq.proxy())
+            .with(PortletConstants.RESPONSE, mockPortletRes.proxy())
+            .with(PortletConstants.PHASE, PortletPhase.RENDER_PHASE)
+            .with(PortletConstants.MODE_NAMESPACE_MAP, modeMap)
+            .with(PortletConstants.DEFAULT_ACTION_MAP, actionMap)
+            .with(STRUTS_PORTLET_CONTEXT, mockCtx.proxy())
+            .getContextMap();
 
         ActionInvocation ai = (ActionInvocation) mockActionInvocation.proxy();
 

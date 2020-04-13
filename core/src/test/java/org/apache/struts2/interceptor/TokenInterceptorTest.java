@@ -18,12 +18,10 @@
  */
 package org.apache.struts2.interceptor;
 
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestConfigurationProvider;
@@ -32,10 +30,10 @@ import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts2.views.jsp.StrutsMockHttpSession;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -95,10 +93,10 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
 
     protected void setToken(String token) {
         request.getParameterMap().put(TokenHelper.TOKEN_NAME_FIELD, new String[]{
-                TokenHelper.DEFAULT_TOKEN_NAME
+            TokenHelper.DEFAULT_TOKEN_NAME
         });
         request.getParameterMap().put(TokenHelper.DEFAULT_TOKEN_NAME, new String[]{
-                token
+            token
         });
         extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
     }
@@ -111,8 +109,10 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
         session = new TreeMap<>();
         params = new TreeMap<>();
         extraContext = new TreeMap<>();
-        extraContext.put(ActionContext.SESSION, session);
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create().build());
+        extraContext = ActionContext.of(extraContext)
+            .withSession(session)
+            .withParameters(HttpParameters.create().build())
+            .getContextMap();
 
         request = new StrutsMockHttpServletRequest();
         httpSession = new StrutsMockHttpSession();

@@ -606,7 +606,9 @@ public class Dispatcher {
             }
         }
         if (stack != null) {
-            extraContext.put(ActionContext.VALUE_STACK, valueStackFactory.createValueStack(stack));
+            extraContext = ActionContext.of(extraContext)
+                .withValueStack(valueStackFactory.createValueStack(stack))
+                .getContextMap();
         }
 
         try {
@@ -718,28 +720,26 @@ public class Dispatcher {
      * @return a HashMap representing the <tt>Action</tt> context.
      * @since 2.3.17
      */
-    public HashMap<String, Object> createContextMap(Map requestMap,
-                                                    HttpParameters parameters,
-                                                    Map sessionMap,
-                                                    Map applicationMap,
-                                                    HttpServletRequest request,
-                                                    HttpServletResponse response) {
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, parameters);
-        extraContext.put(ActionContext.SESSION, sessionMap);
-        extraContext.put(ActionContext.APPLICATION, applicationMap);
-
-        extraContext.put(ActionContext.LOCALE, getLocale(request));
-
-        extraContext.put(StrutsStatics.HTTP_REQUEST, request);
-        extraContext.put(StrutsStatics.HTTP_RESPONSE, response);
-        extraContext.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
-
-        // helpers to get access to request/session/application scope
-        extraContext.put("request", requestMap);
-        extraContext.put("session", sessionMap);
-        extraContext.put("application", applicationMap);
-        extraContext.put("parameters", parameters);
+    public Map<String, Object> createContextMap(Map<String, Object> requestMap,
+                                                HttpParameters parameters,
+                                                Map<String, Object> sessionMap,
+                                                Map<String, Object> applicationMap,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+            .withParameters(parameters)
+            .withSession(sessionMap)
+            .withApplication(applicationMap)
+            .withLocale(getLocale(request))
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(servletContext)
+            // helpers to get access to request/session/application scope
+            .with("request", requestMap)
+            .with("session", sessionMap)
+            .with("application", applicationMap)
+            .with("parameters", parameters)
+            .getContextMap();
 
         AttributeMap attrMap = new AttributeMap(extraContext);
         extraContext.put("attr", attrMap);

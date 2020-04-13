@@ -18,7 +18,6 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.conversion.NullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
@@ -65,40 +64,20 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         ValueStack stack = new OgnlValueStack(xworkConverter, compoundRootAccessor, textProvider,
             containerAllowsStaticMethodAccess(), containerAllowsStaticFieldAccess());
         container.inject(stack);
-        ActionContext oldContext = ActionContext.getContext();
-        try {
-            return stack.getActionContext()
-                .bind()
-                .withContainer(container)
-                .withValueStack(stack)
-                .getValueStack();
-        } finally {
-            ActionContext.clear();
-            if (oldContext != null) {
-                LOG.debug("Re-binding the old context");
-                oldContext.bind();
-            }
-        }
+        return stack.getActionContext()
+            .withContainer(container)
+            .withValueStack(stack)
+            .getValueStack();
     }
 
     public ValueStack createValueStack(ValueStack stack) {
         ValueStack result = new OgnlValueStack(stack, xworkConverter, compoundRootAccessor,
             containerAllowsStaticMethodAccess(), containerAllowsStaticFieldAccess());
         container.inject(result);
-        ActionContext oldContext = ActionContext.getContext();
-        try {
-            return result.getActionContext()
-                .bind()
-                .withContainer(container)
-                .withValueStack(result)
-                .getValueStack();
-        } finally {
-            ActionContext.clear();
-            if (oldContext != null) {
-                LOG.debug("Re-binding the old context");
-                oldContext.bind();
-            }
-        }
+        return result.getActionContext()
+            .withContainer(container)
+            .withValueStack(result)
+            .getValueStack();
     }
 
     @Inject

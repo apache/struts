@@ -324,7 +324,6 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     protected Map<String, Object> createContextMap() {
-        ActionContext oldContext = ActionContext.getContext();
         ActionContext actionContext;
 
         if (extraContext != null && extraContext.containsKey(ActionContext.VALUE_STACK)) {
@@ -345,20 +344,11 @@ public class DefaultActionInvocation implements ActionInvocation {
             actionContext = stack.getActionContext();
         }
 
-        try {
-            return actionContext
-                .bind()
-                .withExtraContext(extraContext)
-                .withActionInvocation(this)
-                .withContainer(container)
-                .getContextMap();
-        } finally {
-            ActionContext.clear();
-            if (oldContext != null) {
-                LOG.debug("Re-binding the old context");
-                oldContext.bind();
-            }
-        }
+        return actionContext
+            .withExtraContext(extraContext)
+            .withActionInvocation(this)
+            .withContainer(container)
+            .getContextMap();
     }
 
     /**

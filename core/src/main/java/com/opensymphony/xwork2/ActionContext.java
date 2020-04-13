@@ -242,7 +242,7 @@ public class ActionContext implements Serializable {
      * @return the context map.
      */
     public Map<String, Object> getContextMap() {
-        return getContext().context;
+        return context;
     }
 
     /**
@@ -524,7 +524,7 @@ public class ActionContext implements Serializable {
 
     public ActionContext withExtraContext(Map<String, Object> extraContext) {
         if (extraContext != null) {
-            getContext().context.putAll(extraContext);
+            context.putAll(extraContext);
         }
         return this;
     }

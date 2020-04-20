@@ -74,9 +74,9 @@
 
     <distributionManagement>
         <site>
-            <id>struts-stage</id>
+            <id>struts-site</id>
             <name>Apache Struts</name>
-            <url>file://${project.build.directory}/staging/</url>
+            <url>https://struts.apache.org/maven/</url>
         </site>
     </distributionManagement>
 

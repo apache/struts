@@ -48,6 +48,7 @@ public class DateRangeValidatorTest extends XWorkTestCase {
         HashMap<String, Object> params = new HashMap<>();
         params.put("date", date.getTime());
         context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        context.put(ActionContext.LOCALE, Locale.US);  // Force US Locale for date conversion tests on JDK9+
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context);
         proxy.execute();

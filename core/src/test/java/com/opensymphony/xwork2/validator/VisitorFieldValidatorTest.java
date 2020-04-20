@@ -40,6 +40,7 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        ActionContext.getContext().put(ActionContext.LOCALE, Locale.US);  // Force US Locale for date conversion tests on JDK9+
         action = container.inject(VisitorValidatorTestAction.class);
 
         TestBean bean = action.getBean();

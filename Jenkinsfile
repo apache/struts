@@ -170,14 +170,21 @@ pipeline {
     failure {
       script {
         emailext(
-            subject: "[BUILD-FAILURE]: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]'",
-            body: """
-              BUILD-FAILURE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
-               
-              Check console output at ${env.BUILD_URL}
-            """.stripMargin(),
             to: "dev@struts.apache.org",
-            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+            from: "Mr. Jenkins <jenkins@builds.apache.org>",
+            subject: "Jenkins job ${env.JOB_NAME}#${env.BUILD_NUMBER} failed",
+            body: """
+There is a build failure in ${env.JOB_NAME}.
+
+Build: ${env.BUILD_URL}
+Logs: ${env.BUILD_URL}console
+Changes: ${env.BUILD_URL}changes
+
+--
+Mr. Jenkins
+Director of Continuous Integration
+"""
         )
       }
     }
@@ -186,14 +193,21 @@ pipeline {
     unstable {
       script {
         emailext(
-            subject: "[BUILD-UNSTABLE]: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]'",
-            body: """
-              BUILD-UNSTABLE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
-               
-              Check console output at ${env.BUILD_URL}
-            """.stripMargin(),
             to: "dev@struts.apache.org",
-            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+            from: "Mr. Jenkins <jenkins@builds.apache.org>",
+            subject: "Jenkins job ${env.JOB_NAME}#${env.BUILD_NUMBER} unstable",
+            body: """
+Some tests have failed in ${env.JOB_NAME}.
+
+Build: ${env.BUILD_URL}
+Logs: ${env.BUILD_URL}console
+Changes: ${env.BUILD_URL}changes
+
+--
+Mr. Jenkins
+Director of Continuous Integration
+"""
         )
       }
     }
@@ -202,14 +216,21 @@ pipeline {
     fixed {
       script {
         emailext(
-            subject: "[BUILD-STABLE]: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]'",
-            body: """
-              BUILD-STABLE: Job '${env.JOB_NAME} [${env.BRANCH_NAME}] [${env.BUILD_NUMBER}]':
-               
-              Is back to normal.
-            """.stripMargin(),
             to: "dev@struts.apache.org",
-            recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+            from: 'Mr. Jenkins <jenkins@builds.apache.org>',
+            subject: "Jenkins job ${env.JOB_NAME}#${env.BUILD_NUMBER} back to normal",
+            body: """
+The build for ${env.JOB_NAME} completed successfully and is back to normal.
+
+Build: ${env.BUILD_URL}
+Logs: ${env.BUILD_URL}console
+Changes: ${env.BUILD_URL}changes
+
+--
+Mr. Jenkins
+Director of Continuous Integration
+"""
         )
       }
     }

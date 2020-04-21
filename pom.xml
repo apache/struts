@@ -72,6 +72,14 @@
         </notifiers>
     </ciManagement>
 
+    <distributionManagement>
+        <site>
+            <id>struts-site</id>
+            <name>Apache Struts</name>
+            <url>https://struts.apache.org/maven/</url>
+        </site>
+    </distributionManagement>
+
     <modules>
         <module>bom</module>
         <module>core</module>
@@ -99,21 +107,21 @@
         <java.version>1.8</java.version>
 
         <!-- dependency versions in alphanumeric order -->
-        <asm.version>7.2</asm.version>
-        <jackson.version>2.10.1</jackson.version>
-        <log4j2.version>2.12.1</log4j2.version>
-        <ognl.version>3.2.12</ognl.version>
-        <slf4j.version>1.7.29</slf4j.version>
-        <spring.platformVersion>4.3.25.RELEASE</spring.platformVersion>
+        <asm.version>7.3.1</asm.version>
+        <jackson.version>2.10.3</jackson.version>
+        <log4j2.version>2.13.1</log4j2.version>
+        <ognl.version>3.2.14</ognl.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <spring.platformVersion>4.3.26.RELEASE</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
 
         <!-- Site generation -->
-        <fluido-skin.version>1.8</fluido-skin.version>
+        <fluido-skin.version>1.9</fluido-skin.version>
 
         <!-- Sonar -->
         <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
     </properties>
 
     <profiles>
@@ -223,7 +231,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.4</version>
+                        <version>0.8.5</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
@@ -287,17 +295,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.2.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>4.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -353,7 +361,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>5.2.4</version>
+                    <version>5.3.2</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
@@ -366,7 +374,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>3.0.0-M3</version>
                     <executions>
                         <execution>
                             <id>enforce</id>
@@ -425,7 +433,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.8.2</version>
+                <version>3.9.0</version>
                 <configuration>
                     <relativizeDecorationLinks>false</relativizeDecorationLinks>
                 </configuration>
@@ -433,12 +441,12 @@
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
                         <artifactId>doxia-core</artifactId>
-                        <version>1.9</version>
+                        <version>1.9.1</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
                         <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.9</version>
+                        <version>1.9.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -678,13 +686,13 @@
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.28</version>
+                <version>2.3.30</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.main</artifactId>
-                <version>4.6.1</version>
+                <version>6.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -713,7 +721,7 @@
             <dependency>
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity-engine-core</artifactId>
-                <version>2.1</version>
+                <version>2.2</version>
             </dependency>
 
             <dependency>
@@ -746,13 +754,13 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13</version>
             </dependency>
 
             <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
-                <version>3.5.1</version>
+                <version>4.2</version>
                 <scope>test</scope>
             </dependency>
 
@@ -766,7 +774,7 @@
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.el</artifactId>
-                <version>3.0.1-b10</version>
+                <version>3.0.1-b11</version>
             </dependency>
 
             <dependency>
@@ -779,21 +787,21 @@
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>
-                <version>1.1.2</version>
+                <version>1.2</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-jasper</artifactId>
-                <version>8.5.37</version>
+                <version>8.5.53</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-api</artifactId>
-                <version>8.5.37</version>
+                <version>8.5.53</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -870,7 +878,7 @@
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-juli</artifactId>
-                <version>8.5.37</version>
+                <version>8.5.53</version>
             </dependency>
 
             <!-- Commons -->
@@ -903,7 +911,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.9</version>
+                <version>3.10</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -1025,14 +1033,22 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>2.9.1</version>
+                <version>3.15.0</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>2.23.0</version>
+                <version>3.3.3</version>
+                <exclusions>
+                    <!-- The mockito-core artifact and easymock artifact use different versions of objenesis (2.6 vs 3.1).
+                         Excluding the older version here to pass enforcer.  When next upgrading mockito-core, confirm whether this exclusion is still required. -->
+                    <exclusion>
+                        <groupId>org.objenesis</groupId>
+                        <artifactId>objenesis</artifactId>
+                    </exclusion>
+                </exclusions>
                 <scope>test</scope>
             </dependency>
 
@@ -1063,7 +1079,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>5.14.10</version>
+                <version>7.1.0</version>
                 <scope>compile</scope>
                 <optional>true</optional>
             </dependency>
@@ -1131,26 +1147,26 @@
             <dependency>
                 <groupId>org.apache.juneau</groupId>
                 <artifactId>juneau-marshall</artifactId>
-                <version>7.2.2</version>
+                <version>8.1.3</version>
             </dependency>
 
             <!-- CDI & Weld -->
             <dependency>
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
-                <version>1.0-SP4</version>
+                <version>1.2</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jboss.weld</groupId>
                 <artifactId>weld-core</artifactId>
-                <version>1.0.1-SP4</version>
+                <version>2.2.16.SP1</version>
             </dependency>
 
             <dependency>
-                <groupId>org.jboss.weld</groupId>
+                <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se</artifactId>
-                <version>1.0.1-Final</version>
+                <version>2.2.16.SP1</version>
             </dependency>
 
             <dependency>

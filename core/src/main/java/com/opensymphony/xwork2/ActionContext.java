@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 
@@ -71,6 +70,7 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the {@link com.opensymphony.xwork2.util.ValueStack OGNL value stack}.
+     *
      * @deprecated scope will be narrowed to "private", use helper methods instead
      */
     @Deprecated
@@ -78,6 +78,7 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the action's session.
+     *
      * @deprecated scope will be narrowed to "private", use helper methods instead
      */
     @Deprecated
@@ -85,6 +86,7 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the action's application context.
+     *
      * @deprecated scope will be narrowed to "private", use helper methods instead
      */
     @Deprecated
@@ -92,6 +94,7 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the action's parameters.
+     *
      * @deprecated scope will be narrowed to "private", use helper methods instead
      */
     @Deprecated
@@ -99,11 +102,15 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the action's locale.
+     *
+     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
+    @Deprecated
     public static final String LOCALE = "com.opensymphony.xwork2.ActionContext.locale";
 
     /**
      * Constant for the action's {@link com.opensymphony.xwork2.ActionInvocation invocation} context.
+     *
      * @deprecated scope will be narrowed to "private", use helper methods instead
      */
     @Deprecated
@@ -111,6 +118,7 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the map of type conversion errors.
+     *
      * @deprecated scope will be narrowed to "private", use helper methods instead
      */
     @Deprecated
@@ -118,6 +126,7 @@ public class ActionContext implements Serializable {
 
     /**
      * Constant for the container
+     *
      * @deprecated scope will be narrowed to "private", use helper methods instead
      */
     @Deprecated
@@ -295,9 +304,16 @@ public class ActionContext implements Serializable {
      * Sets the Locale for the current action.
      *
      * @param locale the Locale for the current action.
+     * @deprecated use {@link #withLocale(Locale)} instead
      */
+    @Deprecated
     public void setLocale(Locale locale) {
         put(LOCALE, locale);
+    }
+
+    public ActionContext withLocale(Locale locale) {
+        put(LOCALE, locale);
+        return this;
     }
 
     /**
@@ -481,60 +497,112 @@ public class ActionContext implements Serializable {
         context.put(key, value);
     }
 
+    /**
+     * Gets ServletContext associated with current action
+     *
+     * @return current ServletContext
+     */
     public ServletContext getServletContext() {
         return (ServletContext) get(StrutsStatics.SERVLET_CONTEXT);
     }
 
+    /**
+     * Assigns ServletContext to action context
+     *
+     * @param servletContext associated with current request
+     * @return ActionContext
+     */
     public ActionContext withServletContext(ServletContext servletContext) {
         put(StrutsStatics.SERVLET_CONTEXT, servletContext);
         return this;
     }
 
+    /**
+     * Gets ServletRequest associated with current action
+     *
+     * @return current ServletRequest
+     */
     public HttpServletRequest getServletRequest() {
         return (HttpServletRequest) get(StrutsStatics.HTTP_REQUEST);
     }
 
+    /**
+     * Assigns ServletRequest to action context
+     *
+     * @param request associated with current request
+     * @return ActionContext
+     */
     public ActionContext withServletRequest(HttpServletRequest request) {
         put(StrutsStatics.HTTP_REQUEST, request);
         return this;
     }
 
+    /**
+     * Gets ServletResponse associated with current action
+     *
+     * @return current ServletResponse
+     */
     public HttpServletResponse getServletResponse() {
         return (HttpServletResponse) get(StrutsStatics.HTTP_RESPONSE);
     }
 
+    /**
+     * Assigns ServletResponse to action context
+     *
+     * @param response associated with current request
+     * @return ActionContext
+     */
     public ActionContext withServletResponse(HttpServletResponse response) {
         put(StrutsStatics.HTTP_RESPONSE, response);
         return this;
     }
 
+    /**
+     * Gets PageContext associated with current action
+     *
+     * @return current PageContext
+     */
     public PageContext getPageContext() {
         return (PageContext) get(StrutsStatics.PAGE_CONTEXT);
     }
 
+    /**
+     * Assigns PageContext to action context
+     *
+     * @param pageContext associated with current request
+     * @return ActionContext
+     */
     public ActionContext withPageContext(PageContext pageContext) {
         put(StrutsStatics.PAGE_CONTEXT, pageContext);
         return this;
     }
 
+    /**
+     * Gets ActionMapping associated with current action
+     *
+     * @return current ActionMapping
+     */
     public ActionMapping getActionMapping() {
         return (ActionMapping) get(StrutsStatics.ACTION_MAPPING);
     }
 
+    /**
+     * Assigns ActionMapping to action context
+     *
+     * @param actionMapping associated with current request
+     * @return ActionContext
+     */
     public ActionContext withActionMapping(ActionMapping actionMapping) {
         put(StrutsStatics.ACTION_MAPPING, actionMapping);
         return this;
     }
 
-    public ActionContext usePageContextOrClear(ActionContext actionContext) {
-        if (actionContext == null) {
-            put(StrutsStatics.PAGE_CONTEXT, null);
-        } else {
-            put(StrutsStatics.PAGE_CONTEXT, actionContext.getPageContext());
-        }
-        return this;
-    }
-
+    /**
+     * Assigns an extra context map to action context
+     *
+     * @param extraContext to add to the current action context
+     * @return ActionContext
+     */
     public ActionContext withExtraContext(Map<String, Object> extraContext) {
         if (extraContext != null) {
             context.putAll(extraContext);
@@ -542,11 +610,13 @@ public class ActionContext implements Serializable {
         return this;
     }
 
-    public ActionContext withLocale(Locale locale) {
-        put(LOCALE, locale);
-        return this;
-    }
-
+    /**
+     * Adds arbitrary key to action context
+     *
+     * @param key   a string
+     * @param value an object
+     * @return ActionContext
+     */
     public ActionContext with(String key, Object value) {
         put(key, value);
         return this;

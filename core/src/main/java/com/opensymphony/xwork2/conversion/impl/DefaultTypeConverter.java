@@ -324,7 +324,7 @@ public abstract class DefaultTypeConverter implements TypeConverter {
     protected Locale getLocale(Map<String, Object> context) {
         Locale locale = null;
         if (context != null) {
-            locale = (Locale) context.get(ActionContext.LOCALE);
+            locale = ActionContext.of(context).getLocale();
         }
         if (locale == null) {
             LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);

@@ -317,7 +317,8 @@ public class XWorkConverterTest extends XWorkTestCase {
         Locale locale = Locale.GERMANY;
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
         String dateString = df.format(date);
-        context.put(ActionContext.LOCALE, locale);
+        context = ActionContext.of(context).withLocale(locale).getContextMap();
+
         assertEquals(dateString, converter.convertValue(context, null, null, null, date, String.class));
     }
 
@@ -553,7 +554,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
     public void testStringToInt() {
         assertEquals(123, converter.convertValue(context, null, null, null, "123", int.class));
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123.12", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", int.class));
@@ -562,7 +563,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1,234.12", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", int.class));
-        context.put(ActionContext.LOCALE, Locale.GERMANY);
+        context = ActionContext.of(context).withLocale(Locale.GERMANY).getContextMap();
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123.12", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", int.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", int.class));
@@ -576,7 +577,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
     public void testStringToInteger() {
         assertEquals(123, converter.convertValue(context, null, null, null, "123", Integer.class));
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123.12", Integer.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Integer.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", Integer.class));
@@ -587,7 +588,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234", Integer.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", Integer.class));
 
-        context.put(ActionContext.LOCALE, Locale.GERMANY);
+        context = ActionContext.of(context).withLocale(Locale.GERMANY).getContextMap();
         // WRONG: locale separator is wrongly placed
         assertEquals(12312, converter.convertValue(context, null, null, null, "123.12", Integer.class));
         assertEquals(1234, converter.convertValue(context, null, null, null, "1.234", Integer.class));
@@ -601,7 +602,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
     public void testStringToPrimitiveDouble() {
         assertEquals(123d, converter.convertValue(context, null, null, null, "123", double.class));
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
         assertEquals(123.12, converter.convertValue(context, null, null, null, "123.12", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", double.class));
@@ -611,7 +612,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(1.234, converter.convertValue(context, null, null, null, "1.234", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", double.class));
 
-        context.put(ActionContext.LOCALE, Locale.GERMANY);
+        context = ActionContext.of(context).withLocale(Locale.GERMANY).getContextMap();
         assertEquals(12312d, converter.convertValue(context, null, null, null, "123.12", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", double.class));
@@ -624,7 +625,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
     public void testStringToDouble() {
         assertEquals(123d, converter.convertValue(context, null, null, null, "123", Double.class));
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
         assertEquals(123.12, converter.convertValue(context, null, null, null, "123.12", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", Double.class));
@@ -635,7 +636,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(1.234, converter.convertValue(context, null, null, null, "1.234", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", Double.class));
 
-        context.put(ActionContext.LOCALE, Locale.GERMANY);
+        context = ActionContext.of(context).withLocale(Locale.GERMANY).getContextMap();
         // WRONG: locale separator is wrongly placed
         assertEquals(12312d, converter.convertValue(context, null, null, null, "123.12", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "123aa", Double.class));
@@ -782,8 +783,7 @@ public class XWorkConverterTest extends XWorkTestCase {
 
         converter = container.getInstance(XWorkConverter.class);
 
-        ActionContext ac = ActionContext.getContext();
-        ac.setLocale(Locale.US);
+        ActionContext ac = ActionContext.getContext().withLocale(Locale.US);
         context = ac.getContextMap();
         stack = (OgnlValueStack) ac.getValueStack();
     }

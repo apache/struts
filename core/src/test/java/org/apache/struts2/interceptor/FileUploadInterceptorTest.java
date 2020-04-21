@@ -393,10 +393,10 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
-        ActionContext.getContext().setParameters(HttpParameters.create(param).build());
-        // set German locale
-        ActionContext.getContext().setLocale(Locale.GERMAN);
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 10));
+        ActionContext.getContext()
+            .withParameters(HttpParameters.create(param).build())
+            .withLocale(Locale.GERMAN)
+            .withServletRequest(createMultipartRequest(req, 10));
 
         interceptor.intercept(mai);
 

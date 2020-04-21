@@ -164,7 +164,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
                     ReflectionContextState.setReportingConversionErrors(context, true);
 
                     //keep locale from original context
-                    context.put(ActionContext.LOCALE, stack.getContext().get(ActionContext.LOCALE));
+                    newStack.getActionContext().withLocale(stack.getActionContext().getLocale());
                 }
 
                 for (Map.Entry<String, String> entry : parameters.entrySet()) {

@@ -97,7 +97,7 @@ public class CompositeTextProviderTest extends XWorkTestCase {
 
         TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
 
-        ActionContext.getContext().setLocale(Locale.ENGLISH);
+        ActionContext.getContext().withLocale(Locale.ENGLISH);
 
         textProvider = new CompositeTextProvider(new TextProvider[]{
                 tpf.createInstance(ResourceBundle.getBundle("com.opensymphony.xwork2.validator.CompositeTextProviderTestResourceBundle1")),

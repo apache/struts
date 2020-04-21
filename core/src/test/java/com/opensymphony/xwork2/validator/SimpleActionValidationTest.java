@@ -124,8 +124,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
             ValueStack stack = ActionContext.getContext().getValueStack();
-            ActionContext actionContext = ActionContext.of(stack.getContext()).bind();
-            actionContext.setLocale(Locale.US);
+            stack.getActionContext().withLocale(Locale.US);
 
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -553,7 +554,7 @@ public class URLTagTest extends AbstractUITagTest {
                 response);
         // let's not set the locale -- there is a test that checks if Dispatcher actually picks this up...
         // ... but generally we want to just use no locale (let it stay system default)
-        extraContext.remove(ActionContext.LOCALE);
+        extraContext = ActionContext.of(extraContext).withLocale(null).getContextMap();
         stack.getContext().putAll(extraContext);
 
         ActionContext actionContext = ActionContext.of(context)

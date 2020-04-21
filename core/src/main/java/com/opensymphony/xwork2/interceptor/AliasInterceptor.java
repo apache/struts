@@ -158,7 +158,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                     ReflectionContextState.setReportingConversionErrors(context, true);
 
                     //keep locale from original context
-                    context.put(ActionContext.LOCALE, stack.getContext().get(ActionContext.LOCALE));
+                    newStack.getActionContext().withLocale(stack.getActionContext().getLocale());
                 }
 
                 // override

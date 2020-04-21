@@ -327,7 +327,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
         
-        ActionContext.getContext().setLocale(Locale.US);
+        ActionContext.getContext().withLocale(Locale.US);
     }
 
     @Override

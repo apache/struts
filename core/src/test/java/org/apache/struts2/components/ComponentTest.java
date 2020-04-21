@@ -430,7 +430,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     public void testI18nComponentDisposeItselfFromComponentStack() throws Exception {
-        stack.getContext().put(ActionContext.LOCALE, Locale.getDefault());
+        stack.getActionContext().withLocale(Locale.getDefault());
 
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);

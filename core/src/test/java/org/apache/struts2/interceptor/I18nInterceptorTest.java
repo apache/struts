@@ -214,7 +214,7 @@ public class I18nInterceptorTest extends TestCase {
 
     public void testActionContextLocaleIsPreservedWhenNotOverridden() throws Exception {
         final Locale locale1 = Locale.TRADITIONAL_CHINESE;
-        mai.getInvocationContext().setLocale(locale1);
+        mai.getInvocationContext().withLocale(locale1);
         interceptor.intercept(mai);
 
         Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);

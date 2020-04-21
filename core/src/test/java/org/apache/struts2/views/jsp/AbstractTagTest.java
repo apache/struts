@@ -21,6 +21,7 @@ package org.apache.struts2.views.jsp;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -118,10 +119,10 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
                 response);
         // let's not set the locale -- there is a test that checks if Dispatcher actually picks this up...
         // ... but generally we want to just use no locale (let it stay system default)
-        extraContext.remove(ActionContext.LOCALE);
+        extraContext = ActionContext.of(extraContext).withLocale(null).getContextMap();
         stack.getContext().putAll(extraContext);
 
-        ActionContext actionContext = ActionContext.of(context)
+        ActionContext.of(context)
             .withServletRequest(request)
             .withServletResponse(response)
             .withServletContext(servletContext)

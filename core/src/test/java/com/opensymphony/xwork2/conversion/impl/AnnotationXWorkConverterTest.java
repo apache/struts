@@ -209,7 +209,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         Locale locale = Locale.GERMANY;
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
         String dateString = df.format(date);
-        context.put(ActionContext.LOCALE, locale);
+        context = ActionContext.of(context).withLocale(locale).getContextMap();
         assertEquals(dateString, converter.convertValue(context, null, null, null, date, String.class));
     }
 
@@ -471,8 +471,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         super.setUp();
         converter = container.getInstance(XWorkConverter.class);
 
-        ac = ActionContext.getContext();
-        ac.setLocale(Locale.US);
+        ac = ActionContext.getContext().withLocale(Locale.US);
         context = ac.getContextMap();
     }
 

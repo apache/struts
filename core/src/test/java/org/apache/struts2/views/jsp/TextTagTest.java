@@ -190,7 +190,7 @@ public class TextTagTest extends AbstractTagTest {
         Locale foreignLocale = getForeignLocale();
         assertNotSame(defaultLocale, foreignLocale);
 
-        ActionContext.getContext().setLocale(defaultLocale);
+        ActionContext.getContext().withLocale(defaultLocale);
         String key = "simpleKey";
         String value_default = getLocalizedMessage(defaultLocale);
         tag.setName(key);
@@ -204,7 +204,7 @@ public class TextTagTest extends AbstractTagTest {
         assertNotEquals(value_default, value_int);
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack(stack);
         newStack.getActionContext().withLocale(foreignLocale).withContainer(container);
-        assertNotSame(newStack.getContext().get(ActionContext.LOCALE), ActionContext.getContext().getLocale());
+        assertNotSame(newStack.getActionContext().getLocale(), ActionContext.getContext().getLocale());
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertEquals(ActionContext.getContext().getValueStack().peek(), newStack.peek());
         tag.doStartTag();

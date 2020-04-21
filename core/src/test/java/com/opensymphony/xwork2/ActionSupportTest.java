@@ -39,7 +39,7 @@ public class ActionSupportTest extends XWorkTestCase {
         as = new ActionSupport();
         container.inject(as);
 
-        ActionContext.getContext().setLocale(new Locale("da"));
+        ActionContext.getContext().withLocale(new Locale("da"));
 
         mas = new MyActionSupport();
         container.inject(mas);
@@ -150,13 +150,13 @@ public class ActionSupportTest extends XWorkTestCase {
 
     public void testLocale() {
         Locale defLocale = Locale.getDefault();
-        ActionContext.getContext().setLocale(null);
+        ActionContext.getContext().withLocale(null);
 
         // will never return null, if no locale is set then default is returned
         assertNotNull(as.getLocale());
         assertEquals(defLocale, as.getLocale());
 
-        ActionContext.getContext().setLocale(Locale.ITALY);
+        ActionContext.getContext().withLocale(Locale.ITALY);
         assertEquals(Locale.ITALY, as.getLocale());
 
         ActionContext.of(new HashMap<>()).bind();
@@ -177,7 +177,7 @@ public class ActionSupportTest extends XWorkTestCase {
     }
 
     public void testSimpleGetTextsWithInjectedTextProvider() {
-        ActionContext.getContext().setLocale(new Locale("da"));
+        ActionContext.getContext().withLocale(new Locale("da"));
         MyActionSupport mas = new MyActionSupport();
 
         TextProvider textProvider = container.getInstance(TextProvider.class, "system");
@@ -253,7 +253,7 @@ public class ActionSupportTest extends XWorkTestCase {
     }
 
     public void testGetTextsWithListAndStack() {
-        ActionContext.getContext().setLocale(new Locale("da"));
+        ActionContext.getContext().withLocale(new Locale("da"));
         MyActionSupport mas = container.inject(MyActionSupport.class);
 
         ValueStack stack = ActionContext.getContext().getValueStack();
@@ -271,7 +271,7 @@ public class ActionSupportTest extends XWorkTestCase {
     }
 
     public void testGetTextsWithArrayAndStack() {
-        ActionContext.getContext().setLocale(new Locale("da"));
+        ActionContext.getContext().withLocale(new Locale("da"));
         MyActionSupport mas = container.inject(MyActionSupport.class);
 
         ValueStack stack = ActionContext.getContext().getValueStack();
@@ -303,7 +303,7 @@ public class ActionSupportTest extends XWorkTestCase {
 
     public void testFormattingSupportWithConversionError() {
         ActionContext.getContext().getConversionErrors().put("val", new ConversionData(new String[]{"4567def"}, Double.class));
-        ActionContext.getContext().setLocale(new Locale("da"));
+        ActionContext.getContext().withLocale(new Locale("da"));
         MyActionSupport mas = new MyActionSupport();
         container.inject(mas);
         ActionContext.getContext().getValueStack().push(mas);

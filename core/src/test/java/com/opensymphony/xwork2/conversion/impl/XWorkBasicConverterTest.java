@@ -60,12 +60,11 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testDateWithLocalePoland() throws Exception {
 
-        Map<String, Object> map = new HashMap<>();
         Locale locale = new Locale("pl", "PL");
-        map.put(ActionContext.LOCALE, locale);
+        Map<String, Object> context = createContextWithLocale(locale);
 
         String reference = "2009-01-09";
-        Object convertedObject = basicConverter.convertValue(map, null, null, null, reference, Date.class);
+        Object convertedObject = basicConverter.convertValue(context, null, null, null, reference, Date.class);
 
         assertNotNull(convertedObject);
 
@@ -73,13 +72,11 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
     }
 
     public void testDateWithLocaleFrance() throws Exception {
-
-        Map<String, Object> map = new HashMap<>();
         Locale locale = new Locale("fr", "FR");
-        map.put(ActionContext.LOCALE, locale);
+        Map<String, Object> context = createContextWithLocale(locale);
 
         String reference = "09/01/2009";
-        Object convertedObject = basicConverter.convertValue(map, null, null, null, reference, Date.class);
+        Object convertedObject = basicConverter.convertValue(context, null, null, null, reference, Date.class);
 
         assertNotNull(convertedObject);
 
@@ -87,13 +84,11 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
     }
 
     public void testDateWithLocaleUK() throws Exception {
-
-        Map<String, Object> map = new HashMap<>();
         Locale locale = new Locale("en", "US");
-        map.put(ActionContext.LOCALE, locale);
+        Map<String, Object> context = createContextWithLocale(locale);
 
         String reference = "01/09/2009";
-        Object convertedObject = basicConverter.convertValue(map, null, null, null, reference, Date.class);
+        Object convertedObject = basicConverter.convertValue(context, null, null, null, reference, Date.class);
 
         assertNotNull(convertedObject);
 
@@ -133,9 +128,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testXW490ConvertStringToDouble() throws Exception {
         Locale locale = new Locale("DA"); // let's use a not common locale such as Denmark
-
-        Map<String, Object> context = new HashMap<>();
-        context.put(ActionContext.LOCALE, locale);
+        Map<String, Object> context = createContextWithLocale(locale);
 
         // decimal seperator is , in Denmark so we should write 123,99 as input
         Double value = (Double) basicConverter.convertValue(context, null, null, null, "123,99", Double.class);
@@ -147,9 +140,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
     public void testXW49ConvertDoubleToString() throws Exception {
         Locale locale = new Locale("DA"); // let's use a not common locale such as Denmark
-
-        Map<String, Object> context = new HashMap<>();
-        context.put(ActionContext.LOCALE, locale);
+        Map<String, Object> context = createContextWithLocale(locale);
 
         // decimal seperator is , in Denmark so we should write 123,99 as input
         String value = (String) basicConverter.convertValue(context, null, null, null, new Double("123.99"), String.class);

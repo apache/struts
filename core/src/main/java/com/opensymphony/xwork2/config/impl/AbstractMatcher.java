@@ -36,6 +36,9 @@ import java.util.*;
  * @since 2.1
  */
 public abstract class AbstractMatcher<E> implements Serializable {
+
+    private static final Logger LOG = LogManager.getLogger(AbstractMatcher.class);
+
     /**
      * <p> The logging instance </p>
      */
@@ -50,10 +53,23 @@ public abstract class AbstractMatcher<E> implements Serializable {
      * <p> The compiled patterns and their associated target objects </p>
      */
     List<Mapping<E>> compiledPatterns = new ArrayList<>();
-    ;
+
+    /**
+     * This flag controls if passed named params should be appended
+     * to the map in {@link #replaceParameters(Map, Map)}
+     * and will be accessible in {@link com.opensymphony.xwork2.config.entities.ResultConfig}.
+     * If set to false, the named parameters won't be appended.
+     *
+     * This behaviour is controlled by {@link org.apache.struts2.StrutsConstants#STRUTS_MATCHER_APPEND_NAMED_PARAMETERS}
+     *
+     * @since 2.5.23
+     * See WW-5065
+     */
+    private final boolean appendNamedParameters;
     
-    public AbstractMatcher(PatternMatcher<?> helper) {
+    public AbstractMatcher(PatternMatcher<?> helper, boolean appendNamedParameters) {
         this.wildcard = (PatternMatcher<Object>) helper;
+        this.appendNamedParameters = appendNamedParameters;
     }
 
     /**
@@ -152,12 +168,23 @@ public abstract class AbstractMatcher<E> implements Serializable {
      */
     protected Map<String,String> replaceParameters(Map<String, String> orig, Map<String,String> vars) {
         Map<String, String> map = new LinkedHashMap<>();
-        
+
         //this will set the group index references, like {1}
         for (Map.Entry<String,String> entry : orig.entrySet()) {
             map.put(entry.getKey(), convertParam(entry.getValue(), vars));
         }
-        
+
+        if (appendNamedParameters) {
+            LOG.debug("Appending named parameters to the result map");
+            //the values map will contain entries like name->"Lex Luthor" and 1->"Lex Luthor"
+            //now add the non-numeric values
+            for (Map.Entry<String,String> entry: vars.entrySet()) {
+                if (!NumberUtils.isCreatable(entry.getKey())) {
+                    map.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+
         return map;
     }
 

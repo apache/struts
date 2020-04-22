@@ -107,6 +107,7 @@ import com.opensymphony.xwork2.validator.DefaultValidatorFactory;
 import com.opensymphony.xwork2.validator.DefaultValidatorFileParser;
 import com.opensymphony.xwork2.validator.ValidatorFactory;
 import com.opensymphony.xwork2.validator.ValidatorFileParser;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import ognl.MethodAccessor;
 import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;
@@ -225,6 +226,7 @@ public class XWorkConfigurationProvider implements ConfigurationProvider {
         props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, Boolean.FALSE.toString());
         props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, Boolean.FALSE.toString());
         props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Boolean.TRUE.toString());
+        props.setProperty(StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS, Boolean.TRUE.toString());
     }
 
 }

@@ -346,4 +346,7 @@ public final class StrutsConstants {
     public static final String STRUTS_DISALLOW_PROXY_MEMBER_ACCESS = "struts.disallowProxyMemberAccess";
 
     public static final String STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT = "struts.ognl.autoGrowthCollectionLimit";
+
+    /** See {@link com.opensymphony.xwork2.config.impl.AbstractMatcher#appendNamedParameters */
+    public static final String STRUTS_MATCHER_APPEND_NAMED_PARAMETERS = "";
 }

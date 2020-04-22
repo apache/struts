@@ -58,7 +58,33 @@ public class ActionConfigMatcher extends AbstractMatcher<ActionConfig> implement
     public ActionConfigMatcher(PatternMatcher<?> patternMatcher,
             Map<String, ActionConfig> configs,
             boolean looseMatch) {
-        super(patternMatcher);
+        this(patternMatcher, configs, looseMatch, true);
+    }
+
+    /**
+     * <p> Finds and precompiles the wildcard patterns from the ActionConfig
+     * "path" attributes. ActionConfig's will be evaluated in the order they
+     * exist in the config file. Only paths that actually contain a
+     * wildcard will be compiled. </p>
+     *
+     * <p>Patterns can optionally be matched "loosely".  When
+     * the end of the pattern matches \*[^*]\*$ (wildcard, no wildcard,
+     * wildcard), if the pattern fails, it is also matched as if the
+     * last two characters didn't exist.  The goal is to support the
+     * legacy "*!*" syntax, where the "!*" is optional.</p>
+     *
+     * @param patternMatcher pattern matcher
+     * @param configs An array of ActionConfig's to process
+     * @param looseMatch To loosely match wildcards or not
+     * @param appendNamedParameters To append named parameters or not
+     *
+     * @since 2.5.23
+     * See WW-5065
+     */
+    public ActionConfigMatcher(PatternMatcher<?> patternMatcher,
+            Map<String, ActionConfig> configs,
+            boolean looseMatch, boolean appendNamedParameters) {
+        super(patternMatcher, appendNamedParameters);
         for (Map.Entry<String, ActionConfig> entry : configs.entrySet()) {
             addPattern(entry.getKey(), entry.getValue(), looseMatch);
         }

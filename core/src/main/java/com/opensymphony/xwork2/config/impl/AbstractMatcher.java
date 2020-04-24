@@ -40,11 +40,6 @@ public abstract class AbstractMatcher<E> implements Serializable {
     private static final Logger LOG = LogManager.getLogger(AbstractMatcher.class);
 
     /**
-     * <p> The logging instance </p>
-     */
-    private static final Logger log = LogManager.getLogger(AbstractMatcher.class);
-
-    /**
      * <p> Handles all wildcard pattern matching. </p>
      */
     PatternMatcher<Object> wildcard;
@@ -70,6 +65,17 @@ public abstract class AbstractMatcher<E> implements Serializable {
     public AbstractMatcher(PatternMatcher<?> helper, boolean appendNamedParameters) {
         this.wildcard = (PatternMatcher<Object>) helper;
         this.appendNamedParameters = appendNamedParameters;
+    }
+
+    /**
+     * Creates a matcher with {@link #appendNamedParameters} set to true to keep backward compatibility
+     *
+     * @param helper an instance of {@link PatternMatcher}
+     * @deprecated use @{link {@link AbstractMatcher(PatternMatcher, boolean)} instead
+     */
+    @Deprecated
+    public AbstractMatcher(PatternMatcher<?> helper) {
+        this(helper, true);
     }
 
     /**
@@ -100,17 +106,17 @@ public abstract class AbstractMatcher<E> implements Serializable {
                 name = name.substring(1);
             }
 
-            log.debug("Compiling pattern '{}'", name);
+            LOG.debug("Compiling pattern '{}'", name);
 
             pattern = wildcard.compilePattern(name);
-            compiledPatterns.add(new Mapping<E>(name, pattern, target));
+            compiledPatterns.add(new Mapping<>(name, pattern, target));
 
             if (looseMatch) {
                 int lastStar = name.lastIndexOf('*');
                 if (lastStar > 1 && lastStar == name.length() - 1) {
                     if (name.charAt(lastStar - 1) != '*') {
                         pattern = wildcard.compilePattern(name.substring(0, lastStar - 1));
-                        compiledPatterns.add(new Mapping<E>(name, pattern, target));
+                        compiledPatterns.add(new Mapping<>(name, pattern, target));
                     }
                 }
             }
@@ -131,12 +137,12 @@ public abstract class AbstractMatcher<E> implements Serializable {
         E config = null;
 
         if (compiledPatterns.size() > 0) {
-            log.debug("Attempting to match '{}' to a wildcard pattern, {} available", potentialMatch, compiledPatterns.size());
+            LOG.debug("Attempting to match '{}' to a wildcard pattern, {} available", potentialMatch, compiledPatterns.size());
 
-            Map<String,String> vars = new LinkedHashMap<String,String>();
+            Map<String,String> vars = new LinkedHashMap<>();
             for (Mapping<E> m : compiledPatterns) {
                 if (wildcard.match(vars, potentialMatch, m.getPattern())) {
-                    log.debug("Value matches pattern '{}'", m.getOriginalPattern());
+                    LOG.debug("Value matches pattern '{}'", m.getOriginalPattern());
                     config = convert(potentialMatch, m.getTarget(), vars);
                     break;
                 }
@@ -211,7 +217,7 @@ public abstract class AbstractMatcher<E> implements Serializable {
             c = val.charAt(x);
             if (x < len - 2 && 
                     c == '{' && '}' == val.charAt(x+2)) {
-                varVal = (String)vars.get(String.valueOf(val.charAt(x + 1)));
+                varVal = vars.get(String.valueOf(val.charAt(x + 1)));
                 if (varVal != null) {
                     ret.append(varVal);
                 } 
@@ -232,18 +238,18 @@ public abstract class AbstractMatcher<E> implements Serializable {
         /**
          * <p> The original pattern. </p>
          */
-        private String original;
+        private final String original;
 
         
         /**
          * <p> The compiled pattern. </p>
          */
-        private Object pattern;
+        private final Object pattern;
 
         /**
          * <p> The original object. </p>
          */
-        private E config;
+        private final E config;
 
         /**
          * <p> Contructs a read-only Mapping instance. </p>

@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.opensymphony.xwork2.ModelDriven;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -67,8 +68,6 @@ import com.opensymphony.xwork2.util.WildcardUtil;
  * </pre>
  */
 public class JSONResult implements Result {
-
-    private static final long serialVersionUID = 8624350183189931165L;
 
     private static final Logger LOG = LogManager.getLogger(JSONResult.class);
 
@@ -212,12 +211,22 @@ public class JSONResult implements Result {
     }
 
     protected Object findRootObject(ActionInvocation invocation) {
+        ValueStack stack = invocation.getStack();
         Object rootObject;
         if (this.root != null) {
-            ValueStack stack = invocation.getStack();
+            LOG.debug("Root was defined as [{}], searching stack for it", this.root);
             rootObject = stack.findValue(root);
         } else {
-            rootObject = invocation.getStack().peek(); // model overrides action
+            LOG.debug("Root was not defined, searching for #action");
+            rootObject = stack.findValue("#action");
+            if (rootObject instanceof ModelDriven) {
+                LOG.debug("Action is an instance of ModelDriven, assuming model is on the top of the stack and using it");
+                rootObject = stack.peek();
+            }
+            if (rootObject == null) {
+                LOG.debug("Neither #action nor ModelDriven, peeking up object from top of the stack");
+                rootObject = stack.peek();
+            }
         }
         return rootObject;
     }
@@ -239,7 +248,6 @@ public class JSONResult implements Result {
                 wrapSuffix));
     }
 
-    @SuppressWarnings("unchecked")
     protected org.apache.struts2.json.smd.SMD buildSMDObject(ActionInvocation invocation) {
         return new SMDGenerator(findRootObject(invocation), excludeProperties, ignoreInterfaces).generate(invocation);
     }
@@ -286,7 +294,9 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Sets the root object to be serialized, defaults to the Action
+     * Sets the root object to be serialized, defaults to the Action.
+     * If the Action implements {@link ModelDriven}, model will be used instead
+     * and assumptions is the Model was pushed on the top of the stack
      *
      * @param root OGNL expression of root object to be serialized
      */

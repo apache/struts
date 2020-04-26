@@ -16,13 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.json;
+package org.apache.struts2.util;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,21 +40,16 @@ public class TestUtils {
      * normalizes a string so that strings generated on different platforms can
      * be compared. any group of one or more space, tab, \r, and \n characters
      * are converted to a single space character
-     * 
-     * @param obj
-     *            the object to be normalized. normalize will perform its
-     *            operation on obj.toString().trim() ;
-     * @param appendSpace
+     *
+     * @param json         the JSON to be normalized. normalize will trim before starting
+     * @param removeSpaces removes white spaces from the JSON or not
      * @return the normalized string
      */
-    public static String normalize(Object obj, boolean appendSpace) {
-        Matcher matcher = WHITESPACE_BLOCK.matcher(StringUtils.trim(obj.toString()));
-        /*
-        FIXME: appendSpace has been always ignored, uncommenting the following line will cause dozen of test fails
-        if (appendSpace) {
-            return matcher.replaceAll(" ");
+    public static String normalize(String json, boolean removeSpaces) {
+        Matcher matcher = WHITESPACE_BLOCK.matcher(StringUtils.trim(json));
+        if (removeSpaces) {
+            return matcher.replaceAll("").replaceAll(" ", "");
         }
-        */
         return matcher.replaceAll("");
     }
 
@@ -64,17 +60,15 @@ public class TestUtils {
     /**
      * Attempt to verify the contents of text against the contents of the URL
      * specified. Performs a trim on both ends
-     * 
-     * @param url
-     *            the HTML snippet that we want to validate against
-     * @throws Exception
-     *             if the validation failed
+     *
+     * @param url the HTML snippet that we want to validate against
+     * @throws Exception if the validation failed
      */
     public static boolean compare(URL url, String text) throws Exception {
-        /**
-         * compare the trimmed values of each buffer and make sure they're
-         * equivalent. however, let's make sure to normalize the strings first
-         * to account for line termination differences between platforms.
+        /*
+          compare the trimmed values of each buffer and make sure they're
+          equivalent. however, let's make sure to normalize the strings first
+          to account for line termination differences between platforms.
          */
         String writerString = TestUtils.normalize(text, true);
         String bufferString = TestUtils.normalize(readContent(url), true);
@@ -85,13 +79,13 @@ public class TestUtils {
     public static void assertEquals(URL source, String text) throws Exception {
         String writerString = TestUtils.normalize(text, true);
         String bufferString = TestUtils.normalize(readContent(source), true);
-        Assert.assertEquals(bufferString,writerString);
+        Assert.assertEquals(bufferString, writerString);
     }
 
     public static String readContent(URL url) throws Exception {
         if (url == null)
             throw new Exception("unable to verify a null URL");
 
-        return IOUtils.toString(url.openStream());
+        return IOUtils.toString(url.openStream(), StandardCharsets.UTF_8);
     }
 }

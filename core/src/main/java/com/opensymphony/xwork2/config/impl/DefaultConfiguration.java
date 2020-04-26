@@ -289,6 +289,8 @@ public class DefaultConfiguration implements Configuration {
         builder.constant(XWorkConstants.RELOAD_XML_CONFIGURATION, "false");
         builder.constant(StrutsConstants.STRUTS_I18N_RELOAD, "false");
 
+        builder.constant(StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS, "true");
+
         return builder.create(true);
     }
 
@@ -338,8 +340,12 @@ public class DefaultConfiguration implements Configuration {
         }
 
         PatternMatcher<int[]> matcher = container.getInstance(PatternMatcher.class);
+        boolean appendNamedParameters = Boolean.parseBoolean(
+                container.getInstance(String.class, StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS)
+        );
+
         return new RuntimeConfigurationImpl(Collections.unmodifiableMap(namespaceActionConfigs),
-                Collections.unmodifiableMap(namespaceConfigs), matcher);
+                Collections.unmodifiableMap(namespaceConfigs), matcher, appendNamedParameters);
     }
 
     private void setDefaultResults(Map<String, ResultConfig> results, PackageConfig packageContext) {
@@ -417,15 +423,18 @@ public class DefaultConfiguration implements Configuration {
 
         public RuntimeConfigurationImpl(Map<String, Map<String, ActionConfig>> namespaceActionConfigs,
                                         Map<String, String> namespaceConfigs,
-                                        PatternMatcher<int[]> matcher) {
+                                        PatternMatcher<int[]> matcher,
+                                        boolean appendNamedParameters)
+        {
             this.namespaceActionConfigs = namespaceActionConfigs;
             this.namespaceConfigs = namespaceConfigs;
 
             this.namespaceActionConfigMatchers = new LinkedHashMap<>();
-            this.namespaceMatcher = new NamespaceMatcher(matcher, namespaceActionConfigs.keySet());
+            this.namespaceMatcher = new NamespaceMatcher(matcher, namespaceActionConfigs.keySet(), appendNamedParameters);
 
             for (Map.Entry<String, Map<String, ActionConfig>> entry : namespaceActionConfigs.entrySet()) {
-                namespaceActionConfigMatchers.put(entry.getKey(), new ActionConfigMatcher(matcher, entry.getValue(), true));
+                ActionConfigMatcher configMatcher = new ActionConfigMatcher(matcher, entry.getValue(), true, appendNamedParameters);
+                namespaceActionConfigMatchers.put(entry.getKey(), configMatcher);
             }
         }
 

@@ -26,12 +26,8 @@ import java.util.Properties;
 
 
 /**
- * Simple Test Action for annotaton processing.
- *
- * @author Rainer Hermanns
- * @version $Revision$
+ * Simple Test Action for annotation processing.
  */
-@Validation()
 public class SimpleAnnotationAction extends ActionSupport {
     //~ Static fields/initializers /////////////////////////////////////////////
 

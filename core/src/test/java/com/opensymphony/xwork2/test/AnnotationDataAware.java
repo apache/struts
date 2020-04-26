@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.conversion.impl.FooBarConverter;
 import com.opensymphony.xwork2.util.Bar;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.annotations.Validation;
 
 
 /**

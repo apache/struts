@@ -69,6 +69,8 @@ import com.opensymphony.xwork2.util.WildcardUtil;
  */
 public class JSONResult implements Result {
 
+    private static final long serialVersionUID = 233903199020467341L;
+
     private static final Logger LOG = LogManager.getLogger(JSONResult.class);
 
     /**

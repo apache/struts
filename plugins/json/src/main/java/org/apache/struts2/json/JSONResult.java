@@ -224,9 +224,8 @@ public class JSONResult implements Result {
             if (rootObject instanceof ModelDriven) {
                 LOG.debug("Action is an instance of ModelDriven, assuming model is on the top of the stack and using it");
                 rootObject = stack.peek();
-            }
-            if (rootObject == null) {
-                LOG.debug("Neither #action nor ModelDriven, peeking up object from top of the stack");
+            } else if (rootObject == null) {
+                LOG.debug("Neither #action nor ModelDriven, peeking up object from the top of the stack");
                 rootObject = stack.peek();
             }
         }

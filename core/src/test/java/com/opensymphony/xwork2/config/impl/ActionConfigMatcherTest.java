@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.util.WildcardHelper;
+import org.apache.struts2.util.RegexPatternMatcher;
 
 import java.util.HashMap;
 import java.util.Map;

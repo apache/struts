@@ -296,8 +296,8 @@ public class JSONResult implements Result {
 
     /**
      * Sets the root object to be serialized, defaults to the Action.
-     * If the Action implements {@link ModelDriven}, model will be used instead
-     * and assumptions is the Model was pushed on the top of the stack
+     * If the Action implements {@link ModelDriven}, the Model will be used instead,
+     * with the logic assuming the Model was pushed onto the top of the stack.
      *
      * @param root OGNL expression of root object to be serialized
      */

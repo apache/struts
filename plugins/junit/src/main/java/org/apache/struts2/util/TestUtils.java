@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +32,7 @@ import java.util.regex.Pattern;
  * Utility methods for test classes
  */
 public class TestUtils {
+
     /**
      * A regex pattern for recognizing blocks of whitespace characters.
      */
@@ -83,9 +85,19 @@ public class TestUtils {
     }
 
     public static String readContent(URL url) throws Exception {
-        if (url == null)
-            throw new Exception("unable to verify a null URL");
-
-        return IOUtils.toString(url.openStream(), StandardCharsets.UTF_8);
+        return readContent(url, StandardCharsets.UTF_8);
     }
+
+    public static String readContent(URL url, Charset encoding) throws Exception {
+        if (url == null) {
+            throw new IllegalArgumentException("Unable to verify a null URL");
+        }
+
+        if (encoding == null) {
+            throw new IllegalArgumentException("Unable to verify the URL using a null Charset");
+        }
+
+        return IOUtils.toString(url.openStream(), encoding);
+    }
+
 }

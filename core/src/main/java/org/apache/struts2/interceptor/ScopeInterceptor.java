@@ -262,9 +262,9 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
     }
 
     protected void after(ActionInvocation invocation, String result) throws Exception {
-        Map<String, Object> ses = ActionContext.getContext().getSession();
-        if ( ses != null) {
-            unlock(ses);
+        Map<String, Object> session = ActionContext.getContext().getSession();
+        if ( session != null) {
+            unlock(session);
         }
     }
 
@@ -282,14 +282,14 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         }
 
         String key = getKey(invocation);
-        Map<String, Object> app = ActionContext.getContext().getApplication();
+        Map<String, Object> application = ActionContext.getContext().getApplication();
         final ValueStack stack = ActionContext.getContext().getValueStack();
 
         LOG.debug("scope interceptor before");
 
-        if (application != null)
-            for (String string : application) {
-                Object attribute = app.get(key + string);
+        if (this.application != null)
+            for (String string : this.application) {
+                Object attribute = application.get(key + string);
                 if (attribute != null) {
                     LOG.debug("Application scoped variable set {} = {}", string, String.valueOf(attribute));
                     stack.setValue(string, nullConvert(attribute));

@@ -107,7 +107,6 @@ import com.opensymphony.xwork2.validator.DefaultValidatorFactory;
 import com.opensymphony.xwork2.validator.DefaultValidatorFileParser;
 import com.opensymphony.xwork2.validator.ValidatorFactory;
 import com.opensymphony.xwork2.validator.ValidatorFileParser;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import ognl.MethodAccessor;
 import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;

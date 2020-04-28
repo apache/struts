@@ -46,8 +46,6 @@ import java.util.Map;
 import static javax.servlet.http.HttpServletResponse.SC_FOUND;
 
 /**
- * <!-- START SNIPPET: description -->
- * <p>
  * Calls the {@link HttpServletResponse#sendRedirect(String) sendRedirect}
  * method to the location specified. The response is told to redirect the
  * browser to the specified location (a new request from the client). The
@@ -56,33 +54,19 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
  * available. This is because actions are built on a single-thread model. The
  * only way to pass data is through the session or with web parameters
  * (url?name=value) which can be OGNL expressions.
- * </p>
- * <!-- END SNIPPET: description -->
- * <p>
+ *
  * <b>This result type takes the following parameters:</b>
- * </p>
- * <!-- START SNIPPET: params -->
  *
  * <ul>
- *
  * <li><b>location (default)</b> - the location to go to after execution.</li>
- *
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>
- *
  * <li><b>anchor</b> - Optional.  Also known as "fragment" or colloquially as
  * "hash".  You can specify an anchor for a result.</li>
  * </ul>
- *
- * <p>
  * This result follows the same rules from {@link StrutsResultSupport}.
- * </p>
- * <p>
- * <!-- END SNIPPET: params -->
- * <p>
- * <b>Example:</b>
- * </p>
  *
+ * <b>Example:</b>
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;!--

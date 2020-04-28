@@ -34,17 +34,17 @@ import java.util.Map;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 /**
- * <!-- START SNIPPET: description -->
- * <p>
  * An interceptor that makes sure there are not validation errors before allowing the interceptor chain to continue.
  * <b>This interceptor does not perform any validation</b>.
+ *
+ * <p>
+ * Copied from the {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor}, this interceptor adds support
+ * for error handling of Restful operations.  For example, if an validation error is discovered, a map of errors
+ * is created and processed to be returned, using the appropriate content handler for rendering the body.
  * </p>
  *
- * <p>Copied from the {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor}, this interceptor adds support for error handling of Restful
- * operations.  For example, if an validation error is discovered, a map of errors is created and processed to be
- * returned, using the appropriate content handler for rendering the body.</p>
- *
- * <p>This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
+ * <p>
+ * This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
  * parameter. <b>excludeMethods</b> accepts a comma-delimited list of method names. For example, requests to
  * <b>foo!input.action</b> and <b>foo!back.action</b> will be skipped by this interceptor if you set the
  * <b>excludeMethods</b> parameter to "input, back".
@@ -58,34 +58,20 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  * all methods for both parameters.
  * See {@link MethodFilterInterceptor} for more info.
  * </p>
- * <!-- END SNIPPET: description -->
  *
- * <p><u>Interceptor parameters:</u></p>
- * <p>
- * <!-- START SNIPPET: parameters -->
+ * <b>Interceptor parameters:</b>
  *
  * <ul>
- *
  * <li>inputResultName - Default to "input". Determine the result name to be returned when
  * an action / field error is found.</li>
- *
  * </ul>
- * <p>
- * <!-- END SNIPPET: parameters -->
  *
- * <p><u>Extending the interceptor:</u></p>
- * <p>
- * <!-- START SNIPPET: extending -->
- * <p>
+ * <b>Extending the interceptor:</b>
  * There are no known extension points for this interceptor.
- * </p>
- * <!-- END SNIPPET: extending -->
  *
- * <p><u>Example code:</u></p>
+ * <b>Example code:</b>
  *
  * <pre>
- * <!-- START SNIPPET: example -->
- *
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
  *     &lt;interceptor-ref name="params"/&gt;
  *     &lt;interceptor-ref name="validation"/&gt;
@@ -118,8 +104,6 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
  *     &lt;/interceptor-ref&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- *
- * <!-- END SNIPPET: example -->
  * </pre>
  *
  * @author Jason Carreira

@@ -27,60 +27,46 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * <!-- START SNIPPET: description -->
- * <p>
  * A custom Result type for sending raw data (via an InputStream) directly to the
  * HttpServletResponse. Very useful for allowing users to download content.
- * </p>
- * <!-- END SNIPPET: description -->
- * <p>
+ *
  * <b>This result type takes the following parameters:</b>
- * </p>
- * <!-- START SNIPPET: params -->
  *
  * <ul>
- *
  * <li><b>contentType</b> - the stream mime-type as sent to the web browser
  * (default = <code>text/plain</code>).</li>
- *
  * <li><b>contentLength</b> - the stream length in bytes (the browser displays a
  * progress bar).</li>
- *
  * <li><b>contentDisposition</b> - the content disposition header value for
  * specifing the file name (default = <code>inline</code>, values are typically
  * <i>attachment;filename="document.pdf"</i>.</li>
- *
  * <li><b>inputName</b> - the name of the InputStream property from the chained
  * action (default = <code>inputStream</code>).</li>
- *
  * <li><b>bufferSize</b> - the size of the buffer to copy from input to output
  * (default = <code>1024</code>).</li>
- *
  * <li><b>allowCaching</b> if set to 'false' it will set the headers 'Pragma' and 'Cache-Control'
  * to 'no-cahce', and prevent client from caching the content. (default = <code>true</code>)
- *
  * <li><b>contentCharSet</b> if set to a string, ';charset=value' will be added to the
  * content-type header, where value is the string set. If set to an expression, the result
  * of evaluating the expression will be used. If not set, then no charset will be set on
  * the header</li>
  * </ul>
  *
- * <p>These parameters can also be set by exposing a similarly named getter method on your Action.  For example, you can
- * provide <code>getContentType()</code> to override that parameter for the current action.</p>
  * <p>
- * <!-- END SNIPPET: params -->
- * <p>
- * <b>Example:</b>
+ * These parameters can also be set by exposing a similarly named getter method on your Action.  For example, you can
+ * provide <code>getContentType()</code> to override that parameter for the current action.
  * </p>
  *
- * <pre><!-- START SNIPPET: example -->
+ * <b>Example:</b>
+ *
+ * <pre>
  * &lt;result name="success" type="stream"&gt;
  *   &lt;param name="contentType"&gt;image/jpeg&lt;/param&gt;
  *   &lt;param name="inputName"&gt;imageStream&lt;/param&gt;
  *   &lt;param name="contentDisposition"&gt;attachment;filename="document.pdf"&lt;/param&gt;
  *   &lt;param name="bufferSize"&gt;1024&lt;/param&gt;
  * &lt;/result&gt;
- * <!-- END SNIPPET: example --></pre>
+ * </pre>
  */
 public class StreamResult extends StrutsResultSupport {
 

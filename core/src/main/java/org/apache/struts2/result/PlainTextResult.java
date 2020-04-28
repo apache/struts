@@ -31,15 +31,8 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
 /**
- * <!-- START SNIPPET: description -->
- * <p>
  * A result that send the content out as plain text. Useful typically when needed
  * to display the raw content of a JSP or Html file for example.
- * <p>
- * <!-- END SNIPPET: description -->
- * <p>
- * <p>
- * <!-- START SNIPPET: params -->
  *
  * <ul>
  *  <li>location (default) = location of the file (jsp/html) to be displayed as plain text.</li>
@@ -47,17 +40,11 @@ import java.nio.charset.Charset;
  *  response type (eg. Content-Type=text/plain; charset=UTF-8) and when reading
  *  using a Reader. Some example of charSet would be UTF-8, ISO-8859-1 etc.
  * </ul>
- * <p>
- * <!-- END SNIPPET: params -->
  *
- *
- * <pre>
- * <!-- START SNIPPET: example -->
- *
+ *  <pre>
  * &lt;action name="displayJspRawContent" &gt;
  *   &lt;result type="plainText"&gt;/myJspFile.jsp&lt;/result&gt;
  * &lt;/action&gt;
- *
  *
  * &lt;action name="displayJspRawContent" &gt;
  *   &lt;result type="plainText"&gt;
@@ -65,8 +52,6 @@ import java.nio.charset.Charset;
  *      &lt;param name="charSet"&gt;UTF-8&lt;/param&gt;
  *   &lt;/result&gt;
  * &lt;/action&gt;
- *
- * <!-- END SNIPPET: example -->
  * </pre>
  */
 public class PlainTextResult extends StrutsResultSupport {

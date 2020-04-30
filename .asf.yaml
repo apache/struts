@@ -1,0 +1,10 @@
+notifications:
+  commits: commits@struts.apache.org
+  # Send all issue emails (new, closed, comments) to issues@
+  issues: issues@struts.apache.org
+  # Send new/closed PR notifications to dev@
+  pullrequests_status: dev@struts.apache.org
+  # Send individual PR comments/reviews to issues@
+  pullrequests_comment: issues@struts.apache.org
+  # Link opened PRs with JIRA
+  jira_options: link label worklog

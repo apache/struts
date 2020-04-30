@@ -32,6 +32,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -48,7 +49,7 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        ActionContext.getContext().put(ActionContext.LOCALE, Locale.US);  // Force US Locale for date conversion tests on JDK9+
+        ActionContext.getContext().withLocale(Locale.US);  // Force US Locale for date conversion tests on JDK9+
         action = container.inject(VisitorValidatorTestAction.class);
 
         TestBean bean = action.getBean();

@@ -26,7 +26,7 @@
 <validators>
 	<field name="upload">
 		<field-validator type="fieldexpression">
-			<param name="expression"><![CDATA[upload.length() > 0]]></param>
+			<param name="expression"><![CDATA[getUploadSize() > 0]]></param>
 			<message>File cannot be empty</message>
 		</field-validator>
 	</field>

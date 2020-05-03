@@ -21,7 +21,11 @@ package com.opensymphony.xwork2.test;
 import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.util.KeyProperty;
-import com.opensymphony.xwork2.validator.annotations.*;
+import com.opensymphony.xwork2.validator.annotations.EmailValidator;
+import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
+import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,17 +34,12 @@ import java.util.Map;
 
 /**
  * Test bean.
- *
- * @author Mark Woon
- * @author Rainer Hermanns
  */
-@Validation(
-        validations = @Validations(
-                expressions = {
-                    @ExpressionValidator(expression = "email.startsWith('mark')", message = "Email does not start with mark"),
-                    @ExpressionValidator(expression = "email2.startsWith('mark')", message = "Email2 does not start with mark")
-                }
-        )
+@Validations(
+    expressions = {
+        @ExpressionValidator(expression = "email.startsWith('mark')", message = "Email does not start with mark"),
+        @ExpressionValidator(expression = "email2.startsWith('mark')", message = "Email2 does not start with mark")
+    }
 )
 public class AnnotationUser implements AnnotationUserMarker {
 
@@ -84,7 +83,7 @@ public class AnnotationUser implements AnnotationUserMarker {
         list = l;
     }
 
-    @KeyProperty( value = "name")
+    @KeyProperty(value = "name")
     @TypeConversion(converterClass = String.class, rule = ConversionRule.COLLECTION)
     public List getList() {
         return list;

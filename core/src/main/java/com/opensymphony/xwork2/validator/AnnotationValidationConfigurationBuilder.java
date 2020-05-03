@@ -73,16 +73,6 @@ public class AnnotationValidationConfigurationBuilder {
                 if (a instanceof Validations) {
                     processValidationAnnotation(a, fieldName, methodName, result);
                 }
-
-                // Process single custom validator
-                if (a instanceof Validation) {
-                    Validation v = (Validation) a;
-                    if (v.validations() != null) {
-                        for (Validations val : v.validations()) {
-                            processValidationAnnotation(val, fieldName, methodName, result);
-                        }
-                    }
-                }
                 // Process single custom validator
                 else if (a instanceof ExpressionValidator) {
                     ExpressionValidator v = (ExpressionValidator) a;

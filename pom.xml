@@ -751,6 +751,21 @@
                 <artifactId>asm-commons</artifactId>
                 <version>${asm.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-digester3</artifactId>
+                <optional>true</optional>
+                <!-- Prevent inclusion of ASM 3.3.1 via transitive dependency from velocity-tools-view/commons-digester3/cglib 2.2.2
+                     (its presence creates classpath conflicts / duplicate ASM jars due to ASM groupId changing after 3.x).  -->
+                <exclusions>
+                    <exclusion>
+                        <groupId>asm</groupId>
+                        <artifactId>asm</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>

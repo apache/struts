@@ -32,6 +32,7 @@ import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor;
 import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.apache.struts2.util.TestUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;

@@ -20,6 +20,7 @@ package org.apache.struts2.json;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -65,7 +66,7 @@ import java.util.regex.Pattern;
  */
 public class JSONResult implements Result {
 
-    private static final long serialVersionUID = 8624350183189931165L;
+    private static final long serialVersionUID = 233903199020467341L;
 
     private static final Logger LOG = LogManager.getLogger(JSONResult.class);
 
@@ -209,12 +210,21 @@ public class JSONResult implements Result {
     }
 
     protected Object findRootObject(ActionInvocation invocation) {
+        ValueStack stack = invocation.getStack();
         Object rootObject;
         if (this.root != null) {
-            ValueStack stack = invocation.getStack();
+            LOG.debug("Root was defined as [{}], searching stack for it", this.root);
             rootObject = stack.findValue(root);
         } else {
-            rootObject = invocation.getStack().peek(); // model overrides action
+            LOG.debug("Root was not defined, searching for #action");
+            rootObject = stack.findValue("#action");
+            if (rootObject instanceof ModelDriven) {
+                LOG.debug("Action is an instance of ModelDriven, assuming model is on the top of the stack and using it");
+                rootObject = stack.peek();
+            } else if (rootObject == null) {
+                LOG.debug("Neither #action nor ModelDriven, peeking up object from the top of the stack");
+                rootObject = stack.peek();
+            }
         }
         return rootObject;
     }
@@ -236,7 +246,6 @@ public class JSONResult implements Result {
             wrapSuffix));
     }
 
-    @SuppressWarnings("unchecked")
     protected org.apache.struts2.json.smd.SMD buildSMDObject(ActionInvocation invocation) {
         return new SMDGenerator(findRootObject(invocation), excludeProperties, ignoreInterfaces).generate(invocation);
     }
@@ -283,7 +292,9 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Sets the root object to be serialized, defaults to the Action
+     * Sets the root object to be serialized, defaults to the Action.
+     * If the Action implements {@link ModelDriven}, the Model will be used instead,
+     * with the logic assuming the Model was pushed onto the top of the stack.
      *
      * @param root OGNL expression of root object to be serialized
      */

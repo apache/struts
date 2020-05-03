@@ -20,15 +20,10 @@ package com.opensymphony.xwork2.test.annotations;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
-import com.opensymphony.xwork2.validator.annotations.Validation;
 
 /**
  * <code>ValidateAnnotatedMethodOnlyAction</code>
- *
- * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id$
  */
-@Validation
 public class ValidateAnnotatedMethodOnlyAction extends ActionSupport {
 
     String param1;
@@ -52,7 +47,7 @@ public class ValidateAnnotatedMethodOnlyAction extends ActionSupport {
     }
 
     @ExpressionValidator(expression = "(param1 != null) || (param2 != null)",
-            message = "Need param1 or param2.")
+        message = "Need param1 or param2.")
     public String annotatedMethod() {
         try {
             // do search

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.util.TestUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;

@@ -21,6 +21,7 @@ package org.apache.struts2.json;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.json.bridge.StringBridge;
+import org.apache.struts2.util.TestUtils;
 import org.junit.Test;
 
 import java.net.URL;

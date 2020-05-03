@@ -19,7 +19,7 @@
 package org.apache.struts2.spring;
 
 public class SpringConstants {
-    public static final String SPRING_CLASS_RELOADING_WATCH_LIST = "struts.class.reloading.watchList";
-    public static final String SPRING_CLASS_RELOADING_ACCEPT_CLASSES = "struts.class.reloading.acceptClasses";
-    public static final String SPRING_CLASS_RELOADING_RELOAD_CONFIG = "struts.class.reloading.reloadConfig";
+    public static final String STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_WATCH_LIST = "struts.objectFactory.spring.class.reloading.watchList";
+    public static final String STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_ACCEPT_CLASSES = "struts.objectFactory.spring.class.reloading.acceptClasses";
+    public static final String STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_RELOAD_CONFIG = "struts.objectFactory.spring.class.reloading.reloadConfig";
 }

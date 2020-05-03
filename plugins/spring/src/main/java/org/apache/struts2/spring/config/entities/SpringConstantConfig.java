@@ -37,9 +37,9 @@ public class SpringConstantConfig extends ConstantConfig {
     public Map<String, String> getAllAsStringsMap() {
         Map<String, String> map = super.getAllAsStringsMap();
 
-        map.put(SpringConstants.SPRING_CLASS_RELOADING_WATCH_LIST, StringUtils.join(classReloadingWatchList, ','));
-        map.put(SpringConstants.SPRING_CLASS_RELOADING_ACCEPT_CLASSES, StringUtils.join(classReloadingAcceptClasses, ','));
-        map.put(SpringConstants.SPRING_CLASS_RELOADING_RELOAD_CONFIG, Objects.toString(classReloadingReloadConfig, null));
+        map.put(SpringConstants.STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_WATCH_LIST, StringUtils.join(classReloadingWatchList, ','));
+        map.put(SpringConstants.STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_ACCEPT_CLASSES, StringUtils.join(classReloadingAcceptClasses, ','));
+        map.put(SpringConstants.STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_RELOAD_CONFIG, Objects.toString(classReloadingReloadConfig, null));
 
         return map;
     }

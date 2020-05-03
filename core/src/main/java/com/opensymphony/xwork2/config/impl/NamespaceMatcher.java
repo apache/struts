@@ -29,9 +29,23 @@ import java.util.Set;
  * @since 2.1
  */
 public class NamespaceMatcher extends AbstractMatcher<NamespaceMatch> {
-     public NamespaceMatcher(PatternMatcher<?> patternMatcher,
-            Set<String> namespaces) {
-        super(patternMatcher);
+
+    public NamespaceMatcher(PatternMatcher<?> patternMatcher, Set<String> namespaces) {
+        this(patternMatcher, namespaces, true);
+    }
+
+    /**
+     * Matches namespace strings against a wildcard pattern matcher
+     *
+     * @param patternMatcher pattern matcher
+     * @param namespaces A set of namespaces to process
+     * @param appendNamedParameters To append named parameters or not
+     *
+     * @since 2.5.23
+     * See WW-5065
+     */
+    public NamespaceMatcher(PatternMatcher<?> patternMatcher, Set<String> namespaces, boolean appendNamedParameters) {
+        super(patternMatcher, appendNamedParameters);
         for (String name : namespaces) {
             if (!patternMatcher.isLiteral(name)) {
                 addPattern(name, new NamespaceMatch(name, null), false);

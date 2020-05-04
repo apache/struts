@@ -164,7 +164,7 @@ public class TextParseUtil {
             }
         };
 
-        TextParser parser = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(TextParser.class);
+        TextParser parser = stack.getActionContext().getContainer().getInstance(TextParser.class);
 
         return parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
     }
@@ -205,8 +205,8 @@ public class TextParseUtil {
             }
         };
 
-        Map<String, Object> context = stack.getContext();
-        TextParser parser = ((Container)context.get(ActionContext.CONTAINER)).getInstance(TextParser.class);
+        ActionContext actionContext = stack.getActionContext();
+        TextParser parser = actionContext.getContainer().getInstance(TextParser.class);
 
         Object result = parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
 
@@ -216,10 +216,10 @@ public class TextParseUtil {
             Collection<Object> casted = (Collection<Object>)result;
             resultCol = new ArrayList<>();
 
-            XWorkConverter conv = ((Container)context.get(ActionContext.CONTAINER)).getInstance(XWorkConverter.class);
+            XWorkConverter conv = actionContext.getContainer().getInstance(XWorkConverter.class);
 
             for (Object element : casted) {
-                String stringElement = (String)conv.convertValue(context, element, String.class);
+                String stringElement = (String) conv.convertValue(actionContext.getContextMap(), element, String.class);
                 if (shallBeIncluded(stringElement, excludeEmptyElements)) {
                     if (evaluator != null) {
                         stringElement = evaluator.evaluate(stringElement).toString();

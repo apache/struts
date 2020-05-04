@@ -36,7 +36,7 @@ public class ContextUtilTest extends StrutsInternalTestCase {
     private void setAltSyntax(ValueStack stack, String val) {
         Mock container = new Mock(Container.class);
         container.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_TAG_ALTSYNTAX)), val);
-        stack.getContext().put(ActionContext.CONTAINER, container.proxy());
+        stack.getActionContext().withContainer((Container) container.proxy());
     }
     
     public void testAltSyntaxMethod1() throws Exception {

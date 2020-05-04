@@ -80,10 +80,8 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
             LOG.trace("Loading packages from XML and Convention on startup");                
 
         //init action context
-        ActionContext ctx = ActionContext.getContext();
-        if (ctx == null) {
-            ctx = createActionContext();
-            ActionContext.setContext(ctx);
+        if (ActionContext.getContext() == null) {
+            createActionContext();
         }
 
         Set<String> bundleNames = new HashSet<>();
@@ -103,7 +101,7 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
     }
 
     protected ActionContext createActionContext() {
-        return new ActionContext(new HashMap<String, Object>());
+        return ActionContext.of(new HashMap<>()).bind();
     }
 
     /**
@@ -120,7 +118,6 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
         ActionContext ctx = ActionContext.getContext();
         if (ctx == null) {
             ctx = createActionContext();
-            ActionContext.setContext(ctx);
         }
 
         try {

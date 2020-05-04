@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -147,14 +148,13 @@ public class URLTagTest extends AbstractUITagTest {
 
     /**
      * Use Iterable values as the value of the param tags
-     * @throws Exception
      */
     public void testIterableParameters() throws Exception {
         tag.setValue("/TestAction.action?p0=z");
         
         tag.doStartTag();
         //Iterable
-        List<ValueHolder> list = new ArrayList<ValueHolder>();
+        List<ValueHolder> list = new ArrayList<>();
         list.add(new ValueHolder("a"));
         list.add(new ValueHolder("b"));
         tag.component.addParameter("p1", list);
@@ -180,8 +180,6 @@ public class URLTagTest extends AbstractUITagTest {
      *  In this case only parameters from the tag itself is taken into account.
      *  Those from request will not count, only those in tag's value attribute
      *  and nested param tag.
-     *
-     * @throws Exception
      */
     public void testParametersPriorityWithIncludeParamsAsNONE() throws Exception {
         request.setQueryString("id1=urlId1&id2=urlId2&urlParam1=urlValue1&urlParam2=urlValue2");
@@ -229,7 +227,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         // request parameter map should not have any effect, as includeParams
         // default to GET, which get its param from request.getQueryString()
-        Map tmp = new HashMap();
+        Map<String, String> tmp = new HashMap<>();
         tmp.put("one", "aaa");
         tmp.put("two", "bbb");
         tmp.put("three", "ccc");
@@ -353,7 +351,7 @@ public class URLTagTest extends AbstractUITagTest {
 
     public void testPutId() throws Exception {
         tag.setValue("/public/about");
-        assertEquals(null, stack.findString("myId")); // nothing in stack
+        assertNull(stack.findString("myId")); // nothing in stack
         tag.setVar("myId");
         tag.doStartTag();
         tag.doEndTag();
@@ -516,16 +514,13 @@ public class URLTagTest extends AbstractUITagTest {
     }
     
     public void testEmptyActionCustomMapper() throws Exception {
-        Map<String,String> props = new HashMap<String, String>();
+        Map<String,String> props = new HashMap<>();
         props.put("config", "struts-default.xml,struts-plugin.xml,struts.xml,org/apache/struts2/views/jsp/WW3090-struts.xml");
         
         this.tearDown();
         
         Dispatcher du = this.initDispatcher(props);
         
-        /**
-         * create our standard mock objects
-         */
         action = this.getAction();
         stack = ActionContext.getContext().getValueStack();
         context = stack.getContext();
@@ -550,7 +545,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         mockContainer = new Mock(Container.class);
 
-        session = new SessionMap(request);
+        session = new SessionMap<>(request);
         Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
                 HttpParameters.create(request.getParameterMap()).build(),
                 session,
@@ -559,17 +554,17 @@ public class URLTagTest extends AbstractUITagTest {
                 response);
         // let's not set the locale -- there is a test that checks if Dispatcher actually picks this up...
         // ... but generally we want to just use no locale (let it stay system default)
-        extraContext.remove(ActionContext.LOCALE);
+        extraContext = ActionContext.of(extraContext).withLocale(null).getContextMap();
         stack.getContext().putAll(extraContext);
 
-        context.put(ServletActionContext.HTTP_REQUEST, request);
-        context.put(ServletActionContext.HTTP_RESPONSE, response);
-        context.put(ServletActionContext.SERVLET_CONTEXT, servletContext);
+        ActionContext actionContext = ActionContext.of(context)
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(servletContext)
+            .bind();
 
-        ActionContext.setContext(new ActionContext(context));
-        
         // Make sure we have an action invocation available
-        ActionContext.getContext().setActionInvocation(new DefaultActionInvocation(null, true));
+        ActionContext.getContext().withActionInvocation(new DefaultActionInvocation(null, true));
         DefaultActionProxyFactory apFactory = new DefaultActionProxyFactory();
         apFactory.setContainer(container);
         ActionProxy ap = apFactory.createActionProxy("/", "hello", null, null);
@@ -780,7 +775,8 @@ public class URLTagTest extends AbstractUITagTest {
         
         
     }
-    
+
+    @SuppressWarnings("unused")
     public static class RedBlueActionMapper extends DefaultActionMapper {
         
         @Override

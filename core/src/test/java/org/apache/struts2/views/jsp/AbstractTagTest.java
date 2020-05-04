@@ -21,6 +21,7 @@ package org.apache.struts2.views.jsp;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -49,8 +50,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public abstract class AbstractTagTest extends StrutsInternalTestCase {
     protected Action action;
-    protected Map context;
-    protected Map session;
+    protected Map<String, Object> context;
+    protected Map<String, Object> session;
     protected ValueStack stack;
 
     /**
@@ -75,13 +76,10 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        /**
-         * create our standard mock objects
-         */
         createMocks();
     }
 
-    protected void createMocks() throws Exception {
+    protected void createMocks() {
         action = this.getAction();
         container.inject(action);
 
@@ -109,10 +107,10 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         pageContext.setServletContext(servletContext);
 
         mockContainer = new Mock(Container.class);
-        MockDispatcher du = new MockDispatcher(pageContext.getServletContext(), new HashMap<String, String>(), configurationManager);
+        MockDispatcher du = new MockDispatcher(pageContext.getServletContext(), new HashMap<>(), configurationManager);
         du.init();
         Dispatcher.setInstance(du);
-        session = new SessionMap(request);
+        session = new SessionMap<>(request);
         Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
                 HttpParameters.create(request.getParameterMap()).build(),
                 session,
@@ -121,14 +119,14 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
                 response);
         // let's not set the locale -- there is a test that checks if Dispatcher actually picks this up...
         // ... but generally we want to just use no locale (let it stay system default)
-        extraContext.remove(ActionContext.LOCALE);
+        extraContext = ActionContext.of(extraContext).withLocale(null).getContextMap();
         stack.getContext().putAll(extraContext);
 
-        context.put(ServletActionContext.HTTP_REQUEST, request);
-        context.put(ServletActionContext.HTTP_RESPONSE, response);
-        context.put(ServletActionContext.SERVLET_CONTEXT, servletContext);
-
-        ActionContext.setContext(new ActionContext(context));
+        ActionContext.of(context)
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(servletContext)
+            .bind();
     }
 
     protected void tearDown() throws Exception {

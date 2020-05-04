@@ -93,7 +93,6 @@ public class VelocityResultTest extends XWorkTestCase {
         namespace = "/html";
         result = new VelocityResult();
         stack = ActionContext.getContext().getValueStack();
-        ActionContext.getContext().setValueStack(stack);
         velocity = new TestVelocityEngine();
         mockActionProxy = new Mock(ActionProxy.class);
         mockActionProxy.expectAndReturn("getNamespace", "/html");

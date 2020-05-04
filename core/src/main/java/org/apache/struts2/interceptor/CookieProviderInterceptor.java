@@ -96,7 +96,7 @@ public class CookieProviderInterceptor extends AbstractInterceptor implements Pr
             LOG.trace("beforeResult start");
             ActionContext ac = invocation.getInvocationContext();
             if (invocation.getAction() instanceof CookieProvider) {
-                HttpServletResponse response = (HttpServletResponse) ac.get(StrutsStatics.HTTP_RESPONSE);
+                HttpServletResponse response = ac.getServletResponse();
                 addCookiesToResponse((CookieProvider) invocation.getAction(), response);
             }
             LOG.trace("beforeResult end");

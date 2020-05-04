@@ -49,11 +49,13 @@ public class ConversionErrorFieldValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
         ValueStack stack = ActionContext.getContext().getValueStack();
-        ActionContext context = new ActionContext(stack.getContext());
 
         Map<String, ConversionData> conversionErrors = new HashMap<>();
         conversionErrors.put("foo", new ConversionData("bar", Integer.class));
-        context.setConversionErrors(conversionErrors);
+        ActionContext.of(stack.getContext())
+            .withConversionErrors(conversionErrors)
+            .bind();
+
         validator = new ConversionErrorFieldValidator();
         validationAware = new ValidationAwareSupport();
 
@@ -71,17 +73,17 @@ public class ConversionErrorFieldValidatorTest extends XWorkTestCase {
         validator.validate(validationAware);
 
 
-        Map fieldErrors = validationAware.getFieldErrors();
+        Map<String, List<String>> fieldErrors = validationAware.getFieldErrors();
         assertTrue(fieldErrors.containsKey("foo"));
-        assertEquals(message, ((List) fieldErrors.get("foo")).get(0));
+        assertEquals(message, fieldErrors.get("foo").get(0));
     }
 
     public void testConversionErrorsAreAddedToFieldErrors() throws ValidationException {
         validator.validate(validationAware);
 
-        Map fieldErrors = validationAware.getFieldErrors();
+        Map<String, List<String>> fieldErrors = validationAware.getFieldErrors();
         assertTrue(fieldErrors.containsKey("foo"));
-        assertEquals(defaultFooMessage, ((List) fieldErrors.get("foo")).get(0));
+        assertEquals(defaultFooMessage, fieldErrors.get("foo").get(0));
     }
 
 }

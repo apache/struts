@@ -323,7 +323,6 @@ public class IfTagTest extends StrutsInternalTestCase {
 
         // create the mock http servlet request
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        ActionContext.getContext().setValueStack(stack);
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
         // create the mock page context

@@ -63,8 +63,9 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 		
 		Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
-		ActionContext.getContext().getValueStack().push(action);
+        ActionContext.getContext()
+            .withActionInvocation((ActionInvocation) mockActionInvocation.proxy())
+		    .getValueStack().push(action);
 		
 		String message = action.getText("barObj.title");
 		assertEquals("Title:", message);
@@ -92,7 +93,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInvocation.proxy());
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().getValueStack().push(action.getModel());
 
@@ -112,8 +113,9 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
-        ActionContext.getContext().getValueStack().push(action);
+        ActionContext.getContext()
+            .withActionInvocation((ActionInvocation) mockActionInvocation.proxy())
+            .getValueStack().push(action);
 
         String message = action.getText("bean.name");
         String foundBean2 = action.getText("bean2.name");
@@ -163,7 +165,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("hashCode", 0);
         mockActionInvocation.expectAndReturn("getAction", action);
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInvocation.proxy());
         ActionContext.getContext().getValueStack().push(action);
         ActionContext.getContext().getValueStack().push(action.getModel());
 
@@ -175,7 +177,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         Action action = new ModelDrivenAction2();
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInvocation.proxy());
 
         String message = localizedTextProvider.findText(ModelDrivenAction2.class, "test.foo", Locale.getDefault());
         assertEquals("Foo!", message);
@@ -186,7 +188,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInvocation.proxy());
 
         String message = localizedTextProvider.findText(ModelDrivenAction2.class, "package.properties", Locale.getDefault());
         assertEquals("It works!", message);
@@ -325,7 +327,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
         
-        ActionContext.getContext().setLocale(Locale.US);
+        ActionContext.getContext().withLocale(Locale.US);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class NumberTagTest extends AbstractTagTest {
 
     public void testSimpleFloatFormat() throws Exception {
         // given
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
 
         TestAction testAction = (TestAction) action;
         testAction.setFloatNumber(120.0f);
@@ -48,7 +48,7 @@ public class NumberTagTest extends AbstractTagTest {
     
     public void testSimpleCurrencyUSFormat() throws Exception {
         // given
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
         
         TestAction testAction = (TestAction) action;
         testAction.setFloatNumber(120.0f);
@@ -68,7 +68,7 @@ public class NumberTagTest extends AbstractTagTest {
     
     public void testSimpleCurrencyPLFormat() throws Exception {
         // given
-        context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
+        context = ActionContext.of(context).withLocale(new Locale("pl", "PL")).getContextMap();
         
         TestAction testAction = (TestAction) action;
         testAction.setFloatNumber(120.0f);
@@ -83,7 +83,8 @@ public class NumberTagTest extends AbstractTagTest {
         tag.doEndTag();
 
         // then
-        NumberFormat format = NumberFormat.getCurrencyInstance((Locale) context.get(ActionContext.LOCALE));
+        Locale locale = ActionContext.of(context).getLocale();
+        NumberFormat format = NumberFormat.getCurrencyInstance(locale);
         format.setRoundingMode(RoundingMode.CEILING);
         String expected = format.format(120.0f);
 
@@ -92,7 +93,7 @@ public class NumberTagTest extends AbstractTagTest {
 
     public void testSimpleRoundingCeiling() throws Exception {
         // given
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
 
         TestAction testAction = (TestAction) action;
         testAction.setFloatNumber(120.45f);
@@ -107,7 +108,8 @@ public class NumberTagTest extends AbstractTagTest {
         tag.doEndTag();
 
         // then
-        NumberFormat format = NumberFormat.getInstance((Locale) context.get(ActionContext.LOCALE));
+        Locale locale = ActionContext.of(context).getLocale();
+        NumberFormat format = NumberFormat.getInstance(locale);
         format.setRoundingMode(RoundingMode.DOWN);
         String expected = format.format(120.45f);
 

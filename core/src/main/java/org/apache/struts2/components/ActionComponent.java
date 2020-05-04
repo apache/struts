@@ -175,16 +175,17 @@ public class ActionComponent extends ContextBean {
         return end;
     }
 
-    protected Map createExtraContext() {
+    protected Map<String, Object> createExtraContext() {
         HttpParameters newParams = createParametersForContext();
 
-        ActionContext ctx = new ActionContext(stack.getContext());
-        PageContext pageContext = (PageContext) ctx.get(ServletActionContext.PAGE_CONTEXT);
-        Map session = ctx.getSession();
-        Map application = ctx.getApplication();
+        ActionContext ctx = stack.getActionContext();
+        PageContext pageContext = ctx.getPageContext();
+        Map<String, Object> session = ctx.getSession();
+        Map<String, Object> application = ctx.getApplication();
 
         Dispatcher du = Dispatcher.getInstance();
-        Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
+        Map<String, Object> extraContext = du.createContextMap(
+            new RequestMap(req),
                 newParams,
                 session,
                 application,
@@ -192,12 +193,12 @@ public class ActionComponent extends ContextBean {
                 res);
 
         ValueStack newStack = valueStackFactory.createValueStack(stack);
-        extraContext.put(ActionContext.VALUE_STACK, newStack);
 
-        // add page context, such that ServletDispatcherResult will do an include
-        extraContext.put(ServletActionContext.PAGE_CONTEXT, pageContext);
-
-        return extraContext;
+        return ActionContext.of(extraContext)
+            .withValueStack(newStack)
+            // add page context, such that ServletDispatcherResult will do an include
+            .withPageContext(pageContext)
+            .getContextMap();
     }
 
     /**
@@ -210,7 +211,7 @@ public class ActionComponent extends ContextBean {
         HttpParameters parentParams = null;
 
         if (!ignoreContextParams) {
-            parentParams = new ActionContext(getStack().getContext()).getParameters();
+            parentParams = getStack().getActionContext().getParameters();
         }
 
         HttpParameters.Builder builder = HttpParameters.create();
@@ -293,7 +294,7 @@ public class ActionComponent extends ContextBean {
             // set the old stack back on the request
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
             if (inv != null) {
-                ActionContext.getContext().setActionInvocation(inv);
+                ActionContext.getContext().withActionInvocation(inv);
             }
         }
 

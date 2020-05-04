@@ -45,7 +45,7 @@ public class AnnotationValidationInterceptorTest extends StrutsInternalTestCase 
         mockActionInvocation.matchAndReturn("getAction", test);
         mockActionInvocation.expect("invoke");
 
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInvocation.proxy());
     }
 
     public void testShouldNotSkip() throws Exception {

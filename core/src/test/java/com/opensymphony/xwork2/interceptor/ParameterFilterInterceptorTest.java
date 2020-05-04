@@ -34,22 +34,20 @@ import java.util.Map;
  */
 public class ParameterFilterInterceptorTest extends XWorkTestCase {
 
-    ActionInvocation invocation;
-    ParameterFilterInterceptor interceptor;
-    Mock mockInvocation;
-    ValueStack stack;
-    Map<String, Object> contextMap;
+    private ActionInvocation invocation;
+    private ParameterFilterInterceptor interceptor;
+    private Mock mockInvocation;
+    private ValueStack stack;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        contextMap = new HashMap<>();
         stack = ActionContext.getContext().getValueStack();
         mockInvocation = new Mock(ActionInvocation.class);
-        mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+        mockInvocation.expectAndReturn("getInvocationContext", ActionContext.getContext());
         mockInvocation.expectAndReturn("getStack", stack);
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
-        mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+        mockInvocation.expectAndReturn("getInvocationContext", ActionContext.getContext());
         mockInvocation.matchAndReturn("getAction", new SimpleAction());
         invocation = (ActionInvocation) mockInvocation.proxy();
         interceptor = new ParameterFilterInterceptor();
@@ -115,11 +113,11 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
             params.put(paramName, "irrelevant what this is");
 
         }
-        contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
     }
     
-    private Collection getParameterNames() {
-        return ((HttpParameters)contextMap.get(ActionContext.PARAMETERS)).keySet();
+    private Collection<String> getParameterNames() {
+        return ActionContext.getContext().getParameters().keySet();
     }
     
     public void runAction() throws Exception  {

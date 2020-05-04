@@ -54,7 +54,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
             assertFalse(validationAware.hasFieldErrors());
 
             // put in an out-of-range value to see if the old validators still work
-            ActionContext.setContext(new ActionContext(new HashMap<String, Object>()));
+            ActionContext.of(new HashMap<>()).bind();
 
             params.put("bar", "42");
             extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
@@ -124,8 +124,8 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
             ValueStack stack = ActionContext.getContext().getValueStack();
-            ActionContext.setContext(new ActionContext(stack.getContext()));
-            ActionContext.getContext().setLocale(Locale.US);
+            stack.getActionContext().withLocale(Locale.US);
+
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

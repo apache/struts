@@ -192,7 +192,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             ReflectionContextState.setReportingConversionErrors(context, true);
 
             //keep locale from original context
-            context.put(ActionContext.LOCALE, stack.getContext().get(ActionContext.LOCALE));
+            newStack.getActionContext().withLocale(stack.getActionContext().getLocale());
         }
 
         boolean memberAccessStack = newStack instanceof MemberAccessValueStack;
@@ -216,8 +216,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             }
         }
 
-        if (clearableStack && (stack.getContext() != null) && (newStack.getContext() != null))
-            stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
+        if (clearableStack) {
+            stack.getActionContext().withConversionErrors(newStack.getActionContext().getConversionErrors());
+        }
 
         addParametersToContext(ActionContext.getContext(), acceptableParameters);
     }

@@ -99,7 +99,6 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
 
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(prod);
-        ActionContext.getContext().setValueStack(stack);
 
         val.setMinInclusive(0d);
         val.setMaxInclusive(10d);
@@ -115,7 +114,6 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
 
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(prod);
-        ActionContext.getContext().setValueStack(stack);
 
         val.setMinInclusive(0d);
         val.setMaxInclusive(30d);
@@ -129,7 +127,6 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
 
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(prod);
-        ActionContext.getContext().setValueStack(stack);
 
         val.setMinInclusive(0d);
         val.setMaxInclusive(10d);
@@ -151,7 +148,6 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
 
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(prod);
-        ActionContext.getContext().setValueStack(stack);
 
         val.setFieldName("price");
 
@@ -160,7 +156,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
 
         val.setMaxInclusive(9.95d);
         val.validate(prod); // should pass
-        assertTrue(!context.hasErrors());
+        assertFalse(context.hasErrors());
         assertEquals(9.95d, val.getMaxInclusive());
 
         val.setMaxExclusive(9.95d);
@@ -176,7 +172,6 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
 
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(prod);
-        ActionContext.getContext().setValueStack(stack);
 
         val.setFieldName("price");
 
@@ -185,7 +180,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
 
         val.setMinInclusive(9.95d);
         val.validate(prod); // should pass
-        assertTrue(!context.hasErrors());
+        assertFalse(context.hasErrors());
 
         val.setMinExclusive(9.95d);
         val.validate(prod); // should not pass
@@ -193,9 +188,6 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
     }
 
     public void testNoValue() throws Exception {
-        ValueStack stack = ActionContext.getContext().getValueStack();
-        ActionContext.getContext().setValueStack(stack);
-
         val.setFieldName("price");
 
         DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);

@@ -44,7 +44,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
         validator.validate(action);
 
         // then
-        assertTrue(context.getFieldErrors().size() == 0);
+        assertEquals(0, context.getFieldErrors().size());
     }
 
     public void testMinValidation() throws Exception {
@@ -53,11 +53,13 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
         ValidatorContext context = new DummyValidatorContext(action, tpf);
         DateRangeFieldValidator validator = prepareValidator(action, context);
 
+        System.out.println(ActionContext.getContext().getLocale());
+
         // when
         validator.validate(action);
 
         // then
-        assertTrue(context.getFieldErrors().size() == 1);
+        assertEquals(1, context.getFieldErrors().size());
         assertEquals("Max is 12.12.13, min is 01.01.13 but value is 03.03.12", context.getFieldErrors().get("dateRange").get(0));
     }
 
@@ -71,7 +73,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
         validator.validate(action);
 
         // then
-        assertTrue(context.getFieldErrors().size() == 1);
+        assertEquals(1, context.getFieldErrors().size());
         assertEquals("Max is 12.12.13, min is 01.01.13 but value is 04.04.14", context.getFieldErrors().get("dateRange").get(0));
     }
 
@@ -91,6 +93,7 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
 
     private DateRangeFieldValidator prepareValidator(ValidationAction action, ValidatorContext context) {
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
+        valueStack.getActionContext().withLocale(new Locale("de"));
         valueStack.push(action);
 
         DateRangeFieldValidator validator = new DateRangeFieldValidator();
@@ -108,7 +111,6 @@ public class DateRangeFieldValidatorTest extends XWorkTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        ActionContext.getContext().setLocale(new Locale("DE"));
         tpf = container.getInstance(TextProviderFactory.class);
     }
 

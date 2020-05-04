@@ -134,12 +134,12 @@ public abstract class StrutsTestCasePortletTests extends XWorkTestCase {
         initSession(actionContext);
         applyAdditionalParams(actionContext);
         // set the action context to the one used by the proxy
-        ActionContext.setContext(actionContext);
+        ActionContext.bind(actionContext);
     }
 
     protected void initSession(ActionContext actionContext) {
         if (actionContext.getSession() == null) {
-            actionContext.setSession(new HashMap<String, Object>());
+            actionContext.setSession(new HashMap<>());
             request.setSession(new MockHttpSession(servletContext));
         }
     }

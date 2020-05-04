@@ -43,7 +43,7 @@ public class TagUtils {
 
     public static ValueStack getStack(PageContext pageContext) {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-        ValueStack stack = (ValueStack) req.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
+        ValueStack stack = ServletActionContext.getValueStack(req);
 
         if (stack == null) {
 
@@ -60,7 +60,7 @@ public class TagUtils {
 
             Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
                     params,
-                    new SessionMap(req),
+                    new SessionMap<>(req),
                     new ApplicationMap(pageContext.getServletContext()),
                     req,
                     res);
@@ -69,9 +69,10 @@ public class TagUtils {
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
             // also tie this stack/context to the ThreadLocal
-            ActionContext.setContext(new ActionContext(stack.getContext()));
+            ActionContext.of(stack.getContext()).bind();
         } else {
             // let's make sure that the current page context is in the action context
+            // TODO: refactor this to stop using put()
             Map<String, Object> context = stack.getContext();
             context.put(ServletActionContext.PAGE_CONTEXT, pageContext);
 
@@ -83,7 +84,7 @@ public class TagUtils {
     }
 
     public static String buildNamespace(ActionMapper mapper, ValueStack stack, HttpServletRequest request) {
-        ActionContext context = new ActionContext(stack.getContext());
+        ActionContext context = ActionContext.of(stack.getContext());
         ActionInvocation invocation = context.getActionInvocation();
 
         if (invocation == null) {

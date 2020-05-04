@@ -74,7 +74,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
      */
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        Dispatcher dispatcher = (Dispatcher) getServletContext().getAttribute(StrutsStatics.SERVLET_DISPATCHER);
+        Dispatcher dispatcher = Dispatcher.getInstance(getServletContext());
         if (dispatcher == null) {
             throw new IllegalStateException("Unable to find the Dispatcher in the Servlet Context. Is '" + StrutsListener.class.getName() + "' missing in web.xml?");
         }

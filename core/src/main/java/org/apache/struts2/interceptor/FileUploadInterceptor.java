@@ -26,7 +26,6 @@ import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -232,7 +231,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
 
-        HttpServletRequest request = (HttpServletRequest) ac.get(ServletActionContext.HTTP_REQUEST);
+        HttpServletRequest request = ac.getServletRequest();
 
         if (!(request instanceof MultiPartRequestWrapper)) {
             if (LOG.isDebugEnabled()) {

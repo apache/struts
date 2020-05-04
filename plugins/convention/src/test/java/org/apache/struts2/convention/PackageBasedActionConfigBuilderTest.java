@@ -89,9 +89,9 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        ActionContext context = new ActionContext(new HashMap<String, Object>());
-        context.setContainer(new DummyContainer());
-        ActionContext.setContext(context);
+        ActionContext.of(new HashMap<>())
+            .withContainer(new DummyContainer())
+            .bind();
     }
 
     public void testActionPackages() throws MalformedURLException {
@@ -692,7 +692,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
 
         ObjectFactory workingFactory = configuration.getContainer().getInstance(ObjectFactory.class);
         ConventionUnknownHandler uh = new ConventionUnknownHandler(configuration, workingFactory, context, mockContainer, "struts-default", null, "-");
-        ActionContext actionContext = new ActionContext(Collections.EMPTY_MAP);
+        ActionContext actionContext = ActionContext.of(Collections.emptyMap()).bind();
 
         Result result = uh.handleUnknownResult(actionContext, "foo", pkgConfig.getActionConfigs().get("foo"), "bar");
         assertNotNull(result);

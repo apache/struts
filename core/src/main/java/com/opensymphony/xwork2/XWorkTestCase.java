@@ -29,6 +29,10 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.ClassUtils;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * Base JUnit TestCase to extend for XWork specific JUnit tests. Uses 
  * the generic test setup for logic.
@@ -96,5 +100,11 @@ public abstract class XWorkTestCase extends TestCase {
             }
         });
     }
-    
+
+    protected Map<String, Object> createContextWithLocale(Locale locale) {
+        return ActionContext.of(new HashMap<>())
+            .withLocale(locale)
+            .getContextMap();
+    }
+
 }

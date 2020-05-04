@@ -44,7 +44,6 @@ public class StrutsListener implements ServletContextListener {
             init.initStaticContentLoader(config, dispatcher);
 
             prepare = new PrepareOperations(dispatcher);
-            sce.getServletContext().setAttribute(StrutsStatics.SERVLET_DISPATCHER, dispatcher);
         } finally {
             if (dispatcher != null) {
                 dispatcher.cleanUpAfterInit();

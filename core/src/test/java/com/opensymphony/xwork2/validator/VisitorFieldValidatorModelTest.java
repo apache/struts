@@ -61,8 +61,7 @@ public class VisitorFieldValidatorModelTest extends XWorkTestCase {
         EasyMock.replay(invocation);
         EasyMock.replay(proxy);
 
-        ActionContext.getContext().setActionInvocation(invocation);
-
+        ActionContext.getContext().withActionInvocation(invocation);
     }
 
     public void testModelFieldErrorsAddedWithoutFieldPrefix() throws Exception {
@@ -122,6 +121,6 @@ public class VisitorFieldValidatorModelTest extends XWorkTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        ActionContext.setContext(null);
+        ActionContext.clear();
     }
 }

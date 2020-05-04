@@ -137,7 +137,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 	}
 
     private String createDefaultUrl(UrlProvider urlComponent) {
-        ActionInvocation ai = (ActionInvocation) urlComponent.getStack().getContext().get(ActionContext.ACTION_INVOCATION);
+        ActionInvocation ai = urlComponent.getStack().getActionContext().getActionInvocation();
         String action = ai.getProxy().getActionName();
         return portletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getParameters(),
                 urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
@@ -165,7 +165,7 @@ public class PortletUrlRenderer implements UrlRenderer {
         if (formComponent.action != null) {
             action = formComponent.findString(formComponent.action);
         } else {
-            ActionInvocation ai = (ActionInvocation) formComponent.getStack().getContext().get(ActionContext.ACTION_INVOCATION);
+            ActionInvocation ai = formComponent.getStack().getActionContext().getActionInvocation();
             action = ai.getProxy().getActionName();
         }
 

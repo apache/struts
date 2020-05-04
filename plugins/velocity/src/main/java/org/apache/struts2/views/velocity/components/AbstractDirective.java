@@ -62,7 +62,7 @@ public abstract class AbstractDirective extends Directive {
         HttpServletRequest req = (HttpServletRequest) stack.getContext().get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse res = (HttpServletResponse) stack.getContext().get(ServletActionContext.HTTP_RESPONSE);
         Component bean = getBean(stack, req, res);
-        Container container = (Container) stack.getContext().get(ActionContext.CONTAINER);
+        Container container = stack.getActionContext().getContainer();
         container.inject(bean);
         // get the parameters
         Map params = createPropertyMap(ctx, node);

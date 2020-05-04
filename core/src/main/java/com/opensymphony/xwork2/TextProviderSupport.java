@@ -254,7 +254,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
         if (stack == null){
         	locale = getLocale();
         }else{
-        	locale = (Locale) stack.getContext().get(ActionContext.LOCALE);
+        	locale = stack.getActionContext().getLocale();
         }
         if (locale == null) {
             locale = getLocale();
@@ -284,7 +284,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
         if (stack == null){
         	locale = getLocale();
         }else{
-        	locale = (Locale) stack.getContext().get(ActionContext.LOCALE);
+        	locale = stack.getActionContext().getLocale();
         }
         if (locale == null) {
             locale = getLocale();

@@ -90,8 +90,6 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
 
     /**
      * See WW-3668
-     *
-     * @throws Exception
      */
     public void testWithPreResultListenerAgainstMaliciousCode() throws Exception {
         conversionErrors.put("foo", new ConversionData("\" + #root + \"", int.class));
@@ -128,10 +126,10 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
     }
 
     private ActionContext createActionContext() {
-        ActionContext ac = new ActionContext(stack.getContext());
-        ac.setConversionErrors(conversionErrors);
-        ac.setValueStack(stack);
-        return ac;
+        return ActionContext.of(stack.getContext())
+            .withConversionErrors(conversionErrors)
+            .withValueStack(stack)
+            .bind();
     }
 
     @Override
@@ -141,9 +139,10 @@ public class ConversionErrorInterceptorTest extends XWorkTestCase {
         mockInvocation = new Mock(ActionInvocation.class);
         invocation = (ActionInvocation) mockInvocation.proxy();
         stack = ActionContext.getContext().getValueStack();
-        context = new ActionContext(stack.getContext());
         conversionErrors = new HashMap<>();
-        context.setConversionErrors(conversionErrors);
+        context = ActionContext.of(stack.getContext())
+            .withConversionErrors(conversionErrors)
+            .bind();
         mockInvocation.matchAndReturn("getInvocationContext", context);
         mockInvocation.expect("addPreResultListener", C.isA(PreResultListener.class));
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);

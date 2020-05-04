@@ -55,7 +55,7 @@ public abstract class TagModel implements TemplateTransformModel {
     public Writer getWriter(Writer writer, Map params)
         throws TemplateModelException, IOException {
         Component bean = getBean();
-        Container container = (Container) stack.getContext().get(ActionContext.CONTAINER);
+        Container container = stack.getActionContext().getContainer();
         container.inject(bean);
 
         Map unwrappedParameters = unwrapParameters(params);

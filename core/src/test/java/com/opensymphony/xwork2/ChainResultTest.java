@@ -58,19 +58,23 @@ public class ChainResultTest extends XWorkTestCase {
         stack.push(values);
 
         Mock actionProxyMock = new Mock(ActionProxy.class);
+        actionProxyMock.matchAndReturn("getActionName", expectedActionName);
+        actionProxyMock.matchAndReturn("getMethod", "execute");
         actionProxyMock.expect("execute");
 
         ActionProxyFactory testActionProxyFactory = new NamespaceActionNameTestActionProxyFactory(expectedNamespace, expectedActionName, (ActionProxy) actionProxyMock.proxy());
         result.setActionProxyFactory(testActionProxyFactory);
-        try {
 
-            ActionContext testContext = new ActionContext(stack.getContext());
-            ActionContext.setContext(testContext);
-            result.execute(null);
-            actionProxyMock.verify();
-        } finally {
-            ActionContext.setContext(null);
-        }
+        ActionProxy actionProxy = (ActionProxy) actionProxyMock.proxy();
+        result.setActionProxyFactory(testActionProxyFactory);
+
+        Mock invocationMock = new Mock(ActionInvocation.class);
+        invocationMock.matchAndReturn("getProxy", actionProxy);
+        invocationMock.matchAndReturn("getInvocationContext", ActionContext.getContext());
+
+        result.execute((ActionInvocation) invocationMock.proxy());
+
+        actionProxyMock.verify();
     }
 
     public void testWithNoNamespace() throws Exception {
@@ -97,14 +101,14 @@ public class ChainResultTest extends XWorkTestCase {
 
         Mock invocationMock = new Mock(ActionInvocation.class);
         invocationMock.matchAndReturn("getProxy", actionProxy);
+        invocationMock.matchAndReturn("getInvocationContext", ActionContext.getContext());
         try {
 
-            ActionContext testContext = new ActionContext(stack.getContext());
-            ActionContext.setContext(testContext);
+            ActionContext.bind(stack.getActionContext());
             result.execute((ActionInvocation) invocationMock.proxy());
             actionProxyMock.verify();
         } finally {
-            ActionContext.setContext(null);
+            ActionContext.clear();
         }
     }
 

@@ -442,11 +442,12 @@ public class XWorkConverter extends DefaultTypeConverter {
                 realProperty = fullName;
             }
 
-            Map<String, ConversionData> conversionErrors = (Map<String, ConversionData>) context.get(ActionContext.CONVERSION_ERRORS);
+            ActionContext actionContext = ActionContext.of(context);
+            Map<String, ConversionData> conversionErrors = actionContext.getConversionErrors();
 
             if (conversionErrors == null) {
                 conversionErrors = new HashMap<>();
-                context.put(ActionContext.CONVERSION_ERRORS, conversionErrors);
+                actionContext.withConversionErrors(conversionErrors);
             }
 
             conversionErrors.put(realProperty, new ConversionData(value, toClass));

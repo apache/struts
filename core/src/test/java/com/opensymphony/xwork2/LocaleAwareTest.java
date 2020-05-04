@@ -37,7 +37,7 @@ public class LocaleAwareTest extends XWorkTestCase {
     public void testGetText() {
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.FOO_ACTION_NAME, null, null);
-            ActionContext.getContext().setLocale(Locale.US);
+            ActionContext.getContext().withLocale(Locale.US);
 
             TextProvider localeAware = (TextProvider) proxy.getAction();
             assertEquals("Foo Range Message", localeAware.getText("foo.range"));
@@ -50,7 +50,7 @@ public class LocaleAwareTest extends XWorkTestCase {
     public void testLocaleGetText() {
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.FOO_ACTION_NAME, null, null);
-            ActionContext.getContext().setLocale(Locale.GERMANY);
+            ActionContext.getContext().withLocale(Locale.GERMANY);
 
             TextProvider localeAware = (TextProvider) proxy.getAction();
             assertEquals("I don't know German", localeAware.getText("foo.range"));
@@ -68,7 +68,7 @@ public class LocaleAwareTest extends XWorkTestCase {
         loadConfigurationProviders(configurationProvider, new MockConfigurationProvider());
 
         ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
-        stack.getContext().put(ActionContext.CONTAINER, container);
-        ActionContext.setContext(new ActionContext(stack.getContext()));
+        stack.getActionContext().withContainer(container);
+        ActionContext.of(stack.getContext()).bind();
     }
 }

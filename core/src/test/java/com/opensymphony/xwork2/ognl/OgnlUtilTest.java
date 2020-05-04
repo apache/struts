@@ -480,7 +480,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Map<String, Object> props = new HashMap<>();
         props.put("birthday", "02/12/1982");
         // US style test
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
         ognlUtil.setProperties(props, foo, context);
 
         Calendar cal = Calendar.getInstance(Locale.US);
@@ -519,7 +519,7 @@ public class OgnlUtilTest extends XWorkTestCase {
             .format(meetingTime);
         props.put("meeting", formatted);
 
-        context.put(ActionContext.LOCALE, Locale.UK);
+        context = ActionContext.of(context).withLocale(Locale.UK).getContextMap();
 
         ognlUtil.setProperties(props, foo, context);
 
@@ -529,7 +529,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         //test RFC 3339 date format for JSON
         props.put("event", "1996-12-19T16:39:57Z");
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
         ognlUtil.setProperties(props, foo, context);
 
         cal = Calendar.getInstance(Locale.US);
@@ -545,7 +545,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         //test setting a calendar property
         props.put("calendar", "1996-12-19T16:39:57Z");
-        context.put(ActionContext.LOCALE, Locale.US);
+        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
         ognlUtil.setProperties(props, foo, context);
         assertEquals(cal, foo.getCalendar());
     }

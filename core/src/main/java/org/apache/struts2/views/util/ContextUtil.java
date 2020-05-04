@@ -18,26 +18,20 @@
  */
 package org.apache.struts2.views.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.StrutsUtil;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Value Stack's Context related Utilities.
- *
  */
 public class ContextUtil {
     public static final String REQUEST = "request";
@@ -48,7 +42,7 @@ public class ContextUtil {
     public static final String OGNL = "ognl";
     public static final String STRUTS = "struts";
     public static final String ACTION = "action";
-    
+
     public static Map<String, Object> getStandardContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         HashMap<String, Object> map = new HashMap<>();
         map.put(REQUEST, req);
@@ -56,10 +50,10 @@ public class ContextUtil {
         map.put(SESSION, req.getSession(false));
         map.put(BASE, req.getContextPath());
         map.put(STACK, stack);
-        map.put(OGNL, ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(OgnlTool.class));
+        map.put(OGNL, stack.getActionContext().getContainer().getInstance(OgnlTool.class));
         map.put(STRUTS, new StrutsUtil(stack, req, res));
 
-        ActionInvocation invocation = (ActionInvocation) stack.getContext().get(ActionContext.ACTION_INVOCATION);
+        ActionInvocation invocation = stack.getActionContext().getActionInvocation();
         if (invocation != null) {
             map.put(ACTION, invocation.getAction());
         }
@@ -68,25 +62,31 @@ public class ContextUtil {
 
     /**
      * Return true if either Configuration's altSyntax is on or the stack context's useAltSyntax is on
+     *
      * @param context stack's context
      * @return boolean
      */
-    public static boolean isUseAltSyntax(Map context) {
+    public static boolean isUseAltSyntax(Map<String, Object> context) {
         // We didn't make altSyntax static cause, if so, struts.configuration.xml.reload will not work
         // plus the Configuration implementation should cache the properties, which the framework's
         // configuration implementation does
-        return "true".equals(((Container)context.get(ActionContext.CONTAINER)).getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX)) ||(
-                (context.containsKey("useAltSyntax") &&
-                        context.get("useAltSyntax") != null &&
-                        "true".equals(context.get("useAltSyntax").toString())));
+        String tagAltSytnax = ActionContext.of(context).getContainer().getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX);
+
+        return "true".equals(tagAltSytnax) || (
+            (context.containsKey("useAltSyntax") &&
+                context.get("useAltSyntax") != null &&
+                "true".equals(context.get("useAltSyntax").toString()))
+        );
     }
-    
+
     /**
      * Returns a String for overriding the default templateSuffix if templateSuffix is on the stack
+     *
      * @param context stack's context
      * @return String
      */
-    public static String getTemplateSuffix(Map context) {
+    public static String getTemplateSuffix(Map<String, Object> context) {
         return context.containsKey("templateSuffix") ? (String) context.get("templateSuffix") : null;
     }
+
 }

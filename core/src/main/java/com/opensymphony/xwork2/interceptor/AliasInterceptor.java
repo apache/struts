@@ -158,7 +158,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                     ReflectionContextState.setReportingConversionErrors(context, true);
 
                     //keep locale from original context
-                    context.put(ActionContext.LOCALE, stack.getContext().get(ActionContext.LOCALE));
+                    newStack.getActionContext().withLocale(stack.getActionContext().getLocale());
                 }
 
                 // override
@@ -193,8 +193,9 @@ public class AliasInterceptor extends AbstractInterceptor {
                     }
                 }
 
-                if (clearableStack && (stack.getContext() != null) && (newStack.getContext() != null))
-                    stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
+                if (clearableStack) {
+                    stack.getActionContext().withConversionErrors(newStack.getActionContext().getConversionErrors());
+                }
             } else {
                 LOG.debug("invalid alias expression: {}", aliasesKey);
             }

@@ -81,7 +81,7 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
      */
     @Override
     protected HttpParameters retrieveParameters(ActionContext ac) {
-        ActionMapping mapping = (ActionMapping) ac.get(ServletActionContext.ACTION_MAPPING);
+        ActionMapping mapping = ac.getActionMapping();
         if (mapping != null) {
             return HttpParameters.create(mapping.getParams()).buildNoNestedWrapping();
         } else {

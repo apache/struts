@@ -34,31 +34,31 @@ import java.util.Map;
  */
 public class ActionContextTest extends XWorkTestCase {
 
-    private static final String APPLICATION_KEY = "com.opensymphony.xwork2.ActionContextTest.application";
-    private static final String SESSION_KEY = "com.opensymphony.xwork2.ActionContextTest.session";
-    private static final String PARAMETERS_KEY = "com.opensymphony.xwork2.ActionContextTest.params";
-    private static final String ACTION_NAME = "com.opensymphony.xwork2.ActionContextTest.actionName";
+    private static final String APPLICATION_KEY = ActionContextTest.class.getName() + ".application";
+    private static final String SESSION_KEY = ActionContextTest.class.getName() + ".session";
+    private static final String PARAMETERS_KEY = ActionContextTest.class.getName() + ".params";
+    private static final String ACTION_NAME = ActionContextTest.class.getName() + ".actionName";
 
     private ActionContext context;
+    private Map<String, Object> application = new HashMap<>();
+    private Map<String, Object> session = new HashMap<>();
+    private Map<String, Object> params = new HashMap<>();
 
     @Override public void setUp() throws Exception {
         super.setUp();
         ValueStack valueStack = container.getInstance(ValueStackFactory.class).createValueStack();
         Map<String, Object> extraContext = valueStack.getContext();
-        Map<String, Object> application = new HashMap<>();
+
         application.put(APPLICATION_KEY, APPLICATION_KEY);
-
-        Map<String, Object> session = new HashMap<>();
         session.put(SESSION_KEY, SESSION_KEY);
-
-        Map<String, Object> params = new HashMap<>();
         params.put(PARAMETERS_KEY, PARAMETERS_KEY);
-        extraContext.put(ActionContext.APPLICATION, application);
-        extraContext.put(ActionContext.SESSION, session);
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
-        extraContext.put(ActionContext.ACTION_NAME, ACTION_NAME);
-        context = new ActionContext(extraContext);
-        ActionContext.setContext(context);
+
+        context = ActionContext.of(extraContext)
+            .withApplication(application)
+            .withSession(session)
+            .withParameters(HttpParameters.create(params).build())
+            .withActionName(ACTION_NAME)
+            .bind();
     }
 
     public void testContextParams() {
@@ -81,21 +81,19 @@ public class ActionContextTest extends XWorkTestCase {
     }
 
     public void testApplication() {
-        Map<String, Object> app = new HashMap<>();
-        context.setApplication(app);
-        assertEquals(app, context.getApplication());
+        assertEquals(application, context.getApplication());
     }
 
     public void testContextMap() {
         Map<String, Object> map = new HashMap<>();
-        ActionContext.setContext(new ActionContext(map));
+        ActionContext.of(map).bind();
 
         assertEquals(map, ActionContext.getContext().getContextMap());
     }
 
     public void testParameters() {
-        context.setParameters(HttpParameters.create().build());
-        assertEquals(0, context.getParameters().keySet().size());
+        assertEquals(1, context.getParameters().keySet().size());
+        assertEquals(PARAMETERS_KEY, context.getParameters().get(PARAMETERS_KEY).getValue());
     }
 
     public void testConversionErrors() {
@@ -104,17 +102,16 @@ public class ActionContextTest extends XWorkTestCase {
         assertEquals(0, errors.size());
 
         Map<String, ConversionData> errors2 = new HashMap<>();
-        context.setConversionErrors(errors);
+        context.withConversionErrors(errors);
         assertEquals(errors2, context.getConversionErrors());
     }
 
     public void testStaticMethods() {
         assertEquals(context, ActionContext.getContext());
 
-        ActionContext context2 = new ActionContext(null);
-        ActionContext.setContext(context2);
+        ActionContext.clear();
 
-        assertEquals(context2, ActionContext.getContext());
+        assertNull(ActionContext.getContext());
     }
 
 }

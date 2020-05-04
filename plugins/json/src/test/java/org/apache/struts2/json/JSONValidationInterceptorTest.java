@@ -198,7 +198,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
 
         context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
         invocation = new MockActionInvocation();
-        ActionContext.getContext().setActionInvocation(invocation);
+        ActionContext.getContext().withActionInvocation(invocation);
         invocation.setAction(action);
         invocation.setInvocationContext(context);
         MockActionProxy proxy = new MockActionProxy();

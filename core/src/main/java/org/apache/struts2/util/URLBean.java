@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.util;
 
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
@@ -48,7 +49,7 @@ public class URLBean {
 
     public void setRequest(HttpServletRequest request) {
         this.request = request;
-        urlHelper = ServletActionContext.getContext().getInstance(DefaultUrlHelper.class);
+        urlHelper = ActionContext.getContext().getInstance(DefaultUrlHelper.class);
     }
 
     public void setResponse(HttpServletResponse response) {

@@ -110,6 +110,6 @@ public class FormTest extends AbstractUITagTest {
 
         ((DefaultActionMapper) container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
         
-        ActionContext.getContext().setActionInvocation(invocation);
+        ActionContext.getContext().withActionInvocation(invocation);
     }
 }

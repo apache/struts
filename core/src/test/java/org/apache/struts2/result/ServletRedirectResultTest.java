@@ -18,38 +18,6 @@
  */
 package org.apache.struts2.result;
 
-import static javax.servlet.http.HttpServletResponse.SC_SEE_OTHER;
-import static org.easymock.EasyMock.createControl;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
-import ognl.Ognl;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.result.ServletRedirectResult;
-import org.apache.struts2.views.util.DefaultUrlHelper;
-import org.easymock.IMocksControl;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
@@ -60,10 +28,33 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.views.util.DefaultUrlHelper;
+import org.easymock.IMocksControl;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- */
+import static javax.servlet.http.HttpServletResponse.SC_SEE_OTHER;
+import static org.easymock.EasyMock.createControl;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+
 public class ServletRedirectResultTest extends StrutsInternalTestCase implements StrutsStatics {
 
     protected ServletRedirectResult view;
@@ -167,6 +158,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
             fail();
         }
     }
+
     public void testPrependServletContextFalse() {
         view.setLocation("/bar/foo.jsp");
         view.setPrependServletContext(false);
@@ -197,7 +189,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         requestMock.verify();
         responseMock.verify();
     }
-    
+
     public void testMultipleParametersRedirect() throws Exception {
         view.setLocation("foo.jsp?foo=bar&amp;baz=jim");
         requestMock.expectAndReturn("getParameterMap", new HashMap());
@@ -235,11 +227,11 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         context.put(ServletActionContext.HTTP_RESPONSE, res);
 
 
-        Map<String, ResultConfig> results=  new HashMap<String, ResultConfig>();
+        Map<String, ResultConfig> results = new HashMap<>();
         results.put("myResult", resultConfig);
 
         ActionConfig actionConfig = new ActionConfig.Builder("", "", "")
-                .addResultConfigs(results).build();
+            .addResultConfigs(results).build();
 
         ServletRedirectResult result = new ServletRedirectResult();
         result.setLocation("/myNamespace/myAction.action");
@@ -265,7 +257,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
     }
 
     public void testIncludeCollectionParameterInResult() throws Exception {
-        List<String> paramValues = new ArrayList<String>();
+        List<String> paramValues = new ArrayList<>();
         paramValues.add("value 1");
         paramValues.add("");
         paramValues.add("value 2");
@@ -282,11 +274,11 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         context.put(ServletActionContext.HTTP_REQUEST, req);
         context.put(ServletActionContext.HTTP_RESPONSE, res);
 
-        Map<String, ResultConfig> results=  new HashMap<String, ResultConfig>();
+        Map<String, ResultConfig> results = new HashMap<>();
         results.put("myResult", resultConfig);
 
         ActionConfig actionConfig = new ActionConfig.Builder("", "", "")
-                .addResultConfigs(results).build();
+            .addResultConfigs(results).build();
 
         ServletRedirectResult result = new ServletRedirectResult();
         result.setLocation("/myNamespace/myAction.action");
@@ -301,11 +293,10 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
 
         ValueStack mockValueStack = control.createMock(ValueStack.class);
-        Map<String, Object> mockContext = new HashMap<String, Object>();
-        mockContext.put(ActionContext.CONTAINER, container);
+        ActionContext actionContext = ActionContext.of(new HashMap<>()).withContainer(container);
 
         expect(mockInvocation.getStack()).andReturn(mockValueStack);
-        expect(mockValueStack.getContext()).andReturn(mockContext);
+        expect(mockValueStack.getActionContext()).andReturn(actionContext);
 
         expect(mockInvocation.getStack()).andReturn(mockValueStack);
 
@@ -316,7 +307,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         expect(mockActionProxy.getConfig()).andReturn(actionConfig);
         expect(mockInvocation.getInvocationContext()).andReturn(context);
 
-        expect(mockValueStack.getContext()).andReturn(mockContext);
+        expect(mockValueStack.getActionContext()).andReturn(actionContext);
 
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
@@ -326,11 +317,11 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
     }
 
     /**
-     * Test to exercise the code path and prove sendRedirect() will output 
+     * Test to exercise the code path and prove sendRedirect() will output
      * the desired log warning when an IOException is thrown for statusCode SC_FOUND.
      */
     public void testSendRedirectSCFoundIOException() {
-        HttpServletResponse httpServletResponseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
+        HttpServletResponse httpServletResponseMock = createMock(HttpServletResponse.class);
         boolean ioeCaught = false;
         view.setLocation("/bar/foo.jsp");
         view.setStatusCode(HttpServletResponse.SC_FOUND);
@@ -352,11 +343,11 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
     }
 
     /**
-     * Test to exercise the code path and prove sendRedirect() will output 
+     * Test to exercise the code path and prove sendRedirect() will output
      * the desired log warning when an IOException is thrown for statusCode SC_MOVED_PERMANENTLY.
      */
     public void testSendRedirectSCMovedPermanentlyIOException() {
-        HttpServletResponse httpServletResponseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
+        HttpServletResponse httpServletResponseMock = createMock(HttpServletResponse.class);
         boolean ioeCaught = false;
         view.setLocation("/bar/foo.jsp");
         view.setStatusCode(HttpServletResponse.SC_MOVED_PERMANENTLY);  // Any non SC_FOUND will suffice
@@ -381,7 +372,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
     }
 
     /**
-     * Test to exercise the code path and prove sendRedirect() will output 
+     * Test to exercise the code path and prove sendRedirect() will output
      * the desired log warning when an IllegalStateException is thrown for statusCode SC_FOUND.
      */
     public void testSendRedirectSCFoundIllegalStateException() {
@@ -410,11 +401,11 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
     }
 
     /**
-     * Test to exercise the code path and prove sendRedirect() will output 
+     * Test to exercise the code path and prove sendRedirect() will output
      * the desired log warning when an IllegalStateException is thrown for statusCode SC_MOVED_PERMANENTLY.
      */
     public void testSendRedirectSCMovedPermanentlyIllegalStateException() {
-        HttpServletResponse httpServletResponseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
+        HttpServletResponse httpServletResponseMock = createMock(HttpServletResponse.class);
         boolean iseCaught = false;
         view.setLocation("/bar/foo.jsp");
         view.setStatusCode(HttpServletResponse.SC_MOVED_PERMANENTLY);  // Any non SC_FOUND will suffice
@@ -454,25 +445,28 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         requestMock = new Mock(HttpServletRequest.class);
         requestMock.matchAndReturn("getContextPath", "/context");
 
-         ResultConfig resultConfig = new ResultConfig.Builder("", "").build();
+        ResultConfig resultConfig = new ResultConfig.Builder("", "").build();
 
-        Map<String, ResultConfig> results=  new HashMap<String, ResultConfig>();
+        Map<String, ResultConfig> results = new HashMap<>();
         results.put("myResult", resultConfig);
 
         ActionConfig actionConfig = new ActionConfig.Builder("", "", "")
-                .addResultConfigs(results).build();
+            .addResultConfigs(results).build();
 
-        ActionContext ac = new ActionContext(Ognl.createDefaultContext(null, new SecurityMemberAccess(false, true)));
-        ac.put(ServletActionContext.HTTP_REQUEST, requestMock.proxy());
-        ac.put(ServletActionContext.HTTP_RESPONSE, responseMock.proxy());
+        ActionContext ac = ActionContext.getContext();
+        ac.withServletRequest((HttpServletRequest) requestMock.proxy());
+        ac.withServletResponse((HttpServletResponse) responseMock.proxy());
+
         MockActionInvocation ai = new MockActionInvocation();
         ai.setInvocationContext(ac);
         ai.setResultCode("myResult");
+
         ActionProxy mockActionProxy = createNiceMock(ActionProxy.class);
         ai.setProxy(mockActionProxy);
         expect(mockActionProxy.getConfig()).andReturn(actionConfig).anyTimes();
         replay(mockActionProxy);
-        this.ai = ai;
         ai.setStack(ActionContext.getContext().getValueStack());
+
+        this.ai = ai;
     }
 }

@@ -71,7 +71,7 @@ public abstract class StrutsPortletTestCase extends StrutsTestCase {
         portletResponse = new MockStateAwareResponse();
         portletSession = new MockPortletSession();
         portletRequest.setSession(portletSession);
-        actionContext.setSession(createSession());
+        actionContext.withSession(createSession());
         actionContext.put(PortletConstants.REQUEST, portletRequest);
         actionContext.put(PortletConstants.RESPONSE, portletResponse);
         actionContext.put(PortletConstants.MODE_NAMESPACE_MAP, new HashMap<PortletMode, String>());

@@ -25,21 +25,22 @@ import java.util.HashMap;
 
 /**
  * Simple Test ActionContext's ThreadLocal
- * 
+ *
  * @author tm_jee
  * @version $Date$ $Id$
  */
 public class ActionContextThreadLocalTest extends TestCase {
 
-	
-	public void testGetContext() throws Exception {
-	    ActionContext.setContext(null);
-		assertNull(ActionContext.getContext());
-	}
-	
-	public void testSetContext() throws Exception {
-		ActionContext context = new ActionContext(new HashMap<String, Object>());
-		ActionContext.setContext(context);
-		assertEquals(context, ActionContext.getContext());
-	}
+    public void testGetContext() {
+        ActionContext.clear();
+
+        assertNull(ActionContext.getContext());
+    }
+
+    public void testSetContext() {
+        ActionContext context = ActionContext.of(new HashMap<>()).bind();
+
+        assertEquals(context, ActionContext.getContext());
+    }
+
 }

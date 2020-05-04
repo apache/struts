@@ -24,31 +24,31 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * Authenticate showcase chat example, make sure everyone have a username.
  */
 public class ChatInterceptor extends AbstractInterceptor {
 
-	private static final Logger LOG = LogManager.getLogger(ChatInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ChatInterceptor.class);
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final String CHAT_USER_SESSION_KEY = "ChatUserSessionKey";
+    public static final String CHAT_USER_SESSION_KEY = "ChatUserSessionKey";
 
-	public String intercept(ActionInvocation invocation) throws Exception {
-		HttpSession session = (HttpSession) ActionContext.getContext().get(ActionContext.SESSION);
-		User chatUser = (User) session.getAttribute(CHAT_USER_SESSION_KEY);
-		if (chatUser == null) {
-			LOG.debug("Chat user not logged in");
-			return Action.LOGIN;
-		}
-		return invocation.invoke();
-	}
+    public String intercept(ActionInvocation invocation) throws Exception {
+        Map<String, Object> session = ActionContext.getContext().getSession();
+        User chatUser = (User) session.get(CHAT_USER_SESSION_KEY);
+        if (chatUser == null) {
+            LOG.debug("Chat user not logged in");
+            return Action.LOGIN;
+        }
+        return invocation.invoke();
+    }
 }
 
 

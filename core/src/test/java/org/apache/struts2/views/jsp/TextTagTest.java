@@ -18,15 +18,11 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTag;
-
+import com.mockobjects.servlet.MockJspWriter;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.TestAction;
@@ -34,16 +30,19 @@ import org.apache.struts2.components.Text;
 import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
 import org.apache.struts2.views.jsp.ui.TestAction1;
 
-import com.mockobjects.servlet.MockJspWriter;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTag;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import static org.junit.Assert.assertNotEquals;
 
 
 /**
  * TextTagTest
- *
  */
 public class TextTagTest extends AbstractTagTest {
 
@@ -104,10 +103,10 @@ public class TextTagTest extends AbstractTagTest {
     public void testMessageFormatWorks() throws Exception {
         String key = "messageFormatKey";
         String pattern = "Params are {0} {1} {2}";
-        Object param1 = new Integer(12);
+        Object param1 = 12;
         Object param2 = new Date();
         Object param3 = "StringVal";
-        List params = new ArrayList();
+        List<Object> params = new ArrayList<>();
         params.add(param1);
         params.add(param2);
         params.add(param3);
@@ -173,8 +172,7 @@ public class TextTagTest extends AbstractTagTest {
         final StringBuffer buffer = writer.getBuffer();
         buffer.delete(0, buffer.length());
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack();
-        newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
-        newStack.getContext().put(ActionContext.CONTAINER, container);
+        newStack.getActionContext().withLocale(foreignLocale).withContainer(container);
         newStack.push(container.inject(TestAction1.class));
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertNotSame(ActionContext.getContext().getValueStack().peek(), newStack.peek());
@@ -192,7 +190,7 @@ public class TextTagTest extends AbstractTagTest {
         Locale foreignLocale = getForeignLocale();
         assertNotSame(defaultLocale, foreignLocale);
 
-        ActionContext.getContext().setLocale(defaultLocale);
+        ActionContext.getContext().withLocale(defaultLocale);
         String key = "simpleKey";
         String value_default = getLocalizedMessage(defaultLocale);
         tag.setName(key);
@@ -203,11 +201,10 @@ public class TextTagTest extends AbstractTagTest {
         final StringBuffer buffer = writer.getBuffer();
         buffer.delete(0, buffer.length());
         String value_int = getLocalizedMessage(foreignLocale);
-        assertFalse(value_default.equals(value_int));
+        assertNotEquals(value_default, value_int);
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack(stack);
-        newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
-        newStack.getContext().put(ActionContext.CONTAINER, container);
-        assertNotSame(newStack.getContext().get(ActionContext.LOCALE), ActionContext.getContext().getLocale());
+        newStack.getActionContext().withLocale(foreignLocale).withContainer(container);
+        assertNotSame(newStack.getActionContext().getLocale(), ActionContext.getContext().getLocale());
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertEquals(ActionContext.getContext().getValueStack().peek(), newStack.peek());
         tag.doStartTag();
@@ -255,7 +252,7 @@ public class TextTagTest extends AbstractTagTest {
     }
 
     public void testPutId() throws Exception {
-        assertEquals(null, stack.findString("myId")); // nothing in stack
+        assertNull(stack.findString("myId")); // nothing in stack
         tag.setVar("myId");
         tag.setName("bar.baz");
         tag.doStartTag();
@@ -286,7 +283,7 @@ public class TextTagTest extends AbstractTagTest {
 
     public void testEscapeJavaScript() throws Exception {
         final String key = "foo.escape.javascript";
-        final String value = "\\t\\b\\n\\f\\r\\\"\\\'\\/\\\\";
+        final String value = "\\t\\b\\n\\f\\r\\\"\\'\\/\\\\";
         tag.setName(key);
         tag.setEscapeJavaScript(true);
         tag.doStartTag();
@@ -304,16 +301,11 @@ public class TextTagTest extends AbstractTagTest {
         assertEquals(value, writer.toString());
     }
 
-    /**
-     * todo remove ActionContext set after LocalizedTextUtil is fixed to not use ThreadLocal
-     *
-     * @throws Exception
-     */
     protected void setUp() throws Exception {
         super.setUp();
         tag = new TextTag();
         tag.setPageContext(pageContext);
-        ActionContext.setContext(new ActionContext(stack.getContext()));
+        ActionContext.of(stack.getContext()).bind();
     }
 
     protected void tearDown() throws Exception {

@@ -45,14 +45,14 @@ public class I18nInterceptorTest extends TestCase {
     private I18nInterceptor interceptor;
     private ActionInvocation mai;
     private ActionContext ac;
-    private Map session;
+    private Map<String, Object> session;
     private MockHttpServletRequest request;
 
     public void testEmptyParamAndSession() throws Exception {
         interceptor.intercept(mai);
     }
 
-    public void testNoSessionNoLocale() throws Exception {
+    public void testNoSessionNoLocale() {
         request.setSession(null);
         try {
             interceptor.intercept(mai);
@@ -67,7 +67,7 @@ public class I18nInterceptorTest extends TestCase {
         assertNull("should not be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
     }
 
-    public void testNoSessionButLocale() throws Exception {
+    public void testNoSessionButLocale() {
         prepare(I18nInterceptor.DEFAULT_PARAMETER, "da_DK"); //prevents shouldStore to being false
         request.setSession(null);
         try {
@@ -214,7 +214,7 @@ public class I18nInterceptorTest extends TestCase {
 
     public void testActionContextLocaleIsPreservedWhenNotOverridden() throws Exception {
         final Locale locale1 = Locale.TRADITIONAL_CHINESE;
-        mai.getInvocationContext().setLocale(locale1);
+        mai.getInvocationContext().withLocale(locale1);
         interceptor.intercept(mai);
 
         Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);
@@ -254,24 +254,17 @@ public class I18nInterceptorTest extends TestCase {
         interceptor = new I18nInterceptor();
         interceptor.setLocaleProviderFactory(new DefaultLocaleProviderFactory());
         interceptor.init();
-        session = new HashMap();
+        session = new HashMap<>();
 
-        Map<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put(ActionContext.PARAMETERS, HttpParameters.create().build());
-        ctx.put(ActionContext.SESSION, session);
+        ac = ActionContext.of(new HashMap<>()).bind();
+        ac.setSession(session);
+        ac.setParameters(HttpParameters.create().build());
 
-        ac = new ActionContext(ctx);
-
-        ServletActionContext.setContext(ac);
         request = new MockHttpServletRequest();
         request.setSession(new MockHttpSession());
         ServletActionContext.setRequest(request);
 
-        Action action = new Action() {
-            public String execute() throws Exception {
-                return SUCCESS;
-            }
-        };
+        Action action = () -> Action.SUCCESS;
 
         MockActionProxy proxy = new MockActionProxy();
         proxy.setAction(action);

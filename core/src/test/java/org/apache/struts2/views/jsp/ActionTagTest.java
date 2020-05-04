@@ -39,7 +39,6 @@ import javax.servlet.jsp.PageContext;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Unit test for {@link ActionTag}.
  */
@@ -107,7 +106,7 @@ public class ActionTagTest extends AbstractTagTest {
         this.testSimple();
     }
 
-    public void testSimpleWithctionMethodInOriginalURI() {
+    public void testSimpleWithActionMethodInOriginalURI() {
         request.setupGetServletPath("/foo!foo.action");
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", "testAction");
@@ -156,7 +155,7 @@ public class ActionTagTest extends AbstractTagTest {
         TestActionTagResult result = (TestActionTagResult) component.getProxy().getInvocation().getResult();
 
         assertTrue(stack.getContext().containsKey(ServletActionContext.PAGE_CONTEXT));
-        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT)instanceof PageContext);
+        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT) instanceof PageContext);
         assertTrue(result.isExecuted());
     }
 
@@ -177,18 +176,18 @@ public class ActionTagTest extends AbstractTagTest {
         TestActionTagResult result = (TestActionTagResult) component.getProxy().getInvocation().getResult();
 
         assertTrue(stack.getContext().containsKey(ServletActionContext.PAGE_CONTEXT));
-        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT)instanceof PageContext);
+        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT) instanceof PageContext);
         assertNull(result); // result is never executed, hence never set into invocation
     }
 
-     public void testExecuteButResetReturnSameInvocation() throws Exception {
+    public void testExecuteButResetReturnSameInvocation() throws Exception {
         Mock mockActionInv = new Mock(ActionInvocation.class);
         ActionTag tag = new ActionTag();
         tag.setPageContext(pageContext);
         tag.setNamespace("");
         tag.setName("testActionTagAction");
         tag.setExecuteResult(true);
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInv.proxy());
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInv.proxy());
 
         ActionInvocation oldInvocation = ActionContext.getContext().getActionInvocation();
         assertNotNull(oldInvocation);
@@ -199,7 +198,7 @@ public class ActionTagTest extends AbstractTagTest {
         ActionComponent component = (ActionComponent) tag.getComponent();
 
         tag.doEndTag();
-        assertTrue(oldInvocation == ActionContext.getContext().getActionInvocation());
+        assertSame(oldInvocation, ActionContext.getContext().getActionInvocation());
     }
 
     public void testIngoreContextParamsFalse() throws Exception {
@@ -236,7 +235,7 @@ public class ActionTagTest extends AbstractTagTest {
         tag.setIgnoreContextParams(true);
 
         Map<String, String[]> params = new HashMap<>();
-        params.put("user", new String[] { "Santa Claus" });
+        params.put("user", new String[]{"Santa Claus"});
         ActionContext.getContext().setParameters(HttpParameters.create(params).build());
 
         tag.doStartTag();
@@ -264,7 +263,7 @@ public class ActionTagTest extends AbstractTagTest {
             tag.doEndTag();
             fail("Should have thrown RuntimeException");
         } catch (StrutsException e) {
-             assertEquals("tag 'actioncomponent', field 'name': Action name is required. Example: updatePerson", e.getMessage());
+            assertEquals("tag 'actioncomponent', field 'name': Action name is required. Example: updatePerson", e.getMessage());
         }
     }
 
@@ -287,7 +286,7 @@ public class ActionTagTest extends AbstractTagTest {
         tag.setNamespace("");
         tag.setName("testActionTagAction!input");
         tag.setExecuteResult(true);
-        ((DefaultActionMapper)container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
+        ((DefaultActionMapper) container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
 
         tag.doStartTag();
 
@@ -299,18 +298,19 @@ public class ActionTagTest extends AbstractTagTest {
         TestActionTagResult result = (TestActionTagResult) component.getProxy().getInvocation().getResult();
 
         assertTrue(stack.getContext().containsKey(ServletActionContext.PAGE_CONTEXT));
-        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT)instanceof PageContext);
+        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT) instanceof PageContext);
         assertTrue(result.isExecuted());
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        initDispatcher(new HashMap<String, String>() {{ put("configProviders", TestConfigurationProvider.class.getName()); }});
+        initDispatcher(new HashMap<String, String>() {{
+            put("configProviders", TestConfigurationProvider.class.getName());
+        }});
         createMocks();
     }
 
     protected void tearDown() throws Exception {
-
         super.tearDown();
     }
 }

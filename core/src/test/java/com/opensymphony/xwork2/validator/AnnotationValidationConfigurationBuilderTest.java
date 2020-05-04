@@ -336,7 +336,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         });
 
         // ActionContext is destroyed during rebuilding configuration
-        ActionContext.getContext().setLocale(locale);
+        ActionContext.getContext().withLocale(locale);
 
         ActionInvocation invocation = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), true);
         container.inject(invocation);

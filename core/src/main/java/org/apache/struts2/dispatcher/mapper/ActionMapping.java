@@ -95,7 +95,7 @@ public class ActionMapping {
      * @return The method
      */
     public String getMethod() {
-        if (null != method && "".equals(method)) {
+        if ("".equals(method)) {
             return null;
         } else {
             return method;

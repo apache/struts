@@ -44,8 +44,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -140,12 +138,12 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         actionContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
         initSession(actionContext);
         // set the action context to the one used by the proxy
-        ActionContext.setContext(actionContext);
+        ActionContext.bind(actionContext);
     }
 
     protected void initSession(ActionContext actionContext) {
         if (actionContext.getSession() == null) {
-            actionContext.setSession(new HashMap<String, Object>());
+            actionContext.withSession(new HashMap<>());
             request.setSession(new MockHttpSession(servletContext));
         }
     }

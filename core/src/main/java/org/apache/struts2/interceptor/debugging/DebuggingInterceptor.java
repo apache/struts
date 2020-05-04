@@ -192,7 +192,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                 ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
                 if (stack == null) {
                     //allows it to be embedded on another page
-                    stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
+                    stack = ctx.getValueStack();
                     ctx.getSession().put(SESSION_KEY, stack);
                 }
                 String cmd = getParameter(EXPRESSION_PARAM);
@@ -218,7 +218,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                                 rootObjectExpression = "action";
                             }
                             String decorate = getParameter(DECORATE_PARAM);
-                            ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
+                            ValueStack stack = ctx.getValueStack();
                             Object rootObject = stack.findValue(rootObjectExpression);
 
                             try (StringWriter writer = new StringWriter()) {
@@ -258,7 +258,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             } finally {
                 if (devMode && consoleEnabled) {
                     final ActionContext ctx = ActionContext.getContext();
-                    ctx.getSession().put(SESSION_KEY, ctx.get(ActionContext.VALUE_STACK));
+                    ctx.getSession().put(SESSION_KEY, ctx.getValueStack());
                 }
             }
         } else {
@@ -304,14 +304,12 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         writer.startNode(DEBUG_PARAM);
         serializeIt(ctx.getParameters(), "parameters", writer, new ArrayList<>());
         writer.startNode("context");
-        String key;
-        Map ctxMap = ctx.getContextMap();
-        for (Object o : ctxMap.keySet()) {
-            key = o.toString();
+        Map<String, Object> ctxMap = ctx.getContextMap();
+        for (String key : ctxMap.keySet()) {
             boolean print = !ignoreKeys.contains(key);
 
-            for (String ignorePrefixe : ignorePrefixes) {
-                if (key.startsWith(ignorePrefixe)) {
+            for (String ignorePrefix : ignorePrefixes) {
+                if (key.startsWith(ignorePrefix)) {
                     print = false;
                     break;
                 }
@@ -321,11 +319,11 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             }
         }
         writer.endNode();
-        Map requestMap = (Map) ctx.get("request");
+        Map<String, Object> requestMap = (Map<String, Object>) ctx.get("request");
         serializeIt(requestMap, "request", writer, filterValueStack(requestMap));
         serializeIt(ctx.getSession(), "session", writer, new ArrayList<>());
 
-        ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
+        ValueStack stack = ctx.getValueStack();
         serializeIt(stack.getRoot(), "valueStack", writer, new ArrayList<>());
         writer.endNode();
     }

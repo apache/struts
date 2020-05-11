@@ -40,6 +40,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 
@@ -52,6 +53,9 @@ import java.util.regex.Pattern;
 public class OgnlUtil {
 
     private static final Logger LOG = LogManager.getLogger(OgnlUtil.class);
+
+    // Flag used to reduce flooding logs with WARNs about using DevMode excluded packages
+    private final AtomicBoolean warnReported = new AtomicBoolean(false);
 
     private final ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<>();
     private final ConcurrentMap<Class<?>, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
@@ -806,7 +810,10 @@ public class OgnlUtil {
         memberAccess.setDisallowProxyMemberAccess(disallowProxyMemberAccess);
 
         if (devMode) {
-            LOG.warn("Working in devMode, using devMode excluded classes and packages!");
+            if (!warnReported.get()) {
+                warnReported.set(true);
+                LOG.warn("Working in devMode, using devMode excluded classes and packages!");
+            }
             memberAccess.setExcludedClasses(devModeExcludedClasses);
             memberAccess.setExcludedPackageNamePatterns(devModeExcludedPackageNamePatterns);
             memberAccess.setExcludedPackageNames(devModeExcludedPackageNames);

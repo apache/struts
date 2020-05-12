@@ -758,7 +758,12 @@ public class Dispatcher {
                 locale = request.getLocale();
             }
         } else {
-            locale = request.getLocale();
+            try {
+                locale = request.getLocale();
+            } catch (RuntimeException e) {
+                LOG.warn("Cannot get locale from Http Request, falling back to system default locale", e);
+                locale = Locale.getDefault();
+            }
         }
         return locale;
     }

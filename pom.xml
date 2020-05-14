@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts-master</artifactId>
-        <version>13</version>
+        <version>14</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -383,6 +383,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
+                <version>3.9.0</version>
                 <configuration>
                     <relativizeDecorationLinks>false</relativizeDecorationLinks>
                 </configuration>

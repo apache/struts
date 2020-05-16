@@ -148,4 +148,9 @@
         <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus/plexus\-utils@.*$</packageUrl>
         <vulnerabilityName>Possible XML Injection</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[file name: oval-1.90.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@1\.90$</packageUrl>
+        <vulnerabilityName>Vulnerable transitive dependencies</vulnerabilityName>
+    </suppress>
 </suppressions>

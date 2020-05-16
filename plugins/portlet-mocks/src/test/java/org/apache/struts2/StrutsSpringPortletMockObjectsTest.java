@@ -44,7 +44,6 @@ import javax.portlet.PortletURL;
 import javax.portlet.PreferencesValidator;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.ResourceURL;
-import javax.portlet.ValidatorException;
 import javax.portlet.WindowState;
 import javax.security.auth.Subject;
 import javax.servlet.http.Cookie;
@@ -81,6 +80,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Element;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotEquals;
+
 /**
  * Basic test class for Portlet Mock Object testing
  * 
@@ -93,7 +95,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
     private static class BasicPreferencesValidator implements PreferencesValidator {
 
         @Override
-        public void validate(PortletPreferences preferences) throws ValidatorException {
+        public void validate(PortletPreferences preferences) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
@@ -103,7 +105,8 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         final String TEST_ACTIONNAME = "TEST_ACTIONNAME";
 
         // Call each constructor in sequence, do some basic checks
-        MockActionRequest mockActionRequest = new MockActionRequest();  // Only test is to confirm constructor completes without exception
+        new MockActionRequest();  // Only test is to confirm constructor completes without exception
+        MockActionRequest mockActionRequest;
         mockActionRequest = new MockActionRequest(TEST_ACTIONNAME);
         assertEquals("Action name (ActionRequest.ACTION_NAME) " + TEST_ACTIONNAME + " not set ?", TEST_ACTIONNAME, mockActionRequest.getParameter(ActionRequest.ACTION_NAME));
         mockActionRequest = new MockActionRequest(PortletMode.VIEW);
@@ -111,7 +114,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
 
         final MockPortletContext mockPortletContext = new MockPortletContext();
         final MockPortalContext mockPortalContext = new MockPortalContext();
-        mockActionRequest = new MockActionRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
+        new MockActionRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
         mockActionRequest = new MockActionRequest(mockPortalContext, mockPortletContext);
         assertEquals("Portal context does not match constructor-set value ?", mockPortalContext, mockActionRequest.getPortalContext());
     }
@@ -145,8 +148,8 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         final Map<String, String[]> renderParametersMap = new LinkedHashMap<>();
         renderParametersMap.put(TEST_PARAM3, TEST_PARAM_ARRAYVALUE2);
         mockActionResponse.setRenderParameters(renderParametersMap);
-        assertEquals("Portal test render parameter value not cleared as expected ?", null, mockActionResponse.getRenderParameter(TEST_PARAM));
-        assertEquals("Portal test render parameter value not cleared as expected ?", null, mockActionResponse.getRenderParameter(TEST_PARAM2));
+        assertNull("Portal test render parameter value not cleared as expected ?", mockActionResponse.getRenderParameter(TEST_PARAM));
+        assertNull("Portal test render parameter value not cleared as expected ?", mockActionResponse.getRenderParameter(TEST_PARAM2));
         assertEquals("Portal test render parameter map value not as expected ?", renderParametersMap, mockActionResponse.getRenderParameterMap());
 
         try {
@@ -205,10 +208,11 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         final String TEST_METHOD = "POST";
 
         // Call each constructor in sequence, do some basic checks
-        MockClientDataRequest mockClientDataRequest = new MockClientDataRequest();  // Only test is to confirm constructor completes without exception
+        new MockClientDataRequest();  // Only test is to confirm constructor completes without exception
+        MockClientDataRequest mockClientDataRequest;
         final MockPortletContext mockPortletContext = new MockPortletContext();
         final MockPortalContext mockPortalContext = new MockPortalContext();
-        mockClientDataRequest = new MockClientDataRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
+        new MockClientDataRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
         mockClientDataRequest = new MockClientDataRequest(mockPortalContext, mockPortletContext);
         assertEquals("Portal context does not match constructor-set value ?", mockPortalContext, mockClientDataRequest.getPortalContext());
         mockClientDataRequest.setContent(TEST_FAKECONTENT_ASBYTES);
@@ -222,7 +226,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         try ( InputStream inputStream = mockClientDataRequest.getPortletInputStream() ) {
             final byte[] readContent = new byte[mockClientDataRequest.getContentLength()];
             inputStream.read(readContent, 0, readContent.length);
-            assertTrue("Read byte array does not match original ?", Arrays.equals(TEST_FAKECONTENT_ASBYTES, readContent));
+            assertArrayEquals("Read byte array does not match original ?", TEST_FAKECONTENT_ASBYTES, readContent);
         } catch (Exception ex) {
             fail("MockClientDataRequest read inputstream failed.  Exception: " + ex);
         }
@@ -241,7 +245,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
 
         // Call each constructor in sequence, do some basic checks
         MockEvent mockClientDataRequest = new MockEvent(TEST_EVENT);
-        assertEquals("Initial value not null ?", null, mockClientDataRequest.getValue());
+        assertNull("Initial value not null ?", mockClientDataRequest.getValue());
         assertEquals("Event name does not match ?", TEST_EVENT, mockClientDataRequest.getName());
         assertEquals("Event QName does not match ?", new QName(TEST_EVENT), mockClientDataRequest.getQName());
         mockClientDataRequest = new MockEvent(TEST_EVENT, TEST_EVENT_VALUE);
@@ -249,7 +253,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         assertEquals("Event name does not match ?", TEST_EVENT, mockClientDataRequest.getName());
         assertEquals("Event QName does not match ?", new QName(TEST_EVENT), mockClientDataRequest.getQName());
         mockClientDataRequest = new MockEvent(TEST_QNAME);
-        assertEquals("Initial value not null ?", null, mockClientDataRequest.getValue());
+        assertNull("Initial value not null ?", mockClientDataRequest.getValue());
         assertEquals("Event name does not match ?", TEST_EVENT, mockClientDataRequest.getName());
         assertEquals("Event QName does not match ?", TEST_QNAME, mockClientDataRequest.getQName());
         mockClientDataRequest = new MockEvent(TEST_QNAME, TEST_EVENT_VALUE);
@@ -269,17 +273,22 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         assertEquals("Method not the method set ?", TEST_METHOD, mockEventRequest.getMethod());
         final MockPortletContext mockPortletContext = new MockPortletContext();
         final MockPortalContext mockPortalContext = new MockPortalContext();
-        mockEventRequest = new MockEventRequest(TEST_MOCKEVENT, mockPortletContext);  // Only test is to confirm constructor completes without exception
+        new MockEventRequest(TEST_MOCKEVENT, mockPortletContext);  // Only test is to confirm constructor completes without exception
         mockEventRequest = new MockEventRequest(TEST_MOCKEVENT, mockPortalContext, mockPortletContext);  // Only test is to confirm constructor completes without exception
         assertEquals("Portal context does not match constructor-set value ?", mockPortalContext, mockEventRequest.getPortalContext());
     }
 
     public void testMockEventResponse() {
         // Call each constructor in sequence, do some basic checks
-        MockEventResponse mockEventResponse = new MockEventResponse();  // Only test is to confirm constructor completes without exception
+        try {
+            new MockEventResponse();  // Only test is to confirm constructor completes without exception
+            assertTrue(true);
+        } catch (Throwable t) {
+            fail(t.getMessage());
+        }
     }
 
-    public void testMockMimeResponse() {;
+    public void testMockMimeResponse() {
         final String TEST_CONTENT_TYPE = "text/html";
         final int TEST_BUFFERSIZE = 8192;
         final String TEST_INCLUDED_URL = "localhost:8080/fakeincludedurl";
@@ -332,7 +341,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
             assertNotNull("OutputStream null ?", outputStream);
             outputStream.write(TEST_FAKECONTENT_ASBYTES);
             final byte[] writeResult = mockMimeResponse.getContentAsByteArray();
-            assertTrue("Written byte array does not match original ?", Arrays.equals(TEST_FAKECONTENT_ASBYTES, writeResult));
+            assertArrayEquals("Written byte array does not match original ?", TEST_FAKECONTENT_ASBYTES, writeResult);
             assertTrue("Buffer not committed after processing ?", mockMimeResponse.isCommitted());
         } catch (Exception ex) {
             fail("MockMimeResponse get/process outputstream failed.  Exception: " + ex);
@@ -351,7 +360,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
             printWriter.print(TEST_FAKECONTENT);
             mockMimeResponse.flushBuffer();
             final byte[] writeResult = mockMimeResponse.getContentAsByteArray();
-            assertTrue("Written byte array does not match original ?", Arrays.equals(TEST_FAKECONTENT_ASBYTES, writeResult));
+            assertArrayEquals("Written byte array does not match original ?", TEST_FAKECONTENT_ASBYTES, writeResult);
             assertTrue("Buffer not committed after processing ?", mockMimeResponse.isCommitted());
             final String writeResultAsString = mockMimeResponse.getContentAsString();
             assertEquals("Written result does not match original ?", TEST_FAKECONTENT, writeResultAsString);
@@ -593,7 +602,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         assertTrue("MockPortletContext minor version not >= 0 ?", mockPortletContext.getMajorVersion() >= 0);
         assertNull("MockPortletContext MIME type for / not null ?", mockPortletContext.getMimeType("/"));
         assertNotNull("MockPortletContext real path for / null ?", mockPortletContext.getRealPath("/"));
-        assertNull("MockPortletContext real path for /ThisDoesNotExist not null ? ?", mockPortletContext.getRealPath("/ThisDoesNotExist"));
+        assertNull("MockPortletContext real path for /ThisDoesNotExist not null ?", mockPortletContext.getRealPath("/ThisDoesNotExist"));
         assertNotNull("MockPortletContext resource paths for / null ?", mockPortletContext.getResourcePaths("/"));
         assertNull("MockPortletContext resource paths for / null ?", mockPortletContext.getResourcePaths("/ThisDoesNotExist"));
         try {
@@ -760,8 +769,8 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
             assertFalse(PORTLET_WRITEABLE2 + " is readonly ?", mockPortletPreferences.isReadOnly(PORTLET_WRITEABLE2));
             mockPortletPreferences.reset(PORTLET_WRITEABLE);
             mockPortletPreferences.reset(PORTLET_WRITEABLE2);
-            assertEquals("After reset getValue with null not null ?", null, mockPortletPreferences.getValue(PORTLET_WRITEABLE, null));
-            assertEquals("After reset getValue with null not null ?", null, mockPortletPreferences.getValue(PORTLET_WRITEABLE2, null));
+            assertNull("After reset getValue with null not null ?", mockPortletPreferences.getValue(PORTLET_WRITEABLE, null));
+            assertNull("After reset getValue with null not null ?", mockPortletPreferences.getValue(PORTLET_WRITEABLE2, null));
         } catch (Exception ex) {
             fail("Set/Get/Reset failed unexpectedly: " + ex);
         }
@@ -877,7 +886,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         assertEquals("Default server port not as expected ?", 80, mockPortletRequest.getServerPort());
         final MockPortalContext mockPortalContext = new MockPortalContext();
         final MockPortletContext mockPortletContext = new MockPortletContext();
-        mockPortletRequest = new MockPortletRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
+        new MockPortletRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
         mockPortletRequest = new MockPortletRequest(mockPortalContext, mockPortletContext);
         assertEquals("Portal context does not match constructor-set value ?", mockPortalContext, mockPortletRequest.getPortalContext());
         mockPortletRequest.addResponseContentType(TEST_CONTENT_TYPE);
@@ -968,7 +977,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         }
         assertEquals("Parameter names size not 2 ?", 2, parameterNameCount);
         mockPortletRequest.addParameter(TEST_ARRAYPARAM, TEST_PARAM_ARRAYVALUE);
-        assertTrue("Array parameter value not set as expected ?", Arrays.equals(TEST_PARAM_ARRAYVALUE, mockPortletRequest.getParameterValues(TEST_ARRAYPARAM)));
+        assertArrayEquals("Array parameter value not set as expected ?", TEST_PARAM_ARRAYVALUE, mockPortletRequest.getParameterValues(TEST_ARRAYPARAM));
         final Map<String, String[]> parameterMap = mockPortletRequest.getParameterMap();
         assertNotNull("Parameter map is null ?", parameterMap);
         assertTrue("Expected parameter not present ?", parameterMap.containsKey(TEST_PARAM));
@@ -1179,7 +1188,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         assertEquals("MockPortletSession portletcontext not equal to set value ?", mockPortletContext, mockPortletSession.getPortletContext());
         final String NEW_SESSION_ID = mockPortletSession.getId();
         assertNotNull("MockPortletSession session id null ?", NEW_SESSION_ID);
-        assertFalse("Original and new session id match ?", NEW_SESSION_ID.equals(INITIAL_SESSION_ID));
+        assertNotEquals("Original and new session id match ?", NEW_SESSION_ID, INITIAL_SESSION_ID);
 
         assertNull(TEST_ATTRIBUTE + " present before set ?", mockPortletSession.getAttribute(TEST_ATTRIBUTE));
         assertNull(TEST_ATTRIBUTE2 + " present before set ?", mockPortletSession.getAttribute(TEST_ATTRIBUTE2));
@@ -1205,14 +1214,12 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         assertEquals("Retrieved atribute 1 does not match set value (application scope) ?", TEST_ATTRIBUTE_VALUE, mockPortletSession.getAttribute(TEST_ATTRIBUTE, PortletSession.APPLICATION_SCOPE));
         assertEquals("Retrieved atribute 2 does not match set value (application scope) ?", TEST_ATTRIBUTE_VALUE2, mockPortletSession.getAttribute(TEST_ATTRIBUTE2, PortletSession.APPLICATION_SCOPE));
         final Enumeration<String> attributeNamesApplication = mockPortletSession.getAttributeNames(PortletSession.APPLICATION_SCOPE);
-        int attributeNameCountApplication = 0;
         assertNotNull("Attribute names null after additions (application scope) ?", attributeNamesApplication);
         assertTrue("Attribute names empty after additions (application scope) ?", attributeNamesApplication.hasMoreElements());
         while (attributeNamesApplication.hasMoreElements()) {
-            attributeNameCountApplication++;
-            String currentAttibuteName = attributeNamesApplication.nextElement();
-            assertTrue("Attribute name not one of two expected matches (application scope) ?", TEST_ATTRIBUTE.equals(currentAttibuteName) || 
-                    TEST_ATTRIBUTE2.equals(currentAttibuteName));
+            String currentAttributeName = attributeNamesApplication.nextElement();
+            assertTrue("Attribute name not one of two expected matches (application scope) ?", TEST_ATTRIBUTE.equals(currentAttributeName) ||
+                    TEST_ATTRIBUTE2.equals(currentAttributeName));
         }
         assertEquals("Atribute names size not expected value (application scope) ?", 2, attributeNameCount);
 
@@ -1272,7 +1279,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         mockRenderRequest = new MockRenderRequest(PortletMode.HELP, WindowState.MAXIMIZED);
         assertEquals("MockRenderRequest portlet mode does not match constructor-set value ?", PortletMode.HELP, mockRenderRequest.getPortletMode());
         assertEquals("MockRenderRequest window state does not match constructor-set value ?", WindowState.MAXIMIZED, mockRenderRequest.getWindowState());
-        mockRenderRequest = new MockRenderRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
+        new MockRenderRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
         mockRenderRequest = new MockRenderRequest(mockPortalContext, mockPortletContext);
         assertEquals("Portal context does not match constructor-set value ?", mockPortalContext, mockRenderRequest.getPortalContext());
     }
@@ -1316,8 +1323,8 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         final MockPortletContext mockPortletContext = new MockPortletContext();
         final MockPortalContext mockPortalContext = new MockPortalContext();
         final MockResourceURL mockResourceURL = new MockResourceURL();
-        mockResourceRequest = new MockResourceRequest(mockResourceURL);     // Only test is to confirm constructor completes without exception
-        mockResourceRequest = new MockResourceRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
+        new MockResourceRequest(mockResourceURL);     // Only test is to confirm constructor completes without exception
+        new MockResourceRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
         mockResourceRequest = new MockResourceRequest(mockPortalContext, mockPortletContext);
         assertEquals("Portal context does not match constructor-set value ?", mockPortalContext, mockResourceRequest.getPortalContext());
         mockResourceRequest.setCacheability(TEST_CACHEABILITY);
@@ -1431,12 +1438,12 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
                     currentParameter.equals(TEST_PARAM3));
         }
         final String[] renderParameterValuesParam2 = mockStateAwareResponse.getRenderParameterValues(TEST_PARAM2);
-        assertTrue("Render parameter value2 not as expected ?", Arrays.equals(TEST_PARAM_ARRAYVALUE, renderParameterValuesParam2));
+        assertArrayEquals("Render parameter value2 not as expected ?", TEST_PARAM_ARRAYVALUE, renderParameterValuesParam2);
         final Map<String, String[]> renderParametersMap = new LinkedHashMap<>();
         renderParametersMap.put(TEST_PARAM3, TEST_PARAM_ARRAYVALUE2);
         mockStateAwareResponse.setRenderParameters(renderParametersMap);
-        assertEquals("Portal test render parameter value not cleared as expected ?", null, mockStateAwareResponse.getRenderParameter(TEST_PARAM));
-        assertEquals("Portal test render parameter value not cleared as expected ?", null, mockStateAwareResponse.getRenderParameter(TEST_PARAM2));
+        assertNull("Portal test render parameter value not cleared as expected ?", mockStateAwareResponse.getRenderParameter(TEST_PARAM));
+        assertNull("Portal test render parameter value not cleared as expected ?", mockStateAwareResponse.getRenderParameter(TEST_PARAM2));
         assertEquals("Portal test render parameter map value not as expected ?", renderParametersMap, mockStateAwareResponse.getRenderParameterMap());
     }
 
@@ -1468,7 +1475,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
             }
         }
         assertNotNull("ServletWrappingPortletContext real path for / null ?", servletWrappingPortletContext.getRealPath("/"));
-        assertNull("ServletWrappingPortletContext real path for /ThisDoesNotExist not null ? ?", servletWrappingPortletContext.getRealPath("/ThisDoesNotExist"));
+        assertNull("ServletWrappingPortletContext real path for /ThisDoesNotExist not null ?", servletWrappingPortletContext.getRealPath("/ThisDoesNotExist"));
         assertNull("ServletWrappingPortletContext resource paths for / not null ?", servletWrappingPortletContext.getResourcePaths("/"));
         assertNull("ServletWrappingPortletContext resource paths for / null ?", servletWrappingPortletContext.getResourcePaths("/ThisDoesNotExist"));
         try {
@@ -1510,12 +1517,11 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
     }
     // -------- Continue writing tests here --------------
 
-    class TestMockMultipartFile implements MultipartFile {
-        private String name;
-        private String originalFilename;
-        private String contentType;
-        private int size;
-        private byte[] bytes;
+    static class TestMockMultipartFile implements MultipartFile {
+        private final String name;
+        private final String originalFilename;
+        private final String contentType;
+        private final byte[] bytes;
 
         public TestMockMultipartFile(String name, String originalFilename, String contentType, byte[] bytes) {
             this.name = name;
@@ -1524,7 +1530,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
             if (bytes != null) {
                 this.bytes = Arrays.copyOf(bytes, bytes.length);
             } else {
-                bytes = null;
+                this.bytes = null;
             }
         }
 
@@ -1545,7 +1551,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
 
         @Override
         public boolean isEmpty() {
-            return (bytes != null ? bytes.length > 0 : true);
+            return (bytes == null || bytes.length > 0);
         }
 
         @Override
@@ -1569,7 +1575,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         }
     }
 
-    class TetMockResourceBundle extends ResourceBundle {
+    static class TetMockResourceBundle extends ResourceBundle {
 
         @Override
         protected Object handleGetObject(String key) {

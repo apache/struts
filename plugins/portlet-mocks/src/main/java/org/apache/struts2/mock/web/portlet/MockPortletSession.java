@@ -156,6 +156,7 @@ public class MockPortletSession implements PortletSession {
 
 	@Override
 	public void invalidate() {
+		this.lastAccessedTime = System.currentTimeMillis();
 		this.invalid = true;
 		clearAttributes();
 	}

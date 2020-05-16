@@ -209,11 +209,10 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
 
         // Call each constructor in sequence, do some basic checks
         new MockClientDataRequest();  // Only test is to confirm constructor completes without exception
-        MockClientDataRequest mockClientDataRequest;
         final MockPortletContext mockPortletContext = new MockPortletContext();
         final MockPortalContext mockPortalContext = new MockPortalContext();
         new MockClientDataRequest(mockPortletContext);  // Only test is to confirm constructor completes without exception
-        mockClientDataRequest = new MockClientDataRequest(mockPortalContext, mockPortletContext);
+        MockClientDataRequest mockClientDataRequest = new MockClientDataRequest(mockPortalContext, mockPortletContext);
         assertEquals("Portal context does not match constructor-set value ?", mockPortalContext, mockClientDataRequest.getPortalContext());
         mockClientDataRequest.setContent(TEST_FAKECONTENT_ASBYTES);
         assertEquals("Content length not as expected ?", TEST_FAKECONTENT_ASBYTES.length, mockClientDataRequest.getContentLength());
@@ -1214,14 +1213,16 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
         assertEquals("Retrieved atribute 1 does not match set value (application scope) ?", TEST_ATTRIBUTE_VALUE, mockPortletSession.getAttribute(TEST_ATTRIBUTE, PortletSession.APPLICATION_SCOPE));
         assertEquals("Retrieved atribute 2 does not match set value (application scope) ?", TEST_ATTRIBUTE_VALUE2, mockPortletSession.getAttribute(TEST_ATTRIBUTE2, PortletSession.APPLICATION_SCOPE));
         final Enumeration<String> attributeNamesApplication = mockPortletSession.getAttributeNames(PortletSession.APPLICATION_SCOPE);
+        int attributeNameCountApplication = 0;
         assertNotNull("Attribute names null after additions (application scope) ?", attributeNamesApplication);
         assertTrue("Attribute names empty after additions (application scope) ?", attributeNamesApplication.hasMoreElements());
         while (attributeNamesApplication.hasMoreElements()) {
-            String currentAttributeName = attributeNamesApplication.nextElement();
-            assertTrue("Attribute name not one of two expected matches (application scope) ?", TEST_ATTRIBUTE.equals(currentAttributeName) ||
-                    TEST_ATTRIBUTE2.equals(currentAttributeName));
+            attributeNameCountApplication++;
+            String currentAttibuteName = attributeNamesApplication.nextElement();
+            assertTrue("Attribute name not one of two expected matches (application scope) ?", TEST_ATTRIBUTE.equals(currentAttibuteName) || 
+                    TEST_ATTRIBUTE2.equals(currentAttibuteName));
         }
-        assertEquals("Atribute names size not expected value (application scope) ?", 2, attributeNameCount);
+        assertEquals("Atribute names size not expected value (application scope) ?", 2, attributeNameCountApplication);
 
         assertTrue("MockPortletSession session is not new ?", mockPortletSession.isNew());
         mockPortletSession.access();
@@ -1551,7 +1552,7 @@ public class StrutsSpringPortletMockObjectsTest extends TestCase {
 
         @Override
         public boolean isEmpty() {
-            return (bytes == null || bytes.length > 0);
+            return (bytes == null || bytes.length == 0);
         }
 
         @Override

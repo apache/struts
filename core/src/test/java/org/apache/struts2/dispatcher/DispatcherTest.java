@@ -20,6 +20,7 @@ package org.apache.struts2.dispatcher;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.Configuration;
@@ -36,6 +37,7 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -372,6 +374,207 @@ public class DispatcherTest extends StrutsInternalTestCase {
             put(StrutsConstants.STRUTS_DEVMODE, "true");
         }});
         assertTrue("Modified Dispatcher devMode state not true ?", du2.isDevMode());
+    }
+
+    public void testGetLocale_With_DefaultLocale_FromConfiguration() throws Exception {
+        // Given
+        Mock mock = new Mock(HttpServletRequest.class);
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        mock.expectAndReturn("getCharacterEncoding", "utf-8");       // From Dispatcher prepare().
+        mock.expectAndReturn("getHeader", "X-Requested-With", "");   // From Dispatcher prepare().
+        mock.expectAndReturn("getParameterMap", new HashMap<String, Object>());  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", false, mockHttpSession);  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", true, mockHttpSession);   // From createTestContextMap().
+        HttpServletRequest request = (HttpServletRequest) mock.proxy();
+        HttpServletResponse response = new MockHttpServletResponse();
+
+        Dispatcher testDispatcher = initDispatcher(new HashMap<String, String>() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+            // Not setting a Struts Locale here, so we should receive the default "de_DE" from the test configuration.
+        }});
+
+        // When
+        testDispatcher.prepare(request, response);
+        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+
+        // Then
+        assertEquals(Locale.GERMANY, contextMap.get(ActionContext.LOCALE));  // Expect the Dispatcher defaultLocale value "de_DE" from the test configuration.
+        mock.verify();
+    }
+
+    public void testGetLocale_With_DefaultLocale_fr_CA() throws Exception {
+        // Given
+        Mock mock = new Mock(HttpServletRequest.class);
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        mock.expectAndReturn("getCharacterEncoding", "utf-8");       // From Dispatcher prepare().
+        mock.expectAndReturn("getHeader", "X-Requested-With", "");   // From Dispatcher prepare().
+        mock.expectAndReturn("getParameterMap", new HashMap<String, Object>());  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", false, mockHttpSession);  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", true, mockHttpSession);   // From createTestContextMap().
+        HttpServletRequest request = (HttpServletRequest) mock.proxy();
+        HttpServletResponse response = new MockHttpServletResponse();
+
+        Dispatcher testDispatcher = initDispatcher(new HashMap<String, String>() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+            put(StrutsConstants.STRUTS_LOCALE, Locale.CANADA_FRENCH.toString());  // Set the Dispatcher defaultLocale to fr_CA.
+        }});
+
+        // When
+        testDispatcher.prepare(request, response);
+        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+
+        // Then
+        assertEquals(Locale.CANADA_FRENCH, contextMap.get(ActionContext.LOCALE));  // Expect the Dispatcher defaultLocale value.
+        mock.verify();
+    }
+
+    public void testGetLocale_With_BadDefaultLocale_RequestLocale_en_UK() throws Exception {
+        // Given
+        Mock mock = new Mock(HttpServletRequest.class);
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        mock.expectAndReturn("getCharacterEncoding", "utf-8");       // From Dispatcher prepare().
+        mock.expectAndReturn("getHeader", "X-Requested-With", "");   // From Dispatcher prepare().
+        mock.expectAndReturn("getLocale", Locale.UK);                // From Dispatcher prepare().
+        mock.expectAndReturn("getParameterMap", new HashMap<String, Object>());  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", false, mockHttpSession);  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", true, mockHttpSession);   // From createTestContextMap().
+        mock.expectAndReturn("getLocale", Locale.UK);     // From createTestContextMap().
+        HttpServletRequest request = (HttpServletRequest) mock.proxy();
+        HttpServletResponse response = new MockHttpServletResponse();
+
+        Dispatcher testDispatcher = initDispatcher(new HashMap<String, String>() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+            put(StrutsConstants.STRUTS_LOCALE, "This_is_not_a_valid_Locale_string");  // Set Dispatcher defaultLocale to an invalid value.
+        }});
+
+        // When
+        testDispatcher.prepare(request, response);
+        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+
+        // Then
+        assertEquals(Locale.UK, contextMap.get(ActionContext.LOCALE));  // Expect the request set value from Mock.
+        mock.verify();
+    }
+
+    public void testGetLocale_With_BadDefaultLocale_And_RuntimeException() throws Exception {
+        // Given
+        Mock mock = new Mock(HttpServletRequest.class);
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        mock.expectAndReturn("getCharacterEncoding", "utf-8");       // From Dispatcher prepare().
+        mock.expectAndReturn("getHeader", "X-Requested-With", "");   // From Dispatcher prepare().
+        mock.expectAndReturn("getLocale", Locale.UK);                // From Dispatcher prepare().
+        mock.expectAndReturn("getParameterMap", new HashMap<String, Object>());  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", false, mockHttpSession);  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", true, mockHttpSession);   // From createTestContextMap().
+        mock.expectAndThrow("getLocale", new IllegalStateException("Test theoretical state preventing HTTP Request Locale access"));  // From createTestContextMap().
+        HttpServletRequest request = (HttpServletRequest) mock.proxy();
+        HttpServletResponse response = new MockHttpServletResponse();
+
+        Dispatcher testDispatcher = initDispatcher(new HashMap<String, String>() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+            put(StrutsConstants.STRUTS_LOCALE, "This_is_not_a_valid_Locale_string");  // Set the Dispatcher defaultLocale to an invalid value.
+        }});
+
+        // When
+        testDispatcher.prepare(request, response);
+        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+
+        // Then
+        assertEquals(Locale.getDefault(), contextMap.get(ActionContext.LOCALE));  // Expect the system default value, when BOTH Dispatcher default Locale AND request access fail.
+        mock.verify();
+    }
+
+    public void testGetLocale_With_NullDefaultLocale() throws Exception {
+        // Given
+        Mock mock = new Mock(HttpServletRequest.class);
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        mock.expectAndReturn("getCharacterEncoding", "utf-8");       // From Dispatcher prepare().
+        mock.expectAndReturn("getHeader", "X-Requested-With", "");   // From Dispatcher prepare().
+        mock.expectAndReturn("getLocale", Locale.CANADA_FRENCH);     // From Dispatcher prepare().
+        mock.expectAndReturn("getParameterMap", new HashMap<String, Object>());  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", false, mockHttpSession);  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", true, mockHttpSession);   // From createTestContextMap().
+        mock.expectAndReturn("getLocale", Locale.CANADA_FRENCH);     // From createTestContextMap().
+        HttpServletRequest request = (HttpServletRequest) mock.proxy();
+        HttpServletResponse response = new MockHttpServletResponse();
+
+        Dispatcher testDispatcher = initDispatcher(new HashMap<String, String>() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+            // Attempting to set StrutsConstants.STRUTS_LOCALE to null here via parameters causes an NPE.
+        }});
+
+        testDispatcher.setDefaultLocale(null);  // Force a null Struts default locale, otherwise we receive the default "de_DE" from the test configuration.
+
+        // When
+        testDispatcher.prepare(request, response);
+        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+
+        // Then
+        assertEquals(Locale.CANADA_FRENCH, contextMap.get(ActionContext.LOCALE));  // Expect the request set value from Mock.
+        mock.verify();
+    }
+
+    public void testGetLocale_With_NullDefaultLocale_And_RuntimeException() throws Exception {
+        // Given
+        Mock mock = new Mock(HttpServletRequest.class);
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        mock.expectAndReturn("getCharacterEncoding", "utf-8");       // From Dispatcher prepare().
+        mock.expectAndReturn("getHeader", "X-Requested-With", "");   // From Dispatcher prepare().
+        mock.expectAndReturn("getLocale", Locale.CANADA_FRENCH);     // From Dispatcher prepare().
+        mock.expectAndReturn("getParameterMap", new HashMap<String, Object>());  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", false, mockHttpSession);  // From Dispatcher prepare().
+        mock.expectAndReturn("getSession", true, mockHttpSession);   // From createTestContextMap().
+        mock.expectAndThrow("getLocale", new IllegalStateException("Test some theoretical state preventing HTTP Request Locale access"));  // From createTestContextMap().
+        HttpServletRequest request = (HttpServletRequest) mock.proxy();
+        HttpServletResponse response = new MockHttpServletResponse();
+
+        Dispatcher testDispatcher = initDispatcher(new HashMap<String, String>() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+            // Attempting to set StrutsConstants.STRUTS_LOCALE to null via parameters causes an NPE.
+        }});
+
+        testDispatcher.setDefaultLocale(null);  // Force a null Struts default locale, otherwise we receive the default "de_DE" from the test configuration.
+
+        // When
+        testDispatcher.prepare(request, response);
+        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+
+        // Then
+        assertEquals(Locale.getDefault(), contextMap.get(ActionContext.LOCALE));  // Expect the system default value when Mock request access fails.
+        mock.verify();
+    }
+
+    /**
+     * Create a test context Map from a Dispatcher instance.
+     * 
+     * The method directly calls getParameterMap() and getSession(true) on the HttpServletRequest.
+     * 
+     * The method indirectly calls getLocale(request) on the Dispatcher instance, allowing a test of that code path.
+     * The derived Struts Dispatcher Locale can be retrieved from the Map afterwards.
+     * 
+     * @param dispatcher
+     * @param request
+     * @param response
+     * @return 
+     */
+    protected static Map<String, Object> createTestContextMap(Dispatcher dispatcher,
+            HttpServletRequest request, HttpServletResponse response) {
+        if (dispatcher == null) {
+            throw new IllegalArgumentException("Cannot create a test ContextMap from a null Dispatcher");
+        }
+        if (request == null) {
+            throw new IllegalArgumentException("Cannot create a test ContextMap from a null HttpServletRequest");
+        }
+        if (response == null) {
+            throw new IllegalArgumentException("Cannot create a test ContextMap from a null HttpServletResponse");
+        }
+
+        return dispatcher.createContextMap(new RequestMap(request),
+                HttpParameters.create(request.getParameterMap()).build(),
+                new SessionMap(request),
+                new ApplicationMap(request.getSession(true).getServletContext()),
+                request,
+                response);
     }
 
     class InternalConfigurationManager extends ConfigurationManager {

@@ -753,15 +753,21 @@ public class Dispatcher {
             try {
                 locale = LocaleUtils.toLocale(defaultLocale);
             } catch (IllegalArgumentException e) {
-                LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, defaulting to request locale [{}]",
-                    defaultLocale, request.getLocale()), e);
-                locale = request.getLocale();
+                try {
+                    locale = request.getLocale();
+                    LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, defaulting to request locale [{}]",
+                                    defaultLocale, locale), e);
+                } catch (RuntimeException rex) {
+                    LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, and cannot get locale from HTTP Request, falling back to system default locale",
+                                    defaultLocale), rex);
+                    locale = Locale.getDefault();
+                }
             }
         } else {
             try {
                 locale = request.getLocale();
-            } catch (RuntimeException e) {
-                LOG.warn("Cannot get locale from Http Request, falling back to system default locale", e);
+            } catch (RuntimeException rex) {
+                LOG.warn("Cannot get locale from HTTP Request, falling back to system default locale", rex);
                 locale = Locale.getDefault();
             }
         }

@@ -150,7 +150,22 @@
     </suppress>
     <suppress>
         <notes><![CDATA[file name: oval-1.90.jar]]></notes>
-        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@1\.90$</packageUrl>
-        <vulnerabilityName>Vulnerable transitive dependencies</vulnerabilityName>
+        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
+        <cpe>cpe:/a:apache:groovy</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: oval-1.90.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
+        <cpe>cpe:/a:apache:log4j</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: oval-1.90.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
+        <cpe>cpe:/a:jruby:jruby</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: oval-1.90.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
+        <cpe>cpe:/a:xstream_project:xstream</cpe>
     </suppress>
 </suppressions>

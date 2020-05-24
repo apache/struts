@@ -25,13 +25,16 @@ import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.ClearableValueStack;
+import com.opensymphony.xwork2.util.MemberAccessValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -100,8 +103,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      */
     static final Comparator<String> rbCollator = new Comparator<String>() {
         public int compare(String s1, String s2) {
-            int l1 = countOGNLCharacters(s1),
-                l2 = countOGNLCharacters(s2);
+            int l1 = countOGNLCharacters(s1);
+            int l2 = countOGNLCharacters(s2);
             return l1 < l2 ? -1 : (l2 < l1 ? 1 : s1.compareTo(s2));
         }
 
@@ -185,7 +188,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (clearableStack) {
             //if the stack's context can be cleared, do that to prevent OGNL
             //from having access to objects in the stack, see XW-641
-            ((ClearableValueStack)newStack).clearContextValues();
+            ((ClearableValueStack) newStack).clearContextValues();
             Map<String, Object> context = newStack.getContext();
             ReflectionContextState.setCreatingNullObjects(context, true);
             ReflectionContextState.setDenyMethodExecution(context, true);
@@ -228,7 +231,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             TextProvider tp = (TextProvider) action;
             developerNotification = tp.getText("devmode.notification",
                     "Developer Notification:\n{0}",
-                    new String[]{ developerNotification }
+                    new String[]{developerNotification}
             );
         }
 
@@ -245,7 +248,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     /**
      * Checks if name of parameter can be accepted or thrown away
      *
-     * @param name parameter name
+     * @param name   parameter name
      * @param action current action
      * @return true if parameter is accepted
      */
@@ -289,27 +292,45 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return accepted;
     }
 
-	protected boolean isWithinLengthLimit( String name ) {
+    protected boolean isWithinLengthLimit(String name) {
         boolean matchLength = name.length() <= paramNameMaxLength;
         if (!matchLength) {
-            LOG.debug("Parameter [{}] is too long, allowed length is [{}]", name, String.valueOf(paramNameMaxLength));
+            if (devMode) { // warn only when in devMode
+                LOG.warn("Parameter [{}] is too long, allowed length is [{}]. Use Interceptor Parameter Overriding " +
+                                "to override the limit, see more at\n" +
+                                "https://struts.apache.org/core-developers/interceptors.html#interceptor-parameter-overriding",
+                        name, paramNameMaxLength);
+            } else {
+                LOG.warn("Parameter [{}] is too long, allowed length is [{}]", name, paramNameMaxLength);
+            }
         }
         return matchLength;
-	}
+    }
 
     protected boolean isAccepted(String paramName) {
         AcceptedPatternsChecker.IsAccepted result = acceptedPatterns.isAccepted(paramName);
         if (result.isAccepted()) {
             return true;
+        } else if (devMode) { // warn only when in devMode
+            LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
+                            "https://struts.apache.org/security/#accepted--excluded-patterns",
+                    paramName, result.getAcceptedPattern());
+        } else {
+            LOG.debug("Parameter [{}] didn't match accepted pattern [{}]!", paramName, result.getAcceptedPattern());
         }
-        LOG.debug("Parameter [{}] didn't match accepted pattern [{}]!", paramName, result.getAcceptedPattern());
         return false;
     }
 
     protected boolean isExcluded(String paramName) {
         ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
         if (result.isExcluded()) {
-            LOG.debug("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
+            if (devMode) { // warn only when in devMode
+                LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
+                                "https://struts.apache.org/security/#accepted--excluded-patterns",
+                        paramName, result.getExcludedPattern());
+            } else {
+                LOG.debug("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
+            }
             return true;
         }
         return false;

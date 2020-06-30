@@ -20,6 +20,9 @@ package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.result.plain.HttpHeader;
 import org.apache.struts2.result.plain.ResponseBuilder;
@@ -27,30 +30,51 @@ import org.apache.struts2.result.plain.ResponseBuilder;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * This result can only be used in code, as a result of action's method, eg.:
+ * <p>
+ * public PlainResult execute() {
+ * return response -> response.write("");
+ * }
+ * <p>
+ * Please notice the result type of the method is a PlainResult not a String.
+ */
 public interface PlainResult extends Result {
+
+    Logger LOG = LogManager.getLogger(PlainResult.class);
 
     @Override
     default void execute(ActionInvocation invocation) throws Exception {
+        LOG.debug("Executing plain result");
         ResponseBuilder builder = new ResponseBuilder();
         write(builder);
 
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
 
         if (response.isCommitted()) {
-            throw new StrutsException("Http response already committed, cannot modify it!");
+            if (ignoreCommitted()) {
+                LOG.warn("Http response already committed, ignoring & skipping!");
+                return;
+            } else {
+                throw new StrutsException("Http response already committed, cannot modify it!");
+            }
         }
 
         for (HttpHeader<String> header : builder.getStringHeaders()) {
+            LOG.debug(new ParameterizedMessage("A string header: {} = {}", header.getName(), header.getValue()));
             response.addHeader(header.getName(), header.getValue());
         }
         for (HttpHeader<Long> header : builder.getDateHeaders()) {
+            LOG.debug(new ParameterizedMessage("A date header: {} = {}", header.getName(), header.getValue()));
             response.addDateHeader(header.getName(), header.getValue());
         }
         for (HttpHeader<Integer> header : builder.getIntHeaders()) {
+            LOG.debug(new ParameterizedMessage("An int header: {} = {}", header.getName(), header.getValue()));
             response.addIntHeader(header.getName(), header.getValue());
         }
 
         for (Cookie cookie : builder.getCookies()) {
+            LOG.debug(new ParameterizedMessage("A cookie: {} = {}", cookie.getName(), cookie.getValue()));
             response.addCookie(cookie);
         }
 
@@ -58,7 +82,23 @@ public interface PlainResult extends Result {
         response.flushBuffer();
     }
 
+    /**
+     * Implement this method in action using lambdas
+     *
+     * @param response a response builder used to build a Http response
+     */
     void write(ResponseBuilder response);
+
+    /**
+     * Controls if result should ignore already committed Http response
+     * If set to true only a warning will be issued and the rest of the result
+     * will be skipped
+     *
+     * @return boolean false by default which means an exception will be thrown
+     */
+    default boolean ignoreCommitted() {
+        return false;
+    }
 
 }
 

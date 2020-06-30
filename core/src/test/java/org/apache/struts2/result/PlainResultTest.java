@@ -20,7 +20,9 @@ package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.result.plain.ResponseBuilder;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 public class PlainResultTest extends StrutsInternalTestCase {
@@ -86,6 +88,43 @@ public class PlainResultTest extends StrutsInternalTestCase {
         assertEquals("test", response.getHeader("X-String"));
         assertEquals("Thu, 01 Jan 1970 00:00:00 GMT", response.getHeader("X-Date"));
         assertEquals("100", response.getHeader("X-NUmber"));
+    }
+
+    public void testExceptionOnCommitted() throws Exception {
+        response.setCommitted(true);
+
+        PlainResult result = (PlainResult) response ->
+            response.write("");
+
+        try {
+            result.execute(invocation);
+            fail("Exception was expected!");
+        } catch (StrutsException e) {
+            assertEquals("Http response already committed, cannot modify it!", e.getMessage());
+        }
+    }
+
+    public void testNoExceptionOnCommitted() throws Exception {
+        response.setCommitted(true);
+
+        PlainResult result = new PlainResult() {
+            @Override
+            public void write(ResponseBuilder response) {
+                response.write("");
+            }
+
+            @Override
+            public boolean ignoreCommitted() {
+                return true;
+            }
+        };
+
+        try {
+            result.execute(invocation);
+            assertTrue(true);
+        } catch (StrutsException e) {
+            fail(e.getMessage());
+        }
     }
 
     public void setUp() throws Exception {

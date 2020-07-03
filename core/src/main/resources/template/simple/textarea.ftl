@@ -20,8 +20,12 @@
 -->
 <textarea<#rt/>
  name="${(parameters.name!"")}"<#rt/>
+<#if parameters.cols?has_content>
  cols="${(parameters.cols!"")}"<#rt/>
+</#if>
+<#if parameters.rows?has_content>
  rows="${(parameters.rows!"")}"<#rt/>
+</#if>
 <#if parameters.wrap?has_content>
  wrap="${parameters.wrap}"<#rt/>
 </#if>

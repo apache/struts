@@ -54,6 +54,30 @@ public class TextareaTest extends AbstractUITagTest {
         verify(TextareaTag.class.getResource("Textarea-1.txt"));
     }
 
+    public void testNoColsAndRows() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        TextareaTag tag = new TextareaTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("myname");
+        tag.setValue("%{foo}");
+        tag.setTitle("mytitle");
+        tag.setDisabled("true");
+        tag.setTabindex("5");
+        tag.setOnchange("alert('goodbye');");
+        tag.setOnclick("alert('onclick');");
+        tag.setId("the_id");
+        tag.setOnkeyup("alert('hello');");
+        tag.setReadonly("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextareaTag.class.getResource("Textarea-2.txt"));
+    }
+
     /**
      * Initialize a map of {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder} for generic tag
      * property testing. Will be used when calling {@link #verifyGenericProperties(org.apache.struts2.views.jsp.ui.AbstractUITag,

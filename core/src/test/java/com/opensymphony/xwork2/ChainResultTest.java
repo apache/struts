@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import junit.framework.TestCase;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class ChainResultTest extends XWorkTestCase {
         super.setUp();
 
         // ensure we're using the default configuration, not simple config
-        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(configurationProvider);
         loadConfigurationProviders(configurationProvider);
     }
@@ -124,9 +125,9 @@ public class ChainResultTest extends XWorkTestCase {
     }
 
     private class NamespaceActionNameTestActionProxyFactory implements ActionProxyFactory {
-        private ActionProxy returnVal;
-        private String expectedActionName;
-        private String expectedNamespace;
+        private final ActionProxy returnVal;
+        private final String expectedActionName;
+        private final String expectedNamespace;
 
         NamespaceActionNameTestActionProxyFactory(String expectedNamespace, String expectedActionName, ActionProxy returnVal) {
             this.expectedNamespace = expectedNamespace;
@@ -156,14 +157,14 @@ public class ChainResultTest extends XWorkTestCase {
         }
 
         public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) {
-             TestCase.assertEquals(expectedNamespace, namespace);
+            TestCase.assertEquals(expectedNamespace, namespace);
             TestCase.assertEquals(expectedActionName, actionName);
 
             return returnVal;
         }
 
         public ActionProxy createActionProxy(ActionInvocation actionInvocation, String namespace, String actionName, String methodName, boolean executeResult, boolean cleanupContext) {
-             TestCase.assertEquals(expectedNamespace, namespace);
+            TestCase.assertEquals(expectedNamespace, namespace);
             TestCase.assertEquals(expectedActionName, actionName);
 
             return returnVal;
@@ -177,7 +178,7 @@ public class ChainResultTest extends XWorkTestCase {
         }
 
         public ActionProxy createActionProxy(ActionInvocation inv, String namespace, String actionName,
-                Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) throws Exception {
+                                             Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) throws Exception {
             return null;
         }
     }

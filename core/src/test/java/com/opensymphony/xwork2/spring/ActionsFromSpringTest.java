@@ -18,9 +18,16 @@
  */
 package com.opensymphony.xwork2.spring;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestSubBean;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.springframework.context.ApplicationContext;
 
@@ -35,14 +42,15 @@ import java.util.Map;
 public class ActionsFromSpringTest extends XWorkTestCase {
     private ApplicationContext appContext;
 
-    @Override public void setUp() throws Exception {
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
 
         // Set up XWork
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("com/opensymphony/xwork2/spring/actionContext-xwork.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/spring/actionContext-xwork.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
-        appContext = ((SpringObjectFactory)container.getInstance(ObjectFactory.class)).appContext;
+        appContext = ((SpringObjectFactory) container.getInstance(ObjectFactory.class)).appContext;
     }
 
     public void testLoadSimpleAction() throws Exception {
@@ -87,20 +95,20 @@ public class ActionsFromSpringTest extends XWorkTestCase {
         String result = action.execute();
         assertEquals(Action.INPUT, result);
     }
-    
+
     public void testActionWithSpringResult() throws Exception {
-    	        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "simpleActionSpringResult", null, null);
-    	                
-    	        proxy.execute();
-    	        
-    	        SpringResult springResult = (SpringResult) proxy.getInvocation().getResult();
-    	        assertTrue(springResult.isInitialize());
-    	        assertNotNull(springResult.getStringParameter());
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "simpleActionSpringResult", null, null);
+
+        proxy.execute();
+
+        SpringResult springResult = (SpringResult) proxy.getInvocation().getResult();
+        assertTrue(springResult.isInitialize());
+        assertNotNull(springResult.getStringParameter());
     }
 
     public void testChainingProxiedActions() throws Exception {
         ActionProxy proxy = actionProxyFactory.createActionProxy(null, "chainedAOPedTestBeanAction",
-                null, null);
+            null, null);
 
         proxy.execute();
 
@@ -131,7 +139,7 @@ public class ActionsFromSpringTest extends XWorkTestCase {
         extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy(null,
-                "chaintoAOPedTestSubBeanAction", null, extraContext);
+            "chaintoAOPedTestSubBeanAction", null, extraContext);
 
         // when
         proxy.execute();
@@ -140,6 +148,6 @@ public class ActionsFromSpringTest extends XWorkTestCase {
         //then
         assertEquals("S2-047", ((TestSubBean) action).getIssueId());
         assertFalse("proxied action is accessible!",
-                (boolean) MethodUtils.invokeMethod(action, "isExposeProxy"));
+            (boolean) MethodUtils.invokeMethod(action, "isExposeProxy"));
     }
 }

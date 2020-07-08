@@ -26,6 +26,7 @@ import org.apache.struts.beanvalidation.actions.FieldAction;
 import org.apache.struts.beanvalidation.actions.FieldMatchAction;
 import org.apache.struts.beanvalidation.actions.ModelDrivenAction;
 import org.apache.struts.beanvalidation.actions.ValidateGroupAction;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.Collection;
 import java.util.List;
@@ -280,6 +281,6 @@ public class BeanValidationInterceptorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        loadConfigurationProviders(new XmlConfigurationProvider("bean-validation-test.xml"));
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider("bean-validation-test.xml"));
     }
 }

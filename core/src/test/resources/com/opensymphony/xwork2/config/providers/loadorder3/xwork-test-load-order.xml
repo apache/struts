@@ -19,10 +19,9 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 2.1.3//EN"
-    "http://struts.apache.org/dtds/xwork-2.1.3.dtd"
- >
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
 
-<xwork order="1">
-</xwork>
+<struts order="1">
+</struts>

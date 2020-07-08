@@ -19,8 +19,10 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC "-//Apache Struts//XWork 2.0//EN" "http://struts.apache.org/dtds/xwork-2.0.dtd">
-<xwork>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
 	<bean type="com.opensymphony.xwork2.ObjectFactory" class="com.opensymphony.xwork2.spring.SpringObjectFactory" />
 	<constant name="applicationContextPath" value="com/opensymphony/xwork2/spring/actionContext-spring.xml" />
     <constant name="struts.disallowProxyMemberAccess" value="true" />
@@ -65,4 +67,4 @@
             <result name="S2-047" type="null" />
         </action>
     </package>
-</xwork>
+</struts>

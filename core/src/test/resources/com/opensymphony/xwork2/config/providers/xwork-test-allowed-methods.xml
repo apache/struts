@@ -19,12 +19,10 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 2.5//EN"
-    "http://struts.apache.org/dtds/xwork-2.5.dtd"
- >
-
-<xwork>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
     <package name="default" strict-method-invocation="false">
         <global-allowed-methods>input,cancel</global-allowed-methods>
         <action name="Default">
@@ -68,4 +66,4 @@
             <allowed-methods>foo,bar</allowed-methods>
         </action>
     </package>
-</xwork>
+</struts>

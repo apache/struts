@@ -23,7 +23,6 @@ import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
@@ -32,6 +31,7 @@ import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.Collections;
 import java.util.Map;
@@ -43,63 +43,65 @@ public class PrefixBasedActionProxyFactoryTest extends StrutsInternalTestCase {
     public void testDifferentPrefixes() throws Exception {
         initFactory("/ns1:prefix1,/ns2:prefix2");
 
-        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
+        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
 
-        ActionProxy proxy2 = factory.createActionProxy("/ns2", "", "", Collections.<String, Object>emptyMap(), false, true);
+        ActionProxy proxy2 = factory.createActionProxy("/ns2", "", "", Collections.emptyMap(), false, true);
         assertTrue(proxy2 instanceof Prefix2ActionProxy);
     }
 
     public void testFallbackToDefault() throws Exception {
         initFactory("/ns1:prefix1");
 
-        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
+        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
 
-        ActionProxy proxy2 = factory.createActionProxy("", "Foo", "", Collections.<String, Object>emptyMap(), false, true);
+        ActionProxy proxy2 = factory.createActionProxy("", "Foo", "", Collections.emptyMap(), false, true);
         assertTrue(proxy2 instanceof StrutsActionProxy);
     }
 
     public void testEmptyPrefix() throws Exception {
         initFactory(":prefix1");
 
-        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.<String, Object>emptyMap(), false, true);
+        ActionProxy proxy1 = factory.createActionProxy("/ns1", "", "", Collections.emptyMap(), false, true);
         assertTrue(proxy1 instanceof Prefix1ActionProxy);
 
-        ActionProxy proxy2 = factory.createActionProxy("/ns2", "", "", Collections.<String, Object>emptyMap(), false, true);
+        ActionProxy proxy2 = factory.createActionProxy("/ns2", "", "", Collections.emptyMap(), false, true);
         assertTrue(proxy2 instanceof Prefix1ActionProxy);
     }
 
     @Override
     public void setUp() throws Exception {
         ConfigurationProvider[] providers = new ConfigurationProvider[]{
-                new XmlConfigurationProvider("xwork-sample.xml"),
-                new StubConfigurationProvider() {
-                    @Override
-                    public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-                        builder.factory(ActionProxyFactory.class, "prefix1", new Factory() {
-                            public Object create(Context context) throws Exception {
-                                return new Prefix1Factory();
-                            }
-                            public Class type() {
-                                return Prefix1Factory.class;
-                            }
-                        }, Scope.SINGLETON);
-                    }
-                },
-                new StubConfigurationProvider() {
-                    @Override
-                    public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-                        builder.factory(ActionProxyFactory.class, "prefix2", new Factory() {
-                            public Object create(Context context) throws Exception {
-                                return new Prefix2Factory();
-                            }
-                            public Class type() {
-                                return Prefix2Factory.class;
-                            }
-                        }, Scope.SINGLETON);
-                    }
+            new StrutsXmlConfigurationProvider("xwork-sample.xml"),
+            new StubConfigurationProvider() {
+                @Override
+                public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+                    builder.factory(ActionProxyFactory.class, "prefix1", new Factory() {
+                        public Object create(Context context) throws Exception {
+                            return new Prefix1Factory();
+                        }
+
+                        public Class type() {
+                            return Prefix1Factory.class;
+                        }
+                    }, Scope.SINGLETON);
                 }
+            },
+            new StubConfigurationProvider() {
+                @Override
+                public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+                    builder.factory(ActionProxyFactory.class, "prefix2", new Factory() {
+                        public Object create(Context context) throws Exception {
+                            return new Prefix2Factory();
+                        }
+
+                        public Class type() {
+                            return Prefix2Factory.class;
+                        }
+                    }, Scope.SINGLETON);
+                }
+            }
         };
 
         loadConfigurationProviders(providers);

@@ -85,21 +85,22 @@ import java.util.Vector;
  * @author Neo
  * @version $Revision$
  */
-public class XmlConfigurationProvider implements ConfigurationProvider {
+public abstract class XmlConfigurationProvider implements ConfigurationProvider {
 
     private static final Logger LOG = LogManager.getLogger(XmlConfigurationProvider.class);
 
+    private final String configFileName;
+    private final Set<String> loadedFileUrls = new HashSet<>();
+    private final Map<String, Element> declaredPackages = new HashMap<>();
+
     private List<Document> documents;
     private Set<String> includedFileNames;
-    private String configFileName;
     private ObjectFactory objectFactory;
 
-    private final Set<String> loadedFileUrls = new HashSet<>();
-    private boolean errorIfMissing;
-    private Map<String, String> dtdMappings;
+    private Map<String, String> dtdMappings = new HashMap<>();
     private Configuration configuration;
+
     private boolean throwExceptionOnDuplicateBeans = true;
-    private final Map<String, Element> declaredPackages = new HashMap<>();
 
     private FileManager fileManager;
     private ValueSubstitutor valueSubstitutor;
@@ -112,21 +113,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         this(filename, true);
     }
 
-    public XmlConfigurationProvider(String filename, boolean errorIfMissing) {
+    public XmlConfigurationProvider(String filename, @Deprecated boolean notUsed) {
         this.configFileName = filename;
-        this.errorIfMissing = errorIfMissing;
-
-        Map<String, String> mappings = new HashMap<>();
-        mappings.put("-//Apache Struts//XWork 2.6//EN", "xwork-2.6.dtd");
-        mappings.put("-//Apache Struts//XWork 2.5//EN", "xwork-2.5.dtd");
-        mappings.put("-//Apache Struts//XWork 2.3//EN", "xwork-2.3.dtd");
-        mappings.put("-//Apache Struts//XWork 2.1.3//EN", "xwork-2.1.3.dtd");
-        mappings.put("-//Apache Struts//XWork 2.1//EN", "xwork-2.1.dtd");
-        mappings.put("-//Apache Struts//XWork 2.0//EN", "xwork-2.0.dtd");
-        mappings.put("-//Apache Struts//XWork 1.1.1//EN", "xwork-1.1.1.dtd");
-        mappings.put("-//Apache Struts//XWork 1.1//EN", "xwork-1.1.dtd");
-        mappings.put("-//Apache Struts//XWork 1.0//EN", "xwork-1.0.dtd");
-        setDtdMappings(mappings);
     }
 
     public void setThrowExceptionOnDuplicateBeans(boolean val) {
@@ -1078,12 +1066,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             }
 
             if (urls == null || !urls.hasNext()) {
-                if (errorIfMissing) {
-                    throw new ConfigurationException("Could not open files of the name " + fileName, ioException);
-                } else {
-                    LOG.trace("Unable to locate configuration files of the name {}, skipping", fileName);
-                    return docs;
-                }
+                throw new ConfigurationException("Could not open file: " + fileName, ioException);
             }
 
             URL url = null;

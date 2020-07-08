@@ -23,9 +23,14 @@ import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.interceptor.LoggingInterceptor;
 import com.opensymphony.xwork2.mock.MockInterceptor;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.interceptor.NoOpInterceptor;
 
 import java.util.ArrayList;
@@ -46,7 +51,7 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
     InterceptorConfig mockInterceptor = new InterceptorConfig.Builder("mock", MockInterceptor.class.getName()).build();
     InterceptorConfig noopInterceptor = new InterceptorConfig.Builder("noop", NoOpInterceptor.class.getName()).build();
     ObjectFactory objectFactory;
-    
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -68,16 +73,16 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
         // the default interceptor stack
         InterceptorStackConfig defaultStack = new InterceptorStackConfig.Builder("defaultStack")
-                .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
-                .addInterceptor(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptor, params)))
-                .build();
+            .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
+            .addInterceptor(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptor, params)))
+            .build();
 
         // the derivative interceptor stack
         InterceptorStackConfig derivativeStack = new InterceptorStackConfig.Builder("derivativeStack")
-                .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
-                .addInterceptor(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptor, params)))
-                .addInterceptor(new InterceptorMapping("logging", objectFactory.buildInterceptor(loggingInterceptor, new HashMap<String, String>())))
-                .build();
+            .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
+            .addInterceptor(new InterceptorMapping("test", objectFactory.buildInterceptor(mockInterceptor, params)))
+            .addInterceptor(new InterceptorMapping("logging", objectFactory.buildInterceptor(loggingInterceptor, new HashMap<String, String>())))
+            .build();
 
         // execute the configuration
         provider.init(configuration);
@@ -100,7 +105,7 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
     }
 
     public void testInterceptorDefaultRefs() throws ConfigurationException {
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-defaultref.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-defaultref.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
 
@@ -141,7 +146,7 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
     }
 
     public void testInterceptorInheritance() throws ConfigurationException {
-        
+
         // expectations - the inherited interceptor stack
         InterceptorStackConfig inheritedStack = new InterceptorStackConfig.Builder("subDefaultStack")
             .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
@@ -160,9 +165,9 @@ public class XmlConfigurationProviderInterceptorsTest extends ConfigurationTestB
 
         // expectations - the inherited interceptor stack
         inheritedStack = new InterceptorStackConfig.Builder("subSubDefaultStack")
-                .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
-                .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
-                .build();
+            .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
+            .addInterceptor(new InterceptorMapping("noop", objectFactory.buildInterceptor(noopInterceptor, new HashMap<String, String>())))
+            .build();
 
         PackageConfig subSubPkg = configuration.getPackageConfig("subSubPackage");
         assertEquals(1, subSubPkg.getInterceptorConfigs().size());

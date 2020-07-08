@@ -19,15 +19,13 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 2.1//EN"
-    "http://struts.apache.org/dtds/xwork-2.1.dtd"
- >
-
-<xwork>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
     <bean type="com.opensymphony.xwork2.UnknownHandler" name="uh1" class="com.opensymphony.xwork2.config.providers.SomeUnknownHandler"/>
     <bean type="com.opensymphony.xwork2.UnknownHandler" name="uh2" class="com.opensymphony.xwork2.config.providers.SomeUnknownHandler"/>
 
     <unknown-handler-stack>
     </unknown-handler-stack>
-</xwork>
+</struts>

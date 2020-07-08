@@ -29,9 +29,9 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -306,7 +306,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-default.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-default.xml");
         container.inject(provider);
         loadConfigurationProviders(provider, new MockConfigurationProvider());
         val = new DoubleRangeFieldValidator();

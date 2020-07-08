@@ -18,6 +18,7 @@
  */
 package com.opensymphony.xwork2.config.providers;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -27,7 +28,17 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.impl.MockConfiguration;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.result.ServletDispatcherResult;
+import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.TypeInfo;
+import org.w3c.dom.UserDataHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,15 +53,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.struts2.result.ServletDispatcherResult;
-import org.w3c.dom.Attr;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.TypeInfo;
-import org.w3c.dom.UserDataHandler;
 
 
 public class XmlConfigurationProviderTest extends ConfigurationTestBase {
@@ -60,7 +62,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         ((MockConfiguration) configuration).selfRegister();
         container = configuration.getContainer();
 
-        XmlConfigurationProvider prov = new XmlConfigurationProvider("xwork-test-load-order.xml", true) {
+        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider("xwork-test-load-order.xml") {
             @Override
             protected Iterator<URL> getConfigurationUrls(String fileName) throws IOException {
                 List<URL> urls = new ArrayList<>();
@@ -83,7 +85,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
     public static final long FILE_TS_WAIT_IN_MS = 3600000;
 
-    private static void changeFileTime(File f) throws Exception {
+    private static void changeFileTime(String filename, File f) throws Exception {
         final long orig = f.lastModified();
         final long maxwait = orig + FILE_TS_WAIT_IN_MS;
         long curr;
@@ -91,11 +93,12 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
             Thread.sleep(500);
             assertTrue("Waited more than " + FILE_TS_WAIT_IN_MS + " ms to update timestamp on file: " + f, maxwait > curr);
         }
+        ActionContext.getContext().with("configurationReload-" + filename, null);
     }
 
     public void testNeedsReload() throws Exception {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-actions.xml";
-        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
+        ConfigurationProvider provider = new StrutsXmlConfigurationProvider(filename);
         container.inject(provider);
         provider.init(configuration);
         provider.loadPackages();
@@ -105,14 +108,14 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
         File file = new File(getClass().getResource("/" + filename).toURI());
         assertTrue("not exists: " + file.toString(), file.exists());
-        changeFileTime(file);
+        changeFileTime(filename, file);
 
         assertTrue(provider.needsReload());
     }
 
     public void testReload() throws Exception {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-reload.xml";
-        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
+        ConfigurationProvider provider = new StrutsXmlConfigurationProvider(filename);
         loadConfigurationProviders(provider);
 
         assertFalse(provider.needsReload()); // Revision exists and timestamp didn't change
@@ -123,7 +126,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         Path configPath = Paths.get(file.getAbsolutePath());
         String content = new String(Files.readAllBytes(configPath));
         content = content.replaceAll("<constant name=\"struts.configuration.xml.reload\" value=\"true\" />",
-                "<constant name=\"struts.configuration.xml.reload\" value=\"false\" />");
+            "<constant name=\"struts.configuration.xml.reload\" value=\"false\" />");
         Files.write(configPath, content.getBytes()); // user demand: stop reloading configs
 
         try {
@@ -131,11 +134,11 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
             configurationManager.reload();
 
-            changeFileTime(file);
+            changeFileTime(filename, file);
             assertFalse(provider.needsReload());    // user already has stopped reloading configs
         } finally {
             content = content.replaceAll("<constant name=\"struts.configuration.xml.reload\" value=\"false\" />",
-                    "<constant name=\"struts.configuration.xml.reload\" value=\"true\" />");
+                "<constant name=\"struts.configuration.xml.reload\" value=\"true\" />");
             Files.write(configPath, content.getBytes());
         }
     }
@@ -143,7 +146,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     public void testNeedsReloadNotReloadingConfigs() throws Exception {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-actions.xml";
         buildConfigurationProvider(filename);
-        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
+        ConfigurationProvider provider = new StrutsXmlConfigurationProvider(filename);
         container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(false);
         container.inject(provider);
         provider.init(configuration);
@@ -153,7 +156,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
         File file = new File(getClass().getResource("/" + filename).toURI());
         assertTrue("not exists: " + file.toString(), file.exists());
-        changeFileTime(file);
+        changeFileTime(filename, file);
 
         assertFalse(provider.needsReload());
     }
@@ -210,7 +213,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     }
 
     public void testGuessResultType() {
-        XmlConfigurationProvider prov = new XmlConfigurationProvider();
+        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider("xwork.xml");
 
         assertEquals(null, prov.guessResultType(null));
         assertEquals("foo", prov.guessResultType("foo"));
@@ -221,7 +224,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
     public void testEmptySpaces() throws Exception {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork- test.xml";
-        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
+        ConfigurationProvider provider = new StrutsXmlConfigurationProvider(filename);
         container.inject(provider);
         provider.init(configuration);
         provider.loadPackages();
@@ -234,7 +237,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         File file = new File(uri);
 
         assertTrue(file.exists());
-        changeFileTime(file);
+        changeFileTime(filename, file);
 
         assertTrue(provider.needsReload());
     }
@@ -242,7 +245,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     public void testEmptySpacesNotReloadingConfigs() throws Exception {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork- test.xml";
         buildConfigurationProvider(filename);
-        ConfigurationProvider provider = new XmlConfigurationProvider(filename, true);
+        ConfigurationProvider provider = new StrutsXmlConfigurationProvider(filename);
         container.getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(false);
         container.inject(provider);
         provider.init(configuration);
@@ -255,7 +258,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         File file = new File(uri);
 
         assertTrue(file.exists());
-        changeFileTime(file);
+        changeFileTime(filename, file);
 
         assertFalse(provider.needsReload());
     }
@@ -287,7 +290,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         File file = new File(jar);
 
         assertTrue("File [" + file + "] doesn't exist!", file.exists());
-        changeFileTime(file);
+        changeFileTime(jar, file);
 
         assertFalse(provider.needsReload());
     }
@@ -311,8 +314,8 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     /**
      * Test buildAllowedMethods() to ensure consistent results for processing
      * <allowed-methods/> in <action/> XML configuration elements.
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     public void testBuildAllowedMethods() throws Exception {
         // Test introduced with WW-5029 fix.
@@ -335,20 +338,20 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         NodeList mockNodeListSingleChild = new MockNodeList(singleStringList);
         NodeList mockNodeListMultipleChild = new MockNodeList(multipleStringList);
         Element mockSingleChildAllowedMethodsElement = new MockElement("allowed-methods", fakeBodyString,
-                "allowed-methods", fakeBodyString, Node.TEXT_NODE, mockNodeListSingleChild, null);
+            "allowed-methods", fakeBodyString, Node.TEXT_NODE, mockNodeListSingleChild, null);
         Element mockMultipleChildAllowedMethodsElement = new MockElement("allowed-methods", fakeBodyString,
-                "allowed-methods", fakeBodyString, Node.TEXT_NODE, mockNodeListMultipleChild, null);
+            "allowed-methods", fakeBodyString, Node.TEXT_NODE, mockNodeListMultipleChild, null);
         MockNodeList mockActionElementChildrenSingle = new MockNodeList();
         mockActionElementChildrenSingle.addToNodeList(mockSingleChildAllowedMethodsElement);
         MockNodeList mockActionElementChildrenMultiple = new MockNodeList();
         mockActionElementChildrenMultiple.addToNodeList(mockMultipleChildAllowedMethodsElement);
         Element mockActionElementSingle = new MockElement("action", "fakeBody", "action", "fakeValue",
-                Node.TEXT_NODE, mockActionElementChildrenSingle, null);
+            Node.TEXT_NODE, mockActionElementChildrenSingle, null);
         Element mockActionElementMultiple = new MockElement("action", "fakeBody", "action", "fakeValue",
-                Node.TEXT_NODE, mockActionElementChildrenMultiple, null);
+            Node.TEXT_NODE, mockActionElementChildrenMultiple, null);
         // Attempt the method using both types of Elements (single child and multiple child) and confirm
         // the result is the same for both.  Also confirm the results are as expected.
-        XmlConfigurationProvider prov = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork- test.xml", false);
+        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork- test.xml");
         Set<String> singleChildResult = prov.buildAllowedMethods(mockActionElementSingle, testPackageConfigBuilder);
         Set<String> multipleChildResult = prov.buildAllowedMethods(mockActionElementMultiple, testPackageConfigBuilder);
         assertNotNull("singleChildResult is null ?", singleChildResult);
@@ -365,8 +368,8 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     /**
      * Test loadGlobalAllowedMethods() to ensure consistent results for processing
      * <global-allowed-methods/> in <package/> XML configuration elements.
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     public void testLoadGlobalAllowedMethods() throws Exception {
         // Test introduced with WW-5029 fix.
@@ -389,19 +392,19 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         NodeList mockNodeListSingleChild = new MockNodeList(singleStringList);
         NodeList mockNodeListMultipleChild = new MockNodeList(multipleStringList);
         Element mockSingleChildAllowedMethodsElement = new MockElement("global-allowed-methods", fakeBodyString,
-                "global-allowed-methods", fakeBodyString, Node.TEXT_NODE, mockNodeListSingleChild, null);
+            "global-allowed-methods", fakeBodyString, Node.TEXT_NODE, mockNodeListSingleChild, null);
         Element mockMultipleChildAllowedMethodsElement = new MockElement("global-allowed-methods", fakeBodyString,
-                "global-allowed-methods", fakeBodyString, Node.TEXT_NODE, mockNodeListMultipleChild, null);
+            "global-allowed-methods", fakeBodyString, Node.TEXT_NODE, mockNodeListMultipleChild, null);
         MockNodeList mockPackageElementChildrenSingle = new MockNodeList();
         mockPackageElementChildrenSingle.addToNodeList(mockSingleChildAllowedMethodsElement);
         MockNodeList mockPackageElementChildrenMultiple = new MockNodeList();
         mockPackageElementChildrenMultiple.addToNodeList(mockMultipleChildAllowedMethodsElement);
         Element mockPackageElementSingle = new MockElement("package", "fakeBody", "package", "fakeValue",
-                Node.TEXT_NODE, mockPackageElementChildrenSingle, null);
+            Node.TEXT_NODE, mockPackageElementChildrenSingle, null);
         Element mockPackageElementMultiple = new MockElement("package", "fakeBody", "package", "fakeValue",
-                Node.TEXT_NODE, mockPackageElementChildrenMultiple, null);
+            Node.TEXT_NODE, mockPackageElementChildrenMultiple, null);
         // Attempt the method using the single child Element and confirm the result is as expected.
-        XmlConfigurationProvider prov = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork- test.xml", false);
+        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork- test.xml");
         prov.loadGlobalAllowedMethods(testPackageConfigBuilder, mockPackageElementSingle);
         Set<String> currentGlobalResult = testPackageConfigBuilder.getGlobalAllowedMethods();
         assertNotNull("currentGlobalResult is null ?", currentGlobalResult);
@@ -428,8 +431,8 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
     /**
      * Test buildResults() to ensure consistent results for processing
      * <result/> in <action/> XML configuration elements.
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     public void testBuildResults() throws Exception {
         // Set up test using two mock DOM Elements:
@@ -443,7 +446,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         final String fakeBodyString2 = "/SomePath2/SomePath2/SomePath2/SomeJSP2.jsp";
         final String resultParam = "nonNullDefaultParam";
         PackageConfig.Builder testPackageConfigBuilder = new PackageConfig.Builder("resultsPackage");
-        ResultTypeConfig.Builder resultTypeConfigBuilder = new ResultTypeConfig.Builder("dispatcher", (String) ServletDispatcherResult.class.getName());
+        ResultTypeConfig.Builder resultTypeConfigBuilder = new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName());
         resultTypeConfigBuilder.defaultResultParam(resultParam);
         ResultTypeConfig resultTypeConfig = resultTypeConfigBuilder.build();
         testPackageConfigBuilder.addResultTypeConfig(resultTypeConfig);
@@ -466,19 +469,19 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         NodeList mockNodeListMultipleChild = new MockNodeList(multipleStringList);
         NodeList mockNodeListMultipleChild2 = new MockNodeList(multipleStringList2);
         Element mockSingleChildResultElement = new MockElement("result", fakeBodyString,
-                "result", fakeBodyString, Node.TEXT_NODE, mockNodeListSingleChild, null);
+            "result", fakeBodyString, Node.TEXT_NODE, mockNodeListSingleChild, null);
         mockSingleChildResultElement.setAttribute("name", "input");
         mockSingleChildResultElement.setAttribute("type", "dispatcher");
         Element mockSingleChildResultElement2 = new MockElement("result", fakeBodyString2,
-                "result", fakeBodyString2, Node.TEXT_NODE, mockNodeListSingleChild2, null);
+            "result", fakeBodyString2, Node.TEXT_NODE, mockNodeListSingleChild2, null);
         mockSingleChildResultElement2.setAttribute("name", "success");
         mockSingleChildResultElement2.setAttribute("type", "dispatcher");
         Element mockMultipleChildAllowedMethodsElement = new MockElement("result", fakeBodyString,
-                "result", fakeBodyString, Node.TEXT_NODE, mockNodeListMultipleChild, null);
+            "result", fakeBodyString, Node.TEXT_NODE, mockNodeListMultipleChild, null);
         mockMultipleChildAllowedMethodsElement.setAttribute("name", "input");
         mockMultipleChildAllowedMethodsElement.setAttribute("type", "dispatcher");
         Element mockMultipleChildAllowedMethodsElement2 = new MockElement("result", fakeBodyString2,
-                "result", fakeBodyString2, Node.TEXT_NODE, mockNodeListMultipleChild2, null);
+            "result", fakeBodyString2, Node.TEXT_NODE, mockNodeListMultipleChild2, null);
         mockMultipleChildAllowedMethodsElement2.setAttribute("name", "success");
         mockMultipleChildAllowedMethodsElement2.setAttribute("type", "dispatcher");
         MockNodeList mockActionElementChildrenSingle = new MockNodeList();
@@ -488,12 +491,12 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         mockActionElementChildrenMultiple.addToNodeList(mockMultipleChildAllowedMethodsElement);
         mockActionElementChildrenMultiple.addToNodeList(mockMultipleChildAllowedMethodsElement2);
         Element mockActionElementSingle = new MockElement("action", "fakeBody", "action", "fakeValue",
-                Node.TEXT_NODE, mockActionElementChildrenSingle, null);
+            Node.TEXT_NODE, mockActionElementChildrenSingle, null);
         Element mockActionElementMultiple = new MockElement("action", "fakeBody", "action", "fakeValue",
-                Node.TEXT_NODE, mockActionElementChildrenMultiple, null);
+            Node.TEXT_NODE, mockActionElementChildrenMultiple, null);
         // Attempt the method using both types of Elements (single child and multiple child) and confirm
         // the result is the same for both.  Also confirm the results are as expected.
-        XmlConfigurationProvider prov = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork- test.xml", false);
+        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork- test.xml");
         Map<String, ResultConfig> singleChildResult = prov.buildResults(mockActionElementSingle, testPackageConfigBuilder);
         Map<String, ResultConfig> multipleChildResult = prov.buildResults(mockActionElementMultiple, testPackageConfigBuilder);
         assertNotNull("singleChildResult is null ?", singleChildResult);
@@ -511,16 +514,16 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         assertNotNull("inputResultParams (multipleChildResult) is null ?", inputResultParams);
         assertNotNull("successResultParams (multipleChildResult) is null ?", successResultParams);
         assertEquals("inputResult (multipleChildResult) resultParam value not equal to fakeBodyString ?",
-                fakeBodyString, inputResultParams.get(resultParam));
+            fakeBodyString, inputResultParams.get(resultParam));
         assertEquals("successResult (multipleChildResult) resultParam value not equal to fakeBodyString2 ?",
-                fakeBodyString2, successResultParams.get(resultParam));
+            fakeBodyString2, successResultParams.get(resultParam));
     }
 
     /**
      * Test loadGlobalResults() to ensure consistent results for processing
      * <global-results/> in <package/> XML configuration elements.
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     public void testLoadGlobalResults() throws Exception {
         // Set up test using two mock DOM Elements:
@@ -534,7 +537,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         final String fakeBodyString2 = "/SomePath2/SomePath2/SomePath2/SomeJSP2.jsp";
         final String resultParam = "nonNullDefaultParam";
         PackageConfig.Builder testPackageConfigBuilder = new PackageConfig.Builder("resultsPackage");
-        ResultTypeConfig.Builder resultTypeConfigBuilder = new ResultTypeConfig.Builder("dispatcher", (String) ServletDispatcherResult.class.getName());
+        ResultTypeConfig.Builder resultTypeConfigBuilder = new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName());
         resultTypeConfigBuilder.defaultResultParam(resultParam);
         ResultTypeConfig resultTypeConfig = resultTypeConfigBuilder.build();
         testPackageConfigBuilder.addResultTypeConfig(resultTypeConfig);
@@ -557,19 +560,19 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         NodeList mockNodeListMultipleChild = new MockNodeList(multipleStringList);
         NodeList mockNodeListMultipleChild2 = new MockNodeList(multipleStringList2);
         Element mockSingleChildResultElement = new MockElement("result", fakeBodyString,
-                "result", fakeBodyString, Node.TEXT_NODE, mockNodeListSingleChild, null);
+            "result", fakeBodyString, Node.TEXT_NODE, mockNodeListSingleChild, null);
         mockSingleChildResultElement.setAttribute("name", "input");
         mockSingleChildResultElement.setAttribute("type", "dispatcher");
         Element mockSingleChildResultElement2 = new MockElement("result", fakeBodyString2,
-                "result", fakeBodyString2, Node.TEXT_NODE, mockNodeListSingleChild2, null);
+            "result", fakeBodyString2, Node.TEXT_NODE, mockNodeListSingleChild2, null);
         mockSingleChildResultElement2.setAttribute("name", "success");
         mockSingleChildResultElement2.setAttribute("type", "dispatcher");
         Element mockMultipleChildAllowedMethodsElement = new MockElement("result", fakeBodyString,
-                "result", fakeBodyString, Node.TEXT_NODE, mockNodeListMultipleChild, null);
+            "result", fakeBodyString, Node.TEXT_NODE, mockNodeListMultipleChild, null);
         mockMultipleChildAllowedMethodsElement.setAttribute("name", "input2");
         mockMultipleChildAllowedMethodsElement.setAttribute("type", "dispatcher");
         Element mockMultipleChildAllowedMethodsElement2 = new MockElement("result", fakeBodyString,
-                "result", fakeBodyString2, Node.TEXT_NODE, mockNodeListMultipleChild2, null);
+            "result", fakeBodyString2, Node.TEXT_NODE, mockNodeListMultipleChild2, null);
         mockMultipleChildAllowedMethodsElement2.setAttribute("name", "success2");
         mockMultipleChildAllowedMethodsElement2.setAttribute("type", "dispatcher");
         MockNodeList mockGlobalResultsElementChildrenSingle = new MockNodeList();
@@ -579,19 +582,19 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         mockGlobalResultsElementChildrenMultiple.addToNodeList(mockMultipleChildAllowedMethodsElement);
         mockGlobalResultsElementChildrenMultiple.addToNodeList(mockMultipleChildAllowedMethodsElement2);
         Element mockGlobalResultsElementSingle = new MockElement("global-results", "fakeBody", "global-results", "fakeValue",
-                Node.TEXT_NODE, mockGlobalResultsElementChildrenSingle, null);
+            Node.TEXT_NODE, mockGlobalResultsElementChildrenSingle, null);
         Element mockGlobalResultsGlobalResultsElementMultiple = new MockElement("global-results", "fakeBody", "global-results", "fakeValue",
-                Node.TEXT_NODE, mockGlobalResultsElementChildrenMultiple, null);
+            Node.TEXT_NODE, mockGlobalResultsElementChildrenMultiple, null);
         MockNodeList mockPackageElementChildrenSingle = new MockNodeList();
         mockPackageElementChildrenSingle.addToNodeList(mockGlobalResultsElementSingle);
         MockNodeList mockPackageElementChildrenMultiple = new MockNodeList();
         mockPackageElementChildrenMultiple.addToNodeList(mockGlobalResultsGlobalResultsElementMultiple);
         Element mockPackageElementSingle = new MockElement("package", "fakeBody", "package", "fakeValue",
-                Node.TEXT_NODE, mockPackageElementChildrenSingle, null);
+            Node.TEXT_NODE, mockPackageElementChildrenSingle, null);
         Element mockPackageElementMultiple = new MockElement("package", "fakeBody", "package", "fakeValue",
-                Node.TEXT_NODE, mockPackageElementChildrenMultiple, null);
+            Node.TEXT_NODE, mockPackageElementChildrenMultiple, null);
         // Attempt the global laod method using single child Elements first, and confirm the results are as expected.
-        XmlConfigurationProvider prov = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork- test.xml", false);
+        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork- test.xml");
         prov.loadGlobalResults(testPackageConfigBuilder, mockPackageElementSingle);
         PackageConfig testPackageConfig = testPackageConfigBuilder.build();
         Map<String, ResultConfig> currentGlobalResults = testPackageConfig.getAllGlobalResults();
@@ -606,9 +609,9 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         assertNotNull("inputResultParams (currentGlobalResults - single) is null ?", inputResultParams);
         assertNotNull("successResultParams (currentGlobalResults - single) is null ?", successResultParams);
         assertEquals("inputResult (currentGlobalResults - single) resultParam value not equal to fakeBodyString ?",
-                fakeBodyString, inputResultParams.get(resultParam));
+            fakeBodyString, inputResultParams.get(resultParam));
         assertEquals("successResult (currentGlobalResults - single) resultParam value not equal to fakeBodyString2 ?",
-                fakeBodyString2, successResultParams.get(resultParam));
+            fakeBodyString2, successResultParams.get(resultParam));
         // Attempt the global laod method using mutliple child Elements next, and confirm the results are as expected.
         prov.loadGlobalResults(testPackageConfigBuilder, mockPackageElementMultiple);
         testPackageConfig = testPackageConfigBuilder.build();
@@ -624,9 +627,9 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         assertNotNull("inputResultParams2 (currentGlobalResults - multiple) is null ?", inputResultParams2);
         assertNotNull("successResultParams2 (currentGlobalResults - multiple) is null ?", successResultParams2);
         assertEquals("inputResult2 (currentGlobalResults - multiple) resultParam value not equal to fakeBodyString ?",
-                fakeBodyString, inputResultParams2.get(resultParam));
+            fakeBodyString, inputResultParams2.get(resultParam));
         assertEquals("successResult2 (currentGlobalResults - multiple) resultParam value not equal to fakeBodyString2 ?",
-                fakeBodyString2, successResultParams2.get(resultParam));
+            fakeBodyString2, successResultParams2.get(resultParam));
         // Confirm the previous global results are still present
         inputResult = currentGlobalResults.get("input");
         successResult = currentGlobalResults.get("success");
@@ -637,9 +640,9 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         assertNotNull("inputResultParams (currentGlobalResults - single) is null ?", inputResultParams);
         assertNotNull("successResultParams (currentGlobalResults - single) is null ?", successResultParams);
         assertEquals("inputResult (currentGlobalResults - single) resultParam value not equal to fakeBodyString ?",
-                fakeBodyString, inputResultParams.get(resultParam));
+            fakeBodyString, inputResultParams.get(resultParam));
         assertEquals("successResult (currentGlobalResults - single) resultParam value not equal to fakeBodyString2 ?",
-                fakeBodyString2, successResultParams.get(resultParam));
+            fakeBodyString2, successResultParams.get(resultParam));
         inputResult = currentGlobalResults.get("input");
         successResult = currentGlobalResults.get("success");
         assertNotNull("inputResult (currentGlobalResults - single) is null ?", inputResult);
@@ -649,14 +652,14 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         assertNotNull("inputResultParams (currentGlobalResults - single) is null ?", inputResultParams);
         assertNotNull("successResultParams (currentGlobalResults - single) is null ?", successResultParams);
         assertEquals("inputResult (currentGlobalResults - single) resultParam value not equal to fakeBodyString ?",
-                fakeBodyString, inputResultParams.get(resultParam));
+            fakeBodyString, inputResultParams.get(resultParam));
         assertEquals("successResult (currentGlobalResults - single) resultParam value not equal to fakeBodyString2 ?",
-                fakeBodyString2, successResultParams.get(resultParam));
+            fakeBodyString2, successResultParams.get(resultParam));
     }
 
     /**
      * Mock NodeList.
-     * 
+     * <p>
      * Provides minimal functionality to permit limited mock DOM testing.
      */
     protected class MockNodeList implements org.w3c.dom.NodeList {
@@ -669,8 +672,8 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         /**
          * Produces TEXT_NODE Nodes based on the input List of Strings.  Node names
          * follow a simple pattern "nodeX" where X is the index.
-         * 
-         * @param stringList 
+         *
+         * @param stringList
          */
         public MockNodeList(List<String> stringList) {
             if (stringList != null) {
@@ -737,7 +740,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
     /**
      * MockNode
-     * 
+     * <p>
      * Provides minimal functionality to permit limited mock DOM testing.
      */
     protected class MockNode implements org.w3c.dom.Node {
@@ -854,7 +857,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
         @Override
         public boolean hasChildNodes() {
-            return (childNodes != null ? childNodes.getLength() > 0 : false);
+            return (childNodes != null && childNodes.getLength() > 0);
         }
 
         @Override
@@ -960,16 +963,16 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
 
     /**
      * Mock Element.
-     * 
+     * <p>
      * Provides minimal functionality to permit limited mock DOM testing.
      */
     protected class MockElement extends MockNode implements org.w3c.dom.Element {
         final private String tagName;
         final private String tagBody;
-        final private Map<String, String> attributes; 
+        final private Map<String, String> attributes;
 
         public MockElement(String tagName, String tagBody,
-                String nodeName, String nodeValue, short nodeType, NodeList childNodes, Node parentNode) {
+                           String nodeName, String nodeValue, short nodeType, NodeList childNodes, Node parentNode) {
             super(nodeName, nodeValue, nodeType, childNodes, parentNode);
             this.tagName = nodeName;
             this.tagBody = nodeValue;

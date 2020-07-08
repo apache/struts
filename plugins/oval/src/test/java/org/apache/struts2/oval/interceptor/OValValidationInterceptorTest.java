@@ -19,16 +19,15 @@
 package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
+import junit.framework.AssertionFailedError;
 import net.sf.oval.configuration.Configurer;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import junit.framework.AssertionFailedError;
 
 public class OValValidationInterceptorTest extends XWorkTestCase {
     public void testSimpleFieldsXML() throws Exception {
@@ -42,7 +41,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         assertValue(fieldErrors, "lastName", Arrays.asList("lastName cannot be null"));
     }
 
-     public void testSimpleFieldsJPAAnnotations() throws Exception {
+    public void testSimpleFieldsJPAAnnotations() throws Exception {
         ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "simpleFieldsJPA", null, null);
         baseActionProxy.execute();
 
@@ -290,8 +289,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
             assertValue(fieldErrors, "address", Arrays.asList("net.sf.oval.constraint.AssertValid.violated"));
             // Oval version <= 1.40 validation error for minimum length reports: "street cannot be smaller than 7 characters".
             assertValue(fieldErrors, "address.street", Arrays.asList("street cannot be smaller than 7 characters"));
-        }
-        catch (AssertionFailedError afe) {
+        } catch (AssertionFailedError afe) {
             // Oval version >= 1.50 validation error for invalid data reports: "address is invalid".
             assertValue(fieldErrors, "address", Arrays.asList("address is invalid"));
             // Oval version >= 1.50 validation error for minimum length reports: "street cannot be shorter than 7 characters".
@@ -301,30 +299,29 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
     }
 
     public void testMemberObject() throws Exception {
-    	ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "memberObject", null, null);
-    	MemberObject action = (MemberObject) baseActionProxy.getAction();
-    	action.getPerson().setName(null);
-    	action.getPerson().setEmail(null);
-    	action.getPerson().getAddress().setStreet("short");
-    	baseActionProxy.execute();
+        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "memberObject", null, null);
+        MemberObject action = (MemberObject) baseActionProxy.getAction();
+        action.getPerson().setName(null);
+        action.getPerson().setEmail(null);
+        action.getPerson().getAddress().setStreet("short");
+        baseActionProxy.execute();
 
-    	Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
-    	assertNotNull(fieldErrors);
-    	assertEquals(5, fieldErrors.size()); // 5: as there will be field errors for 'person' and 'person.address' themselves
-    	assertValue(fieldErrors, "person.name", Arrays.asList("name cannot be null"));
-    	assertValue(fieldErrors, "person.email", Arrays.asList("email cannot be null"));
-       try {
-           // Oval version <= 1.40 validation error for invalid data reports: "net.sf.oval.constraint.AssertValid.violated".
-           assertValue(fieldErrors, "person.address", Arrays.asList("net.sf.oval.constraint.AssertValid.violated"));
-           // Oval version <= 1.40 validation error for minimum length reports: "street cannot be smaller than 7 characters".
-           assertValue(fieldErrors, "person.address.street", Arrays.asList("street cannot be smaller than 7 characters"));
-       }
-       catch (AssertionFailedError afe) {
-           // Oval version >= 1.50 validation error for invalid data reports: "address is invalid".
-           assertValue(fieldErrors, "person.address", Arrays.asList("address is invalid"));
-           // Oval version >= 1.50 validation error for minimum length reports: "street cannot be shorter than 7 characters".
-           assertValue(fieldErrors, "person.address.street", Arrays.asList("street cannot be shorter than 7 characters"));
-       }
+        Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
+        assertNotNull(fieldErrors);
+        assertEquals(5, fieldErrors.size()); // 5: as there will be field errors for 'person' and 'person.address' themselves
+        assertValue(fieldErrors, "person.name", Arrays.asList("name cannot be null"));
+        assertValue(fieldErrors, "person.email", Arrays.asList("email cannot be null"));
+        try {
+            // Oval version <= 1.40 validation error for invalid data reports: "net.sf.oval.constraint.AssertValid.violated".
+            assertValue(fieldErrors, "person.address", Arrays.asList("net.sf.oval.constraint.AssertValid.violated"));
+            // Oval version <= 1.40 validation error for minimum length reports: "street cannot be smaller than 7 characters".
+            assertValue(fieldErrors, "person.address.street", Arrays.asList("street cannot be smaller than 7 characters"));
+        } catch (AssertionFailedError afe) {
+            // Oval version >= 1.50 validation error for invalid data reports: "address is invalid".
+            assertValue(fieldErrors, "person.address", Arrays.asList("address is invalid"));
+            // Oval version >= 1.50 validation error for minimum length reports: "street cannot be shorter than 7 characters".
+            assertValue(fieldErrors, "person.address.street", Arrays.asList("street cannot be shorter than 7 characters"));
+        }
 
     }
 
@@ -342,6 +339,6 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        loadConfigurationProviders(new XmlConfigurationProvider("oval-test.xml"));
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider("oval-test.xml"));
     }
 }

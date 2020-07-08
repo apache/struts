@@ -19,12 +19,10 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-        "-//Apache Struts//XWork 2.5//EN"
-        "http://struts.apache.org/dtds/xwork-2.5.dtd"
-        >
-
-<xwork>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
     <constant name="struts.beanValidation.providerClass" value="org.hibernate.validator.HibernateValidator"/>
     <constant name="struts.beanValidation.ignoreXMLConfiguration" value="false"/>
     <constant name="struts.beanValidation.convertMessageToUtf" value="false"/>
@@ -72,4 +70,4 @@
         </action>
 
     </package>
-</xwork>
+</struts>

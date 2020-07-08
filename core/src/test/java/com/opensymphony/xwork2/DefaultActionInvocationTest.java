@@ -29,6 +29,7 @@ import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.ArrayList;
@@ -304,7 +305,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext, true);
         container.inject(defaultActionInvocation);
 
-        ActionProxy actionProxy = actionProxyFactory.createActionProxy( "", "LazyFoo", null, extraContext);
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFoo", null, extraContext);
         defaultActionInvocation.init(actionProxy);
         defaultActionInvocation.invoke();
 
@@ -322,6 +323,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         lock.acquire();
         dai.setAsyncManager(new AsyncManager() {
             Object asyncActionResult;
+
             @Override
             public boolean hasAsyncActionResult() {
                 return asyncActionResult != null;
@@ -384,7 +386,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertFalse("invocation should not be executed", dai.executed);
         assertNull("a null result should be passed to upper and wait for the async result", dai.resultCode);
 
-        if(lock.tryAcquire(1500L, TimeUnit.MILLISECONDS)) {
+        if (lock.tryAcquire(1500L, TimeUnit.MILLISECONDS)) {
             try {
                 dai.invoke();
                 assertTrue("preResultListener should be executed", preResultExecuted[0]);
@@ -402,7 +404,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testActionEventListener() throws Exception {
         ActionProxy actionProxy = actionProxyFactory.createActionProxy("",
-                "ExceptionFoo", "exceptionMethod", new HashMap<String, Object>());
+            "ExceptionFoo", "exceptionMethod", new HashMap<String, Object>());
         DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
 
         SimpleActionEventListener actionEventListener = new SimpleActionEventListener("prepared", "exceptionHandled");
@@ -428,7 +430,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testActionChainResult() throws Exception {
         ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "Foo", null,
-                new HashMap<String, Object>());
+            new HashMap<String, Object>());
         DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
         defaultActionInvocation.init(actionProxy);
 
@@ -446,7 +448,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testNoResultDefined() throws Exception {
         ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "Foo", null,
-                new HashMap<String, Object>());
+            new HashMap<String, Object>());
         DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
         defaultActionInvocation.init(actionProxy);
 
@@ -459,7 +461,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     public void testNullResultPossible() throws Exception {
         ActionProxy actionProxy = actionProxyFactory.createActionProxy("",
-                "NullFoo", "nullMethod", new HashMap<String, Object>());
+            "NullFoo", "nullMethod", new HashMap<String, Object>());
         DefaultActionInvocation defaultActionInvocation = (DefaultActionInvocation) actionProxy.getInvocation();
         defaultActionInvocation.init(actionProxy);
 
@@ -473,7 +475,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         super.setUp();
 
         // ensure we're using the default configuration, not simple config
-        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(configurationProvider);
         loadConfigurationProviders(configurationProvider);
     }
@@ -481,8 +483,8 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     private class SimpleActionEventListener implements ActionEventListener {
 
-        private String name;
-        private String result;
+        private final String name;
+        private final String result;
 
         SimpleActionEventListener(String name, String result) {
 
@@ -492,7 +494,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         @Override
         public Object prepare(Object action, ValueStack stack) {
-            ((SimpleAction)action).setName(name);
+            ((SimpleAction) action).setName(name);
             return action;
         }
 

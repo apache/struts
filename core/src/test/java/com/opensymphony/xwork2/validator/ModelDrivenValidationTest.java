@@ -18,8 +18,13 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ModelDrivenAction;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
@@ -31,7 +36,7 @@ import java.util.Map;
  * ModelDrivenValidationTest
  *
  * @author Jason Carreira
- *         Created Oct 1, 2003 10:08:25 AM
+ * Created Oct 1, 2003 10:08:25 AM
  */
 public class ModelDrivenValidationTest extends XWorkTestCase {
 
@@ -42,7 +47,7 @@ public class ModelDrivenValidationTest extends XWorkTestCase {
         Map<String, Object> context = new HashMap<>();
         context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
         ActionProxy proxy = actionProxyFactory.createActionProxy(null, "TestModelDrivenValidation", null, context);

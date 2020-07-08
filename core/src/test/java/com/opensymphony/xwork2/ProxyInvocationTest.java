@@ -19,6 +19,7 @@
 package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,22 +32,22 @@ public class ProxyInvocationTest extends XWorkTestCase {
     /**
      * Sets a ProxyObjectFactory as ObjectFactory (so the FooAction will always be retrieved
      * as a FooProxy), and it tries to call invokeAction on the TestActionInvocation.
-     * 
-     * It should fail, because the Method got from the action (actually a FooProxy) 
-     * will be executed on the InvocationHandler of the action (so, in the action itself). 
+     * <p>
+     * It should fail, because the Method got from the action (actually a FooProxy)
+     * will be executed on the InvocationHandler of the action (so, in the action itself).
      */
     public void testProxyInvocation() throws Exception {
 
         ActionProxy proxy = actionProxyFactory
             .createActionProxy("", "ProxyInvocation", null, createDummyContext());
         ActionInvocation invocation = proxy.getInvocation();
-        
+
         String result = invocation.invokeActionOnly();
         assertEquals("proxyResult", result);
 
     }
 
-    /** 
+    /**
      * Needed for the creation of the action proxy
      */
     private Map<String, Object> createDummyContext() {
@@ -62,7 +63,7 @@ public class ProxyInvocationTest extends XWorkTestCase {
         super.setUp();
 
         // ensure we're using the default configuration, not simple config
-        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("xwork-proxyinvoke.xml");
+        XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("xwork-proxyinvoke.xml");
         container.inject(configurationProvider);
         loadConfigurationProviders(configurationProvider);
     }

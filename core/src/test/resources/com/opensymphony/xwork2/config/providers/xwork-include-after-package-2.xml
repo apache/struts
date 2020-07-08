@@ -19,12 +19,10 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 2.0//EN"
-    "http://struts.apache.org/dtds/xwork-2.0.dtd"
- >
-
-<xwork>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
     <package name="namespace5" extends="namespace4" namespace="/namespace5">
         <action name="action5" class="com.opensymphony.xwork2.SimpleAction">
             <result name="success" type="chain"/>
@@ -32,4 +30,4 @@
         </action>
     </package>
 
-</xwork>
+</struts>

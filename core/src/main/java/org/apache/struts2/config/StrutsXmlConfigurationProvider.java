@@ -56,6 +56,15 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     }
 
     /**
+     * Constructs the configuration provider based on the provided config file
+     *
+     * @param filename file with Struts configuration
+     */
+    public StrutsXmlConfigurationProvider(String filename) {
+        this(filename, false, null);
+    }
+
+    /**
      * Constructs the configuration provider
      *
      * @param filename The filename to look for

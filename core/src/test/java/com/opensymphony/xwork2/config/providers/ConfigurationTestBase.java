@@ -21,21 +21,22 @@ package com.opensymphony.xwork2.config.providers;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.impl.MockConfiguration;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 /**
  * ConfigurationTestBase
  *
  * @author Jason Carreira
- *         Created Jun 9, 2003 7:42:12 AM
+ * Created Jun 9, 2003 7:42:12 AM
  */
 public abstract class ConfigurationTestBase extends XWorkTestCase {
 
     protected ConfigurationProvider buildConfigurationProvider(final String filename) {
         configuration = new MockConfiguration();
-        ((MockConfiguration)configuration).selfRegister();
+        ((MockConfiguration) configuration).selfRegister();
         container = configuration.getContainer();
 
-        XmlConfigurationProvider prov = new XmlConfigurationProvider(filename, true);
+        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider(filename);
         container.inject(prov);
         prov.init(configuration);
         prov.loadPackages();

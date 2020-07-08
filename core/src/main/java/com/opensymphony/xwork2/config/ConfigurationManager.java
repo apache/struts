@@ -20,7 +20,6 @@ package com.opensymphony.xwork2.config;
 
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -102,7 +101,6 @@ public class ConfigurationManager {
         try {
             if (containerProviders.size() == 0) {
                 containerProviders.add(new XWorkConfigurationProvider());
-                containerProviders.add(new XmlConfigurationProvider("xwork.xml", false));
             }
 
             return containerProviders;
@@ -160,7 +158,7 @@ public class ConfigurationManager {
      */
     public synchronized void destroyConfiguration() {
         clearContainerProviders(); // let's destroy the ConfigurationProvider first
-        containerProviders = new CopyOnWriteArrayList<ContainerProvider>();
+        containerProviders = new CopyOnWriteArrayList<>();
         if (configuration != null)
             configuration.destroy(); // let's destroy it first, before nulling it.
         configuration = null;

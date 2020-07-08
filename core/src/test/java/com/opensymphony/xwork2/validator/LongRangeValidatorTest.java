@@ -20,10 +20,11 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class LongRangeValidatorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider, new MockConfigurationProvider());
     }

@@ -5,9 +5,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.ServletActionContext;
-import org.junit.jupiter.api.Assertions;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.util.Arrays;
 import java.util.List;
 
 // TODO Vary headers tests
@@ -27,21 +27,31 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
         ActionContext context = ServletActionContext.getActionContext();
         mai.setInvocationContext(context);
 
-        Assertions.assertDoesNotThrow(() -> interceptor.intercept(mai));
+        try{
+            interceptor.intercept(mai);
+            assert(true);
+        } catch (RuntimeException e){
+            assert(false);
+        }
     }
 
     public void testValidSite() throws Exception {
         MockActionInvocation mai = new MockActionInvocation();
         MockHttpServletRequest request = new MockHttpServletRequest();
 
-        for (String header : List.of("same-origin", "same-site", "none")){
+        for (String header : Arrays.asList("same-origin", "same-site", "none")){
             request.addHeader("sec-fetch-site", "same-origin");
 
             ServletActionContext.setRequest(request);
             ActionContext context = ServletActionContext.getActionContext();
             mai.setInvocationContext(context);
 
-            Assertions.assertDoesNotThrow(() -> interceptor.intercept(mai));
+            try{
+                interceptor.intercept(mai);
+                assert(true);
+            } catch (RuntimeException e){
+                assert(false);
+            }
             request.removeHeader("sec-fetch-site");
         }
 
@@ -59,14 +69,19 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
         ActionContext context = ServletActionContext.getActionContext();
         mai.setInvocationContext(context);
 
-        Assertions.assertDoesNotThrow(() -> interceptor.intercept(mai));
+        try{
+            interceptor.intercept(mai);
+            assert(true);
+        } catch (RuntimeException e){
+            assert(false);
+        }
     }
 
     public void testInValidTopLevelNavigation() throws Exception {
         MockActionInvocation mai = new MockActionInvocation();
         MockHttpServletRequest request = new MockHttpServletRequest();
 
-        for (String header : List.of("object", "embed")) {
+        for (String header : Arrays.asList("object", "embed")) {
             request.addHeader("sec-fetch-site", "foo");
             request.addHeader("sec-fetch-mode", "navigate");
             request.addHeader("sec-fetch-dest", header);
@@ -76,9 +91,12 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
             ActionContext context = ServletActionContext.getActionContext();
             mai.setInvocationContext(context);
 
-            Assertions.assertThrows(RuntimeException.class, () -> {
+            try{
                 interceptor.intercept(mai);
-            });
+                assert(false);
+            } catch (RuntimeException e){
+                assert(true);
+            }
             request.removeHeader("sec-fetch-dest");
         }
     }
@@ -89,13 +107,18 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
 
         request.addHeader("sec-fetch-site", "foo");
         request.setContextPath("/foobar");
-        interceptor.setExemptedPaths(List.of("/foobar", "/test"));
+        interceptor.setExemptedPaths(Arrays.asList("/foobar", "/test"));
 
         ServletActionContext.setRequest(request);
         ActionContext context = ServletActionContext.getActionContext();
         mai.setInvocationContext(context);
 
-        Assertions.assertDoesNotThrow(() -> interceptor.intercept(mai));
+        try{
+            interceptor.intercept(mai);
+            assert(true);
+        } catch (RuntimeException e){
+            assert(false);
+        }
     }
 
     public void testPathNotInExemptedPaths() throws Exception {
@@ -104,15 +127,18 @@ public class CSRFPreventionInterceptorTest extends XWorkTestCase {
 
         request.addHeader("sec-fetch-site", "foo");
         request.setContextPath("/foobar");
-        interceptor.setExemptedPaths(List.of("/test"));
+        interceptor.setExemptedPaths(Arrays.asList("/test"));
 
         ServletActionContext.setRequest(request);
         ActionContext context = ServletActionContext.getActionContext();
         mai.setInvocationContext(context);
 
-        Assertions.assertThrows(RuntimeException.class, () -> {
+        try{
             interceptor.intercept(mai);
-        });
+            assert(false);
+        } catch (RuntimeException e){
+            assert(true);
+        }
     }
 
 

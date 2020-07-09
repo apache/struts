@@ -285,10 +285,10 @@
                             <exclude>**/TestBean.java</exclude>
                         </excludes>
                         <properties>
-                          <property>
-                            <name>junit</name>
-                            <value>false</value>
-                          </property>
+                            <property>
+                                <name>junit</name>
+                                <value>false</value>
+                            </property>
                         </properties>
                     </configuration>
                 </plugin>

@@ -273,6 +273,7 @@
             <interceptor name="annotationParameterFilter" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationParameterFilterInterceptor" />
             <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor" />
             <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor" />
+            <interceptor name="csrfprevention" class="com.opensymphony.xwork2.interceptor.CSRFPreventionInterceptor" />
 
             <!-- Empty stack - performs no operations -->
             <interceptor-stack name="emptyStack">
@@ -388,6 +389,7 @@
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="csrfprevention"></interceptor-ref>
                 <interceptor-ref name="validation">
                     <param name="excludeMethods">input,back,cancel,browse</param>
                 </interceptor-ref>

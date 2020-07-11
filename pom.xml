@@ -96,7 +96,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>now</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2020-07-11T19:40:00Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
         <ognl.version>3.1.28</ognl.version>

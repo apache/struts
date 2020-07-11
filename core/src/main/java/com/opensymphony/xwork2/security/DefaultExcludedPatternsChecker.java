@@ -80,7 +80,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
     protected void setDynamicMethodInvocation(String dmiValue) {
-        if (BooleanUtils.toBoolean(dmiValue) == false) {
+        if (!BooleanUtils.toBoolean(dmiValue)) {
             LOG.debug("DMI is disabled, adding DMI related excluded patterns");
             setAdditionalExcludePatterns("^(action|method):.*");
         }

@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.security;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -35,7 +36,11 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     private static final Logger LOG = LogManager.getLogger(DefaultAcceptedPatternsChecker.class);
 
     public static final String[] ACCEPTED_PATTERNS = {
-            "\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'\\])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*"
+            "\\w+((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*"
+    };
+
+    public static final String[] DMI_AWARE_ACCEPTED_PATTERNS = {
+            "\\w+([:]?\\w+)*((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*([!]?\\w+)*"
     };
 
     private Set<Pattern> acceptedPatterns;
@@ -44,10 +49,21 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
         setAcceptedPatterns(ACCEPTED_PATTERNS);
     }
 
+    public DefaultAcceptedPatternsChecker(
+            @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false) String dmiValue
+    ) {
+        if (BooleanUtils.toBoolean(dmiValue)) {
+            LOG.debug("DMI is enabled, adding DMI related accepted patterns");
+            setAcceptedPatterns(DMI_AWARE_ACCEPTED_PATTERNS);
+        } else {
+            setAcceptedPatterns(ACCEPTED_PATTERNS);
+        }
+    }
+
     @Inject(value = StrutsConstants.STRUTS_OVERRIDE_ACCEPTED_PATTERNS, required = false)
     protected void setOverrideAcceptedPatterns(String acceptablePatterns) {
         LOG.warn("Overriding accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
-                    acceptedPatterns, acceptablePatterns);
+                acceptedPatterns, acceptablePatterns);
         acceptedPatterns = new HashSet<>();
         try {
             for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {
@@ -88,7 +104,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
             LOG.debug("Sets accepted patterns to [{}], note this impacts the safety of your application!", patterns);
         } else {
             LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
-                        acceptedPatterns, patterns);
+                    acceptedPatterns, patterns);
         }
         acceptedPatterns = new HashSet<>(patterns.size());
         try {

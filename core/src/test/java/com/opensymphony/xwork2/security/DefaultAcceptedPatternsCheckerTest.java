@@ -27,41 +27,41 @@ import java.util.regex.Pattern;
 
 public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
 
-    public void testHardcodedAcceptedPatterns() throws Exception {
-        // given
-        List<String> params = new ArrayList<String>() {
-            {
-                add("%{#application['test']}");
-                add("%{#application.test}");
-                add("%{#Application['test']}");
-                add("%{#Application.test}");
-                add("%{#session['test']}");
-                add("%{#session.test}");
-                add("%{#Session['test']}");
-                add("%{#Session.test}");
-                add("%{#struts['test']}");
-                add("%{#struts.test}");
-                add("%{#Struts['test']}");
-                add("%{#Struts.test}");
-                add("%{#request['test']}");
-                add("%{#request.test}");
-                add("%{#Request['test']}");
-                add("%{#Request.test}");
-                add("%{#servletRequest['test']}");
-                add("%{#servletRequest.test}");
-                add("%{#ServletRequest['test']}");
-                add("%{#ServletRequest.test}");
-                add("%{#servletResponse['test']}");
-                add("%{#servletResponse.test}");
-                add("%{#ServletResponse['test']}");
-                add("%{#ServletResponse.test}");
-                add("%{#parameters['test']}");
-                add("%{#parameters.test}");
-                add("%{#Parameters['test']}");
-                add("%{#Parameters.test}");
-            }
-        };
+    private final List<String> params = new ArrayList<String>() {
+        {
+            add("%{#application['test']}");
+            add("%{#application.test}");
+            add("%{#Application['test']}");
+            add("%{#Application.test}");
+            add("%{#session['test']}");
+            add("%{#session.test}");
+            add("%{#Session['test']}");
+            add("%{#Session.test}");
+            add("%{#struts['test']}");
+            add("%{#struts.test}");
+            add("%{#Struts['test']}");
+            add("%{#Struts.test}");
+            add("%{#request['test']}");
+            add("%{#request.test}");
+            add("%{#Request['test']}");
+            add("%{#Request.test}");
+            add("%{#servletRequest['test']}");
+            add("%{#servletRequest.test}");
+            add("%{#ServletRequest['test']}");
+            add("%{#ServletRequest.test}");
+            add("%{#servletResponse['test']}");
+            add("%{#servletResponse.test}");
+            add("%{#ServletResponse['test']}");
+            add("%{#ServletResponse.test}");
+            add("%{#parameters['test']}");
+            add("%{#parameters.test}");
+            add("%{#Parameters['test']}");
+            add("%{#Parameters.test}");
+        }
+    };
 
+    public void testHardcodedAcceptedPatterns() {
+        // given
         AcceptedPatternsChecker checker = new DefaultAcceptedPatternsChecker();
 
         for (String param : params) {
@@ -73,7 +73,20 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
         }
     }
 
-    public void testUnderscoreInParamName() throws Exception {
+    public void testHardcodedAcceptedPatternsWithDmiEnabled() {
+        // given
+        AcceptedPatternsChecker checker = new DefaultAcceptedPatternsChecker(Boolean.TRUE.toString());
+
+        for (String param : params) {
+            // when
+            AcceptedPatternsChecker.IsAccepted actual = checker.isAccepted(param);
+
+            // then
+            assertFalse("Access to " + param + " is possible!", actual.isAccepted());
+        }
+    }
+
+    public void testUnderscoreInParamName() {
         // given
         AcceptedPatternsChecker checker = new DefaultAcceptedPatternsChecker();
 
@@ -84,22 +97,33 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
         assertTrue("Param with underscore wasn't accepted!", actual.isAccepted());
     }
 
-    public void testAcceptedPatternsImmutable() throws Exception {
+    public void testUnderscoreInParamNameWithDmiEnabled() {
+        // given
+        AcceptedPatternsChecker checker = new DefaultAcceptedPatternsChecker(Boolean.TRUE.toString());
+
+        // when
+        AcceptedPatternsChecker.IsAccepted actual = checker.isAccepted("mapParam['param_1']");
+
+        // then
+        assertTrue("Param with underscore wasn't accepted!", actual.isAccepted());
+    }
+
+    public void testAcceptedPatternsImmutable() {
         AcceptedPatternsChecker checker = new DefaultAcceptedPatternsChecker();
 
         Set<Pattern> acceptedPatternSet = checker.getAcceptedPatterns();
         assertNotNull("default accepted patterns null?", acceptedPatternSet);
         assertFalse("default accepted patterns empty?", acceptedPatternSet.isEmpty());
         try {
-            acceptedPatternSet.add(Pattern.compile("SomeRegexPattern") );
-            fail ("accepted patterns modifiable?");
-        } catch(UnsupportedOperationException uoe) {
+            acceptedPatternSet.add(Pattern.compile("SomeRegexPattern"));
+            fail("accepted patterns modifiable?");
+        } catch (UnsupportedOperationException uoe) {
             // Expected result
         }
         try {
             acceptedPatternSet.clear();
-            fail ("accepted patterns modifiable?");
-        } catch(UnsupportedOperationException uoe) {
+            fail("accepted patterns modifiable?");
+        } catch (UnsupportedOperationException uoe) {
             // Expected result
         }
 
@@ -108,15 +132,15 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
         assertNotNull("replaced default accepted patterns null?", acceptedPatternSet);
         assertFalse("replaced default accepted patterns empty?", acceptedPatternSet.isEmpty());
         try {
-            acceptedPatternSet.add(Pattern.compile("SomeRegexPattern") );
-            fail ("replaced accepted patterns modifiable?");
-        } catch(UnsupportedOperationException uoe) {
+            acceptedPatternSet.add(Pattern.compile("SomeRegexPattern"));
+            fail("replaced accepted patterns modifiable?");
+        } catch (UnsupportedOperationException uoe) {
             // Expected result
         }
         try {
             acceptedPatternSet.clear();
-            fail ("accepted patterns modifiable?");
-        } catch(UnsupportedOperationException uoe) {
+            fail("accepted patterns modifiable?");
+        } catch (UnsupportedOperationException uoe) {
             // Expected result
         }
 
@@ -125,23 +149,29 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
         acceptedPatternSet = checker.getAcceptedPatterns();
         assertNotNull("replaced default accepted patterns null?", acceptedPatternSet);
         assertFalse("replaced default accepted patterns empty?", acceptedPatternSet.isEmpty());
-        assertTrue("replaced default accepted patterns not size " + testPatternArray.length + "?",
-                acceptedPatternSet.size() == testPatternArray.length);
+        assertEquals("replaced default accepted patterns not size " + testPatternArray.length + "?", acceptedPatternSet.size(), testPatternArray.length);
         for (String testPatternArray1 : testPatternArray) {
             assertTrue(testPatternArray1 + " not accepted?", checker.isAccepted(testPatternArray1).isAccepted());
         }
         try {
-            acceptedPatternSet.add(Pattern.compile("SomeRegexPattern") );
-            fail ("replaced accepted patterns modifiable?");
-        } catch(UnsupportedOperationException uoe) {
+            acceptedPatternSet.add(Pattern.compile("SomeRegexPattern"));
+            fail("replaced accepted patterns modifiable?");
+        } catch (UnsupportedOperationException uoe) {
             // Expected result
         }
         try {
             acceptedPatternSet.clear();
-            fail ("accepted patterns modifiable?");
-        } catch(UnsupportedOperationException uoe) {
+            fail("accepted patterns modifiable?");
+        } catch (UnsupportedOperationException uoe) {
             // Expected result
         }
+    }
 
+    public void testDmiIsEnabled() {
+        DefaultAcceptedPatternsChecker checker = new DefaultAcceptedPatternsChecker(Boolean.TRUE.toString());
+
+        AcceptedPatternsChecker.IsAccepted accepted = checker.isAccepted("action:myAction!save");
+
+        assertTrue("dmi isn't accepted", accepted.isAccepted());
     }
 }

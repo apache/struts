@@ -27,12 +27,9 @@ import javax.servlet.http.HttpServletRequest;
  * {@code sec-fetch-*} request headers to decide whether to accept or reject a request. Read more
  * about <a href="https://web.dev/fetch-metadata/">Fetch Metadata.</a>
  *
- * See {@link DefaultResourceIsolationPolicy} for the default implementation used.
+ * See {@link StrutsResourceIsolationPolicy} for the default implementation used.
  *
  * @see <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>
- *
- * @author Santiago Diaz - saldiaz@google.com
- * @author Giannis Chatziveroglou - giannic@google.com
  **/
 
 @FunctionalInterface

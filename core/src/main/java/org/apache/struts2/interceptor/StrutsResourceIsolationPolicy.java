@@ -29,12 +29,9 @@ import javax.servlet.http.HttpServletRequest;
  * <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>.
  *
  * @see <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>
- *
- * @author Santiago Diaz - saldiaz@google.com
- * @author Giannis Chatziveroglou - giannic@google.com
  **/
 
-public final class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy {
+public final class StrutsResourceIsolationPolicy implements ResourceIsolationPolicy {
 
     @Override
     public boolean isRequestAllowed(HttpServletRequest request) {
@@ -54,8 +51,7 @@ public final class DefaultResourceIsolationPolicy implements ResourceIsolationPo
         return isAllowedTopLevelNavigation(request);
     }
 
-    private boolean isAllowedTopLevelNavigation(HttpServletRequest request)
-    {
+    private boolean isAllowedTopLevelNavigation(HttpServletRequest request) {
         String mode = request.getHeader(SEC_FETCH_MODE_HEADER);
         String dest = request.getHeader(SEC_FETCH_DEST_HEADER);
 

@@ -1,12 +1,15 @@
 package org.apache.struts2.interceptor.csp;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 public class CspInterceptor extends AbstractInterceptor implements PreResultListener {
 
@@ -21,6 +24,7 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         // TODO : check content-type and uri for csp reports and logCspViolation()
+//        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         invocation.addPreResultListener(this);
         return invocation.invoke();
 
@@ -28,11 +32,7 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
-        addCspHeaders(response);
-    }
-
-    private void addCspHeaders(HttpServletResponse response){
-        //TODO use settings and add csp headers to the response
+        settings.addCspHeaders(response);
     }
 
     private void logCspViolation() {

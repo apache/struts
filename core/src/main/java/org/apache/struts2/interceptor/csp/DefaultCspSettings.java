@@ -5,7 +5,6 @@ import com.opensymphony.xwork2.ActionContext;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-import static org.apache.struts2.interceptor.csp.CspSettings.CSP_HEADER;
 
 public class DefaultCspSettings implements CspSettings {
 

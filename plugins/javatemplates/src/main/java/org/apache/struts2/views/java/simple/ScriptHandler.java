@@ -22,7 +22,10 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
         //      if yes, getNonceString
         //      if not, createNonce
 
-        String nonceValue = settings.getNonceString();
+//        String nonceValue = settings.getNonceString();
+
+        String nonceValue = "foobar";
+
         attrs.add("nonce", nonceValue)
             .addIfExists("async", params.get("async"))
             .addIfExists("charset", params.get("charset"))

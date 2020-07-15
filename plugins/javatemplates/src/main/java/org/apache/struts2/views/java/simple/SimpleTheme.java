@@ -50,6 +50,7 @@ public class SimpleTheme extends DefaultTheme {
                 put("textarea", new FactoryList(TextAreaHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("radiomap", new FactoryList(RadioHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("checkboxlist", new FactoryList(CheckboxListHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
+                put("script", new FactoryList(ScriptHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("actionerror", new FactoryList(ActionErrorHandler.class));
                 put("token", new FactoryList(TokenHandler.class));
                 put("actionmessage", new FactoryList(ActionMessageHandler.class));

@@ -10,7 +10,7 @@ public class DefaultCspSettings implements CspSettings {
 
     public void addCspHeaders(HttpServletResponse response) {
         createNonce();
-        response.addHeader(CSP_HEADER, getPolicyString();
+        response.addHeader(CSP_HEADER, getPolicyString());
         //TODO add nonces to the script / style tags
     }
 

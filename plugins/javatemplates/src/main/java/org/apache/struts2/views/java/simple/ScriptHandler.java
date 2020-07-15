@@ -1,5 +1,6 @@
 package org.apache.struts2.views.java.simple;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.interceptor.csp.DefaultCspSettings;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
@@ -35,7 +36,8 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
 
         start("script", attrs);
         String body = (String) params.get("body");
-        characters(body, false); // false means no HTML encoding
+        if (StringUtils.isNotEmpty(body))
+            characters(body, false); // false means no HTML encoding
         // TODO how to connect helper with tag
         end("script");
     }

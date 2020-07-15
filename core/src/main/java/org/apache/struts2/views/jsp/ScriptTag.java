@@ -17,7 +17,7 @@ public class ScriptTag extends ComponentTagSupport {
 
     @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
-        return new Script();
+        return new Script(stack, req, res);
     }
 
     protected void populateParams() {

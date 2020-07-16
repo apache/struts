@@ -15,6 +15,10 @@ public class ScriptTag extends ComponentTagSupport {
     protected String defer;
     protected String src;
     protected String type;
+    protected String referrerpolicy;
+    protected String nomodule;
+    protected String integrity;
+    protected String crossorigin;
 
     @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -29,6 +33,10 @@ public class ScriptTag extends ComponentTagSupport {
         script.setDefer(defer);
         script.setSrc(src);
         script.setType(type);
+        script.setReferrerpolicy(referrerpolicy);
+        script.setNomodule(nomodule);
+        script.setIntegrity(integrity);
+        script.setCrossorigin(crossorigin);
     }
 
     public void setAsync(String async) {
@@ -40,7 +48,6 @@ public class ScriptTag extends ComponentTagSupport {
     }
 
     public void setSrc(String src) {
-        System.out.println("setting src in tag");
         this.src = src;
     }
 
@@ -50,6 +57,22 @@ public class ScriptTag extends ComponentTagSupport {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setReferrerpolicy(String referrerpolicy) {
+        this.referrerpolicy = referrerpolicy;
+    }
+
+    public void setNomodule(String nomodule) {
+        this.nomodule = nomodule;
+    }
+
+    public void setIntegrity(String integrity) {
+        this.integrity = integrity;
+    }
+
+    public void setCrossorigin(String crossorigin) {
+        this.crossorigin = crossorigin;
     }
 
 }

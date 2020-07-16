@@ -21,6 +21,11 @@ public class Script extends UIBean {
     protected String defer;
     protected String src;
     protected String type;
+    protected String referrerpolicy;
+    protected String nomodule;
+    protected String integrity;
+    protected String crossorigin;
+
 
     // TODO Sketchy
     private static final String TEMPLATE = "script";
@@ -59,6 +64,26 @@ public class Script extends UIBean {
         this.type = type;
     }
 
+    @StrutsTagAttribute(description="HTML script referrerpolicy attribute")
+    public void setReferrerpolicy(String referrerpolicy) {
+        this.referrerpolicy = referrerpolicy;
+    }
+
+    @StrutsTagAttribute(description="HTML script nomodule attribute")
+    public void setNomodule(String nomodule) {
+        this.nomodule = nomodule;
+    }
+
+    @StrutsTagAttribute(description="HTML script integrity attribute")
+    public void setIntegrity(String integrity) {
+        this.integrity = integrity;
+    }
+
+    @StrutsTagAttribute(description="HTML script crossorigin attribute")
+    public void setCrossorigin(String crossorigin) {
+        this.crossorigin = crossorigin;
+    }
+
     @Override
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
@@ -81,6 +106,22 @@ public class Script extends UIBean {
 
         if (type != null) {
             addParameter("type", findString(type));
+        }
+
+        if (referrerpolicy != null) {
+            addParameter("referrerpolicy", findString(referrerpolicy));
+        }
+
+        if (nomodule != null) {
+            addParameter("nomodule", findString(nomodule));
+        }
+
+        if (integrity != null) {
+            addParameter("integrity", findString(integrity));
+        }
+
+        if (crossorigin != null) {
+            addParameter("crossorigin", findString(crossorigin));
         }
 
         //TODO this portion was copied from Form.java - don't know if it's necessary for scripts

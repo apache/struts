@@ -4,6 +4,8 @@ import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.components.Script;
 import org.apache.struts2.components.Token;
 import org.apache.struts2.components.UIBean;
+import org.apache.struts2.components.UrlRenderer;
+import org.easymock.EasyMock;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -13,8 +15,12 @@ public class ScriptTest extends AbstractTest {
     private Script tag;
 
     public void testRenderScriptTag() {
-//        tag.setType("text/javascript");
-       
+        tag.setName("name_");
+        tag.setType("text/javascript");
+        tag.setSrc("mysrc");
+        tag.setAsync("false");
+        tag.setDefer("false");
+
         tag.evaluateParams();
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
@@ -22,6 +28,10 @@ public class ScriptTest extends AbstractTest {
 
         System.out.println(output);
         assertTrue(output.contains("nonce="));
+        assertTrue(output.contains("type="));
+        assertTrue(output.contains("src="));
+        assertTrue(output.contains("async="));
+        assertTrue(output.contains("defer="));
     }
 
     @Override
@@ -40,6 +50,7 @@ public class ScriptTest extends AbstractTest {
         this.tag = new Script(stack, request, response);
 
         ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.setSession(new HashMap<>());
+        actionContext.withSession(new HashMap<>());
+
     }
 }

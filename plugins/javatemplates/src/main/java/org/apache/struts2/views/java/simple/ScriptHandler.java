@@ -32,7 +32,8 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
             .addIfExists("charset", params.get("charset"))
             .addIfExists("defer", params.get("defer"))
             .addIfExists("src", params.get("src"))
-            .addIfExists("type", params.get("type"));
+            .addIfExists("type", params.get("type"))
+            .addIfExists("name", params.get("name"));
 
         start("script", attrs);
         String body = (String) params.get("body");

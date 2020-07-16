@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
 
-    private final DefaultCspSettings settings = new DefaultCspSettings();
 
     @Override
     public void generate() throws IOException {
@@ -23,17 +22,17 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
         //      if yes, getNonceString
         //      if not, createNonce
 
-        String nonceValue = settings.getNonceString();
-
-//        String nonceValue = "foobar";
-
-        attrs.add("nonce", nonceValue)
+        attrs.add("nonce", (String) params.get("nonce"))
             .addIfExists("async", params.get("async"))
             .addIfExists("charset", params.get("charset"))
             .addIfExists("defer", params.get("defer"))
             .addIfExists("src", params.get("src"))
             .addIfExists("type", params.get("type"))
-            .addIfExists("name", params.get("name"));
+            .addIfExists("name", params.get("name"))
+            .addIfExists("referrerpolicy", params.get("referrerpolicy"))
+            .addIfExists("nomodule", params.get("nomodule"))
+            .addIfExists("integrity", params.get("integrity"))
+            .addIfExists("crossorigin", params.get("crossorigin"));
 
         start("script", attrs);
         String body = (String) params.get("body");

@@ -11,6 +11,8 @@ public interface CspSettings {
     String REPORT_URI = "report-uri";
     String NONE = "none";
     String STRICT_DYNAMIC = "strict-dynamic";
+    String HTTP = "http:";
+    String HTTPS = "https:";
 
     void addCspHeaders(HttpServletResponse response);
 }

@@ -38,7 +38,7 @@ public final class StrutsResourceIsolationPolicy implements ResourceIsolationPol
         String site = request.getHeader(SEC_FETCH_SITE_HEADER);
 
         // Allow requests from browsers which don't send Fetch Metadata
-        if (Strings.isEmpty((site))){
+        if (Strings.isEmpty(site)){
             return true;
         }
 

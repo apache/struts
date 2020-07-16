@@ -2,13 +2,12 @@ package org.apache.struts2.views.java.simple;
 
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.components.Script;
-import org.apache.struts2.components.Token;
 import org.apache.struts2.components.UIBean;
-import org.apache.struts2.components.UrlRenderer;
-import org.easymock.EasyMock;
+
 
 import java.util.HashMap;
-import java.util.regex.Pattern;
+import java.util.Map;
+
 
 public class ScriptTest extends AbstractTest {
 
@@ -50,7 +49,8 @@ public class ScriptTest extends AbstractTest {
         this.tag = new Script(stack, request, response);
 
         ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.withSession(new HashMap<>());
-
+        Map<String, Object> session = new HashMap<>();
+        session.put("nonce", "r4nd0m");
+        actionContext.withSession(session);
     }
 }

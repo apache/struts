@@ -246,6 +246,7 @@
             <interceptor name="cookieProvider" class="org.apache.struts2.interceptor.CookieProviderInterceptor"/>
             <interceptor name="clearSession" class="org.apache.struts2.interceptor.ClearSessionInterceptor" />
             <interceptor name="createSession" class="org.apache.struts2.interceptor.CreateSessionInterceptor" />
+            <interceptor name="cspInterceptor" class="org.apache.struts2.interceptor.csp.CspInterceptor"/>
             <interceptor name="debugging" class="org.apache.struts2.interceptor.debugging.DebuggingInterceptor" />
             <interceptor name="execAndWait" class="org.apache.struts2.interceptor.ExecuteAndWaitInterceptor"/>
             <interceptor name="exception" class="com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor"/>
@@ -372,6 +373,7 @@
                  associated with requests that should not be validated.
                  -->
             <interceptor-stack name="defaultStack">
+                <interceptor-ref name="cspInterceptor"/>
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>

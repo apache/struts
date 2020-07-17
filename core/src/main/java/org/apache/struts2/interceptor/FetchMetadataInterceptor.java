@@ -43,7 +43,7 @@ import org.apache.logging.log4j.Logger;
  * @see <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>
  **/
 
-public class FetchMetadataInterceptor extends AbstractInterceptor implements PreResultListener {
+public class FetchMetadataInterceptor extends AbstractInterceptor {
     private static final Logger logger = LogManager.getLogger(FetchMetadataInterceptor.class);
     private static final String VARY_HEADER_VALUE = String.format("%s,%s,%s", SEC_FETCH_DEST_HEADER, SEC_FETCH_SITE_HEADER, SEC_FETCH_MODE_HEADER);
     private static final String SC_FORBIDDEN = String.valueOf(HttpServletResponse.SC_FORBIDDEN);
@@ -56,19 +56,11 @@ public class FetchMetadataInterceptor extends AbstractInterceptor implements Pre
     }
 
     @Override
-    public void beforeResult(ActionInvocation invocation, String resultCode) {
-        // Add Vary headers
-        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
-        response.setHeader(VARY_HEADER, VARY_HEADER_VALUE);
-    }
-
-    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         ActionContext context = invocation.getInvocationContext();
         HttpServletRequest request = context.getServletRequest();
 
-        // Adds listener that operates between interceptor and result rendering to set Vary headers
-        invocation.addPreResultListener(this);
+        addVaryHeaders(invocation);
 
         String contextPath = request.getContextPath();
         // Apply exemptions: paths/endpoints meant to be served cross-origin
@@ -85,7 +77,11 @@ public class FetchMetadataInterceptor extends AbstractInterceptor implements Pre
             "Fetch metadata rejected cross-origin request to %s",
             contextPath
         );
-        beforeResult(invocation, SC_FORBIDDEN);
         return SC_FORBIDDEN;
+    }
+
+    private void addVaryHeaders(ActionInvocation invocation) {
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
+        response.setHeader(VARY_HEADER, VARY_HEADER_VALUE);
     }
 }

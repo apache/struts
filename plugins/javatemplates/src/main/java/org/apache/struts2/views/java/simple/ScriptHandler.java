@@ -35,10 +35,17 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
             .addIfExists("crossorigin", params.get("crossorigin"));
 
         start("script", attrs);
-        String body = (String) params.get("body");
-        if (StringUtils.isNotEmpty(body))
-            characters(body, false); // false means no HTML encoding
-        // TODO how to connect helper with tag
-        end("script");
+
+
+    }
+
+    public static class CloseHandler extends AbstractTagHandler implements TagGenerator {
+        public void generate() throws IOException {
+            Map<String, Object> params = context.getParameters();
+            String body = (String) params.get("body");
+            if (StringUtils.isNotEmpty(body))
+                characters(body, false); // false means no HTML encoding
+            end("script");
+        }
     }
 }

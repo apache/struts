@@ -32,7 +32,7 @@ import java.util.ArrayList;
         tldTagClass="org.apache.struts2.views.jsp.ui.ScriptTag",
         description="Script tag to be used for adding nonce values to scripts",
         allowDynamicAttributes=true)
-public class Script extends UIBean {
+public class Script extends ClosingUIBean {
 
     protected String async;
     protected String charset;
@@ -46,10 +46,15 @@ public class Script extends UIBean {
 
 
     // TODO Sketchy
-    private static final String TEMPLATE = "script";
+    private static final String TEMPLATE = "script-close";
 
     public Script(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
+    }
+
+    @Override
+    public String getDefaultOpenTemplate() {
+        return "script";
     }
 
     @Override
@@ -103,6 +108,12 @@ public class Script extends UIBean {
     }
 
     @Override
+    public boolean usesBody() {
+        return true;
+    }
+
+
+    @Override
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
 
@@ -149,6 +160,9 @@ public class Script extends UIBean {
             // we have this if check so we don't do this twice (on open and close of the template)
             addParameter("tagNames", new ArrayList());
         }
+
+//        String nonceValue = stack.getContext().get("nonce");
+        addParameter("nonce", "r4and0m");
 
     }
 

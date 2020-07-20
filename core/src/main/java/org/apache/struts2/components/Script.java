@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.views.annotations.StrutsTag;
@@ -26,6 +27,7 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Map;
 
 
 @StrutsTag(name="script",
@@ -44,9 +46,8 @@ public class Script extends ClosingUIBean {
     protected String integrity;
     protected String crossorigin;
 
-
-    // TODO Sketchy
     private static final String TEMPLATE = "script-close";
+    private static final String OPEN_TEMPLATE = "script";
 
     public Script(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -54,7 +55,7 @@ public class Script extends ClosingUIBean {
 
     @Override
     public String getDefaultOpenTemplate() {
-        return "script";
+        return OPEN_TEMPLATE;
     }
 
     @Override
@@ -161,8 +162,8 @@ public class Script extends ClosingUIBean {
             addParameter("tagNames", new ArrayList());
         }
 
-//        String nonceValue = stack.getContext().get("nonce");
-        addParameter("nonce", "r4and0m");
+        String nonceValue = stack.getActionContext().getSession().get("nonce").toString();
+        addParameter("nonce", nonceValue);
 
     }
 

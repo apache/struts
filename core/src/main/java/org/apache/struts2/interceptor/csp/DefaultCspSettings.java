@@ -31,8 +31,6 @@ import java.util.Map;
 public class DefaultCspSettings implements CspSettings {
 
     private static final int NONCE_LENGTH = 18;
-    private String nonceValue;
-    private ValueStack stack = ActionContext.getContext().getValueStack();
 
     public void addCspHeaders(HttpServletResponse response) {
         createNonce();
@@ -40,12 +38,14 @@ public class DefaultCspSettings implements CspSettings {
     }
 
     public String getNonceString() {
-        return nonceValue;
+        Map<String, Object> session = ActionContext.getContext().getSession();
+        return (String) session.get("nonce");
     }
 
     protected void createNonce() {
-        nonceValue = Base64.getUrlEncoder().encodeToString(getRandomBytes(NONCE_LENGTH));
-        stack.push(nonceValue);
+        String nonceValue = Base64.getUrlEncoder().encodeToString(getRandomBytes(NONCE_LENGTH));
+        Map<String, Object> session = ActionContext.getContext().getSession();
+        session.put("nonce", nonceValue);
     }
 
     private String getPolicyString() {

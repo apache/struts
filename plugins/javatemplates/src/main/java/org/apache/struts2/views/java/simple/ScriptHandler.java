@@ -25,7 +25,7 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
         //      if yes, getNonceString
         //      if not, createNonce
 
-        attrs.add("nonce", (String) stack.pop())
+        attrs.add("nonce", (String) params.get("nonce"))
             .addIfExists("async", params.get("async"))
             .addIfExists("charset", params.get("charset"))
             .addIfExists("defer", params.get("defer"))

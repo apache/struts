@@ -32,7 +32,7 @@ public class DefaultCspSettings implements CspSettings {
 
     public void addCspHeaders(HttpServletResponse response) {
         createNonce();
-        response.addHeader(CSP_HEADER, getPolicyString());
+        response.setHeader(CSP_HEADER, getPolicyString());
     }
 
     public String getNonceString() {

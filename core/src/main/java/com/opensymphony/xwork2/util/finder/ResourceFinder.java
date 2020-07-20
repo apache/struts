@@ -58,10 +58,25 @@ public class ResourceFinder {
         this(path, classLoaderInterface, null);
     }
 
+    /**
+     * Create a ResourceFinder instance for looking up resources (via ClassLoader or via specific URLs
+     * specifying resource locations).
+     * 
+     * This class was functional in Struts 2.3.x, but broken for Struts 2.5.x (before 2.5.24), when dealing with
+     * JAR resources in certain circumstances.  The current logic permits the base path to be "" (empty string),
+     * which is required to also match JAR entries rooted at "" and not just file entries rooted at "/".
+     * 
+     * @param path  Base path from which to look for resources (typically "xyz/abc/klm" form for file or
+     *              jar contents).
+     * @param classLoaderInterface  ClassLoader to perform the resource lookup.  If null, a default Thread
+     *              ClassLoader will be used.
+     * @param urls  URLs (typically file: or jar:) within which to search for resources, instead of the
+     *              ClassLoader.  If null, fallback to a ClassLoader instead.
+     */
     public ResourceFinder(String path, ClassLoaderInterface classLoaderInterface, URL... urls) {
         path = StringUtils.trimToEmpty(path);
-        if (!StringUtils.endsWith(path, "/")) {
-            path += "/";
+        if (!path.isEmpty() && !StringUtils.endsWith(path, "/")) {
+            path += "/";  // Only append terminator to nonempty paths, otherwise JAR entry lookups break.
         }
         this.path = path;
 
@@ -1015,14 +1030,25 @@ public class ResourceFinder {
     public Map<URL, Set<String>> findPackagesMap(String uri) throws IOException {
         String basePath = path + uri;
 
+        LOG.trace("    basePath(initial): " + basePath);
+
         if (!basePath.endsWith("/")) {
             basePath += "/";
         }
+
+        LOG.trace("    basePath(final): " + basePath);
+
         Enumeration<URL> urls = getResources(basePath);
         Map<URL, Set<String>> result = new HashMap<>();
 
+        if (! urls.hasMoreElements()) {
+            LOG.debug("    urls enumeration for basePath is empty ?");
+        }
+
         while (urls.hasMoreElements()) {
             URL location = urls.nextElement();
+
+            LOG.debug("       url (location): " + location);
 
             try {
                 if ("jar".equals(location.getProtocol())) {
@@ -1114,12 +1140,20 @@ public class ResourceFinder {
         jarfile = conn.getJarFile();
 
         Enumeration<JarEntry> entries = jarfile.entries();
+
+        if (entries == null || ! entries.hasMoreElements()) {
+            LOG.debug("           JAR entries null or empty");
+        }
+        LOG.debug("           Looking for entries matching basePath: " + basePath);
+
         while (entries != null && entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
             String name = entry.getName();
 
             if (entry.isDirectory() && StringUtils.startsWith(name, basePath)) {
                 resources.add(name);
+            } else if (entry.isDirectory()) {
+               LOG.trace("           entry: " + name + " , isDirectory: " + entry.isDirectory() + " but does not start with basepath");
             }
         }
     }
@@ -1156,13 +1190,22 @@ public class ResourceFinder {
 
     private Enumeration<URL> getResources(String fulluri) throws IOException {
         if (urls == null) {
+            LOG.debug("    urls (member) null, using classLoaderInterface to get resources");
+
             return classLoaderInterface.getResources(fulluri);
         }
+
+        LOG.debug("    urls (member) non-null, using findResource to get resources");
+
         Vector<URL> resources = new Vector<>();
         for (URL url : urls) {
             URL resource = findResource(fulluri, url);
-            if (resource != null){
+
+            if (resource != null) {
+                LOG.trace("    resource lookup non-null");
                 resources.add(resource);
+            } else {
+                LOG.trace("    resource lookup is null");
             }
         }
         return resources.elements();

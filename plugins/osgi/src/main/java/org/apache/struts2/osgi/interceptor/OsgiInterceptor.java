@@ -43,13 +43,17 @@ public class OsgiInterceptor extends AbstractInterceptor {
 
     private BundleContext bundleContext;
 
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
+        LOG.trace("OSGi Interceptor - intercept() called - ActionInvocation: [{}]", invocation);
+
         if (bundleContext != null) {
             Object action = invocation.getAction();
 
             //inject BundleContext
-            if (action instanceof BundleContextAware)
+            if (action instanceof BundleContextAware) {
                 ((BundleContextAware)action).setBundleContext(bundleContext);
+            }
 
             //inject service implementations
             if (action instanceof ServiceAware) {
@@ -69,12 +73,14 @@ public class OsgiInterceptor extends AbstractInterceptor {
                                         for (ServiceReference ref : refs) {
                                             Object service = bundleContext.getService(ref);
                                             //wow, that's a lot of nested ifs
-                                            if (service != null)
+                                            if (service != null) {
                                                 services.add(service);
+                                            }
                                         }
 
-                                        if (!services.isEmpty())
-                                            ((ServiceAware)action).setServices(services);
+                                        if (!services.isEmpty()) {
+                                            ((ServiceAware) action).setServices(services);
+                                        }
                                     }
                                 }
                             }
@@ -82,8 +88,8 @@ public class OsgiInterceptor extends AbstractInterceptor {
                     }
                 }
             }
-        } else if (LOG.isWarnEnabled()){
-            LOG.warn("The OSGi interceptor was not able to find the BundleContext in the ServletContext");          
+        } else {
+            LOG.warn("The OSGi interceptor was not able to find the BundleContext in the ServletContext");
         }
 
         return invocation.invoke();
@@ -91,6 +97,8 @@ public class OsgiInterceptor extends AbstractInterceptor {
 
     @Inject
     public void setServletContext(ServletContext servletContext) {
+        LOG.trace("OSGi Interceptor - setServletContext() called - ServletContext: [{}] ", servletContext);
+
         this.bundleContext = (BundleContext) servletContext.getAttribute(OsgiHost.OSGI_BUNDLE_CONTEXT);
     }
 

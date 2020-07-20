@@ -18,12 +18,53 @@
  */
 package org.apache.struts2.osgi.host;
 
+import java.util.Map;
 import junit.framework.TestCase;
-import org.apache.struts2.osgi.host.FelixOsgiHost;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.springframework.mock.web.MockServletContext;
 
 public class FelixOsgiHostTest extends TestCase {
+    private static final Logger LOG = LogManager.getLogger(FelixOsgiHostTest.class);
+    private FelixOsgiHost felixHost;
+    private MockServletContext servletContext;
 
-    private FelixOsgiHost felixHost = new FelixOsgiHost();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        // Use non-public API to explicitly set Log4j2 logging levels for the test.
+        Configurator.setRootLevel(Level.INFO);
+        Configurator.setLevel("org.apache.felix.framework.Felix.", Level.INFO);
+        Configurator.setLevel("org.apache.struts2.osgi.host.BaseOsgiHost", Level.INFO);
+        Configurator.setLevel("org.apache.struts2.osgi.host.FelixOsgiHost", Level.INFO);
+
+        // Set up mock ServletContext for Felix OSGi testing.
+        servletContext = new MockServletContext();
+        servletContext.setInitParameter("struts.osgi.clearBundleCache", "true");   // Same as default (true).
+        servletContext.setInitParameter("struts.osgi.felixCacheLocking", "true");  // Same as default (true).  If testing a start-after-init, value must be false (otherwise the second start fails).
+        servletContext.setInitParameter("struts.osgi.runLevel", "0");  // Different from default (3).  Setting to run level above 0 causes error complaints in the Felix initialization for the unit test.
+        servletContext.setInitParameter("struts.osgi.logLevel", "3");  // INFO instead of default (1) for ERROR.
+        servletContext.setInitParameter("struts.osgi.searchForPropertiesFilesInRelativePath", "true");      // Different from default (false).  Must be true for unit tests.
+        servletContext.setInitParameter("struts.osgi.felixPropertiesPath", "default.properties");           // Same as default.
+        servletContext.setInitParameter("struts.osgi.strutsOSGiPropertiesPath", "struts-osgi.properties");  // Same as default.
+
+        felixHost = new FelixOsgiHost();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        try {
+            felixHost.destroy();
+        } catch (Exception ex) {
+            // Nothing to be done if destruction fails.
+        }
+    }
 
     public void testGetVersionFromString() {
         assertEquals("2.1.1", felixHost.getVersionFromString("2.1.1-SNAPSHOT"));
@@ -35,4 +76,111 @@ public class FelixOsgiHostTest extends TestCase {
         assertEquals("1.0.0", felixHost.getVersionFromString("something"));
     }
 
+    public void testInitAndDestroy() {
+        try {
+            // Calling init will call start as part of the flow.  Calling startFelix() afterwards
+            // will produce errors, unless destroy has been called first
+            felixHost.init(servletContext);
+        } catch (Exception ex) {
+            fail("Unable to initialize Felix OSGi container.  Exception: " + ex );
+        }
+
+        try {
+            felixHost.destroy();
+        } catch (Exception ex) {
+            fail("Unable to destroy Felix OSGi container after init.  Exception: " + ex );
+        }
+
+        // Test to confirm a Felix restart is possible (with cache locking true), using the previously initialized values.
+        try {
+            felixHost.startFelix();
+        } catch (Exception ex) {
+            fail("Unable to start Felix OSGi container after destroy.  Exception: " + ex );
+        }
+
+        try {
+            felixHost.destroy();
+        } catch (Exception ex) {
+            fail("Unable to destroy Felix OSGi container after start.  Exception: " + ex );
+        }
+    }
+
+    public void testGetBundles() {
+        try {
+            Map<String, Bundle> bundles = felixHost.getBundles();
+            fail("Expected an IllegalStateException since Felix was never initialized or started");
+        } catch (IllegalStateException isex) {
+            // Expected state
+        } catch (Exception ex) {
+            fail("Unable to get Felix bundles.  Exception: " + ex );
+        }
+
+        try {
+            felixHost.init(servletContext);
+            Map<String, Bundle> bundles = felixHost.getBundles();
+            assertNotNull("Bundles is null ?", bundles);
+            assertFalse("Bundles is empty ?", bundles.isEmpty());
+            LOG.info("OSGi Bundles: " + bundles.toString());
+        } catch (Exception ex) {
+            fail("Unable to get Felix bundles.  Exception: " + ex );
+        } finally {
+            try {
+                felixHost.destroy();
+            } catch (Exception ex) {
+                // Nothing to be done if destruction fails.
+            }
+        }
+    }
+
+    public void testGetActiveBundles() {
+        try {
+            Map<String, Bundle> bundles = felixHost.getActiveBundles();
+            fail("Expected an IllegalStateException since Felix was never initialized or started");
+        } catch (IllegalStateException isex) {
+            // Expected state
+        } catch (Exception ex) {
+            fail("Unable to get Felix active bundles.  Exception: " + ex );
+        }
+
+        try {
+            felixHost.init(servletContext);
+            Map<String, Bundle> bundles = felixHost.getActiveBundles();
+            assertNotNull("Bundles is null ?", bundles);
+            assertFalse("Bundles is empty ?", bundles.isEmpty());
+            LOG.info("OSGi Active Bundles: " + bundles.toString());
+        } catch (Exception ex) {
+            fail("Unable to get Felix active bundles.  Exception: " + ex );
+        } finally {
+            try {
+                felixHost.destroy();
+            } catch (Exception ex) {
+                // Nothing to be done if destruction fails.
+            }
+        }
+    }
+
+    public void testGetBundleContext() {
+        try {
+            BundleContext bundleContext = felixHost.getBundleContext();
+            fail("Expected an IllegalStateException since Felix was never initialized or started");
+        } catch (IllegalStateException isex) {
+            // Expected state
+        } catch (Exception ex) {
+            fail("Unable to get Felix bundle context.  Exception: " + ex );
+        }
+
+        try {
+            felixHost.init(servletContext);
+            BundleContext bundleContext = felixHost.getBundleContext();
+            assertNotNull("Bundle context is null ?", bundleContext);
+        } catch (Exception ex) {
+            fail("Unable to get Felix bundle context.  Exception: " + ex );
+        } finally {
+            try {
+                felixHost.destroy();
+            } catch (Exception ex) {
+                // Nothing to be done if destruction fails.
+            }
+        }
+    }
 }

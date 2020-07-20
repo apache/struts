@@ -49,7 +49,6 @@
 <#if parameters.crossorigin?has_content>
  crossorigin="${parameters.crossorigin}"<#rt/>
 </#if>
-
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 >

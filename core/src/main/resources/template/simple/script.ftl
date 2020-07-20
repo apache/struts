@@ -19,9 +19,37 @@
  */
 -->
 <script nonce="${parameters.nonce}"<#rt/>
+<#if parameters.async?has_content>
+ name="${parameters.async}"<#rt/>
+</#if>
+<#if parameters.charset?has_content>
+ name="${parameters.charset}"<#rt/>
+</#if>
+<#if parameters.defer?has_content>
+ name="${parameters.defer}"<#rt/>
+</#if>
 <#if parameters.src?has_content>
  name="${parameters.src}"<#rt/>
 </#if>
+<#if parameters.type?has_content>
+ name="${parameters.type}"<#rt/>
+</#if>
+<#if parameters.name?has_content>
+ name="${parameters.name}"<#rt/>
+</#if>
+<#if parameters.referrerpolicy?has_content>
+ name="${parameters.referrerpolicy}"<#rt/>
+</#if>
+<#if parameters.nomodule?has_content>
+ name="${parameters.nomodule}"<#rt/>
+</#if>
+<#if parameters.integrity?has_content>
+ name="${parameters.integrity}"<#rt/>
+</#if>
+<#if parameters.crossorigin?has_content>
+ name="${parameters.crossorigin}"<#rt/>
+</#if>
+
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 >

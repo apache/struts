@@ -19,7 +19,9 @@
 package org.apache.struts2.interceptor.csp;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
 
+import javax.accessibility.AccessibleIcon;
 import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -29,6 +31,8 @@ import java.util.Map;
 public class DefaultCspSettings implements CspSettings {
 
     private static final int NONCE_LENGTH = 18;
+    private String nonceValue;
+    private ValueStack stack = ActionContext.getContext().getValueStack();
 
     public void addCspHeaders(HttpServletResponse response) {
         createNonce();
@@ -36,14 +40,12 @@ public class DefaultCspSettings implements CspSettings {
     }
 
     public String getNonceString() {
-        Map<String, Object> session = ActionContext.getContext().getSession();
-        return (String) session.get("nonce");
+        return nonceValue;
     }
 
     protected void createNonce() {
-        String nonceValue = Base64.getUrlEncoder().encodeToString(getRandomBytes(NONCE_LENGTH));
-        Map<String, Object> session = ActionContext.getContext().getSession();
-        session.put("nonce", nonceValue);
+        nonceValue = Base64.getUrlEncoder().encodeToString(getRandomBytes(NONCE_LENGTH));
+        stack.push(nonceValue);
     }
 
     private String getPolicyString() {

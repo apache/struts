@@ -66,7 +66,7 @@ public class Token extends UIBean {
     /**
      * First looks for the token in the PageContext using the supplied name (or {@link org.apache.struts2.util.TokenHelper#DEFAULT_TOKEN_NAME}
      * if no name is provided) so that the same token can be re-used for the scope of a request for the same name. If
-     * the token is not in thre PageContext, a new Token is created and set into the Session and the PageContext with
+     * the token is not in the PageContext, a new Token is created and set into the Session and the PageContext with
      * the name.
      */
     protected void evaluateExtraParams() {

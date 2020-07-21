@@ -43,7 +43,6 @@ public class ScriptTest extends AbstractTest {
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
 
-        System.out.println(output);
         assertTrue(output.contains("nonce="));
         assertTrue(output.contains("type="));
         assertTrue(output.contains("src="));

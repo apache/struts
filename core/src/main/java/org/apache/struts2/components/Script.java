@@ -112,8 +112,7 @@ public class Script extends ClosingUIBean {
     public boolean usesBody() {
         return true;
     }
-
-
+    
     @Override
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
@@ -154,12 +153,10 @@ public class Script extends ClosingUIBean {
             addParameter("crossorigin", findString(crossorigin));
         }
 
-        //TODO Add check for nonce
         if (stack.getActionContext().getSession().containsKey("nonce")) {
             String nonceValue = stack.getActionContext().getSession().get("nonce").toString();
             addParameter("nonce", nonceValue);
         }
-
     }
 
 }

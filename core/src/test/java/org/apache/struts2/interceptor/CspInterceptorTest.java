@@ -26,7 +26,7 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.interceptor.csp.CspInterceptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import static org.apache.struts2.interceptor.csp.CspSettings.CSP_HEADER;
+import static org.apache.struts2.interceptor.csp.CspSettings.CSP_ENFORCE_HEADER;
 import static org.apache.struts2.interceptor.csp.CspSettings.SCRIPT_SRC;
 import static org.apache.struts2.interceptor.csp.CspSettings.STRICT_DYNAMIC;
 import static org.apache.struts2.interceptor.csp.CspSettings.OBJECT_SRC;
@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CspInterceptorTest extends StrutsInternalTestCase {
-
 
     private final CspInterceptor interceptor = new CspInterceptor();
     private final MockActionInvocation mai = new MockActionInvocation();
@@ -68,12 +67,11 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
                 SCRIPT_SRC, session.get("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
                 BASE_URI, NONE
         );
-        String expectedCspHeader = response.getHeader(CSP_HEADER);
+        String expectedCspHeader = response.getHeader(CSP_ENFORCE_HEADER);
         System.out.println(expectedCspHeader);
         assertFalse("No CSP header exists", Strings.isEmpty(header));
         assertEquals("Repsonse headers does not contain nonce header", expectedCspHeader, header);
     }
-
 
     @Override
     protected void setUp() throws Exception {
@@ -84,7 +82,5 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         ActionContext context = ServletActionContext.getActionContext().bind();
         context.withSession(session);
         mai.setInvocationContext(context);
-
     }
-
 }

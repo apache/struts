@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface CspSettings {
 
-    String CSP_HEADER = "Content-Security-Policy";
+    String CSP_ENFORCE_HEADER = "Content-Security-Policy";
     String OBJECT_SRC = "object-src";
     String SCRIPT_SRC = "script-src";
     String BASE_URI = "base-uri";

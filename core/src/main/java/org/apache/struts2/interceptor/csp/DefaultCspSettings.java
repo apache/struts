@@ -19,9 +19,7 @@
 package org.apache.struts2.interceptor.csp;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
 
-import javax.accessibility.AccessibleIcon;
 import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -31,12 +29,13 @@ import java.util.Map;
 public class DefaultCspSettings implements CspSettings {
 
     private static final int NONCE_LENGTH = 18;
+    private final SecureRandom sRand  = new SecureRandom();
     private String reportUri = "cspviolation";
     //TODO add string constants for csp header to avoid doing string operations each time
 
     public void addCspHeaders(HttpServletResponse response) {
         createNonce();
-        response.setHeader(CSP_HEADER, getPolicyString());
+        response.setHeader(CSP_ENFORCE_HEADER, getPolicyString());
     }
 
     public void setReportUri(String reportUri) {
@@ -63,9 +62,7 @@ public class DefaultCspSettings implements CspSettings {
         );
     }
 
-    private byte[] getRandomBytes(int length)
-    {
-        SecureRandom sRand  = new SecureRandom();
+    private byte[] getRandomBytes(int length) {
         byte[] ret = new byte[length];
         sRand.nextBytes(ret);
         return ret;

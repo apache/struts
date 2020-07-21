@@ -91,5 +91,4 @@ public class ScriptTag extends AbstractUITag {
     public void setCrossorigin(String crossorigin) {
         this.crossorigin = crossorigin;
     }
-
 }

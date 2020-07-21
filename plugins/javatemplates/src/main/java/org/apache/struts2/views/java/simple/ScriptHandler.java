@@ -16,13 +16,7 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
     public void generate() throws IOException {
         Map<String, Object> params = context.getParameters();
         Attributes attrs = new Attributes();
-
-        // TODO check that
-        // Order of execution of the interceptor
-        // Maybe first check if new nonce value was generated
-        //      if yes, getNonceString
-        //      if not, createNonce
-
+        
         attrs.add("nonce", (String) params.get("nonce"))
             .addIfExists("async", params.get("async"))
             .addIfExists("charset", params.get("charset"))

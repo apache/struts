@@ -37,6 +37,11 @@ public class ScriptTest extends AbstractTest {
         tag.setSrc("mysrc");
         tag.setAsync("false");
         tag.setDefer("false");
+        tag.setCharset("test");
+        tag.setReferrerpolicy("foo");
+        tag.setNomodule("bar");
+        tag.setIntegrity("test");
+        tag.setCrossorigin("test");
 
         tag.evaluateParams();
         map.putAll(tag.getParameters());
@@ -48,6 +53,12 @@ public class ScriptTest extends AbstractTest {
         assertTrue(output.contains("src="));
         assertTrue(output.contains("async="));
         assertTrue(output.contains("defer="));
+        assertTrue(output.contains("charset="));
+        assertTrue(output.contains("referrerpolicy="));
+        assertTrue(output.contains("nomodule="));
+        assertTrue(output.contains("integrity="));
+        assertTrue(output.contains("crossorigin="));
+
     }
 
     @Override

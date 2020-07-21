@@ -20,13 +20,17 @@
 -->
 <script nonce="${parameters.nonce}"<#rt/>
 <#if parameters.async?has_content>
- async="${parameters.async}"<#rt/>
+ <#if parameter.async=="true">
+  async<#rt/>
+ </#if>
 </#if>
 <#if parameters.charset?has_content>
  charset="${parameters.charset}"<#rt/>
 </#if>
 <#if parameters.defer?has_content>
- defer="${parameters.defer}"<#rt/>
+ <#if parameter.defer=="true">
+  defer<#rt/>
+ </#if>
 </#if>
 <#if parameters.src?has_content>
  src="${parameters.src}"<#rt/>

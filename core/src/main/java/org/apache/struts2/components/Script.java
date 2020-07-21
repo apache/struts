@@ -154,16 +154,11 @@ public class Script extends ClosingUIBean {
             addParameter("crossorigin", findString(crossorigin));
         }
 
-        //TODO this portion was copied from Form.java - don't know if it's necessary for scripts
-        // keep a collection of the tag names for anything special the templates might want to do (such as pure client
-        // side validation)
-        if (!parameters.containsKey("tagNames")) {
-            // we have this if check so we don't do this twice (on open and close of the template)
-            addParameter("tagNames", new ArrayList());
+        //TODO Add check for nonce
+        if (stack.getActionContext().getSession().containsKey("nonce")) {
+            String nonceValue = stack.getActionContext().getSession().get("nonce").toString();
+            addParameter("nonce", nonceValue);
         }
-
-        String nonceValue = stack.getActionContext().getSession().get("nonce").toString();
-        addParameter("nonce", nonceValue);
 
     }
 

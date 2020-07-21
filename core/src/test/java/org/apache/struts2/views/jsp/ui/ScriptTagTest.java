@@ -14,20 +14,27 @@ public class ScriptTagTest extends AbstractUITagTest {
 
     public void testScriptTagAttributes() {
         ScriptTag tag = new ScriptTag();
+
+
         tag.setSrc("mysrc.js");
         tag.setAsync("false");
         tag.setType("module");
         tag.setAsync("false");
         tag.setNomodule("true");
         tag.setReferrerpolicy("same-origin");
-        tag.setCrossorigin("anaonymous");
+        tag.setCrossorigin("anonymous");
+
+        doScriptTest(tag);
         String s = writer.toString();
-        assertTrue(s.indexOf("nonce=\"" + nonceVal) > -1);
+
+        System.out.println(s);
+        assertTrue(s.contains("nonce=\"" + nonceVal));
     }
 
     private void doScriptTest(ScriptTag tag) {
         //creating nonce value like the CspInterceptor does
         stack.getActionContext().getSession().put("nonce", nonceVal);
+        tag.setPageContext(pageContext);
 
         try {
             tag.doStartTag();

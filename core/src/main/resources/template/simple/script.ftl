@@ -41,7 +41,9 @@
  referrerpolicy="${parameters.referrerpolicy}"<#rt/>
 </#if>
 <#if parameters.nomodule?has_content>
- nomodule="${parameters.nomodule}"<#rt/>
+ <#if parameter.nomodule=="true">
+  nomodule<#rt/>
+ </#if>
 </#if>
 <#if parameters.integrity?has_content>
  integrity="${parameters.integrity}"<#rt/>

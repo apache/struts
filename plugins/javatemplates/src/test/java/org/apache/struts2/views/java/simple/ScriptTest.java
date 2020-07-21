@@ -64,11 +64,12 @@ public class ScriptTest extends AbstractTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        this.tag = new Script(stack, request, response);
 
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
+        ActionContext actionContext = stack.getActionContext();
         Map<String, Object> session = new HashMap<>();
         session.put("nonce", "r4nd0m");
         actionContext.withSession(session);
+
+        this.tag = new Script(stack, request, response);
     }
 }

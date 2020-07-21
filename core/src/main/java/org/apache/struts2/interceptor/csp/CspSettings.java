@@ -33,4 +33,5 @@ public interface CspSettings {
     String HTTPS = "https:";
 
     void addCspHeaders(HttpServletResponse response);
+    void setReportUri(String uri);
 }

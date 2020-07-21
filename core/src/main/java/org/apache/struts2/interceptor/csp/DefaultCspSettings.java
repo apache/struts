@@ -31,10 +31,16 @@ import java.util.Map;
 public class DefaultCspSettings implements CspSettings {
 
     private static final int NONCE_LENGTH = 18;
+    private String reportUri = "cspviolation";
+    //TODO add string constants for csp header to avoid doing string operations each time
 
     public void addCspHeaders(HttpServletResponse response) {
         createNonce();
         response.setHeader(CSP_HEADER, getPolicyString());
+    }
+
+    public void setReportUri(String reportUri) {
+        this.reportUri = reportUri;
     }
 
     public String getNonceString() {

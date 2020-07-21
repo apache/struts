@@ -37,6 +37,10 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
         this.settings = settings;
     }
 
+    public void setReportUri(String reportUri) {
+        settings.setReportUri(reportUri);
+    }
+
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         // TODO : check content-type and uri for csp reports and logCspViolation()

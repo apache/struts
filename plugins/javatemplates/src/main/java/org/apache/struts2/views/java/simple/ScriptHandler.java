@@ -12,11 +12,9 @@ import java.util.Map;
 
 public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
 
-    private Map params = context.getParameters();
-    private ValueStack stack = ActionContext.getContext().getValueStack();
-
     @Override
     public void generate() throws IOException {
+        Map<String, Object> params = context.getParameters();
         Attributes attrs = new Attributes();
 
         // TODO check that
@@ -43,9 +41,9 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
     }
 
     public static class CloseHandler extends AbstractTagHandler implements TagGenerator {
-        private Map params = context.getParameters();
 
         public void generate() throws IOException {
+            Map<String, Object> params = context.getParameters();
             String body = (String) params.get("body");
             if (StringUtils.isNotEmpty(body))
                 characters(body, false); // false means no HTML encoding

@@ -53,7 +53,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @StrutsTag(name="link",
         tldTagClass="org.apache.struts2.views.jsp.ui.LinkTag",
-        description="Link tag automatically adds nonces to link blocks - should be used in combination with Strut's CSP Interceptor.",
+        description="Link tag automatically adds nonces to link blocks - should be used in combination with Struts' CSP Interceptor.",
         allowDynamicAttributes=true)
 public class Link extends UIBean{
 

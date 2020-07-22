@@ -68,10 +68,8 @@ public class Link extends UIBean{
     protected String crossorigin;
     protected String type;
     protected String as;
-//    protected String disabled;
     protected String importance; //docs say importance is an experimental API TODO: should we include it
     protected String integrity; //experimental API too
-//    protected String title;
 
     public Link(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -165,6 +163,10 @@ public class Link extends UIBean{
             addParameter("sizes", findString(sizes));
         }
 
+        if (crossorigin != null) {
+            addParameter("crossorigin", findString(crossorigin));
+        }
+
         if (type != null) {
             addParameter("type", findString(type));
         }
@@ -179,6 +181,14 @@ public class Link extends UIBean{
 
         if (integrity != null) {
             addParameter("integrity", findString(integrity));
+        }
+
+        if (disabled != null) {
+            addParameter("disabled", findString(disabled));
+        }
+
+        if (title != null) {
+            addParameter("title", findString(title));
         }
 
         if (stack.getActionContext().getSession().containsKey("nonce")) {

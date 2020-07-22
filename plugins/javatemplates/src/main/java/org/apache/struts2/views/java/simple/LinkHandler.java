@@ -33,6 +33,7 @@ public class LinkHandler extends AbstractTagHandler implements TagGenerator {
         Attributes attrs = new Attributes();
 
         attrs.add("nonce", (String) params.get("nonce"))
+                .addIfExists("href", params.get(("href")))
                 .addIfExists("hreflang", params.get("hreflang"))
                 .addIfExists("rel", params.get("rel"))
                 .addIfExists("media", params.get("media"))
@@ -42,7 +43,9 @@ public class LinkHandler extends AbstractTagHandler implements TagGenerator {
                 .addIfExists("type", params.get("type"))
                 .addIfExists("as", params.get("as"))
                 .addIfExists("disabled", params.get("disabled"))
-                .addIfExists("title", params.get("title"));
+                .addIfExists("title", params.get("title"))
+                .addIfExists("importance", params.get("importance"))
+                .addIfExists("integrity", params.get("integrity"));
 
         start("link", attrs);
         end("link");

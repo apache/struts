@@ -40,10 +40,8 @@ public class LinkTag extends AbstractUITag {
     protected String crossorigin;
     protected String type;
     protected String as;
-//    protected String disabled; these attributes exist in the uibean/tag
     protected String importance; //docs say importance is an experimental API TODO: should we include it
     protected String integrity; //experimental API too
-//   protected String title;
 
     @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {

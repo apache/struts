@@ -19,47 +19,52 @@
 package org.apache.struts2.views.java.simple;
 
 import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.components.Link;
 import org.apache.struts2.components.Script;
 import org.apache.struts2.components.UIBean;
-
 
 import java.util.HashMap;
 import java.util.Map;
 
+public class LinkTest extends AbstractTest{
 
-public class ScriptTest extends AbstractTest {
-
-    private Script tag;
+    private Link tag;
 
     public void testRenderScriptTag() {
-        tag.setName("name_");
-        tag.setType("text/javascript");
-        tag.setSrc("mysrc");
-        tag.setAsync("false");
-        tag.setDefer("false");
-        tag.setCharset("test");
+        tag.setHref("testlink.com");
+        tag.setHreflang("en");
+        tag.setRel("preload");
+        tag.setMedia("media_");
+        tag.setSizes("sizes_");
         tag.setReferrerpolicy("foo");
-        tag.setNomodule("bar");
+        tag.setCrossorigin("same-origin");
+        tag.setType("type_");
+        tag.setAs("as_");
+        tag.setDisabled("disabled");
+        tag.setTitle("title_");
         tag.setIntegrity("test");
-        tag.setCrossorigin("test");
+        tag.setImportance("auto");
 
         tag.evaluateParams();
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
 
-        assertTrue("Script doesn't have nonce attribute", output.contains("nonce="));
-        assertTrue("Script doesn't have type attribute", output.contains("type="));
-        assertTrue("Script doesn't have src attribute", output.contains("src="));
-        assertTrue("Script doesn't have async attribute", output.contains("async"));
-        assertTrue("Script doesn't have defer attribute", output.contains("defer"));
-        assertTrue("Script doesn't have charset attribute", output.contains("charset="));
-        assertTrue("Script doesn't have referrerpolicy attribute", output.contains("referrerpolicy="));
-        assertTrue("Script doesn't have nomodule attribute", output.contains("nomodule"));
-        assertTrue("Script doesn't have integrity attribute", output.contains("integrity="));
-        assertTrue("Script doesn't have crossorigin attribute", output.contains("crossorigin="));
+        assertTrue("Link doesn't have nonce attribute", output.contains("nonce="));
+        assertTrue("Link doesn't have href attribute", output.contains("href="));
+        assertTrue("Link doesn't have hreflang attribute", output.contains("hreflang="));
+        assertTrue("Link doesn't have rel attribute", output.contains("rel="));
+        assertTrue("Link doesn't have media attribute", output.contains("media"));
+        assertTrue("Link doesn't have sizes attribute", output.contains("sizes"));
+        assertTrue("Link doesn't have crossorigin attribute", output.contains("crossorigin="));
+        assertTrue("Link doesn't have referrerpolicy attribute", output.contains("referrerpolicy="));
+        assertTrue("Link doesn't have type attribute", output.contains("type="));
+        assertTrue("Link doesn't have as attribute", output.contains("as="));
+        assertTrue("Link doesn't have disabled attribute", output.contains("disabled="));
+        assertTrue("Link doesn't have title attribute", output.contains("title="));
+        assertTrue("Link doesn't have integrity attribute", output.contains("integrity="));
+        assertTrue("Link doesn't have importance attribute", output.contains("importance="));
     }
-
     @Override
     protected UIBean getUIBean() throws Exception {
         return tag;
@@ -67,7 +72,7 @@ public class ScriptTest extends AbstractTest {
 
     @Override
     protected String getTagName() {
-        return "script";
+        return "link";
     }
 
     @Override
@@ -79,6 +84,6 @@ public class ScriptTest extends AbstractTest {
         session.put("nonce", "r4nd0m");
         actionContext.withSession(session);
 
-        this.tag = new Script(stack, request, response);
+        this.tag = new Link(stack, request, response);
     }
 }

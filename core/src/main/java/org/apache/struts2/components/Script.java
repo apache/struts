@@ -18,18 +18,38 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Map;
 
 
+/**
+ * <!-- START SNIPPET: javadoc -->
+ * <p>
+ * Add nonce propagation feature to implement CSP in script tags
+ * </p>
+ *
+ * <p>
+ * The script tag allows the user to execute JavaScript. It also allows external resources to execute
+ * scripts which can be malicious. The s:script tag includes a nonce attribute that is being randomly
+ * generated with each request and only allows scripts with the valid nonce value to be executed.
+ * </p>
+ * <!-- END SNIPPET: javadoc -->
+ *
+ * <p><b>Examples</b></p>
+ *
+ * <pre>
+ * <!-- START SNIPPET: example -->
+ *
+ * &lt;s:script ... /&gt;
+ *
+ * <!-- END SNIPPET: example -->
+ * </pre>
+ *
+ */
 @StrutsTag(name="script",
         tldTagClass="org.apache.struts2.views.jsp.ui.ScriptTag",
         description="Script tag to be used for adding nonce values to scripts",

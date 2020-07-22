@@ -26,7 +26,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 
-
+/**
+ * Interceptor that implements Content Security Policy on incoming requests used to protect against
+ * common XSS and data injection attacks. Uses {@link CspSettings} to filter the requests allowed to be processed.
+ *
+ * @see <a href="https://csp.withgoogle.com/docs/index.html">https://csp.withgoogle.com/docs/index.html/</a>
+ **/
 public class CspInterceptor extends AbstractInterceptor implements PreResultListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(CspInterceptor.class);

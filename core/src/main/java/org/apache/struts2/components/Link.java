@@ -26,6 +26,31 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * <!-- START SNIPPET: javadoc -->
+ * <p>
+ * Add nonce propagation feature to implement CSP in link tags
+ * </p>
+ *
+ * <p>
+ * The link tag allows the user to load external resources, most usually style sheets. External resources
+ * can inject malicious code and perform XSS and data injection attacks. The s:link tag includes a nonce
+ * attribute that is being randomly generated with each request and only allows links with the valid
+ * nonce value to be executed.
+ * </p>
+ * <!-- END SNIPPET: javadoc -->
+ *
+ * <p><b>Examples</b></p>
+ *
+ * <pre>
+ * <!-- START SNIPPET: example -->
+ *
+ * &lt;s:link ... /&gt;
+ *
+ * <!-- END SNIPPET: example -->
+ * </pre>
+ *
+ */
 @StrutsTag(name="link",
         tldTagClass="org.apache.struts2.views.jsp.ui.LinkTag",
         description="Link tag automatically adds nonces to link blocks - should be used in combination with Strut's CSP Interceptor.",

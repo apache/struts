@@ -18,9 +18,11 @@
  * under the License.
  */
 -->
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 <script nonce="${parameters.nonce}"<#rt/>
 <#if parameters.async?has_content>
- <#if parameter.async=="true">
+ <#if parameters.async=="true">
   async<#rt/>
  </#if>
 </#if>
@@ -28,7 +30,7 @@
  charset="${parameters.charset}"<#rt/>
 </#if>
 <#if parameters.defer?has_content>
- <#if parameter.defer=="true">
+ <#if parameters.defer=="true">
   defer<#rt/>
  </#if>
 </#if>
@@ -45,7 +47,7 @@
  referrerpolicy="${parameters.referrerpolicy}"<#rt/>
 </#if>
 <#if parameters.nomodule?has_content>
- <#if parameter.nomodule=="true">
+ <#if parameters.nomodule=="true">
   nomodule<#rt/>
  </#if>
 </#if>
@@ -55,6 +57,4 @@
 <#if parameters.crossorigin?has_content>
  crossorigin="${parameters.crossorigin}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 >

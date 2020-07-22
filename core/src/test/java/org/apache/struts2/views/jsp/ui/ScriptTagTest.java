@@ -34,16 +34,26 @@ public class ScriptTagTest extends AbstractUITagTest {
         tag.setSrc("mysrc.js");
         tag.setAsync("false");
         tag.setType("module");
-        tag.setAsync("false");
+        tag.setCharset("foo");
         tag.setNomodule("true");
+        tag.setDefer("true");
         tag.setReferrerpolicy("same-origin");
         tag.setCrossorigin("anonymous");
+        tag.setIntegrity("test");
 
         doScriptTest(tag);
         String s = writer.toString();
-
-        System.out.println(s);
-        assertTrue(s.contains("nonce=\"" + nonceVal));
+        
+        assertTrue("Incorrect src attribute for script tag", s.contains("src=\"mysrc.js\""));
+        assertFalse("Non-existent async attribute for script tag", s.contains("async"));
+        assertTrue("Incorrect type attribute for script tag", s.contains("type=\"module\""));
+        assertTrue("Incorrect charset attribute for script tag", s.contains("charset=\"foo\""));
+        assertTrue("Non-existent nomodule attribute for script tag", s.contains("nomodule"));
+        assertTrue("Non-existent defer attribute for script tag", s.contains("defer"));
+        assertTrue("Incorrect referrerpolicy attribute for script tag", s.contains("referrerpolicy=\"same-origin\""));
+        assertTrue("Incorrect crossorigin attribute for script tag", s.contains("crossorigin=\"anonymous\""));
+        assertTrue("Incorrect integrity attribute for script tag", s.contains("integrity=\"test\""));
+        assertTrue(s.contains("nonce=\"" + nonceVal+"\""));
     }
 
     private void doScriptTest(ScriptTag tag) {

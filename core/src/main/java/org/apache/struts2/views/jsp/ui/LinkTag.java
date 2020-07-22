@@ -21,10 +21,14 @@ package org.apache.struts2.views.jsp.ui;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Link;
+import org.apache.struts2.components.Script;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @see Link
+ */
 public class LinkTag extends AbstractUITag {
 
     protected String href;

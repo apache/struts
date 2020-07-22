@@ -68,7 +68,6 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
                 BASE_URI, NONE
         );
         String expectedCspHeader = response.getHeader(CSP_ENFORCE_HEADER);
-        System.out.println(expectedCspHeader);
         assertFalse("No CSP header exists", Strings.isEmpty(header));
         assertEquals("Repsonse headers does not contain nonce header", expectedCspHeader, header);
     }

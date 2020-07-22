@@ -21,6 +21,9 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 <link nonce="${parameters.nonce}"<#rt/>
+<#if parameters.href?has_content>
+    href="${parameters.href}"<#rt/>
+</#if>
 <#if parameters.hreflang?has_content>
     hreflang="${parameters.hreflang}"<#rt/>
 </#if>
@@ -48,9 +51,15 @@
     referrerpolicy="${parameters.referrerpolicy}"<#rt/>
 </#if>
 <#if parameters.sizes?has_content>
-    integrity="${parameters.sizes}"<#rt/>
+    sizes="${parameters.sizes}"<#rt/>
 </#if>
 <#if parameters.crossorigin?has_content>
     crossorigin="${parameters.crossorigin}"<#rt/>
+</#if>
+<#if parameters.integrity?has_content>
+    integrity="${parameters.integrity}"<#rt/>
+</#if>
+<#if parameters.importance?has_content>
+    importance="${parameters.importance}"<#rt/>
 </#if>
 >

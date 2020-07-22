@@ -54,6 +54,7 @@ public class LinkTag extends AbstractUITag {
         link.setHref(href);
         link.setHreflang(hreflang);
         link.setRel(rel);
+        link.setDisabled(disabled);
         link.setMedia(media);
         link.setReferrerpolicy(referrerpolicy);
         link.setSizes(sizes);
@@ -62,6 +63,7 @@ public class LinkTag extends AbstractUITag {
         link.setAs(as);
         link.setImportance(importance);
         link.setIntegrity(integrity);
+        link.setTitle(title);
     }
 
     public void setHref(String href) {

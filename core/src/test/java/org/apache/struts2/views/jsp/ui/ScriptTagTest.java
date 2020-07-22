@@ -53,7 +53,7 @@ public class ScriptTagTest extends AbstractUITagTest {
         assertTrue("Incorrect referrerpolicy attribute for script tag", s.contains("referrerpolicy=\"same-origin\""));
         assertTrue("Incorrect crossorigin attribute for script tag", s.contains("crossorigin=\"anonymous\""));
         assertTrue("Incorrect integrity attribute for script tag", s.contains("integrity=\"test\""));
-        assertTrue(s.contains("nonce=\"" + nonceVal+"\""));
+        assertTrue("Incorrect nonce attribute for script tag", s.contains("nonce=\"" + nonceVal+"\""));
     }
 
     private void doScriptTest(ScriptTag tag) {
@@ -64,7 +64,6 @@ public class ScriptTagTest extends AbstractUITagTest {
         try {
             tag.doStartTag();
             tag.doEndTag();
-//            assertNotNull();
         } catch (JspException e) {
             e.printStackTrace();
             fail();

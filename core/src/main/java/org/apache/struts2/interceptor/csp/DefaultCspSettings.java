@@ -31,11 +31,20 @@ public class DefaultCspSettings implements CspSettings {
     private static final int NONCE_LENGTH = 18;
     private final SecureRandom sRand  = new SecureRandom();
     private String reportUri = "cspviolation";
+    private boolean reporting = true;
     //TODO add string constants for csp header to avoid doing string operations each time
+
+    public void setReporting(boolean value){
+        this.reporting = value;
+    }
 
     public void addCspHeaders(HttpServletResponse response) {
         createNonce();
-        response.setHeader(CSP_ENFORCE_HEADER, getPolicyString());
+        if (this.reporting){
+            response.setHeader(CSP_REPORT_HEADER, getPolicyString());
+        } else {
+            response.setHeader(CSP_ENFORCE_HEADER, getPolicyString());
+        }
     }
 
     public void setReportUri(String reportUri) {
@@ -54,11 +63,11 @@ public class DefaultCspSettings implements CspSettings {
     }
 
     private String getPolicyString() {
-        //TODO add reportURI
-        return String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s';",
+        return String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s '%s';",
                 OBJECT_SRC, NONE,
                 SCRIPT_SRC, getNonceString(), STRICT_DYNAMIC, HTTP, HTTPS,
-                BASE_URI, NONE
+                BASE_URI, NONE,
+                REPORT_URI, this.reportUri
         );
     }
 

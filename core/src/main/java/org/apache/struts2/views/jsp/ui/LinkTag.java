@@ -40,8 +40,6 @@ public class LinkTag extends AbstractUITag {
     protected String crossorigin;
     protected String type;
     protected String as;
-    protected String importance; //docs say importance is an experimental API TODO: should we include it
-    protected String integrity; //experimental API too
 
     @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -61,8 +59,6 @@ public class LinkTag extends AbstractUITag {
         link.setCrossorigin(crossorigin);
         link.setType(type);
         link.setAs(as);
-        link.setImportance(importance);
-        link.setIntegrity(integrity);
         link.setTitle(title);
     }
 
@@ -94,14 +90,6 @@ public class LinkTag extends AbstractUITag {
         this.as = as;
     }
 
-    public void setImportance(String importance) {
-        this.importance = importance;
-    }
-
-    public void setIntegrity(String integrity) {
-        this.integrity = integrity;
-    }
-
     public void setMedia(String media) {
         this.media = media;
     }
@@ -109,5 +97,4 @@ public class LinkTag extends AbstractUITag {
     public void setReferrerpolicy(String referrerpolicy) {
         this.referrerpolicy = referrerpolicy;
     }
-
 }

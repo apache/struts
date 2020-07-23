@@ -46,8 +46,6 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
             .addIfExists("crossorigin", params.get("crossorigin"));
 
         start("script", attrs);
-
-
     }
 
     public static class CloseHandler extends AbstractTagHandler implements TagGenerator {

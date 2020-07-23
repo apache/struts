@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * <!-- START SNIPPET: javadoc -->
  * <p>
  * Add nonce propagation feature to implement CSP in link tags
  * </p>
@@ -38,22 +37,19 @@ import javax.servlet.http.HttpServletResponse;
  * attribute that is being randomly generated with each request and only allows links with the valid
  * nonce value to be executed.
  * </p>
- * <!-- END SNIPPET: javadoc -->
  *
  * <p><b>Examples</b></p>
  *
  * <pre>
- * <!-- START SNIPPET: example -->
  *
  * &lt;s:link ... /&gt;
  *
- * <!-- END SNIPPET: example -->
  * </pre>
  *
  */
 @StrutsTag(name="link",
         tldTagClass="org.apache.struts2.views.jsp.ui.LinkTag",
-        description="Link tag automatically adds nonces to link blocks - should be used in combination with Struts' CSP Interceptor.",
+        description="Link tag automatically adds nonces to link elements - should be used in combination with Struts' CSP Interceptor.",
         allowDynamicAttributes=true)
 public class Link extends UIBean{
 
@@ -68,8 +64,6 @@ public class Link extends UIBean{
     protected String crossorigin;
     protected String type;
     protected String as;
-    protected String importance; //docs say importance is an experimental API TODO: should we include it
-    protected String integrity; //experimental API too
 
     public Link(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -108,16 +102,6 @@ public class Link extends UIBean{
     @StrutsTagAttribute(description="HTML link as attribute")
     public void setAs(String as) {
         this.as = as;
-    }
-
-    @StrutsTagAttribute(description="HTML link importance attribute")
-    public void setImportance(String importance) {
-        this.importance = importance;
-    }
-
-    @StrutsTagAttribute(description="HTML link integrity attribute")
-    public void setIntegrity(String integrity) {
-        this.integrity = integrity;
     }
 
     @StrutsTagAttribute(description="HTML link media attribute")
@@ -175,14 +159,6 @@ public class Link extends UIBean{
             addParameter("as", findString(as));
         }
 
-        if (importance != null) {
-            addParameter("importance", findString(importance));
-        }
-
-        if (integrity != null) {
-            addParameter("integrity", findString(integrity));
-        }
-
         if (disabled != null) {
             addParameter("disabled", findString(disabled));
         }
@@ -195,6 +171,5 @@ public class Link extends UIBean{
             String nonceValue = stack.getActionContext().getSession().get("nonce").toString();
             addParameter("nonce", nonceValue);
         }
-
     }
 }

@@ -55,19 +55,19 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
 
     public void testNonceExists() throws Exception {
         String reportUri = "barfoo";
-        String reporting = "true";
+        String enforcingMode = "false";
         interceptor.setReportUri(reportUri);
-        interceptor.setReporting(reporting);
+        interceptor.setReporting(enforcingMode);
         session.put("nonce", "foo");
 
         interceptor.intercept(mai);
 
         assertTrue("Nonce key does not exist", session.containsKey("nonce"));
         assertFalse("Nonce value is empty", Strings.isEmpty((String) session.get("nonce")));
-        checkHeader(reportUri, reporting);
+        checkHeader(reportUri, enforcingMode);
     }
 
-    public void checkHeader(String reportUri, String reporting){
+    public void checkHeader(String reportUri, String enforcingMode){
         String expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s '%s';",
                 OBJECT_SRC, NONE,
                 SCRIPT_SRC, session.get("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
@@ -76,10 +76,10 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         );
 
         String header = "";
-        if (reporting.equals("true")){
-            header = response.getHeader(CSP_REPORT_HEADER);
-        } else {
+        if (enforcingMode.equals("true")){
             header = response.getHeader(CSP_ENFORCE_HEADER);
+        } else {
+            header = response.getHeader(CSP_REPORT_HEADER);
         }
         assertFalse("No CSP header exists", Strings.isEmpty(header));
         assertEquals("Repsonse headers does not contain nonce header", expectedCspHeader, header);

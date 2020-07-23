@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CspInterceptor extends AbstractInterceptor implements PreResultListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(CspInterceptor.class);
-    private boolean reporting = true;
+    private boolean enforcingMode = false;
     private final CspSettings settings = new DefaultCspSettings();
 
     public void setReportUri(String reportUri) {
@@ -43,8 +43,8 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
     }
 
     public void setReporting(String value){
-        this.reporting = Boolean.parseBoolean(value);
-        this.settings.setReporting(this.reporting);
+        this.enforcingMode = Boolean.parseBoolean(value);
+        this.settings.setEnforcingMode(this.enforcingMode);
     }
 
     @Override

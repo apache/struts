@@ -30,20 +30,16 @@ public class DefaultCspSettings implements CspSettings {
 
     private static final int NONCE_LENGTH = 18;
     private final SecureRandom sRand  = new SecureRandom();
-    private String reportUri = "cspviolation";
-    private boolean reporting = true;
+    private String reportUri = "csp-reports";
+    private boolean enforcingMode = false;
     //TODO add string constants for csp header to avoid doing string operations each time
-
-    public void setReporting(boolean value){
-        this.reporting = value;
-    }
 
     public void addCspHeaders(HttpServletResponse response) {
         createNonce();
-        if (this.reporting){
-            response.setHeader(CSP_REPORT_HEADER, getPolicyString());
-        } else {
+        if (this.enforcingMode){
             response.setHeader(CSP_ENFORCE_HEADER, getPolicyString());
+        } else {
+            response.setHeader(CSP_REPORT_HEADER, getPolicyString());
         }
     }
 
@@ -51,12 +47,16 @@ public class DefaultCspSettings implements CspSettings {
         this.reportUri = reportUri;
     }
 
-    public String getNonceString() {
+    public void setEnforcingMode(boolean enforcingMode) {
+        this.enforcingMode = enforcingMode;
+    }
+
+    private String getNonceString() {
         Map<String, Object> session = ActionContext.getContext().getSession();
         return (String) session.get("nonce");
     }
 
-    protected void createNonce() {
+    private void createNonce() {
         String nonceValue = Base64.getUrlEncoder().encodeToString(getRandomBytes(NONCE_LENGTH));
         Map<String, Object> session = ActionContext.getContext().getSession();
         session.put("nonce", nonceValue);

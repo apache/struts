@@ -20,7 +20,6 @@ package org.apache.struts2.views.java.simple;
 
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.components.Link;
-import org.apache.struts2.components.Script;
 import org.apache.struts2.components.UIBean;
 
 import java.util.HashMap;
@@ -30,40 +29,38 @@ public class LinkTest extends AbstractTest{
 
     private Link tag;
 
+    private static final String nonceVal = "r4andom";
+
     public void testRenderScriptTag() {
-        tag.setHref("testlink.com");
-        tag.setHreflang("en");
-        tag.setRel("preload");
-        tag.setMedia("media_");
-        tag.setSizes("sizes_");
-        tag.setReferrerpolicy("foo");
+        tag.setHref("testhref");
+        tag.setHreflang("test");
+        tag.setRel("module");
+        tag.setMedia("foo");
+        tag.setReferrerpolicy("test");
+        tag.setSizes("foo");
         tag.setCrossorigin("same-origin");
-        tag.setType("type_");
-        tag.setAs("as_");
-        tag.setDisabled("disabled");
-        tag.setTitle("title_");
-        tag.setIntegrity("test");
-        tag.setImportance("auto");
+        tag.setType("anonymous");
+        tag.setAs("test");
+        tag.setDisabled("disabled_");
+        tag.setTitle("test");
 
         tag.evaluateParams();
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
-        String output = writer.getBuffer().toString();
+        String s = writer.getBuffer().toString();
 
-        assertTrue("Link doesn't have nonce attribute", output.contains("nonce="));
-        assertTrue("Link doesn't have href attribute", output.contains("href="));
-        assertTrue("Link doesn't have hreflang attribute", output.contains("hreflang="));
-        assertTrue("Link doesn't have rel attribute", output.contains("rel="));
-        assertTrue("Link doesn't have media attribute", output.contains("media"));
-        assertTrue("Link doesn't have sizes attribute", output.contains("sizes"));
-        assertTrue("Link doesn't have crossorigin attribute", output.contains("crossorigin="));
-        assertTrue("Link doesn't have referrerpolicy attribute", output.contains("referrerpolicy="));
-        assertTrue("Link doesn't have type attribute", output.contains("type="));
-        assertTrue("Link doesn't have as attribute", output.contains("as="));
-        assertTrue("Link doesn't have disabled attribute", output.contains("disabled="));
-        assertTrue("Link doesn't have title attribute", output.contains("title="));
-        assertTrue("Link doesn't have integrity attribute", output.contains("integrity="));
-        assertTrue("Link doesn't have importance attribute", output.contains("importance="));
+        assertTrue("Incorrect href attribute for link tag", s.contains("href=\"testhref\""));
+        assertTrue("Incorrect hreflang attribute for link tag", s.contains("hreflang=\"test\""));
+        assertTrue("Incorrect rel attribute for link tag", s.contains("rel=\"module\""));
+        assertTrue("Incorrect media attribute for link tag", s.contains("media=\"foo\""));
+        assertTrue("Incorrect referrerpolicy attribute for link tag", s.contains("referrerpolicy=\"test\""));
+        assertTrue("Incorrect sizes attribute for link tag", s.contains("sizes=\"foo\""));
+        assertTrue("Incorrect crossorigin attribute for link tag", s.contains("crossorigin=\"same-origin\""));
+        assertTrue("Incorrect type attribute for link tag", s.contains("type=\"anonymous\""));
+        assertTrue("Incorrect as attribute for link tag", s.contains("as=\"test\""));
+        assertTrue("Non-existent disabled attribute for link tag", s.contains("disabled=\"disabled_\""));
+        assertTrue("Incorrect title attribute for link tag", s.contains("title=\"test\""));
+        assertTrue("Incorrect nonce attribute for link tag", s.contains("nonce=\"" + nonceVal+"\""));
     }
     @Override
     protected UIBean getUIBean() throws Exception {
@@ -81,7 +78,7 @@ public class LinkTest extends AbstractTest{
 
         ActionContext actionContext = stack.getActionContext();
         Map<String, Object> session = new HashMap<>();
-        session.put("nonce", "r4nd0m");
+        session.put("nonce", nonceVal);
         actionContext.withSession(session);
 
         this.tag = new Link(stack, request, response);

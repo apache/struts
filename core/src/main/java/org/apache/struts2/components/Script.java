@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * <!-- START SNIPPET: javadoc -->
  * <p>
  * Add nonce propagation feature to implement CSP in script tags
  * </p>
@@ -37,22 +36,19 @@ import javax.servlet.http.HttpServletResponse;
  * scripts which can be malicious. The s:script tag includes a nonce attribute that is being randomly
  * generated with each request and only allows scripts with the valid nonce value to be executed.
  * </p>
- * <!-- END SNIPPET: javadoc -->
  *
  * <p><b>Examples</b></p>
  *
  * <pre>
- * <!-- START SNIPPET: example -->
  *
  * &lt;s:script ... /&gt;
  *
- * <!-- END SNIPPET: example -->
  * </pre>
  *
  */
 @StrutsTag(name="script",
         tldTagClass="org.apache.struts2.views.jsp.ui.ScriptTag",
-        description="Script tag to be used for adding nonce values to scripts",
+        description="Script tag automatically adds nonces to script blocks - should be used in combination with Struts' CSP Interceptor.",
         allowDynamicAttributes=true)
 public class Script extends ClosingUIBean {
 

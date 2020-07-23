@@ -373,14 +373,14 @@
                  associated with requests that should not be validated.
                  -->
             <interceptor-stack name="defaultStack">
-                <interceptor-ref name="cspInterceptor">
-                    <param name="reporting">false</param>
-                    <param name="reportUri">www.google.com</param>
-                </interceptor-ref>
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="i18n"/>
+                <interceptor-ref name="cspInterceptor">
+                    <param name="enforcingMode">false</param>
+                    <param name="reportUri">csp-reports</param>
+                </interceptor-ref>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="scopedModelDriven"/>

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.java.simple;
 
 import org.apache.struts2.views.java.Attributes;
@@ -43,9 +42,7 @@ public class LinkHandler extends AbstractTagHandler implements TagGenerator {
                 .addIfExists("type", params.get("type"))
                 .addIfExists("as", params.get("as"))
                 .addIfExists("disabled", params.get("disabled"))
-                .addIfExists("title", params.get("title"))
-                .addIfExists("importance", params.get("importance"))
-                .addIfExists("integrity", params.get("integrity"));
+                .addIfExists("title", params.get("title"));
 
         start("link", attrs);
         end("link");

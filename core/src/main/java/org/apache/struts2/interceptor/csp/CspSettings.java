@@ -34,6 +34,8 @@ public interface CspSettings {
     String HTTPS = "https:";
 
     void addCspHeaders(HttpServletResponse response);
+    // sets the uri where csp violation reports will be sent
     void setReportUri(String uri);
-    void setReporting(boolean value);
+    // sets CSP headers in enforcing mode when true, and report-only when false
+    void setEnforcingMode(boolean value);
 }

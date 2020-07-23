@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
@@ -20,9 +38,7 @@ public class LinkTagTest extends AbstractUITagTest {
         tag.setCrossorigin("same-origin");
         tag.setType("anonymous");
         tag.setAs("test");
-        tag.setIntegrity("test");
         tag.setDisabled("false");
-        tag.setImportance("test");
         tag.setTitle("test");
 
         doLinkTest(tag);
@@ -37,9 +53,7 @@ public class LinkTagTest extends AbstractUITagTest {
         assertTrue("Incorrect crossorigin attribute for link tag", s.contains("crossorigin=\"same-origin\""));
         assertTrue("Incorrect type attribute for link tag", s.contains("type=\"anonymous\""));
         assertTrue("Incorrect as attribute for link tag", s.contains("as=\"test\""));
-        assertTrue("Incorrect integrity attribute for link tag", s.contains("integrity=\"test\""));
         assertFalse("Non-existent disabled attribute for link tag", s.contains("disabled"));
-        assertTrue("Incorrect importance attribute for link tag", s.contains("importance=\"test\""));
         assertTrue("Incorrect title attribute for link tag", s.contains("title=\"test\""));
         assertTrue("Incorrect nonce attribute for link tag", s.contains("nonce=\"" + nonceVal+"\""));
     }
@@ -56,6 +70,5 @@ public class LinkTagTest extends AbstractUITagTest {
             e.printStackTrace();
             fail();
         }
-
     }
 }

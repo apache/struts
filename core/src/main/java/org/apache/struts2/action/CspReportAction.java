@@ -19,27 +19,40 @@
 package org.apache.struts2.action;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
 
-public class CspReportAction extends ActionSupport {
+public class CspReportAction extends ActionSupport implements ServletRequestAware {
 
-    private Map violation;
+    private static final Logger LOG = LogManager.getLogger(CspReportAction.class);
+    private HttpServletRequest request;
 
-    public String execute(){
-
-
-
-        return "none";
+    public String execute() throws IOException {
+        return "success";
     }
 
-    public Map getViolation() {
-        return violation;
+    public void setServletRequest(HttpServletRequest request) {
+        this.request = request;
     }
 
-    public void setViolation(Map violation) {
-        this.violation = violation;
+    public HttpServletRequest getServletRequest() {
+        return this.request;
     }
 
-
+    @Override
+    public void withServletRequest(HttpServletRequest request) {
+        System.out.println("I am here!");
+        BufferedReader reader = null;
+        try {
+            reader = request.getReader();
+            System.out.println("before logging");
+            LOG.error(reader.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

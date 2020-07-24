@@ -63,7 +63,7 @@ public class DefaultCspSettings implements CspSettings {
     }
 
     private String getPolicyString() {
-        return String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s '%s';",
+        return String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s;",
                 OBJECT_SRC, NONE,
                 SCRIPT_SRC, getNonceString(), STRICT_DYNAMIC, HTTP, HTTPS,
                 BASE_URI, NONE,

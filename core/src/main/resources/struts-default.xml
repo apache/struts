@@ -378,7 +378,7 @@
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="cspInterceptor">
-                    <param name="enforcingMode">false</param>
+                    <param name="enforcingMode">true</param>
                     <param name="reportUri">csp-reports</param>
                 </interceptor-ref>
                 <interceptor-ref name="prepare"/>

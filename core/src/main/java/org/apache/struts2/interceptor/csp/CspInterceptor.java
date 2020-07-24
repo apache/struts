@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.interceptor.PreResultListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -50,6 +51,9 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         invocation.addPreResultListener(this);
+
+        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
+
         return invocation.invoke();
         // TODO : check content-type and uri for csp reports and logCspViolation()
     }

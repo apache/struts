@@ -69,7 +69,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void checkHeader(String reportUri, String enforcingMode){
-        String expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s '%s';",
+        String expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s;",
                 OBJECT_SRC, NONE,
                 SCRIPT_SRC, session.get("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
                 BASE_URI, NONE,
@@ -83,7 +83,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
             header = response.getHeader(CSP_REPORT_HEADER);
         }
         assertFalse("No CSP header exists", Strings.isEmpty(header));
-        assertEquals("Repsonse headers does not contain nonce header", expectedCspHeader, header);
+        assertEquals("Response headers does not contain nonce header", expectedCspHeader, header);
     }
 
     @Override

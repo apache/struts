@@ -65,7 +65,6 @@ public abstract class CspReportAction extends ActionSupport implements ServletRe
 
     abstract void processReport(String jsonCspReport);
 
-    //TODO nit should we change this into an if block within withServletRequest?
     private boolean isCspReportRequest(HttpServletRequest request) {
         if (!"POST".equals(request.getMethod()) || request.getContentLength() <= 0){
             return false;

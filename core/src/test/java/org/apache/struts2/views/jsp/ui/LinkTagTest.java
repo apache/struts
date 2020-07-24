@@ -24,7 +24,7 @@ import javax.servlet.jsp.JspException;
 
 public class LinkTagTest extends AbstractUITagTest {
 
-    private static final String nonceVal = "r4andom";
+    private static final String NONCE_VAL = "r4andom";
 
     public void testLinkTagAttributes() {
         LinkTag tag = new LinkTag();
@@ -55,12 +55,12 @@ public class LinkTagTest extends AbstractUITagTest {
         assertTrue("Incorrect as attribute for link tag", s.contains("as=\"test\""));
         assertFalse("Non-existent disabled attribute for link tag", s.contains("disabled"));
         assertTrue("Incorrect title attribute for link tag", s.contains("title=\"test\""));
-        assertTrue("Incorrect nonce attribute for link tag", s.contains("nonce=\"" + nonceVal+"\""));
+        assertTrue("Incorrect nonce attribute for link tag", s.contains("nonce=\"" + NONCE_VAL+"\""));
     }
 
     private void doLinkTest(LinkTag tag) {
         //creating nonce value like the CspInterceptor does
-        stack.getActionContext().getSession().put("nonce", nonceVal);
+        stack.getActionContext().getSession().put("nonce", NONCE_VAL);
         tag.setPageContext(pageContext);
 
         try {

@@ -31,6 +31,8 @@ public class ScriptTest extends AbstractTest {
 
     private Script tag;
 
+    private static final String NONCE_VAL = "r4andom";
+
     public void testRenderScriptTag() {
         tag.setName("name_");
         tag.setType("text/javascript");
@@ -76,7 +78,7 @@ public class ScriptTest extends AbstractTest {
 
         ActionContext actionContext = stack.getActionContext();
         Map<String, Object> session = new HashMap<>();
-        session.put("nonce", "r4nd0m");
+        session.put("nonce", NONCE_VAL);
         actionContext.withSession(session);
 
         this.tag = new Script(stack, request, response);

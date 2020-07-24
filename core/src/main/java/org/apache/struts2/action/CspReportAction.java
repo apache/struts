@@ -23,13 +23,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class CspReportAction extends ActionSupport implements ServletRequestAware {
+public abstract class CspReportAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 
-    private static final Logger LOG = LogManager.getLogger(CspReportAction.class);
     private HttpServletRequest request;
+    protected static final Logger LOG = LogManager.getLogger(CspReportAction.class);
 
     public String execute() throws IOException {
         return "success";
@@ -45,14 +46,21 @@ public class CspReportAction extends ActionSupport implements ServletRequestAwar
 
     @Override
     public void withServletRequest(HttpServletRequest request) {
-        System.out.println("I am here!");
         BufferedReader reader = null;
+        //TODO check post method - content-type - non-zero content length
         try {
             reader = request.getReader();
-            System.out.println("before logging");
-            LOG.error(reader.readLine());
+            String cspReport = reader.readLine();
+            processReport(cspReport);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void withServletResponse(HttpServletResponse response) {
+        response.setStatus(204);
+    }
+
+    abstract void processReport(String jsonCspReport);
 }

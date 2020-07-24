@@ -18,10 +18,15 @@
  */
 package org.apache.struts2.action;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class DefaultCspReportAction extends CspReportAction {
+
+    protected static final Logger LOG = LogManager.getLogger(DefaultCspReportAction.class);
 
     @Override
     void processReport(String jsonCspReport) {
-        LOG.info(jsonCspReport);
+        LOG.error(jsonCspReport);
     }
 }

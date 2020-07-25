@@ -49,6 +49,7 @@ public class BundlePackageLoader implements PackageLoader {
 
     private Container contextContainer = null;
 
+    @Deprecated
     @Override
     public List<PackageConfig> loadPackages(Bundle bundle, BundleContext bundleContext, ObjectFactory objectFactory,
                                             FileManagerFactory fileManagerFactory, Map<String, PackageConfig> pkgConfigs) throws ConfigurationException {
@@ -72,21 +73,22 @@ public class BundlePackageLoader implements PackageLoader {
 
         prov.setObjectFactory(objectFactory);
 
-        final DefaultFileManagerFactory defaultFileManagerFactory = new DefaultFileManagerFactory();
-        final Container container = getContextContainer();
-
-        if (container == null) {
-            LOG.warn("LoadPackages - Config Container is null.  May cause a NPE to be thrown");
-        }
-
-        defaultFileManagerFactory.setContainer(container);
-
         if (fileManagerFactory == null || fileManagerFactory.getFileManager() == null) {
-             LOG.warn("LoadPackages - FileManagerFactory parameter is null or produces a null FileManager, replacing with a new DefaultFileManagerFactory instance");
-             fileManagerFactory = defaultFileManagerFactory;
-        }
+            LOG.warn("LoadPackages - FileManagerFactory parameter is null or produces a null FileManager, replacing with a new DefaultFileManagerFactory instance");
 
-        prov.setFileManagerFactory(fileManagerFactory);
+            final DefaultFileManagerFactory defaultFileManagerFactory = new DefaultFileManagerFactory();
+            final Container container = getContextContainer();
+
+            if (container == null) {
+                LOG.warn("LoadPackages - Config Container is null.  May cause a NPE to be thrown");
+            } else {
+                container.inject(defaultFileManagerFactory);  // Apply configuration (including the container reference) to the DefaultFileManagerFactory instance.
+            }
+
+            prov.setFileManagerFactory(defaultFileManagerFactory);
+        } else {
+            prov.setFileManagerFactory(fileManagerFactory);
+        }
 
         LOG.trace("LoadPackages - After prov.setFileManagerFactory().  Before init()");
 
@@ -107,6 +109,7 @@ public class BundlePackageLoader implements PackageLoader {
         return list;
     }
 
+    @Override
     public List<PackageConfig> loadPackages(Container container, Bundle bundle, BundleContext bundleContext, ObjectFactory objectFactory,
                                         FileManagerFactory fileManagerFactory, Map<String, PackageConfig> pkgConfigs) throws ConfigurationException {
         setContextContainer(container);  // Prepare Container state for standard signature call.

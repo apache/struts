@@ -34,6 +34,7 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 
 import javax.servlet.ServletContext;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -98,7 +99,7 @@ public class FelixOsgiHost extends BaseOsgiHost {
         replaceFelixFrameworkSystemCapabilities(configProps);
         replaceFelixExecutionEnvironment(configProps);
 
-       // Retrieve Struts OSGi properties path from ServletContext (default to "struts-osgi.properties" if not present).
+        // Retrieve Struts OSGi properties path from ServletContext (default to "struts-osgi.properties" if not present).
         String strutsOSGiPropertiesPath = getServletContextParam("struts.osgi.strutsOSGiPropertiesPath", "struts-osgi.properties");
         strutsOSGiPropertiesPath = strutsOSGiPropertiesPath.trim();
         if (strutsOSGiPropertiesPath.startsWith("/")) {
@@ -128,8 +129,21 @@ public class FelixOsgiHost extends BaseOsgiHost {
         LOG.trace("FelixOSGiHost: After addAutoStartBundles. before bundle cache processing");
 
         // Bundle cache
-        String storageDir = System.getProperty("java.io.tmpdir") + ".felix-cache";
-        configProps.setProperty(Constants.FRAMEWORK_STORAGE, storageDir);
+        String storageDir = configProps.getProperty(Constants.FRAMEWORK_STORAGE);
+        if (storageDir == null || storageDir.isEmpty()) {
+            String javaTmpDir = System.getProperty("java.io.tmpdir");
+            if (javaTmpDir == null || javaTmpDir.isEmpty()) {
+                LOG.warn("Felix environment 'java.io.tmpdir': [{}], and 'org.osgi.framework.storage': [{}].  Felix bundle cache will be created at the root directory (probable failure)", javaTmpDir, storageDir);
+                javaTmpDir = File.separator;
+            }
+            if (javaTmpDir.endsWith(File.separator)) {
+                 storageDir = javaTmpDir + ".felix-cache";
+            } else {
+                storageDir = javaTmpDir + File.separator + ".felix-cache";
+            }
+            configProps.setProperty(Constants.FRAMEWORK_STORAGE, storageDir);
+        }
+
         LOG.debug("Storing bundles at [{}]", storageDir);
 
         String cleanBundleCache = getServletContextParam("struts.osgi.clearBundleCache", "true");

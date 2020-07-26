@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
  * <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>.
  *
  * @see <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>
+ * @see <a href="https://www.w3.org/TR/fetch-metadata/">https://www.w3.org/TR/fetch-metadata/</a>
  **/
 
 public final class StrutsResourceIsolationPolicy implements ResourceIsolationPolicy {
@@ -38,12 +39,12 @@ public final class StrutsResourceIsolationPolicy implements ResourceIsolationPol
         String site = request.getHeader(SEC_FETCH_SITE_HEADER);
 
         // Allow requests from browsers which don't send Fetch Metadata
-        if (Strings.isEmpty(site)){
+        if (Strings.isEmpty(site)) {
             return true;
         }
 
         // Allow same-site and browser-initiated requests
-        if (SAME_ORIGIN.equals(site) || SAME_SITE.equals(site) || NONE.equals(site)) {
+        if (SITE_SAME_ORIGIN.equalsIgnoreCase(site) || SITE_SAME_SITE.equalsIgnoreCase(site) || SITE_NONE.equalsIgnoreCase(site)) {
             return true;
         }
 
@@ -55,8 +56,8 @@ public final class StrutsResourceIsolationPolicy implements ResourceIsolationPol
         String mode = request.getHeader(SEC_FETCH_MODE_HEADER);
         String dest = request.getHeader(SEC_FETCH_DEST_HEADER);
 
-        boolean isSimpleTopLevelNavigation = MODE_NAVIGATE.equals(mode) || "GET".equals(request.getMethod());
-        boolean isNotObjectOrEmbedRequest = !DEST_EMBED.equals(dest) && !DEST_OBJECT.equals(dest);
+        boolean isSimpleTopLevelNavigation = MODE_NAVIGATE.equalsIgnoreCase(mode) || "GET".equalsIgnoreCase(request.getMethod());
+        boolean isNotObjectOrEmbedRequest = !DEST_EMBED.equalsIgnoreCase(dest) && !DEST_OBJECT.equalsIgnoreCase(dest);
 
         return isSimpleTopLevelNavigation && isNotObjectOrEmbedRequest;
     }

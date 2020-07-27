@@ -43,8 +43,8 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
     }
 
     public void setEnforcingMode(String value){
-        this.enforcingMode = Boolean.parseBoolean(value);
-        this.settings.setEnforcingMode(this.enforcingMode);
+        enforcingMode = Boolean.parseBoolean(value);
+        settings.setEnforcingMode(enforcingMode);
     }
 
     @Override

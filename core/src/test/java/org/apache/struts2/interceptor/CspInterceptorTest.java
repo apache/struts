@@ -71,7 +71,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
     public void testEnforcingCspHeadersSet() throws Exception {
         String baseUri = "csp-reports";
         String enforcingMode = "true";
-        interceptor.setReporting(enforcingMode);
+        interceptor.setEnforcingMode(enforcingMode);
         session.put("nonce", "foo");
 
         interceptor.intercept(mai);
@@ -85,7 +85,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
     public void testReportingCspHeadersSet() throws Exception {
         String baseUri = "csp-reports";
         String enforcingMode = "false";
-        interceptor.setReporting(enforcingMode);
+        interceptor.setEnforcingMode(enforcingMode);
         session.put("nonce", "foo");
 
         interceptor.intercept(mai);

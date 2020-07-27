@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor.csp;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
@@ -37,9 +38,10 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
 
     private boolean enforcingMode = false;
     private CspSettings settings = new DefaultCspSettings();
+    private String path = "";
 
     public void setReportUri(String reportUri) {
-        settings.setReportUri(reportUri);
+        settings.setReportUri(path+reportUri);
     }
 
     public void setEnforcingMode(String value){
@@ -50,6 +52,7 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         invocation.addPreResultListener(this);
+        path = invocation.getInvocationContext().getServletRequest().getContextPath();
         return invocation.invoke();
     }
 

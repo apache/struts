@@ -20,7 +20,10 @@
 -->
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-<script nonce="${parameters.nonce}"<#rt/>
+<script <#rt/>
+<#if parameters.nonce?has_content>
+ nonce="${parameters.nonce}"<#rt/>
+</#if>
 <#if parameters.async?has_content>
  <#if parameters.async=="true">
   async<#rt/>

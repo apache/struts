@@ -21,6 +21,12 @@ package org.apache.struts2.action;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The default implementation of {@link CspReportAction} that simply logs the JSON object
+ * that contains the details of the CSP violation.
+ *
+ * @see CspReportAction
+ */
 public class DefaultCspReportAction extends CspReportAction {
 
     protected static final Logger LOG = LogManager.getLogger(DefaultCspReportAction.class);

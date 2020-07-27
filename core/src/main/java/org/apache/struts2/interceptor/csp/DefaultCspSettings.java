@@ -26,6 +26,13 @@ import java.util.Base64;
 import java.util.Map;
 
 
+/**
+ * Default implementation of {@link CspSettings}.
+ * The default policy implements strict CSP with a nonce based approach and follows the guide: <a href="https://csp.withgoogle.com/docs/index.html">https://csp.withgoogle.com/docs/index.html/</a>
+ *
+ * @see CspSettings
+ * @see CspInterceptor
+ */
 public class DefaultCspSettings implements CspSettings {
 
     private static final int NONCE_LENGTH = 18;

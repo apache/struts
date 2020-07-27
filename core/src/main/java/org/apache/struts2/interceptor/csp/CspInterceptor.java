@@ -30,9 +30,13 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Interceptor that implements Content Security Policy on incoming requests used to protect against
- * common XSS and data injection attacks. Uses {@link CspSettings} to filter the requests allowed to be processed.
+ * common XSS and data injection attacks. Uses {@link CspSettings} to add appropriate Content Security Policy header
+ * to the response. These headers determine what the browser will consider a policy violation and the browser's behavior
+ * when a violation occurs. A detailed explanation of CSP can be found <a href="https://csp.withgoogle.com/docs/index.html">here</a>.
  *
  * @see <a href="https://csp.withgoogle.com/docs/index.html">https://csp.withgoogle.com/docs/index.html/</a>
+ * @see CspSettings
+ * @see DefaultCspSettings
  **/
 public class CspInterceptor extends AbstractInterceptor implements PreResultListener {
 

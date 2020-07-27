@@ -55,7 +55,6 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
 
         return invocation.invoke();
-        // TODO : check content-type and uri for csp reports and logCspViolation()
     }
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {

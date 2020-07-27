@@ -54,7 +54,6 @@ public abstract class CspReportAction extends ActionSupport implements ServletRe
             String cspReport = reader.readLine();
             processReport(cspReport);
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

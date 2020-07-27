@@ -36,11 +36,7 @@ public class DefaultCspSettings implements CspSettings {
 
     public void addCspHeaders(HttpServletResponse response) {
         createNonce();
-        if (this.enforcingMode){
-            response.setHeader(CSP_ENFORCE_HEADER, getPolicyString());
-        } else {
-            response.setHeader(CSP_REPORT_HEADER, getPolicyString());
-        }
+        response.setHeader(enforcingMode ? CSP_ENFORCE_HEADER : CSP_REPORT_HEADER, getPolicyString());
     }
 
     public void setReportUri(String reportUri) {

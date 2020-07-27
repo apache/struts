@@ -19,8 +19,6 @@
 package org.apache.struts2.action;
 
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +28,6 @@ import java.io.IOException;
 public abstract class CspReportAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 
     private HttpServletRequest request;
-    protected static final Logger LOG = LogManager.getLogger(CspReportAction.class);
 
     public String execute() throws IOException {
         return "success";
@@ -47,7 +44,11 @@ public abstract class CspReportAction extends ActionSupport implements ServletRe
     @Override
     public void withServletRequest(HttpServletRequest request) {
         BufferedReader reader = null;
-        //TODO check post method - content-type - non-zero content length
+
+        if (!isCspReportRequest(request)) {
+            return;
+        }
+
         try {
             reader = request.getReader();
             String cspReport = reader.readLine();
@@ -63,4 +64,17 @@ public abstract class CspReportAction extends ActionSupport implements ServletRe
     }
 
     abstract void processReport(String jsonCspReport);
+
+    private boolean isCspReportRequest(HttpServletRequest request) {
+        if (!"POST".equals(request.getMethod()) || request.getContentLength() <= 0){
+            return false;
+        }
+
+        String contentType = request.getContentType();
+        if (contentType == null || !"application/csp-report".equals(contentType)) {
+            return false;
+        }
+
+        return true;
+    }
 }

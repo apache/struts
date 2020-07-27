@@ -29,7 +29,7 @@ public class LinkTest extends AbstractTest{
 
     private Link tag;
 
-    private static final String nonceVal = "r4andom";
+    private static final String NONCE_VAL = "r4andom";
 
     public void testRenderScriptTag() {
         tag.setHref("testhref");
@@ -60,7 +60,7 @@ public class LinkTest extends AbstractTest{
         assertTrue("Incorrect as attribute for link tag", s.contains("as=\"test\""));
         assertTrue("Non-existent disabled attribute for link tag", s.contains("disabled=\"disabled_\""));
         assertTrue("Incorrect title attribute for link tag", s.contains("title=\"test\""));
-        assertTrue("Incorrect nonce attribute for link tag", s.contains("nonce=\"" + nonceVal+"\""));
+        assertTrue("Incorrect nonce attribute for link tag", s.contains("nonce=\"" + NONCE_VAL+"\""));
     }
     @Override
     protected UIBean getUIBean() throws Exception {
@@ -78,7 +78,7 @@ public class LinkTest extends AbstractTest{
 
         ActionContext actionContext = stack.getActionContext();
         Map<String, Object> session = new HashMap<>();
-        session.put("nonce", nonceVal);
+        session.put("nonce", NONCE_VAL);
         actionContext.withSession(session);
 
         this.tag = new Link(stack, request, response);

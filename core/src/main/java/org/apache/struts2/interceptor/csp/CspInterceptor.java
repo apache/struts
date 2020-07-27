@@ -35,15 +35,14 @@ import javax.servlet.http.HttpServletResponse;
  **/
 public class CspInterceptor extends AbstractInterceptor implements PreResultListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CspInterceptor.class);
     private boolean enforcingMode = false;
-    private final CspSettings settings = new DefaultCspSettings();
+    private CspSettings settings = new DefaultCspSettings();
 
     public void setReportUri(String reportUri) {
         settings.setReportUri(reportUri);
     }
 
-    public void setReporting(String value){
+    public void setEnforcingMode(String value){
         this.enforcingMode = Boolean.parseBoolean(value);
         this.settings.setEnforcingMode(this.enforcingMode);
     }
@@ -51,18 +50,11 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         invocation.addPreResultListener(this);
-
-        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-
         return invocation.invoke();
     }
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
         settings.addCspHeaders(response);
-    }
-
-    private void logCspViolation() {
-
     }
 }

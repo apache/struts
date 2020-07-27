@@ -25,7 +25,7 @@ import javax.servlet.jsp.JspException;
 
 public class ScriptTagTest extends AbstractUITagTest {
 
-    private static final String nonceVal = "r4andom";
+    private static final String NONCE_VAL = "r4andom";
 
     public void testScriptTagAttributes() {
         ScriptTag tag = new ScriptTag();
@@ -53,12 +53,12 @@ public class ScriptTagTest extends AbstractUITagTest {
         assertTrue("Incorrect referrerpolicy attribute for script tag", s.contains("referrerpolicy=\"same-origin\""));
         assertTrue("Incorrect crossorigin attribute for script tag", s.contains("crossorigin=\"anonymous\""));
         assertTrue("Incorrect integrity attribute for script tag", s.contains("integrity=\"test\""));
-        assertTrue("Incorrect nonce attribute for script tag", s.contains("nonce=\"" + nonceVal+"\""));
+        assertTrue("Incorrect nonce attribute for script tag", s.contains("nonce=\"" + NONCE_VAL+"\""));
     }
 
     private void doScriptTest(ScriptTag tag) {
         //creating nonce value like the CspInterceptor does
-        stack.getActionContext().getSession().put("nonce", nonceVal);
+        stack.getActionContext().getSession().put("nonce", NONCE_VAL);
         tag.setPageContext(pageContext);
 
         try {

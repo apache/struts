@@ -32,6 +32,7 @@ public interface CspSettings {
     String STRICT_DYNAMIC = "strict-dynamic";
     String HTTP = "http:";
     String HTTPS = "https:";
+    String CSP_REPORT_TYPE = "application/csp-report";
 
     void addCspHeaders(HttpServletResponse response);
     // sets the uri where csp violation reports will be sent

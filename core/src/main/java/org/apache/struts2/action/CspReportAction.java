@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import static org.apache.struts2.interceptor.csp.CspSettings.CSP_REPORT_TYPE;
+
 public abstract class CspReportAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 
     private HttpServletRequest request;
@@ -70,7 +72,7 @@ public abstract class CspReportAction extends ActionSupport implements ServletRe
         }
 
         String contentType = request.getContentType();
-        if (contentType == null || !"application/csp-report".equals(contentType)) {
+        if (contentType == null || !CSP_REPORT_TYPE.equals(contentType)) {
             return false;
         }
 

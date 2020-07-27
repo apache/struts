@@ -42,7 +42,7 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
         settings.setReportUri(reportUri);
     }
 
-    public void setReporting(String value){
+    public void setEnforcingMode(String value){
         this.enforcingMode = Boolean.parseBoolean(value);
         this.settings.setEnforcingMode(this.enforcingMode);
     }

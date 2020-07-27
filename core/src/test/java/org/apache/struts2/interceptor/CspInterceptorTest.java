@@ -44,7 +44,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         String reportUri = "barfoo";
         String reporting = "false";
         interceptor.setReportUri(reportUri);
-        interceptor.setReporting(reporting);
+        interceptor.setEnforcingMode(reporting);
 
         interceptor.intercept(mai);
 
@@ -55,9 +55,9 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
 
     public void test_whenNonceAlreadySetInSession_andRequestReceived_thenNewNonceIsSet() throws Exception {
         String reportUri = "barfoo";
-        String enforcingMode = "false";
+        String enforcingMode = "true";
         interceptor.setReportUri(reportUri);
-        interceptor.setReporting(enforcingMode);
+        interceptor.setEnforcingMode(enforcingMode);
         session.put("nonce", "foo");
 
         interceptor.intercept(mai);
@@ -82,6 +82,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         } else {
             header = response.getHeader(CSP_REPORT_HEADER);
         }
+
         assertFalse("No CSP header exists", Strings.isEmpty(header));
         assertEquals("Response headers does not contain nonce header", expectedCspHeader, header);
     }

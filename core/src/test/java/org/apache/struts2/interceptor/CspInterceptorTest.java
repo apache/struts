@@ -98,13 +98,60 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         checkHeader(reportUri, enforcingMode);
     }
 
+    public void test_uriSetOnlyWhenSetIsCalled() throws Exception {
+        String enforcingMode = "false";
+        interceptor.setEnforcingMode(enforcingMode);
+
+        interceptor.intercept(mai);
+        checkHeader(null, enforcingMode);
+
+//      set report uri
+        String reportUri = "/some-uri";
+        interceptor.setReportUri(reportUri);
+        interceptor.intercept(mai);
+        checkHeader(reportUri, enforcingMode);
+    }
+
+    public void testCannotParseUri() throws Exception {
+        String enforcingMode = "false";
+        interceptor.setEnforcingMode(enforcingMode);
+
+        try{
+            interceptor.setReportUri("ww w. google.@com");
+            assert(false);
+        } catch (IllegalArgumentException e){
+            assert(true);
+        }
+    }
+
+    public void testCannotParseRelativeUri() throws Exception {
+        String enforcingMode = "false";
+        interceptor.setEnforcingMode(enforcingMode);
+
+        try{
+            interceptor.setReportUri("some-uri");
+            assert(false);
+        } catch (IllegalArgumentException e){
+            assert(true);
+        }
+    }
+
     public void checkHeader(String reportUri, String enforcingMode){
-        String expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s",
-                OBJECT_SRC, NONE,
-                SCRIPT_SRC, session.get("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
-                BASE_URI, NONE,
-                REPORT_URI, reportUri
-        );
+        String expectedCspHeader = "";
+        if (Strings.isEmpty(reportUri)) {
+            expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; ",
+                    OBJECT_SRC, NONE,
+                    SCRIPT_SRC, session.get("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
+                    BASE_URI, NONE
+            );
+        } else {
+            expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s",
+                    OBJECT_SRC, NONE,
+                    SCRIPT_SRC, session.get("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
+                    BASE_URI, NONE,
+                    REPORT_URI, reportUri
+            );
+        }
 
         String header = "";
         if (enforcingMode.equals("true")){
@@ -119,8 +166,6 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
 
     // TODO: Missing tests
     /*
-    - Test that the report-uri directive is only set when setReportUri is called
-    - Test that an exception is thrown if the configured reportUri cannot be parsed
     - Test that an exception is thrown if the configured reportUri is relative but doesn't start with /
      */
 

@@ -27,6 +27,29 @@ import java.io.IOException;
 
 import static org.apache.struts2.interceptor.csp.CspSettings.CSP_REPORT_TYPE;
 
+/**
+ * An abstract Action that can be extended to process the incoming CSP violation reports. Performs
+ * necessary checks to extract the JSON string of the CSP report and make sure it's a valid report.
+ * Always returns a 204 response.
+ *
+ * Override the <code>processReport(String jsonCspReport)</code> method to customize how the action processes
+ * the CSP report. See {@link DefaultCspReportAction} for the default implementation.
+ *
+ * Add the action to the endpoint that is the <code>reportUri</code> in the {@link org.apache.struts2.interceptor.csp.CspInterceptor}
+ * to collect the reports.
+ *
+ * <pre>
+ *     &lt;package name="csp-reports" namespace="/" extends="struts-default"&gt;
+ *         &lt;action name="csp-reports" class="org.apache.struts2.action.DefaultCspReportAction"&gt;
+ *             &lt;result type="httpheader"&gt;
+ *                 &lt;param name="statusCode">200&lt;/param&gt;
+ *             &lt;/result&gt;
+ *         &lt;/action&gt;
+ *     &lt;/package&gt;
+ * </pre>
+ *
+ * @see DefaultCspReportAction
+ */
 public abstract class CspReportAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 
     private HttpServletRequest request;

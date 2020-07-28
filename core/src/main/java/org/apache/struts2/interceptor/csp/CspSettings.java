@@ -20,6 +20,12 @@ package org.apache.struts2.interceptor.csp;
 
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * CspSettings interface used by the {@link CspInterceptor} to add the CSP header to the response.
+ * The default implementation can be found in {@link DefaultCspSettings}.
+ *
+ * @see DefaultCspSettings
+ */
 public interface CspSettings {
 
     String CSP_ENFORCE_HEADER = "Content-Security-Policy";

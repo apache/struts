@@ -51,35 +51,33 @@ import static org.apache.struts2.interceptor.csp.CspSettings.CSP_REPORT_TYPE;
  * @see DefaultCspReportAction
  */
 public abstract class CspReportAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
-
     private HttpServletRequest request;
 
     public String execute() throws IOException {
         return "success";
     }
 
-    public void setServletRequest(HttpServletRequest request) {
-        this.request = request;
-    }
-
-    public HttpServletRequest getServletRequest() {
-        return this.request;
-    }
-
     @Override
     public void withServletRequest(HttpServletRequest request) {
-        BufferedReader reader = null;
-
         if (!isCspReportRequest(request)) {
             return;
         }
 
         try {
-            reader = request.getReader();
+            BufferedReader reader = request.getReader();
             String cspReport = reader.readLine();
             processReport(cspReport);
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
+    }
+
+    private boolean isCspReportRequest(HttpServletRequest request) {
+        if (!"POST".equals(request.getMethod()) || request.getContentLength() <= 0){
+            return false;
+        }
+
+        String contentType = request.getContentType();
+        return CSP_REPORT_TYPE.equals(contentType);
     }
 
     @Override
@@ -89,16 +87,11 @@ public abstract class CspReportAction extends ActionSupport implements ServletRe
 
     abstract void processReport(String jsonCspReport);
 
-    private boolean isCspReportRequest(HttpServletRequest request) {
-        if (!"POST".equals(request.getMethod()) || request.getContentLength() <= 0){
-            return false;
-        }
+    public void setServletRequest(HttpServletRequest request) {
+        this.request = request;
+    }
 
-        String contentType = request.getContentType();
-        if (contentType == null || !CSP_REPORT_TYPE.equals(contentType)) {
-            return false;
-        }
-
-        return true;
+    public HttpServletRequest getServletRequest() {
+        return request;
     }
 }

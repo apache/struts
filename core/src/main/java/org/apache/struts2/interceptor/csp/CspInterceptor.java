@@ -41,7 +41,12 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
     private String path = "";
 
     public void setReportUri(String reportUri) {
-        settings.setReportUri(path+reportUri);
+        System.out.println(path);
+        if (reportUri.charAt(0) == '/'){
+            settings.setReportUri(String.format("%s%s", path, reportUri));
+        } else{
+            settings.setReportUri(reportUri);
+        }
     }
 
     public void setEnforcingMode(String value){
@@ -53,6 +58,7 @@ public class CspInterceptor extends AbstractInterceptor implements PreResultList
     public String intercept(ActionInvocation invocation) throws Exception {
         invocation.addPreResultListener(this);
         path = invocation.getInvocationContext().getServletRequest().getContextPath();
+
         return invocation.invoke();
     }
 

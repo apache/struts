@@ -41,7 +41,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
     private final Map<String, Object> session = new HashMap<>();
 
     public void test_whenRequestReceived_thenNonceIsSetInSession_andCspHeaderContainsIt() throws Exception {
-        String reportUri = "barfoo";
+        String reportUri = "/barfoo";
         String reporting = "false";
         interceptor.setReportUri(reportUri);
         interceptor.setEnforcingMode(reporting);
@@ -54,7 +54,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void test_whenNonceAlreadySetInSession_andRequestReceived_thenNewNonceIsSet() throws Exception {
-        String reportUri = "barfoo";
+        String reportUri = "https://www.google.com/";
         String enforcingMode = "true";
         interceptor.setReportUri(reportUri);
         interceptor.setEnforcingMode(enforcingMode);
@@ -69,8 +69,9 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testEnforcingCspHeadersSet() throws Exception {
-        String baseUri = "csp-reports";
+        String reportUri = "/csp-reports";
         String enforcingMode = "true";
+        interceptor.setReportUri(reportUri);
         interceptor.setEnforcingMode(enforcingMode);
         session.put("nonce", "foo");
 
@@ -79,12 +80,13 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         assertTrue("Nonce key does not exist", session.containsKey("nonce"));
         assertFalse("Nonce value is empty", Strings.isEmpty((String) session.get("nonce")));
         assertFalse("New nonce value couldn't be set", session.get("nonce").equals("foo"));
-        checkHeader(baseUri, enforcingMode);
+        checkHeader(reportUri, enforcingMode);
     }
 
     public void testReportingCspHeadersSet() throws Exception {
-        String baseUri = "csp-reports";
+        String reportUri = "/csp-reports";
         String enforcingMode = "false";
+        interceptor.setReportUri(reportUri);
         interceptor.setEnforcingMode(enforcingMode);
         session.put("nonce", "foo");
 
@@ -93,7 +95,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         assertTrue("Nonce key does not exist", session.containsKey("nonce"));
         assertFalse("Nonce value is empty", Strings.isEmpty((String) session.get("nonce")));
         assertFalse("New nonce value couldn't be set", session.get("nonce").equals("foo"));
-        checkHeader(baseUri, enforcingMode);
+        checkHeader(reportUri, enforcingMode);
     }
 
     public void checkHeader(String reportUri, String enforcingMode){
@@ -101,7 +103,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
                 OBJECT_SRC, NONE,
                 SCRIPT_SRC, session.get("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
                 BASE_URI, NONE,
-                REPORT_URI, reportUri
+                REPORT_URI, String.format("%s%s", request.getContextPath(), reportUri)
         );
 
         String header = "";
@@ -112,7 +114,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         }
 
         assertFalse("No CSP header exists", Strings.isEmpty(header));
-        assertEquals("Response headers does not contain nonce header", expectedCspHeader, header);
+        assertEquals("Response headers do not contain nonce header", expectedCspHeader, header);
     }
 
     @Override

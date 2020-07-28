@@ -164,11 +164,6 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         assertEquals("Response headers do not contain nonce header", expectedCspHeader, header);
     }
 
-    // TODO: Missing tests
-    /*
-    - Test that an exception is thrown if the configured reportUri is relative but doesn't start with /
-     */
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();

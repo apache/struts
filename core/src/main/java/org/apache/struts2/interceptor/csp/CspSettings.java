@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface CspSettings {
 
+    int NONCE_RANDOM_LENGTH = 18;
+
     String CSP_ENFORCE_HEADER = "Content-Security-Policy";
     String CSP_REPORT_HEADER = "Content-Security-Policy-Report-Only";
     String OBJECT_SRC = "object-src";

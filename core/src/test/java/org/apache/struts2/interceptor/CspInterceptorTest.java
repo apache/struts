@@ -99,11 +99,11 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void checkHeader(String reportUri, String enforcingMode){
-        String expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s;",
+        String expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s",
                 OBJECT_SRC, NONE,
                 SCRIPT_SRC, session.get("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
                 BASE_URI, NONE,
-                REPORT_URI, String.format("%s%s", request.getContextPath(), reportUri)
+                REPORT_URI, reportUri
         );
 
         String header = "";
@@ -116,6 +116,12 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         assertFalse("No CSP header exists", Strings.isEmpty(header));
         assertEquals("Response headers do not contain nonce header", expectedCspHeader, header);
     }
+
+    // TODO: Missing tests
+    /*
+    - Test that the report-uri directive is only set when setReportUri is called
+    - Test that an exception is thrown if the configured reportUri cannot be parsed
+     */
 
     @Override
     protected void setUp() throws Exception {

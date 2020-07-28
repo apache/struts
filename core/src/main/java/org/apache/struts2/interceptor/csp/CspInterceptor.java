@@ -18,14 +18,11 @@
  */
 package org.apache.struts2.interceptor.csp;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -38,36 +35,40 @@ import javax.servlet.http.HttpServletResponse;
  * @see CspSettings
  * @see DefaultCspSettings
  **/
-public class CspInterceptor extends AbstractInterceptor implements PreResultListener {
-
-    private boolean enforcingMode = false;
-    private CspSettings settings = new DefaultCspSettings();
-    private String path = "";
-
-    public void setReportUri(String reportUri) {
-        System.out.println(path);
-        if (reportUri.charAt(0) == '/'){
-            settings.setReportUri(String.format("%s%s", path, reportUri));
-        } else{
-            settings.setReportUri(reportUri);
-        }
-    }
-
-    public void setEnforcingMode(String value){
-        enforcingMode = Boolean.parseBoolean(value);
-        settings.setEnforcingMode(enforcingMode);
-    }
+public final class CspInterceptor extends AbstractInterceptor implements PreResultListener {
+    private final CspSettings settings = new DefaultCspSettings();
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         invocation.addPreResultListener(this);
-        path = invocation.getInvocationContext().getServletRequest().getContextPath();
-
         return invocation.invoke();
     }
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
         settings.addCspHeaders(response);
+    }
+
+    public void setReportUri(String reportUri) {
+        Optional<URI> uri = buildUri(reportUri);
+        if (!uri.isPresent()) {
+            throw new IllegalArgumentException("Could not parse configured report URI for CSP interceptor: " + reportUri);
+        }
+
+        settings.setReportUri(reportUri);
+    }
+
+    private static Optional<URI> buildUri(String reportUri) {
+        try {
+            return Optional.of(URI.create(reportUri));
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        return Optional.empty();
+    }
+
+    public void setEnforcingMode(String value){
+        boolean enforcingMode = Boolean.parseBoolean(value);
+        settings.setEnforcingMode(enforcingMode);
     }
 }

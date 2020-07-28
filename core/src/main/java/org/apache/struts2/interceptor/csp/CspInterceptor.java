@@ -55,6 +55,10 @@ public final class CspInterceptor extends AbstractInterceptor implements PreResu
             throw new IllegalArgumentException("Could not parse configured report URI for CSP interceptor: " + reportUri);
         }
 
+        if (!uri.get().isAbsolute() && !reportUri.startsWith("/")) {
+            throw new IllegalArgumentException("Illegal configuration: report URI is not relative to the root. Please set a report URI that starts with /");
+        }
+
         settings.setReportUri(reportUri);
     }
 

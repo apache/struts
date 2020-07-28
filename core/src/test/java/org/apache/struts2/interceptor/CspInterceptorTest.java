@@ -121,6 +121,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
     /*
     - Test that the report-uri directive is only set when setReportUri is called
     - Test that an exception is thrown if the configured reportUri cannot be parsed
+    - Test that an exception is thrown if the configured reportUri is relative but doesn't start with /
      */
 
     @Override

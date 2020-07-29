@@ -33,26 +33,31 @@ import java.util.Hashtable;
  */
 public class BundleClassLoaderInterface implements ClassLoaderInterface {
 
+    @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         return DefaultBundleAccessor.getInstance().loadClass(name);
     }
 
+    @Override
     public URL getResource(String name) {
         return  DefaultBundleAccessor.getInstance().loadResource(name, true);
     }
 
+    @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         Collection<URL> coll = DefaultBundleAccessor.getInstance().loadResources(name, true);
-        if (coll == null){
+        if (coll == null) {
             return new Hashtable<Object, URL>().elements();
         }
-        return Collections.enumeration(DefaultBundleAccessor.getInstance().loadResources(name, true));
+        return Collections.enumeration(coll);
     }
 
+    @Override
     public InputStream getResourceAsStream(String name) throws IOException {
         return DefaultBundleAccessor.getInstance().loadResourceAsStream(name);
     }
 
+    @Override
     public ClassLoaderInterface getParent() {
         return null;
     }

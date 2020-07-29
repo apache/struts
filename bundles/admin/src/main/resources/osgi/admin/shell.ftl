@@ -24,11 +24,11 @@
 
         <link rel="stylesheet" type="text/css" href="<@s.url value="/static/css/shell.css" />" />
         <link rel="stylesheet" type="text/css" href="<@s.url value="/static/css/main.css" />" />
-        <link rel="stylesheet" type="text/css" href="<@s.url value="/static/css/redmond/jquery-ui-1.7.1.custom.css" />" />
+        <link rel="stylesheet" type="text/css" href="<@s.url value="/static/css/redmond/jquery-ui-1.12.1.redmond.css" />" />
 
         <script src="<@s.url value="/static/js/shell.js" />"></script>
-        <script src="<@s.url value="/static/js/jquery-1.3.2.min.js" />"></script>
-        <script src="<@s.url value="/static/js/jquery-ui-1.7.1.custom.min.js" />"></script>
+        <script src="<@s.url value="/static/js/jquery-1.12.4.min.js" />"></script>
+        <script src="<@s.url value="/static/js/jquery-ui-1.12.1.min.js" />"></script>
     </head>
 <body>
 <div class="menu">

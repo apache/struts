@@ -28,6 +28,7 @@ public class SomeAction implements ServiceAware<Object> {
         return services;
     }
 
+    @Override
     public void setServices(List<Object> services) {
         this.services = services;
     }

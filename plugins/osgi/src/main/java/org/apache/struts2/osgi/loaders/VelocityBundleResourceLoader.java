@@ -29,6 +29,7 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
  */
 public class VelocityBundleResourceLoader extends ClasspathResourceLoader {
 
+    @Override
     public synchronized InputStream getResourceStream(String name)
             throws ResourceNotFoundException {
         if ((name == null) || (name.length() == 0)) {

@@ -22,7 +22,7 @@
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
 	"http://struts.apache.org/dtds/struts-2.5.dtd">
-    
+
 <struts order="10">
     <constant name="struts.objectFactory" value="osgi" />
     <constant name="struts.objectFactory.delegate" value="struts" />
@@ -33,7 +33,7 @@
 
     <bean type="org.apache.struts2.osgi.BundleAccessor" class="org.apache.struts2.osgi.DefaultBundleAccessor" />
     <bean type="org.apache.struts2.osgi.PackageLoader" class="org.apache.struts2.osgi.BundlePackageLoader" />
-    
+
     <bean name="osgi" type="com.opensymphony.xwork2.ObjectFactory" class="org.apache.struts2.osgi.DelegatingObjectFactory" />
     <bean name="springOsgi" type="com.opensymphony.xwork2.ObjectFactory" class="org.apache.struts2.osgi.SpringOsgiObjectFactory" />
     <bean name="osgi" type="com.opensymphony.xwork2.config.PackageProvider" class="org.apache.struts2.osgi.OsgiConfigurationProvider" />

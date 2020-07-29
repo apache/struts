@@ -38,34 +38,47 @@ public class SpringOsgiObjectFactory extends ObjectFactory {
     public SpringOsgiObjectFactory() {
     }
 
+    @Override
     public Object buildBean(String className, Map<String, Object> extraContext, boolean injectInternal) throws Exception {
-        if (containsBean(className))
+        if (containsBean(className)) {
             return getBean(className);
-        else {
+        } else {
             Class clazz = ClassLoaderUtil.loadClass(className, SpringOsgiObjectFactory.class);
             Object object = clazz.newInstance();
-            if (injectInternal)
+            if (injectInternal) {
                 injectInternalBeans(object);
+            }
             return object;
         }
 
     }
 
+    @Override
     public Object buildBean(Class clazz, Map<String, Object> extraContext) throws Exception {
+        if (clazz == null) {
+            throw new IllegalArgumentException("Unable to build bean from a null Class");
+        }
+
         return clazz.newInstance();
     }
 
+    @Override
     public Class getClassInstance(String className) throws ClassNotFoundException {
         return containsBean(className) ? getBean(className).getClass() :  ClassLoaderUtil.loadClass(className, SpringOsgiObjectFactory.class);
     }
 
     protected Object getBean(String beanName) {
+        if (bundleAccessor == null) {
+            throw new IllegalStateException("BundleAccessor is null (may not have been injected).  Unable to get bean");  // Better than a NPE.
+        }
+
         ServiceReference[] refs = bundleAccessor.getAllServiceReferences(SPRING_SERVICE_NAME);
         if (refs != null) {
             for (ServiceReference ref : refs) {
                 Object context = bundleAccessor.getService(ref);
-                if (OsgiUtil.containsBean(context, beanName))
+                if (OsgiUtil.containsBean(context, beanName)) {
                     return OsgiUtil.getBean(context, beanName);
+                }
             }
         }
 
@@ -73,12 +86,17 @@ public class SpringOsgiObjectFactory extends ObjectFactory {
     }
 
     protected boolean containsBean(String beanName) {
+        if (bundleAccessor == null) {
+            throw new IllegalStateException("BundleAccessor is null (may not have been injected).  Unable to check if contains bean");  // Better than a NPE.
+        }
+
         ServiceReference[] refs = bundleAccessor.getAllServiceReferences(SPRING_SERVICE_NAME);
         if (refs != null) {
             for (ServiceReference ref : refs) {
                 Object context = bundleAccessor.getService(ref);
-                if (OsgiUtil.containsBean(context, beanName))
+                if (OsgiUtil.containsBean(context, beanName)) {
                     return true;
+                }
             }
         }
 

@@ -76,7 +76,7 @@ public class FetchMetadataInterceptor extends AbstractInterceptor {
             return invocation.invoke();
         }
 
-        LOG.debug("Fetch metadata rejected cross-origin request to [{}]", contextPath);
+        LOG.info("Fetch metadata rejected cross-origin request to [{}]", contextPath);
         return SC_FORBIDDEN;
     }
 

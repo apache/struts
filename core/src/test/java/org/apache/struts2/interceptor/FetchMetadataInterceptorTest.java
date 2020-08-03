@@ -35,12 +35,20 @@ import static org.junit.Assert.assertNotEquals;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import javax.servlet.http.HttpServletResponse;
 
 public class FetchMetadataInterceptorTest extends XWorkTestCase {
@@ -142,4 +150,113 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         assertFalse("Expected original vary header content to be replaced", response.getHeader(VARY_HEADER).contains(ACCEPT_ENCODING_VALUE));
         assertTrue("Expected added vary header content to be present", response.getHeader(VARY_HEADER).contains(VARY_HEADER_VALUE));
     }
+
+    public void testSetExemptedPathsInjectionIndirectly() throws Exception {
+        // Perform a multi-step test to confirm (indirectly) that the method parameter injection of setExemptedPaths() for
+        // the FetchMetadataInterceptor is functioning as expected, when configured appropriately.
+        // Ensure we're using the specific test configuration, not the default simple configuration.
+        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("struts-testing.xml");
+        container.inject(configurationProvider);
+        loadConfigurationProviders(configurationProvider);
+
+        // The test configuration in "struts-testing.xml" should define a "default" package.  That "default" package should contain a "defaultInterceptorStack" containing
+        // a "fetchMetadata" interceptor parameter "fetchMetadata.setExemptedPaths".  If the parameter method injection is working correctly for the FetchMetadataInterceptor,
+        // the exempted paths should be set appropriately for the interceptor instances, once the configuration is loaded into the container.
+        final PackageConfig defaultPackageConfig = configuration.getPackageConfig("default");
+        final InterceptorStackConfig defaultInterceptorStackConfig = (InterceptorStackConfig) defaultPackageConfig.getInterceptorConfig("defaultInterceptorStack");
+        final Collection<InterceptorMapping> defaultInterceptorStackInterceptors = defaultInterceptorStackConfig.getInterceptors();
+        assertFalse("'defaultInterceptorStack' interceptors in struts-testing.xml is empty ?", defaultInterceptorStackInterceptors.isEmpty());
+        InterceptorMapping configuredFetchMetadataInterceptorMapping = null;
+        Iterator<InterceptorMapping> interceptorIterator = defaultInterceptorStackInterceptors.iterator();
+        while (interceptorIterator.hasNext()) {
+            InterceptorMapping currentMapping = interceptorIterator.next();
+            if (currentMapping != null && "fetchMetadata".equals(currentMapping.getName())) {
+                configuredFetchMetadataInterceptorMapping = currentMapping;
+                break;
+            }
+        }
+        assertNotNull("'fetchMetadata' interceptor mapping not present after loading 'struts-testing.xml' ?", configuredFetchMetadataInterceptorMapping);
+        assertTrue("'fetchMetadata' interceptor mapping loaded from 'struts-testing.xml' produced a non-FetchMetadataInterceptor type ?", configuredFetchMetadataInterceptorMapping.getInterceptor() instanceof FetchMetadataInterceptor);
+        FetchMetadataInterceptor configuredFetchMetadataInterceptor = (FetchMetadataInterceptor) configuredFetchMetadataInterceptorMapping.getInterceptor();
+        request.removeHeader(SEC_FETCH_SITE_HEADER);
+        request.addHeader(SEC_FETCH_SITE_HEADER, "foo");
+        request.setContextPath("/foo");
+        assertEquals("Expected interceptor to NOT accept this request [/foo]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
+        request.setContextPath("/fetchMetadataExemptedGlobal");
+        assertNotEquals("Expected interceptor to accept this request [/fetchMetadataExemptedGlobal]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
+        request.setContextPath("/someOtherPath");
+        assertNotEquals("Expected interceptor to accept this request [/someOtherPath]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
+
+        // The test configuration in "struts-testing.xml" should also contain three actions configured differently for the "fetchMetadata" interceptor.
+        // "fetchMetadataExempted" has an override exemption matching its action name, "fetchMetadataNotExempted" has an override exemption NOT matching its action name,
+        // and "fetchMetadataExemptedGlobal" has an action name matching an exemption defined in "defaultInterceptorStack".
+        final RuntimeConfiguration runtimeConfiguration = configuration.getRuntimeConfiguration();
+        final ActionConfig fetchMetadataExemptedActionConfig = runtimeConfiguration.getActionConfig("/", "fetchMetadataExempted");
+        final ActionConfig fetchMetadataNotExemptedActionConfig = runtimeConfiguration.getActionConfig("/", "fetchMetadataNotExempted");
+        final ActionConfig fetchMetadataExemptedGlobalActionConfig = runtimeConfiguration.getActionConfig("/", "fetchMetadataExemptedGlobal");
+        assertNotNull("'fetchMetadataExempted' action config not present in 'struts-testing.xml' ?", fetchMetadataExemptedActionConfig);
+        assertNotNull("'fetchMetadataNotExempted' action config not present in 'struts-testing.xml' ?", fetchMetadataExemptedActionConfig);
+        assertNotNull("'fetchMetadataExemptedGlobal' action config not present in 'struts-testing.xml' ?", fetchMetadataExemptedActionConfig);
+
+        // Test fetchMetadata interceptor for the "fetchMetadataExempted" action.
+        Collection<InterceptorMapping> currentActionInterceptors = fetchMetadataExemptedActionConfig.getInterceptors();
+        assertFalse("'fetchMetadataExempted' interceptors in struts-testing.xml is empty ?", currentActionInterceptors.isEmpty());
+        configuredFetchMetadataInterceptorMapping = null;
+        interceptorIterator = currentActionInterceptors.iterator();
+        while (interceptorIterator.hasNext()) {
+            InterceptorMapping currentMapping = interceptorIterator.next();
+            if (currentMapping != null && "fetchMetadata".equals(currentMapping.getName())) {
+                configuredFetchMetadataInterceptorMapping = currentMapping;
+                break;
+            }
+        }
+        assertNotNull("'fetchMetadata' interceptor mapping for action 'fetchMetadataExempted' not present in 'struts-testing.xml' ?", configuredFetchMetadataInterceptorMapping);
+        assertTrue("'fetchMetadata' interceptor mapping for action 'fetchMetadataExempted' in 'struts-testing.xml' produced a non-FetchMetadataInterceptor type ?", configuredFetchMetadataInterceptorMapping.getInterceptor() instanceof FetchMetadataInterceptor);
+        configuredFetchMetadataInterceptor = (FetchMetadataInterceptor) configuredFetchMetadataInterceptorMapping.getInterceptor();
+        request.removeHeader(SEC_FETCH_SITE_HEADER);
+        request.addHeader(SEC_FETCH_SITE_HEADER, fetchMetadataExemptedActionConfig.getName());
+        request.setContextPath("/" + fetchMetadataExemptedActionConfig.getName());
+        assertNotEquals("Expected interceptor to accept this request [" + "/" + fetchMetadataExemptedActionConfig.getName() + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
+
+        // Test fetchMetadata interceptor for the "fetchMetadataNotExempted" action.
+        currentActionInterceptors = fetchMetadataNotExemptedActionConfig.getInterceptors();
+        assertFalse("'fetchMetadataNotExempted' interceptors in struts-testing.xml is empty ?", currentActionInterceptors.isEmpty());
+        configuredFetchMetadataInterceptorMapping = null;
+        interceptorIterator = currentActionInterceptors.iterator();
+        while (interceptorIterator.hasNext()) {
+            InterceptorMapping currentMapping = interceptorIterator.next();
+            if (currentMapping != null && "fetchMetadata".equals(currentMapping.getName())) {
+                configuredFetchMetadataInterceptorMapping = currentMapping;
+                break;
+            }
+        }
+        assertNotNull("'fetchMetadata' interceptor mapping for action 'fetchMetadataNotExempted' not present in 'struts-testing.xml' ?", configuredFetchMetadataInterceptorMapping);
+        assertTrue("'fetchMetadata' interceptor mapping 'fetchMetadataExempted' in 'struts-testing.xml' produced a non-FetchMetadataInterceptor type ?", configuredFetchMetadataInterceptorMapping.getInterceptor() instanceof FetchMetadataInterceptor);
+        configuredFetchMetadataInterceptor = (FetchMetadataInterceptor) configuredFetchMetadataInterceptorMapping.getInterceptor();
+        request.removeHeader(SEC_FETCH_SITE_HEADER);
+        request.addHeader(SEC_FETCH_SITE_HEADER, fetchMetadataNotExemptedActionConfig.getName());
+        request.setContextPath("/" + fetchMetadataNotExemptedActionConfig.getName());
+        assertEquals("Expected interceptor to NOT accept this request [" + "/" + fetchMetadataNotExemptedActionConfig.getName() + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
+
+        // Test fetchMetadata interceptor for the "fetchMetadataExemptedGlobal" action.
+        currentActionInterceptors = fetchMetadataExemptedGlobalActionConfig.getInterceptors();
+        assertFalse("'fetchMetadataExemptedGlobal' interceptors in struts-testing.xml is empty ?", currentActionInterceptors.isEmpty());
+        configuredFetchMetadataInterceptorMapping = null;
+        interceptorIterator = currentActionInterceptors.iterator();
+        while (interceptorIterator.hasNext()) {
+            InterceptorMapping currentMapping = interceptorIterator.next();
+            if (currentMapping != null && "fetchMetadata".equals(currentMapping.getName())) {
+                configuredFetchMetadataInterceptorMapping = currentMapping;
+                break;
+            }
+        }
+        assertNotNull("'fetchMetadata' interceptor mapping for action 'fetchMetadataExemptedGlobal' not present in 'struts-testing.xml' ?", configuredFetchMetadataInterceptorMapping);
+        assertTrue("'fetchMetadata' interceptor mapping 'fetchMetadataExemptedGlobal' in 'struts-testing.xml' produced a non-FetchMetadataInterceptor type ?", configuredFetchMetadataInterceptorMapping.getInterceptor() instanceof FetchMetadataInterceptor);
+        configuredFetchMetadataInterceptor = (FetchMetadataInterceptor) configuredFetchMetadataInterceptorMapping.getInterceptor();
+        request.removeHeader(SEC_FETCH_SITE_HEADER);
+        request.addHeader(SEC_FETCH_SITE_HEADER, fetchMetadataExemptedGlobalActionConfig.getName());
+        request.setContextPath("/" + fetchMetadataExemptedGlobalActionConfig.getName());
+        assertNotEquals("Expected interceptor to accept this request [" + "/" + fetchMetadataExemptedGlobalActionConfig.getName() + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
+    }
+
 }

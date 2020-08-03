@@ -241,11 +241,12 @@
             <interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
             <interceptor name="autowiring" class="com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor"/>
             <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
+            <interceptor name="coepInterceptor" class="org.apache.struts2.interceptor.CoepInterceptor"/>
             <interceptor name="conversionError" class="org.apache.struts2.interceptor.StrutsConversionErrorInterceptor"/>
             <interceptor name="cookie" class="org.apache.struts2.interceptor.CookieInterceptor"/>
             <interceptor name="cookieProvider" class="org.apache.struts2.interceptor.CookieProviderInterceptor"/>
             <interceptor name="clearSession" class="org.apache.struts2.interceptor.ClearSessionInterceptor" />
-            <interceptor name="coopInterceptor" class="org.apache.struts2.interceptor.coop.CoopInterceptor"/>
+            <interceptor name="coopInterceptor" class="org.apache.struts2.interceptor.CoopInterceptor"/>
             <interceptor name="createSession" class="org.apache.struts2.interceptor.CreateSessionInterceptor" />
             <interceptor name="debugging" class="org.apache.struts2.interceptor.debugging.DebuggingInterceptor" />
             <interceptor name="execAndWait" class="org.apache.struts2.interceptor.ExecuteAndWaitInterceptor"/>
@@ -376,7 +377,6 @@
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
-                <interceptor-ref name="coopInterceptor"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
@@ -390,6 +390,15 @@
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="coepInterceptor">
+                    <param name="enforcingMode">false</param>
+                    <param name="disabled">false</param>
+                    <param name="exemptedPaths"></param>
+                </interceptor-ref>
+                <interceptor-ref name="coopInterceptor">
+                    <param name="exemptedPaths"></param>
+                    <param name="mode">same-origin</param>
+                </interceptor-ref>
                 <interceptor-ref name="validation">
                     <param name="excludeMethods">input,back,cancel,browse</param>
                 </interceptor-ref>

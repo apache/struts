@@ -26,64 +26,70 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-public class CoopInterceptorTest extends StrutsInternalTestCase {
+import java.util.HashMap;
+import java.util.Map;
 
-    private final CoopInterceptor interceptor = new CoopInterceptor();
+public class CoepInterceptorTest extends StrutsInternalTestCase {
+
+    private final CoepInterceptor interceptor = new CoepInterceptor();
     private final MockActionInvocation mai = new MockActionInvocation();
     private final MockHttpServletRequest request = new MockHttpServletRequest();
     private final MockHttpServletResponse response = new MockHttpServletResponse();
 
-    String SAME_ORIGIN = "same-origin";
-    String SAME_SITE = "same-site";
-    String UNSAFE_NONE = "unsafe-none";
-    String COOP_HEADER = "Cross-Origin-Opener-Policy";
+    private final String COEP_ENFORCING_HEADER = "Cross-Origin-Embedder-Policy";
+    private final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
+    private final String HEADER_CONTENT = "require-corp";
 
-    public void testHeaderIsSetNonExemptedPath() throws Exception {
-        request.setContextPath("/some");
+
+    public void testDisabled() throws Exception {
+        interceptor.setDisabled("true");
+
         interceptor.intercept(mai);
 
-        String header = response.getHeader(COOP_HEADER);
-        assertFalse("Coop header does not existing non-exempted path", Strings.isEmpty(header));
-        assertEquals("Coop header is not same-origin", SAME_ORIGIN, header);
+        String header = response.getHeader(COEP_ENFORCING_HEADER);
+        assertTrue("COEP is not disabled", Strings.isEmpty(header));
     }
 
-    public void testHeaderIsNotSetExemptedPath() throws Exception {
+    public void testEnforcingHeader() throws Exception {
+        interceptor.setEnforcingMode("true");
+
+        interceptor.intercept(mai);
+
+        String header = response.getHeader(COEP_ENFORCING_HEADER);
+        assertFalse("COEP enforcing header does not exist", Strings.isEmpty(header));
+        assertEquals("COEP header value is incorrect", HEADER_CONTENT, header);
+    }
+
+    public void testExemptedPath() throws Exception{
         request.setContextPath("/foo");
+        interceptor.setEnforcingMode("true");
+
         interceptor.intercept(mai);
 
-        String header = response.getHeader(COOP_HEADER);
-        assertTrue("Coop header exists in exempted path", Strings.isEmpty(header));
+        String header = response.getHeader(COEP_ENFORCING_HEADER);
+        assertTrue("COEP applied to exempted path", Strings.isEmpty(header));
     }
 
-    public void testChangeDefaultMode() throws Exception {
-        interceptor.setMode("unsafe-none");
-        request.setContextPath("/some");
+    public void testReportingHeader() throws Exception {
+        interceptor.setEnforcingMode("false");
+
         interceptor.intercept(mai);
 
-        String header = response.getHeader(COOP_HEADER);
-        assertFalse("Coop header does not existin non-exempted path", Strings.isEmpty(header));
-        assertEquals("Coop header is not same-origin", UNSAFE_NONE, header);
-    }
-
-    public void testErrorNotRecognizedMode() throws Exception {
-        request.setContextPath("/some");
-
-        try{
-            interceptor.setMode("foobar");
-            fail("Exception should be thrown for unrecognized mode");
-        } catch (IllegalArgumentException e){
-            assert(true);
-        }
+        String header = response.getHeader(COEP_REPORT_HEADER);
+        assertFalse("COEP reporting header does not exist", Strings.isEmpty(header));
+        assertEquals("COEP header value is incorrect", HEADER_CONTENT, header);
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         container.inject(interceptor);
-        interceptor.setExemptedPaths("/foo,/bar");
+        interceptor.setExemptedPaths("/foo");
         ServletActionContext.setRequest(request);
         ServletActionContext.setResponse(response);
         ActionContext context = ServletActionContext.getActionContext();
+        Map<String, Object> session = new HashMap<>();
+        context.withSession(session);
         mai.setInvocationContext(context);
     }
 

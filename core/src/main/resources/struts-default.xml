@@ -275,6 +275,7 @@
             <interceptor name="annotationParameterFilter" class="com.opensymphony.xwork2.interceptor.annotations.AnnotationParameterFilterInterceptor" />
             <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor" />
             <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor" />
+            <interceptor name="fetchMetadata" class="org.apache.struts2.interceptor.FetchMetadataInterceptor" />
 
             <!-- Empty stack - performs no operations -->
             <interceptor-stack name="emptyStack">
@@ -399,6 +400,7 @@
                     <param name="exemptedPaths"></param>
                     <param name="mode">same-origin</param>
                 </interceptor-ref>
+                <interceptor-ref name="fetchMetadata"/>
                 <interceptor-ref name="validation">
                     <param name="excludeMethods">input,back,cancel,browse</param>
                 </interceptor-ref>

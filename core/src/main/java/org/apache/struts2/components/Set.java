@@ -31,8 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * complex expression and then simply reference that variable each time rather than the complex expression. This is
  * useful in both cases: when the complex expression takes time (performance improvement) or is hard to read (code
  * readability improvement).</p>
- * <p>If the tag is used with body content, the evaluation of the value parameter is omitted. Instead, the String to
- * which the body evaluates is set as value for the scoped variable.</p>
+ * <p>If the value parameter is omitted, the String to which the body evaluates is set as value for the scoped variable.</p>
  *
  * <p>The scopes available are as follows:</p>
  * <ul>
@@ -94,11 +93,7 @@ public class Set extends ContextBean {
 
         Object o;
         if (value == null) {
-            if (body != null && !body.equals("")) {
-                o = body;
-            } else {
-                o = findValue("top");
-            }
+            o = body;
         } else {
             o = findValue(value);
         }

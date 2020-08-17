@@ -68,9 +68,13 @@ public class SetTag extends ContextBeanTag {
     @Override
     protected String getBody() {
         if (trimBody) {
-            return super.getBody();
+            if (bodyContent == null) {
+                return null;
+            } else {
+                return bodyContent.getString().trim();
+            }
         } else {
-            return (bodyContent == null ? "" : bodyContent.getString());
+            return (bodyContent == null ? null : bodyContent.getString());
         }
     }
 }

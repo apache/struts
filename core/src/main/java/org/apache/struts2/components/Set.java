@@ -93,7 +93,11 @@ public class Set extends ContextBean {
 
         Object o;
         if (value == null) {
-            o = body;
+            if (body == null) {
+                o = findValue("top");
+            } else {
+                o = body;
+            }
         } else {
             o = findValue(value);
         }

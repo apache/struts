@@ -121,6 +121,20 @@ public class SetTagTest extends AbstractUITagTest {
         assertEquals(beginEndSpaceString, context.get("foo"));
     }
 
+    public void testEmptyBody() throws JspException {
+        StrutsMockBodyContent mockBodyContent;
+        String variableName = "foo";
+        tag.setName(variableName);
+        tag.setValue(null);
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        String emptyBody = "";
+        mockBodyContent.setString(emptyBody);
+        tag.setBodyContent(mockBodyContent);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(emptyBody, context.get(variableName));
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
 

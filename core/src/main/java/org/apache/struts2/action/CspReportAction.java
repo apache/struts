@@ -53,10 +53,6 @@ import static org.apache.struts2.interceptor.csp.CspSettings.CSP_REPORT_TYPE;
 public abstract class CspReportAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
     private HttpServletRequest request;
 
-    public String execute() throws IOException {
-        return "success";
-    }
-
     @Override
     public void withServletRequest(HttpServletRequest request) {
         if (!isCspReportRequest(request)) {

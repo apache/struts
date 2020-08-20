@@ -62,7 +62,7 @@ public final class CspInterceptor extends AbstractInterceptor implements PreResu
         settings.setReportUri(reportUri);
     }
 
-    private static Optional<URI> buildUri(String reportUri) {
+    private Optional<URI> buildUri(String reportUri) {
         try {
             return Optional.of(URI.create(reportUri));
         } catch (IllegalArgumentException ignored) {

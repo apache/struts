@@ -20,21 +20,36 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-    <package name="bundle-demo" namespace="/osgi" extends="osgi-default">
+    <!-- Set some Struts 2 constants relevant to the OSGi Plugin. 
+           Note:  The constant definitions specified here (within the demo bundle) may also need to be 
+                  duplicated in the struts.xml configuration of the outer project that packages the demo
+                  bundle JAR file within it.
+    -->
+    <constant name="struts.objectFactory" value="osgi" />
+    <constant name="struts.objectFactory.delegate" value="struts" />
+    <constant name="struts.freemarker.manager.classname" value="org.apache.struts2.osgi.BundleFreemarkerManager" />
+    <constant name="struts.velocity.manager.classname" value="org.apache.struts2.osgi.VelocityBundleResourceLoader" />
+    <constant name="struts.staticContentLoader" value="org.apache.struts2.osgi.loaders.StaticContentBundleResourceLoader" />
+
+    <package name="bundle-demo" namespace="/osgi" extends="osgi-default, velocity-default" strict-method-invocation="true">
+
         <default-action-ref name="home" />
-        <action name="hello-velocity" class="helloWorldAction">
+
+        <action name="hello-velocity" class="actions.osgi.HelloWorldAction">
             <result type="velocity">/content/osgi/hello.vm</result>
         </action>
-        <action name="hello-freemarker" class="helloWorldAction">
+
+        <action name="hello-freemarker" class="actions.osgi.HelloWorldAction">
             <result type="freemarker">/content/osgi/hello.ftl</result>
         </action>
 
-        <action name="home">
+        <action name="home" class="actions.osgi.HelloWorldAction">
             <result type="freemarker">/content/osgi/home.ftl</result>
         </action>
+
     </package>
 </struts>

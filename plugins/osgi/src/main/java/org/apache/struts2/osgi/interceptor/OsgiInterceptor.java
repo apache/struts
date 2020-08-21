@@ -21,8 +21,8 @@ package org.apache.struts2.osgi.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -44,13 +44,16 @@ public class OsgiInterceptor extends AbstractInterceptor {
 
     private BundleContext bundleContext;
 
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
+        LOG.trace("OSGi Interceptor - intercept() called - ActionInvocation: [{}]", invocation);
+
         if (bundleContext != null) {
             Object action = invocation.getAction();
             injectBundleContext(action);
             injectServicesUsingDeprecatedInterface(action);
             injectServices(action);
-        } else if (LOG.isWarnEnabled()) {
+        } else {
             LOG.warn("The OSGi interceptor was not able to find the BundleContext in the ServletContext");
         }
 
@@ -58,9 +61,9 @@ public class OsgiInterceptor extends AbstractInterceptor {
     }
 
     private void injectBundleContext(Object action) {
-        if (action instanceof BundleContextAware)
+        if (action instanceof BundleContextAware) {
             ((BundleContextAware) action).setBundleContext(bundleContext);
-
+        }
         if (action instanceof org.apache.struts2.osgi.action.BundleContextAware) {
             ((org.apache.struts2.osgi.action.BundleContextAware) action).withBundleContext(bundleContext);
         }
@@ -86,12 +89,14 @@ public class OsgiInterceptor extends AbstractInterceptor {
                                     for (ServiceReference ref : refs) {
                                         Object service = bundleContext.getService(ref);
                                         //wow, that's a lot of nested ifs
-                                        if (service != null)
+                                        if (service != null) {
                                             services.add(service);
+                                        }
                                     }
 
-                                    if (!services.isEmpty())
+                                    if (!services.isEmpty()) {
                                         ((ServiceAware) action).setServices(services);
+                                    }
                                 }
                             }
                         }
@@ -120,8 +125,9 @@ public class OsgiInterceptor extends AbstractInterceptor {
                                     for (ServiceReference ref : refs) {
                                         Object service = bundleContext.getService(ref);
                                         //wow, that's a lot of nested ifs
-                                        if (service != null)
+                                        if (service != null) {
                                             services.add(service);
+                                        }
                                     }
 
                                     if (!services.isEmpty()) {
@@ -138,6 +144,8 @@ public class OsgiInterceptor extends AbstractInterceptor {
 
     @Inject
     public void setServletContext(ServletContext servletContext) {
+        LOG.trace("OSGi Interceptor - setServletContext() called - ServletContext: [{}] ", servletContext);
+
         this.bundleContext = (BundleContext) servletContext.getAttribute(OsgiHost.OSGI_BUNDLE_CONTEXT);
     }
 

@@ -60,6 +60,9 @@ public class BundlesAction extends ActionSupport implements ServletContextAware 
     }
 
     public String start() throws BundleException {
+        clearErrorsAndMessages();
+        addActionMessage("Start - OSGi Host: " + osgiHost + ", ID: " + id);
+
         Bundle bundle = osgiHost.getBundles().get(id);
         try {
             bundle.start();
@@ -69,29 +72,35 @@ public class BundlesAction extends ActionSupport implements ServletContextAware 
             //there no easy way/elegant way to know if the bundle was processed already
             Thread.sleep(1000);
         } catch (Exception e) {
-            addActionError(e.toString());
+            addActionError("Exception: " + e.toString() + " (" + e.getMessage() + ")");
         }
 
         return view();
     }
 
     public String stop() throws BundleException {
+        clearErrorsAndMessages();
+        addActionMessage("Stop - OSGi Host: " + osgiHost + ", ID: " + id);
+
         Bundle bundle = osgiHost.getBundles().get(id);
         try {
             bundle.stop();
         } catch (Exception e) {
-            addActionError(e.toString());
+            addActionError("Exception: " + e.toString() + " (" + e.getMessage() + ")");
         }
 
         return view();
     }
 
     public String update() throws BundleException {
+        clearErrorsAndMessages();
+        addActionMessage("Update - OSGi Host: " + osgiHost + ", ID: " + id);
+
         Bundle bundle = osgiHost.getBundles().get(id);
         try {
             bundle.update();
         } catch (Exception e) {
-            addActionError(e.toString());
+            addActionError("Exception: " + e.toString() + " (" + e.getMessage() + ")");
         }
 
         return view();
@@ -114,14 +123,14 @@ public class BundlesAction extends ActionSupport implements ServletContextAware 
     }
 
     public List<PackageConfig> getPackages() {
-        List<PackageConfig> pkgs = new ArrayList<PackageConfig>();
+        List<PackageConfig> pkgs = new ArrayList<>();
         Bundle bundle = getBundle();
         if (bundle.getState() == Bundle.ACTIVE) {
-            for (String name : bundleAccessor.getPackagesByBundle(bundle)) {
-                PackageConfig packageConfig = configuration.getPackageConfig(name);
-                if (packageConfig != null)
-                    pkgs.add(packageConfig);
-            }
+            bundleAccessor.getPackagesByBundle(bundle).stream().map(
+                    name -> configuration.getPackageConfig(name)).filter(
+                            packageConfig -> (packageConfig != null)).forEachOrdered(packageConfig -> {
+                                pkgs.add(packageConfig);
+                            });
         }
         return pkgs;
     }
@@ -132,16 +141,14 @@ public class BundlesAction extends ActionSupport implements ServletContextAware 
 
     public Collection<Bundle> getBundles() {
         List<Bundle> bundles = new ArrayList(osgiHost.getBundles().values());
-        Collections.sort(bundles, new Comparator<Bundle>() {
-            public int compare(Bundle bundle1, Bundle bundle2) {
-                boolean bundle1StrutsEnabled = isStrutsEnabled(bundle1);
-                boolean bundle2StrutsEnabled = isStrutsEnabled(bundle2);
+        Collections.sort(bundles, (Bundle bundle1, Bundle bundle2) -> {
+            boolean bundle1StrutsEnabled = isStrutsEnabled(bundle1);
+            boolean bundle2StrutsEnabled = isStrutsEnabled(bundle2);
 
-                if ((bundle1StrutsEnabled && bundle2StrutsEnabled) || (!bundle1StrutsEnabled && !bundle2StrutsEnabled))
-                    return bundle1.getSymbolicName().compareTo(bundle2.getSymbolicName());
-                else {
-                    return bundle1StrutsEnabled ? -1 : 1;
-                }
+            if ((bundle1StrutsEnabled && bundle2StrutsEnabled) || (!bundle1StrutsEnabled && !bundle2StrutsEnabled)) {
+                return bundle1.getSymbolicName().compareTo(bundle2.getSymbolicName());
+            } else {
+                return bundle1StrutsEnabled ? -1 : 1;
             }
         });
         return bundles;
@@ -172,17 +179,21 @@ public class BundlesAction extends ActionSupport implements ServletContextAware 
         try {
             state = bundle.getState();
         } catch (Exception e) {
-            addActionError("Unable to determine bundle state: " + e.getMessage());
+            addActionError("Unable to determine bundle state.  Exception: " + e.toString() + " (" + e.getMessage() + ")");
             return false;
         }
 
-        if ("start".equals(val)) {
-            return state == Bundle.RESOLVED;
-        } else if ("stop".equals(val)) {
-            return state == Bundle.ACTIVE;
-        } else if ("update".equals(val)) {
-            return state == Bundle.ACTIVE || state == Bundle.INSTALLED
-                    || state == Bundle.RESOLVED;
+        if (val != null) {
+            switch (val) {
+                case "start":
+                    return state == Bundle.RESOLVED;
+                case "stop":
+                    return state == Bundle.ACTIVE;
+                case "update":
+                    return state == Bundle.ACTIVE || state == Bundle.INSTALLED || state == Bundle.RESOLVED;
+                default:
+                    break;
+            }
         }
         throw new IllegalArgumentException("Invalid state");
     }
@@ -197,6 +208,7 @@ public class BundlesAction extends ActionSupport implements ServletContextAware 
         this.bundleAccessor = bundleAccessor;
     }
 
+    @Override
     public void withServletContext(ServletContext servletContext) {
         osgiHost = (OsgiHost) servletContext.getAttribute(StrutsOsgiListener.OSGI_HOST);
     }

@@ -21,28 +21,29 @@
 -->
 
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-    <package name="bundle-admin" namespace="/osgi/admin" extends="struts-default">
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <package name="bundle-admin" namespace="/osgi/admin" extends="osgi-default" strict-method-invocation="true">
         <default-action-ref name="bundles" />
         
         <action name="bundle_*!*" class="org.apache.struts2.osgi.admin.actions.BundlesAction" method="{2}">
             <param name="id">{1}</param>
             <result type="freemarker">viewBundle.ftl</result>
+            <allowed-methods>index,view,start,stop,update</allowed-methods>
         </action>
 
         <action name="bundles" class="org.apache.struts2.osgi.admin.actions.BundlesAction" method="index">
             <result type="freemarker">viewBundles.ftl</result>
         </action>
 
-
         <action name="execCommand" class="org.apache.struts2.osgi.admin.actions.ShellAction">
             <result type="freemarker">commandResult.ftl</result>
         </action>
 
-        <action name="shell">
+        <action name="shell" class="org.apache.struts2.osgi.admin.actions.ShellAction">
             <result type="freemarker">shell.ftl</result>
         </action>
     </package>

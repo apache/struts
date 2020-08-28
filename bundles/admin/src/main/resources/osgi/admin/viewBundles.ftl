@@ -23,10 +23,10 @@
         <title>OSGi Bundles</title>
 
         <link rel="stylesheet" type="text/css" href="<@s.url value="/static/css/main.css" />" />
-        <link rel="stylesheet" type="text/css" href="<@s.url value="/static/css/redmond/jquery-ui-1.7.1.custom.css" />" />
+        <link rel="stylesheet" type="text/css" href="<@s.url value="/static/css/redmond/jquery-ui-1.12.1.redmond.css" />" />
 
-        <script src="<@s.url value="/static/js/jquery-1.3.2.min.js" />"></script>
-        <script src="<@s.url value="/static/js/jquery-ui-1.7.1.custom.min.js" />"></script>
+        <script src="<@s.url value="/static/js/jquery-1.12.4.min.js" />"></script>
+        <script src="<@s.url value="/static/js/jquery-ui-1.12.1.min.js" />"></script>
     </head>
 <body>
 
@@ -44,6 +44,9 @@
         </a>
     </div>    
 </div>
+
+<@s.actionerror />
+
 <table class="properties" style="clear:both; width:700px">
     <thead>
         <tr>
@@ -87,5 +90,8 @@
         </#list>
     </tbody>
 </table>
+
+<@s.actionmessage />
+
 </body>
 </html>

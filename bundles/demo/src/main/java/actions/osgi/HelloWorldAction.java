@@ -22,13 +22,21 @@ package actions.osgi;
 
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Actions;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.ResultPath;
 
-@ResultPath("/content")
+@Namespace("/osgi")
+@ResultPath("/content/osgi")
 public class HelloWorldAction extends ActionSupport {
-    private Message message;
+    private Message message = new Message("Default non-null message");
 
-    @Action("hello-convention")
+    @Override
+    @Actions({
+        @Action(value="hello-convention", results={@Result(name="success", type="freemarker", location="/content/osgi/hello-convention.ftl")}),
+        @Action(value="/osgi/hello-convention", results={@Result(name="success", type="freemarker", location="/content/osgi/hello-convention.ftl")})
+    })
     public String execute() {
         return SUCCESS;
     }
@@ -45,6 +53,7 @@ public class HelloWorldAction extends ActionSupport {
         return "Hello!!!";
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("{message:");
         sb.append(message != null ? message.getText() : "null");

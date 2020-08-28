@@ -80,25 +80,27 @@ public class GlassfishOSGiHost extends BaseOsgiHost implements OsgiHost {
     }
 
     private void installBundles() throws Exception {
-        ArrayList<Bundle> installed = new ArrayList<Bundle>();
+        ArrayList<Bundle> installed = new ArrayList<>();
         for (URL url : findBundles()) {
-            LOG.debug("Installing bundle [" + url + "]");
+            if (LOG.isDebugEnabled()) {  // Avoid repeated cost of URL string transform, except when debug level logging is enabled.
+                LOG.debug("Installing bundle [{}]", url);
+            }
             Bundle bundle = bctx.installBundle(url.toExternalForm());
             installed.add(bundle);
         }
-        for (Bundle bundle : installed) {
+        installed.forEach(bundle -> {
             try {
                 bundle.start();
             } catch (BundleException e) {
-                e.printStackTrace();
-                LOG.error("Failed to start " + bundle, e);
+                // Use logging to print the stacktrace (no direct stacktrace print to stdout/stderr).
+                LOG.error("Failed to start [{}]", bundle, e);
             }
-        }
+        });
 
     }
 
     private List<URL> findBundles() throws Exception {
-        ArrayList<URL> list = new ArrayList<URL>();
+        ArrayList<URL> list = new ArrayList<>();
         for (Object o : this.servletContext.getResourcePaths(BUNDLES_DIR)) {
             String name = (String) o;
             if (name.endsWith(".jar")) {
@@ -132,12 +134,9 @@ public class GlassfishOSGiHost extends BaseOsgiHost implements OsgiHost {
                     "BUNDLE_CONTEXT_ATTRIBUTE").get(null);
             servletContext.setAttribute(key, bctx);
         } catch (ClassNotFoundException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Spring OSGi support is not enabled");
-            }
+            LOG.debug("Spring OSGi support is not enabled");
         } catch (Exception e) {
-            LOG.error(
-                        "The API of Spring OSGi has changed and the field [[}] is no longer available. The OSGi plugin needs to be updated",
+            LOG.error("The API of Spring OSGi has changed and the field [{}] is no longer available. The OSGi plugin needs to be updated",
                         "org.springframework.osgi.web.context.support.OsgiBundleXmlWebApplicationContext.BUNDLE_CONTEXT_ATTRIBUTE", e);
         }
     }
@@ -148,7 +147,7 @@ public class GlassfishOSGiHost extends BaseOsgiHost implements OsgiHost {
      */
     @Override
     public Map<String, Bundle> getBundles() {
-        Map<String, Bundle> bundles = new HashMap<String, Bundle>();
+        Map<String, Bundle> bundles = new HashMap<>();
         for (Bundle bundle : bctx.getBundles()) {
             bundles.put(bundle.getSymbolicName(), bundle);
         }
@@ -156,8 +155,9 @@ public class GlassfishOSGiHost extends BaseOsgiHost implements OsgiHost {
         return Collections.unmodifiableMap(bundles);
     }
 
+    @Override
     public Map<String, Bundle> getActiveBundles() {
-        Map<String, Bundle> bundles = new HashMap<String, Bundle>();
+        Map<String, Bundle> bundles = new HashMap<>();
         for (Bundle bundle : bctx.getBundles()) {
             if (bundle.getState() == Bundle.ACTIVE)
                 bundles.put(bundle.getSymbolicName(), bundle);
@@ -166,10 +166,12 @@ public class GlassfishOSGiHost extends BaseOsgiHost implements OsgiHost {
         return Collections.unmodifiableMap(bundles);
     }
 
+    @Override
     public BundleContext getBundleContext() {
         return bctx;
     }
 
+    @Override
     public void destroy() throws Exception {
     }
 

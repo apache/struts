@@ -20,7 +20,7 @@
 -->
 <html>
     <head>
-        <title>Action mapped by the XML configurationn</title>
+        <title>Action mapped by the XML configuration</title>
     </head>
     <body>
         This is an action mapped by XML configuration, using a <b>FreeMarker</b> result.

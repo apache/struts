@@ -33,6 +33,7 @@ public class StaticContentBundleResourceLoader extends DefaultStaticContentLoade
 
     private BundleAccessor bundleAccessor;
 
+    @Override
     protected URL findResource(String path) throws IOException {
         return bundleAccessor.loadResourceFromAllBundles(path);
     }

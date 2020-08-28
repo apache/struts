@@ -64,7 +64,7 @@
                 <configuration>
                     <instructions>
                         <manifestLocation>META-INF</manifestLocation>
-                        <Import-Package>*,com.opensymphony.xwork2</Import-Package>
+                        <Import-Package>*</Import-Package>
                         <Spring-Context>*;create-asynchronously:=false</Spring-Context>
                         <Struts2-Enabled>true</Struts2-Enabled>
                     </instructions>

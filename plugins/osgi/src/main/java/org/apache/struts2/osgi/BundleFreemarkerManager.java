@@ -42,18 +42,26 @@ public class BundleFreemarkerManager extends FreemarkerManager {
 
     private static final Logger LOG = LogManager.getLogger(BundleFreemarkerManager.class);
 
+    @Override
     protected TemplateLoader createTemplateLoader(ServletContext servletContext, String templatePath) {
         TemplateLoader templatePathLoader = null;
 
+        if (servletContext == null) {
+            throw new IllegalArgumentException("Unable to create a template loader using a null servlet context");  // Better than a NPE.
+        }
+
         try {
-             if (templatePath.startsWith("class://")) {
+             if (templatePath != null && templatePath.startsWith("class://")) {
                  // substring(7) is intentional as we "reuse" the last slash
                  templatePathLoader = new ClassTemplateLoader(getClass(), templatePath.substring(7));
-             } else if (templatePath.startsWith("file://")) {
+             } else if (templatePath != null && templatePath.startsWith("file://")) {
                  templatePathLoader = new FileTemplateLoader(new File(URI.create(templatePath)));
+             } else {
+                 LOG.warn("The provided template path specified: [{}] does not start with expected path protocol (class: or file:).  " +
+                          "The template loader will only look in standard locations", templatePath);
              }
          } catch (IOException e) {
-             LOG.error("Invalid template path specified: " + e.getMessage(), e);
+             LOG.error("Invalid template path specified: [{}]", e.getMessage(), e);
          }
 
         // presume that most apps will require the class and webapp template loader

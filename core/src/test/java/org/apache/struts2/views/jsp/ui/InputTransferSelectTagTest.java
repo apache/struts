@@ -42,6 +42,7 @@ public class InputTransferSelectTagTest extends AbstractUITagTest {
 
         tag.setName("collection");
         tag.setList("collection");
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
 
         tag.doStartTag();
         tag.doEndTag();

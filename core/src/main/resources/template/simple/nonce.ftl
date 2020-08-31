@@ -18,6 +18,6 @@
  * under the License.
  */
 -->
-<script src="${base}/struts/utils.js" type="text/javascript" <#rt/>
-<#include "/${parameters.templateDir}/simple/nonce.ftl" />
-></script>
+<#if parameters.nonce?has_content>
+    nonce="${parameters.nonce}"<#rt/>
+</#if>

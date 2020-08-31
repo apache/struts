@@ -1,4 +1,3 @@
-<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,7 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<script src="${base}/struts/utils.js" type="text/javascript" <#rt/>
-<#include "/${parameters.templateDir}/simple/nonce.ftl" />
-></script>
+package org.apache.struts2.views.java.simple;
+
+import org.apache.struts2.views.java.Attributes;
+import java.io.IOException;
+
+public class NonceHandler extends AbstractTagHandler {
+
+    @Override
+    public void start(String name, Attributes a) throws IOException {
+        a.addIfExists("nonce", context.getParameters().get("nonce"));
+        super.start(name, a);
+    }
+}

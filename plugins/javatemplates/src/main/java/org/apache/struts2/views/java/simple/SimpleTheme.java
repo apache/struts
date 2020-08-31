@@ -37,7 +37,7 @@ public class SimpleTheme extends DefaultTheme {
                 put("datetextfield", new FactoryList(DateTextFieldHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class));
                 put("select", new FactoryList(SelectHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("form", new FactoryList(FormHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
-                put("form-close", new FactoryList(FormHandler.CloseHandler.class));
+                put("form-close", new FactoryList(FormHandler.CloseHandler.class, ScriptHandler.class, NonceHandler.class));
                 put("a", new FactoryList(AnchorHandler.class));
                 put("a-close", new FactoryList(AnchorHandler.CloseHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("checkbox", new FactoryList(CheckboxHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
@@ -50,13 +50,13 @@ public class SimpleTheme extends DefaultTheme {
                 put("textarea", new FactoryList(TextAreaHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("radiomap", new FactoryList(RadioHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
                 put("checkboxlist", new FactoryList(CheckboxListHandler.class, ScriptingEventsHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
-                put("script", new FactoryList(ScriptHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
+                put("script", new FactoryList(ScriptHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class, NonceHandler.class));
                 put("script-close", new FactoryList(ScriptHandler.CloseHandler.class));
-                put("link", new FactoryList(LinkHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class));
+                put("link", new FactoryList(LinkHandler.class, CommonAttributesHandler.class, DynamicAttributesHandler.class, NonceHandler.class));
                 put("actionerror", new FactoryList(ActionErrorHandler.class));
                 put("token", new FactoryList(TokenHandler.class));
                 put("actionmessage", new FactoryList(ActionMessageHandler.class));
-                put("head", new FactoryList(HeadHandler.class));
+                put("head", new FactoryList(HeadHandler.class, NonceHandler.class));
                 put("hidden", new FactoryList(HiddenHandler.class));
                 put("fielderror", new FactoryList(FieldErrorHandler.class));
                 put("empty", new FactoryList(EmptyHandler.class));

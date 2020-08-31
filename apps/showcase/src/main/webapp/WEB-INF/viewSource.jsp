@@ -64,11 +64,11 @@
 </div>
 
 
-<script>
+<s:script>
 	$('#codeTab a').click(function (e) {
 		e.preventDefault();
 		$(this).tab('show');
 	})
-</script>
+</s:script>
 </body>
 </html>

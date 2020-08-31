@@ -73,6 +73,8 @@ public class ComboBoxTest extends AbstractUITagTest {
         tag.setId("cb");
         tag.setList("collection");
 
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         tag.doEndTag();
 

@@ -32,7 +32,9 @@ public class HeadTagTest extends AbstractUITagTest {
     public void testHead1() throws Exception {
         HeadTag tag = new HeadTag();
         tag.setPageContext(pageContext);
-        
+
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         tag.doEndTag();
 

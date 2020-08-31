@@ -166,10 +166,5 @@ public class Link extends UIBean{
         if (title != null) {
             addParameter("title", findString(title));
         }
-
-        if (stack.getActionContext().getSession().containsKey("nonce")) {
-            String nonceValue = stack.getActionContext().getSession().get("nonce").toString();
-            addParameter("nonce", nonceValue);
-        }
     }
 }

@@ -19,7 +19,9 @@
  */
 -->
 <#if parameters.validate!false == true>
-	<script type="text/javascript" src="${base}/struts/xhtml/validation.js"></script>
+	<script type="text/javascript" src="${base}/struts/xhtml/validation.js" <#rt/>
+    <#include "/${parameters.templateDir}/simple/nonce.ftl" />
+	></script>
 	<#if parameters.onsubmit??>
 		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}();")}
 	<#else>

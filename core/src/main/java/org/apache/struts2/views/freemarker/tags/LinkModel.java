@@ -1,4 +1,3 @@
-<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,7 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<script src="${base}/struts/utils.js" type="text/javascript" <#rt/>
-<#include "/${parameters.templateDir}/simple/nonce.ftl" />
-></script>
+package org.apache.struts2.views.freemarker.tags;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.components.Component;
+import org.apache.struts2.components.Link;
+
+import com.opensymphony.xwork2.util.ValueStack;
+
+/**
+ * @see Link
+ */
+public class LinkModel extends TagModel {
+    public LinkModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        super(stack, req, res);
+    }
+
+    protected Component getBean() {
+        return new Link(stack, req, res);
+    }
+}

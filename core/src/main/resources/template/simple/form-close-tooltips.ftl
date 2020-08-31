@@ -24,7 +24,11 @@
 --><#t/>
 <#if (parameters.hasTooltip!false)><#t/>
 	<#lt/><!-- javascript that is needed for tooltips -->
-	<#lt/><script type="text/javascript" src='<@s.url value="/struts/domTT.js" includeParams="none" encode="false" />'></script>
-	<#lt/><link rel="stylesheet" type="text/css" href="<@s.url value="/struts/domTT.css" includeParams="none" encode="false" />"/>
+	<#lt/><script type="text/javascript" src='<@s.url value="/struts/domTT.js" includeParams="none" encode="false" />'<#rt/>
+	<#include "/${parameters.templateDir}/simple/nonce.ftl" />
+	></script>
+	<#lt/><link rel="stylesheet" type="text/css" href="<@s.url value="/struts/domTT.css" includeParams="none" encode="false" />" <#rt/>
+	<#include "/${parameters.templateDir}/simple/nonce.ftl" />
+	/>
 	
 </#if><#t/>

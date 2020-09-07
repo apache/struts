@@ -345,6 +345,14 @@ public class FileUploadInterceptor extends AbstractInterceptor {
             if (LOG.isWarnEnabled()) {
                 LOG.warn(errMsg);
             }
+        } else if (file.getContent() == null) {
+            String errMsg = getTextMessage(action, "struts.messages.error.uploading", new String[]{filename});
+            if (validation != null) {
+                validation.addFieldError(inputName, errMsg);
+            }
+            if (LOG.isWarnEnabled()) {
+                LOG.warn(errMsg);
+            }
         } else if (maximumSize != null && maximumSize < file.length()) {
             String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new String[]{inputName, filename, file.getName(), "" + file.length(), getMaximumSizeStr(action)});
             if (validation != null) {

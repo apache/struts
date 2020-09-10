@@ -238,6 +238,41 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         assertTrue(result.contains("<option value=\"2\">2</option>"));
     }
 
+    public void testNonce() throws Exception {
+        File file = new File(ClassLoaderUtil.getResource("template/simple/common-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/xhtml/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~xhtml/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/dynamic-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/xhtml/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~xhtml/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/nonce.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/nonce.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/script.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/script.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/script-close.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/script-close.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/link.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/link.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(FreeMarkerResultTest.class.getResource("nonceTest.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/nonceTest.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.replay(servletContext);
+
+        init();
+
+        request.setRequestURI("/tutorial/test10.action");
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
+        dispatcher.serviceAction(request, response, mapping);
+
+        assertTrue(stringWriter.toString().contains("<link nonce=\""));
+        assertTrue(stringWriter.toString().contains("<script nonce=\""));
+    }
+
     private void init() {
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);

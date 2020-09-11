@@ -18,9 +18,7 @@
  * under the License.
  */
 -->
-<script type="text/javascript" <#rt/>
-<#include "/${parameters.templateDir}/simple/nonce.ftl" />
->
+<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
 	function autoPopulate_${parameters.escapedId}(targetElement) {
 		<#if parameters.headerKey?? && parameters.headerValue??>
 		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey}') {

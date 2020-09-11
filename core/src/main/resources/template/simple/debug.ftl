@@ -18,9 +18,7 @@
  * under the License.
  */
 -->
-<script type="text/javascript" <#rt/>
-<#include "/${parameters.templateDir}/simple/nonce.ftl" />
->
+<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
 <!--
     function toggleDebug(debugId) {
         var debugDiv = document.getElementById(debugId);

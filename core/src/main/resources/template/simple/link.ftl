@@ -20,8 +20,7 @@
 -->
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-<link <#rt/>
-<#include "/${parameters.templateDir}/simple/nonce.ftl" />
+<link <#include "/${parameters.templateDir}/simple/nonce.ftl" />
 <#if parameters.href?has_content>
     href="${parameters.href}"<#rt/>
 </#if>

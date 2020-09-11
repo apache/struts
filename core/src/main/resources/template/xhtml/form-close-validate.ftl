@@ -32,9 +32,7 @@ Only the following validators are supported:
 END SNIPPET: supported-validators
 -->
 <#if ((parameters.validate!false == true) && (parameters.performValidation!false == true))>
-<script type="text/javascript"<#rt/>
-<#include "/${parameters.templateDir}/simple/nonce.ftl" />
->
+<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
     function validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}() {
         <#--
             In case of multiselect fields return only the first value.

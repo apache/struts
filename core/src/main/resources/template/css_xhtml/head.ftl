@@ -18,7 +18,5 @@
  * under the License.
  */
 -->
-<link
-        <#include "/${parameters.templateDir}/simple/nonce.ftl" />
-        rel="stylesheet" href="<@s.url value='/struts/css_xhtml/styles.css' includeParams='none' encode='false' />" type="text/css" />
+<link <#include "/${parameters.templateDir}/simple/nonce.ftl" /> rel="stylesheet" href="<@s.url value='/struts/css_xhtml/styles.css' includeParams='none' encode='false' />" type="text/css" />
 <#include "/${parameters.templateDir}/simple/head.ftl" />

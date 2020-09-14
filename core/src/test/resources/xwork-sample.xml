@@ -97,7 +97,7 @@
         </action>
 
         <action name="aliasTest" class="com.opensymphony.xwork2.SimpleAction">
-           	<param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz" }</param>
+           	<param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz", "notExisting":"blah" }</param>
 			<interceptor-ref name="params"/>
          	<interceptor-ref name="alias"/>
          	<result name="success" type="mock" />

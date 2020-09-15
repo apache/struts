@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
 
 import java.util.Map;
 
@@ -173,7 +174,10 @@ public class AliasInterceptor extends AbstractInterceptor {
                         HttpParameters contextParameters = ActionContext.getContext().getParameters();
 
                         if (null != contextParameters) {
-                            value = new Evaluated(contextParameters.get(name));
+                            Parameter param = contextParameters.get(name);
+                            if (param.isDefined()) {
+                                value = new Evaluated(param.getValue());
+                            }
                         }
                     }
                     if (value.isDefined()) {

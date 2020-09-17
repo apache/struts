@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +61,30 @@ public class AliasInterceptorTest extends XWorkTestCase {
         actionOne.setFoo(17);
         actionOne.setBar(23);
         proxy.execute();
+        assertEquals("name to be copied", actionOne.getAliasSource());
         assertEquals(actionOne.getAliasSource(), actionOne.getAliasDest());
+        assertNull(actionOne.getBlah());    //  WW-5087
+    }
+
+    public void testNotExisting() throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> httpParams = new HashMap<>();
+        httpParams.put("notExisting", "from http parameter");
+        params.put(ActionContext.PARAMETERS, HttpParameters.create(httpParams).build());
+
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasTest", null, params);
+        SimpleAction actionOne = (SimpleAction) proxy.getAction();
+
+        // prevent ERROR result
+        actionOne.setFoo(-1);
+        actionOne.setBar(1);
+
+        proxy.execute();
+        assertEquals("from http parameter", actionOne.getBlah());
+        assertNull(actionOne.getAliasDest());    //  WW-5087
     }
 
     public void testInvalidAliasExpression() throws Exception {

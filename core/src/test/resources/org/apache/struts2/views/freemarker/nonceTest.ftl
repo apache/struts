@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id: someFreeMarkerFile.ftl 590812 2007-10-31 20:32:54Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,16 +20,6 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/control-close.ftl" />
-<#include "/${parameters.templateDir}/simple/form-close.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-validate.ftl" />
-<#if parameters.focusElement??>
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
-    StrutsUtils.addOnLoad(function() {
-        var element = document.getElementById("${parameters.focusElement}");
-        if(element) {
-            element.focus();
-        }
-    });
-</script>
-</#if>
+
+<@s.link/>
+<@s.script/>

@@ -30,6 +30,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class UIBeanTest extends StrutsInternalTestCase {
@@ -304,5 +305,21 @@ public class UIBeanTest extends StrutsInternalTestCase {
         txtFld.evaluateParams();
 
         assertEquals(cssStyle, txtFld.getParameters().get("cssStyle"));
+    }
+
+    public void testNonce() {
+        String nonceVal = "r4nd0m";
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        ActionContext actionContext = stack.getActionContext();
+        Map<String, Object> session = new HashMap<>();
+        session.put("nonce", nonceVal);
+        actionContext.withSession(session);
+
+        DoubleSelect dblSelect = new DoubleSelect(stack, req, res);
+        dblSelect.evaluateParams();
+
+        assertEquals(nonceVal, dblSelect.getParameters().get("nonce"));
     }
 }

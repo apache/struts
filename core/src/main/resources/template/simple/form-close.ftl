@@ -21,16 +21,16 @@
 </form>
 
 <#if (parameters.customOnsubmitEnabled??)>
-<script type="text/javascript">
-<#-- 
-  Enable auto-select of optiontransferselect tag's entries upon containing form's 
+<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
+<#--
+  Enable auto-select of optiontransferselect tag's entries upon containing form's
   submission.
 -->
 <#if (parameters.optiontransferselectIds!?size > 0)>
 	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectObjIds = parameters.optiontransferselectIds.keySet() />
 	<#list selectObjIds as selectObjectId>
-		StrutsUtils.addEventListener(containingForm, "submit", 
+		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjectId}");
 				<#if parameters.optiontransferselectIds.get(selectObjectId)??>
@@ -62,7 +62,7 @@
 	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectDoubleObjIds = parameters.optiontransferselectDoubleIds.keySet() />
 	<#list selectDoubleObjIds as selectObjId>
-		StrutsUtils.addEventListener(containingForm, "submit", 
+		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjId}");
 				<#if parameters.optiontransferselectDoubleIds.get(selectObjId)??>
@@ -84,7 +84,7 @@
 	var containingForm = document.getElementById("${parameters.id}");
 	<#assign tmpIds = parameters.updownselectIds.keySet() />
 	<#list tmpIds as tmpId>
-		StrutsUtils.addEventListener(containingForm, "submit", 
+		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
 				var updownselectObj = document.getElementById("${tmpId}");
 				<#if parameters.updownselectIds.get(tmpId)??>

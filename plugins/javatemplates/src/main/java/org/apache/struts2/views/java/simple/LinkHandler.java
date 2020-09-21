@@ -31,8 +31,7 @@ public class LinkHandler extends AbstractTagHandler implements TagGenerator {
         Map<String, Object> params = context.getParameters();
         Attributes attrs = new Attributes();
 
-        attrs.add("nonce", (String) params.get("nonce"))
-                .addIfExists("href", params.get(("href")))
+        attrs.addIfExists("href", params.get(("href")))
                 .addIfExists("hreflang", params.get("hreflang"))
                 .addIfExists("rel", params.get("rel"))
                 .addIfExists("media", params.get("media"))

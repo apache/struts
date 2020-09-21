@@ -61,6 +61,9 @@ public class FormTagTest extends AbstractUITagTest {
         tag.setEnctype("myEncType");
         tag.setTitle("mytitle");
         tag.setOnsubmit("submitMe()");
+
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         tag.doEndTag();
         

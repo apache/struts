@@ -1,4 +1,3 @@
-<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,17 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/control-close.ftl" />
-<#include "/${parameters.templateDir}/simple/form-close.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-validate.ftl" />
-<#if parameters.focusElement??>
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
-    StrutsUtils.addOnLoad(function() {
-        var element = document.getElementById("${parameters.focusElement}");
-        if(element) {
-            element.focus();
-        }
-    });
-</script>
-</#if>
+package org.apache.struts2.views.java.simple;
+
+import org.apache.struts2.views.java.Attributes;
+import java.io.IOException;
+
+public class NonceHandler extends AbstractTagHandler {
+
+    @Override
+    public void start(String name, Attributes a) throws IOException {
+        a.addIfExists("nonce", context.getParameters().get("nonce"));
+        super.start(name, a);
+    }
+}

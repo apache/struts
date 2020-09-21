@@ -18,16 +18,4 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/control-close.ftl" />
-<#include "/${parameters.templateDir}/simple/form-close.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-validate.ftl" />
-<#if parameters.focusElement??>
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
-    StrutsUtils.addOnLoad(function() {
-        var element = document.getElementById("${parameters.focusElement}");
-        if(element) {
-            element.focus();
-        }
-    });
-</script>
-</#if>
+<#if parameters.nonce?has_content>nonce="${parameters.nonce}"<#rt/></#if>

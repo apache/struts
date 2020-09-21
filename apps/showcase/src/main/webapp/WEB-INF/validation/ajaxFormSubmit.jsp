@@ -72,7 +72,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<s:script type="text/javascript">
 /********************************************************************
  * JS just used on this page.
  * Usually this would be placed in a JS file
@@ -196,6 +196,6 @@ function _handleValidationResult(form, errors) {
 $(window).bind('load', function() {
     $('form').bind('submit', ajaxFormValidation);
 });
-</script>
+</s:script>
 </body>
 </html>

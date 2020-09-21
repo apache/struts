@@ -26,10 +26,10 @@
 <head>
 	<title>Struts2 Showcase - Validation - DWR</title>
 	<s:head/>
-	<script type='text/javascript' src='../dwr/engine.js'></script>
-    <script type='text/javascript' src='../dwr/util.js'></script>
-	<script type='text/javascript' src='../dwr/interface/validator.js'></script>
-	<script type='text/javascript'>
+	<s:script type='text/javascript' src='../dwr/engine.js'></s:script>
+    <s:script type='text/javascript' src='../dwr/util.js'></s:script>
+	<s:script type='text/javascript' src='../dwr/interface/validator.js'></s:script>
+	<s:script type='text/javascript'>
         var dwrValidateReply = function(data) {
             var validationResult = '';
             for (index = 0; index < data.actionErrors.length; ++index) {
@@ -62,7 +62,7 @@
             validator.doPost('/validation', 'quizDwr', postData, dwrValidateReply);
             return false;
         }
-	</script>
+	</s:script>
 </head>
 
 <body>

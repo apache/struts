@@ -85,6 +85,8 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
         tag.setDoubleHeaderKey("Double Header Key");
         tag.setDoubleHeaderValue("Double Header Value");
 
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         tag.doEndTag();
 

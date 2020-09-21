@@ -70,7 +70,7 @@
     </#if>
         />
 </#if>
-<script type="text/javascript">
+<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
     <#assign itemCount = startCount/>
     var ${parameters.id}Group = new Array(${parameters.listSize} + ${startCount});
     for (var i = 0; i < (${parameters.listSize} + ${startCount}); i++) {

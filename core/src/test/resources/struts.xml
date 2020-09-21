@@ -86,6 +86,12 @@
             </result>
         </action>
 
+        <action name="test10" class="com.opensymphony.xwork2.ActionSupport">
+            <result type="freemarker">
+                <param name="location">org/apache/struts2/views/freemarker/nonceTest.ftl</param>
+            </result>
+        </action>
+
     </package>
 
     <package name="sitegraph" namespace="/tutorial/sitegraph" extends="struts-default">

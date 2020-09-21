@@ -48,10 +48,13 @@ public class DebugTagTest extends AbstractUITagTest {
 
     public void testDevModeEnabled() throws Exception {
         setDevMode(true);
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
 
         tag.doStartTag();
         tag.doEndTag();
         String result = writer.toString();
+
+        assertTrue("Nonce value not included", result.contains("nonce=\"r4nd0m\""));
         assertTrue(StringUtils.isNotEmpty(result));
         assertTrue("Property 'checkStackProperty' should be in Debug Tag output", StringUtils.contains(result, "<td>checkStackProperty</td>"));
     }

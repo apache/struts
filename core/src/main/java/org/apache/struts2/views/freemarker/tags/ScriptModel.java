@@ -1,4 +1,3 @@
-<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,17 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/control-close.ftl" />
-<#include "/${parameters.templateDir}/simple/form-close.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-validate.ftl" />
-<#if parameters.focusElement??>
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
-    StrutsUtils.addOnLoad(function() {
-        var element = document.getElementById("${parameters.focusElement}");
-        if(element) {
-            element.focus();
-        }
-    });
-</script>
-</#if>
+package org.apache.struts2.views.freemarker.tags;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.components.Component;
+import org.apache.struts2.components.Script;
+
+import com.opensymphony.xwork2.util.ValueStack;
+
+/**
+ * @see Script
+ */
+public class ScriptModel extends TagModel {
+    public ScriptModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        super(stack, req, res);
+    }
+
+    protected Component getBean() {
+        return new Script(stack, req, res);
+    }
+}

@@ -168,11 +168,6 @@ public class Script extends ClosingUIBean {
         if (crossorigin != null) {
             addParameter("crossorigin", findString(crossorigin));
         }
-
-        if (stack.getActionContext().getSession().containsKey("nonce")) {
-            String nonceValue = stack.getActionContext().getSession().get("nonce").toString();
-            addParameter("nonce", nonceValue);
-        }
     }
 
 }

@@ -33,13 +33,11 @@ public class ScriptHandler extends AbstractTagHandler implements TagGenerator {
         Map<String, Object> params = context.getParameters();
         Attributes attrs = new Attributes();
 
-        attrs.add("nonce", (String) params.get("nonce"))
-            .addIfExists("async", params.get("async"))
+        attrs.addIfExists("async", params.get("async"))
             .addIfExists("charset", params.get("charset"))
             .addIfExists("defer", params.get("defer"))
             .addIfExists("src", params.get("src"))
             .addIfExists("type", params.get("type"))
-            .addIfExists("name", params.get("name"))
             .addIfExists("referrerpolicy", params.get("referrerpolicy"))
             .addIfExists("nomodule", params.get("nomodule"))
             .addIfExists("integrity", params.get("integrity"))

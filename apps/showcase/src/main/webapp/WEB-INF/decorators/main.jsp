@@ -63,26 +63,32 @@
 
     <title><decorator:title default="Struts2 Showcase"/></title>
 
-    <link href="<s:url value='/styles/bootstrap.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="all">
-    <link href="<s:url value='/styles/main.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="all"/>
+    <s:url var="bootstrapCss" value='/styles/bootstrap.css' encode='false' includeParams='none'/>
+    <s:link href="%{bootstrapCss}" rel="stylesheet" type="text/css" media="all"></s:link>
+    <s:url var="mainCss" value='/styles/main.css' encode='false' includeParams='none'/>
+    <s:link href="%{mainCss}" rel="stylesheet" type="text/css" media="all"></s:link>
 
-    <script src="<s:url value='/js/jquery-2.1.4.min.js' encode='false' includeParams='none'/>"></script>
-    <script src="<s:url value='/js/bootstrap.min.js' encode='false' includeParams='none'/>"></script>
-    <script type="text/javascript">
+    <s:url var="jqueryJs" value='/js/jquery-2.1.4.min.js' encode='false' includeParams='none'/>
+    <s:script src="%{jqueryJs}"></s:script>
+    <s:url var="bootstrapJs" value='/js/bootstrap.min.js' encode='false' includeParams='none'/>
+    <s:script src="%{bootstrapJs}"></s:script>
+    <s:script type="text/javascript">
         $(function () {
             var alerts = $('ul.alert').wrap('<div />');
             alerts.prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
             alerts.alert();
         });
-    </script>
+    </s:script>
 
     <!-- Prettify -->
-    <link href="<s:url value='/styles/prettify.css' encode='false' includeParams='none'/>" rel="stylesheet">
-    <script src="<s:url value='/js/prettify.js' encode='false' includeParams='none'/>"></script>
+    <s:url var="prettifyCss" value='/styles/prettify.css' encode='false' includeParams='none'/>
+    <s:link href="%{prettifyCss}" rel="stylesheet"></s:link>
+    <s:url var="prettifyJs" value='/js/prettify.js' encode='false' includeParams='none'/>
+    <s:script src="%{prettifyJs}"></s:script>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <s:script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></s:script>
     <![endif]-->
 
     <decorator:head/>

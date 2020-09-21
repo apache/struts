@@ -60,6 +60,8 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.setValue("mySelectedMapIds");
         tag.setEmptyOption("false");
 
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         tag.doEndTag();
 

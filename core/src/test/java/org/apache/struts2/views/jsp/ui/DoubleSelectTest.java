@@ -87,13 +87,15 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.setCssStyle("s1");
         tag.setDoubleCssClass("c2");
         tag.setDoubleCssStyle("s2");
-        
+
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("DoubleSelect-1.txt"));
     }
-    
+
     public void testOnchange() throws Exception {
         TestAction testAction = (TestAction) action;
 
@@ -151,7 +153,7 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.setCssStyle("s1");
         tag.setDoubleCssClass("c2");
         tag.setDoubleCssStyle("s2");
-        
+
         tag.doStartTag();
         tag.doEndTag();
 
@@ -221,7 +223,7 @@ public class DoubleSelectTest extends AbstractUITagTest {
 
 
     }
-    
+
     public void testDoubleWithDotName() throws Exception {
         TestAction testAction = (TestAction) action;
 

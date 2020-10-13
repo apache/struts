@@ -153,8 +153,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     protected DiskFileItemFactory createDiskFileItemFactory(String saveDir) {
         DiskFileItemFactory fac = new DiskFileItemFactory();
-        // Make sure that the data is written to file
-        fac.setSizeThreshold(0);
+        // Make sure that the data is written to file, even if the file is empty.
+        fac.setSizeThreshold(-1);
         if (saveDir != null) {
             fac.setRepository(new File(saveDir));
         }
@@ -198,8 +198,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
         List<UploadedFile> fileList = new ArrayList<>(items.size());
         for (FileItem fileItem : items) {
-            File storeLocation = ((DiskFileItem) fileItem).getStoreLocation();
-            if (fileItem.isInMemory() && storeLocation != null && !storeLocation.exists()) {
+            DiskFileItem diskFileItem = (DiskFileItem) fileItem;
+            File storeLocation = diskFileItem.getStoreLocation();
+
+            // Ensure file exists even if it is empty.
+            if (diskFileItem.getSize() == 0 && storeLocation != null && !storeLocation.exists()) {
                 try {
                     storeLocation.createNewFile();
                 } catch (IOException e) {

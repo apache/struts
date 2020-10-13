@@ -25,6 +25,7 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
@@ -126,13 +127,15 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             values = new ArrayList<>();
         }
 
-        // note: see http://jira.opensymphony.com/browse/WW-633
-        // basically, in some cases the charset may be null, so
-        // we're just going to try to "other" method (no idea if this
-        // will work)
-        if (charset != null) {
+        if (item.getSize() == 0) {
+            values.add(StringUtils.EMPTY);
+        } else if (charset != null) {
             values.add(item.getString(charset));
         } else {
+            // note: see https://issues.apache.org/jira/browse/WW-633
+            // basically, in some cases the charset may be null, so
+            // we're just going to try to "other" method (no idea if this
+            // will work)
             values.add(item.getString());
         }
         params.put(item.getFieldName(), values);
@@ -154,7 +157,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected DiskFileItemFactory createDiskFileItemFactory(String saveDir) {
         DiskFileItemFactory fac = new DiskFileItemFactory();
         // Make sure that the data is written to file, even if the file is empty.
-        fac.setSizeThreshold(-1);
+        fac.setSizeThreshold(0);
         if (saveDir != null) {
             fac.setRepository(new File(saveDir));
         }

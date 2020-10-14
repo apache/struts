@@ -157,7 +157,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected DiskFileItemFactory createDiskFileItemFactory(String saveDir) {
         DiskFileItemFactory fac = new DiskFileItemFactory();
         // Make sure that the data is written to file, even if the file is empty.
-        fac.setSizeThreshold(0);
+        fac.setSizeThreshold(-1);
         if (saveDir != null) {
             fac.setRepository(new File(saveDir));
         }

@@ -20,6 +20,7 @@ package org.apache.struts2.views.java;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.views.TagAttribute;
 
 import java.util.LinkedHashMap;
 
@@ -60,6 +61,9 @@ public class Attributes extends LinkedHashMap<String, String> {
     public Attributes addIfExists(String attrName, Object paramValue, boolean encode) {
         if (paramValue != null) {
             String val = paramValue.toString();
+            if (paramValue instanceof TagAttribute) {
+                val = ((TagAttribute) paramValue).getValue();
+            }
             if (StringUtils.isNotBlank(val))
                 put(attrName, (encode ? StringUtils.defaultString(StringEscapeUtils.escapeHtml4(val)) : val));
         }

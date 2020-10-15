@@ -30,7 +30,9 @@ import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
+import org.apache.struts2.views.TagAttribute;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -49,7 +51,8 @@ import freemarker.template.Version;
  * <!-- END SNIPPET: javadoc -->
  */
 public class StrutsBeanWrapper extends BeansWrapper {
-    private boolean altMapWrapper;
+
+    private final boolean altMapWrapper;
 
     public StrutsBeanWrapper(boolean altMapWrapper, Version incompatibleImprovements) {
         super(incompatibleImprovements);
@@ -63,6 +66,16 @@ public class StrutsBeanWrapper extends BeansWrapper {
         }
 
         return super.getModelFactory(clazz);
+    }
+
+    @Override
+    public TemplateModel wrap(final Object obj) throws TemplateModelException {
+        if (obj instanceof TagAttribute) {
+            TagAttribute attribute = (TagAttribute) obj;
+            return new TagAttributeAdapter(attribute, this);
+        }
+
+        return super.wrap(obj);
     }
 
     /**

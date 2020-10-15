@@ -22,8 +22,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -32,6 +32,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.FastByteArrayOutputStream;
+import org.apache.struts2.views.TagAttribute;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.TagUtils;
 import org.apache.struts2.views.util.UrlHelper;
@@ -65,7 +66,7 @@ public class Component {
 
     protected boolean devMode = false;
     protected ValueStack stack;
-    protected Map parameters;
+    protected Map<String, Object> parameters;
     protected ActionMapper actionMapper;
     protected boolean throwExceptionOnELFailure;
     private UrlHelper urlHelper;
@@ -220,6 +221,10 @@ public class Component {
         return (String) findValue(expr, String.class);
     }
 
+    protected TagAttribute findString(TagAttribute attribute) {
+        return findValue(attribute, String.class);
+    }
+
     /**
      * Evaluates the OGNL stack to find a String value.
      * <br>
@@ -276,7 +281,7 @@ public class Component {
     }
 
     /**
-     * If altsyntax (%{...}) is applied, simply strip the "%{" and "}" off. 
+     * If altsyntax (%{...}) is applied, simply strip the "%{" and "}" off.
      * @param expr the expression (must be not null)
      * @return the stripped expression if altSyntax is enabled. Otherwise
      * the parameter expression is returned as is.
@@ -296,7 +301,7 @@ public class Component {
     /**
      * Adds the surrounding %{ } to the expression for proper processing.
      * @param expr the expression.
-     * @return the modified expression if altSyntax is enabled, or the parameter 
+     * @return the modified expression if altSyntax is enabled, or the parameter
      * expression otherwise.
      */
 	protected String completeExpressionIfAltSyntax(String expr) {
@@ -318,6 +323,13 @@ public class Component {
 		}
 		return expr;
 	}
+
+    protected TagAttribute findStringIfAltSyntax(TagAttribute attribute) {
+        if (altSyntax()) {
+            return findString(attribute);
+        }
+        return attribute;
+    }
 
     /**
      * <p>
@@ -368,7 +380,7 @@ public class Component {
      * @param toType  the type expected to find.
      * @return  the Object found, or <tt>null</tt> if not found.
      */
-    protected Object findValue(String expr, Class toType) {
+    protected Object findValue(String expr, Class<?> toType) {
         if (altSyntax() && toType == String.class) {
             if (ComponentUtils.containsExpression(expr)) {
                 return TextParseUtil.translateVariables('%', expr, stack);
@@ -379,6 +391,25 @@ public class Component {
             expr = stripExpressionIfAltSyntax(expr);
 
             return getStack().findValue(expr, toType, throwExceptionOnELFailure);
+        }
+    }
+
+    protected TagAttribute findValue(TagAttribute attribute, Class<?> toType) {
+        if (altSyntax() && toType == String.class) {
+            if (attribute.isExpression() && !attribute.isEvaluated()) {
+                String translateVariables = TextParseUtil.translateVariables('%', attribute.getValue(), stack);
+                return TagAttribute.evaluated(translateVariables);
+            } else {
+                return attribute;
+            }
+        } else {
+            Object value = getStack().findValue(attribute.stripedExpression(), toType, throwExceptionOnELFailure);
+
+            if (value == null) {
+                return TagAttribute.NULL;
+            } else {
+                return TagAttribute.evaluated(String.valueOf(value));
+            }
         }
     }
 
@@ -440,13 +471,12 @@ public class Component {
      *
      * @param params  the parameters to copy.
      */
-    public void copyParams(Map params) {
+    public void copyParams(Map<String, ?> params) {
         stack.push(parameters);
         stack.push(this);
         try {
-            for (Object o : params.entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
-                String key = (String) entry.getKey();
+            for (Map.Entry<String, ?> entry : params.entrySet()) {
+                String key = entry.getKey();
 
                 if (key.indexOf('-') >= 0) {
                     // UI component attributes may contain hypens (e.g. data-ajax), but ognl
@@ -480,7 +510,7 @@ public class Component {
      * Gets the parameters.
      * @return the parameters. Is never <tt>null</tt>.
      */
-    public Map getParameters() {
+    public Map<String, Object> getParameters() {
         return parameters;
     }
 
@@ -523,9 +553,9 @@ public class Component {
 
     /**
      * Override to set if body content should be HTML-escaped.
-     * 
+     *
      * @return always true (default) for this component.
-     * 
+     *
      * @since 2.6
      */
     public boolean escapeHtmlBody() {

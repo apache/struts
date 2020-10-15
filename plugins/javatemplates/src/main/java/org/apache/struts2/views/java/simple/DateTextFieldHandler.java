@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.struts2.interceptor.DateTextFieldInterceptor.DateWord;
+import org.apache.struts2.views.TagAttribute;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
 
@@ -37,7 +38,7 @@ public class DateTextFieldHandler extends AbstractTagHandler implements TagGener
 
         // Get format
         String format = (String)params.get("format");
-        String id = (String)params.get("id");
+        String id = params.get("id") != null ? ((TagAttribute) params.get("id")).getValue() : null;
         String name = (String)params.get("name");
         if (id == null) {
         	id = name;

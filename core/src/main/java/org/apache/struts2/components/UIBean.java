@@ -31,6 +31,7 @@ import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.util.TextProviderHelper;
+import org.apache.struts2.views.TagAttribute;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.ContextUtil;
 
@@ -456,7 +457,7 @@ public abstract class UIBean extends Component {
     // shortcut, sets label, name, and value
     protected String key;
 
-    protected String id;
+    protected TagAttribute id = TagAttribute.NULL;
     protected String cssClass;
     protected String cssStyle;
     protected String cssErrorClass;
@@ -989,25 +990,26 @@ public abstract class UIBean extends Component {
      * @param form enclosing form tag
      */
     protected void populateComponentHtmlId(Form form) {
-        String tryId;
+        TagAttribute tryId;
         String generatedId;
-        if (id != null) {
+        if (id != null && !id.isNull()) {
             // this check is needed for backwards compatibility with 2.1.x
             tryId = findStringIfAltSyntax(id);
         } else if (null == (generatedId = escape(name != null ? findString(name) : null))) {
             LOG.debug("Cannot determine id attribute for [{}], consider defining id, name or key attribute!", this);
-            tryId = null;
+            tryId = TagAttribute.NULL;
         } else if (form != null) {
-            tryId = form.getParameters().get("id") + "_" + generatedId;
+            tryId = TagAttribute.evaluated(((TagAttribute)form.getParameters().get("id")).getValue() + "_" + generatedId);
         } else {
-            tryId = generatedId;
+            tryId = TagAttribute.evaluated(generatedId);
         }
 
         //fix for https://issues.apache.org/jira/browse/WW-4299
         //do not assign value to id if tryId is null
-        if (tryId != null) {
-          addParameter("id", tryId);
-          addParameter("escapedId", escape(tryId));
+        if (!tryId.isNull()) {
+            id = tryId;
+            addParameter("id", tryId);
+            addParameter("escapedId", tryId.escaped());
         }
     }
 
@@ -1015,15 +1017,13 @@ public abstract class UIBean extends Component {
      * Get's the id for referencing element.
      * @return the id for referencing element.
      */
-    public String getId() {
+    public TagAttribute getId() {
         return id;
     }
 
     @StrutsTagAttribute(description="HTML id attribute")
     public void setId(String id) {
-        if (id != null) {
-            this.id = findString(id);
-        }
+        this.id = TagAttribute.raw(id);
     }
 
     @StrutsTagAttribute(description="The template directory.")

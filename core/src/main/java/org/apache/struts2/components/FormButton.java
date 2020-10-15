@@ -21,6 +21,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.views.TagAttribute;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -98,32 +99,33 @@ public abstract class FormButton extends ClosingUIBean {
      * </ol>
      */
     protected void populateComponentHtmlId(Form form) {
-        String _tmp_id = "";
-        if (id != null) {
+        TagAttribute _tmp_id = TagAttribute.EMPTY;
+        if (!id.isNull()) {
             // this check is needed for backwards compatibility with 2.1.x
         	_tmp_id = findStringIfAltSyntax(id);
         }
         else {
             if (form != null && form.getParameters().get("id") != null) {
-                _tmp_id = _tmp_id + form.getParameters().get("id").toString() + "_";
+                _tmp_id = _tmp_id.append(((TagAttribute)form.getParameters().get("id")).getValue() + "_");
             }
             if (name != null) {
-                _tmp_id = _tmp_id + escape(name);
+                _tmp_id = _tmp_id.append(escape(name));
             } else if (action != null || method != null){
                 if (action != null) {
-                    _tmp_id = _tmp_id + escape(action);
+                    _tmp_id = _tmp_id.append(escape(action));
                 }
                 if (method != null) {
-                    _tmp_id = _tmp_id + "_" + escape(method);
+                    _tmp_id = _tmp_id.append("_" + escape(method));
                 }
             } else {
                 // if form is null, this component is used, without a form, i guess
                 // there's not much we could do then.
                 if (form != null) {
-                    _tmp_id = _tmp_id + form.getSequence();
+                    _tmp_id = _tmp_id.append(String.valueOf(form.getSequence()));
                 }
             }
         }
+        this.id = _tmp_id;
         addParameter("id", _tmp_id);
     }
 

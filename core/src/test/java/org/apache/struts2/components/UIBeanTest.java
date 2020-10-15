@@ -25,6 +25,7 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
+import org.apache.struts2.views.TagAttribute;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -40,14 +41,14 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getParameters().put("id", TagAttribute.evaluated("formId"));
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setId("txtFldId");
 
         txtFld.populateComponentHtmlId(form);
 
-        assertEquals("txtFldId", txtFld.getParameters().get("id"));
+        assertEquals("txtFldId", txtFld.getId().getValue());
     }
 
     public void testPopulateComponentHtmlIdWithOgnl() throws Exception {
@@ -56,14 +57,14 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getParameters().put("id", TagAttribute.evaluated("formId"));
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setName("txtFldName%{'1'}");
 
         txtFld.populateComponentHtmlId(form);
 
-        assertEquals("formId_txtFldName1", txtFld.getParameters().get("id"));
+        assertEquals("formId_txtFldName1", txtFld.getId().getValue());
     }
 
     public void testPopulateComponentHtmlId2() throws Exception {
@@ -72,14 +73,14 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getParameters().put("id", TagAttribute.evaluated("formId"));
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setName("txtFldName");
 
         txtFld.populateComponentHtmlId(form);
 
-        assertEquals("formId_txtFldName", txtFld.getParameters().get("id"));
+        assertEquals("formId_txtFldName", txtFld.getId().getValue());
     }
 
     public void testPopulateComponentHtmlWithoutNameAndId() throws Exception {
@@ -94,7 +95,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
 
         txtFld.populateComponentHtmlId(form);
 
-        assertEquals(null, txtFld.getParameters().get("id"));
+        assertNull(txtFld.getParameters().get("id"));
     }
 
     public void testEscape() throws Exception {
@@ -120,12 +121,12 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getParameters().put("id", TagAttribute.evaluated("formId"));
 
         TextField txtFld = new TextField(stack, req, res);
         txtFld.setName("foo/bar");
         txtFld.populateComponentHtmlId(form);
-        assertEquals("formId_foo_bar", txtFld.getParameters().get("id"));
+        assertEquals("formId_foo_bar", txtFld.getId().getValue());
     }
 
     public void testGetThemeFromForm() throws Exception {

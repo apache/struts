@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
 /**
  * Simple Restfull Action Mapper to support REST application
  * See docs for more information
- * http://struts.apache.org/docs/restfulactionmapper.html
+ * https://struts.apache.org/core-developers/restful-action-mapper.html
  */
 public class RestfulActionMapper implements ActionMapper {
     protected static final Logger LOG = LogManager.getLogger(RestfulActionMapper.class);

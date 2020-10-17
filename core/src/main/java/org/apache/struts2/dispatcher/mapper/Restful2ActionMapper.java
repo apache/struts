@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
 
 /**
  * Extended version of {@link RestfulActionMapper}, see documentation for more details
- * http://struts.apache.org/docs/restfulactionmapper.html
+ * https://struts.apache.org/core-developers/restful-action-mapper.html
  */
 public class Restful2ActionMapper extends DefaultActionMapper {
 

@@ -30,8 +30,8 @@ pipeline {
         label 'ubuntu'
       }
       tools {
-        jdk 'JDK 11 (latest)'
-        maven 'Maven (latest)'
+        jdk 'jdk_11_latest'
+        maven 'maven_3_latest'
       }
       environment {
         MAVEN_OPTS = "-Xmx1024m"
@@ -66,8 +66,8 @@ pipeline {
         label 'ubuntu'
       }
       tools {
-        jdk 'JDK 1.9 (latest)'
-        maven 'Maven (latest)'
+        jdk 'jdk_1.9_latest'
+        maven 'maven_3_latest'
       }
       environment {
         MAVEN_OPTS = "-Xmx1024m"
@@ -102,8 +102,8 @@ pipeline {
         label 'ubuntu'
       }
       tools {
-        jdk 'JDK 1.8 (latest)'
-        maven 'Maven (latest)'
+        jdk 'jdk_1.8_latest'
+        maven 'maven_3_latest'
       }
       environment {
         MAVEN_OPTS = "-Xmx1024m"

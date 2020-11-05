@@ -478,7 +478,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <configuration>
-                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
                 </configuration>
             </plugin>
             <plugin>
@@ -765,6 +765,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-digester3</artifactId>
+                <version>3.2</version>
                 <optional>true</optional>
                 <!-- Prevent inclusion of ASM 3.3.1 via transitive dependency from velocity-tools-view/commons-digester3/cglib 2.2.2
                      (its presence creates classpath conflicts / duplicate ASM jars due to ASM groupId changing after 3.x).  -->

@@ -9,8 +9,8 @@ pipeline {
     disableConcurrentBuilds()
   }
   tools {
-    jdk 'JDK 1.7 (latest)'
-    maven 'Maven 3 (latest)'
+    jdk 'jdk_1.7_latest'
+    maven 'maven_3_latest'
   }
   triggers {
     pollSCM 'H/15 * * * *'

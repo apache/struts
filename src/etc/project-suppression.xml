@@ -168,4 +168,26 @@
         <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
         <cpe>cpe:/a:xstream_project:xstream</cpe>
     </suppress>
+    <!-- TestNG -->
+    <suppress>
+        <notes><![CDATA[file name: guava-19.0.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
+        <cve>CVE-2018-10237</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: snakeyaml-1.21.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
+        <cve>CVE-2017-18640</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: testng-7.1.0.jar: jquery-3.4.1.min.js]]></notes>
+        <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+        <cve>CVE-2020-11022</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: testng-7.1.0.jar: jquery-3.4.1.min.js]]></notes>
+        <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+        <cve>CVE-2020-11023</cve>
+    </suppress>
+    <!-- TestNG -->
 </suppressions>

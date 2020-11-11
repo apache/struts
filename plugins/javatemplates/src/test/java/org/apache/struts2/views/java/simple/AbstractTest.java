@@ -21,7 +21,6 @@
 
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
@@ -48,14 +47,15 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
 public abstract class AbstractTest extends TestCase {
-    private Map<String, String> scriptingAttrs = new HashMap<>();
-    private Map<String, String> commonAttrs = new HashMap<>();
-    private Map<String, Object> dynamicAttrs = new HashMap<>();
+
+    private final Map<String, String> scriptingAttrs = new HashMap<>();
+    private final Map<String, String> commonAttrs = new HashMap<>();
+    private final Map<String, String> dynamicAttrs = new HashMap<>();
 
     protected SimpleTheme theme;
 
     protected StringWriter writer;
-    protected Map map;
+    protected Map<String, Object> map;
 
     protected Template template;
     protected Map<String, Object> stackContext;
@@ -101,7 +101,7 @@ public abstract class AbstractTest extends TestCase {
         stackContext = new HashMap<>();
 
         context = new TemplateRenderingContext(template, writer, stack, map, null);
-        stackContext.put(Component.COMPONENT_STACK, new Stack());
+        stackContext.put(Component.COMPONENT_STACK, new Stack<>());
         ActionContext actionContext = ActionContext.of(stackContext).bind();
 
         request = createNiceMock(HttpServletRequest.class);
@@ -183,7 +183,7 @@ public abstract class AbstractTest extends TestCase {
     }
 
     protected void assertDynamicAttrs(String str) {
-        for (Map.Entry<String, Object> entry : dynamicAttrs.entrySet()) {
+        for (Map.Entry<String, String> entry : dynamicAttrs.entrySet()) {
             String substr = entry.getKey() + "=\"" + entry.getValue() + "\"";
             assertTrue("String [" + substr + "] was not found in [" + str + "]", str.contains(substr));
         }

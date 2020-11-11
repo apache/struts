@@ -795,8 +795,11 @@ public abstract class UIBean extends Component {
                         addParameter("nameValue", findValue(value, valueClazz));
                     } else if (name != null) {
                         String expr = completeExpressionIfAltSyntax(name);
-
-                        addParameter("nameValue", findValue(expr, valueClazz));
+                        if (recursion(name)) {
+                            addParameter("nameValue", expr);
+                        } else {
+                            addParameter("nameValue", findValue(expr, valueClazz));
+                        }
                     }
                 } else {
                     if (value != null) {
@@ -1030,9 +1033,7 @@ public abstract class UIBean extends Component {
 
     @StrutsTagAttribute(description="HTML id attribute")
     public void setId(String id) {
-        if (id != null) {
-            this.id = findString(id);
-        }
+        this.id = id;
     }
 
     @StrutsTagAttribute(description="The template directory.")
@@ -1250,8 +1251,8 @@ public abstract class UIBean extends Component {
         this.tooltipIconPath = tooltipIconPath;
     }
 
-    public void setDynamicAttributes(Map<String, Object> tagDynamicAttributes) {
-        for (Map.Entry<String, Object> entry : tagDynamicAttributes.entrySet()) {
+    public void setDynamicAttributes(Map<String, String> tagDynamicAttributes) {
+        for (Map.Entry<String, String> entry : tagDynamicAttributes.entrySet()) {
             String key = entry.getKey();
 
             if (!isValidTagAttribute(key)) {

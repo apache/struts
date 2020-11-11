@@ -281,6 +281,27 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals(value, txtFld.getParameters().get("nameValue"));
     }
 
+    public void testValueParameterRecursion() {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        stack.push(new Object() {
+            public String getMyValue() {
+                return "%{myBad}";
+            }
+            public String getMyBad() {
+                throw new IllegalStateException("Recursion detected!");
+            }
+        });
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setName("%{myValue}");
+        txtFld.evaluateParams();
+
+        assertEquals("%{myBad}", txtFld.getParameters().get("nameValue"));
+    }
+
     public void testSetClass() {
         String cssClass = "insertCssClassHere";
         ValueStack stack = ActionContext.getContext().getValueStack();

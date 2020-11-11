@@ -131,6 +131,8 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         ServletActionContext.setRequest(request);
         ServletActionContext.setResponse(response);
 
+        ServletActionContext.getContext().put(ServletActionContext.ACTION_MAPPING, mapping);
+
         return proxy;
     }
 

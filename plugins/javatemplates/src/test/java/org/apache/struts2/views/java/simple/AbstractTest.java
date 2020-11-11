@@ -46,7 +46,7 @@ import java.util.Stack;
 public abstract class AbstractTest extends TestCase {
     private Map<String, String> scriptingAttrs = new HashMap<String, String>();
     private Map<String, String> commonAttrs = new HashMap<String, String>();
-    private Map<String, Object> dynamicAttrs = new HashMap<String, Object>();
+    private Map<String, String> dynamicAttrs = new HashMap<String, String>();
 
     protected SimpleTheme theme;
 
@@ -180,7 +180,7 @@ public abstract class AbstractTest extends TestCase {
     }
 
     protected void assertDynamicAttrs(String str) {
-        for (Map.Entry<String, Object> entry : dynamicAttrs.entrySet()) {
+        for (Map.Entry<String, String> entry : dynamicAttrs.entrySet()) {
             String substr = entry.getKey() + "=\"" + entry.getValue() + "\"";
             assertTrue("String [" + substr + "] was not found in [" + str + "]", str.indexOf(substr) >= 0);
         }

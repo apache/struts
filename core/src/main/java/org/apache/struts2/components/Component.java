@@ -300,7 +300,7 @@ public class Component {
      * expression otherwise.
      */
 	protected String completeExpressionIfAltSyntax(String expr) {
-		if (altSyntax()) {
+		if (altSyntax() && !ComponentUtils.containsExpression(expr)) {
 			return "%{" + expr + "}";
 		}
 		return expr;
@@ -380,6 +380,15 @@ public class Component {
 
             return getStack().findValue(expr, toType, throwExceptionOnELFailure);
         }
+    }
+
+    /**
+     * Detects if altSyntax is enabled and then checks if expression contains %{...}
+     * @param expr a string to examined
+     * @return true if altSyntax is enabled and expr contains %{...}
+     */
+    protected boolean recursion(String expr) {
+        return ComponentUtils.altSyntax(stack) && ComponentUtils.containsExpression(expr);
     }
 
     /**

@@ -238,10 +238,11 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
             }
         } else {
             if (newParams != null) {
-                combinedParams = combinedParams.withExtraParams(newParams);
+                HttpParameters newHttpParameters = HttpParameters.create(newParams).build();
+                combinedParams = combinedParams.withParent(newHttpParameters);
             }
             if (previousParams != null) {
-                combinedParams = combinedParams.withParent(previousParams);
+                combinedParams = combinedParams.withExtraParams(previousParams);
             }
         }
         ac.setParameters(combinedParams.build());

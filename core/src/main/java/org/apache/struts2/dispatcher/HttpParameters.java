@@ -192,7 +192,11 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
             for (Map.Entry<String, Object> entry : requestParameterMap.entrySet()) {
                 String name = entry.getKey();
                 Object value = entry.getValue();
-                parameters.put(name, new Parameter.Request(name, value));
+                if (value instanceof Parameter) {
+                    parameters.put(name, (Parameter) value);
+                } else {
+                    parameters.put(name, new Parameter.Request(name, value));
+                }
             }
 
             return new HttpParameters(parameters);

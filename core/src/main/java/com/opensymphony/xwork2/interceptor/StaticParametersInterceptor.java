@@ -227,22 +227,13 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
     protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
         HttpParameters previousParams = ac.getParameters();
 
-        HttpParameters.Builder combinedParams = HttpParameters.create();
+        HttpParameters.Builder combinedParams;
         if (overwrite) {
-            if (previousParams != null) {
-                combinedParams = combinedParams.withParent(previousParams);
-            }
-            if (newParams != null) {
-                combinedParams = combinedParams.withExtraParams(newParams);
-            }
+            combinedParams = HttpParameters.create().withParent( previousParams);
+            combinedParams = combinedParams.withExtraParams(newParams);
         } else {
-            if (newParams != null) {
-                HttpParameters newHttpParameters = HttpParameters.create(newParams).build();
-                combinedParams = combinedParams.withParent(newHttpParameters);
-            }
-            if (previousParams != null) {
-                combinedParams = combinedParams.withExtraParams(previousParams);
-            }
+            combinedParams = HttpParameters.create(newParams);
+            combinedParams = combinedParams.withExtraParams(previousParams);
         }
         ac.setParameters(combinedParams.build());
     }

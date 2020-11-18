@@ -209,7 +209,6 @@ class JspReader {
         CharArrayWriter caw = new CharArrayWriter();
         while (!stop.equals(mark()))
             caw.write(nextChar());
-        caw.close();
         reset(oldstart);
         return caw.toString();
     }
@@ -595,7 +594,6 @@ class JspReader {
             char buf[] = new char[1024];
             for (int i = 0 ; (i = reader.read(buf)) != -1 ;)
                 caw.write(buf, 0, i);
-            caw.close();
             if (current == null) {
                 current = new Mark(this, caw.toCharArray(), fileid, 
                                    getFile(fileid), master, encoding);

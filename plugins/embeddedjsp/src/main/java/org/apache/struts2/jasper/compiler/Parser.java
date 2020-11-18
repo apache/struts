@@ -324,7 +324,6 @@ class Parser implements TagConstants {
                 ++i;
             }
         }
-        cw.close();
         return cw.toString();
     }
 

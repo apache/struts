@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +26,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.portlet.util.PortletUrlHelperJSR286;
+import org.apache.struts2.views.TagAttribute;
 import org.apache.struts2.views.util.UrlHelper;
 
 import javax.portlet.PortletMode;
@@ -183,16 +183,16 @@ public class PortletUrlRenderer implements UrlRenderer {
 
             // name/id: cut out anything between / and . should be the id and
             // name
-            String id = formComponent.getId();
-            if (id == null) {
+            TagAttribute id = formComponent.getId();
+            if (id.isNull()) {
                 int slash = action.lastIndexOf('/');
                 int dot = action.indexOf('.', slash);
                 if (dot != -1) {
-                    id = action.substring(slash + 1, dot);
+                    id = TagAttribute.evaluated(action.substring(slash + 1, dot));
                 } else {
-                    id = action.substring(slash + 1);
+                    id = TagAttribute.evaluated(action.substring(slash + 1));
                 }
-                formComponent.addParameter("id", formComponent.escape(id));
+                formComponent.addParameter("id", id.escaped());
             }
         }
     }

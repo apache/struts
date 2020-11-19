@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.views.java.simple;
 
+import org.apache.struts2.views.TagAttribute;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagGenerator;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +33,7 @@ public class CheckboxHandler extends AbstractTagHandler implements TagGenerator 
         Attributes attrs = new Attributes();
 
         String fieldValue = (String) params.get("fieldValue");
-        String id = (String) params.get("id");
+        TagAttribute id = (TagAttribute) params.get("id");
         String name = (String) params.get("name");
         Object disabled = params.get("disabled");
 
@@ -52,8 +53,9 @@ public class CheckboxHandler extends AbstractTagHandler implements TagGenerator 
 
         //hidden input
         attrs = new Attributes();
+        String idStr = id != null ? id.getValue() : null;
         attrs.add("type", "hidden")
-                .add("id", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
+                .add("id", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(idStr)))
                 .add("name", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
                 .add("value", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(fieldValue)))
                 .addIfTrue("disabled", disabled);

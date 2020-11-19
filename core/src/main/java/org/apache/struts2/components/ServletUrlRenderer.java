@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.views.TagAttribute;
 import org.apache.struts2.views.util.UrlHelper;
 
 import java.io.IOException;
@@ -186,8 +187,9 @@ public class ServletUrlRenderer implements UrlRenderer {
             }
 
             // if the id isn't specified, use the action name
-            if (formComponent.getId() == null && actionName != null) {
-                formComponent.addParameter("id", formComponent.escape(actionName));
+            TagAttribute id = formComponent.getId();
+            if (id.isNull() && actionName != null) {
+                formComponent.addParameter("id", TagAttribute.evaluated(actionName).escaped());
             }
         } else if (action != null) {
             // Since we can't find an action alias in the configuration, we just
@@ -213,16 +215,16 @@ public class ServletUrlRenderer implements UrlRenderer {
 
             // name/id: cut out anything between / and . should be the id and
             // name
-            String id = formComponent.getId();
-            if (id == null) {
+            TagAttribute id = formComponent.getId();
+            if (id == null || id.isNull()) {
                 slash = result.lastIndexOf('/');
                 int dot = result.indexOf('.', slash);
                 if (dot != -1) {
-                    id = result.substring(slash + 1, dot);
+                    id = TagAttribute.evaluated(result.substring(slash + 1, dot));
                 } else {
-                    id = result.substring(slash + 1);
+                    id = TagAttribute.evaluated(result.substring(slash + 1));
                 }
-                formComponent.addParameter("id", formComponent.escape(id));
+                formComponent.addParameter("id", id.escaped());
             }
         }
 

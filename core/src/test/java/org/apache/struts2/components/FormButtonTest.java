@@ -19,6 +19,7 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.views.TagAttribute;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -31,7 +32,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class FormButtonTest extends StrutsInternalTestCase {
 
-    public void testPopulateComponentHtmlId1() throws Exception {
+    public void testPopulateComponentHtmlId1() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         ValueStack stack = ActionContext.getContext().getValueStack();
@@ -44,32 +45,32 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(form);
 
-        assertEquals("submitId", submit.getParameters().get("id"));
+        assertEquals("submitId", submit.getId().getValue());
     }
 
-    public void testPopulateComponentHtmlId2() throws Exception {
+    public void testPopulateComponentHtmlId2() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         ValueStack stack = ActionContext.getContext().getValueStack();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getParameters().put("id", TagAttribute.evaluated("formId"));
 
         Submit submit = new Submit(stack, req, res);
         submit.setName("submitName");
 
         submit.populateComponentHtmlId(form);
 
-        assertEquals("formId_submitName", submit.getParameters().get("id"));
+        assertEquals("formId_submitName", submit.getId().getValue());
     }
 
-    public void testPopulateComponentHtmlId3() throws Exception {
+    public void testPopulateComponentHtmlId3() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         ValueStack stack = ActionContext.getContext().getValueStack();
 
         Form form = new Form(stack, req, res);
-        form.getParameters().put("id", "formId");
+        form.getParameters().put("id", TagAttribute.evaluated("formId"));
 
         Submit submit = new Submit(stack, req, res);
         submit.setAction("submitAction");
@@ -77,10 +78,10 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(form);
 
-        assertEquals("formId_submitAction_submitMethod", submit.getParameters().get("id"));
+        assertEquals("formId_submitAction_submitMethod", submit.getId().getValue());
     }
 
-    public void testPopulateComponentHtmlId4() throws Exception {
+    public void testPopulateComponentHtmlId4() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         ValueStack stack = ActionContext.getContext().getValueStack();
@@ -90,10 +91,10 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(null);
 
-        assertEquals("submitId", submit.getParameters().get("id"));
+        assertEquals("submitId", submit.getId().getValue());
     }
 
-    public void testPopulateComponentHtmlId5() throws Exception {
+    public void testPopulateComponentHtmlId5() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         ValueStack stack = ActionContext.getContext().getValueStack();
@@ -103,10 +104,10 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(null);
 
-        assertEquals("submitName", submit.getParameters().get("id"));
+        assertEquals("submitName", submit.getId().getValue());
     }
 
-    public void testPopulateComponentHtmlId6() throws Exception {
+    public void testPopulateComponentHtmlId6() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         ValueStack stack = ActionContext.getContext().getValueStack();
@@ -117,6 +118,6 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         submit.populateComponentHtmlId(null);
 
-        assertEquals("submitAction_submitMethod", submit.getParameters().get("id"));
+        assertEquals("submitAction_submitMethod", submit.getId().getValue());
     }
 }

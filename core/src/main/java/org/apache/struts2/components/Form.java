@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.validator.*;
 import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.views.TagAttribute;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.TagUtils;
@@ -169,9 +170,9 @@ public class Form extends ClosingUIBean {
 
         if (name == null) {
             //make the name the same as the id
-            String id = (String) getParameters().get("id");
-             if (StringUtils.isNotEmpty(id)) {
-                addParameter("name", id);
+            TagAttribute id = (TagAttribute) getParameters().get("id");
+             if (id != null && !id.isNull()) {
+                addParameter("name", id.getValue());
              }
         }
 
@@ -220,8 +221,8 @@ public class Form extends ClosingUIBean {
      */
     @Override
     protected void populateComponentHtmlId(Form form) {
-        if (id != null) {
-            addParameter("id", escape(id));
+        if (!id.isNull()) {
+            addParameter("id", id.escaped());
         }
 
         // if no id given, it will be tried to generate it from the action attribute

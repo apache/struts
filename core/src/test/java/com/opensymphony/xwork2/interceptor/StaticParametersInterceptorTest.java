@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import org.apache.struts2.dispatcher.HttpParameters;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -137,6 +138,51 @@ public class StaticParametersInterceptorTest extends XWorkTestCase {
         assertEquals(before, ActionContext.getContext().getValueStack().size());
         assertEquals("${top.hero}", user.getName());
         assertEquals(0, ActionContext.getContext().getParameters().keySet().size());
+    }
+
+     public void testOverwrite() throws Exception {
+        MockActionInvocation mai = new MockActionInvocation();
+        MockActionProxy map = new MockActionProxy();
+        ActionConfig ac = new ActionConfig.Builder("", "", "")
+                .addParam("name", "${hero}")
+                .build();
+        map.setConfig(ac);
+        mai.setProxy(map);
+        mai.setAction(new SimpleFooAction());
+
+        Map<String, String> existingParams = new HashMap<>();
+        existingParams.put("name", "Akash");
+        ActionContext.getContext().setParameters(HttpParameters.create(existingParams).build());
+        int before = ActionContext.getContext().getValueStack().size();
+
+        interceptor.setOverwrite("true");
+        interceptor.intercept(mai);
+
+        assertEquals(before, ActionContext.getContext().getValueStack().size());
+        assertEquals("${hero}", ActionContext.getContext().getParameters().get("name").toString());
+    }
+
+    public void testNoOverwrite() throws Exception {
+        MockActionInvocation mai = new MockActionInvocation();
+        MockActionProxy map = new MockActionProxy();
+        ActionConfig ac = new ActionConfig.Builder("", "", "")
+            .addParam("name", "${hero}")
+            .build();
+        map.setConfig(ac);
+        mai.setProxy(map);
+        mai.setAction(new SimpleFooAction());
+        mai.setInvocationContext(ActionContext.getContext());
+
+        Map<String, String> existingParams = new HashMap<>();
+        existingParams.put("name", "Akash");
+        ActionContext.getContext().setParameters(HttpParameters.create(existingParams).build());
+        int before = ActionContext.getContext().getValueStack().size();
+
+        interceptor.setOverwrite("false");
+        interceptor.intercept(mai);
+
+        assertEquals(before, ActionContext.getContext().getValueStack().size());
+        assertEquals("Akash", ActionContext.getContext().getParameters().get("name").toString());
     }
 
     public void testFewParametersParse() throws Exception {

@@ -189,6 +189,21 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         assertEquals(obj1, "try: bar");
     }
 
+    public void testTranslateVariablesRecursion() throws Exception {
+        stack.push(new Object() {
+            public String getFoo() {
+                return "%{bar}";
+            }
+            public String getBar() {
+                return "bar";
+            }
+        });
+        String obj1 = strutsUtil.translateVariables("try: %{foo}");
+
+        assertNotNull(obj1);
+        assertEquals("try: %{bar}", obj1);
+    }
+
     // === Junit Hook
 
     protected void setUp() throws Exception {

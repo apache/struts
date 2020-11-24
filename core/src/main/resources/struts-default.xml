@@ -76,7 +76,16 @@
                 com.opensymphony.xwork2.util.,
                 org.apache.tomcat.,
                 org.apache.catalina.core.,
-                org.wildfly.extension.undertow.deployment." />
+                com.ibm.websphere.,
+                org.apache.geronimo.,
+                org.apache.openejb.,
+                org.apache.tomee.,
+                org.eclipse.jetty.,
+                org.mortbay.jetty.,
+                org.glassfish.,
+                org.jboss.as.,
+                org.wildfly.,
+                weblogic.," />
 
     <bean class="com.opensymphony.xwork2.ObjectFactory" name="struts"/>
     <bean type="com.opensymphony.xwork2.factory.ResultFactory" name="struts" class="org.apache.struts2.factory.StrutsResultFactory" />
@@ -196,7 +205,7 @@
 
     <bean type="com.opensymphony.xwork2.config.providers.ValueSubstitutor" class="com.opensymphony.xwork2.config.providers.EnvsValueSubstitutor" scope="singleton"/>
 
-    <package name="struts-default" abstract="true">
+    <package name="struts-default" abstract="true" strict-method-invocation="true">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>
             <result-type name="dispatcher" class="org.apache.struts2.result.ServletDispatcherResult" default="true"/>

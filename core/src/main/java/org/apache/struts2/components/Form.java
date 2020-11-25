@@ -221,7 +221,7 @@ public class Form extends ClosingUIBean {
     @Override
     protected void populateComponentHtmlId(Form form) {
         if (id != null) {
-            addParameter("id", escape(id));
+            super.populateComponentHtmlId(null);
         }
 
         // if no id given, it will be tried to generate it from the action attribute

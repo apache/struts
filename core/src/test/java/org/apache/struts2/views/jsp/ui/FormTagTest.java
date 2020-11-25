@@ -189,6 +189,25 @@ public class FormTagTest extends AbstractUITagTest {
         verify(FormTag.class.getResource("Formtag-1.txt"));
     }
 
+    public void testFormId() throws Exception {
+
+        request.setupGetServletPath("/testAction");
+
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setMethod("post");
+        tag.setAction("myAction");
+        tag.setId("myid-%{foo}");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-29.txt"));
+    }
+
      public void testFormNoNameOrId() throws Exception {
 
         request.setupGetServletPath("/testAction");

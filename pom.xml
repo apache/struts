@@ -29,7 +29,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-parent</artifactId>
-    <version>2.5.26</version>
+    <version>2.5.27-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/</url>
@@ -96,7 +96,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2020-11-25T16:23:59Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2020-11-25T16:32:09Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
         <ognl.version>3.1.28</ognl.version>

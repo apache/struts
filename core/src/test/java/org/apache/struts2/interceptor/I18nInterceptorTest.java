@@ -36,6 +36,7 @@ import org.springframework.mock.web.MockHttpSession;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -224,7 +225,6 @@ public class I18nInterceptorTest extends TestCase {
     }
 
     public void testCookieCreation() throws Exception {
-
         prepare(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "da_DK");
 
         final Cookie cookie = new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "da_DK");
@@ -243,6 +243,37 @@ public class I18nInterceptorTest extends TestCase {
         assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not create a locale object
     }
 
+    public void testAcceptLanguageBasedLocale() throws Exception {
+        // given
+        request.setPreferredLocales(Arrays.asList(new Locale("da_DK"), new Locale("pl")));
+        interceptor.setLocaleStorage(null);
+        interceptor.setSupportedLocale("en,pl");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not create a locale object
+        assertEquals(new Locale("pl"), mai.getInvocationContext().getLocale());
+    }
+
+    public void testAcceptLanguageBasedLocaleWithFallbackToDefault() throws Exception {
+        // given
+        request.setPreferredLocales(Arrays.asList(new Locale("da_DK"), new Locale("es")));
+
+        interceptor.setLocaleStorage(null);
+        interceptor.setSupportedLocale("en,pl");
+
+        // when
+        interceptor.intercept(mai);
+
+        // then
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not create a locale object
+        assertEquals(Locale.US, mai.getInvocationContext().getLocale());
+    }
+
     private void prepare(String key, Serializable value) {
         Map<String, Serializable> params = new HashMap<>();
         params.put(key, value);
@@ -256,9 +287,10 @@ public class I18nInterceptorTest extends TestCase {
         interceptor.init();
         session = new HashMap<>();
 
-        ac = ActionContext.of(new HashMap<>()).bind();
-        ac.setSession(session);
-        ac.setParameters(HttpParameters.create().build());
+        ac = ActionContext.of(new HashMap<>())
+            .bind()
+            .withSession(session)
+            .withParameters(HttpParameters.create().build());
 
         request = new MockHttpServletRequest();
         request.setSession(new MockHttpSession());
@@ -286,7 +318,8 @@ public class I18nInterceptorTest extends TestCase {
     }
 
     static class CookieMatcher implements IArgumentMatcher {
-        private Cookie expected;
+
+        private final Cookie expected;
 
         CookieMatcher(Cookie cookie) {
             expected = cookie;

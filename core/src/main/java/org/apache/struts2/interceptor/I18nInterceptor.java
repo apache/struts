@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.lang3.LocaleUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,8 +36,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * An interceptor that handles setting the locale specified in a session as the locale for the current action request.
@@ -59,8 +64,9 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     protected LocaleProviderFactory localeProviderFactory;
 
-    // Request-Only = None
-    protected enum Storage { COOKIE, SESSION, NONE }
+    private Set<Locale> supportedLocale = Collections.emptySet();
+
+    protected enum Storage { COOKIE, SESSION, REQUEST, ACCEPT_LANGUAGE }
 
     public void setParameterName(String parameterName) {
         this.parameterName = parameterName;
@@ -80,7 +86,7 @@ public class I18nInterceptor extends AbstractInterceptor {
 
     public void setLocaleStorage(String storageName) {
         if (storageName == null || "".equals(storageName)) {
-            this.storage = Storage.NONE;
+            this.storage = Storage.ACCEPT_LANGUAGE;
         } else {
             try {
                 this.storage = Storage.valueOf(storageName.toUpperCase());
@@ -89,6 +95,19 @@ public class I18nInterceptor extends AbstractInterceptor {
                 this.storage = Storage.SESSION;
             }
         }
+    }
+
+    /**
+     * Sets supported Locales by the application
+     *
+     * @param supportedLocale a comma separated list of supported Locale
+     */
+    public void setSupportedLocale(String supportedLocale) {
+        this.supportedLocale = TextParseUtil
+            .commaDelimitedStringToSet(supportedLocale)
+            .stream()
+            .map(Locale::new)
+            .collect(Collectors.toSet());
     }
 
     @Inject
@@ -139,8 +158,10 @@ public class I18nInterceptor extends AbstractInterceptor {
             localeHandler = new CookieLocaleHandler(invocation);
         } else if (this.storage == Storage.SESSION) {
             localeHandler = new SessionLocaleHandler(invocation);
+        } else if (this.storage == Storage.REQUEST) {
+            localeHandler = new RequestLocaleHandler(invocation);
         } else {
-            localeHandler = new RequestOnlyLocaleHandler(invocation);
+            localeHandler = new AcceptLanguageHandler(invocation);
         }
 
         LOG.debug("Using LocaleFinder implementation {}", localeHandler.getClass().getName());
@@ -176,7 +197,7 @@ public class I18nInterceptor extends AbstractInterceptor {
 
         if (locale != null && !localeProvider.isValidLocale(locale)) {
             Locale defaultLocale = localeProvider.getLocale();
-            LOG.debug("Provided locale {} isn't valid, fallback to default locale", locale, defaultLocale);
+            LOG.debug("Provided locale {} isn't valid, fallback to default locale {}", locale, defaultLocale);
             locale = defaultLocale;
         }
 
@@ -200,7 +221,7 @@ public class I18nInterceptor extends AbstractInterceptor {
      * @param locale     The locale to save.
      */
     protected void useLocale(ActionInvocation invocation, Locale locale) {
-        invocation.getInvocationContext().setLocale(locale);
+        invocation.getInvocationContext().withLocale(locale);
     }
 
     /**
@@ -213,12 +234,12 @@ public class I18nInterceptor extends AbstractInterceptor {
         boolean shouldStore();
     }
 
-    protected class RequestOnlyLocaleHandler implements LocaleHandler {
+    protected class RequestLocaleHandler implements LocaleHandler {
 
-        protected ActionInvocation actionInvocation = null;
+        protected ActionInvocation actionInvocation;
         protected boolean shouldStore = true;
 
-        protected RequestOnlyLocaleHandler(ActionInvocation invocation) {
+        protected RequestLocaleHandler(ActionInvocation invocation) {
             actionInvocation = invocation;
         }
 
@@ -255,7 +276,32 @@ public class I18nInterceptor extends AbstractInterceptor {
         }
     }
 
-    protected class SessionLocaleHandler extends RequestOnlyLocaleHandler {
+    protected class AcceptLanguageHandler extends RequestLocaleHandler {
+
+        protected AcceptLanguageHandler(ActionInvocation invocation) {
+            super(invocation);
+        }
+
+        @Override
+        @SuppressWarnings("rawtypes")
+        public Locale find() {
+            Enumeration locales = actionInvocation.getInvocationContext().getServletRequest().getLocales();
+            while (locales.hasMoreElements()) {
+                Locale locale = (Locale) locales.nextElement();
+                if (supportedLocale.contains(locale)) {
+                    return locale;
+                }
+            }
+            return super.find();
+        }
+
+        @Override
+        public boolean shouldStore() {
+            return false;
+        }
+    }
+
+    protected class SessionLocaleHandler extends RequestLocaleHandler {
 
         protected SessionLocaleHandler(ActionInvocation invocation) {
             super(invocation);
@@ -305,7 +351,7 @@ public class I18nInterceptor extends AbstractInterceptor {
                 String sessionId = session.getId();
                 synchronized (sessionId.intern()) {
                     Object sessionLocale = invocation.getInvocationContext().getSession().get(attributeName);
-                    if (sessionLocale != null && sessionLocale instanceof Locale) {
+                    if (sessionLocale instanceof Locale) {
                         locale = (Locale) sessionLocale;
                         LOG.debug("Applied session locale: {}", locale);
                     }
@@ -324,7 +370,7 @@ public class I18nInterceptor extends AbstractInterceptor {
         }
     }
 
-    protected class CookieLocaleHandler extends RequestOnlyLocaleHandler {
+    protected class CookieLocaleHandler extends RequestLocaleHandler {
         protected CookieLocaleHandler(ActionInvocation invocation) {
             super(invocation);
         }

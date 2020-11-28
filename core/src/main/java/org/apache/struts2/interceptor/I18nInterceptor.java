@@ -368,7 +368,7 @@ public class I18nInterceptor extends AbstractInterceptor {
         }
     }
 
-    protected class CookieLocaleHandler extends RequestLocaleHandler {
+    protected class CookieLocaleHandler extends AcceptLanguageLocaleHandler {
         protected CookieLocaleHandler(ActionInvocation invocation) {
             super(invocation);
         }

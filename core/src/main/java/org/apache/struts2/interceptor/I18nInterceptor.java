@@ -161,7 +161,7 @@ public class I18nInterceptor extends AbstractInterceptor {
         } else if (this.storage == Storage.REQUEST) {
             localeHandler = new RequestLocaleHandler(invocation);
         } else {
-            localeHandler = new AcceptLanguageHandler(invocation);
+            localeHandler = new AcceptLanguageLocaleHandler(invocation);
         }
 
         LOG.debug("Using LocaleFinder implementation {}", localeHandler.getClass().getName());
@@ -276,32 +276,30 @@ public class I18nInterceptor extends AbstractInterceptor {
         }
     }
 
-    protected class AcceptLanguageHandler extends RequestLocaleHandler {
+    protected class AcceptLanguageLocaleHandler extends RequestLocaleHandler {
 
-        protected AcceptLanguageHandler(ActionInvocation invocation) {
+        protected AcceptLanguageLocaleHandler(ActionInvocation invocation) {
             super(invocation);
         }
 
         @Override
         @SuppressWarnings("rawtypes")
         public Locale find() {
-            Enumeration locales = actionInvocation.getInvocationContext().getServletRequest().getLocales();
-            while (locales.hasMoreElements()) {
-                Locale locale = (Locale) locales.nextElement();
-                if (supportedLocale.contains(locale)) {
-                    return locale;
+            if (supportedLocale.size() > 0) {
+                Enumeration locales = actionInvocation.getInvocationContext().getServletRequest().getLocales();
+                while (locales.hasMoreElements()) {
+                    Locale locale = (Locale) locales.nextElement();
+                    if (supportedLocale.contains(locale)) {
+                        return locale;
+                    }
                 }
             }
             return super.find();
         }
 
-        @Override
-        public boolean shouldStore() {
-            return false;
-        }
     }
 
-    protected class SessionLocaleHandler extends RequestLocaleHandler {
+    protected class SessionLocaleHandler extends AcceptLanguageLocaleHandler {
 
         protected SessionLocaleHandler(ActionInvocation invocation) {
             super(invocation);

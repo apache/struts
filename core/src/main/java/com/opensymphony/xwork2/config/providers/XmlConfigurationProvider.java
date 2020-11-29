@@ -72,6 +72,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
 
@@ -106,7 +107,7 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
     private ValueSubstitutor valueSubstitutor;
 
     public XmlConfigurationProvider() {
-        this("xwork.xml", true);
+        this("struts.xml", true);
     }
 
     public XmlConfigurationProvider(String filename) {
@@ -170,11 +171,7 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
 
         final XmlConfigurationProvider xmlConfigurationProvider = (XmlConfigurationProvider) o;
 
-        if ((configFileName != null) ? (!configFileName.equals(xmlConfigurationProvider.configFileName)) : (xmlConfigurationProvider.configFileName != null)) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(configFileName, xmlConfigurationProvider.configFileName);
     }
 
     @Override
@@ -1066,7 +1063,8 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
             }
 
             if (urls == null || !urls.hasNext()) {
-                throw new ConfigurationException("Could not open file: " + fileName, ioException);
+                LOG.debug("Ignoring file that does not exist: " + fileName, ioException);
+                return docs;
             }
 
             URL url = null;

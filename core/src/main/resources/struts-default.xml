@@ -31,8 +31,8 @@
     and {@link com.opensymphony.xwork2.inject.Inject}
 -->
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-    "http://struts.apache.org/dtds/struts-2.5.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 2.6//EN"
+    "http://struts.apache.org/dtds/struts-2.6.dtd">
 
 <struts>
 
@@ -401,10 +401,10 @@
                 <interceptor-ref name="coepInterceptor">
                     <param name="enforcingMode">false</param>
                     <param name="disabled">false</param>
-                    <param name="exemptedPaths"></param>
+                    <param name="exemptedPaths"/>
                 </interceptor-ref>
                 <interceptor-ref name="coopInterceptor">
-                    <param name="exemptedPaths"></param>
+                    <param name="exemptedPaths"/>
                     <param name="mode">same-origin</param>
                 </interceptor-ref>
                 <interceptor-ref name="fetchMetadata"/>

@@ -21,8 +21,8 @@
 -->
 
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 2.6//EN"
+    "http://struts.apache.org/dtds/struts-2.6.dtd">
 
 <struts>
 

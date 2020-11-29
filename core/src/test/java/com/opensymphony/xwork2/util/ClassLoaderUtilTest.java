@@ -39,26 +39,26 @@ public class ClassLoaderUtilTest extends TestCase {
     }
     
     public void testGetResources_Multiple() throws IOException {
-        Iterator<URL> i = ClassLoaderUtil.getResources("xwork-1.0.dtd", ClassLoaderUtilTest.class, false);
+        Iterator<URL> i = ClassLoaderUtil.getResources("struts-2.0.dtd", ClassLoaderUtilTest.class, false);
         assertNotNull(i);
         
         assertTrue(i.hasNext());
         URL url = i.next();
-        assertTrue(url.toString().endsWith("xwork-1.0.dtd"));
+        assertTrue(url.toString().endsWith("struts-2.0.dtd"));
         url = i.next();
-        assertTrue(url.toString().endsWith("xwork-1.0.dtd"));
+        assertTrue(url.toString().endsWith("struts-2.0.dtd"));
         assertTrue(!i.hasNext());
     }
 
     public void testGetResources_Aggregate() throws IOException {
-        Iterator<URL> i = ClassLoaderUtil.getResources("xwork-1.0.dtd", ClassLoaderUtilTest.class, true);
+        Iterator<URL> i = ClassLoaderUtil.getResources("struts-2.0.dtd", ClassLoaderUtilTest.class, true);
         assertNotNull(i);
 
         assertTrue(i.hasNext());
         URL url = i.next();
-        assertTrue(url.toString().endsWith("xwork-1.0.dtd"));
+        assertTrue(url.toString().endsWith("struts-2.0.dtd"));
         url = i.next();
-        assertTrue(url.toString().endsWith("xwork-1.0.dtd"));
+        assertTrue(url.toString().endsWith("struts-2.0.dtd"));
         assertTrue(!i.hasNext());
     }
 

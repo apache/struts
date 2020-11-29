@@ -46,7 +46,7 @@ public class XmlConfigurationProviderInterceptorParamOverridingTest extends XWor
         p.setFileManagerFactory(factory);
         conf.reloadContainer(new ArrayList<ContainerProvider>() {
             {
-                add(new XWorkConfigurationProvider());
+                add(new StrutsDefaultConfigurationProvider());
                 add(p);
             }
         });

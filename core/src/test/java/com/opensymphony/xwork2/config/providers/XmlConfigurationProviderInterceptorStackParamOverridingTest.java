@@ -49,7 +49,7 @@ public class XmlConfigurationProviderInterceptorStackParamOverridingTest extends
         configurationManager.addContainerProvider(p);
         conf.reloadContainer(new ArrayList<ContainerProvider>() {
             {
-                add(new XWorkConfigurationProvider());
+                add(new StrutsDefaultConfigurationProvider());
                 add(p);
             }
         });

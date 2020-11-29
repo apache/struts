@@ -21,7 +21,7 @@ package com.opensymphony.xwork2.config.impl;
 import com.opensymphony.xwork2.config.*;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
@@ -50,7 +50,7 @@ public class MockConfiguration implements Configuration {
         //this cannot be done in the constructor, as it causes an infinite loop
         builder.factory(Configuration.class, MockConfiguration.class, Scope.SINGLETON);
         LocatableProperties props = new LocatableProperties();
-        new XWorkConfigurationProvider().register(builder, props);
+        new StrutsDefaultConfigurationProvider().register(builder, props);
         builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
         builder.constant(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
         builder.constant(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, "true");

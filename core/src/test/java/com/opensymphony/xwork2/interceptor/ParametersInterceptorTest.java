@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
@@ -95,7 +95,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
     public void testInsecureParameters() throws Exception {
         // given
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put("name", "(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new " +
@@ -132,7 +132,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution1 = "class.classLoader.jarPath";
         final String pollution2 = "model.class.classLoader.jarPath";
 
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
@@ -171,7 +171,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution2 = "model.class.classLoader.jarPath";
         final String pollution3 = "class.classLoader.defaultAssertionStatus";
 
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-class-param-test.xml"));
+        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-class-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
@@ -290,7 +290,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution5 = "class['classLoader']['jarPath']";
         final String pollution6 = "class[\"classLoader\"]['jarPath']";
 
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");

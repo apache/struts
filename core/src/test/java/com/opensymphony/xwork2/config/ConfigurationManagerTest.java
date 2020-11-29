@@ -22,7 +22,7 @@ import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import com.opensymphony.xwork2.conversion.TypeConverterHolder;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
@@ -168,7 +168,7 @@ public class ConfigurationManagerTest extends XWorkTestCase {
         configProviderMock.matchAndReturn("equals", C.ANY_ARGS, false);
 
         ConfigurationProvider mockProvider = (ConfigurationProvider) configProviderMock.proxy();
-        configurationManager.addContainerProvider(new XWorkConfigurationProvider());
+        configurationManager.addContainerProvider(new StrutsDefaultConfigurationProvider());
         configurationManager.addContainerProvider(mockProvider);
 
         //the first time it always inits

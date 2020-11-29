@@ -19,7 +19,7 @@
 package com.opensymphony.xwork2.config;
 
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -85,8 +85,8 @@ public class ConfigurationManager {
     /**
      * <p>
      * Get the current list of ConfigurationProviders. If no custom ConfigurationProviders have been added, this method
-     * will return a list containing only the default ConfigurationProvider, XMLConfigurationProvider. If a custom
-     * ConfigurationProvider has been added, then the XmlConfigurationProvider must be added by hand.
+     * will return a list containing only a default ConfigurationProvider, {@link StrutsDefaultConfigurationProvider}.
+     * If a custom ConfigurationProvider has been added, then the StrutsDefaultConfigurationProvider must be added by hand.
      * </p>
      *
      * <p>
@@ -100,7 +100,7 @@ public class ConfigurationManager {
         providerLock.lock();
         try {
             if (containerProviders.size() == 0) {
-                containerProviders.add(new XWorkConfigurationProvider());
+                containerProviders.add(new StrutsDefaultConfigurationProvider());
             }
 
             return containerProviders;

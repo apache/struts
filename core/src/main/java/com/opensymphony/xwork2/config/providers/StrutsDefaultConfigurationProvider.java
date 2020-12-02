@@ -123,7 +123,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class XWorkConfigurationProvider implements ConfigurationProvider {
+public class StrutsDefaultConfigurationProvider implements ConfigurationProvider {
 
     public void destroy() {
     }

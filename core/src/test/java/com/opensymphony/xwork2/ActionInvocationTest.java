@@ -20,9 +20,10 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.HttpParameters;
 import com.opensymphony.xwork2.mock.MockResult;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
 
@@ -34,38 +35,40 @@ public class ActionInvocationTest extends XWorkTestCase {
 
     public void testCommandInvocation() throws Exception {
         ActionProxy baseActionProxy = actionProxyFactory.createActionProxy(
-                "baz", "commandTest", null, null);
+            "baz", "commandTest", null, null);
         assertEquals("success", baseActionProxy.execute());
 
         ActionProxy commandActionProxy = actionProxyFactory.createActionProxy(
-                "baz", "myCommand", null, null);
+            "baz", "myCommand", null, null);
         assertEquals(SimpleAction.COMMAND_RETURN_CODE, commandActionProxy.execute());
     }
 
     public void testCommandInvocationDoMethod() throws Exception {
         ActionProxy baseActionProxy = actionProxyFactory.createActionProxy(
-                "baz", "doMethodTest", null, null);
+            "baz", "doMethodTest", null, null);
         assertEquals("input", baseActionProxy.execute());
     }
 
     public void testCommandInvocationUnknownHandler() throws Exception {
 
         UnknownHandler unknownHandler = new UnknownHandler() {
-			public ActionConfig handleUnknownAction(String namespace, String actionName) throws StrutsException {
+            public ActionConfig handleUnknownAction(String namespace, String actionName) throws StrutsException {
                 return new ActionConfig.Builder("test", actionName, ActionSupport.class.getName())
-                        .addAllowedMethod("unknownmethod")
-                        .build();
+                    .addAllowedMethod("unknownmethod")
+                    .build();
             }
-			public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws StrutsException {
-				return new MockResult();
-			}
-			public Object handleUnknownActionMethod(Object action, String methodName) {
-				if (methodName.equals("unknownmethod")) {
-					return "found";
-				} else {
-					return null;
-				}
-			}
+
+            public Result handleUnknownResult(ActionContext actionContext, String actionName, ActionConfig actionConfig, String resultCode) throws StrutsException {
+                return new MockResult();
+            }
+
+            public Object handleUnknownActionMethod(Object action, String methodName) {
+                if (methodName.equals("unknownmethod")) {
+                    return "found";
+                } else {
+                    return null;
+                }
+            }
         };
 
         UnknownHandlerManagerMock uhm = new UnknownHandlerManagerMock();
@@ -74,16 +77,16 @@ public class ActionInvocationTest extends XWorkTestCase {
         loadButAdd(UnknownHandlerManager.class, uhm);
 
         DefaultActionProxy baseActionProxy = (DefaultActionProxy) actionProxyFactory.createActionProxy(
-                "baz", "unknownMethodTest", "unknownmethod", null);
+            "baz", "unknownMethodTest", "unknownmethod", null);
 
-        ((DefaultActionInvocation)baseActionProxy.getInvocation()).setUnknownHandlerManager(uhm);
+        ((DefaultActionInvocation) baseActionProxy.getInvocation()).setUnknownHandlerManager(uhm);
 
         assertEquals("found", baseActionProxy.execute());
     }
 
     public void testResultReturnInvocationAndWired() throws Exception {
         ActionProxy baseActionProxy = actionProxyFactory.createActionProxy(
-                "baz", "resultAction", null, null);
+            "baz", "resultAction", null, null);
         assertNull(baseActionProxy.execute());
         assertTrue(SimpleAction.resultCalled);
     }
@@ -96,7 +99,7 @@ public class ActionInvocationTest extends XWorkTestCase {
         extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy( "", "Foo", null, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", "Foo", null, extraContext);
             proxy.execute();
             assertEquals("this is blah", proxy.getInvocation().getStack().findValue("[1].blah"));
         } catch (Exception e) {
@@ -105,11 +108,12 @@ public class ActionInvocationTest extends XWorkTestCase {
         }
     }
 
-    @Override protected void setUp() throws Exception {
+    @Override
+    protected void setUp() throws Exception {
         super.setUp();
 
         // ensure we're using the default configuration, not simple config
-        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(configurationProvider);
         loadConfigurationProviders(configurationProvider);
     }

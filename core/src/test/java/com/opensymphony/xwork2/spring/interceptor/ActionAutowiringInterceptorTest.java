@@ -18,8 +18,13 @@
  */
 package com.opensymphony.xwork2.spring.interceptor;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
@@ -52,10 +57,10 @@ public class ActionAutowiringInterceptorTest extends XWorkTestCase {
     }
 
     public void testSetAutowireType() throws Exception {
-        XmlConfigurationProvider prov = new XmlConfigurationProvider("xwork-default.xml");
+        XmlConfigurationProvider prov = new StrutsXmlConfigurationProvider("xwork-default.xml");
         container.inject(prov);
         prov.setThrowExceptionOnDuplicateBeans(false);
-        XmlConfigurationProvider c = new XmlConfigurationProvider("com/opensymphony/xwork2/spring/xwork-autowire.xml");
+        XmlConfigurationProvider c = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/spring/xwork-autowire.xml");
         container.inject(c);
         loadConfigurationProviders(c, prov);
 

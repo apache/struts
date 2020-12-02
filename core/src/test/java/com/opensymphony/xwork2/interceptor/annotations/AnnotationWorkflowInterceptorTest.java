@@ -18,7 +18,12 @@
  */
 package com.opensymphony.xwork2.interceptor.annotations;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -30,6 +35,7 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.Collections;
 
@@ -43,9 +49,9 @@ public class AnnotationWorkflowInterceptorTest extends XWorkTestCase {
     private final AnnotationWorkflowInterceptor annotationWorkflow = new AnnotationWorkflowInterceptor();
 
     @Override
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         super.setUp();
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-default.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-default.xml");
         container.inject(provider);
         loadConfigurationProviders(provider, new MockConfigurationProvider());
     }
@@ -53,14 +59,14 @@ public class AnnotationWorkflowInterceptorTest extends XWorkTestCase {
     public void testInterceptsBeforeAndAfter() throws Exception {
         ActionProxy proxy = actionProxyFactory.createActionProxy("", ANNOTATED_ACTION, null, null);
         assertEquals(Action.SUCCESS, proxy.execute());
-        AnnotatedAction action = (AnnotatedAction)proxy.getInvocation().getAction();
+        AnnotatedAction action = (AnnotatedAction) proxy.getInvocation().getAction();
         assertEquals("interfaceBefore-baseBefore-basePrivateBefore-before-execute-beforeResult-basePrivateBeforeResult-interfaceBeforeResult-after-basePrivateAfter-interfaceAfter", action.log);
     }
 
     public void testInterceptsShortcircuitedAction() throws Exception {
         ActionProxy proxy = actionProxyFactory.createActionProxy("", SHORTCIRCUITED_ACTION, null, null);
         assertEquals("shortcircuit", proxy.execute());
-        ShortcircuitedAction action = (ShortcircuitedAction)proxy.getInvocation().getAction();
+        ShortcircuitedAction action = (ShortcircuitedAction) proxy.getInvocation().getAction();
         assertEquals("interfaceBefore-baseBefore-basePrivateBefore-before-basePrivateBeforeResult-interfaceBeforeResult", action.log);
     }
 
@@ -75,7 +81,8 @@ public class AnnotationWorkflowInterceptorTest extends XWorkTestCase {
             return false;
         }
 
-        public void destroy() { }
+        public void destroy() {
+        }
 
 
         public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
@@ -89,15 +96,15 @@ public class AnnotationWorkflowInterceptorTest extends XWorkTestCase {
 
         public void loadPackages() throws ConfigurationException {
             PackageConfig packageConfig = new PackageConfig.Builder("default")
-                    .addActionConfig(ANNOTATED_ACTION, new ActionConfig.Builder("defaultPackage", ANNOTATED_ACTION, AnnotatedAction.class.getName())
-                            .addInterceptors(Collections.singletonList(new InterceptorMapping("annotationWorkflow", annotationWorkflow)))
-                            .addResultConfig(new ResultConfig.Builder("success", MockResult.class.getName()).build())
-                            .build())
-                    .addActionConfig(SHORTCIRCUITED_ACTION, new ActionConfig.Builder("defaultPackage", SHORTCIRCUITED_ACTION, ShortcircuitedAction.class.getName())
-                            .addInterceptors(Collections.singletonList(new InterceptorMapping("annotationWorkflow", annotationWorkflow)))
-                            .addResultConfig(new ResultConfig.Builder("shortcircuit", MockResult.class.getName()).build())
-                            .build())
-                    .build();
+                .addActionConfig(ANNOTATED_ACTION, new ActionConfig.Builder("defaultPackage", ANNOTATED_ACTION, AnnotatedAction.class.getName())
+                    .addInterceptors(Collections.singletonList(new InterceptorMapping("annotationWorkflow", annotationWorkflow)))
+                    .addResultConfig(new ResultConfig.Builder("success", MockResult.class.getName()).build())
+                    .build())
+                .addActionConfig(SHORTCIRCUITED_ACTION, new ActionConfig.Builder("defaultPackage", SHORTCIRCUITED_ACTION, ShortcircuitedAction.class.getName())
+                    .addInterceptors(Collections.singletonList(new InterceptorMapping("annotationWorkflow", annotationWorkflow)))
+                    .addResultConfig(new ResultConfig.Builder("shortcircuit", MockResult.class.getName()).build())
+                    .build())
+                .build();
             config.addPackageConfig("defaultPackage", packageConfig);
             config.addPackageConfig("default", new PackageConfig.Builder(packageConfig).name("default").build());
         }

@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.Locale;
 
@@ -30,7 +31,7 @@ import java.util.Locale;
  * LocaleAwareTest
  *
  * @author Jason Carreira
- *         Created Feb 10, 2003 6:13:13 PM
+ * Created Feb 10, 2003 6:13:13 PM
  */
 public class LocaleAwareTest extends XWorkTestCase {
 
@@ -63,7 +64,7 @@ public class LocaleAwareTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("xwork-test-beans.xml");
+        XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(configurationProvider);
         loadConfigurationProviders(configurationProvider, new MockConfigurationProvider());
 

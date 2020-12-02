@@ -51,8 +51,18 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      *
      * @param errorIfMissing If we should throw an exception if the file can't be found
      */
+    @Deprecated
     public StrutsXmlConfigurationProvider(boolean errorIfMissing) {
         this("struts.xml", errorIfMissing, null);
+    }
+
+    /**
+     * Constructs the configuration provider based on the provided config file
+     *
+     * @param filename file with Struts configuration
+     */
+    public StrutsXmlConfigurationProvider(String filename) {
+        this(filename, false, null);
     }
 
     /**
@@ -66,7 +76,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         super(filename, errorIfMissing);
         this.servletContext = ctx;
         this.filename = filename;
-        reloadKey = "configurationReload-"+filename;
+        reloadKey = "configurationReload-" + filename;
         Map<String,String> dtdMappings = new HashMap<String,String>(getDtdMappings());
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd");

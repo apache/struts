@@ -72,6 +72,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
 
@@ -85,48 +86,36 @@ import java.util.Vector;
  * @author Neo
  * @version $Revision$
  */
-public class XmlConfigurationProvider implements ConfigurationProvider {
+public abstract class XmlConfigurationProvider implements ConfigurationProvider {
 
     private static final Logger LOG = LogManager.getLogger(XmlConfigurationProvider.class);
 
+    private final String configFileName;
+    private final Set<String> loadedFileUrls = new HashSet<>();
+    private final Map<String, Element> declaredPackages = new HashMap<>();
+
     private List<Document> documents;
     private Set<String> includedFileNames;
-    private String configFileName;
     private ObjectFactory objectFactory;
 
-    private final Set<String> loadedFileUrls = new HashSet<>();
-    private boolean errorIfMissing;
-    private Map<String, String> dtdMappings;
+    private Map<String, String> dtdMappings = new HashMap<>();
     private Configuration configuration;
+
     private boolean throwExceptionOnDuplicateBeans = true;
-    private final Map<String, Element> declaredPackages = new HashMap<>();
 
     private FileManager fileManager;
     private ValueSubstitutor valueSubstitutor;
 
     public XmlConfigurationProvider() {
-        this("xwork.xml", true);
+        this("struts.xml", true);
     }
 
     public XmlConfigurationProvider(String filename) {
         this(filename, true);
     }
 
-    public XmlConfigurationProvider(String filename, boolean errorIfMissing) {
+    public XmlConfigurationProvider(String filename, @Deprecated boolean notUsed) {
         this.configFileName = filename;
-        this.errorIfMissing = errorIfMissing;
-
-        Map<String, String> mappings = new HashMap<>();
-        mappings.put("-//Apache Struts//XWork 2.6//EN", "xwork-2.6.dtd");
-        mappings.put("-//Apache Struts//XWork 2.5//EN", "xwork-2.5.dtd");
-        mappings.put("-//Apache Struts//XWork 2.3//EN", "xwork-2.3.dtd");
-        mappings.put("-//Apache Struts//XWork 2.1.3//EN", "xwork-2.1.3.dtd");
-        mappings.put("-//Apache Struts//XWork 2.1//EN", "xwork-2.1.dtd");
-        mappings.put("-//Apache Struts//XWork 2.0//EN", "xwork-2.0.dtd");
-        mappings.put("-//Apache Struts//XWork 1.1.1//EN", "xwork-1.1.1.dtd");
-        mappings.put("-//Apache Struts//XWork 1.1//EN", "xwork-1.1.dtd");
-        mappings.put("-//Apache Struts//XWork 1.0//EN", "xwork-1.0.dtd");
-        setDtdMappings(mappings);
     }
 
     public void setThrowExceptionOnDuplicateBeans(boolean val) {
@@ -182,11 +171,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         final XmlConfigurationProvider xmlConfigurationProvider = (XmlConfigurationProvider) o;
 
-        if ((configFileName != null) ? (!configFileName.equals(xmlConfigurationProvider.configFileName)) : (xmlConfigurationProvider.configFileName != null)) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(configFileName, xmlConfigurationProvider.configFileName);
     }
 
     @Override
@@ -1078,12 +1063,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             }
 
             if (urls == null || !urls.hasNext()) {
-                if (errorIfMissing) {
-                    throw new ConfigurationException("Could not open files of the name " + fileName, ioException);
-                } else {
-                    LOG.trace("Unable to locate configuration files of the name {}, skipping", fileName);
-                    return docs;
-                }
+                LOG.debug("Ignoring file that does not exist: " + fileName, ioException);
+                return docs;
             }
 
             URL url = null;

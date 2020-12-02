@@ -20,7 +20,7 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.*;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
@@ -33,7 +33,7 @@ public class XWorkTestCaseHelper {
 
     public static ConfigurationManager setUp() throws Exception {
         ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
-        configurationManager.addContainerProvider(new XWorkConfigurationProvider());
+        configurationManager.addContainerProvider(new StrutsDefaultConfigurationProvider());
         Configuration config = configurationManager.getConfiguration();
         Container container = config.getContainer();
         
@@ -62,7 +62,7 @@ public class XWorkTestCaseHelper {
             }
             
         });
-        configurationManager.addContainerProvider(new XWorkConfigurationProvider());
+        configurationManager.addContainerProvider(new StrutsDefaultConfigurationProvider());
         for (ConfigurationProvider prov : providers) {
             if (prov instanceof XmlConfigurationProvider) {
                 ((XmlConfigurationProvider)prov).setThrowExceptionOnDuplicateBeans(false);

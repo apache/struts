@@ -18,13 +18,14 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import java.lang.reflect.Member;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+
+import java.lang.reflect.Member;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SecurityMemberAccessProxyTest extends XWorkTestCase {
     private Map<String, Object> context;
@@ -35,14 +36,14 @@ public class SecurityMemberAccessProxyTest extends XWorkTestCase {
 
         context = new HashMap<>();
         // Set up XWork
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("com/opensymphony/xwork2/spring/actionContext-xwork.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/spring/actionContext-xwork.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
     }
 
     public void testProxyAccessIsBlocked() throws Exception {
         ActionProxy proxy = actionProxyFactory.createActionProxy(null,
-                "chaintoAOPedTestSubBeanAction", null, context);
+            "chaintoAOPedTestSubBeanAction", null, context);
 
         SecurityMemberAccess sma = new SecurityMemberAccess(false, true);
         sma.setDisallowProxyMemberAccess(true);
@@ -55,7 +56,7 @@ public class SecurityMemberAccessProxyTest extends XWorkTestCase {
 
     public void testProxyAccessIsAccessible() throws Exception {
         ActionProxy proxy = actionProxyFactory.createActionProxy(null,
-                "chaintoAOPedTestSubBeanAction", null, context);
+            "chaintoAOPedTestSubBeanAction", null, context);
 
         SecurityMemberAccess sma = new SecurityMemberAccess(false, true);
 

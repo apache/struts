@@ -18,10 +18,17 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ModelDrivenAction;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
@@ -32,13 +39,21 @@ import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.junit.Assert;
 import ognl.OgnlContext;
 import ognl.PropertyAccessor;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.junit.Assert;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -80,12 +95,12 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
     public void testInsecureParameters() throws Exception {
         // given
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put("name", "(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new " +
-                        "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
-                        "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
+                    "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
+                    "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
                 put("top['name'](0)", "true");
                 put("expression", "#f=#_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),#f.setAccessible(true),#f.set(#_memberAccess,true),#req=@org.apache.struts2.ServletActionContext@getRequest(),#resp=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#resp.println(#req.getRealPath('/')),#resp.close()");
             }
@@ -117,7 +132,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution1 = "class.classLoader.jarPath";
         final String pollution2 = "model.class.classLoader.jarPath";
 
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
@@ -156,7 +171,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution2 = "model.class.classLoader.jarPath";
         final String pollution3 = "class.classLoader.defaultAssertionStatus";
 
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-class-param-test.xml"));
+        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-class-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
@@ -240,14 +255,14 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "This is blah");
         params.put("#session.foo", "Foo");
-        params.put("\u0023session[\'user\']", "0wn3d");
-        params.put("\\u0023session[\'user\']", "0wn3d");
+        params.put("\u0023session['user']", "0wn3d");
+        params.put("\\u0023session['user']", "0wn3d");
         params.put("\u0023session.user2", "0wn3d");
         params.put("\\u0023session.user2", "0wn3d");
-        params.put("('\u0023'%20%2b%20'session[\'user3\']')(unused)", "0wn3d");
+        params.put("('\u0023'%20%2b%20'session['user3']')(unused)", "0wn3d");
         params.put("('\\u0023' + 'session[\\'user4\\']')(unused)", "0wn3d");
-        params.put("('\u0023'%2b'session[\'user5\']')(unused)", "0wn3d");
-        params.put("('\\u0023'%2b'session[\'user5\']')(unused)", "0wn3d");
+        params.put("('\u0023'%2b'session['user5']')(unused)", "0wn3d");
+        params.put("('\\u0023'%2b'session['user5']')(unused)", "0wn3d");
 
         HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
@@ -275,7 +290,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution5 = "class['classLoader']['jarPath']";
         final String pollution6 = "class[\"classLoader\"]['jarPath']";
 
-        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
@@ -518,8 +533,8 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     public void testEvalExpressionAsParameterName() throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new " +
-                "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
-                "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
+            "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
+            "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
         params.put("top['blah'](0)", "true");
 
         HashMap<String, Object> extraContext = new HashMap<>();
@@ -552,10 +567,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testNonexistentParametersGetLoggedInDevMode() throws Exception {
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider,
-                new MockConfigurationProvider(Collections.singletonMap("struts.devMode", "true")));
+            new MockConfigurationProvider(Collections.singletonMap("struts.devMode", "true")));
         Map<String, Object> params = new HashMap<>();
         params.put("not_a_property", "There is no action property named like this");
 
@@ -571,10 +586,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testNonexistentParametersAreIgnoredInProductionMode() throws Exception {
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider,
-                new MockConfigurationProvider(Collections.singletonMap("struts.devMode", "false")));
+            new MockConfigurationProvider(Collections.singletonMap("struts.devMode", "false")));
         Map<String, Object> params = new HashMap<>();
         params.put("not_a_property", "There is no action property named like this");
 
@@ -717,13 +732,13 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
     public void testBeanListSingleValue() throws Exception {
         Map<String, Object> params = new HashMap<>();
-        params.put("beanList.name", new String[] { "Superman" });
+        params.put("beanList.name", new String[]{"Superman"});
 
         HashMap<String, Object> extraContext = new HashMap<>();
         extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("",
-                MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
+            MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
         SimpleAction action = (SimpleAction) proxy.getAction();
         assertNotNull(action);
@@ -762,9 +777,9 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
     private ValueStack createStubValueStack(final Map<String, Object> actual) {
         ValueStack stack = new OgnlValueStack(
-                container.getInstance(XWorkConverter.class),
-                (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
-                container.getInstance(TextProvider.class, "system"), true, true) {
+            container.getInstance(XWorkConverter.class),
+            (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
+            container.getInstance(TextProvider.class, "system"), true, true) {
             @Override
             public void setValue(String expr, Object value) {
                 actual.put(expr, value);
@@ -804,7 +819,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider, new MockConfigurationProvider());
 
@@ -816,7 +831,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
 class ValidateAction implements ValidationAware {
 
-    private List<String> messages = new LinkedList<>();
+    private final List<String> messages = new LinkedList<>();
     private String name;
 
     public void setActionErrors(Collection<String> errorMessages) {

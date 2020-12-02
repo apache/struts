@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.interceptor;
 
-
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_EMBED;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_OBJECT;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_SCRIPT;
@@ -43,6 +42,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -155,7 +155,7 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         // Perform a multi-step test to confirm (indirectly) that the method parameter injection of setExemptedPaths() for
         // the FetchMetadataInterceptor is functioning as expected, when configured appropriately.
         // Ensure we're using the specific test configuration, not the default simple configuration.
-        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("struts-testing.xml");
+        XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("struts-testing.xml");
         container.inject(configurationProvider);
         loadConfigurationProviders(configurationProvider);
 

@@ -19,10 +19,19 @@
 package com.opensymphony.xwork2.util;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.LocalizedTextProvider;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.test.ModelDrivenAction2;
 import com.opensymphony.xwork2.test.TestBean2;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,52 +46,52 @@ import java.util.ResourceBundle;
  *
  * @author jcarreira
  * @author tm_jee
- * 
  * @version $Date$ $Id$
  */
 public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
     private LocalizedTextProvider localizedTextProvider;
-    
-	public void testNpeWhenClassIsPrimitive() throws Exception {
-		ValueStack stack = ActionContext.getContext().getValueStack();
-		stack.push(new MyObject());
-		String result = localizedTextProvider.findText(MyObject.class, "someObj.someI18nKey", Locale.ENGLISH, "default message", null, stack);
-		System.out.println(result);
-	}
-	
-	public static class MyObject extends ActionSupport {
-		public boolean getSomeObj() {
-			return true;
-		}
-	}
-	
-	public void testActionGetTextWithNullObject() throws Exception {
-		MyAction action = new MyAction();
+
+    public void testNpeWhenClassIsPrimitive() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        stack.push(new MyObject());
+        String result = localizedTextProvider.findText(MyObject.class, "someObj.someI18nKey", Locale.ENGLISH, "default message", null, stack);
+        System.out.println(result);
+    }
+
+    public static class MyObject extends ActionSupport {
+        public boolean getSomeObj() {
+            return true;
+        }
+    }
+
+    public void testActionGetTextWithNullObject() throws Exception {
+        MyAction action = new MyAction();
         container.inject(action);
-		
-		Mock mockActionInvocation = new Mock(ActionInvocation.class);
+
+        Mock mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionInvocation.expectAndReturn("getAction", action);
         ActionContext.getContext()
             .withActionInvocation((ActionInvocation) mockActionInvocation.proxy())
-		    .getValueStack().push(action);
-		
-		String message = action.getText("barObj.title");
-		assertEquals("Title:", message);
-	}
-	
-	
-	public static class MyAction extends ActionSupport {
-		private Bar testBean2;
-		
-		public Bar getBarObj() {
-			return testBean2;
-		}
-		public void setBarObj(Bar testBean2) {
-			this.testBean2 = testBean2;
-		}
-	}
-	
+            .getValueStack().push(action);
+
+        String message = action.getText("barObj.title");
+        assertEquals("Title:", message);
+    }
+
+
+    public static class MyAction extends ActionSupport {
+        private Bar testBean2;
+
+        public Bar getBarObj() {
+            return testBean2;
+        }
+
+        public void setBarObj(Bar testBean2) {
+            this.testBean2 = testBean2;
+        }
+    }
+
     public void testActionGetText() throws Exception {
         ModelDrivenAction2 action = new ModelDrivenAction2();
         container.inject(action);
@@ -207,7 +216,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
     public void testLocalizedDateFormatIsUsed() throws ParseException {
         localizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
         Date date = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US).parse("01/01/2015");
-        Object[] params = new Object[]{ date };
+        Object[] params = new Object[]{date};
         String usDate = localizedTextProvider.findDefaultText("test.format.date", Locale.US, params);
         String germanDate = localizedTextProvider.findDefaultText("test.format.date", Locale.GERMANY, params);
         assertEquals(usDate, "1/1/15");
@@ -253,26 +262,26 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
     /**
      * Unit test to confirm expected behaviour of "clearing methods" provided to
-     *   StrutsLocalizedTextProvider (from AbstractLocalizedTextProvider).
+     * StrutsLocalizedTextProvider (from AbstractLocalizedTextProvider).
      *
      * @since 2.6
      */
     public void testLocalizedTextProviderClearingMethods() {
         TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
         assertTrue("testStrutsLocalizedTextProvider not instance of AbstractLocalizedTextProvider ?",
-                testStrutsLocalizedTextProvider instanceof AbstractLocalizedTextProvider);
+            testStrutsLocalizedTextProvider instanceof AbstractLocalizedTextProvider);
         assertEquals("testStrutsLocalizedTextProvider starting default bundle map size not 0 before any retrievals ?",
-                0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+            0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Access the two default bundles to populate their cache entries and test bundle map size.
         ResourceBundle tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-                TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
+            TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
         assertNotNull("XWORK_MESSAGES_BUNDLE retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-                TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
+            TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
         assertNotNull("STRUTS_MESSAGES_BUNDLE retrieval null ?", tempBundle);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after retrievals ?",
-                2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+            2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Add and then access four test bundles to populate their cache entries and test bundle map size.
         testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
@@ -280,39 +289,39 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/SimpleAction");
         testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/test");
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-                "com/opensymphony/xwork2/util/LocalizedTextUtilTest", Locale.ENGLISH);
+            "com/opensymphony/xwork2/util/LocalizedTextUtilTest", Locale.ENGLISH);
         assertNotNull("com/opensymphony/xwork2/util/LocalizedTextUtilTest retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-                "com/opensymphony/xwork2/util/FindMe", Locale.ENGLISH);
+            "com/opensymphony/xwork2/util/FindMe", Locale.ENGLISH);
         assertNotNull("com/opensymphony/xwork2/util/FindMe retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-                "com/opensymphony/xwork2/SimpleAction", Locale.ENGLISH);
+            "com/opensymphony/xwork2/SimpleAction", Locale.ENGLISH);
         assertNotNull("com/opensymphony/xwork2/SimpleAction retrieval null ?", tempBundle);
         tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
-                "com/opensymphony/xwork2/test", Locale.ENGLISH);
+            "com/opensymphony/xwork2/test", Locale.ENGLISH);
         assertNotNull("com/opensymphony/xwork2/test retrieval null ?", tempBundle);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 6 after retrievals ?",
-                6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+            6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Expect the call to be ineffective due to deprecation and change to a "no-op" (but shouldn't throw an Exception or cause failure).
         testStrutsLocalizedTextProvider.callClearBundleNoLocale("com/opensymphony/xwork2/test");
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 6 after non-locale clear call ?",
-                6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+            6, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Expect the call to function with bundle name + locale.  Remove all four of the non-default
         //   bundles and confirm the bundle map size changes.
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/test", Locale.ENGLISH);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 5 after locale clear call ?",
-                5, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+            5, testStrutsLocalizedTextProvider.currentBundlesMapSize());
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/SimpleAction", Locale.ENGLISH);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 4 after locale clear call ?",
-                4, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+            4, testStrutsLocalizedTextProvider.currentBundlesMapSize());
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/util/FindMe", Locale.ENGLISH);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 3 after locale clear call ?",
-                3, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+            3, testStrutsLocalizedTextProvider.currentBundlesMapSize());
         testStrutsLocalizedTextProvider.callClearBundleWithLocale("com/opensymphony/xwork2/util/LocalizedTextUtilTest", Locale.ENGLISH);
         assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after locale clear call ?",
-                2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+            2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
 
         // Confirm the missing bundles cache clearing method does not produce any Exceptions or failures.
         testStrutsLocalizedTextProvider.callClearMissingBundlesCache();
@@ -321,12 +330,12 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
 
         localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
-        
+
         ActionContext.getContext().withLocale(Locale.US);
     }
 
@@ -345,7 +354,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         public void callClearBundleNoLocale(String bundleName) {
             super.clearBundle(bundleName);
-}
+        }
 
         public void callClearBundleWithLocale(String bundleName, Locale locale) {
             super.clearBundle(bundleName, locale);

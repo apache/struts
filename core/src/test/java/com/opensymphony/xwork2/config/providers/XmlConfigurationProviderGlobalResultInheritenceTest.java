@@ -39,7 +39,7 @@ public class XmlConfigurationProviderGlobalResultInheritenceTest extends Configu
         ConfigurationProvider provider = buildConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-global-result-inheritence.xml");
 
         ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
-        configurationManager.addContainerProvider(new XWorkConfigurationProvider());
+        configurationManager.addContainerProvider(new StrutsDefaultConfigurationProvider());
         configurationManager.addContainerProvider(provider);
         Configuration configuration = configurationManager.getConfiguration();
 

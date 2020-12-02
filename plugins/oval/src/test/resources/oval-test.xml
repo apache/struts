@@ -19,15 +19,14 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-        "-//Apache Struts//XWork 2.0//EN"
-        "http://struts.apache.org/dtds/xwork-2.0.dtd"
-        >
-
-<xwork>
-    <bean type="org.apache.struts2.oval.interceptor.OValValidationManager" class="org.apache.struts2.oval.interceptor.DummyDefaultOValValidationManager"/>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+    <bean type="org.apache.struts2.oval.interceptor.OValValidationManager"
+          class="org.apache.struts2.oval.interceptor.DummyDefaultOValValidationManager"/>
     <constant name="struts.enable.SlashesInActionNames" value="true"/>
-    <constant name="struts.oval.validateJPAAnnotations" value="false" />
+    <constant name="struts.oval.validateJPAAnnotations" value="false"/>
 
     <package namespace="oval" name="oval-test">
         <result-types>
@@ -87,11 +86,13 @@
             <interceptor-ref name="ovalValidation"/>
             <result type="void"></result>
         </action>
-        <action name="fieldsWidthProfiles13" class="org.apache.struts2.oval.interceptor.FieldsWithProfiles" method="run1">
+        <action name="fieldsWidthProfiles13" class="org.apache.struts2.oval.interceptor.FieldsWithProfiles"
+                method="run1">
             <interceptor-ref name="ovalValidation"/>
             <result type="void"></result>
         </action>
-        <action name="fieldsWidthProfiles2" class="org.apache.struts2.oval.interceptor.FieldsWithProfiles" method="run2">
+        <action name="fieldsWidthProfiles2" class="org.apache.struts2.oval.interceptor.FieldsWithProfiles"
+                method="run2">
             <interceptor-ref name="ovalValidation"/>
             <result type="void"></result>
         </action>
@@ -109,15 +110,15 @@
         </action>
         <action name="modelDrivenAction" class="org.apache.struts2.oval.interceptor.ModelDrivenAction">
             <interceptor-ref name="ovalValidation">
-              <param name="validateJPAAnnotations">true</param>
+                <param name="validateJPAAnnotations">true</param>
             </interceptor-ref>
             <result type="void"></result>
         </action>
         <action name="memberObject" class="org.apache.struts2.oval.interceptor.MemberObject">
             <interceptor-ref name="ovalValidation">
-              <param name="validateJPAAnnotations">true</param>
+                <param name="validateJPAAnnotations">true</param>
             </interceptor-ref>
             <result type="void"></result>
         </action>
     </package>
-</xwork>
+</struts>

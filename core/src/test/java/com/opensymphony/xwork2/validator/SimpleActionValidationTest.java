@@ -18,15 +18,24 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.ValidatorSupport;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -229,14 +238,14 @@ public class SimpleActionValidationTest extends XWorkTestCase {
     public void testInitializable() throws Exception {
         ValidatorFactory validatorFactory = container.getInstance(ValidatorFactory.class);
         assertEquals("com.opensymphony.xwork2.validator.validators.RequiredFieldValidator",
-                validatorFactory.lookupRegisteredValidatorType("requiredAnother"));
+            validatorFactory.lookupRegisteredValidatorType("requiredAnother"));
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider, new MockConfigurationProvider());
     }

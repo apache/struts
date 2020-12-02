@@ -19,7 +19,6 @@
 package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.ContainerProvider;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
@@ -27,6 +26,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +39,14 @@ public class XmlConfigurationProviderInterceptorParamOverridingTest extends XWor
 
     public void testInterceptorParamOveriding() throws Exception {
         DefaultConfiguration conf = new DefaultConfiguration();
-        final XmlConfigurationProvider p = new XmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-param-overriding.xml");
+        final XmlConfigurationProvider p = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/config/providers/xwork-test-interceptor-param-overriding.xml");
         DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
         factory.setContainer(container);
         factory.setFileManager(new DefaultFileManager());
         p.setFileManagerFactory(factory);
         conf.reloadContainer(new ArrayList<ContainerProvider>() {
             {
-                add(new XWorkConfigurationProvider());
+                add(new StrutsDefaultConfigurationProvider());
                 add(p);
             }
         });

@@ -446,7 +446,7 @@ public class Dispatcher {
             String[] classes = configClasses.split("\\s*[,]\\s*");
             for (String cname : classes) {
                 try {
-                    Class cls = ClassLoaderUtil.loadClass(cname, this.getClass());
+                    Class<?> cls = ClassLoaderUtil.loadClass(cname, this.getClass());
                     StrutsJavaConfiguration config = (StrutsJavaConfiguration) cls.newInstance();
                     configurationManager.addContainerProvider(createJavaConfigurationProvider(config));
                 } catch (InstantiationException e) {

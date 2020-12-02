@@ -19,13 +19,11 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 1.1.1//EN"
-    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
- >
-
-<xwork>
-	<include file="xwork-test-beans.xml" />
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+    <include file="xwork-test-beans.xml"/>
     <package name="default">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
@@ -55,7 +53,7 @@
             <param name="bar">23</param>
             <param name="testXW412">foo.jspa?fooID=${fooID}&amp;something=bar</param>
             <param name="testXW412Again">
-            		something
+                something
             </param>
             <param name="testForXW171"></param>
         </action>
@@ -63,19 +61,19 @@
         <action name="Foo" class="com.opensymphony.xwork2.SimpleAction">
             <param name="foo">18</param>
             <param name="bar">24</param>
-            <result name="success" type="mock" />
+            <result name="success" type="mock"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
         <action name="WildCard" class="com.opensymphony.xwork2.SimpleAction">
-            <result name="*" type="mock" />
+            <result name="*" type="mock"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
         <action name="FooBar" class="com.opensymphony.xwork2.SimpleAction">
             <param name="foo">18</param>
             <param name="bar">24</param>
-            <result name="success" type="mock" />
+            <result name="success" type="mock"/>
             <interceptor-ref name="defaultStack"/>
             <exception-mapping name="runtime" exception="java.lang.RuntimeException" result="exception"/>
         </action>
@@ -99,4 +97,4 @@
         </action>
 
     </package>
-</xwork>
+</struts>

@@ -18,9 +18,9 @@
  */
 package com.opensymphony.xwork2;
 
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.junit.Test;
 
 public class DefaultActionProxyTest extends StrutsInternalTestCase {
@@ -28,7 +28,7 @@ public class DefaultActionProxyTest extends StrutsInternalTestCase {
     @Test
     public void testThorwExceptionOnNotAllowedMethod() throws Exception {
         final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-allowed-methods.xml";
-        loadConfigurationProviders(new XmlConfigurationProvider(filename));
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(filename));
         DefaultActionProxy dap = new DefaultActionProxy(new MockActionInvocation(), "strict", "Default", "notAllowed", true, true);
         container.inject(dap);
 

@@ -18,11 +18,17 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.SimpleFooAction;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
@@ -44,6 +50,7 @@ import java.util.Map;
  *    <interceptor-ref name="alias"/>
  * </action>
  * </pre>
+ *
  * @author Matthew Payne
  */
 public class AliasInterceptorTest extends XWorkTestCase {
@@ -52,7 +59,7 @@ public class AliasInterceptorTest extends XWorkTestCase {
         Map<String, Object> params = new HashMap<>();
         params.put("aliasSource", "source here");
 
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasTest", null, params);
@@ -72,7 +79,7 @@ public class AliasInterceptorTest extends XWorkTestCase {
         httpParams.put("notExisting", "from http parameter");
         params.put(ActionContext.PARAMETERS, HttpParameters.create(httpParams).build());
 
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
         ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasTest", null, params);
@@ -94,8 +101,8 @@ public class AliasInterceptorTest extends XWorkTestCase {
         MockActionProxy map = new MockActionProxy();
 
         ActionConfig cfg = new ActionConfig.Builder("", "", "")
-                .addParam("aliases", "invalid alias expression")
-                .build();
+            .addParam("aliases", "invalid alias expression")
+            .build();
         map.setConfig(cfg);
 
         mai.setProxy(map);
@@ -117,8 +124,8 @@ public class AliasInterceptorTest extends XWorkTestCase {
         MockActionProxy map = new MockActionProxy();
 
         ActionConfig cfg = new ActionConfig.Builder("", "", "")
-                .addParam("hello", "invalid alias expression")
-                .build();
+            .addParam("hello", "invalid alias expression")
+            .build();
         map.setConfig(cfg);
 
         mai.setProxy(map);
@@ -141,8 +148,8 @@ public class AliasInterceptorTest extends XWorkTestCase {
         MockActionProxy map = new MockActionProxy();
 
         ActionConfig cfg = new ActionConfig.Builder("", "", "")
-                .addParam("hello", "invalid alias expression")
-                .build();
+            .addParam("hello", "invalid alias expression")
+            .build();
         map.setConfig(cfg);
 
         mai.setProxy(map);

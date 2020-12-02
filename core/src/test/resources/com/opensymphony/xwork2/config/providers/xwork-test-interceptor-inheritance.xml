@@ -19,13 +19,11 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 1.1.1//EN"
-    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
- >
-
-<xwork>
-	<include file="xwork-test-beans.xml" />
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+    <include file="xwork-test-beans.xml"/>
     <package name="default">
         <interceptors>
             <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor"/>
@@ -52,4 +50,4 @@
             </interceptor-stack>
         </interceptors>
     </package>
-</xwork>
+</struts>

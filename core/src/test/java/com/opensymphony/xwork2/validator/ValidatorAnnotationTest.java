@@ -20,9 +20,10 @@ package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
@@ -127,9 +128,9 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        XmlConfigurationProvider provider1 = new XmlConfigurationProvider("xwork-default.xml");
+        XmlConfigurationProvider provider1 = new StrutsXmlConfigurationProvider("xwork-default.xml");
         container.inject(provider1);
-        XmlConfigurationProvider provider2 = new XmlConfigurationProvider("xwork-test-validation.xml");
+        XmlConfigurationProvider provider2 = new StrutsXmlConfigurationProvider("xwork-test-validation.xml");
         container.inject(provider2);
         loadConfigurationProviders(provider1, provider2);
     }

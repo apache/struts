@@ -18,26 +18,31 @@
  */
 package com.opensymphony.xwork2.spring;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.TestSubBean;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.util.ProxyUtil;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.springframework.context.ApplicationContext;
 
 /**
  * Test various utility methods dealing with spring proxies.
- *
  */
 public class SpringProxyUtilTest extends XWorkTestCase {
     private ApplicationContext appContext;
 
-    @Override public void setUp() throws Exception {
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
 
         // Set up XWork
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("com/opensymphony/xwork2/spring/actionContext-xwork.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/spring/actionContext-xwork.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
-        appContext = ((SpringObjectFactory)container.getInstance(ObjectFactory.class)).appContext;
+        appContext = ((SpringObjectFactory) container.getInstance(ObjectFactory.class)).appContext;
     }
 
     public void testIsProxy() throws Exception {
@@ -91,26 +96,26 @@ public class SpringProxyUtilTest extends XWorkTestCase {
 
         Object simpleAction = appContext.getBean("simple-action");
         assertFalse(ProxyUtil.isProxyMember(
-                simpleAction.getClass().getMethod("setName", String.class), simpleAction));
+            simpleAction.getClass().getMethod("setName", String.class), simpleAction));
 
         Object proxiedAction = appContext.getBean("proxied-action");
         assertTrue(ProxyUtil.isProxyMember(
-                proxiedAction.getClass().getMethod("setExposeProxy", boolean.class), proxiedAction));
+            proxiedAction.getClass().getMethod("setExposeProxy", boolean.class), proxiedAction));
 
         Object autoProxiedAction = appContext.getBean("auto-proxied-action");
         assertTrue(ProxyUtil.isProxyMember(
-                autoProxiedAction.getClass().getMethod("getTargetClass"), autoProxiedAction));
+            autoProxiedAction.getClass().getMethod("getTargetClass"), autoProxiedAction));
 
         Object pointcuttedTestBean = appContext.getBean("pointcutted-test-bean");
         assertTrue(ProxyUtil.isProxyMember(
-                pointcuttedTestBean.getClass().getMethod("getTargetSource"), pointcuttedTestBean));
+            pointcuttedTestBean.getClass().getMethod("getTargetSource"), pointcuttedTestBean));
 
         Object pointcuttedTestSubBean = appContext.getBean("pointcutted-test-sub-bean");
         assertFalse(ProxyUtil.isProxyMember(
-                pointcuttedTestSubBean.getClass().getConstructor(), pointcuttedTestSubBean));
+            pointcuttedTestSubBean.getClass().getConstructor(), pointcuttedTestSubBean));
 
         Object testAspect = appContext.getBean("test-aspect");
         assertFalse(ProxyUtil.isProxyMember(
-                testAspect.getClass().getMethod("setExposeProxy", boolean.class), testAspect));
+            testAspect.getClass().getMethod("setExposeProxy", boolean.class), testAspect));
     }
 }

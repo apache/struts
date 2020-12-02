@@ -19,12 +19,10 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 2.0//EN"
-    "http://struts.apache.org/dtds/xwork-2.0.dtd"
- >
-
-<xwork>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
 	<include file="xwork-test-beans.xml" />
     <package name="xwork-test-default">
         <result-types>
@@ -80,4 +78,4 @@
 
     </package>
 
-</xwork>
+</struts>

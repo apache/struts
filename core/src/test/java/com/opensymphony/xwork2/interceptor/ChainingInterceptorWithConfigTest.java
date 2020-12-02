@@ -18,7 +18,14 @@
  */
 package com.opensymphony.xwork2.interceptor;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -30,15 +37,15 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-
-import java.util.*;
-
 import org.apache.struts2.TestResult;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+
+import java.util.Collections;
+import java.util.HashMap;
 
 
 /**
  * Unit test for {@link ChainingInterceptor} with a configuration provider.
- *
  */
 public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
 
@@ -59,13 +66,13 @@ public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-default.xml");
+        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-default.xml");
         container.inject(provider);
         this.objectFactory = container.getInstance(ObjectFactory.class);
         loadConfigurationProviders(provider, new MockConfigurationProvider());
     }
 
-    
+
     private class MockConfigurationProvider implements ConfigurationProvider {
         private Configuration config;
 
@@ -77,7 +84,8 @@ public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
             return false;
         }
 
-        public void destroy() { }
+        public void destroy() {
+        }
 
 
         public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
@@ -101,17 +109,17 @@ public class ChainingInterceptorWithConfigTest extends XWorkTestCase {
             successParams2.put("propertyName", "blah");
             successParams2.put("expectedValue", null);
 
-            InterceptorConfig chainingInterceptorConfig =  new InterceptorConfig.Builder("chainStack", ChainingInterceptor.class.getName()).build();
+            InterceptorConfig chainingInterceptorConfig = new InterceptorConfig.Builder("chainStack", ChainingInterceptor.class.getName()).build();
             PackageConfig packageConfig = new PackageConfig.Builder("default")
-                    .addActionConfig(CHAINED_ACTION, new ActionConfig.Builder("defaultPackage", CHAINED_ACTION, SimpleAction.class.getName())
-                            .addResultConfig(new ResultConfig.Builder(Action.ERROR, ActionChainResult.class.getName()).addParam("actionName", CHAINTO_ACTION).build())
-                            .build())
-                    .addActionConfig(CHAINTO_ACTION, new ActionConfig.Builder("defaultPackage", CHAINTO_ACTION, SimpleAction.class.getName())
-                            .addInterceptors(Collections.singletonList(new InterceptorMapping("chainStack", objectFactory.buildInterceptor(chainingInterceptorConfig, interceptorParams))))
-                            .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, TestResult.class.getName()).addParams(successParams1).build())
-                            .addResultConfig(new ResultConfig.Builder(Action.ERROR, TestResult.class.getName()).addParams(successParams2).build())
-                            .build())
-                    .build();
+                .addActionConfig(CHAINED_ACTION, new ActionConfig.Builder("defaultPackage", CHAINED_ACTION, SimpleAction.class.getName())
+                    .addResultConfig(new ResultConfig.Builder(Action.ERROR, ActionChainResult.class.getName()).addParam("actionName", CHAINTO_ACTION).build())
+                    .build())
+                .addActionConfig(CHAINTO_ACTION, new ActionConfig.Builder("defaultPackage", CHAINTO_ACTION, SimpleAction.class.getName())
+                    .addInterceptors(Collections.singletonList(new InterceptorMapping("chainStack", objectFactory.buildInterceptor(chainingInterceptorConfig, interceptorParams))))
+                    .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, TestResult.class.getName()).addParams(successParams1).build())
+                    .addResultConfig(new ResultConfig.Builder(Action.ERROR, TestResult.class.getName()).addParams(successParams2).build())
+                    .build())
+                .build();
             config.addPackageConfig("defaultPackage", packageConfig);
             config.addPackageConfig("default", new PackageConfig.Builder(packageConfig).name("default").build());
         }

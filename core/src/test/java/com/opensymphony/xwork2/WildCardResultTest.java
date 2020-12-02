@@ -20,6 +20,7 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.mock.MockResult;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 /**
  * <code>WildCardResultTest</code>
@@ -34,7 +35,7 @@ public class WildCardResultTest extends XWorkTestCase {
         super.setUp();
 
         // ensure we're using the default configuration, not simple config
-        XmlConfigurationProvider configurationProvider = new XmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(configurationProvider);
         loadConfigurationProviders(configurationProvider);
     }

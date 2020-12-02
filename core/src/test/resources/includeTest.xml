@@ -19,13 +19,11 @@
  * under the License.
  */
 -->
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 1.1.1//EN"
-    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
- >
-
-<xwork>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
     <package name="includeTest" extends="default" namespace="includeTest">
         <action name="includeTest" class="com.opensymphony.xwork2.SimpleAction"></action>
     </package>
-</xwork>
+</struts>

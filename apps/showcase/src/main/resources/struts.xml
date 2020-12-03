@@ -44,6 +44,8 @@
     <constant name="struts.serve.static" value="true" />
     <constant name="struts.serve.static.browserCache" value="false" />
 
+    <constant name="struts.action.excludePattern" value=".*\.gif,.*\.css,.*\.js"/>
+
     <include file="struts-interactive.xml" />
 
     <include file="struts-hangman.xml" />

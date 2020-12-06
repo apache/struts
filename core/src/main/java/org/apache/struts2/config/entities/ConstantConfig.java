@@ -169,7 +169,6 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, Objects.toString(configurationXmlReload, null));
         map.put(StrutsConstants.STRUTS_ACTION_EXTENSION, StringUtils.join(actionExtension, ','));
         map.put(StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN, StringUtils.join(actionExcludePattern, ','));
-        map.put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, Objects.toString(tagAltSyntax, null));
         map.put(StrutsConstants.STRUTS_URL_HTTP_PORT, Objects.toString(urlHttpPort, null));
         map.put(StrutsConstants.STRUTS_URL_HTTPS_PORT, Objects.toString(urlHttpsPort, null));
         map.put(StrutsConstants.STRUTS_URL_INCLUDEPARAMS, urlIncludeParams);
@@ -325,14 +324,6 @@ public class ConstantConfig {
 
     public void setActionExcludePattern(List<Pattern> actionExcludePattern) {
         this.actionExcludePattern = actionExcludePattern;
-    }
-
-    public Boolean getTagAltSyntax() {
-        return tagAltSyntax;
-    }
-
-    public void setTagAltSyntax(Boolean tagAltSyntax) {
-        this.tagAltSyntax = tagAltSyntax;
     }
 
     public Integer getUrlHttpPort() {

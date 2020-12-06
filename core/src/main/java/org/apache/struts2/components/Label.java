@@ -88,7 +88,7 @@ public class Label extends UIBean {
                 addParameter("nameValue", providedLabel);
             }
         } else if (name != null) {
-            String expr = completeExpressionIfAltSyntax(name);
+            String expr = completeExpression(name);
             addParameter("nameValue", findString(expr));
         }
     }

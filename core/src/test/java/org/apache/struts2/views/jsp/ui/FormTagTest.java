@@ -18,31 +18,21 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
-import org.apache.struts2.components.Form;
-import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
 import org.easymock.EasyMock;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
 
 
 /**
@@ -50,8 +40,8 @@ import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
  */
 public class FormTagTest extends AbstractUITagTest {
 
-    
-     public void testFormWithActionAttributeContainingQueryString() throws Exception {
+
+    public void testFormWithActionAttributeContainingQueryString() throws Exception {
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setName("myForm");
@@ -66,10 +56,10 @@ public class FormTagTest extends AbstractUITagTest {
 
         tag.doStartTag();
         tag.doEndTag();
-        
+
         verify(FormTag.class.getResource("Formtag-26.txt"));
     }
-    
+
     public void testFormWithActionAttributeContainingBothActionAndMethod() throws Exception {
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -114,7 +104,7 @@ public class FormTagTest extends AbstractUITagTest {
 
         verify(FormTag.class.getResource("Formtag-13.txt"));
     }
-    
+
     public void testFormWithActionAttributeContainingBothActionAndDMIMethod() throws Exception {
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -126,13 +116,13 @@ public class FormTagTest extends AbstractUITagTest {
         tag.setTitle("mytitle");
         tag.setOnsubmit("submitMe()");
 
-        ((DefaultActionMapper)container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
+        ((DefaultActionMapper) container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
 
         tag.doStartTag();
         tag.doEndTag();
 
         verify(FormTag.class.getResource("Formtag-23.txt"));
-    }    
+    }
 
     public void testFormWithFocusElement() throws Exception {
         FormTag tag = new FormTag();
@@ -208,7 +198,7 @@ public class FormTagTest extends AbstractUITagTest {
         verify(FormTag.class.getResource("Formtag-29.txt"));
     }
 
-     public void testFormNoNameOrId() throws Exception {
+    public void testFormNoNameOrId() throws Exception {
 
         request.setupGetServletPath("/testAction");
 
@@ -330,7 +320,7 @@ public class FormTagTest extends AbstractUITagTest {
         verify(FormTag.class.getResource("Formtag-22.txt"));
     }
 
-/**
+    /**
      * Tests the numbers are formatted correctly to not break the javascript, using doubles
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled4() throws Exception {
@@ -420,7 +410,7 @@ public class FormTagTest extends AbstractUITagTest {
      * </p>
      */
     public void testFormTagWithDifferentActionExtension() throws Exception {
-        initDispatcher(new HashMap<String,String>(){{ 
+        initDispatcher(new HashMap<String, String>() {{
             put(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
             put("configProviders", TestConfigurationProvider.class.getName());
         }});
@@ -630,7 +620,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormWithActionAndExtension() throws Exception {
         request.setupGetServletPath("/BLA");
-        
+
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setAction("/testNamespace/testNamespaceAction.jspa");
@@ -684,7 +674,7 @@ public class FormTagTest extends AbstractUITagTest {
 
         verify(FormTag.class.getResource("Formtag-27.txt"));
     }
-    
+
     public void testFormWithTopLabelPositionCssXhtml() throws Exception {
         FormTag form = new FormTag();
         form.setTheme("css_xhtml");
@@ -725,7 +715,7 @@ public class FormTagTest extends AbstractUITagTest {
 
         verify(FormTag.class.getResource("Formtag-28.txt"));
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

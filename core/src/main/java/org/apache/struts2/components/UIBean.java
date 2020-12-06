@@ -788,13 +788,13 @@ public abstract class UIBean extends Component {
             parameters.put("nameValue", parameters.get("value"));
         } else {
             if (evaluateNameValue()) {
-                final Class valueClazz = getValueClassType();
+                final Class<?> valueClazz = getValueClassType();
 
                 if (valueClazz != null) {
                     if (value != null) {
                         addParameter("nameValue", findValue(value, valueClazz));
                     } else if (name != null) {
-                        String expr = completeExpressionIfAltSyntax(name);
+                        String expr = completeExpression(name);
                         if (recursion(name)) {
                             addParameter("nameValue", expr);
                         } else {
@@ -834,19 +834,18 @@ public abstract class UIBean extends Component {
         if (tooltip != null) {
             addParameter("tooltip", findString(tooltip));
 
-            Map tooltipConfigMap = getTooltipConfig(this);
+            Map<String, String> tooltipConfigMap = getTooltipConfig(this);
 
             if (form != null) { // inform the containing form that we need tooltip javascript included
                 form.addParameter("hasTooltip", Boolean.TRUE);
 
                 // tooltipConfig defined in component itself will take precedence
                 // over those defined in the containing form
-                Map overallTooltipConfigMap = getTooltipConfig(form);
+                Map<String, String> overallTooltipConfigMap = getTooltipConfig(form);
                 overallTooltipConfigMap.putAll(tooltipConfigMap); // override parent form's tooltip config
 
-                for (Object o : overallTooltipConfigMap.entrySet()) {
-                    Map.Entry entry = (Map.Entry) o;
-                    addParameter((String) entry.getKey(), entry.getValue());
+                for (Map.Entry<String, String> entry : overallTooltipConfigMap.entrySet()) {
+                    addParameter(entry.getKey(), entry.getValue());
                 }
             }
             else {
@@ -899,7 +898,7 @@ public abstract class UIBean extends Component {
     protected String escape(String name) {
         // escape any possible values that can make the ID painful to work with in JavaScript
         if (name != null) {
-            return name.replaceAll("[\\/\\.\\[\\]\'\"]", "_");
+            return name.replaceAll("[/.\\[\\]'\"]", "_");
         } else {
             return null;
         }
@@ -926,7 +925,7 @@ public abstract class UIBean extends Component {
         return true;
     }
 
-    protected Class getValueClassType() {
+    protected Class<?> getValueClassType() {
         return String.class;
     }
 
@@ -948,7 +947,7 @@ public abstract class UIBean extends Component {
         }
     }
 
-    protected Map getTooltipConfig(UIBean component) {
+    protected Map<String, String> getTooltipConfig(UIBean component) {
         Object tooltipConfigObj = component.getParameters().get("tooltipConfig");
         Map<String, String> tooltipConfig = new LinkedHashMap<>();
 
@@ -1005,7 +1004,7 @@ public abstract class UIBean extends Component {
         String generatedId;
         if (id != null) {
             // this check is needed for backwards compatibility with 2.1.x
-            tryId = findStringIfAltSyntax(id);
+            tryId = findString(id);
         } else if (null == (generatedId = escape(name != null ? findString(name) : null))) {
             LOG.debug("Cannot determine id attribute for [{}], consider defining id, name or key attribute!", this);
             tryId = null;
@@ -1261,17 +1260,16 @@ public abstract class UIBean extends Component {
         }
     }
 
-    @Override
     /**
      * supports dynamic attributes for freemarker ui tags
-     * @see https://issues.apache.org/jira/browse/WW-3174
-     * @see https://issues.apache.org/jira/browse/WW-4166
+     * @see <a href="https://issues.apache.org/jira/browse/WW-3174">WW-3174</a>
+     * @see <a href="https://issues.apache.org/jira/browse/WW-4166">WW-4166</a>
      */
-    public void copyParams(Map params) {
+    @Override
+    public void copyParams(Map<String, Object> params) {
         super.copyParams(params);
-        for (Object o : params.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            String key = (String) entry.getKey();
+        for (Map.Entry<String, Object>entry : params.entrySet()) {
+            String key = entry.getKey();
             if (!isValidTagAttribute(key) && !key.equals("dynamicAttributes")) {
                 dynamicAttributes.put(key, entry.getValue());
             }

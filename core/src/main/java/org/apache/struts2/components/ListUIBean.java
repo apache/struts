@@ -104,7 +104,7 @@ public abstract class ListUIBean extends UIBean {
         }
 
         if (listKey != null) {
-            listKey = stripExpressionIfAltSyntax(listKey);
+            listKey = stripExpression(listKey);
             addParameter("listKey", listKey);
         } else if (value instanceof Map) {
             addParameter("listKey", "key");
@@ -113,12 +113,12 @@ public abstract class ListUIBean extends UIBean {
         }
 
         if (listValueKey != null) {
-            listValueKey = stripExpressionIfAltSyntax(listValueKey);
+            listValueKey = stripExpression(listValueKey);
             addParameter("listValueKey", listValueKey);
         }
 
         if (listValue != null) {
-            listValue = stripExpressionIfAltSyntax(listValue);
+            listValue = stripExpression(listValue);
             addParameter("listValue", listValue);
         } else if (value instanceof Map) {
             addParameter("listValue", "value");
@@ -127,7 +127,7 @@ public abstract class ListUIBean extends UIBean {
         }
 
         if (listLabelKey != null) {
-            listLabelKey = stripExpressionIfAltSyntax(listLabelKey);
+            listLabelKey = stripExpression(listLabelKey);
             addParameter("listLabelKey", listLabelKey);
         }
 

@@ -134,6 +134,7 @@ public class GenericUIBean extends UIBean {
         return ContainUtil.contains(obj1, obj2);
     }
 
+    @Override
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }

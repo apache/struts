@@ -52,26 +52,32 @@ public class AttributeMap implements Map {
         this.context = context;
     }
 
+    @Override
     public boolean isEmpty() {
         throw new UnsupportedOperationException(UNSUPPORTED);
     }
 
+    @Override
     public void clear() {
         throw new UnsupportedOperationException(UNSUPPORTED);
     }
 
+    @Override
     public boolean containsKey(Object key) {
         return (get(key) != null);
     }
 
+    @Override
     public boolean containsValue(Object value) {
         throw new UnsupportedOperationException(UNSUPPORTED);
     }
 
+    @Override
     public Set entrySet() {
         return Collections.EMPTY_SET;
     }
 
+    @Override
     public Object get(Object key) {
         PageContext pc = getPageContext();
 
@@ -88,9 +94,9 @@ public class AttributeMap implements Map {
                 return application.get(key);
             }
         } else {
-            try{
+            try {
                 return pc.findAttribute(key.toString());
-            }catch (NullPointerException npe){
+            } catch (NullPointerException npe) {
                 return null;
             }
         }
@@ -98,10 +104,12 @@ public class AttributeMap implements Map {
         return null;
     }
 
+    @Override
     public Set keySet() {
         return Collections.EMPTY_SET;
     }
 
+    @Override
     public Object put(Object key, Object value) {
         PageContext pc = getPageContext();
         if (pc != null) {
@@ -111,18 +119,22 @@ public class AttributeMap implements Map {
         return null;
     }
 
+    @Override
     public void putAll(Map t) {
         throw new UnsupportedOperationException(UNSUPPORTED);
     }
 
+    @Override
     public Object remove(Object key) {
         throw new UnsupportedOperationException(UNSUPPORTED);
     }
 
+    @Override
     public int size() {
         throw new UnsupportedOperationException(UNSUPPORTED);
     }
 
+    @Override
     public Collection values() {
         return Collections.EMPTY_SET;
     }

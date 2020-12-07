@@ -150,10 +150,12 @@ public class ActionComponent extends ContextBean {
     }
 
     @Inject
+    @Override
     public void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;
     }
 
+    @Override
     public boolean end(Writer writer, String body) {
         boolean end = super.end(writer, "", false);
         try {

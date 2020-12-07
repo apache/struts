@@ -59,10 +59,12 @@ public class ActionMessage extends UIBean {
         super(stack, request, response);
     }
 
+    @Override
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
 
+    @Override
     protected void evaluateExtraParams() {
         boolean isEmptyList = true;
         Collection<String> actionMessages = (List) findValue("actionMessages");

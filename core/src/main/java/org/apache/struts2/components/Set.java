@@ -60,6 +60,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <li>scope (String): The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>,
  * <b>request</b>, <b>page</b>, or <b>action</b>. By default it is <b>action</b>.</li>
+ * 
+ * <li>Note: With the <b>action</b> scope, the variable is <em>also</em> assigned to the <b>page</b> scope.
  *
  * </ul>
  *
@@ -88,6 +90,7 @@ public class Set extends ContextBean {
         super(stack);
     }
 
+    @Override
     public boolean end(Writer writer, String body) {
         ValueStack stack = getStack();
 
@@ -113,6 +116,7 @@ public class Set extends ContextBean {
         } else if ("page".equalsIgnoreCase(scope)) {
             stack.setValue("#attr['" + getVar() + "']", o, false);
         } else {
+            // Default scope is action.  Note: The action acope handling also adds the var to the page scope.
             stack.getContext().put(getVar(), o);
             stack.setValue("#attr['" + getVar() + "']", o, false);
         }
@@ -120,13 +124,15 @@ public class Set extends ContextBean {
         return super.end(writer, body);
     }
 
-    @StrutsTagAttribute(required=true, description="Name used to reference the value pushed into the Value Stack")
+    @StrutsTagAttribute(required=true, description="Name used to reference the value pushed into the Value Stack (default scope: action," +
+                "<em>override</em> with the scope attribute).")
+    @Override
     public void setVar(String var) {
        super.setVar(var);
     }
 
     @StrutsTagAttribute(description="The scope in which to assign the variable. Can be <b>application</b>" +
-                ", <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.", defaultValue="action")
+                ", <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b> (action scope <em>also</em> adds it to the page scope).", defaultValue="action")
     public void setScope(String scope) {
         this.scope = scope;
     }

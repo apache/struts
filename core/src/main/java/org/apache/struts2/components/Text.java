@@ -52,6 +52,12 @@ import java.util.List;
  * tag will be used as default message. If no value is found, the key of the
  * message will not be written out.
  * </p>
+ * 
+ * <p>
+ * Note: If the <b>var</b> attribute is used with this tag, the tag's value will
+ * <em>not</em> be written out.  Instead the result will be saved into the
+ * action context (action scope).
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
  * <!-- START SNIPPET: params -->
@@ -156,6 +162,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         this.escapeCsv = escapeCsv;
     }
 
+    @Override
     public boolean usesBody() {
         // overriding this to true such that EVAL_BODY_BUFFERED is return and
         // bodyContent will be valid hence, text between start & end tag will
@@ -163,6 +170,7 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         return true;
     }
 
+    @Override
     public boolean end(Writer writer, String body) {
         actualName = findString(name, "name", "You must specify the i18n key. Example: welcome.header");
         String defaultMessage;
@@ -189,10 +197,12 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         return super.end(writer, "");
     }
 
+    @Override
     public void addParameter(String key, Object value) {
         addParameter(value);
     }
 
+    @Override
     public void addParameter(Object value) {
         if (values.isEmpty()) {
             values = new ArrayList<>(4);

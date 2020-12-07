@@ -46,6 +46,7 @@ public abstract class ClosingUIBean extends UIBean {
         this.openTemplate = openTemplate;
     }
 
+    @Override
     public boolean start(Writer writer) {
         boolean result = super.start(writer);
         try {

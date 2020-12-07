@@ -62,6 +62,7 @@ public abstract class ListUIBean extends UIBean {
         super(stack, request, response);
     }
 
+    @Override
     public void evaluateExtraParams() {
         Object value = null;
 
@@ -148,6 +149,7 @@ public abstract class ListUIBean extends UIBean {
         return ContainUtil.contains(obj1, obj2);
     }
 
+    @Override
     protected Class getValueClassType() {
         return null; // don't convert nameValue to anything, we need the raw value
     }

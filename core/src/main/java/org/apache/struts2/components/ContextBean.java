@@ -38,7 +38,7 @@ public abstract class ContextBean extends Component {
         }
     }
     
-    @StrutsTagAttribute(description="Name used to reference the value pushed into the Value Stack")
+    @StrutsTagAttribute(description="Name used to reference the value pushed into the Value Stack (scope: action).")
     public void setVar(String var) {
         if (var != null) {
             this.var = findString(var);

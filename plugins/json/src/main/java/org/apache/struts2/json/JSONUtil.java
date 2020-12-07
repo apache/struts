@@ -411,9 +411,9 @@ public class JSONUtil {
     public static Method[] listSMDMethods(Class clazz, boolean ignoreInterfaces) {
         final List<Method> methods = new LinkedList<>();
         if (ignoreInterfaces) {
-            Method[] SMDMethods = clazz.getMethods();
-            Arrays.sort(SMDMethods, (a, b) -> a.toString().compareTo(b.toString()));
-            for (Method method : SMDMethods) {
+            Method[] classMethods = clazz.getMethods();
+            Arrays.sort(classMethods, (a, b) -> a.toString().compareTo(b.toString()));
+            for (Method method : classMethods) {
                 SMDMethod smdMethodAnnotation = method.getAnnotation(SMDMethod.class);
                 if (smdMethodAnnotation != null) {
                     methods.add(method);
@@ -424,9 +424,9 @@ public class JSONUtil {
             // order encountered
             JSONUtil.visitInterfaces(clazz, new JSONUtil.ClassVisitor() {
                 public boolean visit(Class aClass) {
-                    Method[] SMDMethods = aClass.getMethods();
-                    Arrays.sort(SMDMethods, (a, b) -> a.toString().compareTo(b.toString()));
-                    for (Method method : SMDMethods) {
+                    Method[] classMethods = aClass.getMethods();
+                    Arrays.sort(classMethods, (a, b) -> a.toString().compareTo(b.toString()));
+                    for (Method method : classMethods) {
                         SMDMethod smdMethodAnnotation = method.getAnnotation(SMDMethod.class);
                         if ((smdMethodAnnotation != null) && !methods.contains(method)) {
                             methods.add(method);

@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -410,7 +411,9 @@ public class JSONUtil {
     public static Method[] listSMDMethods(Class clazz, boolean ignoreInterfaces) {
         final List<Method> methods = new LinkedList<>();
         if (ignoreInterfaces) {
-            for (Method method : clazz.getMethods()) {
+            Method[] SMDMethods = clazz.getMethods();
+            Arrays.sort(SMDMethods, (a, b) -> a.toString().compareTo(b.toString()));
+            for (Method method : SMDMethods) {
                 SMDMethod smdMethodAnnotation = method.getAnnotation(SMDMethod.class);
                 if (smdMethodAnnotation != null) {
                     methods.add(method);
@@ -421,7 +424,9 @@ public class JSONUtil {
             // order encountered
             JSONUtil.visitInterfaces(clazz, new JSONUtil.ClassVisitor() {
                 public boolean visit(Class aClass) {
-                    for (Method method : aClass.getMethods()) {
+                    Method[] SMDMethods = aClass.getMethods();
+                    Arrays.sort(SMDMethods, (a, b) -> a.toString().compareTo(b.toString()));
+                    for (Method method : SMDMethods) {
                         SMDMethod smdMethodAnnotation = method.getAnnotation(SMDMethod.class);
                         if ((smdMethodAnnotation != null) && !methods.contains(method)) {
                             methods.add(method);

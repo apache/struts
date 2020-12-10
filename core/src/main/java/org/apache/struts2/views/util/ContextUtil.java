@@ -61,25 +61,6 @@ public class ContextUtil {
     }
 
     /**
-     * Return true if either Configuration's altSyntax is on or the stack context's useAltSyntax is on
-     *
-     * @param context stack's context
-     * @return boolean
-     */
-    public static boolean isUseAltSyntax(Map<String, Object> context) {
-        // We didn't make altSyntax static cause, if so, struts.configuration.xml.reload will not work
-        // plus the Configuration implementation should cache the properties, which the framework's
-        // configuration implementation does
-        String tagAltSytnax = ActionContext.of(context).getContainer().getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX);
-
-        return "true".equals(tagAltSytnax) || (
-            (context.containsKey("useAltSyntax") &&
-                context.get("useAltSyntax") != null &&
-                "true".equals(context.get("useAltSyntax").toString()))
-        );
-    }
-
-    /**
      * Returns a String for overriding the default templateSuffix if templateSuffix is on the stack
      *
      * @param context stack's context

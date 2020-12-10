@@ -368,7 +368,7 @@ public class Date extends ContextBean {
     private ZoneId getTimeZone() {
         ZoneId tz = ZoneId.systemDefault();
         if (timezone != null) {
-            timezone = stripExpressionIfAltSyntax(timezone);
+            timezone = stripExpression(timezone);
             String actualTimezone = (String) getStack().findValue(timezone, String.class);
             if (actualTimezone != null) {
                 timezone = actualTimezone;

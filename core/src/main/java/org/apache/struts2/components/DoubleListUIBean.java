@@ -29,16 +29,15 @@ import java.util.Map;
  * <p>
  * DoubleListUIBean is the standard superclass of all Struts double list handling components.
  * </p>
- *
+ * <p>
  * <!-- START SNIPPET: javadoc -->
  * <p>
  * Note that the doublelistkey and doublelistvalue attribute will default to "key" and "value"
  * respectively only when the doublelist attribute is evaluated to a Map or its descendant.
  * Other thing else, will result in doublelistkey and doublelistvalue to be null and not used.
  * </p>
- *
+ * <p>
  * <!-- END SNIPPET: javadoc -->
- *
  */
 public abstract class DoubleListUIBean extends ListUIBean {
 
@@ -137,21 +136,21 @@ public abstract class DoubleListUIBean extends ListUIBean {
         Object tmpDoubleList = findValue(doubleList);
         if (doubleListKey != null) {
             addParameter("doubleListKey", doubleListKey);
-        }else if (tmpDoubleList instanceof Map) {
+        } else if (tmpDoubleList instanceof Map) {
             addParameter("doubleListKey", "key");
         }
 
         if (doubleListValue != null) {
-        	doubleListValue = stripExpressionIfAltSyntax(doubleListValue);
+            doubleListValue = stripExpression(doubleListValue);
 
             addParameter("doubleListValue", doubleListValue);
-        }else if (tmpDoubleList instanceof Map) {
+        } else if (tmpDoubleList instanceof Map) {
             addParameter("doubleListValue", "value");
         }
         if (doubleListCssClass != null) {
             addParameter("doubleListCssClass", findString(doubleListCssClass));
         }
-        if (doubleListCssStyle!= null) {
+        if (doubleListCssStyle != null) {
             addParameter("doubleListCssStyle", findString(doubleListCssStyle));
         }
         if (doubleListTitle != null) {
@@ -169,7 +168,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
             }
         }
 
-        Class valueClazz = getValueClassType();
+        Class<?> valueClazz = getValueClassType();
 
         if (valueClazz != null) {
             if (doubleValue != null) {
@@ -187,10 +186,9 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
         Form form = (Form) findAncestor(Form.class);
         if (doubleId != null) {
-            // this check is needed for backwards compatibility with 2.1.x
-        	addParameter("doubleId", findStringIfAltSyntax(doubleId));
+            addParameter("doubleId", findString(doubleId));
         } else if (form != null) {
-            addParameter("doubleId", form.getParameters().get("id") + "_" +escape(doubleName !=null ? findString(doubleName) : null));
+            addParameter("doubleId", form.getParameters().get("id") + "_" + escape(doubleName != null ? findString(doubleName) : null));
         } else {
             addParameter("doubleId", escape(doubleName != null ? findString(doubleName) : null));
         }
@@ -269,23 +267,23 @@ public abstract class DoubleListUIBean extends ListUIBean {
         }
     }
 
-    @StrutsTagAttribute(description="The second iterable source to populate from.", required=true)
+    @StrutsTagAttribute(description = "The second iterable source to populate from.", required = true)
     public void setDoubleList(String doubleList) {
         this.doubleList = doubleList;
     }
 
-    @StrutsTagAttribute(description="The key expression to use for second list")
+    @StrutsTagAttribute(description = "The key expression to use for second list")
     public void setDoubleListKey(String doubleListKey) {
         this.doubleListKey = doubleListKey;
     }
 
-    @StrutsTagAttribute(description="The value expression to use for second list")
+    @StrutsTagAttribute(description = "The value expression to use for second list")
     public void setDoubleListValue(String doubleListValue) {
         this.doubleListValue = doubleListValue;
     }
 
     @StrutsTagAttribute(description = "Property of second list objects to get css class from")
-     public void setDoubleListCssClass(String doubleListCssClass) {
+    public void setDoubleListCssClass(String doubleListCssClass) {
         this.doubleListCssClass = doubleListCssClass;
     }
 
@@ -299,17 +297,17 @@ public abstract class DoubleListUIBean extends ListUIBean {
         this.doubleListTitle = doubleListTitle;
     }
 
-    @StrutsTagAttribute(description="The name for complete component", required=true)
+    @StrutsTagAttribute(description = "The name for complete component", required = true)
     public void setDoubleName(String doubleName) {
         this.doubleName = doubleName;
     }
 
-    @StrutsTagAttribute(description="The value expression for complete component")
+    @StrutsTagAttribute(description = "The value expression for complete component")
     public void setDoubleValue(String doubleValue) {
         this.doubleValue = doubleValue;
     }
 
-    @StrutsTagAttribute(description="The form name this component resides in and populates to")
+    @StrutsTagAttribute(description = "The form name this component resides in and populates to")
     public void setFormName(String formName) {
         this.formName = formName;
     }
@@ -318,7 +316,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return formName;
     }
 
-    @StrutsTagAttribute(description="The css class for the second list")
+    @StrutsTagAttribute(description = "The css class for the second list")
     public void setDoubleCssClass(String doubleCssClass) {
         this.doubleCssClass = doubleCssClass;
     }
@@ -327,7 +325,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleCssClass;
     }
 
-    @StrutsTagAttribute(description="The css style for the second list")
+    @StrutsTagAttribute(description = "The css style for the second list")
     public void setDoubleCssStyle(String doubleCssStyle) {
         this.doubleCssStyle = doubleCssStyle;
     }
@@ -336,7 +334,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleCssStyle;
     }
 
-    @StrutsTagAttribute(description="The header key for the second list")
+    @StrutsTagAttribute(description = "The header key for the second list")
     public void setDoubleHeaderKey(String doubleHeaderKey) {
         this.doubleHeaderKey = doubleHeaderKey;
     }
@@ -345,7 +343,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleHeaderKey;
     }
 
-    @StrutsTagAttribute(description="The header value for the second list")
+    @StrutsTagAttribute(description = "The header value for the second list")
     public void setDoubleHeaderValue(String doubleHeaderValue) {
         this.doubleHeaderValue = doubleHeaderValue;
     }
@@ -354,7 +352,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleHeaderValue;
     }
 
-    @StrutsTagAttribute(description="Decides if the second list will add an empty option")
+    @StrutsTagAttribute(description = "Decides if the second list will add an empty option")
     public void setDoubleEmptyOption(String doubleEmptyOption) {
         this.doubleEmptyOption = doubleEmptyOption;
     }
@@ -368,7 +366,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleDisabled;
     }
 
-    @StrutsTagAttribute(description="Decides if a disable attribute should be added to the second list")
+    @StrutsTagAttribute(description = "Decides if a disable attribute should be added to the second list")
     public void setDoubleDisabled(String doubleDisabled) {
         this.doubleDisabled = doubleDisabled;
     }
@@ -377,7 +375,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleId;
     }
 
-    @StrutsTagAttribute(description="The id of the second list")
+    @StrutsTagAttribute(description = "The id of the second list")
     public void setDoubleId(String doubleId) {
         this.doubleId = doubleId;
     }
@@ -386,7 +384,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleMultiple;
     }
 
-    @StrutsTagAttribute(description=" Decides if multiple attribute should be set on the second list")
+    @StrutsTagAttribute(description = " Decides if multiple attribute should be set on the second list")
     public void setDoubleMultiple(String doubleMultiple) {
         this.doubleMultiple = doubleMultiple;
     }
@@ -395,7 +393,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnblur;
     }
 
-    @StrutsTagAttribute(description="Set the onblur attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onblur attribute of the second list")
     public void setDoubleOnblur(String doubleOnblur) {
         this.doubleOnblur = doubleOnblur;
     }
@@ -404,7 +402,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnchange;
     }
 
-    @StrutsTagAttribute(description="Set the onchange attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onchange attribute of the second list")
     public void setDoubleOnchange(String doubleOnchange) {
         this.doubleOnchange = doubleOnchange;
     }
@@ -413,7 +411,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnclick;
     }
 
-    @StrutsTagAttribute(description="Set the onclick attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onclick attribute of the second list")
     public void setDoubleOnclick(String doubleOnclick) {
         this.doubleOnclick = doubleOnclick;
     }
@@ -422,7 +420,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOndblclick;
     }
 
-    @StrutsTagAttribute(description="Set the ondbclick attribute of the second list")
+    @StrutsTagAttribute(description = "Set the ondbclick attribute of the second list")
     public void setDoubleOndblclick(String doubleOndblclick) {
         this.doubleOndblclick = doubleOndblclick;
     }
@@ -431,7 +429,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnfocus;
     }
 
-    @StrutsTagAttribute(description="Set the onfocus attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onfocus attribute of the second list")
     public void setDoubleOnfocus(String doubleOnfocus) {
         this.doubleOnfocus = doubleOnfocus;
     }
@@ -440,7 +438,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnkeydown;
     }
 
-    @StrutsTagAttribute(description="Set the onkeydown attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onkeydown attribute of the second list")
     public void setDoubleOnkeydown(String doubleOnkeydown) {
         this.doubleOnkeydown = doubleOnkeydown;
     }
@@ -449,7 +447,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnkeypress;
     }
 
-    @StrutsTagAttribute(description="Set the onkeypress attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onkeypress attribute of the second list")
     public void setDoubleOnkeypress(String doubleOnkeypress) {
         this.doubleOnkeypress = doubleOnkeypress;
     }
@@ -458,7 +456,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnkeyup;
     }
 
-    @StrutsTagAttribute(description="Set the onkeyup attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onkeyup attribute of the second list")
     public void setDoubleOnkeyup(String doubleOnkeyup) {
         this.doubleOnkeyup = doubleOnkeyup;
     }
@@ -467,7 +465,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnmousedown;
     }
 
-    @StrutsTagAttribute(description="Set the onmousedown attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onmousedown attribute of the second list")
     public void setDoubleOnmousedown(String doubleOnmousedown) {
         this.doubleOnmousedown = doubleOnmousedown;
     }
@@ -476,7 +474,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnmousemove;
     }
 
-    @StrutsTagAttribute(description="Set the onmousemove attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onmousemove attribute of the second list")
     public void setDoubleOnmousemove(String doubleOnmousemove) {
         this.doubleOnmousemove = doubleOnmousemove;
     }
@@ -485,7 +483,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnmouseout;
     }
 
-    @StrutsTagAttribute(description="Set the onmouseout attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onmouseout attribute of the second list")
     public void setDoubleOnmouseout(String doubleOnmouseout) {
         this.doubleOnmouseout = doubleOnmouseout;
     }
@@ -494,7 +492,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnmouseover;
     }
 
-    @StrutsTagAttribute(description="Set the onmouseover attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onmouseover attribute of the second list")
     public void setDoubleOnmouseover(String doubleOnmouseover) {
         this.doubleOnmouseover = doubleOnmouseover;
     }
@@ -503,7 +501,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnmouseup;
     }
 
-    @StrutsTagAttribute(description="Set the onmouseup attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onmouseup attribute of the second list")
     public void setDoubleOnmouseup(String doubleOnmouseup) {
         this.doubleOnmouseup = doubleOnmouseup;
     }
@@ -512,7 +510,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleOnselect;
     }
 
-    @StrutsTagAttribute(description="Set the onselect attribute of the second list")
+    @StrutsTagAttribute(description = "Set the onselect attribute of the second list")
     public void setDoubleOnselect(String doubleOnselect) {
         this.doubleOnselect = doubleOnselect;
     }
@@ -521,7 +519,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleSize;
     }
 
-    @StrutsTagAttribute(description="Set the size attribute of the second list")
+    @StrutsTagAttribute(description = "Set the size attribute of the second list")
     public void setDoubleSize(String doubleSize) {
         this.doubleSize = doubleSize;
     }
@@ -546,36 +544,36 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleValue;
     }
 
-    @StrutsTagAttribute(description="Decides of an empty option is to be inserted in the second list", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Decides of an empty option is to be inserted in the second list", type = "Boolean", defaultValue = "false")
     public void setEmptyOption(String emptyOption) {
         this.emptyOption = emptyOption;
     }
 
-    @StrutsTagAttribute(description="Set the header key of the second list. Must not be empty! " +
-                "'-1' and '' is correct, '' is bad.")
+    @StrutsTagAttribute(description = "Set the header key of the second list. Must not be empty! " +
+        "'-1' and '' is correct, '' is bad.")
     public void setHeaderKey(String headerKey) {
         this.headerKey = headerKey;
     }
 
-    @StrutsTagAttribute(description=" Set the header value of the second list")
+    @StrutsTagAttribute(description = " Set the header value of the second list")
     public void setHeaderValue(String headerValue) {
         this.headerValue = headerValue;
     }
 
-    @StrutsTagAttribute(description="Creates a multiple select. " +
-                "The tag will pre-select multiple values if the values are passed as an Array " +
-                "(of appropriate types) via the value attribute.")
+    @StrutsTagAttribute(description = "Creates a multiple select. " +
+        "The tag will pre-select multiple values if the values are passed as an Array " +
+        "(of appropriate types) via the value attribute.")
     public void setMultiple(String multiple) {
         // TODO: Passing a Collection may work too?
         this.multiple = multiple;
     }
 
-    @StrutsTagAttribute(description="Size of the element box (# of elements to show)", type="Integer")
+    @StrutsTagAttribute(description = "Size of the element box (# of elements to show)", type = "Integer")
     public void setSize(String size) {
         this.size = size;
     }
 
-    @StrutsTagAttribute(description="Set the html accesskey attribute.")
+    @StrutsTagAttribute(description = "Set the html accesskey attribute.")
     public void setDoubleAccesskey(String doubleAccesskey) {
         this.doubleAccesskey = doubleAccesskey;
     }

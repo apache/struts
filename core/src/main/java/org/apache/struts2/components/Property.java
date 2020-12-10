@@ -140,7 +140,7 @@ public class Property extends Component {
             value = "top";
         }
         else {
-        	value = stripExpressionIfAltSyntax(value);
+        	value = stripExpression(value);
         }
 
         // exception: don't call findString(), since we don't want the

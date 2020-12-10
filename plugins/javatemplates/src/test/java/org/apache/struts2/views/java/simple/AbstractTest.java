@@ -28,7 +28,6 @@ import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.ValueStack;
 import junit.framework.TestCase;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.template.Template;
@@ -113,7 +112,6 @@ public abstract class AbstractTest extends TestCase {
 
         Container container = createNiceMock(Container.class);
         XWorkConverter converter = new ConverterEx();
-        expect(container.getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX)).andReturn("true").anyTimes();
         expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
         TextParser parser = new OgnlTextParser();
         expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();

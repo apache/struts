@@ -18,23 +18,18 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.util.HashMap;
-
-import javax.servlet.jsp.JspException;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsInternalTestCase;
-
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
+
+import javax.servlet.jsp.JspException;
 
 
 /**
  * PropertyTag test case.
- *
  */
 public class PropertyTagTest extends StrutsInternalTestCase {
 
@@ -163,8 +158,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testWithAltSyntax1() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
         stack.push(foo);
@@ -193,27 +186,27 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testEscapeJavaScript() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
-        foo.setTitle("\t\b\n\f\r\"\'/\\");
+        foo.setTitle("\t\b\n\f\r\"'/\\");
         stack.push(foo);
 
         MockJspWriter jspWriter = new MockJspWriter();
-        jspWriter.setExpectedData("Foo is: \\t\\b\\n\\f\\r\\\"\\\'\\/\\\\");
+        jspWriter.setExpectedData("Foo is: \\t\\b\\n\\f\\r\\\"\\'\\/\\\\");
 
         MockPageContext pageContext = new MockPageContext();
         pageContext.setJspWriter(jspWriter);
         pageContext.setRequest(request);
 
         // test
-        {PropertyTag tag = new PropertyTag();
-        tag.setEscapeHtml(false);
-        tag.setEscapeJavaScript(true);    
-        tag.setPageContext(pageContext);
-        tag.setValue("%{formatTitle()}");
-        tag.doStartTag();
-        tag.doEndTag();}
+        {
+            PropertyTag tag = new PropertyTag();
+            tag.setEscapeHtml(false);
+            tag.setEscapeJavaScript(true);
+            tag.setPageContext(pageContext);
+            tag.setValue("%{formatTitle()}");
+            tag.doStartTag();
+            tag.doEndTag();
+        }
 
         // verify test
         request.verify();
@@ -221,10 +214,8 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         pageContext.verify();
     }
 
-     public void testEscapeXml() throws Exception {
+    public void testEscapeXml() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
         foo.setTitle("<>'\"&");
         stack.push(foo);
@@ -237,13 +228,15 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         pageContext.setRequest(request);
 
         // test
-        {PropertyTag tag = new PropertyTag();
-        tag.setEscapeHtml(false);
-        tag.setEscapeXml(true);
-        tag.setPageContext(pageContext);
-        tag.setValue("%{formatTitle()}");
-        tag.doStartTag();
-        tag.doEndTag();}
+        {
+            PropertyTag tag = new PropertyTag();
+            tag.setEscapeHtml(false);
+            tag.setEscapeXml(true);
+            tag.setPageContext(pageContext);
+            tag.setValue("%{formatTitle()}");
+            tag.doStartTag();
+            tag.doEndTag();
+        }
 
         // verify test
         request.verify();
@@ -251,10 +244,8 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         pageContext.verify();
     }
 
-     public void testEscapeCsv() throws Exception {
+    public void testEscapeCsv() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
         foo.setTitle("\"something,\",\"");
         stack.push(foo);
@@ -267,13 +258,15 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         pageContext.setRequest(request);
 
         // test
-        {PropertyTag tag = new PropertyTag();
-        tag.setEscapeHtml(false);
-        tag.setEscapeCsv(true);
-        tag.setPageContext(pageContext);
-        tag.setValue("%{formatTitle()}");
-        tag.doStartTag();
-        tag.doEndTag();}
+        {
+            PropertyTag tag = new PropertyTag();
+            tag.setEscapeHtml(false);
+            tag.setEscapeCsv(true);
+            tag.setPageContext(pageContext);
+            tag.setValue("%{formatTitle()}");
+            tag.doStartTag();
+            tag.doEndTag();
+        }
 
         // verify test
         request.verify();
@@ -283,8 +276,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testWithAltSyntax2() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
         stack.push(foo);
@@ -297,11 +288,13 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         pageContext.setRequest(request);
 
         // test
-        {PropertyTag tag = new PropertyTag();
-        tag.setPageContext(pageContext);
-        tag.setValue("formatTitle()");
-        tag.doStartTag();
-        tag.doEndTag();}
+        {
+            PropertyTag tag = new PropertyTag();
+            tag.setPageContext(pageContext);
+            tag.setValue("formatTitle()");
+            tag.doStartTag();
+            tag.doEndTag();
+        }
 
         // verify test
         request.verify();
@@ -311,8 +304,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testWithoutAltSyntax1() throws Exception {
         //      setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");}});
-
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
         stack.push(foo);
@@ -325,11 +316,13 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         pageContext.setRequest(request);
 
         // test
-        {PropertyTag tag = new PropertyTag();
-        tag.setPageContext(pageContext);
-        tag.setValue("formatTitle()");
-        tag.doStartTag();
-        tag.doEndTag();}
+        {
+            PropertyTag tag = new PropertyTag();
+            tag.setPageContext(pageContext);
+            tag.setValue("formatTitle()");
+            tag.doStartTag();
+            tag.doEndTag();
+        }
 
         // verify test
         request.verify();
@@ -340,8 +333,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testWithoutAltSyntax2() throws Exception {
         //      setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");}});
-
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
         stack.push(foo);
@@ -353,11 +344,13 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         pageContext.setRequest(request);
 
         // test
-        {PropertyTag tag = new PropertyTag();
-        tag.setPageContext(pageContext);
-        tag.setValue("%{formatTitle()}");
-        tag.doStartTag();
-        tag.doEndTag();}
+        {
+            PropertyTag tag = new PropertyTag();
+            tag.setPageContext(pageContext);
+            tag.setValue("%{formatTitle()}");
+            tag.doStartTag();
+            tag.doEndTag();
+        }
 
         // verify test
         request.verify();
@@ -373,7 +366,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
     }
 
 
-    public class Foo {
+    public static class Foo {
         private String title;
 
         public void setTitle(String title) {

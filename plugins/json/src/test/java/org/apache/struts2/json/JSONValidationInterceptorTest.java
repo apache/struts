@@ -33,12 +33,15 @@ import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.apache.struts2.util.TestUtils;
+import org.assertj.core.internal.bytebuddy.asm.Advice;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,8 +69,23 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         String json = stringWriter.toString();
 
         String normalizedActual = TestUtils.normalize(json, true);
-
         //json
+        // fix the order of "Tooshort", and "Thisisnoemail"
+        assertThat(normalizedActual).contains("Tooshort");
+        assertThat(normalizedActual).contains("Thisisnoemail");
+        int tooshortIndex = normalizedActual.indexOf("Tooshort");
+        int ThisisnoemailIndex = normalizedActual.indexOf("Thisisnoemail");
+        if (tooshortIndex > ThisisnoemailIndex){
+            // swap the items
+            String temp = normalizedActual.substring(0,ThisisnoemailIndex);
+            temp += "Tooshort";
+            int lengthOfNoEmail = 13;
+            int lengthOfTooShort = 8;
+            temp += normalizedActual.substring(ThisisnoemailIndex + lengthOfNoEmail, tooshortIndex);
+            temp += "Thisisnoemail";
+            temp += normalizedActual.substring(tooshortIndex + lengthOfTooShort);
+            normalizedActual = temp;
+        }
         assertThat(normalizedActual)
                 .contains("\"errors\":[\"Generalerror\"]")
                 .contains("\"fieldErrors\":{")

@@ -67,6 +67,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         String json = stringWriter.toString();
 
         String normalizedActual = TestUtils.normalize(json, true);
+        
         //json
         // fix the order of "Tooshort", and "Thisisnoemail"
         assertThat(normalizedActual).contains("Tooshort");

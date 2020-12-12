@@ -835,6 +835,7 @@ public class Dispatcher {
 
         if (encoding != null) {
             applyEncoding(request, encoding);
+            applyEncoding(response, encoding);
         }
 
         if (locale != null) {
@@ -854,7 +855,17 @@ public class Dispatcher {
                 request.setCharacterEncoding(encoding);
             }
         } catch (Exception e) {
-            LOG.error("Error setting character encoding to '{}' - ignoring.", encoding, e);
+            LOG.error(new ParameterizedMessage("Error setting character encoding to '{}' on request - ignoring.", encoding), e);
+        }
+    }
+
+    private void applyEncoding(HttpServletResponse response, String encoding) {
+        try {
+            if (!encoding.equals(response.getCharacterEncoding())) {
+                response.setCharacterEncoding(encoding);
+            }
+        } catch (Exception e) {
+            LOG.error(new ParameterizedMessage("Error setting character encoding to '{}' on response - ignoring.", encoding), e);
         }
     }
 

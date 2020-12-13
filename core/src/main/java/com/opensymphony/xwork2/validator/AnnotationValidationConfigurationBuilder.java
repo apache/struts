@@ -56,6 +56,7 @@ public class AnnotationValidationConfigurationBuilder {
         if (o instanceof Class) {
             Class clazz = (Class) o;
             annotations = clazz.getAnnotations();
+            Arrays.sort(annotations, (a, b) -> a.toString().compareTo(b.toString()));
         }
 
         if (o instanceof Method) {
@@ -64,6 +65,7 @@ public class AnnotationValidationConfigurationBuilder {
             methodName = method.getName();
 
             annotations = method.getAnnotations();
+            Arrays.sort(annotations, (a, b) -> a.toString().compareTo(b.toString()));
         }
 
         if (annotations != null) {

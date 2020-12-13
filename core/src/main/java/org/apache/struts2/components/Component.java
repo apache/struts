@@ -272,38 +272,36 @@ public class Component {
     /**
      * Finds a value from the OGNL stack based on the given expression.
      * Will always evaluate <code>expr</code> against stack except when <code>expr</code>
-     * is null. If altsyntax (%{...}) is applied, simply strip it off.
+     * is null. If %{...} is applied, simply strip it off.
      *
-     * @param expr the expression. Returns <tt>null</tt> if expr is null.
+     * @param expression the expression. Returns <tt>null</tt> if expr is null.
      * @return the value, <tt>null</tt> if not found.
      */
-    protected Object findValue(String expr) {
-        if (expr == null) {
+    protected Object findValue(String expression) {
+        if (expression == null) {
             return null;
         }
 
-        expr = stripExpression(expr);
+        expression = stripExpression(expression);
 
-        return getStack().findValue(expr, throwExceptionOnELFailure);
+        return getStack().findValue(expression, throwExceptionOnELFailure);
     }
 
     /**
-     * If altsyntax (%{...}) is applied, simply strip the "%{" and "}" off.
+     * If %{...} is applied, simply strip the "%{" and "}" off.
      *
-     * @param expr the expression (must be not null)
-     * @return the stripped expression if altSyntax is enabled. Otherwise
-     * the parameter expression is returned as is.
+     * @param expression the expression (must be not null)
+     * @return the stripped expression
      */
-    protected String stripExpression(String expr) {
-        return ComponentUtils.stripExpression(expr);
+    protected String stripExpression(String expression) {
+        return ComponentUtils.stripExpression(expression);
     }
 
     /**
      * Adds the surrounding %{ } to the expression for proper processing.
      *
      * @param expr the expression.
-     * @return the modified expression if altSyntax is enabled, or the parameter
-     * expression otherwise.
+     * @return the modified expression wrapped with %{...}
      */
     protected String completeExpression(String expr) {
         if (expr == null) {
@@ -356,38 +354,36 @@ public class Component {
 
     /**
      * Evaluates the OGNL stack to find an Object of the given type. Will evaluate
-     * <code>expr</code> the portion wrapped with altSyntax (%{...})
-     * against stack when altSyntax is on, else the whole <code>expr</code>
-     * is evaluated against the stack.
-     * <br>
-     * This method only supports the altSyntax. So this should be set to true.
+     * <code>expression</code> the portion wrapped with %{...} against stack if
+     * evaluating to String.class, else the whole <code>expression</code> is evaluated
+     * against the stack.
      *
-     * @param expr   OGNL expression.
+     * @param expression   OGNL expression.
      * @param toType the type expected to find.
      * @return the Object found, or <tt>null</tt> if not found.
      */
-    protected Object findValue(String expr, Class<?> toType) {
+    protected Object findValue(String expression, Class<?> toType) {
         if (toType == String.class) {
-            if (ComponentUtils.containsExpression(expr)) {
-                return TextParseUtil.translateVariables('%', expr, stack);
+            if (ComponentUtils.containsExpression(expression)) {
+                return TextParseUtil.translateVariables('%', expression, stack);
             } else {
-                return expr;
+                return expression;
             }
         } else {
-            expr = stripExpression(expr);
+            expression = stripExpression(expression);
 
-            return getStack().findValue(expr, toType, throwExceptionOnELFailure);
+            return getStack().findValue(expression, toType, throwExceptionOnELFailure);
         }
     }
 
     /**
-     * Detects if altSyntax is enabled and then checks if expression contains %{...}
+     * Detects if expression already contains %{...}
      *
-     * @param expr a string to examined
-     * @return true if altSyntax is enabled and expr contains %{...}
+     * @param expression a string to examined
+     * @return true if expression contains %{...}
      */
-    protected boolean recursion(String expr) {
-        return ComponentUtils.containsExpression(expr);
+    protected boolean recursion(String expression) {
+        return ComponentUtils.containsExpression(expression);
     }
 
     /**

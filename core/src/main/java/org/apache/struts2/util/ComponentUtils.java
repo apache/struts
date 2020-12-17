@@ -24,11 +24,10 @@ package org.apache.struts2.util;
 public class ComponentUtils {
 
     /**
-     * If altSyntax (%{...}) is applied, simply strip the "%{" and "}" off.
+     * Simply strip the "%{" and "}" off.
      *
      * @param expr the expression (must be not null)
-     * @return the stripped expression if altSyntax is enabled. Otherwise
-     * the parameter expression is returned as is.
+     * @return the stripped expression
      */
     public static String stripExpression(String expr) {
         // does the expression start with %{ and end with }? if so, just cut it off!
@@ -39,7 +38,7 @@ public class ComponentUtils {
     }
 
     /**
-     * Check if object is expression base on altSyntax
+     * Check if object is an expression
      *
      * @param expr to treat as an expression
      * @return true if it is an expression

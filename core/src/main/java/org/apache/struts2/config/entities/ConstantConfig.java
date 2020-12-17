@@ -37,7 +37,6 @@ public class ConstantConfig {
     private Boolean configurationXmlReload;
     private List<String> actionExtension;
     private List<Pattern> actionExcludePattern;
-    private Boolean tagAltSyntax;
     private Integer urlHttpPort;
     private Integer urlHttpsPort;
     private String urlIncludeParams;

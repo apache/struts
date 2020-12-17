@@ -136,7 +136,7 @@ public class StrutsUtil {
     }
 
     public String translateVariables(String expression) {
-        return TextParseUtil.translateVariables(expression, stack);
+        return TextParseUtil.translateVariables('%', expression, stack);
     }
 
     /**

@@ -53,6 +53,9 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     public static final String STRUTS_MESSAGES_BUNDLE = "org/apache/struts2/struts-messages";
 
     private static final String TOMCAT_RESOURCE_ENTRIES_FIELD = "resourceEntries";
+    private static final String TOMCAT_PARALLEL_WEBAPP_CLASSLOADER = "org.apache.catalina.loader.ParallelWebappClassLoader";
+    private static final String TOMCAT_WEBAPP_CLASSLOADER = "org.apache.catalina.loader.WebappClassLoader";
+    private static final String TOMCAT_WEBAPP_CLASSLOADER_BASE = "org.apache.catalina.loader.WebappClassLoaderBase";
     private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextProvider.reloaded";
 
     protected final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
@@ -286,13 +289,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
                 }
                 if (!reloaded) {
                     bundlesMap.clear();
-                    try {
-                        clearMap(ResourceBundle.class, null, "cacheList");
-                    } catch (NoSuchFieldException e) {
-                        // happens in IBM JVM, that has a different ResourceBundle impl
-                        // it has a 'cache' member
-                        clearMap(ResourceBundle.class, null, "cache");
-                    }
+                    clearResourceBundleClassloaderCaches();
 
                     // now, for the true and utter hack, if we're running in tomcat, clear
                     // it's class loader resource cache as well.
@@ -308,36 +305,90 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
     }
 
+    /**
+     * A helper method for {@link ResourceBundle} bundle reload logic.
+     * 
+     * Uses standard {@link ResourceBundle} methods to clear the bundle caches for the 
+     * {@link ClassLoader} instances that this class is aware of at the time of the call.
+     * 
+     * The <code>clearCache()</code> methods have been available since Java 1.6, so 
+     * it is anticipated the logic will work on any subsequent JVM versions.
+     * 
+     * @since 2.6
+     */
+    private void clearResourceBundleClassloaderCaches() {
+        final ClassLoader ccl = getCurrentThreadContextClassLoader();
+        ResourceBundle.clearCache();     // Bundles loaded by the caller's classloader.
+        ResourceBundle.clearCache(ccl);  // Bundles loaded by the context classloader (may be the same).
+        // Clear the bundle cache for any non-null delegated classloaders.
+        delegatedClassLoaderMap.forEach( (key, value) -> { if (value != null) ResourceBundle.clearCache(value) ;} );
+    }
+
+    /**
+     * "Hacky" helper method that attempts to clear the Tomcat <code>ResourceEntry</code>
+     * {@link Map} using knowledge of the Tomcat source code.
+     * 
+     * It relies on the {@link #TOMCAT_RESOURCE_ENTRIES_FIELD} field name, base class name 
+     * {@link #TOMCAT_WEBAPP_CLASSLOADER_BASE}. and descendant class names {@link #TOMCAT_WEBAPP_CLASSLOADER},
+     * {@link #TOMCAT_PARALLEL_WEBAPP_CLASSLOADER}, to keep the values identified in the constants.
+     * It appears to be valid for Tomcat versions 7-10 so far, but could become invalid at any time in the future
+     * when the resource handling logic in Tomcat changes.
+     * 
+     * Note: With Java 9+, calling this method may result in "Illegal reflective access" warnings.  Be aware 
+     *       its logic may fail in a future version of Java that blocks the reflection calls needed for this method.
+     * {<code></code>
+     */
     private void clearTomcatCache() {
         ClassLoader loader = getCurrentThreadContextClassLoader();
         // no need for compilation here.
         Class cl = loader.getClass();
+        Class superCl = cl.getSuperclass();
 
         try {
-            if ("org.apache.catalina.loader.WebappClassLoader".equals(cl.getName())) {
-                clearMap(cl, loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
+            if ( (TOMCAT_WEBAPP_CLASSLOADER.equals(cl.getName()) || TOMCAT_PARALLEL_WEBAPP_CLASSLOADER.equals(cl.getName())) &&
+                    (superCl != null && TOMCAT_WEBAPP_CLASSLOADER_BASE.equals(superCl.getName())) ) {
+                // The classloader name and superclass name match the expecations for a Tomcat classloader.
+                // Expect the classloader superclass to have the field, otherwise fallback to the classloader class if the field is not found.
+                clearMap(superCl, loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
+                LOG.debug("Cleared tomcat cache via classloader's parent class.");
             } else {
                 LOG.debug("Class loader {} is not tomcat loader.", cl.getName());
             }
         } catch (NoSuchFieldException nsfe) {
-            if ("org.apache.catalina.loader.WebappClassLoaderBase".equals(cl.getSuperclass().getName())) {
-                LOG.debug("Base class {} doesn't contain '{}' field, trying with parent!", cl.getName(), TOMCAT_RESOURCE_ENTRIES_FIELD, nsfe);
-                try {
-                    clearMap(cl.getSuperclass(), loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
-                } catch (Exception e) {
-                    LOG.warn("Couldn't clear tomcat cache using {}", cl.getSuperclass().getName(), e);
-                }
+            LOG.debug("Parent class {} doesn't contain '{}' field, trying with base!", superCl.getName(), TOMCAT_RESOURCE_ENTRIES_FIELD, nsfe);
+            try {
+                clearMap(cl, loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
+                LOG.debug("Cleared tomcat cache via classloader's class.");
+            } catch (Exception e) {
+                LOG.warn("Couldn't clear tomcat cache using {}", cl.getName(), e);
             }
         } catch (Exception e) {
-            LOG.warn("Couldn't clear tomcat cache", cl.getName(), e);
+            LOG.warn("Couldn't clear tomcat cache using {}", superCl.getName(), e);
         }
     }
 
+    /**
+     * Helper method that is intended to clear a {@link Map} instance by name.
+     * 
+     * This method relies on reflection to perform its operations, and may be blocked in Java 9 and later,
+     * depending on the accessibility of the field.
+     * 
+     * @param cl The {@link Class} of the obj parameter.
+     * @param obj The {@link Object} from which the named field is to be extracted (may be <code>null</code> for a static field).
+     * @param name The name of the field containing a {@link Map} reference.
+     * @throws NoSuchFieldException if a field accessed by this call does not exist.
+     * @throws IllegalAccessException if a field, method or or class accessed by this call cannot be accessed.
+     * @throws NoSuchMethodException if a method accessed by this call does not exist.
+     * @throws InvocationTargetException if a method accessed by this call fails invocation.
+     */
     private void clearMap(Class cl, Object obj, String name)
             throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
         Field field = cl.getDeclaredField(name);
-        field.setAccessible(true);
+
+        if (!field.isAccessible()) {
+            field.setAccessible(true);  // Change state only if necessary.
+        }
 
         Object cache = field.get(obj);
 

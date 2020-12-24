@@ -185,6 +185,10 @@ public class JSONResult implements Result {
     }
 
     public void execute(ActionInvocation invocation) throws Exception {
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
         ActionContext actionContext = invocation.getInvocationContext();
         HttpServletRequest request = actionContext.getServletRequest();
         HttpServletResponse response = actionContext.getServletResponse();

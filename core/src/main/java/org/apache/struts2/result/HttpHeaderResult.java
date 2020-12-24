@@ -172,8 +172,12 @@ public class HttpHeaderResult implements Result {
      * @throws Exception if an error occurs when re-setting the headers.
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        HttpServletResponse response = ServletActionContext.getResponse();
-        ValueStack stack = ActionContext.getContext().getValueStack();
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
+        ValueStack stack = invocation.getStack();
 
         if (status != -1) {
             response.setStatus(status);

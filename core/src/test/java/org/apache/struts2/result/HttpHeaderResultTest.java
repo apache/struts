@@ -118,7 +118,10 @@ public class HttpHeaderResultTest extends StrutsInternalTestCase {
         result = new HttpHeaderResult();
         responseMock = new Mock(HttpServletResponse.class);
         response = (HttpServletResponse) responseMock.proxy();
-        invocation = (ActionInvocation) new Mock(ActionInvocation.class).proxy();
+        Mock invocationMock = new Mock(ActionInvocation.class);
+        invocationMock.expectAndReturn("getInvocationContext", ActionContext.getContext());
+        invocationMock.expectAndReturn("getStack", ActionContext.getContext().getValueStack());
+        invocation = (ActionInvocation) invocationMock.proxy();
         reflectionProvider = container.getInstance(ReflectionProvider.class);
         ServletActionContext.setResponse(response);
     }

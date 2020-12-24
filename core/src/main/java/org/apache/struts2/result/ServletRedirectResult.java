@@ -143,6 +143,10 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     }
 
     public void execute(ActionInvocation invocation) throws Exception {
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
         if (anchor != null) {
             anchor = conditionalParse(anchor, invocation);
         }

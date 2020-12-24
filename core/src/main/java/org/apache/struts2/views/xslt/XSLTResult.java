@@ -146,6 +146,10 @@ public class XSLTResult implements Result {
     }
 
     public void execute(ActionInvocation invocation) throws Exception {
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
         long startTime = System.currentTimeMillis();
         String location = getStylesheetLocation();
 
@@ -154,12 +158,12 @@ public class XSLTResult implements Result {
         }
 
         if (parse) {
-            ValueStack stack = ActionContext.getContext().getValueStack();
+            ValueStack stack = invocation.getStack();
             location = TextParseUtil.translateVariables(location, stack);
         }
 
         try {
-            HttpServletResponse response = ServletActionContext.getResponse();
+            HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
             response.setStatus(status);
             response.setCharacterEncoding(encoding);
             PrintWriter writer = response.getWriter();

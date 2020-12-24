@@ -45,6 +45,6 @@ public interface Result extends Serializable {
      * @param invocation  the invocation context.
      * @throws Exception can be thrown.
      */
-    public void execute(ActionInvocation invocation) throws Exception;
+    void execute(ActionInvocation invocation) throws Exception;
 
 }

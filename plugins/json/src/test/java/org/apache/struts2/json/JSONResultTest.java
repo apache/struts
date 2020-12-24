@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.opensymphony.xwork2.Result;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.util.TestUtils;
@@ -711,6 +712,16 @@ public class JSONResultTest extends StrutsTestCase {
 
         // thn
         assertEquals("UTF-8", encoding);
+    }
+
+    public void testPassingNullInvocation() throws Exception{
+        Result result = new JSONResult();
+        try {
+            result.execute(null);
+            fail("Exception should be thrown!");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Invocation cannot be null!", e.getMessage());
+        }
     }
 
     @Override

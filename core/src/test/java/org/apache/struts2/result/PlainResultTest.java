@@ -19,6 +19,7 @@
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -124,6 +125,16 @@ public class PlainResultTest extends StrutsInternalTestCase {
             assertTrue(true);
         } catch (StrutsException e) {
             fail(e.getMessage());
+        }
+    }
+
+    public void testPassingNullInvocation() throws Exception{
+        Result result = (PlainResult) response -> response.write("ignore");
+        try {
+            result.execute(null);
+            fail("Exception should be thrown!");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Invocation cannot be null!", e.getMessage());
         }
     }
 

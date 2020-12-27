@@ -143,8 +143,28 @@ pipeline {
           }
           steps {
             withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
-              sh 'mvn -s \${CUSTOM_SETTINGS} deploy -skipAssembly'
+              sh 'mvn -s \${CUSTOM_SETTINGS} deploy'
             }
+          }
+        }
+        stage('Upload nightlies') {
+          when {
+            branch 'master'
+          }
+          steps {
+            sshPublisher(publishers: [
+                sshPublisherDesc(
+                    configName: 'nightlies.a.o',
+                    transfers: [
+                        sshTransfer(
+                            remoteDirectory: '/x1/dist/struts',
+                            removePrefix: 'target/assembly/out',
+                            sourceFiles: 'target/assembly/out/struts-*.zip'
+                        )
+                    ],
+                    verbose: true
+                )
+            ])
           }
         }
         stage('Code Quality') {

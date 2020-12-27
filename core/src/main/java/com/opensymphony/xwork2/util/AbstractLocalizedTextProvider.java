@@ -336,7 +336,6 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * 
      * Note: With Java 9+, calling this method may result in "Illegal reflective access" warnings.  Be aware 
      *       its logic may fail in a future version of Java that blocks the reflection calls needed for this method.
-     * {<code></code>
      */
     private void clearTomcatCache() {
         ClassLoader loader = getCurrentThreadContextClassLoader();
@@ -345,8 +344,8 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         Class superCl = cl.getSuperclass();
 
         try {
-            if ( (TOMCAT_WEBAPP_CLASSLOADER.equals(cl.getName()) || TOMCAT_PARALLEL_WEBAPP_CLASSLOADER.equals(cl.getName())) &&
-                    (superCl != null && TOMCAT_WEBAPP_CLASSLOADER_BASE.equals(superCl.getName())) ) {
+            if ((TOMCAT_WEBAPP_CLASSLOADER.equals(cl.getName()) || TOMCAT_PARALLEL_WEBAPP_CLASSLOADER.equals(cl.getName())) &&
+                    (superCl != null && TOMCAT_WEBAPP_CLASSLOADER_BASE.equals(superCl.getName()))) {
                 // The classloader name and superclass name match the expecations for a Tomcat classloader.
                 // Expect the classloader superclass to have the field, otherwise fallback to the classloader class if the field is not found.
                 clearMap(superCl, loader, TOMCAT_RESOURCE_ENTRIES_FIELD);
@@ -363,7 +362,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
                 LOG.warn("Couldn't clear tomcat cache using {}", cl.getName(), e);
             }
         } catch (Exception e) {
-            LOG.warn("Couldn't clear tomcat cache using {}", superCl.getName(), e);
+            LOG.warn("Couldn't clear tomcat cache using {}", (superCl != null ? superCl.getName() : null), e);
         }
     }
 

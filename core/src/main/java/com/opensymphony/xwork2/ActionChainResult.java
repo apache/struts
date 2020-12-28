@@ -202,6 +202,10 @@ public class ActionChainResult implements Result {
      * @param invocation the DefaultActionInvocation calling the action call stack
      */
     public void execute(ActionInvocation invocation) throws Exception {
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
         ValueStack stack = invocation.getInvocationContext().getValueStack();
         String finalNamespace = this.namespace != null
                 ? TextParseUtil.translateVariables(namespace, stack)

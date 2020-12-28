@@ -104,9 +104,13 @@ public class GxpResult extends AbstractGxpResult {
     /**
      * Tells the GXP to write itself to the output stream.
      *
-     * @param actionInvocation the action invocation
+     * @param invocation the action invocation
      */
-    public void execute(ActionInvocation actionInvocation) {
+    public void execute(ActionInvocation invocation) {
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
         GxpResourceProvider provider = getProvider();
         try {
             getGxpClosure().write(provider.getWriter(), new GxpContext(provider.getLocale(), outputXml));
@@ -114,7 +118,7 @@ public class GxpResult extends AbstractGxpResult {
             throw new RuntimeException("Exception while rendering "
                     + getGxpName()
                     + " coming from "
-                    + actionInvocation.getAction().getClass().getName() + ".",
+                    + invocation.getAction().getClass().getName() + ".",
                     e);
         }
     }

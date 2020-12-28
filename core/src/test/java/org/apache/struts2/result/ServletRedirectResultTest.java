@@ -23,6 +23,7 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
@@ -376,7 +377,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
      * the desired log warning when an IllegalStateException is thrown for statusCode SC_FOUND.
      */
     public void testSendRedirectSCFoundIllegalStateException() {
-        HttpServletResponse httpServletResponseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
+        HttpServletResponse httpServletResponseMock = createMock(HttpServletResponse.class);
         boolean iseCaught = false;
         view.setLocation("/bar/foo.jsp");
         view.setStatusCode(HttpServletResponse.SC_FOUND);
@@ -429,6 +430,16 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         }
         if (!iseCaught) {
             fail("sendRedirect (SC_MOVED_PERMANENTLY) with forced IllegalStateException did not propagate from setLocation!");
+        }
+    }
+
+    public void testPassingNullInvocation() throws Exception{
+        Result result = new ServletRedirectResult();
+        try {
+            result.execute(null);
+            fail("Exception should be thrown!");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Invocation cannot be null!", e.getMessage());
         }
     }
 

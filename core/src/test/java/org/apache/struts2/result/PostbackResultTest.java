@@ -21,6 +21,7 @@ package org.apache.struts2.result;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -31,7 +32,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import static org.easymock.EasyMock.createControl;
 import static org.easymock.EasyMock.expect;
-
 
 public class PostbackResultTest extends StrutsInternalTestCase {
 
@@ -92,5 +92,16 @@ public class PostbackResultTest extends StrutsInternalTestCase {
 
         control.verify();
     }
+
+    public void testPassingNullInvocation() throws Exception{
+        Result result = new PostbackResult();
+        try {
+            result.execute(null);
+            fail("Exception should be thrown!");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Invocation cannot be null!", e.getMessage());
+        }
+    }
+
 
 }

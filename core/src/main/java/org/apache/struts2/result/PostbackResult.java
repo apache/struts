@@ -110,6 +110,10 @@ public class PostbackResult extends StrutsResultSupport {
 
     @Override
     public void execute(ActionInvocation invocation) throws Exception {
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
         String postbackUri = makePostbackUri(invocation);
         setLocation(postbackUri);
         super.execute(invocation);

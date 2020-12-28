@@ -45,6 +45,10 @@ public interface PlainResult extends Result {
 
     @Override
     default void execute(ActionInvocation invocation) throws Exception {
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
         LOG.debug("Executing plain result");
         ResponseBuilder builder = new ResponseBuilder();
         write(builder);

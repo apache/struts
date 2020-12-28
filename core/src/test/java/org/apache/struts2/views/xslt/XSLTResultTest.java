@@ -19,7 +19,9 @@
 package org.apache.struts2.views.xslt;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -239,6 +241,16 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         String actual = response.getCharacterEncoding();
 
         assertEquals(actual, "ISO-8859-1");
+    }
+
+    public void testPassingNullInvocation() throws Exception{
+        Result result = new XSLTResult();
+        try {
+            result.execute(null);
+            fail("Exception should be thrown!");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Invocation cannot be null!", e.getMessage());
+        }
     }
 
     protected void setUp() throws Exception {

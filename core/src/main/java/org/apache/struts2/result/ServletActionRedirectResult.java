@@ -158,6 +158,10 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
      * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
      */
     public void execute(ActionInvocation invocation) throws Exception {
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
         actionName = conditionalParse(actionName, invocation);
         parseLocation = false;
         if (namespace == null) {

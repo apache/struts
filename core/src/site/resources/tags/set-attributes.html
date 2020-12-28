@@ -19,7 +19,7 @@
             <td align="left" valign="top">action</td>
             <td align="left" valign="top">false</td>
             <td align="left" valign="top">String</td>
-            <td align="left" valign="top">The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.</td>
+            <td align="left" valign="top">The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b> (action scope <em>also</em> adds it to the page scope).</td>
         </tr>
         <tr>
             <td align="left" valign="top">trimBody</td>
@@ -43,6 +43,6 @@
             <td align="left" valign="top"></td>
             <td align="left" valign="top">false</td>
             <td align="left" valign="top">String</td>
-            <td align="left" valign="top">Name used to reference the value pushed into the Value Stack</td>
+            <td align="left" valign="top">Name used to reference the value pushed into the Value Stack (default scope: action,<em>override</em> with the scope attribute).</td>
         </tr>
 </table>

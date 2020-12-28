@@ -154,6 +154,7 @@ pipeline {
           steps {
             sshPublisher(publishers: [
                 sshPublisherDesc(
+                    configName: 'Nightlies',
                     transfers: [
                         sshTransfer(
                             remoteDirectory: '/x1/dist/struts',

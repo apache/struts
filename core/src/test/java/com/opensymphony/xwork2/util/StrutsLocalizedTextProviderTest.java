@@ -327,6 +327,50 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
         testStrutsLocalizedTextProvider.callClearMissingBundlesCache();
     }
 
+    /**
+     * Unit test to confirm the basic behaviour of bundle reload methods provided to
+     * StrutsLocalizedTextProvider (from AbstractLocalizedTextProvider).
+     *
+     * @since 2.6
+     */
+    public void testLocalizedTextProviderReloadMethods() {
+        TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
+        assertTrue("testStrutsLocalizedTextProvider not instance of AbstractLocalizedTextProvider ?",
+            testStrutsLocalizedTextProvider instanceof AbstractLocalizedTextProvider);
+        assertEquals("testStrutsLocalizedTextProvider starting default bundle map size not 0 before any retrievals ?",
+            0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+
+        // Access the two default bundles to populate their cache entries and test bundle map size.
+        ResourceBundle tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+            TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
+        assertNotNull("XWORK_MESSAGES_BUNDLE retrieval null ?", tempBundle);
+        tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+            TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
+        assertNotNull("STRUTS_MESSAGES_BUNDLE retrieval null ?", tempBundle);
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after retrievals ?",
+            2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+
+        // Force a bundle reload call for code coverage and to confirm it causes the bundle map to be emptied.
+        assertNotNull("ActionContext is somehow null ?", ActionContext.getContext());
+        boolean bundlesReloadedBeforeCall = testStrutsLocalizedTextProvider.getBundlesReloadedIndicatorValue();
+        assertFalse("Bundles reload value true before forced reload ?", bundlesReloadedBeforeCall);
+        testStrutsLocalizedTextProvider.callReloadBundlesForceReload();
+        boolean bundlesReloadedAfterCall = testStrutsLocalizedTextProvider.getBundlesReloadedIndicatorValue();
+        assertTrue("Bundles reload value false after forced reload ?", bundlesReloadedAfterCall);
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 0 after reload (which should clear it) ?",
+            0, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+
+        // Access the two default bundles again (after reload) to populate their cache entries and test bundle map size.
+        tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+            TestStrutsLocalizedTextProvider.XWORK_MESSAGES_BUNDLE, Locale.ENGLISH);
+        assertNotNull("XWORK_MESSAGES_BUNDLE retrieval null ?", tempBundle);
+        tempBundle = testStrutsLocalizedTextProvider.findResourceBundle(
+            TestStrutsLocalizedTextProvider.STRUTS_MESSAGES_BUNDLE, Locale.ENGLISH);
+        assertNotNull("STRUTS_MESSAGES_BUNDLE retrieval null ?", tempBundle);
+        assertEquals("testStrutsLocalizedTextProvider bundle map size not 2 after retrievals ?",
+            2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -352,6 +396,13 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
      */
     class TestStrutsLocalizedTextProvider extends StrutsLocalizedTextProvider {
 
+        /**
+         * Some test correctness depends on this {@link #RELOADED} value matching that of the private ancestor
+         * field {@link AbstractLocalizedTextProvider#RELOADED}.  If the ancestor field value changes, ensure this
+         * field's value is updated to match it exactly.
+         */
+        private static final String RELOADED = "com.opensymphony.xwork2.util.LocalizedTextProvider.reloaded";
+
         public void callClearBundleNoLocale(String bundleName) {
             super.clearBundle(bundleName);
         }
@@ -366,6 +417,33 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
 
         public int currentBundlesMapSize() {
             return super.bundlesMap.size();
+        }
+
+        /**
+         * Attempt to force the resource bundles to be reloaded, even if configuration would otherwise prevent it.
+         * It will preserve the current reloadBundles state, attempt to force a reload and then restore the 
+         * original reloadBundles value.
+         */
+        public void callReloadBundlesForceReload() {
+            final boolean originalReloadState = super.reloadBundles;
+            try {
+                super.setReloadBundles(Boolean.TRUE.toString());
+                super.reloadBundles();
+            } finally {
+                super.setReloadBundles(Boolean.toString(originalReloadState));
+            }
+        }
+
+        /**
+         * Returns the value of the resource bundles reloaded state from the context, provided that one was 
+         * previously set.  If no value is found, the result will be false (same as if bundles had not been reloaded).
+         * 
+         * @return true if resource bundles reloaded indicator is true, false otherwise (including if value was never set).
+         */
+        public boolean getBundlesReloadedIndicatorValue() {
+            final ActionContext actionContext = ActionContext.getContext();
+            final Object reloadedObject = actionContext.get(RELOADED);
+            return ((reloadedObject instanceof Boolean) ? ((Boolean) reloadedObject).booleanValue() : false);
         }
     }
 }

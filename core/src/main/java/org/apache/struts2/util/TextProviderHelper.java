@@ -80,17 +80,11 @@ public class TextProviderHelper {
         }
 
         if (msg == null) {
-            // evaluate the defaultMessage as an OGNL expression
-            if (searchStack)
-                msg = stack.findString(defaultMessage);
-            
-            if (msg == null) {
-                // use the defaultMessage literal value
-                msg = defaultMessage;
-                msg = StringEscapeUtils.escapeEcmaScript(msg);
-                msg = StringEscapeUtils.escapeHtml4(msg);
-                LOG.debug("Message for key '{}' is null, returns escaped default message [{}]", key, msg);
-            }
+            // use the defaultMessage literal value
+            msg = defaultMessage;
+            msg = StringEscapeUtils.escapeHtml4(msg);
+            msg = StringEscapeUtils.escapeEcmaScript(msg);
+            LOG.debug("Message for key '{}' is null, returns escaped default message [{}]", key, msg);
 
             if (LOG.isWarnEnabled()) {
                 if (tp != null) {

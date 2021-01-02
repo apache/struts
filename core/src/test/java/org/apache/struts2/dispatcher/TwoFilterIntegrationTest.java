@@ -79,7 +79,7 @@ public class TwoFilterIntegrationTest extends TestCase {
     }
 
     public void testStaticExecute() throws ServletException, IOException {
-        MockHttpServletResponse response = run("/struts/utils.js", filterPrepare, filterExecute, failFilter);
+        MockHttpServletResponse response = run("/static/utils.js", filterPrepare, filterExecute, failFilter);
         assertEquals(200, response.getStatus());
         assertTrue(response.getContentAsString().contains("StrutsUtils"));
     }

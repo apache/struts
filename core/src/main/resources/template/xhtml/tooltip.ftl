@@ -23,7 +23,7 @@
       <#if parameters.tooltipIconPath??><#t/>
       	src='<@s.url value="${parameters.tooltipIconPath}" includeParams="none" encode="false" />'
       <#else><#t/>
-      	src='<@s.url value="/struts/tooltip.gif" includeParams="none" encode="false" />'
+      	src='<@s.url value="${parameters.staticContentPath}/tooltip.gif" includeParams="none" encode="false" />'
       </#if><#t/>
       <#if (parameters.jsTooltipEnabled!'false') == 'true'>
           onmouseover="domTT_activate(this, event, 'content', '<#outputformat 'JavaScript'>${parameters.tooltip}</#outputformat>'<#t/>

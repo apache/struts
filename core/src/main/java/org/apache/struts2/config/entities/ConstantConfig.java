@@ -143,6 +143,7 @@ public class ConstantConfig {
     private BeanConfig localizedTextProvider;
     private Boolean disallowProxyMemberAccess;
     private Integer ognlAutoGrowthCollectionLimit;
+    private String staticContentPath;
 
     protected String beanConfToString(BeanConfig beanConf) {
         return beanConf == null ? null : beanConf.getName();
@@ -273,6 +274,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_LOCALIZED_TEXT_PROVIDER, beanConfToString(localizedTextProvider));
         map.put(StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Objects.toString(disallowProxyMemberAccess, null));
         map.put(StrutsConstants.STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT, Objects.toString(ognlAutoGrowthCollectionLimit, null));
+        map.put(StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, Objects.toString(staticContentPath, null));
 
         return map;
     }
@@ -1343,5 +1345,13 @@ public class ConstantConfig {
 
     public void setOgnlAutoGrowthCollectionLimit(Integer ognlAutoGrowthCollectionLimit) {
         this.ognlAutoGrowthCollectionLimit = ognlAutoGrowthCollectionLimit;
+    }
+
+    public String getStaticContentPath() {
+        return staticContentPath;
+    }
+
+    public void setStaticContentPath(String staticContentPath) {
+        this.staticContentPath = staticContentPath;
     }
 }

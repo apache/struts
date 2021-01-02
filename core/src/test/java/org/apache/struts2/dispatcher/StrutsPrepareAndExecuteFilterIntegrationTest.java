@@ -179,7 +179,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest extends TestCase {
             }
         };
 
-        request.setRequestURI("/struts/utils.js");
+        request.setRequestURI("/static/utils.js");
         StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter();
         filter.init(filterConfig);
         filter.doFilter(request, response, filterChain);

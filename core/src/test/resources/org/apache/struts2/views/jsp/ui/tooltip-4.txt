@@ -4,7 +4,7 @@
 			<td class="tdLabel">
 				<labelfor="myId"class="label">
 					MyLabel:<img
-								src='/struts/tooltip/myTooltip.gif'
+								src='/static/tooltip/myTooltip.gif'
 								title="myTooltip" alt="myTooltip" />
 				</label>
 			</td>

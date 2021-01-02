@@ -317,7 +317,7 @@ import java.util.Map;
  *    <tr>
  *      <td>tooltipIcon</td>
  *      <td>String</td>
- *      <td>/struts/static/tooltip/tooltip.gif</td>
+ *      <td>/static/tooltip/tooltip.gif</td>
  *      <td>The url to the tooltip icon</td>
  *   <tr>
  *      <td>tooltipDelay</td>
@@ -506,6 +506,8 @@ public abstract class UIBean extends Component {
     protected String defaultTemplateDir;
     protected String defaultUITheme;
     protected String uiThemeExpansionToken;
+    protected String uiStaticContentPath;
+
     protected TemplateEngineManager templateEngineManager;
 
     @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
@@ -521,6 +523,11 @@ public abstract class UIBean extends Component {
     @Inject(StrutsConstants.STRUTS_UI_THEME_EXPANSION_TOKEN)
     public void setUIThemeExpansionToken(String uiThemeExpansionToken) {
         this.uiThemeExpansionToken = uiThemeExpansionToken;
+    }
+
+    @Inject(StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH)
+    public void setUiStaticContentPath(String uiStaticContentPath) {
+        this.uiStaticContentPath = uiStaticContentPath;
     }
 
     @Inject
@@ -644,6 +651,8 @@ public abstract class UIBean extends Component {
         addParameter("dynamicAttributes", dynamicAttributes);
         addParameter("themeExpansionToken", uiThemeExpansionToken);
         addParameter("expandTheme", uiThemeExpansionToken + theme);
+
+        addParameter("staticContentPath", findString(uiStaticContentPath));
 
         String name = null;
         String providedLabel = null;

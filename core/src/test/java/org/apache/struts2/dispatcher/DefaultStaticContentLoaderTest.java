@@ -103,13 +103,14 @@ public class DefaultStaticContentLoaderTest extends StrutsInternalTestCase {
     }
 
     protected void setUp() {
-        requestMock = (HttpServletRequest) createMock(HttpServletRequest.class);
-        responseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
-        hostConfigMock = (HostConfig) createMock(HostConfig.class);
+        requestMock = createMock(HttpServletRequest.class);
+        responseMock = createMock(HttpServletResponse.class);
+        hostConfigMock = createMock(HostConfig.class);
         expect(hostConfigMock.getInitParameter("packages")).andStubReturn(null);
         expect(hostConfigMock.getInitParameter("loggerFactory")).andStubReturn(null);
         defaultStaticContentLoader = new DefaultStaticContentLoader();
         defaultStaticContentLoader.setHostConfig(hostConfigMock);
         defaultStaticContentLoader.setEncoding("UTF-8");
+        defaultStaticContentLoader.setStaticContentPath("/static");
     }
 }

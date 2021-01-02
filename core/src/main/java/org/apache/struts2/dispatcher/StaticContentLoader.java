@@ -39,12 +39,12 @@ public interface StaticContentLoader {
      * @param path Requested resource path
      * @return true if this loader is able to load this type of resource, false otherwise
      */
-    public boolean canHandle(String path);
+    boolean canHandle(String path);
 
     /**
      * @param filterConfig The filter configuration
      */
-    public abstract void setHostConfig(HostConfig filterConfig);
+    void setHostConfig(HostConfig filterConfig);
 
     /**
      * Locate a static resource and copy directly to the response, setting the
@@ -55,7 +55,6 @@ public interface StaticContentLoader {
      * @param response The response
      * @throws IOException If anything goes wrong
      */
-    public abstract void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
-            throws IOException;
+    void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 }

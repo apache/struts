@@ -85,7 +85,7 @@ public class XWorkListPropertyAccessorTest extends XWorkTestCase {
 
     public void testDeprecatedAutoGrowCollectionLimit() {
         PropertyAccessor accessor = container.getInstance(PropertyAccessor.class, ArrayList.class.getName());
-        ((XWorkListPropertyAccessor) accessor).setDeprecatedAutoGrowCollectionLimit("2");
+        ((XWorkListPropertyAccessor) accessor).setAutoGrowCollectionLimit("2");
 
         List<String> myList = new ArrayList<>();
         ListHolder listHolder = new ListHolder();

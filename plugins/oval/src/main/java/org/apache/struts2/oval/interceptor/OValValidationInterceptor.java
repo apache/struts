@@ -55,6 +55,9 @@ import java.util.Map;
  This interceptor provides validation using the OVal validation framework
  */
 public class OValValidationInterceptor extends MethodFilterInterceptor {
+
+    public static final String STRUTS_OVAL_VALIDATE_JPAANNOTATIONS = "struts.oval.validateJPAAnnotations";
+
     private static final Logger LOG = LogManager.getLogger(OValValidationInterceptor.class);
 
     protected final static String VALIDATE_PREFIX = "validate";
@@ -85,7 +88,7 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     /**
      * Enable OVal support for JPA
      */
-    @Inject(value = "struts.oval.validateJPAAnnotations")
+    @Inject(value = STRUTS_OVAL_VALIDATE_JPAANNOTATIONS)
     public void setValidateJPAAnnotations(String validateJPAAnnotations) {
         this.validateJPAAnnotations = Boolean.parseBoolean(validateJPAAnnotations);
     }

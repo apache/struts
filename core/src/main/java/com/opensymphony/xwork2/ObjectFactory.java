@@ -31,6 +31,7 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.validator.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class ObjectFactory implements Serializable {
         this.container = container;
     }
 
-    @Inject(value="objectFactory.classloader", required=false)
+    @Inject(value= StrutsConstants.STRUTS_OBJECT_FACTORY_CLASSLOADER, required=false)
     public void setClassLoader(ClassLoader cl) {
         this.ccl = cl;
     }

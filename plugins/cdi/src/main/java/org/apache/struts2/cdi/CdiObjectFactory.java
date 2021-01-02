@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CdiObjectFactory extends ObjectFactory {
 
-    private static final Logger LOG = LogManager.getLogger(CdiObjectFactory.class);
+	private static final Logger LOG = LogManager.getLogger(CdiObjectFactory.class);
 
     /**
      * The key under which the BeanManager can be found according to CDI API docs
@@ -60,10 +60,11 @@ public class CdiObjectFactory extends ObjectFactory {
 	 */
 	public static final String CDI_JNDIKEY_BEANMANAGER_COMP_ENV = "java:comp/env/BeanManager";
 
+	public static final String STRUTS_OBJECT_FACTORY_CDI_JNDI_KEY = "struts.objectFactory.cdi.jndiKey";
 
 	private String jndiKey;
 
-	@Inject(value = "struts.objectFactory.cdi.jndiKey", required = false)
+	@Inject(value = STRUTS_OBJECT_FACTORY_CDI_JNDI_KEY, required = false)
 	public void setJndiKey( String jndiKey ) {
 		this.jndiKey = jndiKey;
 	}

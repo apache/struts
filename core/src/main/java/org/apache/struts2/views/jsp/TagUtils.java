@@ -23,6 +23,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ApplicationMap;
@@ -40,6 +42,8 @@ import javax.servlet.jsp.PageContext;
 import java.util.Map;
 
 public class TagUtils {
+
+    private static final Logger LOG = LogManager.getLogger(TagUtils.class);
 
     public static ValueStack getStack(PageContext pageContext) {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
@@ -88,6 +92,9 @@ public class TagUtils {
         ActionInvocation invocation = context.getActionInvocation();
 
         if (invocation == null) {
+            TagUtils.LOG.warn("ActionInvocation is null, tag has been executed out of the Action and this can lead " +
+                "to a security vulnerability, please read http://struts.apache.org/security/#never-expose-jsp-files-directly !");
+
             ActionMapping mapping = mapper.getMapping(request,
                     Dispatcher.getInstance().getConfigurationManager());
 

@@ -46,27 +46,6 @@ public class TextProviderHelper {
      * @return the message if found, otherwise the defaultMessage
      */
     public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack) {
-        return getText(key, defaultMessage, args, stack, false);
-    }
-
-    /**
-     * <p>Get a message from the first TextProvider encountered in the stack.
-     * If the first TextProvider doesn't provide the message the default message is returned.</p>
-     * <p>The search for a TextProvider is iterative from the root of the stack.</p>
-     * <p>This method was refactored from  {@link org.apache.struts2.components.Text} to use a
-     * consistent implementation across UIBean components.</p>
-     * @param key             the message key in the resource bundle
-     * @param defaultMessage  the message to return if not found (evaluated for OGNL)
-     * @param args            an array args to be used in a {@link java.text.MessageFormat} message
-     * @param stack           the value stack to use for finding the text
-     * @param searchStack     search stack for the key
-     *
-     * @return the message if found, otherwise the defaultMessage
-     *
-     * @deprecated The stack should never be searched for the key. Use the version without the searchStack boolean instead.
-     */
-    @Deprecated
-    public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack, boolean searchStack) {
         String msg = null;
         TextProvider tp = null;
 

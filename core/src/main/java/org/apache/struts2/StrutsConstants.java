@@ -35,6 +35,17 @@ public final class StrutsConstants {
     /** The encoding to use for localization messages */
     public static final String STRUTS_I18N_ENCODING = "struts.i18n.encoding";
 
+    /** 
+     * Whether the default bundles should be searched for messages first.  Can be used to modify the
+     * standard processing order for message lookup in TextProvider implementations.
+     * <p>
+     * Note: This control flag may not be meaningful to all provider implementations, and should be false by default.
+     * </p>
+     * 
+     * @since 2.6
+     */
+    public static final String STRUTS_I18N_SEARCH_DEFAULTBUNDLES_FIRST = "struts.i18n.search.defaultbundles.first";
+
     /** Whether to reload the XML configuration or not */
     public static final String STRUTS_CONFIGURATION_XML_RELOAD = "struts.configuration.xml.reload";
 

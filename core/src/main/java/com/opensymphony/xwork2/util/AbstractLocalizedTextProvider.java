@@ -61,6 +61,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     protected final ConcurrentMap<String, ResourceBundle> bundlesMap = new ConcurrentHashMap<>();
     protected boolean devMode = false;
     protected boolean reloadBundles = false;
+    protected boolean searchDefaultBundlesFirst = false;  // Search default resource bundles first.  Note: This flag may not be meaningful to all implementations.
 
     private final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
@@ -68,7 +69,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
 
     /**
-     * Add's the bundle to the internal list of default bundles.
+     * Adds the bundle to the internal list of default bundles.
      * If the bundle already exists in the list it will be re-added.
      *
      * @param resourceBundleName the name of the bundle to add.
@@ -431,6 +432,20 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
+     * Set the {@link #searchDefaultBundlesFirst} flag state.  This flag may be used by descendant TextProvider
+     * implementations to determine if default bundles should be searched for messages first (before the standard
+     * flow of the {@link LocalizedTextProvider} implementation the descendant provides).
+     * 
+     * @param searchDefaultBundlesFirst provide {@link String} "true" or "false" to set the flag state accordingly.
+     * 
+     * @since 2.6
+     */
+    @Inject(value = StrutsConstants.STRUTS_I18N_SEARCH_DEFAULTBUNDLES_FIRST, required = false)
+    public void setSearchDefaultBundlesFirst(String searchDefaultBundlesFirst) {
+        this.searchDefaultBundlesFirst = Boolean.parseBoolean(searchDefaultBundlesFirst);
+    }
+
+    /**
      * Finds the given resource bundle by it's name.
      * <p>
      * Will use <code>Thread.currentThread().getContextClassLoader()</code> as the classloader.
@@ -549,6 +564,42 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     }
 
     /**
+     * A helper method that can be used by descendant classes to perform some common two-stage message lookup operations
+     * against the default resource bundles.  The default resource bundles are searched for a value using key first, then
+     * alternateKey when the first search fails, then utilizing defaultMessage (which may be <code>null</code>) if <em>both</em>
+     * key lookup operations fail.
+     * 
+     * <p>
+     * A known use case is when a key indexes a collection (e.g. user.phone[0]) for which some specific keys may exist, but not all,
+     * along with a general key (e.g. user.phone[*]).  In such cases the specific key would be passed in the key parameter and the
+     * general key would be passed in the alternateKey parameter.
+     * </p>
+     * 
+     * @param key             the initial key to search for a value within the default resource bundles.
+     * @param alternateKey    the alternate (fall-back) key to search for a value within the default resource bundles, if the initial key lookup fails.
+     * @param locale          the {@link Locale} to be used for the default resource bundle lookup.
+     * @param valueStack      the {@link ValueStack} associated with the operation. 
+     * @param args            the argument array for parameterized messages (may be <code>null</code>).
+     * @param defaultMessage  the default message {@link String} to use if both key lookup operations fail.
+     * @return the {@link GetDefaultMessageReturnArg} result containing the processed message lookup (by key first, then alternateKey if key's lookup fails).
+     *         If both key lookup operations fail, defaultMessage is used for processing.
+     *         If defaultMessage is <code>null</code> then the return result may be <code>null</code>.
+     */
+    protected GetDefaultMessageReturnArg getDefaultMessageWithAlternateKey(String key, String alternateKey, Locale locale, ValueStack valueStack,
+            Object[] args, String defaultMessage) {
+        GetDefaultMessageReturnArg result;
+        if (alternateKey == null || alternateKey.isEmpty()) {
+            result = getDefaultMessage(key, locale, valueStack, args, defaultMessage);
+        } else {
+            result = getDefaultMessage(key, locale, valueStack, args, null);
+            if (result == null || result.message == null) {
+                result = getDefaultMessage(alternateKey, locale, valueStack, args, defaultMessage);
+            }
+        }
+        return result;
+    }
+
+    /**
      * @return the message from the named resource bundle.
      */
     protected String getMessage(String bundleName, Locale locale, String key, ValueStack valueStack, Object[] args) {
@@ -556,12 +607,14 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         if (bundle == null) {
             return null;
         }
-        if (valueStack != null)
+        if (valueStack != null) {
             reloadBundles(valueStack.getContext());
+        }
         try {
-        	String message = bundle.getString(key);
-        	if (valueStack != null)
-        		message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
+            String message = bundle.getString(key);
+            if (valueStack != null) {
+                message = TextParseUtil.translateVariables(bundle.getString(key), valueStack);
+            }
             MessageFormat mf = buildMessageFormat(message, locale);
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException e) {

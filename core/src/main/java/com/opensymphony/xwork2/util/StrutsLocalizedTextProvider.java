@@ -27,9 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.beans.PropertyDescriptor;
-import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
@@ -122,6 +120,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * </p>
      *
      * <ol>
+     * <li>If {@link #searchDefaultBundlesFirst} is <code>true</code>, look for the message in the default resource bundles first.</li>
      * <li>Look for message in aClass' class hierarchy.
      * <ol>
      * <li>Look for the message in a resource bundle for aClass</li>
@@ -133,10 +132,11 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * <li>If not found, look for message in child property.  This is determined by evaluating
      * the message key as an OGNL expression.  For example, if the key is
      * <i>user.address.state</i>, then it will attempt to see if "user" can be resolved into an
-     * object.  If so, repeat the entire process fromthe beginning with the object's class as
+     * object.  If so, repeat the entire process from the beginning with the object's class as
      * aClass and "address.state" as the message key.</li>
      * <li>If not found, look for the message in aClass' package hierarchy.</li>
-     * <li>If still not found, look for the message in the default resource bundles.</li>
+     * <li>If still not found, look for the message in the default resource bundles 
+     * (Note: the lookup is not repeated again if {@link #searchDefaultBundlesFirst} was <code>true</code>).</li>
      * <li>Return defaultMessage</li>
      * </ol>
      *
@@ -175,6 +175,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * </p>
      *
      * <ol>
+     * <li>If {@link #searchDefaultBundlesFirst} is <code>true</code>, look for the message in the default resource bundles first.</li>
      * <li>Look for message in aClass' class hierarchy.
      * <ol>
      * <li>Look for the message in a resource bundle for aClass</li>
@@ -186,10 +187,11 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * <li>If not found, look for message in child property.  This is determined by evaluating
      * the message key as an OGNL expression.  For example, if the key is
      * <i>user.address.state</i>, then it will attempt to see if "user" can be resolved into an
-     * object.  If so, repeat the entire process fromthe beginning with the object's class as
+     * object.  If so, repeat the entire process from the beginning with the object's class as
      * aClass and "address.state" as the message key.</li>
      * <li>If not found, look for the message in aClass' package hierarchy.</li>
-     * <li>If still not found, look for the message in the default resource bundles.</li>
+     * <li>If still not found, look for the message in the default resource bundles 
+     * (Note: the lookup is not repeated again if {@link #searchDefaultBundlesFirst} was <code>true</code>).</li>
      * <li>Return defaultMessage</li>
      * </ol>
      *
@@ -205,7 +207,7 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * </p>
      *
      * <p>
-     * If a message is <b>not</b> found a WARN log will be logged.
+     * If a message is <b>not</b> found a DEBUG level log warning will be logged.
      * </p>
      *
      * @param aClass         the class whose name to use as the start point for the search
@@ -237,6 +239,20 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
                 String a = indexedTextName.substring(0, i);
                 String b = indexedTextName.substring(j);
                 indexedTextName = a + "[*" + b;
+            }
+        }
+
+        // Allow for and track an early lookup for the message in the default resource bundles first, before searching the class hierarchy.
+        // The early lookup is only performed when the text provider has been configured to do so, otherwise follow the standard processing order.
+        boolean performedInitialDefaultBundlesMessageLookup = false;
+        GetDefaultMessageReturnArg result = null;
+
+        // If search default bundles first is set true, call alternative logic first.
+        if (searchDefaultBundlesFirst) {
+            result = getDefaultMessageWithAlternateKey(aTextName, indexedTextName, locale, valueStack, args, defaultMessage);
+            performedInitialDefaultBundlesMessageLookup = true;
+            if (!unableToFindTextForKey(result)) {
+                return result.message;  // Found a message in the default resource bundles for aTextName or indexedTextName.
             }
         }
 
@@ -342,15 +358,10 @@ public class StrutsLocalizedTextProvider extends AbstractLocalizedTextProvider {
         }
 
         // get default
-        GetDefaultMessageReturnArg result;
-        if (indexedTextName == null) {
-            result = getDefaultMessage(aTextName, locale, valueStack, args, defaultMessage);
-        } else {
-            result = getDefaultMessage(aTextName, locale, valueStack, args, null);
-            if (result != null && result.message != null) {
-                return result.message;
-            }
-            result = getDefaultMessage(indexedTextName, locale, valueStack, args, defaultMessage);
+        // Note: The default bundles lookup may already have been performed (via alternate early lookup),
+        //       so we check first to avoid repeating the same operation twice.
+        if (!performedInitialDefaultBundlesMessageLookup) {
+            result = getDefaultMessageWithAlternateKey(aTextName, indexedTextName, locale, valueStack, args, defaultMessage);
         }
 
         // could we find the text, if not log a warn

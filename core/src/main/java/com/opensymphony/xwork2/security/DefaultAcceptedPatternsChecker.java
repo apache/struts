@@ -36,11 +36,11 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     private static final Logger LOG = LogManager.getLogger(DefaultAcceptedPatternsChecker.class);
 
     public static final String[] ACCEPTED_PATTERNS = {
-            "\\w+((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*"
+            "\\w+((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w-?|[\\u4e00-\\u9fa5]-?)+'])|(\\('(\\w-?|[\\u4e00-\\u9fa5]-?)+'\\)))*"
     };
 
     public static final String[] DMI_AWARE_ACCEPTED_PATTERNS = {
-            "\\w+([:]?\\w+)?((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*([!]?\\w+)?"
+            "\\w+([:]?\\w+)?((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w-?|[\\u4e00-\\u9fa5]-?)+'])|(\\('(\\w-?|[\\u4e00-\\u9fa5]-?)+'\\)))*([!]?\\w+)?"
     };
 
     private Set<Pattern> acceptedPatterns;

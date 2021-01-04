@@ -69,7 +69,7 @@ public class ObjectFactory implements Serializable {
         this.container = container;
     }
 
-    @Inject(value= StrutsConstants.STRUTS_OBJECT_FACTORY_CLASSLOADER, required=false)
+    @Inject(value=StrutsConstants.STRUTS_OBJECT_FACTORY_CLASSLOADER, required=false)
     public void setClassLoader(ClassLoader cl) {
         this.ccl = cl;
     }

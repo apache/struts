@@ -106,7 +106,7 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
         AcceptedPatternsChecker.IsAccepted actual = checker.isAccepted("mapParam['param-1']");
 
         // then
-        assertTrue("Param with dasf wasn't accepted!", actual.isAccepted());
+        assertTrue("Param with dash wasn't accepted!", actual.isAccepted());
 
         // when
         actual = checker.isAccepted("mapParam['-param-1']");

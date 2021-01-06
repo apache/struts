@@ -18,6 +18,10 @@
  */
 package org.apache.struts2.dispatcher;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.StrutsBeanSelectionProvider;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +38,12 @@ import java.io.IOException;
  * Check {@link StrutsBeanSelectionProvider} for more details.
  */
 public interface StaticContentLoader {
+
+    /**
+     * Default path at which static content is served, can be changed
+     * by using {@link org.apache.struts2.StrutsConstants#STRUTS_UI_STATIC_CONTENT_PATH}
+     */
+    String DEFAULT_STATIC_CONTENT_PATH = "/static";
 
     /**
      * @param path Requested resource path
@@ -57,4 +67,32 @@ public interface StaticContentLoader {
      */
     void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
+    class Validator {
+
+        private static final Logger LOG = LogManager.getLogger(DefaultStaticContentLoader.class);
+
+        public static String validateStaticContentPath(String uiStaticContentPath) {
+            if (StringUtils.isBlank(uiStaticContentPath)) {
+                LOG.warn("\"{}\" has been set to \"{}\", falling back into default value \"{}\"",
+                    StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH,
+                    uiStaticContentPath,
+                    StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH);
+                return StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH;
+            } else if ("/".equals(uiStaticContentPath)) {
+                LOG.warn("\"{}\" cannot be set to \"{}\", falling back into default value \"{}\"",
+                    StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH,
+                    uiStaticContentPath,
+                    StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH);
+                return StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH;
+            } else if(!uiStaticContentPath.startsWith("/")) {
+                LOG.warn("\"{}\" must start with \"/\", but has been set to \"{}\", prepending the missing \"/\"!",
+                    StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH,
+                    uiStaticContentPath);
+                return "/" + uiStaticContentPath;
+            } else {
+                LOG.debug("\"{}\" has been set to \"{}\"", StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, uiStaticContentPath);
+                return uiStaticContentPath;
+            }
+        }
+    }
 }

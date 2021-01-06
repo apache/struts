@@ -18,11 +18,17 @@
  */
 package org.apache.struts2.config.entities;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TestBean;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.components.TextField;
+import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,6 +113,32 @@ public class ConstantConfigTest {
             map.get(StrutsConstants.STRUTS_EXCLUDED_CLASSES));
         Assert.assertEquals("java.lang.Object,java.lang.Runtime,java.lang.System",
             map.get(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES));
+    }
+
+    @Test
+    public void testSettingStaticContentPath() {
+        // given
+        ConstantConfig config = new ConstantConfig();
+
+        // when
+        config.setStaticContentPath(null);
+        // then
+        Assert.assertEquals(StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH, config.getStaticContentPath());
+
+        // when
+        config.setStaticContentPath(" ");
+        // then
+        Assert.assertEquals(StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH, config.getStaticContentPath());
+
+        // when
+        config.setStaticContentPath("content");
+        // then
+        Assert.assertEquals("/content", config.getStaticContentPath());
+
+        // when
+        config.setStaticContentPath("/content");
+        // then
+        Assert.assertEquals("/content", config.getStaticContentPath());
     }
 
 }

@@ -30,6 +30,7 @@ import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
+import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.util.TextProviderHelper;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.ContextUtil;
@@ -526,8 +527,8 @@ public abstract class UIBean extends Component {
     }
 
     @Inject(StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH)
-    public void setUiStaticContentPath(String uiStaticContentPath) {
-        this.uiStaticContentPath = uiStaticContentPath;
+    public void setStaticContentPath(String uiStaticContentPath) {
+        this.uiStaticContentPath = StaticContentLoader.Validator.validateStaticContentPath(uiStaticContentPath);
     }
 
     @Inject

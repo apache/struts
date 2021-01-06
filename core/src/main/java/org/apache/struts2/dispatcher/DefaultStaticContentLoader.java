@@ -48,7 +48,7 @@ import java.util.StringTokenizer;
  *
  * <p>
  * This class is used to serve common static content needed when using various parts of Struts, such as JavaScript
- * files, CSS files, etc. It works by looking for requests to {@link #staticContentPath}/*  and then mapping the value
+ * files, CSS files, etc. It works by looking for requests to {@link #uiStaticContentPath}/*  and then mapping the value
  * after to common packages in Struts and, optionally, in your class path. By default, the following packages are
  * automatically searched:
  * </p>
@@ -60,7 +60,7 @@ import java.util.StringTokenizer;
  * </ul>
  *
  * <p>
- * This means that you can simply request {@link #staticContentPath}/xhtml/styles.css and the XHTML UI theme's default stylesheet
+ * This means that you can simply request {@link #uiStaticContentPath}/xhtml/styles.css and the XHTML UI theme's default stylesheet
  * will be returned. Likewise, many of the AJAX UI components require various JavaScript files, which are found in the
  * org.apache.struts2.static package. If you wish to add additional packages to be searched, you can add a comma
  * separated (space, tab and new line will do as well) list in the filter init parameter named "packages". <b>Be
@@ -86,9 +86,9 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     protected boolean serveStatic;
 
     /**
-     * Store state of StrutsConstants.STRUTS_STATIC_CONTENT_PATH setting.
+     * Store state of {@link StrutsConstants#STRUTS_UI_STATIC_CONTENT_PATH} setting.
      */
-    protected String staticContentPath;
+    protected String uiStaticContentPath;
 
     /**
      * Store state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE setting.
@@ -118,8 +118,8 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     }
 
     @Inject(StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH)
-    public void setStaticContentPath(String staticContentPath) {
-        this.staticContentPath = staticContentPath;
+    public void setStaticContentPath(String uiStaticContentPath) {
+        this.uiStaticContentPath = StaticContentLoader.Validator.validateStaticContentPath(uiStaticContentPath);
     }
 
     /**
@@ -238,7 +238,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             LOG.warn("Unable to send error response, code: {};", HttpServletResponse.SC_NOT_FOUND, e1);
         } catch (IllegalStateException ise) {
             // Log illegalstate instead of passing unrecoverable exception to calling thread
-            LOG.warn("Unable to send error response, code: {}; isCommited: {};", HttpServletResponse.SC_NOT_FOUND, response.isCommitted(), ise);
+            LOG.warn("Unable to send error response, code: {}; isCommitted: {};", HttpServletResponse.SC_NOT_FOUND, response.isCommitted(), ise);
         }
     }
 
@@ -298,7 +298,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * Look for a static resource in the classpath.
      *
      * @param path The resource path
-     * @return The inputstream of the resource
+     * @return The URL of the resource
      * @throws IOException If there is a problem locating the resource
      */
     protected URL findResource(String path) throws IOException {
@@ -368,16 +368,16 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     }
 
     public boolean canHandle(String resourcePath) {
-        return serveStatic && resourcePath.startsWith(staticContentPath + "/");
+        return serveStatic && resourcePath.startsWith(uiStaticContentPath + "/");
     }
 
     /**
      * @param path requested path
-     * @return path without leading {@link #staticContentPath}
+     * @return path without leading {@link #uiStaticContentPath}
      */
     protected String cleanupPath(String path) {
-        if (path.startsWith(staticContentPath)) {
-            return path.substring(staticContentPath.length());
+        if (path.startsWith(uiStaticContentPath)) {
+            return path.substring(uiStaticContentPath.length());
         } else {
             return path;
         }

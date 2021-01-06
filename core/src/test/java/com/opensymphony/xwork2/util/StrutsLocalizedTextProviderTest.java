@@ -371,6 +371,196 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
             2, testStrutsLocalizedTextProvider.currentBundlesMapSize());
     }
 
+    /**
+     * Test the {@link StrutsLocalizedTextProvider#searchDefaultBundlesFirst} flag behaviour for basic correctness.
+     */
+    public void testSetSearchDefaultBundlesFirst() {
+        TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
+        assertFalse("Default setSearchDefaultBundlesFirst state is not false ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+        testStrutsLocalizedTextProvider.setSearchDefaultBundlesFirst(Boolean.TRUE.toString());
+        assertTrue("The setSearchDefaultBundlesFirst state is not true after explicit set ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+        testStrutsLocalizedTextProvider.setSearchDefaultBundlesFirst(Boolean.FALSE.toString());
+        assertFalse("The setSearchDefaultBundlesFirst state is not false after explicit set ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+        testStrutsLocalizedTextProvider.setSearchDefaultBundlesFirst("invalidstring");
+        assertFalse("The setSearchDefaultBundlesFirst state is not false after set with invalid value ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+    }
+
+    /**
+     * Test the {@link StrutsLocalizedTextProvider#getDefaultMessageWithAlternateKey(java.lang.String, java.lang.String, java.util.Locale, com.opensymphony.xwork2.util.ValueStack, java.lang.Object[], java.lang.String)}
+     * method for basic correctness.
+     */
+    public void testGetDefaultMessageWithAlternateKey() {
+        final String DEFAULT_MESSAGE = "This is the default message.";
+        final String DEFAULT_MESSAGE_WITH_PARAMS = DEFAULT_MESSAGE + "  We provide a couple of parameter placeholders: -{0}- and -{1}- for fun.";
+        final String param1 = "param1_String";
+        final String param2 = "param2_String";
+        final String[] paramArray = { param1, param2 };
+        TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
+
+        // Load some specific default bundles already provided and used by other tests within this module.
+        testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
+        testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/util/Bar");
+        testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/util/FindMe");
+
+        // Perform some standard checks on message retrieval using null or nonexistent keys and various default message combinations.
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        AbstractLocalizedTextProvider.GetDefaultMessageReturnArg getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey(null, null, Locale.ENGLISH, valueStack, null, null);
+        assertNull("GetDefaultMessageReturnArg result not null with null keys and null default message ?", getDefaultMessageReturnArg);
+        getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey("key_does_not_exist", "alternateKey_does_not_exist", Locale.ENGLISH, valueStack, null, null);
+        assertNull("GetDefaultMessageReturnArg result not null with nonexistent keys and null default message ?", getDefaultMessageReturnArg);
+        getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey("key_does_not_exist", "alternateKey_does_not_exist", Locale.ENGLISH, valueStack, null, DEFAULT_MESSAGE);
+        assertNotNull("GetDefaultMessageReturnArg result is null with nonexistent keys and non-null default message ?", getDefaultMessageReturnArg);
+        assertFalse("GetDefaultMessageReturnArg result with nonexistent keys indicates message found in bundle ?", getDefaultMessageReturnArg.foundInBundle);
+        assertEquals("GetDefaultMessageReturnArg result with nonexistent keys indicates message found in bundle ?", DEFAULT_MESSAGE, getDefaultMessageReturnArg.message);
+        getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey("key_does_not_exist", "alternateKey_does_not_exist", Locale.ENGLISH, valueStack, paramArray, DEFAULT_MESSAGE_WITH_PARAMS);
+        assertNotNull("GetDefaultMessageReturnArg result is null with nonexistent keys and non-null default message ?", getDefaultMessageReturnArg);
+        assertFalse("GetDefaultMessageReturnArg result with nonexistent keys indicates message found in bundle ?", getDefaultMessageReturnArg.foundInBundle);
+        assertNotNull("GetDefaultMessageReturnArg result message is null ?", getDefaultMessageReturnArg.message);
+        assertTrue("GetDefaultMessageReturnArg result message does not contain deafult message ?", getDefaultMessageReturnArg.message.contains(DEFAULT_MESSAGE));
+        assertTrue("GetDefaultMessageReturnArg result message does not contain param1 ?", getDefaultMessageReturnArg.message.contains(param1));
+        assertTrue("GetDefaultMessageReturnArg result message does not contain param2 ?", getDefaultMessageReturnArg.message.contains(param2));
+
+        // Perform some checks where the initial key is null or does not exist in the default bundles, but the alternate key does.
+        getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey(null, "username", Locale.ENGLISH, valueStack, paramArray, null);
+        assertNotNull("GetDefaultMessageReturnArg result is null with alternate key that exists ?", getDefaultMessageReturnArg);
+        assertTrue("GetDefaultMessageReturnArg result with alternate key that exists indicates message not found in bundle ?", getDefaultMessageReturnArg.foundInBundle);
+        assertTrue("GetDefaultMessageReturnArg result with alternate key that exists indicates message is null or empty ?", (getDefaultMessageReturnArg.message != null && !getDefaultMessageReturnArg.message.isEmpty()));
+        assertEquals("GetDefaultMessageReturnArg result with alternate key 'username' not as expected ?", "Santa", getDefaultMessageReturnArg.message);
+        getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey("key_does_not_exist", "invalid.fieldvalue.title", Locale.ENGLISH, valueStack, paramArray, null);
+        assertNotNull("GetDefaultMessageReturnArg result is null with alternate key that exists ?", getDefaultMessageReturnArg);
+        assertTrue("GetDefaultMessageReturnArg result with alternate key that exists indicates message not found in bundle ?", getDefaultMessageReturnArg.foundInBundle);
+        assertTrue("GetDefaultMessageReturnArg result with alternate key that exists indicates message is null or empty ?", (getDefaultMessageReturnArg.message != null && !getDefaultMessageReturnArg.message.isEmpty()));
+        assertEquals("GetDefaultMessageReturnArg result with alternate key 'invalid.fieldvalue.title' not as expected ?", "Title is invalid!", getDefaultMessageReturnArg.message);
+
+        // Perform some checks where the initial key exists, but the alternate key is null or nonexistent.
+        getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey("username", null, Locale.ENGLISH, valueStack, paramArray, null);
+        assertNotNull("GetDefaultMessageReturnArg result is null with key that exists ?", getDefaultMessageReturnArg);
+        assertTrue("GetDefaultMessageReturnArg result with key that exists indicates message not found in bundle ?", getDefaultMessageReturnArg.foundInBundle);
+        assertTrue("GetDefaultMessageReturnArg result with key that exists indicates message is null or empty ?", (getDefaultMessageReturnArg.message != null && !getDefaultMessageReturnArg.message.isEmpty()));
+        assertEquals("GetDefaultMessageReturnArg result with key 'username' not as expected ?", "Santa", getDefaultMessageReturnArg.message);
+        getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey("invalid.fieldvalue.title", "key_does_not_exist", Locale.ENGLISH, valueStack, paramArray, null);
+        assertNotNull("GetDefaultMessageReturnArg result is null with key that exists ?", getDefaultMessageReturnArg);
+        assertTrue("GetDefaultMessageReturnArg result with key that exists indicates message not found in bundle ?", getDefaultMessageReturnArg.foundInBundle);
+        assertTrue("GetDefaultMessageReturnArg result with key that exists indicates message is null or empty ?", (getDefaultMessageReturnArg.message != null && !getDefaultMessageReturnArg.message.isEmpty()));
+        assertEquals("GetDefaultMessageReturnArg result with key 'invalid.fieldvalue.title' not as expected ?", "Title is invalid!", getDefaultMessageReturnArg.message);
+
+        // Perform some checks where the initial key exists, and the alternate key exists.  The result found for the initial key should be returned (not the alternate).
+        getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey("username", "invalid.fieldvalue.title", Locale.ENGLISH, valueStack, paramArray, null);
+        assertNotNull("GetDefaultMessageReturnArg result is null with key that exists ?", getDefaultMessageReturnArg);
+        assertTrue("GetDefaultMessageReturnArg result with key that exists indicates message not found in bundle ?", getDefaultMessageReturnArg.foundInBundle);
+        assertTrue("GetDefaultMessageReturnArg result with key that exists indicates message is null or empty ?", (getDefaultMessageReturnArg.message != null && !getDefaultMessageReturnArg.message.isEmpty()));
+        assertEquals("GetDefaultMessageReturnArg result with key 'username' not as expected ?", "Santa", getDefaultMessageReturnArg.message);
+        getDefaultMessageReturnArg = testStrutsLocalizedTextProvider.getDefaultMessageWithAlternateKey("invalid.fieldvalue.title", "username", Locale.ENGLISH, valueStack, paramArray, null);
+        assertNotNull("GetDefaultMessageReturnArg result is null with key that exists ?", getDefaultMessageReturnArg);
+        assertTrue("GetDefaultMessageReturnArg result with key that exists indicates message not found in bundle ?", getDefaultMessageReturnArg.foundInBundle);
+        assertTrue("GetDefaultMessageReturnArg result with key that exists indicates message is null or empty ?", (getDefaultMessageReturnArg.message != null && !getDefaultMessageReturnArg.message.isEmpty()));
+        assertEquals("GetDefaultMessageReturnArg result with key 'invalid.fieldvalue.title' not as expected ?", "Title is invalid!", getDefaultMessageReturnArg.message);
+    }
+
+    /**
+     * Test the {@link StrutsLocalizedTextProvider#findText(java.lang.Class, java.lang.String, java.util.Locale, java.lang.String, java.lang.Object[], com.opensymphony.xwork2.util.ValueStack) }
+     * method for basic correctness.
+     * 
+     * It is the version of the method that will search the class hierarchy resource bundles first, unless {@link StrutsLocalizedTextProvider#searchDefaultBundlesFirst}
+     * is true (in which case it will search the default resource bundles first).  No matter the flag setting, it should search until it finds a match, or fails to find
+     * a match and returns the default message parameter that was passed.
+     */
+    public void testFindText_FullParameterSet_FirstParameterIsClass() {
+        final String DEFAULT_MESSAGE = "This is the default message.";
+        final String INDEXED_COLLECTION_ONLYGENERALFORM_EXISTS = "title.indexed[20]";  // Only title.indexed[*] exists.
+        final String EXISTS_IN_DEFAULT_AND_CLASS_BUNDLES = "compare.sameproperty.differentbundles";  // Exists in LocalizedTextUtilTest properties (default bundles), and Bar properties (class bundles only).
+        final String DEFAULT_MESSAGE_WITH_PARAMS = DEFAULT_MESSAGE + "  We provide a couple of parameter placeholders: -{0}- and -{1}- for fun.";
+        final String param1 = "param1_String";
+        final String param2 = "param2_String";
+        final String[] paramArray = { param1, param2 };
+        TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
+
+        // Load some specific default bundles already provided and used by other tests within this module.
+        // Note: Intentionally not including the Bar properties file as a default bundle so that we can test retrievals of items that are only available via the class
+        //       or the default bundles.
+        testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/util/LocalizedTextUtilTest");
+        testStrutsLocalizedTextProvider.addDefaultResourceBundle("com/opensymphony/xwork2/util/FindMe");
+
+        // Perform some standard checks on message retrieval both for correctness checks and code coverage (such as the NONEXISTENT_INDEXED_COLLECTION,
+        // which exercises the indexed name logic in findText())
+        ValueStack valueStack = ActionContext.getContext().getValueStack();
+        Bar bar = new Bar();
+        assertFalse("Initial setSearchDefaultBundlesFirst state is not false ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+        String messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "title", Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Bar class title property lookup result does not match expectations (missing or different) ?", "Title:", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), INDEXED_COLLECTION_ONLYGENERALFORM_EXISTS, Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Bar class general indexed collection lookup result does not match expectations (missing or different) ?", "Indexed title text for test!", messageResult);
+
+        // Test lookup with search default bundles first set true.  For properties that exist only with the class bundle, there should be no change.
+        // Repeat the tests with properties only in the class bundle.
+        testStrutsLocalizedTextProvider.setSearchDefaultBundlesFirst(Boolean.TRUE.toString());
+        assertTrue("Updated setSearchDefaultBundlesFirst state is not true ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "title", Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Bar class title property lookup result does not match expectations (missing or different) ?", "Title:", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), INDEXED_COLLECTION_ONLYGENERALFORM_EXISTS, Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Bar class general indexed collection lookup result does not match expectations (missing or different) ?", "Indexed title text for test!", messageResult);
+
+        // Test with a property that is in both the class bundle and default bundles, with search default bundles first true.
+        // The property match from the default bundles should be returned.
+        testStrutsLocalizedTextProvider.setSearchDefaultBundlesFirst(Boolean.TRUE.toString());
+        assertTrue("Updated setSearchDefaultBundlesFirst state is not true ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), EXISTS_IN_DEFAULT_AND_CLASS_BUNDLES, Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Result is not the property from the default bundles ?", "This is the value in the LocalizedTextUtilTest properties!", messageResult);
+
+        // Test with a property that is in both the class bundle and default bundles, with search default bundles first false.
+        // The property match from the Bar class bundle should be returned.
+        testStrutsLocalizedTextProvider.setSearchDefaultBundlesFirst(Boolean.FALSE.toString());
+        assertFalse("Updated setSearchDefaultBundlesFirst state is not false ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), EXISTS_IN_DEFAULT_AND_CLASS_BUNDLES, Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Result is not the property from the Bar bundle ?", "This is the value in the Bar properties!", messageResult);
+
+        // Test with some different properties (including null and nonexistent ones), with search default bundles first false.
+        testStrutsLocalizedTextProvider.setSearchDefaultBundlesFirst(Boolean.FALSE.toString());
+        assertFalse("Updated setSearchDefaultBundlesFirst state is not false ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), null, Locale.ENGLISH, null, paramArray, valueStack);
+        assertNull("Result with null key and null default message is not null ?", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "key_does_not_exist", Locale.ENGLISH, null, paramArray, valueStack);
+        assertNull("Result with nonexistent key and null default message is not null ?", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), null, Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Result with null key and non-null default message is not the default message ?", DEFAULT_MESSAGE, messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "key_does_not_exist", Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Result with nonexistent key and non-null default message is not the default message ?", DEFAULT_MESSAGE, messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "key_does_not_exist", Locale.ENGLISH, DEFAULT_MESSAGE_WITH_PARAMS, paramArray, valueStack);
+        assertNotNull("Result with nonexistent key and non-null default message is null ?", messageResult);
+        assertTrue("Result with parameterized default message does not contain deafult message ?", messageResult.contains(DEFAULT_MESSAGE));
+        assertTrue("Result with parameterized default message does not contain param1 ?", messageResult.contains(param1));
+        assertTrue("Result with parameterized default message does not contain param2 ?", messageResult.contains(param2));
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "username", Locale.ENGLISH, null, paramArray, valueStack);
+        assertEquals("Result of username lookup not as expected ?", "Santa", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "bean.name", Locale.ENGLISH, null, paramArray, valueStack);
+        assertEquals("Result of bean.name lookup not as expected ?", "Haha you cant FindMe!", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "bean2.name", Locale.ENGLISH, null, paramArray, valueStack);
+        assertEquals("Result of bean2.name lookup not as expected ?", "Okay! You found Me!", messageResult);
+
+        // Test with some different properties (including null and nonexistent ones), with search default bundles first true.
+        testStrutsLocalizedTextProvider.setSearchDefaultBundlesFirst(Boolean.TRUE.toString());
+        assertTrue("Updated setSearchDefaultBundlesFirst state is not true ?", testStrutsLocalizedTextProvider.searchDefaultBundlesFirst);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), null, Locale.ENGLISH, null, paramArray, valueStack);
+        assertNull("Result with null key and null default message is not null ?", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "key_does_not_exist", Locale.ENGLISH, null, paramArray, valueStack);
+        assertNull("Result with nonexistent key and null default message is not null ?", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), null, Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Result with null key and non-null default message is not the default message ?", DEFAULT_MESSAGE, messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "key_does_not_exist", Locale.ENGLISH, DEFAULT_MESSAGE, paramArray, valueStack);
+        assertEquals("Result with nonexistent key and non-null default message is not the default message ?", DEFAULT_MESSAGE, messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "key_does_not_exist", Locale.ENGLISH, DEFAULT_MESSAGE_WITH_PARAMS, paramArray, valueStack);
+        assertNotNull("Result with nonexistent key and non-null default message is null ?", messageResult);
+        assertTrue("Result with parameterized default message does not contain deafult message ?", messageResult.contains(DEFAULT_MESSAGE));
+        assertTrue("Result with parameterized default message does not contain param1 ?", messageResult.contains(param1));
+        assertTrue("Result with parameterized default message does not contain param2 ?", messageResult.contains(param2));
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "username", Locale.ENGLISH, null, paramArray, valueStack);
+        assertEquals("Result of username lookup not as expected ?", "Santa", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "bean.name", Locale.ENGLISH, null, paramArray, valueStack);
+        assertEquals("Result of bean.name lookup not as expected ?", "Haha you cant FindMe!", messageResult);
+        messageResult = testStrutsLocalizedTextProvider.findText(bar.getClass(), "bean2.name", Locale.ENGLISH, null, paramArray, valueStack);
+        assertEquals("Result of bean2.name lookup not as expected ?", "Okay! You found Me!", messageResult);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

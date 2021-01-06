@@ -19,7 +19,6 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ModelDriven;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,8 +26,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Provides support for localization in the framework, it can be used to read only default bundles,
- * or it can search the class hierarchy to find proper bundles.
+ * Provides support for localization in the framework, it can be used to read only default bundles.
+ * 
+ * Note that unlike {@link StrutsLocalizedTextProvider}, this class {@link GlobalLocalizedTextProvider} will
+ * <em>only</em> search the default bundles for localized text.
  */
 public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
 
@@ -62,22 +63,8 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * </p>
      *
      * <ol>
-     * <li>Look for message in aClass' class hierarchy.
-     * <ol>
-     * <li>Look for the message in a resource bundle for aClass</li>
-     * <li>If not found, look for the message in a resource bundle for any implemented interface</li>
-     * <li>If not found, traverse up the Class' hierarchy and repeat from the first sub-step</li>
-     * </ol></li>
-     * <li>If not found and aClass is a {@link ModelDriven} Action, then look for message in
-     * the model's class hierarchy (repeat sub-steps listed above).</li>
-     * <li>If not found, look for message in child property.  This is determined by evaluating
-     * the message key as an OGNL expression.  For example, if the key is
-     * <i>user.address.state</i>, then it will attempt to see if "user" can be resolved into an
-     * object.  If so, repeat the entire process fromthe beginning with the object's class as
-     * aClass and "address.state" as the message key.</li>
-     * <li>If not found, look for the message in aClass' package hierarchy.</li>
-     * <li>If still not found, look for the message in the default resource bundles.</li>
-     * <li>Return defaultMessage</li>
+     * <li>Look for the message in the default resource bundles.</li>
+     * <li>If not found, return defaultMessage</li>
      * </ol>
      *
      * <p>
@@ -115,22 +102,8 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * </p>
      *
      * <ol>
-     * <li>Look for message in aClass' class hierarchy.
-     * <ol>
-     * <li>Look for the message in a resource bundle for aClass</li>
-     * <li>If not found, look for the message in a resource bundle for any implemented interface</li>
-     * <li>If not found, traverse up the Class' hierarchy and repeat from the first sub-step</li>
-     * </ol></li>
-     * <li>If not found and aClass is a {@link ModelDriven} Action, then look for message in
-     * the model's class hierarchy (repeat sub-steps listed above).</li>
-     * <li>If not found, look for message in child property.  This is determined by evaluating
-     * the message key as an OGNL expression.  For example, if the key is
-     * <i>user.address.state</i>, then it will attempt to see if "user" can be resolved into an
-     * object.  If so, repeat the entire process fromthe beginning with the object's class as
-     * aClass and "address.state" as the message key.</li>
-     * <li>If not found, look for the message in aClass' package hierarchy.</li>
-     * <li>If still not found, look for the message in the default resource bundles.</li>
-     * <li>Return defaultMessage</li>
+     * <li>Look for the message in the default resource bundles.</li>
+     * <li>If not found, return defaultMessage</li>
      * </ol>
      *
      * <p>
@@ -145,7 +118,7 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
      * </p>
      *
      * <p>
-     * If a message is <b>not</b> found a WARN log will be logged.
+     * If a message is <b>not</b> found a DEBUG level log warning will be logged.
      * </p>
      *
      * @param aClass         the class whose name to use as the start point for the search
@@ -180,16 +153,7 @@ public class GlobalLocalizedTextProvider extends AbstractLocalizedTextProvider {
         }
 
         // get default
-        GetDefaultMessageReturnArg result;
-        if (indexedTextName == null) {
-            result = getDefaultMessage(aTextName, locale, valueStack, args, defaultMessage);
-        } else {
-            result = getDefaultMessage(aTextName, locale, valueStack, args, null);
-            if (result != null && result.message != null) {
-                return result.message;
-            }
-            result = getDefaultMessage(indexedTextName, locale, valueStack, args, defaultMessage);
-        }
+        GetDefaultMessageReturnArg result = getDefaultMessageWithAlternateKey(aTextName, indexedTextName, locale, valueStack, args, defaultMessage);
 
         // could we find the text, if not log a warn
         if (unableToFindTextForKey(result) && LOG.isDebugEnabled()) {

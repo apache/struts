@@ -249,8 +249,18 @@ public final class StrutsConstants {
     /** Throw RuntimeException when a property is not found, or the evaluation of the expression fails */
     public static final String STRUTS_EL_THROW_EXCEPTION = "struts.el.throwExceptionOnFailure";
 
-    /** Logs properties that are not found (very verbose) */
+    /**
+     * Logs properties that are not found (very verbose)
+     * @since 2.6
+     */
     public static final String STRUTS_OGNL_LOG_MISSING_PROPERTIES = "struts.ognl.logMissingProperties";
+
+    /**
+     * Logs properties that are not found (very verbose)
+     * @deprecated as of 2.6.  Use {@link #STRUTS_OGNL_LOG_MISSING_PROPERTIES} instead.
+     */
+    @Deprecated
+    public static final String STRUTS_LOG_MISSING_PROPERTIES = STRUTS_OGNL_LOG_MISSING_PROPERTIES;
 
     /** Enables caching of parsed OGNL expressions */
     public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";

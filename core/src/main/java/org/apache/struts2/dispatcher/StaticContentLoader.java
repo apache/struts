@@ -84,11 +84,16 @@ public interface StaticContentLoader {
                     uiStaticContentPath,
                     StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH);
                 return StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH;
-            } else if(!uiStaticContentPath.startsWith("/")) {
+            } else if (!uiStaticContentPath.startsWith("/")) {
                 LOG.warn("\"{}\" must start with \"/\", but has been set to \"{}\", prepending the missing \"/\"!",
                     StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH,
                     uiStaticContentPath);
                 return "/" + uiStaticContentPath;
+            } else if (uiStaticContentPath.endsWith("/")) {
+                LOG.warn("\"{}\" must not end with \"/\", but has been set to \"{}\", removing all trailing \"/\"!",
+                    StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH,
+                    uiStaticContentPath);
+                return StringUtils.stripEnd(uiStaticContentPath, "/");
             } else {
                 LOG.debug("\"{}\" has been set to \"{}\"", StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, uiStaticContentPath);
                 return uiStaticContentPath;

@@ -373,6 +373,11 @@ public class UIBeanTest extends StrutsInternalTestCase {
         field.setStaticContentPath("/content");
         // then
         assertEquals("/content", field.uiStaticContentPath);
+
+        // when
+        field.setStaticContentPath("/content/");
+        // then
+        assertEquals("/content", field.uiStaticContentPath);
     }
 
 }

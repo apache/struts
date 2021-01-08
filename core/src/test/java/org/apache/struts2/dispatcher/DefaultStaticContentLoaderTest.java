@@ -101,46 +101,32 @@ public class DefaultStaticContentLoaderTest extends StrutsInternalTestCase {
         }
     }
 
-    public void testSetNullUiStaticContentPath() {
+    public void testStaticContentPath() {
         // given
         DefaultStaticContentLoader loader = new DefaultStaticContentLoader();
 
         // when
         loader.setStaticContentPath(null);
-
         // then
         assertEquals(StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH, loader.uiStaticContentPath);
-    }
-
-    public void testSetEmptyUiStaticContentPath() {
-        // given
-        DefaultStaticContentLoader loader = new DefaultStaticContentLoader();
 
         // when
         loader.setStaticContentPath(" ");
-
         // then
         assertEquals(StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH, loader.uiStaticContentPath);
-    }
-
-    public void testSetUiStaticContentPathWithoutLeadingSlash() {
-        // given
-        DefaultStaticContentLoader loader = new DefaultStaticContentLoader();
 
         // when
         loader.setStaticContentPath("content");
-
         // then
         assertEquals("/content", loader.uiStaticContentPath);
-    }
-
-    public void testSetUiStaticContentPath() {
-        // given
-        DefaultStaticContentLoader loader = new DefaultStaticContentLoader();
 
         // when
         loader.setStaticContentPath("/content");
+        // then
+        assertEquals("/content", loader.uiStaticContentPath);
 
+        // when
+        loader.setStaticContentPath("/content/");
         // then
         assertEquals("/content", loader.uiStaticContentPath);
     }

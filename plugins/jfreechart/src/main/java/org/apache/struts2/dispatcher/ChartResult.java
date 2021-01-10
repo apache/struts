@@ -18,12 +18,13 @@
  */
 package org.apache.struts2.dispatcher;
 
+import com.opensymphony.xwork2.config.ConfigurationException;
 import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.result.StrutsResultSupport;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 
 import java.io.OutputStream;
@@ -105,14 +106,16 @@ public class ChartResult extends StrutsResultSupport {
     private final static Logger LOG = LogManager.getLogger(ChartResult.class);
 
     private static final long serialVersionUID = -6484761870055986612L;
+
     private static final String DEFAULT_TYPE = "png";
     private static final String DEFAULT_VALUE = "chart";
 
     private JFreeChart chart; // the JFreeChart to render
     private boolean chartSet;
-    String height, width;
-    String type = DEFAULT_TYPE; // supported are jpg, jpeg or png, defaults to png
-    String value = DEFAULT_VALUE; // defaults to 'chart'
+    private String height;
+    private String width;
+    private String type = DEFAULT_TYPE; // supported are jpg, jpeg or png, defaults to png
+    private String value = DEFAULT_VALUE; // defaults to 'chart'
 
     // CONSTRUCTORS ----------------------------
 
@@ -200,11 +203,11 @@ public class ChartResult extends StrutsResultSupport {
             // check the type to see what kind of output we have to produce
             if ("png".equalsIgnoreCase(type)) {
                 response.setContentType("image/png");
-                ChartUtilities.writeChartAsPNG(os, chart, getIntValueFromString(width), getIntValueFromString(height));
+                ChartUtils.writeChartAsPNG(os, chart, getIntValueFromString(width), getIntValueFromString(height));
             }
             else if ("jpg".equalsIgnoreCase(type) || "jpeg".equalsIgnoreCase(type)) {
                 response.setContentType("image/jpg");
-                ChartUtilities.writeChartAsJPEG(os, chart, getIntValueFromString(width), getIntValueFromString(height));
+                ChartUtils.writeChartAsJPEG(os, chart, getIntValueFromString(width), getIntValueFromString(height));
             }
             else
                 throw new IllegalArgumentException(type + " is not a supported render type (only JPG and PNG are).");
@@ -217,9 +220,8 @@ public class ChartResult extends StrutsResultSupport {
      * Sets up result properties, parsing etc.
      *
      * @param invocation Current invocation.
-     * @throws Exception on initialization error.
      */
-    private void initializeProperties(ActionInvocation invocation) throws Exception {
+    private void initializeProperties(ActionInvocation invocation) {
 
         if (height != null) {
             height = conditionalParse(height, invocation);
@@ -238,12 +240,12 @@ public class ChartResult extends StrutsResultSupport {
         }
     }
 
-    private Integer getIntValueFromString(String value) {
+    private int getIntValueFromString(String value) {
         try {
             return Integer.parseInt(value);
         } catch (Exception e) {
             LOG.error("Specified value for width or height is not of type Integer...", e);
-            return null;
+            throw new ConfigurationException("Wrong value \"" + value + "\", expected Integer!", e);
         }
     }
 

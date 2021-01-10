@@ -230,7 +230,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_STATIC_CONTENT_LOADER, beanConfToString(staticContentLoader));
         map.put(StrutsConstants.STRUTS_UNKNOWN_HANDLER_MANAGER, beanConfToString(unknownHandlerManager));
         map.put(StrutsConstants.STRUTS_EL_THROW_EXCEPTION, Objects.toString(elThrowExceptionOnFailure, null));
-        map.put(StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES, Objects.toString(ognlLogMissingProperties, null));
+        map.put(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, Objects.toString(ognlLogMissingProperties, null));
         map.put(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, Objects.toString(ognlEnableExpressionCache, null));
         map.put(StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, Objects.toString(ognlEnableOGNLEvalExpression, null));
         map.put(StrutsConstants.STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP, Objects.toString(disableRequestAttributeValueStackLookup, null));

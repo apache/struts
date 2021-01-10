@@ -260,8 +260,18 @@ public final class StrutsConstants {
     /** Throw RuntimeException when a property is not found, or the evaluation of the expression fails */
     public static final String STRUTS_EL_THROW_EXCEPTION = "struts.el.throwExceptionOnFailure";
 
-    /** Logs properties that are not found (very verbose) */
-    public static final String STRUTS_LOG_MISSING_PROPERTIES = "struts.ognl.logMissingProperties";
+    /**
+     * Logs properties that are not found (very verbose)
+     * @since 2.6
+     */
+    public static final String STRUTS_OGNL_LOG_MISSING_PROPERTIES = "struts.ognl.logMissingProperties";
+
+    /**
+     * Logs properties that are not found (very verbose)
+     * @deprecated as of 2.6.  Use {@link #STRUTS_OGNL_LOG_MISSING_PROPERTIES} instead.
+     */
+    @Deprecated
+    public static final String STRUTS_LOG_MISSING_PROPERTIES = STRUTS_OGNL_LOG_MISSING_PROPERTIES;
 
     /** Enables caching of parsed OGNL expressions */
     public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
@@ -357,4 +367,9 @@ public final class StrutsConstants {
 
     /** See {@link com.opensymphony.xwork2.config.impl.AbstractMatcher#appendNamedParameters */
     public static final String STRUTS_MATCHER_APPEND_NAMED_PARAMETERS = "struts.matcher.appendNamedParameters";
+
+    public static final String STRUTS_CHAINING_COPY_ERRORS = "struts.chaining.copyErrors";
+    public static final String STRUTS_CHAINING_COPY_FIELD_ERRORS = "struts.chaining.copyFieldErrors";
+    public static final String STRUTS_CHAINING_COPY_MESSAGES = "struts.chaining.copyMessages";
+    public static final String STRUTS_OBJECT_FACTORY_CLASSLOADER = "struts.objectFactory.classloader";
 }

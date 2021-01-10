@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.*;
 
@@ -59,9 +60,9 @@ import java.util.*;
  * </p>
  *
  * <ul>
- * <li>struts.xwork.chaining.copyErrors - set to true to copy Action Errors</li>
- * <li>struts.xwork.chaining.copyFieldErrors - set to true to copy Field Errors</li>
- * <li>struts.xwork.chaining.copyMessages - set to true to copy Action Messages</li>
+ * <li>struts.chaining.copyErrors - set to true to copy Action Errors</li>
+ * <li>struts.chaining.copyFieldErrors - set to true to copy Field Errors</li>
+ * <li>struts.chaining.copyMessages - set to true to copy Action Messages</li>
  * </ul>
  *
  * <p>
@@ -135,17 +136,17 @@ public class ChainingInterceptor extends AbstractInterceptor {
         this.reflectionProvider = prov;
     }
 
-    @Inject(value = "struts.xwork.chaining.copyErrors", required = false)
+    @Inject(value = StrutsConstants.STRUTS_CHAINING_COPY_ERRORS, required = false)
     public void setCopyErrors(String copyErrors) {
         this.copyErrors = "true".equalsIgnoreCase(copyErrors);
     }
 
-    @Inject(value = "struts.xwork.chaining.copyFieldErrors", required = false)
+    @Inject(value = StrutsConstants.STRUTS_CHAINING_COPY_FIELD_ERRORS, required = false)
     public void setCopyFieldErrors(String copyFieldErrors) {
         this.copyFieldErrors = "true".equalsIgnoreCase(copyFieldErrors);
     }
 
-    @Inject(value = "struts.xwork.chaining.copyMessages", required = false)
+    @Inject(value = StrutsConstants.STRUTS_CHAINING_COPY_MESSAGES, required = false)
     public void setCopyMessages(String copyMessages) {
         this.copyMessages = "true".equalsIgnoreCase(copyMessages);
     }

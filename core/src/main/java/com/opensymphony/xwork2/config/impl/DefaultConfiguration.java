@@ -284,7 +284,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
 
         builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
-        builder.constant(StrutsConstants.STRUTS_LOG_MISSING_PROPERTIES, "false");
+        builder.constant(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, "false");
         builder.constant(StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, "false");
         builder.constant(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, "true");
         builder.constant(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "false");

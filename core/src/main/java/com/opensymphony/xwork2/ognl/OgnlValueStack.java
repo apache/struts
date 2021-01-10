@@ -105,7 +105,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
-    @Inject(value = "logMissingProperties", required = false)
+    @Inject(value = StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, required = false)
     protected void setLogMissingProperties(String logMissingProperties) {
         this.logMissingProperties = BooleanUtils.toBoolean(logMissingProperties);
     }

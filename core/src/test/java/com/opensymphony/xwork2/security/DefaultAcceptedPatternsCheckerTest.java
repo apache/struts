@@ -57,6 +57,7 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
             add("%{#parameters.test}");
             add("%{#Parameters['test']}");
             add("%{#Parameters.test}");
+            add("%{#Parameters['test-1']}");
         }
     };
 
@@ -95,6 +96,35 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
 
         // then
         assertTrue("Param with underscore wasn't accepted!", actual.isAccepted());
+    }
+
+    public void testDashInParamName() {
+        // given
+        AcceptedPatternsChecker checker = new DefaultAcceptedPatternsChecker();
+
+        // when
+        AcceptedPatternsChecker.IsAccepted actual = checker.isAccepted("mapParam['param-1']");
+
+        // then
+        assertTrue("Param with dash wasn't accepted!", actual.isAccepted());
+
+        // when
+        actual = checker.isAccepted("mapParam['-param-1']");
+
+        // then
+        assertFalse("Param with dash was accepted!", actual.isAccepted());
+
+        // when
+        actual = checker.isAccepted("-param");
+
+        // then
+        assertFalse("Param with dash was accepted!", actual.isAccepted());
+
+        // when
+        actual = checker.isAccepted("param1-param2");
+
+        // then
+        assertFalse("Param with dash was accepted!", actual.isAccepted());
     }
 
     public void testUnderscoreInParamNameWithDmiEnabled() {
@@ -173,5 +203,34 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
         AcceptedPatternsChecker.IsAccepted accepted = checker.isAccepted("action:myAction!save");
 
         assertTrue("dmi isn't accepted", accepted.isAccepted());
+    }
+
+    public void testDmiIsEnabledAndDash() {
+        // given
+        DefaultAcceptedPatternsChecker checker = new DefaultAcceptedPatternsChecker(Boolean.TRUE.toString());
+
+        // when
+        AcceptedPatternsChecker.IsAccepted accepted = checker.isAccepted("map['param-1']");
+
+        // then
+        assertTrue("Dash isn't accepted", accepted.isAccepted());
+
+        // when
+        accepted = checker.isAccepted("map['-param-1']");
+
+        // then
+        assertFalse("Dash was accepted", accepted.isAccepted());
+
+        // when
+        accepted = checker.isAccepted("-param");
+
+        // then
+        assertFalse("Dash was accepted", accepted.isAccepted());
+
+        // when
+        accepted = checker.isAccepted("param1-param2");
+
+        // then
+        assertFalse("Dash was accepted", accepted.isAccepted());
     }
 }

@@ -40,7 +40,7 @@ public class StaticContentTest {
     public void testInvalidRersources2() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             try {
-                webClient.getPage(ParameterUtils.getBaseUrl() + "/struts/..%252f");
+                webClient.getPage(ParameterUtils.getBaseUrl() + "/static/..%252f");
                 Assert.fail("Previous request should have failed");
             } catch (FailingHttpStatusCodeException e) {
             }
@@ -49,7 +49,7 @@ public class StaticContentTest {
 
     /*public void testInvalidRersources3() throws IOException {
         try {
-            beginAt("/struts/..%252f..%252f..%252fWEB-INF/classes/org/apache/struts2/showcase/action/EmployeeAction.class/");
+            beginAt("/static/..%252f..%252f..%252fWEB-INF/classes/org/apache/struts2/showcase/action/EmployeeAction.class/");
             fail("Previous request should have failed");
         } catch (TestingEngineResponseException ex) {
             // ok

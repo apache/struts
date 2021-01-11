@@ -30,13 +30,12 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 
 public class DefaultStaticContentLoaderTest extends StrutsInternalTestCase {
+
     private HttpServletRequest requestMock;
     private HttpServletResponse responseMock;
-    private HostConfig hostConfigMock;
     private DefaultStaticContentLoader defaultStaticContentLoader;
 
-    public void testParsePackages() throws Exception {
-
+    public void testParsePackages() {
         DefaultStaticContentLoader filterDispatcher = new DefaultStaticContentLoader();
         List<String> result1 = filterDispatcher.parse("foo.bar.package1 foo.bar.package2 foo.bar.package3");
         List<String> result2 = filterDispatcher.parse("foo.bar.package1\tfoo.bar.package2\tfoo.bar.package3");
@@ -102,14 +101,46 @@ public class DefaultStaticContentLoaderTest extends StrutsInternalTestCase {
         }
     }
 
-    protected void setUp() {
-        requestMock = (HttpServletRequest) createMock(HttpServletRequest.class);
-        responseMock = (HttpServletResponse) createMock(HttpServletResponse.class);
-        hostConfigMock = (HostConfig) createMock(HostConfig.class);
+    public void testStaticContentPath() {
+        // given
+        DefaultStaticContentLoader loader = new DefaultStaticContentLoader();
+
+        // when
+        loader.setStaticContentPath(null);
+        // then
+        assertEquals(StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH, loader.uiStaticContentPath);
+
+        // when
+        loader.setStaticContentPath(" ");
+        // then
+        assertEquals(StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH, loader.uiStaticContentPath);
+
+        // when
+        loader.setStaticContentPath("content");
+        // then
+        assertEquals("/content", loader.uiStaticContentPath);
+
+        // when
+        loader.setStaticContentPath("/content");
+        // then
+        assertEquals("/content", loader.uiStaticContentPath);
+
+        // when
+        loader.setStaticContentPath("/content/");
+        // then
+        assertEquals("/content", loader.uiStaticContentPath);
+    }
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        requestMock = createMock(HttpServletRequest.class);
+        responseMock = createMock(HttpServletResponse.class);
+        HostConfig hostConfigMock = createMock(HostConfig.class);
         expect(hostConfigMock.getInitParameter("packages")).andStubReturn(null);
         expect(hostConfigMock.getInitParameter("loggerFactory")).andStubReturn(null);
         defaultStaticContentLoader = new DefaultStaticContentLoader();
         defaultStaticContentLoader.setHostConfig(hostConfigMock);
         defaultStaticContentLoader.setEncoding("UTF-8");
+        defaultStaticContentLoader.setStaticContentPath("/static");
     }
 }

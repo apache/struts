@@ -25,6 +25,8 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
+import org.apache.struts2.dispatcher.DefaultStaticContentLoader;
+import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -343,4 +345,39 @@ public class UIBeanTest extends StrutsInternalTestCase {
 
         assertEquals(nonceVal, dblSelect.getParameters().get("nonce"));
     }
+
+    public void testSetNullUiStaticContentPath() {
+        // given
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        TextField field = new TextField(stack, req, res);
+
+        // when
+        field.setStaticContentPath(null);
+        // then
+        assertEquals(StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH, field.uiStaticContentPath);
+
+        // when
+        field.setStaticContentPath(" ");
+        // then
+        assertEquals(StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH, field.uiStaticContentPath);
+
+        // when
+        field.setStaticContentPath("content");
+        // then
+        assertEquals("/content", field.uiStaticContentPath);
+
+        // when
+        field.setStaticContentPath("/content");
+        // then
+        assertEquals("/content", field.uiStaticContentPath);
+
+        // when
+        field.setStaticContentPath("/content/");
+        // then
+        assertEquals("/content", field.uiStaticContentPath);
+    }
+
 }

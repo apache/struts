@@ -129,6 +129,9 @@ public final class StrutsConstants {
     /** Token to use to indicate start of theme to be expanded. */
     public static final String STRUTS_UI_THEME_EXPANSION_TOKEN = "struts.ui.theme.expansion.token";
 
+    /** A path to static content, by default and from historical point of view it's /static. */
+    public static final String STRUTS_UI_STATIC_CONTENT_PATH = "struts.ui.staticContentPath";
+
     /** The maximize size of a multipart request (file upload) */
     public static final String STRUTS_MULTIPART_MAXSIZE = "struts.multipart.maxSize";
 

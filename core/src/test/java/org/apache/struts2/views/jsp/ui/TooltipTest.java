@@ -52,7 +52,7 @@ public class TooltipTest extends AbstractUITagTest {
         tag.setTooltip("myTooltip");
         tag.setTooltipConfig(
                 "#{" +
-                        "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
+                        "'tooltipIcon':'/static/tooltip/myTooltip.gif', " +
                         "'tooltipDelay':'500', " +
                         "'jsTooltipEnabled':'true' "+
                         "}"
@@ -86,7 +86,7 @@ public class TooltipTest extends AbstractUITagTest {
         tag.setTooltip("myTooltip");
         tag.setTooltipConfig(
                 "#{" +
-                        "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
+                        "'tooltipIcon':'/static/tooltip/myTooltip.gif', " +
                         "'tooltipDelay':'500', " +
                         "'jsTooltipEnabled':'false' "+
                         "}"
@@ -119,7 +119,7 @@ public class TooltipTest extends AbstractUITagTest {
 
         //same parameters as the OGNL map configuration, output must be the same
         tag.setTooltip("myTooltip");
-        tag.setTooltipIconPath("/struts/tooltip/myTooltip.gif");
+        tag.setTooltipIconPath("/static/tooltip/myTooltip.gif");
         tag.setTooltipDelay("500");
         tag.setJavascriptTooltip("true");
        
@@ -142,7 +142,7 @@ public class TooltipTest extends AbstractUITagTest {
 
         formTag.setTooltipConfig(
                 "#{" +
-                "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
+                "'tooltipIcon':'/static/tooltip/myTooltip.gif', " +
                 "'tooltipDelay':'500', " +
                 "'jsTooltipEnabled':'true' "+
                 "}"
@@ -174,7 +174,7 @@ public class TooltipTest extends AbstractUITagTest {
 
         // same parameters as the OGNL map configuration, output must be the same
         formTag.setTooltip("myTooltip");
-        formTag.setTooltipIconPath("/struts/tooltip/myTooltip.gif");
+        formTag.setTooltipIconPath("/static/tooltip/myTooltip.gif");
         formTag.setTooltipDelay("500");
         formTag.setJavascriptTooltip("true");
 
@@ -204,7 +204,7 @@ public class TooltipTest extends AbstractUITagTest {
 
         formTag.setTooltipConfig(
                 "#{" +
-                "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
+                "'tooltipIcon':'/static/tooltip/myTooltip.gif', " +
                 "'tooltipDelay':'500', " +
                 "'jsTooltipEnabled':'true' "+
                 "}"
@@ -219,7 +219,7 @@ public class TooltipTest extends AbstractUITagTest {
         tag.setTooltip("myTooltip");
         tag.setTooltipConfig(
                 "#{" +
-                "'tooltipIcon':'/struts/tooltip/myTooltip2.gif', " +
+                "'tooltipIcon':'/static/tooltip/myTooltip2.gif', " +
                 "'tooltipDelay':'5000' " +
                 "}"
         );
@@ -242,7 +242,7 @@ public class TooltipTest extends AbstractUITagTest {
 
         // same parameters as the OGNL map configuration, output must be the same
         formTag.setTooltip("myTooltip");
-        formTag.setTooltipIconPath("/struts/tooltip/myTooltip.gif");
+        formTag.setTooltipIconPath("/static/tooltip/myTooltip.gif");
         formTag.setTooltipDelay("500");
         formTag.setJavascriptTooltip("true");
 
@@ -255,7 +255,7 @@ public class TooltipTest extends AbstractUITagTest {
 
         //same parameters as the OGNL map configuration, output must be the same
         tag.setTooltip("myTooltip");
-        tag.setTooltipIconPath("/struts/tooltip/myTooltip2.gif");
+        tag.setTooltipIconPath("/static/tooltip/myTooltip2.gif");
         tag.setTooltipDelay("5000");
         tag.setJavascriptTooltip("true");
 
@@ -280,7 +280,7 @@ public class TooltipTest extends AbstractUITagTest {
         formParamTag.setName("tooltipConfig");
         formParamTag.setValue(
                 "#{" +
-                "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
+                "'tooltipIcon':'/static/tooltip/myTooltip.gif', " +
                 "'tooltipDelay':'500', " +
                 "'jsTooltipEnabled':'true' "+
                 "}"
@@ -298,7 +298,7 @@ public class TooltipTest extends AbstractUITagTest {
         textFieldParamTag.setName("tooltipConfig");
         textFieldParamTag.setValue(
                 "#{" +
-                "'tooltipIcon':'/struts/tooltip/myTooltip2.gif', " +
+                "'tooltipIcon':'/static/tooltip/myTooltip2.gif', " +
                 "'tooltipDelay':'5000' "+
                 "}"
         );
@@ -330,7 +330,7 @@ public class TooltipTest extends AbstractUITagTest {
         formParamTag.setName("tooltipConfig");
         StrutsMockBodyContent bodyContent = new StrutsMockBodyContent(new MockJspWriter());
         bodyContent.setString(
-                "tooltipIcon=/struts/tooltip/myTooltip.gif| " +
+                "tooltipIcon=/static/tooltip/myTooltip.gif| " +
                 "tooltipDelay=500| " +
                 "jsTooltipEnabled=true "
         );
@@ -348,7 +348,7 @@ public class TooltipTest extends AbstractUITagTest {
         textFieldParamTag.setName("tooltipConfig");
         StrutsMockBodyContent bodyContent2 = new StrutsMockBodyContent(new MockJspWriter());
         bodyContent2.setString(
-                "tooltipIcon=/struts/tooltip/myTooltip2.gif| " +
+                "tooltipIcon=/static/tooltip/myTooltip2.gif| " +
                 "tooltipDelay=5000 "
         );
         textFieldParamTag.setBodyContent(bodyContent2);

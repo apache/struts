@@ -4,7 +4,7 @@
 			<td class="tdLabel">
 				<labelfor="myId"class="label">
 					MyLabel:<img
-								src='/struts/tooltip/myTooltip.gif'
+								src='/static/tooltip/myTooltip.gif'
 								onmouseover="domTT_activate(this,event,'content','myTooltip','delay','500','styleClass','StrutsTTClassic')"/>
 				</label>
 			</td>
@@ -15,7 +15,7 @@
 	</table>
 </form>
 <!--javascript that is needed for tooltips-->
-<script type="text/javascript" src='/struts/domTT.js'></script>
-<link rel="stylesheet" type="text/css" href="/struts/domTT.css"/>
+<script type="text/javascript" src='/static/domTT.js'></script>
+<link rel="stylesheet" type="text/css" href="/static/domTT.css"/>
 
 

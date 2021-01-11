@@ -19,7 +19,7 @@
  */
 -->
 <#if !stack.findValue("#inputtransferselect_js_included")??><#t/>
-	<script type="text/javascript" src="<@s.url value="/struts/inputtransferselect.js" encode='false' includeParams='none'/>" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
+	<script type="text/javascript" src="<@s.url value="${parameters.staticContentPath}/inputtransferselect.js" encode='false' includeParams='none'/>" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
 	<#assign temporaryVariable = stack.setValue("#inputtransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table>

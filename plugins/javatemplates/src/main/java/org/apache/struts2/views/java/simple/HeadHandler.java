@@ -38,7 +38,7 @@ public class HeadHandler extends AbstractTagHandler implements TagGenerator {
             sb.append(base);
         }
         
-        sb.append("/struts/utils.js");
+        sb.append("/static/utils.js");
         attrs.put("src", sb.toString());
 
         super.start("script", attrs);

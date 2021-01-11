@@ -55,39 +55,13 @@ pipeline {
           }
         }
       }
-      post {
-        always {
-          cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+      stage('Code Quality') {
+        when {
+          branch 'master'
         }
-      }
-    }
-    stage('JDK 9') {
-      agent {
-        label 'ubuntu'
-      }
-      tools {
-        jdk 'jdk_1.9_latest'
-        maven 'maven_3_latest'
-      }
-      environment {
-        MAVEN_OPTS = "-Xmx1024m"
-      }
-      stages {
-        stage('Build') {
-          steps {
-            sh 'mvn -B clean install -DskipTests -DskipAssembly'
-          }
-        }
-        stage('Test') {
-          steps {
-            sh 'mvn -B test'
-            // step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
-          }
-          post {
-            always {
-              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
-              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
-            }
+        steps {
+          withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
+            sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
           }
         }
       }
@@ -165,16 +139,6 @@ pipeline {
                     verbose: true
                 )
             ])
-          }
-        }
-        stage('Code Quality') {
-          when {
-            branch 'master'
-          }
-          steps {
-            withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-              sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
-            }
           }
         }
       }

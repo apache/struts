@@ -324,12 +324,12 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected boolean isExcluded(String paramName) {
         ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
         if (result.isExcluded()) {
-            if (devMode) { // warn only when in devMode
+            if (devMode && result.isLog()) { // warn only when in devMode and required
                 LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
                                 "https://struts.apache.org/security/#accepted--excluded-patterns",
                         paramName, result.getExcludedPattern());
             } else {
-                LOG.debug("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
+                LOG.debug("Parameter [{}] matches excluded/ignored pattern [{}]!", paramName, result.getExcludedPattern());
             }
             return true;
         }

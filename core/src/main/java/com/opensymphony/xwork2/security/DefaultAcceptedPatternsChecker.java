@@ -40,25 +40,10 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
             "\\w+((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*"
     };
 
-    public static final String[] DMI_AWARE_ACCEPTED_PATTERNS = {
-            "\\w+([:]?\\w+)?((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w|[\\u4e00-\\u9fa5])+'])|(\\('(\\w|[\\u4e00-\\u9fa5])+'\\)))*([!]?\\w+)?"
-    };
-
     private Set<Pattern> acceptedPatterns;
 
     public DefaultAcceptedPatternsChecker() {
         setAcceptedPatterns(ACCEPTED_PATTERNS);
-    }
-
-    public DefaultAcceptedPatternsChecker(
-            @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false) String dmiValue
-    ) {
-        if (BooleanUtils.toBoolean(dmiValue)) {
-            LOG.debug("DMI is enabled, adding DMI related accepted patterns");
-            setAcceptedPatterns(DMI_AWARE_ACCEPTED_PATTERNS);
-        } else {
-            setAcceptedPatterns(ACCEPTED_PATTERNS);
-        }
     }
 
     @Inject(value = XWorkConstants.OVERRIDE_ACCEPTED_PATTERNS, required = false)

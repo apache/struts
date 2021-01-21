@@ -42,6 +42,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     };
 
     private Set<Pattern> excludedPatterns;
+    private Set<Pattern> ignoredPatterns;
 
     public DefaultExcludedPatternsChecker() {
         setExcludedPatterns(EXCLUDED_PATTERNS);
@@ -84,6 +85,14 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
         if (!BooleanUtils.toBoolean(dmiValue)) {
             LOG.debug("DMI is disabled, adding DMI related excluded patterns");
             setAdditionalExcludePatterns("^(action|method):.*");
+        } else {
+            LOG.debug("DMI is enabled, adding DMI related ignored patterns");
+            ignoredPatterns = new HashSet<>();
+            try {
+                ignoredPatterns.add(Pattern.compile("^(action|method):.*", Pattern.CASE_INSENSITIVE));
+            } finally {
+            	ignoredPatterns = Collections.unmodifiableSet(ignoredPatterns);
+            }
         }
     }
 
@@ -122,6 +131,14 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
             if (excludedPattern.matcher(value).matches()) {
                 LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
                 return IsExcluded.yes(excludedPattern);
+            }
+        }
+        if (ignoredPatterns != null) {
+            for (Pattern ignoredPattern : ignoredPatterns) {
+                if (ignoredPattern.matcher(value).matches()) {
+                    LOG.trace("[{}] matches ignored pattern [{}]", value, ignoredPattern);
+                    return IsExcluded.yes(ignoredPattern, false); // no dev warnings
+                }
             }
         }
         return IsExcluded.no(excludedPatterns);

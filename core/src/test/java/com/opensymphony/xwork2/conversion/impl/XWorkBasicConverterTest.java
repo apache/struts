@@ -19,7 +19,10 @@
 package com.opensymphony.xwork2.conversion.impl;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.StubTextProvider;
+import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.conversion.TypeConversionException;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.test.annotations.Person;
@@ -50,51 +53,80 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
     // object -> return null when empty string is passed
 
     public void testDateConversionWithEmptyValue() {
-        Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "", Date.class);
+        Object convertedObject = basicConverter.convertValue(new HashMap<>(), null, null, null, "", Date.class);
         // we must not get StrutsException as that will caused a conversion error
         assertNull(convertedObject);
     }
 
-    public void testDateConversionWithInvalidValue() throws Exception {
+    public void testDateConversionWithInvalidValue() {
+        Map<String, String> map = new HashMap<>();
+        map.put(org.apache.struts2.components.Date.DATETAG_PROPERTY, "yyyy-MM-dd");
+        ValueStack stack = new StubValueStack();
+        stack.push(new StubTextProvider(map));
+
+        ActionContext context = ActionContext.of(new HashMap<>())
+            .withLocale(new Locale("es_MX", "MX"))
+            .withValueStack(stack);
+
         try {
-            basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "asdsd", Date.class);
+            basicConverter.convertValue(context.getContextMap(), null, null, null, "asdsd", Date.class);
             fail("StrutsException expected - conversion error occurred");
         } catch (StrutsException e) {
-            // we MUST get this exception as this is a conversion error
+            assertEquals("Could not parse date", e.getMessage());
         }
     }
 
-    public void testDateWithLocalePoland() throws Exception {
+    public void testDateWithLocalePoland() {
+        Map<String, String> map = new HashMap<>();
+        ValueStack stack = new StubValueStack();
+        stack.push(new StubTextProvider(map));
 
         Locale locale = new Locale("pl", "PL");
-        Map<String, Object> context = createContextWithLocale(locale);
+
+        ActionContext context = ActionContext.of(new HashMap<>())
+            .withLocale(locale)
+            .withValueStack(stack);
 
         String reference = "2009-01-09";
-        Object convertedObject = basicConverter.convertValue(context, null, null, null, reference, Date.class);
+        Object convertedObject = basicConverter.convertValue(context.getContextMap(), null, null, null, reference, Date.class);
 
         assertNotNull(convertedObject);
 
         compareDates(locale, convertedObject);
     }
 
-    public void testDateWithLocaleFrance() throws Exception {
+    public void testDateWithLocaleFrance() {
+        Map<String, String> map = new HashMap<>();
+        ValueStack stack = new StubValueStack();
+        stack.push(new StubTextProvider(map));
+
         Locale locale = new Locale("fr", "FR");
-        Map<String, Object> context = createContextWithLocale(locale);
+
+        ActionContext context = ActionContext.of(new HashMap<>())
+            .withLocale(locale)
+            .withValueStack(stack);
 
         String reference = "09/01/2009";
-        Object convertedObject = basicConverter.convertValue(context, null, null, null, reference, Date.class);
+        Object convertedObject = basicConverter.convertValue(context.getContextMap(), null, null, null, reference, Date.class);
 
         assertNotNull(convertedObject);
 
         compareDates(locale, convertedObject);
     }
 
-    public void testDateWithLocaleUK() throws Exception {
+    public void testDateWithLocaleUK() {
+        Map<String, String> map = new HashMap<>();
+        ValueStack stack = new StubValueStack();
+        stack.push(new StubTextProvider(map));
+
         Locale locale = new Locale("en", "US");
-        Map<String, Object> context = createContextWithLocale(locale);
+
+        ActionContext context = ActionContext.of(new HashMap<>())
+            .withLocale(locale)
+            .withValueStack(stack);
 
         String reference = "01/09/2009";
-        Object convertedObject = basicConverter.convertValue(context, null, null, null, reference, Date.class);
+        Object convertedObject = basicConverter.convertValue(context.getContextMap(), null, null, null, reference, Date.class);
 
         assertNotNull(convertedObject);
 
@@ -118,21 +150,21 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         assertEquals(df.format(cal.getTime()), df.format(convertedObject));
     }
 
-    public void testEmptyArrayConversion() throws Exception {
-        Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, new Object[]{}, Object[].class);
+    public void testEmptyArrayConversion() {
+        Object convertedObject = basicConverter.convertValue(new HashMap<>(), null, null, null, new Object[]{}, Object[].class);
         // we must not get StrutsException as that will caused a conversion error
         assertEquals(Object[].class, convertedObject.getClass());
         Object[] obj = (Object[]) convertedObject;
         assertEquals(0, obj.length);
     }
 
-    public void testNullArrayConversion() throws Exception {
-        Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, null, Object[].class);
+    public void testNullArrayConversion() {
+        Object convertedObject = basicConverter.convertValue(new HashMap<>(), null, null, null, null, Object[].class);
         // we must not get StrutsException as that will caused a conversion error
         assertNull(convertedObject);
     }
 
-    public void testXW490ConvertStringToDouble() throws Exception {
+    public void testXW490ConvertStringToDouble() {
         Locale locale = new Locale("DA"); // let's use a not common locale such as Denmark
         Map<String, Object> context = createContextWithLocale(locale);
 
@@ -144,7 +176,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         assertEquals(123.99d, value, 0.001d);
     }
 
-    public void testXW49ConvertDoubleToString() throws Exception {
+    public void testXW49ConvertDoubleToString() {
         Locale locale = new Locale("DA"); // let's use a not common locale such as Denmark
         Map<String, Object> context = createContextWithLocale(locale);
 
@@ -202,26 +234,26 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         assertEquals(1.46464989f, value);
     }
 
-    public void testNegativeFloatValue() throws Exception {
+    public void testNegativeFloatValue() {
         Object convertedObject = basicConverter.convertValue("-94.1231233", Float.class);
         assertTrue(convertedObject instanceof Float);
         assertEquals(-94.1231233f, (Float) convertedObject, 0.0001);
     }
 
-    public void testPositiveFloatValue() throws Exception {
+    public void testPositiveFloatValue() {
         Object convertedObject = basicConverter.convertValue("94.1231233", Float.class);
         assertTrue(convertedObject instanceof Float);
         assertEquals(94.1231233f, (Float) convertedObject, 0.0001);
     }
 
 
-    public void testNegativeDoubleValue() throws Exception {
+    public void testNegativeDoubleValue() {
         Object convertedObject = basicConverter.convertValue("-94.1231233", Double.class);
         assertTrue(convertedObject instanceof Double);
         assertEquals(-94.1231233d, (Double) convertedObject, 0.0001);
     }
 
-    public void testPositiveDoubleValue() throws Exception {
+    public void testPositiveDoubleValue() {
         Object convertedObject = basicConverter.convertValue("94.1231233", Double.class);
         assertTrue(convertedObject instanceof Double);
         assertEquals(94.1231233d, (Double) convertedObject, 0.0001);
@@ -278,7 +310,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         assertEquals(BigDecimal.valueOf(12345.67890), convertedObject);
     }
 
-    public void testNestedEnumValue() throws Exception {
+    public void testNestedEnumValue() {
         Object convertedObject = basicConverter.convertValue(ParentClass.NestedEnum.TEST.name(), ParentClass.NestedEnum.class);
         assertTrue(convertedObject instanceof ParentClass.NestedEnum);
         assertEquals(ParentClass.NestedEnum.TEST, convertedObject);
@@ -288,13 +320,13 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         Map<String, Object> context = new HashMap<>();
         String s = "names";
         Object value = new Person[0];
-        Class toType = String.class;
+        Class<?> toType = String.class;
         basicConverter.convertValue(context, value, null, s, value, toType);
     }
     
     public void testExceptionWhenCantCreateTypeFromValue() {
         try{
-            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, 4, Date.class);
+            basicConverter.convertValue(new HashMap<>(), null, null, null, 4, Date.class);
             fail(MSG_EXCEPTION_EXPECTED);
         }catch(Exception ex){
             assertEquals(TypeConversionException.class, ex.getClass());
@@ -304,7 +336,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
     
     public void testExceptionInDoConvertToClass() {
         try{
-            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", Class.class);
+            basicConverter.convertValue(new HashMap<>(), null, null, null, "Foo", Class.class);
             fail(MSG_EXCEPTION_EXPECTED);
         }catch(Exception ex){
             assertEquals(TypeConversionException.class, ex.getClass());
@@ -315,7 +347,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         try{
             Mockito.when(mockedContainer.getInstanceNames(CollectionConverter.class)).thenReturn(null);
             basicConverter.setContainer(mockedContainer);
-            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", ArrayList.class);
+            basicConverter.convertValue(new HashMap<>(), null, null, null, "Foo", ArrayList.class);
             fail(MSG_EXCEPTION_EXPECTED);
         }catch(Exception ex){
             assertEquals(TypeConversionException.class, ex.getClass());
@@ -328,7 +360,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
             int[] arrayInt = new int[1];
             Mockito.when(mockedContainer.getInstanceNames(ArrayConverter.class)).thenReturn(null);
             basicConverter.setContainer(mockedContainer);
-            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", arrayInt.getClass());
+            basicConverter.convertValue(new HashMap<>(), null, null, null, "Foo", arrayInt.getClass());
             fail(MSG_EXCEPTION_EXPECTED);
         }catch(Exception ex){
             assertEquals(TypeConversionException.class, ex.getClass());
@@ -340,7 +372,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         try{
             Mockito.when(mockedContainer.getInstanceNames(DateConverter.class)).thenReturn(null);
             basicConverter.setContainer(mockedContainer);
-            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", Date.class);
+            basicConverter.convertValue(new HashMap<>(), null, null, null, "Foo", Date.class);
             fail(MSG_EXCEPTION_EXPECTED);
         }catch(Exception ex){
             assertEquals(TypeConversionException.class, ex.getClass());
@@ -352,7 +384,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         try{
             Mockito.when(mockedContainer.getInstanceNames(NumberConverter.class)).thenReturn(null);
             basicConverter.setContainer(mockedContainer);
-            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, "Foo", int.class);
+            basicConverter.convertValue(new HashMap<>(), null, null, null, "Foo", int.class);
             fail(MSG_EXCEPTION_EXPECTED);
         }catch(Exception ex){
             assertEquals(TypeConversionException.class, ex.getClass());
@@ -364,7 +396,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         try{
             Mockito.when(mockedContainer.getInstanceNames(StringConverter.class)).thenReturn(null);
             basicConverter.setContainer(mockedContainer);
-            Object convertedObject = basicConverter.convertValue(new HashMap<String, Object>(), null, null, null, 1, String.class);
+            basicConverter.convertValue(new HashMap<>(), null, null, null, 1, String.class);
             fail(MSG_EXCEPTION_EXPECTED);
         }catch(Exception ex){
             assertEquals(TypeConversionException.class, ex.getClass());

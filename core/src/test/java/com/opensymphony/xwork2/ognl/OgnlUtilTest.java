@@ -19,6 +19,8 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.StubTextProvider;
+import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
@@ -64,13 +66,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     // Fields for static field access test
     public static final String STATIC_FINAL_PUBLIC_ATTRIBUTE = "Static_Final_Public_Attribute";
-    static final String STATIC_FINAL_PACKAGE_ATTRIBUTE = "Static_Final_Package_Attribute";
-    protected static final String STATIC_FINAL_PROTECTED_ATTRIBUTE = "Static_Final_Protected_Attribute";
-    private static final String STATIC_FINAL_PRIVATE_ATTRIBUTE = "Static_Final_Private_Attribute";
     public static String STATIC_PUBLIC_ATTRIBUTE = "Static_Public_Attribute";
-    static String STATIC_PACKAGE_ATTRIBUTE = "Static_Package_Attribute";
-    protected static String STATIC_PROTECTED_ATTRIBUTE = "Static_Protected_Attribute";
-    private static String STATIC_PRIVATE_ATTRIBUTE = "Static_Private_Attribute";
 
     private OgnlUtil ognlUtil;
 
@@ -97,9 +93,7 @@ public class OgnlUtilTest extends XWorkTestCase {
                 for (Method method : methods) {
                     String name = method.getName();
 
-                    if (!getter.equals(name) || (method.getParameterTypes().length != 1)) {
-                        continue;
-                    } else {
+                    if (getter.equals(name) && (method.getParameterTypes().length == 1)) {
                         Class<?> clazz = method.getParameterTypes()[0];
 
                         try {
@@ -477,10 +471,17 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Map<String, Object> context = ognlUtil.createDefaultContext(foo);
 
+        ValueStack stack = new StubValueStack();
+        stack.push(new StubTextProvider(new HashMap<>()));
+
         Map<String, Object> props = new HashMap<>();
         props.put("birthday", "02/12/1982");
         // US style test
-        context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
+        context = ActionContext.of(context)
+            .withLocale(Locale.US)
+            .withValueStack(stack)
+            .getContextMap();
+
         ognlUtil.setProperties(props, foo, context);
 
         Calendar cal = Calendar.getInstance(Locale.US);

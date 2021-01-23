@@ -42,7 +42,7 @@ import java.util.ResourceBundle;
  * When you want to use your own implementation for Struts 2 project you have to define following
  * bean and constant in struts.xml:
  * &lt;bean class=&quot;org.demo.MyTextProvider&quot; name=&quot;myTextProvider&quot; type=&quot;com.opensymphony.xwork2.TextProvider&quot; /&gt;
- * &lt;constant name=&quot;struts.xworkTextProvider&quot; value=&quot;myTextProvider&quot; /&gt;
+ * &lt;constant name=&quot;struts.textProvider&quot; value=&quot;myTextProvider&quot; /&gt;
  * </p>
  *
  * <p>

@@ -117,13 +117,14 @@
         <spring.platformVersion>4.3.29.RELEASE</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
+        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>
 
         <!-- Sonar -->
         <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
-        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
+        <sonar.exclusions>apps/**</sonar.exclusions>
     </properties>
 
     <profiles>

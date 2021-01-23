@@ -390,7 +390,6 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(TypeConverterCreator.class, StrutsConstants.STRUTS_CONVERTER_CREATOR, builder, props);
         alias(TypeConverterHolder.class, StrutsConstants.STRUTS_CONVERTER_HOLDER, builder, props);
 
-        alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props, Scope.PROTOTYPE);
         alias(TextProvider.class, StrutsConstants.STRUTS_TEXT_PROVIDER, builder, props, Scope.PROTOTYPE);
         alias(TextProviderFactory.class, StrutsConstants.STRUTS_TEXT_PROVIDER_FACTORY, builder, props, Scope.PROTOTYPE);
         alias(LocaleProviderFactory.class, StrutsConstants.STRUTS_LOCALE_PROVIDER_FACTORY, builder, props);

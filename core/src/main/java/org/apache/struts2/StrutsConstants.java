@@ -213,13 +213,6 @@ public final class StrutsConstants {
 
     public static final String STRUTS_ALWAYS_SELECT_FULL_NAMESPACE = "struts.mapper.alwaysSelectFullNamespace";
 
-    /**
-     * XWork default text provider
-     * @deprecated use {@link #STRUTS_TEXT_PROVIDER} instead
-     */
-    @Deprecated
-    public static final String STRUTS_XWORKTEXTPROVIDER = "struts.xworkTextProvider";
-
     /** The {@link com.opensymphony.xwork2.LocaleProviderFactory} implementation class */
     public static final String STRUTS_LOCALE_PROVIDER_FACTORY = "struts.localeProviderFactory";
 

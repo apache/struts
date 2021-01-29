@@ -208,15 +208,15 @@ import org.apache.struts2.views.util.UrlHelper;
  *   </tr>
  *   <tr>
  *     <td>com.opensymphony.xwork2.TextProvider</td>
- *     <td>struts.xworkTextProvider</td>
+ *     <td>struts.textProvider</td>
  *     <td>default</td>
- *     <td>Allows provide custom TextProvider for whole application</td>
+ *     <td>Allows provide custom TextProvider for whole application, it's better to use struts.textProviderFactory</td>
  *   </tr>
  *   <tr>
- *     <td>com.opensymphony.xwork2.LocaleProvider</td>
- *     <td>struts.localeProvider</td>
- *     <td>singleton</td>
- *     <td>DEPRECATED! Allows provide custom TextProvider for whole application - instead this endpoint use <b>struts.localeProviderFactory</b></td>
+ *     <td>com.opensymphony.xwork2.TextProviderFactory</td>
+ *     <td>struts.textProviderFactory</td>
+ *     <td>default</td>
+ *     <td>Allows provide custom TextProviderFactory for whole application</td>
  *   </tr>
  *   <tr>
  *     <td>com.opensymphony.xwork2.LocaleProviderFactory</td>
@@ -390,7 +390,6 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(TypeConverterCreator.class, StrutsConstants.STRUTS_CONVERTER_CREATOR, builder, props);
         alias(TypeConverterHolder.class, StrutsConstants.STRUTS_CONVERTER_HOLDER, builder, props);
 
-        alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props, Scope.PROTOTYPE);
         alias(TextProvider.class, StrutsConstants.STRUTS_TEXT_PROVIDER, builder, props, Scope.PROTOTYPE);
         alias(TextProviderFactory.class, StrutsConstants.STRUTS_TEXT_PROVIDER_FACTORY, builder, props, Scope.PROTOTYPE);
         alias(LocaleProviderFactory.class, StrutsConstants.STRUTS_LOCALE_PROVIDER_FACTORY, builder, props);

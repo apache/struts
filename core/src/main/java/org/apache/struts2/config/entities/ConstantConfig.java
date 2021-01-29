@@ -87,8 +87,6 @@ public class ConstantConfig {
     private Boolean freemarkerWrapperAltMap;
     private BeanConfig xworkConverter;
     private Boolean mapperAlwaysSelectFullNamespace;
-    private BeanConfig xworkTextProvider;
-    private BeanConfig localeProvider;
     private BeanConfig localeProviderFactory;
     private String mapperIdParameterName;
     private Boolean ognlAllowStaticFieldAccess;
@@ -218,8 +216,6 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_FREEMARKER_WRAPPER_ALT_MAP, Objects.toString(freemarkerWrapperAltMap, null));
         map.put(StrutsConstants.STRUTS_XWORKCONVERTER, beanConfToString(xworkConverter));
         map.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, Objects.toString(mapperAlwaysSelectFullNamespace, null));
-        map.put(StrutsConstants.STRUTS_XWORKTEXTPROVIDER, beanConfToString(xworkTextProvider));
-        map.put(StrutsConstants.STRUTS_LOCALE_PROVIDER, beanConfToString(localeProvider));
         map.put(StrutsConstants.STRUTS_LOCALE_PROVIDER_FACTORY, beanConfToString(localeProviderFactory));
         map.put(StrutsConstants.STRUTS_ID_PARAMETER_NAME, mapperIdParameterName);
         map.put(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Objects.toString(ognlAllowStaticFieldAccess, null));
@@ -778,30 +774,6 @@ public class ConstantConfig {
 
     public void setMapperAlwaysSelectFullNamespace(Boolean mapperAlwaysSelectFullNamespace) {
         this.mapperAlwaysSelectFullNamespace = mapperAlwaysSelectFullNamespace;
-    }
-
-    public BeanConfig getXworkTextProvider() {
-        return xworkTextProvider;
-    }
-
-    public void setXworkTextProvider(BeanConfig xworkTextProvider) {
-        this.xworkTextProvider = xworkTextProvider;
-    }
-
-    public void setXworkTextProvider(Class<?> clazz) {
-        this.xworkTextProvider = new BeanConfig(clazz, clazz.getName());
-    }
-
-    public BeanConfig getLocaleProvider() {
-        return localeProvider;
-    }
-
-    public void setLocaleProvider(BeanConfig localeProvider) {
-        this.localeProvider = localeProvider;
-    }
-
-    public void setLocaleProvider(Class<?> clazz) {
-        this.localeProvider = new BeanConfig(clazz, clazz.getName());
     }
 
     public BeanConfig getLocaleProviderFactory() {

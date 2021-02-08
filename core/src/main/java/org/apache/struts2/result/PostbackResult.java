@@ -152,7 +152,7 @@ public class PostbackResult extends StrutsResultSupport {
         } else {
             String location = getLocation();
             // Do not prepend if the URL is a FQN
-            if (!location.matches("^([a-zA-z]+:)?//.*")) {
+            if (!location.matches("^([a-zA-Z]+:)?//.*")) {
                 // If the URL is relative to the servlet context, prepend the servlet context path
                 if (prependServletContext && (request.getContextPath() != null) && (request.getContextPath().length() > 0)) {
                     location = request.getContextPath() + location;

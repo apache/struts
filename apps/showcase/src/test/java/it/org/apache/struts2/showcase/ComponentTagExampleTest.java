@@ -27,7 +27,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ComponentTagExampleTest {
-    @Test
+    //@Test
     public void test() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient

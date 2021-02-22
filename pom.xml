@@ -123,8 +123,11 @@
         <fluido-skin.version>1.9</fluido-skin.version>
 
         <!-- Sonar -->
-        <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
-        <sonar.exclusions>apps/**</sonar.exclusions>
+        <!-- <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
+        <sonar.exclusions>apps/**</sonar.exclusions> -->
+        <sonar.projectKey>kerttup_struts</sonar.projectKey>
+        <sonar.organization>kerttup</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <profiles>

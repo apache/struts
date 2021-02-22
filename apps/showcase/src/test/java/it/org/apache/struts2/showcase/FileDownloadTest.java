@@ -31,7 +31,7 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 
 public class FileDownloadTest {
-    @Test
+    //@Test
     public void testImage() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final Page page = webClient.getPage(ParameterUtils.getBaseUrl() + "/filedownload/download.action");

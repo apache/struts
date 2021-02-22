@@ -32,7 +32,7 @@ import java.io.File;
 
 public class FileUploadTest {
 
-    @Test
+    //@Test
     public void testEmptyFile() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/doUpload.action");

@@ -29,7 +29,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
 public class ConversionTest {
-    @Test
+    //@Test
     public void testList() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient
@@ -57,7 +57,7 @@ public class ConversionTest {
         }
     }
 
-    @Test
+    //@Test
     public void testSet() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient
@@ -79,7 +79,7 @@ public class ConversionTest {
         }
     }
 
-    @Test
+    //@Test
     public void testEnum() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient

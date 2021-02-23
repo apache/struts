@@ -126,7 +126,6 @@
         <!-- <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
         <sonar.exclusions>apps/**</sonar.exclusions> -->
         <sonar.projectKey>kerttup-struts</sonar.projectKey>
-        <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
         <sonar.organization>kerttup</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>

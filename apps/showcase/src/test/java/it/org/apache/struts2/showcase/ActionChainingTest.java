@@ -27,7 +27,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ActionChainingTest {
-    //@Test
+    @Test
     public void test() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/actionchaining/actionChain1!input");

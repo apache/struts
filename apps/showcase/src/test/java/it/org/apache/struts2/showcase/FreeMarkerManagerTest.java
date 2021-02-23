@@ -28,7 +28,7 @@ import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class FreeMarkerManagerTest {
-    //@Test
+    @Test
     public void testCustomManager() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient
@@ -44,7 +44,7 @@ public class FreeMarkerManagerTest {
         }
     }
 
-    //@Test
+    @Test
     public void testTags() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/freemarker/standardTags.action");

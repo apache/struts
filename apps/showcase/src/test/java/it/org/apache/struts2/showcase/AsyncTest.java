@@ -29,7 +29,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
 public class AsyncTest {
-    //@Test
+    @Test
     public void testChatRoom() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/async/index.html");

@@ -30,7 +30,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
 public class CRUDTest {
-    //@Test
+    @Test
     public void testCreate() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/skill/edit.action");

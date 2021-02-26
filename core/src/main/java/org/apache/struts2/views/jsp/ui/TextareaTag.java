@@ -38,6 +38,7 @@ public class TextareaTag extends AbstractUITag {
     protected String rows;
     protected String wrap;
     protected String maxlength;
+    protected String minlength;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TextArea(stack, req, res);
@@ -52,6 +53,7 @@ public class TextareaTag extends AbstractUITag {
         textArea.setRows(rows);
         textArea.setWrap(wrap);
         textArea.setMaxlength(maxlength);
+        textArea.setMinlength(minlength);
     }
 
     public void setCols(String cols) {
@@ -72,6 +74,10 @@ public class TextareaTag extends AbstractUITag {
     
     public void setMaxlength(String maxlength) {
         this.maxlength = maxlength;
-    }    
+    }
+
+    public void setMinlength(String minlength) {
+        this.minlength = minlength;
+    }
 
 }

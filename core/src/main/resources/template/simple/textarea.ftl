@@ -52,4 +52,10 @@
 <#if parameters.nameValue??>
 <@s.property value="parameters.nameValue"/><#t/>
 </#if>
+<#if parameters.maxlength?has_content>
+ maxlength="${parameters.maxlength}"<#rt/>
+</#if>
+<#if parameters.minlength?has_content>
+ minlength="${parameters.minlength}"<#rt/>
+</#if>
 </textarea>

@@ -51,6 +51,8 @@ public class TextArea extends UIBean {
     protected String readonly;
     protected String rows;
     protected String wrap;
+    protected String maxlength;
+    protected String minlength;
 
     public TextArea(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -78,6 +80,13 @@ public class TextArea extends UIBean {
         if (wrap != null) {
             addParameter("wrap", findString(wrap));
         }
+
+        if (maxlength != null) {
+            addParameter("maxlength", findString(maxlength));
+        }
+        if (minlength != null) {
+            addParameter("minlength", findString(minlength));
+        }
     }
 
     @StrutsTagAttribute(description="HTML cols attribute", type="Integer")
@@ -98,5 +107,15 @@ public class TextArea extends UIBean {
     @StrutsTagAttribute(description="HTML wrap attribute")
     public void setWrap(String wrap) {
         this.wrap = wrap;
+    }
+
+    @StrutsTagAttribute(description="HTML maxlength attribute", type="Integer")
+    public void setMaxlength(String maxlength) {
+        this.maxlength = maxlength;
+    }
+
+    @StrutsTagAttribute(description="HTML minlength attribute", type="Integer")
+    public void setMinlength(String minlength) {
+        this.minlength = minlength;
     }
 }

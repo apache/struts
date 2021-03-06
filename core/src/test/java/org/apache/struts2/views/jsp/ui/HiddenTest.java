@@ -62,6 +62,23 @@ public class HiddenTest extends AbstractUITagTest {
         verify(TextFieldTag.class.getResource("Hidden-2.txt"));
     }
 
+    public void testDynamicAttributes() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setId(27357L);
+
+        HiddenTag tag = new HiddenTag();
+        tag.setPageContext(pageContext);
+        tag.setId("einszwei");
+        tag.setName("first");
+        tag.setValue("%{id}");
+        tag.setDynamicAttribute("", "data-wuffmiauww", "%{id}");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Hidden-3.txt"));
+    }
+
     /**
      * Initialize a map of {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder} for generic tag
      * property testing. Will be used when calling {@link #verifyGenericProperties(org.apache.struts2.views.jsp.ui.AbstractUITag,

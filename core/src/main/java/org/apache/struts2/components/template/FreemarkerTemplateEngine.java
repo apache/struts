@@ -64,7 +64,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     public void setFreemarkerManager(FreemarkerManager mgr) {
         this.freemarkerManager = mgr;
     }
-    
+
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
     	// get the various items required from the stack
         ValueStack stack = templateContext.getStack();
@@ -144,11 +144,16 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
             }
         };
 
+        LOG.debug("Puts action on the top of the stack, just before the tag");
+        Object actionFromStack = stack.pop();
         try {
             stack.push(templateContext.getTag());
+            stack.push(actionFromStack);
             template.process(model, writer);
         } finally {
-            stack.pop();
+            stack.pop(); // removes action
+            stack.pop(); // removes tag
+            stack.push(actionFromStack); // puts back action
         }
     }
 

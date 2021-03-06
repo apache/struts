@@ -49,6 +49,7 @@ public class TestAction extends ActionSupport {
     private List list3;
     private SomeEnum status = SomeEnum.COMPLETED;
     private Float floatNumber;
+    private Long id;
 
     private final Map<String, String> texts = new HashMap<String, String>();
 
@@ -213,7 +214,7 @@ public class TestAction extends ActionSupport {
 	public void setStatus(SomeEnum status) {
 		this.status = status;
 	}
-    
+
     public List<SomeEnum> getStatusList() {
     	return Arrays.asList(SomeEnum.values());
     }
@@ -225,4 +226,13 @@ public class TestAction extends ActionSupport {
     public void setFloatNumber(Float floatNumber) {
         this.floatNumber = floatNumber;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

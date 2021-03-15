@@ -31,8 +31,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -65,7 +63,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     private final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
-    private final Set<String> missingBundles = Collections.synchronizedSet(new HashSet<String>());
+    private final Set<String> missingBundles = ConcurrentHashMap.newKeySet();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
 
     /**

@@ -31,8 +31,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -61,7 +59,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     private final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
-    private final Set<String> missingBundles = Collections.synchronizedSet(new HashSet<String>());
+    private final ConcurrentMap<String,Boolean> missingBundles = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
 
     /**
@@ -390,7 +388,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         ClassLoader classLoader = getCurrentThreadContextClassLoader();
         String key = createMissesKey(String.valueOf(classLoader.hashCode()), aBundleName, locale);
 
-        if (missingBundles.contains(key)) {
+        if (missingBundles.containsKey(key)) {
             return null;
         }
 
@@ -413,11 +411,11 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
                     }
                 } catch (MissingResourceException e) {
                     LOG.debug("Missing resource bundle [{}]!", aBundleName, e);
-                    missingBundles.add(key);
+                    missingBundles.put(key, Boolean.TRUE);
                 }
             } else {
                 LOG.debug("Missing resource bundle [{}]!", aBundleName);
-                missingBundles.add(key);
+                missingBundles.put(key, Boolean.TRUE);
             }
         }
         return bundle;

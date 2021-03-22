@@ -44,15 +44,17 @@ public enum Scope {
         @Override
         <T> InternalFactory<? extends T> scopeFactory(Class<T> type, String name, final InternalFactory<? extends T> factory) {
             return new InternalFactory<T>() {
-                T instance;
+                volatile T instance;
 
                 public T create(InternalContext context) {
-                    synchronized (context.getContainer()) {
-                        if (instance == null) {
-                            instance = InitializableFactory.wrapIfNeeded(factory).create(context);
+                    if (instance == null) {
+                        synchronized (context.getContainer()) {
+                            if (instance == null) {
+                                instance = InitializableFactory.wrapIfNeeded(factory).create(context);
+                            }
                         }
-                        return instance;
                     }
+                    return instance;
                 }
 
                 @Override

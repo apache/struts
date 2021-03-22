@@ -59,7 +59,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     private final ConcurrentMap<MessageFormatKey, MessageFormat> messageFormats = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, List<String>> classLoaderMap = new ConcurrentHashMap<>();
-    private final ConcurrentMap<String,Boolean> missingBundles = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Boolean> missingBundles = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, ClassLoader> delegatedClassLoaderMap = new ConcurrentHashMap<>();
 
     /**
@@ -411,11 +411,11 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
                     }
                 } catch (MissingResourceException e) {
                     LOG.debug("Missing resource bundle [{}]!", aBundleName, e);
-                    missingBundles.put(key, Boolean.TRUE);
+                    missingBundles.putIfAbsent(key, Boolean.TRUE);
                 }
             } else {
                 LOG.debug("Missing resource bundle [{}]!", aBundleName);
-                missingBundles.put(key, Boolean.TRUE);
+                missingBundles.putIfAbsent(key, Boolean.TRUE);
             }
         }
         return bundle;

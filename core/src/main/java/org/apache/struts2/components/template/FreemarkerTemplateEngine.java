@@ -144,16 +144,19 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
             }
         };
 
-        LOG.debug("Puts action on the top of the stack, just before the tag");
-        Object actionFromStack = stack.pop();
+        LOG.debug("Puts action on the top of ValueStack, just before the tag");
+        if (action == null) {
+            LOG.debug("Action from ActionInvocation is null, assuming action is on the top of ValueStack");
+            action = stack.pop();
+        }
         try {
             stack.push(templateContext.getTag());
-            stack.push(actionFromStack);
+            stack.push(action);
             template.process(model, writer);
         } finally {
             stack.pop(); // removes action
             stack.pop(); // removes tag
-            stack.push(actionFromStack); // puts back action
+            stack.push(action); // puts back action
         }
     }
 

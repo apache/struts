@@ -18,15 +18,14 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- */
 public class HiddenTest extends AbstractUITagTest {
 
     public void testSimple() throws Exception {
@@ -62,7 +61,31 @@ public class HiddenTest extends AbstractUITagTest {
         verify(TextFieldTag.class.getResource("Hidden-2.txt"));
     }
 
-    public void testDynamicAttributes() throws Exception {
+    public void testDynamicAttributesWithActionInvocation() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setId(27357L);
+
+        MockActionInvocation ai = new MockActionInvocation();
+        ai.setAction(action);
+        ActionContext.getContext().setActionInvocation(ai);
+
+        HiddenTag tag = new HiddenTag();
+        tag.setPageContext(pageContext);
+        tag.setId("einszwei");
+        tag.setName("first");
+        tag.setValue("%{id}");
+        tag.setDynamicAttribute("", "data-wuffmiauww", "%{id}");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertSame(stack.pop(), testAction);
+        assertNotSame(stack.pop(), tag);
+
+        verify(TextFieldTag.class.getResource("Hidden-3.txt"));
+    }
+
+    public void testDynamicAttributesWithStack() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setId(27357L);
 
@@ -76,6 +99,9 @@ public class HiddenTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
+        assertSame(stack.pop(), testAction);
+        assertNotSame(stack.pop(), tag);
+
         verify(TextFieldTag.class.getResource("Hidden-3.txt"));
     }
 
@@ -85,7 +111,7 @@ public class HiddenTest extends AbstractUITagTest {
      * String, String[])} as properties to verify.<br> This implementation extends testdata from AbstractUITag.
      *
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
-     *         as key.
+     * as key.
      */
     protected Map initializedGenericTagTestProperties() {
         Map result = new HashMap();

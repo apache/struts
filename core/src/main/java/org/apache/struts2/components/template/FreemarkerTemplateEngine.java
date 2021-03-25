@@ -121,6 +121,10 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         ActionInvocation ai = ActionContext.getContext().getActionInvocation();
 
         Object action = (ai == null) ? null : ai.getAction();
+        if (action == null) {
+            LOG.warn("Rendering tag {} out of Action scope, accessing directly JSPs is not recommended! " +
+                    "Please read https://struts.apache.org/security/#never-expose-jsp-files-directly", templateName);
+        }
         SimpleHash model = freemarkerManager.buildTemplateModel(stack, action, servletContext, req, res, config.getObjectWrapper());
 
         model.put("tag", templateContext.getTag());
@@ -146,9 +150,9 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
 
         LOG.debug("Puts action on the top of ValueStack, just before the tag");
         action = stack.pop();
+        stack.push(templateContext.getTag());
+        stack.push(action);
         try {
-            stack.push(templateContext.getTag());
-            stack.push(action);
             template.process(model, writer);
         } finally {
             stack.pop(); // removes action

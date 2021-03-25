@@ -145,10 +145,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         };
 
         LOG.debug("Puts action on the top of ValueStack, just before the tag");
-        if (action == null) {
-            LOG.debug("Action from ActionInvocation is null, assuming action is on the top of ValueStack");
-            action = stack.pop();
-        }
+        action = stack.pop();
         try {
             stack.push(templateContext.getTag());
             stack.push(action);

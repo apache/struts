@@ -40,6 +40,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * This interceptor sets all parameters on the value stack.
@@ -50,8 +51,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 
+    private static final Pattern DMI_IGNORED_PATTERN = Pattern.compile("^(action|method):.*", Pattern.CASE_INSENSITIVE);
+
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
     private boolean devMode = false;
+    private boolean dmiEnabled = false;
 
     protected boolean ordered = false;
 
@@ -79,6 +83,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         this.acceptedPatterns = acceptedPatterns;
     }
 
+    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
+    protected void setDynamicMethodInvocation(String dmiEnabled) {
+        this.dmiEnabled = Boolean.parseBoolean(dmiEnabled);
+    }
+
     /**
      * If the param name exceeds the configured maximum length it will not be
      * accepted.
@@ -101,13 +110,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     /**
      * Compares based on number of '.' and '[' characters (fewer is higher)
      */
-    static final Comparator<String> rbCollator = new Comparator<String>() {
-        public int compare(String s1, String s2) {
-            int l1 = countOGNLCharacters(s1);
-            int l2 = countOGNLCharacters(s2);
-            return l1 < l2 ? -1 : (l2 < l1 ? 1 : s1.compareTo(s2));
-        }
-
+    static final Comparator<String> rbCollator = (s1, s2) -> {
+        int l1 = countOGNLCharacters(s1);
+        int l2 = countOGNLCharacters(s2);
+        return l1 < l2 ? -1 : (l2 < l1 ? 1 : s1.compareTo(s2));
     };
 
     @Override
@@ -286,11 +292,23 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean acceptableName(String name) {
+        if (isIgnoredDMI(name)) {
+            LOG.trace("DMI is enabled, ignoring DMI method: {}", name);
+            return false;
+        }
         boolean accepted = isWithinLengthLimit(name) && !isExcluded(name) && isAccepted(name);
         if (devMode && accepted) { // notify only when in devMode
             LOG.debug("Parameter [{}] was accepted and will be appended to action!", name);
         }
         return accepted;
+    }
+
+    private boolean isIgnoredDMI(String name) {
+        if (dmiEnabled) {
+            return DMI_IGNORED_PATTERN.matcher(name).matches();
+        } else {
+            return false;
+        }
     }
 
     protected boolean isWithinLengthLimit(String name) {

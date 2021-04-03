@@ -715,6 +715,33 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertEquals(expected, actual);
     }
 
+    public void testDMIMethodsAreIgnored() throws Exception {
+        // given
+        ParametersInterceptor interceptor = createParametersInterceptor();
+        final Map<String, Object> actual = injectValueStackFactory(interceptor);
+        ValueStack stack = injectValueStack(actual);
+
+        final Map<String, Object> expected = new HashMap<String, Object>() {
+            {
+                put("ordinary.bean", "value");
+            }
+        };
+
+        Map<String, Object> parameters = new HashMap<String, Object>() {
+            {
+                put("ordinary.bean", "value");
+                put("action:", "myAction");
+                put("method:", "doExecute");
+            }
+        };
+
+        // when
+        interceptor.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+
+        // then
+        assertEquals(expected, actual);
+    }
+
     public void testBeanListSingleValue() throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("beanList.name", new String[] { "Superman" });

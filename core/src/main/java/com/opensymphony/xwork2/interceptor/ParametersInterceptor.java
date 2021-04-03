@@ -33,6 +33,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 
@@ -40,6 +41,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * This interceptor sets all parameters on the value stack.
@@ -49,9 +51,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private static final Logger LOG = LogManager.getLogger(ParametersInterceptor.class);
 
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
+    private static final Pattern DMI_IGNORED_PATTERN = Pattern.compile("^(action|method):.*", Pattern.CASE_INSENSITIVE);
 
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
     private boolean devMode = false;
+    private boolean dmiEnabled = false;
 
     protected boolean ordered = false;
 
@@ -77,6 +81,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject
     public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
         this.acceptedPatterns = acceptedPatterns;
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
+    public void setDmiEnabled(String dmiEnabled) {
+        this.dmiEnabled = Boolean.parseBoolean(dmiEnabled);
     }
 
     /**
@@ -285,11 +294,23 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean acceptableName(String name) {
+        if (isIgnoredDMI(name)) {
+            LOG.trace("DMI is enabled, ignoring DMI method: {}", name);
+            return false;
+        }
         boolean accepted = isWithinLengthLimit(name) && !isExcluded(name) && isAccepted(name);
         if (devMode && accepted) { // notify only when in devMode
             LOG.debug("Parameter [{}] was accepted and will be appended to action!", name);
         }
         return accepted;
+    }
+
+    private boolean isIgnoredDMI(String name) {
+        if (dmiEnabled) {
+            return false;
+        } else {
+            return DMI_IGNORED_PATTERN.matcher(name).matches();
+        }
     }
 
     protected boolean isWithinLengthLimit(String name) {

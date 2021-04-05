@@ -307,9 +307,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     private boolean isIgnoredDMI(String name) {
         if (dmiEnabled) {
-            return false;
-        } else {
             return DMI_IGNORED_PATTERN.matcher(name).matches();
+        } else {
+            return false;
         }
     }
 

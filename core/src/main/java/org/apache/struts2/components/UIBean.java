@@ -671,7 +671,7 @@ public abstract class UIBean extends Component {
         }
 
         if (this.name != null) {
-            name = findString(this.name);
+            name = findString(this.name, new NestedJavaIdentifierFilter());
             addParameter("name", name);
         }
 
@@ -805,11 +805,7 @@ public abstract class UIBean extends Component {
                         addParameter("nameValue", findValue(value, valueClazz));
                     } else if (name != null) {
                         String expr = completeExpression(name);
-                        if (recursion(name)) {
-                            addParameter("nameValue", expr);
-                        } else {
-                            addParameter("nameValue", findValue(expr, valueClazz));
-                        }
+                        addParameter("nameValue", findValue(expr, valueClazz));
                     }
                 } else {
                     if (value != null) {

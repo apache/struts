@@ -125,7 +125,7 @@ public class Param extends Component {
             if (component instanceof UnnamedParametric) {
                 ((UnnamedParametric) component).addParameter(findValue(value));
             } else {
-                String name = findString(this.name);
+                String name = findString(this.name, new NestedJavaIdentifierFilter());
 
                 if (name == null) {
                     throw new StrutsException("No name found for following expression: " + this.name);

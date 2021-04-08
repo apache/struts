@@ -301,7 +301,60 @@ public class UIBeanTest extends StrutsInternalTestCase {
         txtFld.setName("%{myValue}");
         txtFld.evaluateParams();
 
-        assertEquals("%{myBad}", txtFld.getParameters().get("nameValue"));
+        assertNull(txtFld.getParameters().get("name"));
+        assertNull(txtFld.getParameters().get("nameValue"));
+    }
+
+    public void testValueParameterIsJavaIdentifier() {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        stack.push(new Object() {
+            public Object getMy良い() {
+                return new Object() {
+                    public String getMyValue名前() {
+                        return "myValue";
+                    }
+                };
+            }
+            public String getMyValue () {
+                return "%{myGood}";
+            }
+        });
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setName("%{my良い.myValue名前}");
+        txtFld.evaluateParams();
+
+        assertEquals("myValue", txtFld.getParameters().get("name"));
+        assertEquals("%{myGood}", txtFld.getParameters().get("nameValue"));
+    }
+
+    public void testValueParameterNotJavaIdentifier() {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        stack.push(new Object() {
+            public Object getMyGood() {
+                return new Object() {
+                    public String getMyValueName() {
+                        return "getMyValue()";
+                    }
+                };
+            }
+            public String getMyValue() {
+                return "%{myValue}";
+            }
+        });
+
+        TextField txtFld = new TextField(stack, req, res);
+        txtFld.setName("%{myGood.myValueName}");
+        txtFld.evaluateParams();
+
+        assertNull(txtFld.getParameters().get("name"));
+        assertNull(txtFld.getParameters().get("nameValue"));
     }
 
     public void testSetClass() {

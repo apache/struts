@@ -235,4 +235,15 @@ public class TestAction extends ActionSupport {
         this.id = id;
     }
 
+    public Map<String, String> getMyTexts() {
+        return texts;
+    }
+
+    public User getMyUser() {
+        if (null == user) {
+            user = new User();
+        }
+
+        return user;
+    }
 }

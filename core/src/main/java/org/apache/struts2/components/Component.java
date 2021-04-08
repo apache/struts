@@ -232,6 +232,27 @@ public class Component {
     }
 
     /**
+     * Evaluates the OGNL stack to find and process a String value.
+     * @param expr OGNL expression.
+     * @param evaluator the processor
+     * @return the String value found and processed by evaluator.
+     * @since 2.5.27
+     */
+    protected String findString(String expr, final TextParseUtil.ParsedValueEvaluator evaluator) {
+        Object value = findValue(expr, String.class, evaluator);
+        if (null == value) {
+            return null;
+        }
+
+        String s = value.toString();
+        if (s.trim().isEmpty()) {
+            return null;
+        }
+
+        return s;
+    }
+
+    /**
      * Evaluates the OGNL stack to find a String value.
      * <br>
      * If the given expression is <tt>null</tt> a error is logged and a <code>RuntimeException</code> is thrown
@@ -363,9 +384,29 @@ public class Component {
      * @return the Object found, or <tt>null</tt> if not found.
      */
     protected Object findValue(String expression, Class<?> toType) {
+        return findValue(expression, toType, null);
+    }
+
+    /**
+     * Evaluates the OGNL stack to find an Object of the given type. Will evaluate and process
+     * <code>expression</code> the portion wrapped with %{...} against stack if
+     * evaluating to String.class, else the whole <code>expression</code> is evaluated
+     * against the stack.
+     *
+     * @param expression OGNL expression.
+     * @param toType the type expected to find.
+     * @param evaluator the processor
+     * @return the Object found, or <tt>null</tt> if not found.
+     * @since 2.5.27
+     */
+    protected Object findValue(String expression, Class<?> toType, final TextParseUtil.ParsedValueEvaluator evaluator) {
         if (toType == String.class) {
             if (ComponentUtils.containsExpression(expression)) {
-                return TextParseUtil.translateVariables('%', expression, stack);
+                if (null != evaluator) {
+                    return TextParseUtil.translateVariables('%', expression, stack, String.class, evaluator);
+                } else {
+                    return TextParseUtil.translateVariables('%', expression, stack);
+                }
             } else {
                 return expression;
             }
@@ -374,16 +415,6 @@ public class Component {
 
             return getStack().findValue(expression, toType, throwExceptionOnELFailure);
         }
-    }
-
-    /**
-     * Detects if expression already contains %{...}
-     *
-     * @param expression a string to examined
-     * @return true if expression contains %{...}
-     */
-    protected boolean recursion(String expression) {
-        return ComponentUtils.containsExpression(expression);
     }
 
     /**
@@ -571,4 +602,23 @@ public class Component {
         return standardAttributes;
     }
 
+
+    /**
+     * {@link com.opensymphony.xwork2.util.TextParseUtil.ParsedValueEvaluator} to filter not nested java identifiers
+     * values out. To be used when only a nested java identifiers is expected.
+     */
+    static final class NestedJavaIdentifierFilter implements TextParseUtil.ParsedValueEvaluator {
+        public Object evaluate(String parsedValue) {
+            for (int i = 0; i < parsedValue.length(); i++) {
+                char ch = parsedValue.charAt(i);
+                if ('.' != ch && '[' != ch && ']' != ch && '\'' != ch && '"' != ch && !Character.isJavaIdentifierPart(ch)) {
+                    LOG.warn("since 2.5.27 following expression must be a nested java identifiers (e.g. foo[index].bar)" +
+                            " so it won't be evaluated. Please consider a new design. Expression: {}", parsedValue);
+                    return null;
+                }
+            }
+
+            return parsedValue;
+        }
+    }
 }

@@ -53,7 +53,7 @@ public class BeanTagTest extends AbstractUITagTest {
         pageContext.verify();
     }
 
-    public void testIsJavaIdentifier() throws Exception {
+    public void testAccepted() throws Exception {
         BeanTag tag = new BeanTag();
         tag.setPageContext(pageContext);
         tag.setName("org.apache.struts2.TestAction");
@@ -61,7 +61,7 @@ public class BeanTagTest extends AbstractUITagTest {
         Map<String, String> tmp = new HashMap<>();
         tmp.put("property", "array[0]");
         tmp.put("property2", "myTexts['key']");
-        tmp.put("property3", "myTexts[\"key2\"]");
+        tmp.put("property3", "myTexts.key2");
         tmp.put("property4", "myUser.name");
         context.put("parameters", HttpParameters.create(tmp).build());
         ParamTag param1 = new ParamTag();
@@ -100,7 +100,7 @@ public class BeanTagTest extends AbstractUITagTest {
         tag.doEndTag();
     }
 
-    public void testIsNotJavaIdentifier() throws Exception {
+    public void testNotAccepted() throws Exception {
         BeanTag tag = new BeanTag();
         tag.setPageContext(pageContext);
         tag.setName("org.apache.struts2.TestAction");
@@ -120,7 +120,7 @@ public class BeanTagTest extends AbstractUITagTest {
             param1.doEndTag();
             fail("a not nested java identifiers is evaluated?!");
         } catch (StrutsException e) {
-            assertEquals("No name found for following expression: %{#parameters['property']}", e.getMessage());
+            assertEquals("Not valid or no name found for following expression: %{#parameters['property']}", e.getMessage());
         }
 
         tag.doEndTag();

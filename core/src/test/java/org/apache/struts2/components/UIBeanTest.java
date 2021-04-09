@@ -298,14 +298,15 @@ public class UIBeanTest extends StrutsInternalTestCase {
         });
 
         TextField txtFld = new TextField(stack, req, res);
+        container.inject(txtFld);
         txtFld.setName("%{myValue}");
         txtFld.evaluateParams();
 
-        assertNull(txtFld.getParameters().get("name"));
+        assertEquals("%{myBad}", txtFld.getParameters().get("name"));
         assertNull(txtFld.getParameters().get("nameValue"));
     }
 
-    public void testValueParameterIsJavaIdentifier() {
+    public void testValueParameterAccepted() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -324,6 +325,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         });
 
         TextField txtFld = new TextField(stack, req, res);
+        container.inject(txtFld);
         txtFld.setName("%{my良い.myValue名前}");
         txtFld.evaluateParams();
 
@@ -331,7 +333,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("%{myGood}", txtFld.getParameters().get("nameValue"));
     }
 
-    public void testValueParameterNotJavaIdentifier() {
+    public void testValueParameterNotAccepted() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -350,10 +352,11 @@ public class UIBeanTest extends StrutsInternalTestCase {
         });
 
         TextField txtFld = new TextField(stack, req, res);
+        container.inject(txtFld);
         txtFld.setName("%{myGood.myValueName}");
         txtFld.evaluateParams();
 
-        assertNull(txtFld.getParameters().get("name"));
+        assertEquals("getMyValue()", txtFld.getParameters().get("name"));
         assertNull(txtFld.getParameters().get("nameValue"));
     }
 

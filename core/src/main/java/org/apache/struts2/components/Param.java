@@ -125,10 +125,10 @@ public class Param extends Component {
             if (component instanceof UnnamedParametric) {
                 ((UnnamedParametric) component).addParameter(findValue(value));
             } else {
-                String name = findString(this.name, new NestedJavaIdentifierFilter());
+                String name = findString(this.name);
 
-                if (name == null) {
-                    throw new StrutsException("No name found for following expression: " + this.name);
+                if (name == null || isExcluded(name) || !isAccepted(name)) {
+                    throw new StrutsException("Not valid or no name found for following expression: " + this.name);
                 }
 
                 Object value = findValue(this.value);

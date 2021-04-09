@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.views.java.simple;
 
+import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.ServletUrlRenderer;
@@ -73,6 +75,8 @@ public class AnchorTest extends AbstractTest {
         super.setUp();
         this.tag = new Anchor(stack, request, response);
         this.tag.setUrlRenderer(new ServletUrlRenderer());
+        this.tag.setAcceptedPatterns(new DefaultAcceptedPatternsChecker());
+        this.tag.setExcludedPatterns(new DefaultExcludedPatternsChecker());
     }
 
     @Override

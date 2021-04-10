@@ -25,6 +25,9 @@ import javax.servlet.jsp.JspException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsCheckerTest.ACCEPT_ALL_PATTERNS_CHECKER;
+import static com.opensymphony.xwork2.security.DefaultExcludedPatternsCheckerTest.NO_EXCLUSION_PATTERNS_CHECKER;
+
 
 /**
  */
@@ -53,75 +56,36 @@ public class BeanTagTest extends AbstractUITagTest {
         pageContext.verify();
     }
 
-    public void testAccepted() throws Exception {
-        BeanTag tag = new BeanTag();
-        tag.setPageContext(pageContext);
-        tag.setName("org.apache.struts2.TestAction");
-
-        Map<String, String> tmp = new HashMap<>();
-        tmp.put("property", "array[0]");
-        tmp.put("property2", "myTexts['key']");
-        tmp.put("property3", "myTexts.key2");
-        tmp.put("property4", "myUser.name");
-        context.put("parameters", HttpParameters.create(tmp).build());
-        ParamTag param1 = new ParamTag();
-        param1.setPageContext(pageContext);
-        param1.setName("%{#parameters['property']}");
-        param1.setValue("20");
-        ParamTag param2 = new ParamTag();
-        param2.setPageContext(pageContext);
-        param2.setName("%{#parameters['property2']}");
-        param2.setValue("{'err20', 'err21'}");
-        ParamTag param3 = new ParamTag();
-        param3.setPageContext(pageContext);
-        param3.setName("%{#parameters['property3']}");
-        param3.setValue("{'err22', 'err23'}");
-        ParamTag param4 = new ParamTag();
-        param4.setPageContext(pageContext);
-        param4.setName("%{#parameters['property4']}");
-        param4.setValue("%{getStatus()}");
-
-        tag.doStartTag();
-        tag.component.addParameter("array", "instantiate array[0]");
-        param1.doStartTag();
-        param1.doEndTag();
-        param2.doStartTag();
-        param2.doEndTag();
-        param3.doStartTag();
-        param3.doEndTag();
-        param4.doStartTag();
-        param4.doEndTag();
-
-        assertEquals("20", stack.findValue("array[0]"));
-        assertEquals("[err20, err21]", stack.findValue("myTexts.key").toString());
-        assertEquals("[err22, err23]", stack.findValue("myTexts.key2").toString());
-        assertEquals("COMPLETED", stack.findValue("myUser.name"));
-
-        tag.doEndTag();
-    }
-
     public void testNotAccepted() throws Exception {
         BeanTag tag = new BeanTag();
         tag.setPageContext(pageContext);
         tag.setName("org.apache.struts2.TestAction");
 
         Map<String, String> tmp = new HashMap<>();
-        tmp.put("property", "getResult()");
+        tmp.put("paramName", "getArray()[0]");
         context.put("parameters", HttpParameters.create(tmp).build());
         ParamTag param1 = new ParamTag();
         param1.setPageContext(pageContext);
-        param1.setName("%{#parameters['property']}");
-        param1.setValue("20");
+        param1.setName("%{#parameters['paramName']}");
+        param1.setValue("'success'");
 
         tag.doStartTag();
         param1.doStartTag();
 
         try {
             param1.doEndTag();
-            fail("a not nested java identifiers is evaluated?!");
+            fail("an excluded or not accepted is evaluated?!");
         } catch (StrutsException e) {
-            assertEquals("Not valid or no name found for following expression: %{#parameters['property']}", e.getMessage());
+            assertEquals("Excluded or not accepted name found: getArray()[0]", e.getMessage());
+            assertNull(stack.findValue("result"));
         }
+
+        param1.component.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
+        param1.component.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+        tag.component.addParameter("array", "just to instantiate array to avoid null for getMap()");
+
+        param1.doEndTag();
+        assertEquals("success", stack.findValue("array[0]"));
 
         tag.doEndTag();
     }

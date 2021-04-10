@@ -581,28 +581,25 @@ public class Component {
         AcceptedPatternsChecker.IsAccepted result = acceptedPatterns.isAccepted(paramName);
         if (result.isAccepted()) {
             return true;
-        } else if (devMode) { // warn only when in devMode
-            LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
-                            "https://struts.apache.org/security/#accepted--excluded-patterns",
-                    paramName, result.getAcceptedPattern());
-        } else {
-            LOG.debug("Parameter [{}] didn't match accepted pattern [{}]!", paramName, result.getAcceptedPattern());
         }
+
+        LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
+                        "https://struts.apache.org/security/#accepted--excluded-patterns",
+                paramName, result.getAcceptedPattern());
+
         return false;
     }
 
     protected boolean isExcluded(String paramName) {
         ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
-        if (result.isExcluded()) {
-            if (devMode) { // warn only when in devMode
-                LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
-                                "https://struts.apache.org/security/#accepted--excluded-patterns",
-                        paramName, result.getExcludedPattern());
-            } else {
-                LOG.debug("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
-            }
-            return true;
+        if (!result.isExcluded()) {
+            return false;
         }
-        return false;
+
+        LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
+                        "https://struts.apache.org/security/#accepted--excluded-patterns",
+                paramName, result.getExcludedPattern());
+
+        return true;
     }
 }

@@ -127,8 +127,12 @@ public class Param extends Component {
             } else {
                 String name = findString(this.name);
 
-                if (name == null || isExcluded(name) || !isAccepted(name)) {
-                    throw new StrutsException("Not valid or no name found for following expression: " + this.name);
+                if (name == null) {
+                    throw new StrutsException("No name found for following expression: " + this.name);
+                }
+
+                if (isExcluded(name) || !isAccepted(name)) {
+                    throw new StrutsException("Excluded or not accepted name found: " + name);
                 }
 
                 Object value = findValue(this.value);

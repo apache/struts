@@ -35,6 +35,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsCheckerTest.ACCEPT_ALL_PATTERNS_CHECKER;
+import static com.opensymphony.xwork2.security.DefaultExcludedPatternsCheckerTest.NO_EXCLUSION_PATTERNS_CHECKER;
+
 public class UIBeanTest extends StrutsInternalTestCase {
 
     public void testPopulateComponentHtmlId1() throws Exception {
@@ -302,62 +305,36 @@ public class UIBeanTest extends StrutsInternalTestCase {
         txtFld.setName("%{myValue}");
         txtFld.evaluateParams();
 
+        assertEquals("%{myBad}", txtFld.getParameters().get("nameValue"));
         assertEquals("%{myBad}", txtFld.getParameters().get("name"));
-        assertNull(txtFld.getParameters().get("nameValue"));
     }
 
-    public void testValueParameterAccepted() {
+    public void testValueNameParameterNotAccepted() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         stack.push(new Object() {
-            public Object getMy良い() {
-                return new Object() {
-                    public String getMyValue名前() {
-                        return "myValue";
-                    }
-                };
-            }
-            public String getMyValue () {
-                return "%{myGood}";
-            }
-        });
-
-        TextField txtFld = new TextField(stack, req, res);
-        container.inject(txtFld);
-        txtFld.setName("%{my良い.myValue名前}");
-        txtFld.evaluateParams();
-
-        assertEquals("myValue", txtFld.getParameters().get("name"));
-        assertEquals("%{myGood}", txtFld.getParameters().get("nameValue"));
-    }
-
-    public void testValueParameterNotAccepted() {
-        ValueStack stack = ActionContext.getContext().getValueStack();
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
-
-        stack.push(new Object() {
-            public Object getMyGood() {
-                return new Object() {
-                    public String getMyValueName() {
-                        return "getMyValue()";
-                    }
-                };
+            public String getMyValueName() {
+                return "getMyValue()";
             }
             public String getMyValue() {
-                return "%{myValue}";
+                return "value";
             }
         });
 
         TextField txtFld = new TextField(stack, req, res);
         container.inject(txtFld);
-        txtFld.setName("%{myGood.myValueName}");
+        txtFld.setName("%{myValueName}");
         txtFld.evaluateParams();
-
         assertEquals("getMyValue()", txtFld.getParameters().get("name"));
-        assertNull(txtFld.getParameters().get("nameValue"));
+        assertEquals("getMyValue()", txtFld.getParameters().get("nameValue"));
+
+        txtFld.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
+        txtFld.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+        txtFld.evaluateParams();
+        assertEquals("getMyValue()", txtFld.getParameters().get("name"));
+        assertEquals("value", txtFld.getParameters().get("nameValue"));
     }
 
     public void testSetClass() {

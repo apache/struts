@@ -803,9 +803,13 @@ public abstract class UIBean extends Component {
                 if (valueClazz != null) {
                     if (value != null) {
                         addParameter("nameValue", findValue(value, valueClazz));
-                    } else if (name != null && !isExcluded(name) && isAccepted(name)) {
-                        String expr = completeExpression(name);
-                        addParameter("nameValue", findValue(expr, valueClazz));
+                    } else if (name != null) {
+                        if (isExcluded(name) || !isAccepted(name)) {
+                            addParameter("nameValue", name);
+                        } else {
+                            String expr = completeExpression(name);
+                            addParameter("nameValue", findValue(expr, valueClazz));
+                        }
                     }
                 } else {
                     if (value != null) {

@@ -99,7 +99,14 @@
          	<interceptor-ref name="alias"/>
          	<result name="success" type="mock" />
         </action>
-      
+
+        <action name="dynamicAliasTest" class="com.opensymphony.xwork2.SimpleAction">
+            <param name="aliases">#{ #parameters['name'] : #parameters['value'] }</param>
+            <interceptor-ref name="params"/>
+            <interceptor-ref name="alias"/>
+            <result name="success" type="mock" />
+        </action>
+
         <action name="packagelessAction" class="PackagelessAction">
         </action>
 

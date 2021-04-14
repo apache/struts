@@ -33,6 +33,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
+import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsCheckerTest.ACCEPT_ALL_PATTERNS_CHECKER;
+import static com.opensymphony.xwork2.security.DefaultExcludedPatternsCheckerTest.NO_EXCLUSION_PATTERNS_CHECKER;
+
 /**
  * Unit test for {@link StreamResult}.
  *
@@ -213,11 +216,34 @@ public class StreamResultTest extends StrutsInternalTestCase {
         assertEquals("filename=\"logo.png\"", response.getHeader("Content-disposition"));
     }
 
+    public void testStreamResultParseExpression() throws Exception {
+        result.setParse(true);
+        result.setInputName("${streamForImageAsExpression}");
+
+        try {
+            result.doExecute("helloworld", mai);
+            fail("double evaluation?!");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Can not find a java.io.InputStream with the name [getStreamForImage()] in the " +
+                    "invocation stack. Check the <param name=\"inputName\"> tag specified for this action is correct, " +
+                    "not excluded and accepted.", e.getMessage());
+        }
+
+        // verify that above test has really effect
+        result.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
+        result.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+        assertNull(result.inputStream);
+        result.doExecute("helloworld", mai);
+        assertNotNull(result.inputStream);
+        container.inject(result);   // roll back pattern checkers
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         response = new MockHttpServletResponse();
 
         result = new StreamResult();
+        container.inject(result);
         result.setContentLength("${contentLength}");
         stack = ActionContext.getContext().getValueStack();
 
@@ -271,6 +297,10 @@ public class StreamResultTest extends StrutsInternalTestCase {
 
         public String getStreamForImageAsString() {
             return "streamForImage";
+        }
+
+        public String getStreamForImageAsExpression() {
+            return "getStreamForImage()";
         }
 
         public String getContentCharSetMethod() {

@@ -82,7 +82,28 @@ public class BeanTagTest extends AbstractUITagTest {
 
         param1.component.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
         param1.component.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
-        tag.component.addParameter("array", "just to instantiate array to avoid null for getMap()");
+        tag.component.addParameter("array", "just to instantiate array to avoid null for getArray()");
+
+        param1.doEndTag();
+        assertEquals("success", stack.findValue("array[0]"));
+
+        tag.doEndTag();
+    }
+
+    public void testGetterAccepted() throws Exception {
+        BeanTag tag = new BeanTag();
+        tag.setPageContext(pageContext);
+        tag.setName("org.apache.struts2.TestAction");
+
+        ParamTag param1 = new ParamTag();
+        param1.setPageContext(pageContext);
+        param1.setName("getArray()[0]");
+        param1.setValue("'success'");
+
+        tag.doStartTag();
+        param1.doStartTag();
+
+        tag.component.addParameter("array", "just to instantiate array to avoid null for getArray()");
 
         param1.doEndTag();
         assertEquals("success", stack.findValue("array[0]"));

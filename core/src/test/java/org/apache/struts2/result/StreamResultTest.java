@@ -238,6 +238,14 @@ public class StreamResultTest extends StrutsInternalTestCase {
         container.inject(result);   // roll back pattern checkers
     }
 
+    public void testStreamResultParseGetter() throws Exception {
+        result.setParse(true);
+        result.setInputName("getStreamForImage()");
+        assertNull(result.inputStream);
+        result.doExecute("helloworld", mai);
+        assertNotNull(result.inputStream);
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         response = new MockHttpServletResponse();

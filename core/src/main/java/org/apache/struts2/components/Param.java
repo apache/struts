@@ -131,7 +131,9 @@ public class Param extends Component {
                     throw new StrutsException("No name found for following expression: " + this.name);
                 }
 
-                if (isExcluded(name) || !isAccepted(name)) {
+                boolean evaluated = !name.equals(this.name);
+                boolean reevaluate = !evaluated || (!isExcluded(name) && isAccepted(name));
+                if (!reevaluate) {
                     throw new StrutsException("Excluded or not accepted name found: " + name);
                 }
 

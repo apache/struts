@@ -804,7 +804,9 @@ public abstract class UIBean extends Component {
                     if (value != null) {
                         addParameter("nameValue", findValue(value, valueClazz));
                     } else if (name != null) {
-                        if (isExcluded(name) || !isAccepted(name)) {
+                        boolean evaluated = !name.equals(this.name);
+                        boolean reevaluate = !evaluated || (!isExcluded(name) && isAccepted(name));
+                        if (!reevaluate) {
                             addParameter("nameValue", name);
                         } else {
                             String expr = completeExpression(name);

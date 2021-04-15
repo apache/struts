@@ -221,7 +221,9 @@ public class StreamResult extends StrutsResultSupport {
 
         try {
             String parsedInputName = conditionalParse(inputName, invocation);
-            if (inputStream == null && parsedInputName != null && !isExcluded(parsedInputName) && isAccepted(parsedInputName)) {
+            boolean evaluated = parsedInputName != null && !parsedInputName.equals(inputName);
+            boolean reevaluate = !evaluated || (!isExcluded(parsedInputName) && isAccepted(parsedInputName));
+            if (inputStream == null && reevaluate) {
                 LOG.debug("Find the inputstream from the invocation variable stack");
                 inputStream = (InputStream) invocation.getStack().findValue(parsedInputName);
             }

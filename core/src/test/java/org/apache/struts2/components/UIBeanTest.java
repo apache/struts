@@ -337,6 +337,25 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("value", txtFld.getParameters().get("nameValue"));
     }
 
+    public void testValueNameParameterGetterAccepted() {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        stack.push(new Object() {
+            public String getMyValue() {
+                return "value";
+            }
+        });
+
+        TextField txtFld = new TextField(stack, req, res);
+        container.inject(txtFld);
+        txtFld.setName("getMyValue()");
+        txtFld.evaluateParams();
+        assertEquals("getMyValue()", txtFld.getParameters().get("name"));
+        assertEquals("value", txtFld.getParameters().get("nameValue"));
+    }
+
     public void testSetClass() {
         String cssClass = "insertCssClassHere";
         ValueStack stack = ActionContext.getContext().getValueStack();

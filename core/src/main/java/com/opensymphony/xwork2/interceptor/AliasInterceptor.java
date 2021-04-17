@@ -182,11 +182,11 @@ public class AliasInterceptor extends AbstractInterceptor {
                 for (Object o : aliases.entrySet()) {
                     Map.Entry entry = (Map.Entry) o;
                     String name = entry.getKey().toString();
-                    if (isExcluded(name) || !isAccepted(name)) {
+                    if (isNotAcceptableExpression(name)) {
                         continue;
                     }
                     String alias = (String) entry.getValue();
-                    if (isExcluded(alias) || !isAccepted(alias)) {
+                    if (isNotAcceptableExpression(alias)) {
                         continue;
                     }
                     Evaluated value = new Evaluated(stack.findValue(name));
@@ -253,6 +253,16 @@ public class AliasInterceptor extends AbstractInterceptor {
                 paramName, result.getExcludedPattern());
 
         return true;
+    }
+
+    /**
+     * Checks if expression contains vulnerable code
+     *
+     * @param expression of interceptor
+     * @return true|false
+     */
+    protected boolean isNotAcceptableExpression(String expression) {
+        return isExcluded(expression) || !isAccepted(expression);
     }
 
     /**

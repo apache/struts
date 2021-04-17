@@ -222,7 +222,7 @@ public class StreamResult extends StrutsResultSupport {
         try {
             String parsedInputName = conditionalParse(inputName, invocation);
             boolean evaluated = parsedInputName != null && !parsedInputName.equals(inputName);
-            boolean reevaluate = !evaluated || (!isExcluded(parsedInputName) && isAccepted(parsedInputName));
+            boolean reevaluate = !evaluated || isAcceptableExpression(parsedInputName);
             if (inputStream == null && reevaluate) {
                 LOG.debug("Find the inputstream from the invocation variable stack");
                 inputStream = (InputStream) invocation.getStack().findValue(parsedInputName);
@@ -320,5 +320,15 @@ public class StreamResult extends StrutsResultSupport {
                 paramName, result.getExcludedPattern());
 
         return true;
+    }
+
+    /**
+     * Checks if expression doesn't contain vulnerable code
+     *
+     * @param expression of result
+     * @return true|false
+     */
+    protected boolean isAcceptableExpression(String expression) {
+        return !isExcluded(expression) && isAccepted(expression);
     }
 }

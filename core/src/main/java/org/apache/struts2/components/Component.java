@@ -576,7 +576,6 @@ public class Component {
         return standardAttributes;
     }
 
-
     protected boolean isAccepted(String paramName) {
         AcceptedPatternsChecker.IsAccepted result = acceptedPatterns.isAccepted(paramName);
         if (result.isAccepted()) {
@@ -601,5 +600,15 @@ public class Component {
                 paramName, result.getExcludedPattern());
 
         return true;
+    }
+
+    /**
+     * Checks if expression doesn't contain vulnerable code
+     *
+     * @param expression of the component
+     * @return true|false
+     */
+    protected boolean isAcceptableExpression(String expression) {
+        return !isExcluded(expression) && isAccepted(expression);
     }
 }

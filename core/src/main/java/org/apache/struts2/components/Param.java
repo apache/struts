@@ -132,7 +132,7 @@ public class Param extends Component {
                 }
 
                 boolean evaluated = !name.equals(this.name);
-                boolean reevaluate = !evaluated || (!isExcluded(name) && isAccepted(name));
+                boolean reevaluate = !evaluated || isAcceptableExpression(name);
                 if (!reevaluate) {
                     throw new StrutsException("Excluded or not accepted name found: " + name);
                 }

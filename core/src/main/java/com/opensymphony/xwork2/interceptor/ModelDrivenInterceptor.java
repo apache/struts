@@ -105,7 +105,7 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
      * Refreshes the model instance on the value stack, if it has changed
      */
     protected static class RefreshModelBeforeResult implements PreResultListener {
-        private Object originalModel = null;
+        private Object originalModel;
         protected ModelDriven action;
 
 
@@ -122,10 +122,12 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
             Object newModel = action.getModel();
 
             // Check to see if the new model instance is already on the stack
-            for (Object item : root) {
-                if (item.equals(newModel)) {
-                    needsRefresh = false;
-                    break;
+            if (newModel != null) {
+                for (Object item : root) {
+                    if (item == newModel) {
+                        needsRefresh = false;
+                        break;
+                    }
                 }
             }
 

@@ -156,6 +156,7 @@ public class TextfieldTest extends AbstractUITagTest {
         tag.setName("myname");
         tag.setValue("%{foo}");
         tag.setSize("10");
+        tag.setDynamicAttribute(null, "anotherAttr", "%{foo}");
 
         tag.doStartTag();
         tag.doEndTag();

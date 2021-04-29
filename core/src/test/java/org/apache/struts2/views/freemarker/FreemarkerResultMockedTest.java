@@ -36,6 +36,8 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
 
@@ -271,6 +273,63 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
 
         assertTrue(stringWriter.toString().contains("<link nonce=\""));
         assertTrue(stringWriter.toString().contains("<script nonce=\""));
+    }
+
+    public void testIterator() throws Exception {
+        File file = new File(FreeMarkerResultTest.class.getResource("iterator.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/iterator.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/text.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/text.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/css.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/css.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/css.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/scripting-events.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/common-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/dynamic-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        EasyMock.replay(servletContext);
+
+        init();
+
+        stack.push(new Object() {
+            List items = null;
+
+            public List getItems() {
+                if (items == null) {
+                    items = new ArrayList(3);
+                    for (int i = 0; i < 3; i++) {
+                        int finalI = i;
+                        items.add(new Object() {
+                            public String getName() {
+                                return "value" + finalI;
+                            }
+                        });
+                    }
+                }
+                return items;
+            }
+        });
+
+        request.setRequestURI("/tutorial/test11.action");
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
+        dispatcher.serviceAction(request, response, mapping);
+        String result = stringWriter.toString();
+        for (int i = 0; i < 3; i++) {
+            assertTrue(result.contains("id=\"itemId" + i + "\""));
+            assertTrue(result.contains("name=\"items[" + i + "].name\""));
+            assertTrue(result.contains("value=\"value" + i + "\""));
+        }
     }
 
     private void init() {

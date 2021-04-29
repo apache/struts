@@ -147,6 +147,21 @@
         <action name="InfiniteRecursionChain" class="com.opensymphony.xwork2.ActionSupport">
                 <result name="success" type="chain">InfiniteRecursionChain</result>
         </action>
+        <action name="chain_with_namespace" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="error" type="chain">
+                <param name="actionName">chain_without_namespace</param>
+                <param name="namespace">%{blah}</param>
+            </result>
+            <interceptor-ref name="debugStack"/>
+            <interceptor-ref name="defaultStack"/>
+        </action>
+        <action name="chain_without_namespace" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="error" type="chain">
+                <param name="actionName">Foo</param>
+            </result>
+            <interceptor-ref name="debugStack"/>
+            <interceptor-ref name="defaultStack"/>
+        </action>
 
    </package>
 

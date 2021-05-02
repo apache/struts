@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
 <#if parameters.cssClass?has_content && !(hasFieldErrors && parameters.cssErrorClass??)>
  class="${parameters.cssClass?html}"<#rt/>
 <#elseif parameters.cssClass?has_content && (hasFieldErrors && parameters.cssErrorClass??)>

@@ -21,12 +21,12 @@
 <#--
 	Always include elements to show errors. They may be filled later via AJAX.
 -->
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
 <#if (parameters.errorposition!"top") == 'top'>
 <tr errorFor="${parameters.id}">
     <td class="tdErrorMessage" colspan="2" data-error-for-fieldname="${parameters.name}"><#rt/>
         <#if hasFieldErrors>
-            <#list fieldErrors[parameters.name] as error>
+            <#list fieldErrors.get(parameters.name) as error>
                 <div class="errorMessage">${error?html}</div><#t/>
             </#list>
         </#if>

@@ -29,7 +29,7 @@
             <#list eKeys as eKey><#t/>
                 <#if (eKey = fieldErrorFieldName)><#t/>
                     <#assign haveMatchedErrorField=true><#t/>
-                    <#assign eValue = fieldErrors[fieldErrorFieldName]><#t/>
+                    <#assign eValue = fieldErrors.get(fieldErrorFieldName)><#t/>
                     <#if (haveMatchedErrorField && (!doneStartUlTag))><#t/>
                     <ul<#rt/>
                         <#if parameters.id?has_content>
@@ -69,7 +69,7 @@
             </#if>
                 >
             <#list eKeys as eKey><#t/>
-                <#assign eValue = fieldErrors[eKey]><#t/>
+                <#assign eValue = fieldErrors.get(eKey)><#t/>
                 <#list eValue as eEachValue><#t/>
                     <li><span><#if parameters.escape>${eEachValue!?html}<#else>${eEachValue!}</#if></span></li>
                 </#list><#t/>

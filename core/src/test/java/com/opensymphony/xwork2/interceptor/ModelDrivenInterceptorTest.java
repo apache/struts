@@ -37,10 +37,10 @@ public class ModelDrivenInterceptorTest extends XWorkTestCase {
     ModelDrivenInterceptor modelDrivenInterceptor;
     Object model;
     PreResultListener preResultListener;
+    ValueStack stack;
 
 
     public void testModelDrivenGetsPushedOntoStack() throws Exception {
-        ValueStack stack = ActionContext.getContext().getValueStack();
         action = new ModelDrivenAction();
         mockActionInvocation.expectAndReturn("getAction", action);
         mockActionInvocation.expectAndReturn("getStack", stack);
@@ -52,8 +52,7 @@ public class ModelDrivenInterceptorTest extends XWorkTestCase {
         assertEquals("our model should be on the top of the stack", model, topOfStack);
     }
 
-    public void testModelDrivenUpdatedAndGetsPushedOntoStack() throws Exception {
-        ValueStack stack = ActionContext.getContext().getValueStack();
+    private void setupRefreshModelBeforeResult() {
         action = new ModelDrivenAction();
         mockActionInvocation.expectAndReturn("getAction", action);
         mockActionInvocation.matchAndReturn("getStack", stack);
@@ -70,18 +69,86 @@ public class ModelDrivenInterceptorTest extends XWorkTestCase {
             }
         });
         modelDrivenInterceptor.setRefreshModelBeforeResult(true);
+    }
+
+    public void testModelDrivenUpdatedAndGetsPushedOntoStack() throws Exception {
+        setupRefreshModelBeforeResult();
 
         modelDrivenInterceptor.intercept((ActionInvocation) mockActionInvocation.proxy());
         assertNotNull(preResultListener);
-        model = "this is my model";
+        model = "this is my new model";
         preResultListener.beforeResult((ActionInvocation) mockActionInvocation.proxy(), "success");
 
         Object topOfStack = stack.pop();
-        assertEquals("our model should be on the top of the stack", model, topOfStack);
+        assertSame("our new model should be on the top of the stack", model, topOfStack);
         assertEquals(1, stack.getRoot().size());
     }
 
-    public void testStackNotModifedForNormalAction() throws Exception {
+    public void testWW5126() throws Exception {
+        model = new Object() {
+            @Override
+            public boolean equals(Object obj) {
+                return true;
+            }
+        };
+        setupRefreshModelBeforeResult();
+
+        modelDrivenInterceptor.intercept((ActionInvocation) mockActionInvocation.proxy());
+        assertNotNull(preResultListener);
+        model = "this is my new model";
+        preResultListener.beforeResult((ActionInvocation) mockActionInvocation.proxy(), "success");
+
+        Object topOfStack = stack.pop();
+        assertSame("our new model should be on the top of the stack regardless of Object.equals", model, topOfStack);
+        assertEquals(1, stack.getRoot().size());
+    }
+
+    public void testPrimitiveModelDrivenUpdatedAndGetsPushedOntoStack() throws Exception {
+        model = 123;
+        setupRefreshModelBeforeResult();
+
+        modelDrivenInterceptor.intercept((ActionInvocation) mockActionInvocation.proxy());
+        assertNotNull(preResultListener);
+        model = new Integer("123");
+        preResultListener.beforeResult((ActionInvocation) mockActionInvocation.proxy(), "success");
+
+        Object topOfStack = stack.pop();
+        assertSame("our new primitive model should be on the top of the stack", model, topOfStack);
+        assertEquals(1, stack.getRoot().size());
+    }
+
+    public void testNotNeedsRefresh() throws Exception {
+        model = new Object() {
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+        setupRefreshModelBeforeResult();
+
+        modelDrivenInterceptor.intercept((ActionInvocation) mockActionInvocation.proxy());
+        assertNotNull(preResultListener);
+        preResultListener.beforeResult((ActionInvocation) mockActionInvocation.proxy(), "success");
+
+        Object topOfStack = stack.pop();
+        assertSame("our original model should be on the top of the stack", model, topOfStack);
+        assertEquals(1, stack.getRoot().size());
+    }
+
+    public void testNullNewModel() throws Exception {
+        setupRefreshModelBeforeResult();
+
+        modelDrivenInterceptor.intercept((ActionInvocation) mockActionInvocation.proxy());
+        assertNotNull(preResultListener);
+        model = null;
+        preResultListener.beforeResult((ActionInvocation) mockActionInvocation.proxy(), "success");
+
+        Object topOfStack = stack.pop();
+        assertNotSame("our model should be removed from the stack", model, topOfStack);
+        assertEquals(0, stack.getRoot().size());
+    }
+
+    public void testStackNotModifiedForNormalAction() throws Exception {
         action = new ActionSupport();
         mockActionInvocation.expectAndReturn("getAction", action);
         mockActionInvocation.expectAndReturn("invoke", "foo");
@@ -95,6 +162,7 @@ public class ModelDrivenInterceptorTest extends XWorkTestCase {
         super.setUp();
         mockActionInvocation = new Mock(ActionInvocation.class);
         modelDrivenInterceptor = new ModelDrivenInterceptor();
+        stack = ActionContext.getContext().getValueStack();
         model = new Date(); // any object will do
     }
 

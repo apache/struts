@@ -23,12 +23,12 @@ NOTE: The 'header' stuff that follows is in this one file for checkbox due to th
 that for checkboxes we do not want the label field to show up as checkboxes handle their own
 lables
 -->
-<#assign hasFieldErrors = fieldErrors?? && fieldErrors[parameters.name]??/>
+<#assign hasFieldErrors = fieldErrors?? && fieldErrors.get(parameters.name)??/>
 <div <#rt/><#if parameters.id??>id="wwgrp_${parameters.id}"<#rt/></#if> class="wwgrp">
 
 <#if hasFieldErrors>
 <div <#rt/><#if parameters.id??>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">
-<#list fieldErrors[parameters.name] as error>
+<#list fieldErrors.get(parameters.name) as error>
     <div<#rt/>
     <#if parameters.id??>
      errorFor="${parameters.id}"<#rt/>

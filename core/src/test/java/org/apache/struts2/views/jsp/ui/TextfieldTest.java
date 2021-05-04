@@ -145,7 +145,23 @@ public class TextfieldTest extends AbstractUITagTest {
 
         verify(TextFieldTag.class.getResource("Textfield-1.txt"));
     }
-    
+
+    public void testWW5125() throws Exception {
+        TestAction testAction = (TestAction) action;
+
+        for(String fieldName : new String[] {"clone", "size", "clear", "values", "hashCode", "isEmpty", "keySet", "entrySet"}) {
+            testAction.addFieldError(fieldName, fieldName + " error");
+
+            TextFieldTag tag = new TextFieldTag();
+            tag.setPageContext(pageContext);
+            tag.setName(fieldName);
+            tag.doStartTag();
+            tag.doEndTag();
+        }
+
+        verify(TextFieldTag.class.getResource("Textfield-WW-5125.txt"));
+    }
+
     public void testSimple_recursionTest() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("%{1+1}");

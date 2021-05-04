@@ -18,9 +18,9 @@
  * under the License.
  */
 -->
-<#assign hasFieldErrors = fieldErrors?? && fieldErrors[parameters.name]??/>
+<#assign hasFieldErrors = fieldErrors?? && fieldErrors.get(parameters.name)??/>
 <#if hasFieldErrors>
-<#list fieldErrors[parameters.name] as error>
+<#list fieldErrors.get(parameters.name) as error>
 <tr<#rt/>
 <#if parameters.id??>
  errorFor="${parameters.id}"<#rt/>

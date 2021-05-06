@@ -20,8 +20,7 @@ package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -32,7 +31,6 @@ import javax.servlet.ServletException;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -88,8 +86,7 @@ public class JasperReportsResultTest extends StrutsTestCase {
         }
 
         // verify that above test has really effect
-        result.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
-        result.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+        result.setNotExcludedAcceptedPatterns(NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER);
         result.execute(this.invocation);
         assertTrue(response.getContentAsString().contains("Hello Foo Bar!"));
     }
@@ -139,8 +136,7 @@ public class JasperReportsResultTest extends StrutsTestCase {
         // verify that above test has really effect
         response.setCommitted(false);
         response.reset();
-        result.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
-        result.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+        result.setNotExcludedAcceptedPatterns(NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER);
         result.execute(this.invocation);
         assertTrue(response.getContentAsString().contains("Baz Report"));
     }
@@ -196,8 +192,7 @@ public class JasperReportsResultTest extends StrutsTestCase {
         // verify that above test has really effect
         response.setCommitted(false);
         response.reset();
-        result.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
-        result.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+        result.setNotExcludedAcceptedPatterns(NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER);
         result.execute(this.invocation);
         assertNotEquals(0, sb.length());
     }
@@ -253,37 +248,16 @@ public class JasperReportsResultTest extends StrutsTestCase {
             }}
     };
 
-    private static final ExcludedPatternsChecker NO_EXCLUSION_PATTERNS_CHECKER = new ExcludedPatternsChecker() {
+    private static final NotExcludedAcceptedPatternsChecker NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER
+            = new NotExcludedAcceptedPatternsChecker() {
         @Override
-        public IsExcluded isExcluded(String value) {
-            return IsExcluded.no(new HashSet<>());
+        public IsAllowed isAllowed(String value) {
+            return IsAllowed.yes("*");
         }
 
-        @Override
-        public void setExcludedPatterns(String commaDelimitedPatterns) {
-
-        }
-
-        @Override
-        public void setExcludedPatterns(String[] patterns) {
-
-        }
-
-        @Override
-        public void setExcludedPatterns(Set<String> patterns) {
-
-        }
-
-        @Override
-        public Set<Pattern> getExcludedPatterns() {
-            return null;
-        }
-    };
-
-    private static final AcceptedPatternsChecker ACCEPT_ALL_PATTERNS_CHECKER = new AcceptedPatternsChecker() {
         @Override
         public IsAccepted isAccepted(String value) {
-            return IsAccepted.yes(".*");
+            return null;
         }
 
         @Override
@@ -303,6 +277,31 @@ public class JasperReportsResultTest extends StrutsTestCase {
 
         @Override
         public Set<Pattern> getAcceptedPatterns() {
+            return null;
+        }
+
+        @Override
+        public IsExcluded isExcluded(String value) {
+            return null;
+        }
+
+        @Override
+        public void setExcludedPatterns(String commaDelimitedPatterns) {
+
+        }
+
+        @Override
+        public void setExcludedPatterns(String[] patterns) {
+
+        }
+
+        @Override
+        public void setExcludedPatterns(Set<String> patterns) {
+
+        }
+
+        @Override
+        public Set<Pattern> getExcludedPatterns() {
             return null;
         }
     };

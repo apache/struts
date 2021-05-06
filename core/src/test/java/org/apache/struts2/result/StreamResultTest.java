@@ -33,8 +33,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsCheckerTest.ACCEPT_ALL_PATTERNS_CHECKER;
-import static com.opensymphony.xwork2.security.DefaultExcludedPatternsCheckerTest.NO_EXCLUSION_PATTERNS_CHECKER;
+import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
 
 /**
  * Unit test for {@link StreamResult}.
@@ -230,8 +229,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
         }
 
         // verify that above test has really effect
-        result.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
-        result.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+        result.setNotExcludedAcceptedPatterns(NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER);
         assertNull(result.inputStream);
         result.doExecute("helloworld", mai);
         assertNotNull(result.inputStream);

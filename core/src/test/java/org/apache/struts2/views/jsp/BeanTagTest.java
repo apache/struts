@@ -25,8 +25,7 @@ import javax.servlet.jsp.JspException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsCheckerTest.ACCEPT_ALL_PATTERNS_CHECKER;
-import static com.opensymphony.xwork2.security.DefaultExcludedPatternsCheckerTest.NO_EXCLUSION_PATTERNS_CHECKER;
+import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
 
 
 /**
@@ -80,8 +79,7 @@ public class BeanTagTest extends AbstractUITagTest {
             assertNull(stack.findValue("result"));
         }
 
-        param1.component.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
-        param1.component.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+        param1.component.setNotExcludedAcceptedPatterns(NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER);
         tag.component.addParameter("array", "just to instantiate array to avoid null for getArray()");
 
         param1.doEndTag();

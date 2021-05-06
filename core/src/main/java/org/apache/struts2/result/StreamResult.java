@@ -20,8 +20,7 @@ package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,8 +87,7 @@ public class StreamResult extends StrutsResultSupport {
     protected int bufferSize = 1024;
     protected boolean allowCaching = true;
 
-    private ExcludedPatternsChecker excludedPatterns;
-    private AcceptedPatternsChecker acceptedPatterns;
+    private NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns;
 
     public StreamResult() {
         super();
@@ -100,13 +98,8 @@ public class StreamResult extends StrutsResultSupport {
     }
 
     @Inject
-    public void setExcludedPatterns(ExcludedPatternsChecker excludedPatterns) {
-        this.excludedPatterns = excludedPatterns;
-    }
-
-    @Inject
-    public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
-        this.acceptedPatterns = acceptedPatterns;
+    public void setNotExcludedAcceptedPatterns(NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns) {
+        this.notExcludedAcceptedPatterns = notExcludedAcceptedPatterns;
     }
 
     /**
@@ -296,39 +289,22 @@ public class StreamResult extends StrutsResultSupport {
         }
     }
 
-    protected boolean isAccepted(String paramName) {
-        AcceptedPatternsChecker.IsAccepted result = acceptedPatterns.isAccepted(paramName);
-        if (result.isAccepted()) {
-            return true;
-        }
-
-        LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
-                        "https://struts.apache.org/security/#accepted--excluded-patterns",
-                paramName, result.getAcceptedPattern());
-
-        return false;
-    }
-
-    protected boolean isExcluded(String paramName) {
-        ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
-        if (!result.isExcluded()) {
-            return false;
-        }
-
-        LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
-                        "https://struts.apache.org/security/#accepted--excluded-patterns",
-                paramName, result.getExcludedPattern());
-
-        return true;
-    }
-
     /**
      * Checks if expression doesn't contain vulnerable code
      *
      * @param expression of result
      * @return true|false
+     * @since 2.5.27
      */
     protected boolean isAcceptableExpression(String expression) {
-        return !isExcluded(expression) && isAccepted(expression);
+        NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);
+        if (isAllowed.isAllowed()) {
+            return true;
+        }
+
+        LOG.warn("Expression [{}] isn't allowed by pattern [{}]! See Accepted / Excluded patterns at\n" +
+                "https://struts.apache.org/security/", expression, isAllowed.getAllowedPattern());
+
+        return false;
     }
 }

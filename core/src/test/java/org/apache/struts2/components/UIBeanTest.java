@@ -35,8 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsCheckerTest.ACCEPT_ALL_PATTERNS_CHECKER;
-import static com.opensymphony.xwork2.security.DefaultExcludedPatternsCheckerTest.NO_EXCLUSION_PATTERNS_CHECKER;
+import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
 
 public class UIBeanTest extends StrutsInternalTestCase {
 
@@ -330,8 +329,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("getMyValue()", txtFld.getParameters().get("name"));
         assertEquals("getMyValue()", txtFld.getParameters().get("nameValue"));
 
-        txtFld.setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
-        txtFld.setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+        txtFld.setNotExcludedAcceptedPatterns(NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER);
         txtFld.evaluateParams();
         assertEquals("getMyValue()", txtFld.getParameters().get("name"));
         assertEquals("value", txtFld.getParameters().get("nameValue"));

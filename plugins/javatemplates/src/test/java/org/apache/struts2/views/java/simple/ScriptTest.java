@@ -19,8 +19,7 @@
 package org.apache.struts2.views.java.simple;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.components.Script;
 import org.apache.struts2.components.UIBean;
 
@@ -84,7 +83,6 @@ public class ScriptTest extends AbstractTest {
         actionContext.withSession(session);
 
         this.tag = new Script(stack, request, response);
-        tag.setAcceptedPatterns(new DefaultAcceptedPatternsChecker());
-        tag.setExcludedPatterns(new DefaultExcludedPatternsChecker());
+        tag.setNotExcludedAcceptedPatterns(new DefaultNotExcludedAcceptedPatternsChecker());
     }
 }

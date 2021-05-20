@@ -563,16 +563,13 @@ public abstract class UIBean extends Component {
     protected abstract String getDefaultTemplate();
 
     protected Template buildTemplateName(String myTemplate, String myDefaultTemplate) {
-        String template = myDefaultTemplate;
+        String templateName = myDefaultTemplate;
 
         if (myTemplate != null) {
-            template = findString(myTemplate);
+            templateName = findString(myTemplate);
         }
 
-        String templateDir = getTemplateDir();
-        String theme = getTheme();
-
-        return new Template(templateDir, theme, template);
+        return new Template(getTemplateDir(), getTheme(), templateName);
 
     }
 
@@ -589,73 +586,72 @@ public abstract class UIBean extends Component {
     }
 
     public String getTemplateDir() {
-        String templateDir = null;
+        String result = null;
 
         if (this.templateDir != null) {
-            templateDir = findString(this.templateDir);
+            result = findString(this.templateDir);
         }
 
         // If templateDir is not explicitly given,
         // try to find attribute which states the dir set to use
-        if (StringUtils.isBlank(templateDir)) {
-            templateDir = stack.findString("#attr.templateDir");
+        if (StringUtils.isBlank(result)) {
+            result = stack.findString("#attr.templateDir");
         }
 
         // Default template set
-        if (StringUtils.isBlank(templateDir)) {
-            templateDir = defaultTemplateDir;
+        if (StringUtils.isBlank(result)) {
+            result = defaultTemplateDir;
         }
 
         // Defaults to 'template'
-        if (StringUtils.isBlank(templateDir)) {
-            templateDir = "template";
+        if (StringUtils.isBlank(result)) {
+            result = "template";
         }
 
-        return templateDir;
+        return result;
     }
 
     public String getTheme() {
-        String theme = null;
+        String result = null;
 
         if (this.theme != null) {
-            theme = findString(this.theme);
+            result = findString(this.theme);
         }
 
-        if (StringUtils.isBlank(theme)) {
+        if (StringUtils.isBlank(result)) {
             Form form = (Form) findAncestor(Form.class);
             if (form != null) {
-                theme = form.getTheme();
+                result = form.getTheme();
             }
         }
 
         // If theme set is not explicitly given,
         // try to find attribute which states the theme set to use
-        if (StringUtils.isBlank(theme)) {
-            theme = stack.findString("#attr.theme");
+        if (StringUtils.isBlank(result)) {
+            result = stack.findString("#attr.theme");
         }
 
         // Default theme set
-        if (StringUtils.isBlank(theme)) {
-            theme = defaultUITheme;
+        if (StringUtils.isBlank(result)) {
+            result = defaultUITheme;
         }
 
-        return theme;
+        return result;
     }
 
     public void evaluateParams() {
-        String templateDir = getTemplateDir();
-        String theme = getTheme();
+        String gotTheme = getTheme();
         
-        addParameter("templateDir", templateDir);
-        addParameter("theme", theme);
+        addParameter("templateDir", getTemplateDir());
+        addParameter("theme", gotTheme);
         addParameter("template", template != null ? findString(template) : getDefaultTemplate());
         addParameter("dynamicAttributes", dynamicAttributes);
         addParameter("themeExpansionToken", uiThemeExpansionToken);
-        addParameter("expandTheme", uiThemeExpansionToken + theme);
+        addParameter("expandTheme", uiThemeExpansionToken + gotTheme);
 
         addParameter("staticContentPath", findString(uiStaticContentPath));
 
-        String name = null;
+        String translatedName = null;
         String providedLabel = null;
 
         if (this.key != null) {
@@ -671,8 +667,8 @@ public abstract class UIBean extends Component {
         }
 
         if (this.name != null) {
-            name = findString(this.name);
-            addParameter("name", name);
+            translatedName = findString(this.name);
+            addParameter("name", translatedName);
         }
 
         if (label != null) {
@@ -794,30 +790,31 @@ public abstract class UIBean extends Component {
 
 
         // see if the value was specified as a parameter already
+        final String NAME_VALUE = "nameValue";
         if (parameters.containsKey("value")) {
-            parameters.put("nameValue", parameters.get("value"));
+            parameters.put(NAME_VALUE, parameters.get("value"));
         } else {
             if (evaluateNameValue()) {
                 final Class<?> valueClazz = getValueClassType();
 
                 if (valueClazz != null) {
                     if (value != null) {
-                        addParameter("nameValue", findValue(value, valueClazz));
-                    } else if (name != null) {
-                        boolean evaluated = !name.equals(this.name);
-                        boolean reevaluate = !evaluated || isAcceptableExpression(name);
+                        addParameter(NAME_VALUE, findValue(value, valueClazz));
+                    } else if (translatedName != null) {
+                        boolean evaluated = !translatedName.equals(this.name);
+                        boolean reevaluate = !evaluated || isAcceptableExpression(translatedName);
                         if (!reevaluate) {
-                            addParameter("nameValue", name);
+                            addParameter(NAME_VALUE, translatedName);
                         } else {
-                            String expr = completeExpression(name);
-                            addParameter("nameValue", findValue(expr, valueClazz));
+                            String expr = completeExpression(translatedName);
+                            addParameter(NAME_VALUE, findValue(expr, valueClazz));
                         }
                     }
                 } else {
                     if (value != null) {
-                        addParameter("nameValue", findValue(value));
-                    } else if (name != null) {
-                        addParameter("nameValue", findValue(name));
+                        addParameter(NAME_VALUE, findValue(value));
+                    } else if (translatedName != null) {
+                        addParameter(NAME_VALUE, findValue(translatedName));
                     }
                 }
             }
@@ -831,10 +828,10 @@ public abstract class UIBean extends Component {
         if (form != null ) {
             addParameter("form", form.getParameters());
 
-            if ( name != null ) {
+            if ( translatedName != null ) {
                 // list should have been created by the form component
                 List<String> tags = (List<String>) form.getParameters().get("tagNames");
-                tags.add(name);
+                tags.add(translatedName);
             }
         }
 
@@ -897,11 +894,9 @@ public abstract class UIBean extends Component {
 
         // to be used with the CSP interceptor - adds the nonce value as a parameter to be accessed from ftl files
         Map<String, Object> session = stack.getActionContext().getSession();
-        if (session != null) {
-            if (session.containsKey("nonce")) {
-                String nonceValue = session.get("nonce").toString();
-                addParameter("nonce", nonceValue);
-            }
+        Object nonceValue = session != null ? session.get("nonce") : null;
+        if (nonceValue != null) {
+            addParameter("nonce", nonceValue.toString());
         }
 
         evaluateExtraParams();
@@ -961,14 +956,14 @@ public abstract class UIBean extends Component {
 
     protected Map<String, String> getTooltipConfig(UIBean component) {
         Object tooltipConfigObj = component.getParameters().get("tooltipConfig");
-        Map<String, String> tooltipConfig = new LinkedHashMap<>();
+        Map<String, String> result = new LinkedHashMap<>();
 
         if (tooltipConfigObj instanceof Map) {
             // we get this if its configured using
             // 1] UI component's tooltipConfig attribute  OR
             // 2] <param name="tooltip" value="" /> param tag value attribute
 
-            tooltipConfig = new LinkedHashMap<>((Map) tooltipConfigObj);
+            result = new LinkedHashMap<>((Map) tooltipConfigObj);
         } else if (tooltipConfigObj instanceof String) {
 
             // we get this if its configured using
@@ -978,23 +973,23 @@ public abstract class UIBean extends Component {
 
             for (String aTooltipConfigArray : tooltipConfigArray) {
                 String[] configEntry = aTooltipConfigArray.trim().split("=");
-                String key = configEntry[0].trim();
-                String value;
+                String configKey = configEntry[0].trim();
+                String configValue;
                 if (configEntry.length > 1) {
-                    value = configEntry[1].trim();
-                    tooltipConfig.put(key, value);
+                    configValue = configEntry[1].trim();
+                    result.put(configKey, configValue);
                 } else {
-                    LOG.warn("component {} tooltip config param {} has no value defined, skipped", component, key);
+                    LOG.warn("component {} tooltip config param {} has no value defined, skipped", component, configKey);
                 }
             }
         }
         if (component.javascriptTooltip != null)
-            tooltipConfig.put("jsTooltipEnabled", component.javascriptTooltip);
+            result.put("jsTooltipEnabled", component.javascriptTooltip);
         if (component.tooltipIconPath != null)
-            tooltipConfig.put("tooltipIcon", component.tooltipIconPath);
+            result.put("tooltipIcon", component.tooltipIconPath);
         if (component.tooltipDelay != null)
-            tooltipConfig.put("tooltipDelay", component.tooltipDelay);
-        return tooltipConfig;
+            result.put("tooltipDelay", component.tooltipDelay);
+        return result;
     }
 
     /**
@@ -1264,10 +1259,10 @@ public abstract class UIBean extends Component {
 
     public void setDynamicAttributes(Map<String, String> tagDynamicAttributes) {
         for (Map.Entry<String, String> entry : tagDynamicAttributes.entrySet()) {
-            String key = entry.getKey();
+            String entryKey = entry.getKey();
 
-            if (!isValidTagAttribute(key)) {
-                dynamicAttributes.put(key, entry.getValue());
+            if (!isValidTagAttribute(entryKey)) {
+                dynamicAttributes.put(entryKey, entry.getValue());
             }
         }
     }
@@ -1281,9 +1276,9 @@ public abstract class UIBean extends Component {
     public void copyParams(Map<String, Object> params) {
         super.copyParams(params);
         for (Map.Entry<String, Object>entry : params.entrySet()) {
-            String key = entry.getKey();
-            if (!isValidTagAttribute(key) && !key.equals("dynamicAttributes")) {
-                dynamicAttributes.put(key, entry.getValue());
+            String entryKey = entry.getKey();
+            if (!isValidTagAttribute(entryKey) && !entryKey.equals("dynamicAttributes")) {
+                dynamicAttributes.put(entryKey, entry.getValue());
             }
         }
     }

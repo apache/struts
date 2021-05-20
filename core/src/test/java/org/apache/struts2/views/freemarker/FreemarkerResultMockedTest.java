@@ -303,11 +303,11 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         init();
 
         stack.push(new Object() {
-            List items = null;
+            List<Object> items = null;
 
-            public List getItems() {
+            public List<Object> getItems() {
                 if (items == null) {
-                    items = new ArrayList(3);
+                    items = new ArrayList<>(3);
                     for (int i = 0; i < 3; i++) {
                         int finalI = i;
                         items.add(new Object() {

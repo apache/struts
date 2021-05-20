@@ -44,6 +44,7 @@ import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
 import org.apache.struts2.views.jsp.ui.DoubleValidationAction;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -76,7 +77,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
      */
     public void loadPackages() {
 
-        HashMap successParams = new HashMap();
+        Map<String, String> successParams = new HashMap<>();
         successParams.put("propertyName", "executionCount");
         successParams.put("expectedValue", "1");
 
@@ -151,9 +152,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
-     * Tells whether the ConfigurationProvider should reload its configuration
-     *
-     * @return
+     * @return whether the ConfigurationProvider should reload its configuration
      */
     public boolean needsReload() {
         return false;

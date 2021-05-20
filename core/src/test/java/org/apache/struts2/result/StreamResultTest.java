@@ -276,7 +276,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
         mai = null;
     }
 
-    public class MyImageAction implements Action {
+    public static class MyImageAction implements Action {
 
         FileInputStream streamForImage;
         long contentLength;
@@ -289,7 +289,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
             contentLength = file.length();
         }
 
-        public InputStream getStreamForImage() throws Exception {
+        public InputStream getStreamForImage() {
             return streamForImage;
         }
 
@@ -297,7 +297,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
             return SUCCESS;
         }
 
-        public long getContentLength() throws Exception {
+        public long getContentLength() {
             return contentLength;
         }
 

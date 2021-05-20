@@ -25,7 +25,6 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
-import org.apache.struts2.dispatcher.DefaultStaticContentLoader;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -39,7 +38,7 @@ import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPattern
 
 public class UIBeanTest extends StrutsInternalTestCase {
 
-    public void testPopulateComponentHtmlId1() throws Exception {
+    public void testPopulateComponentHtmlId1() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -55,7 +54,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("txtFldId", txtFld.getParameters().get("id"));
     }
 
-    public void testPopulateComponentHtmlIdWithOgnl() throws Exception {
+    public void testPopulateComponentHtmlIdWithOgnl() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -71,7 +70,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("formId_txtFldName1", txtFld.getParameters().get("id"));
     }
 
-    public void testPopulateComponentHtmlId2() throws Exception {
+    public void testPopulateComponentHtmlId2() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -87,7 +86,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("formId_txtFldName", txtFld.getParameters().get("id"));
     }
 
-    public void testPopulateComponentHtmlWithoutNameAndId() throws Exception {
+    public void testPopulateComponentHtmlWithoutNameAndId() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -99,10 +98,10 @@ public class UIBeanTest extends StrutsInternalTestCase {
 
         txtFld.populateComponentHtmlId(form);
 
-        assertEquals(null, txtFld.getParameters().get("id"));
+        assertNull(txtFld.getParameters().get("id"));
     }
 
-    public void testEscape() throws Exception {
+    public void testEscape() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -119,7 +118,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals(bean.escape("hello!@#$%^&*()world"), "hello!@#$%^&*()world");
     }
 
-    public void testEscapeId() throws Exception {
+    public void testEscapeId() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -133,7 +132,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("formId_foo_bar", txtFld.getParameters().get("id"));
     }
 
-    public void testGetThemeFromForm() throws Exception {
+    public void testGetThemeFromForm() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -145,29 +144,29 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("foo", txtFld.getTheme());
     }
 
-    public void testGetThemeFromContext() throws Exception {
+    public void testGetThemeFromContext() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        Map context = Collections.singletonMap("theme", "bar");
+        Map<String, Object> context = Collections.singletonMap("theme", "bar");
         ActionContext.getContext().put("attr", context);
 
         TextField txtFld = new TextField(stack, req, res);
         assertEquals("bar", txtFld.getTheme());
     }
 
-    public void testGetThemeFromContextNonString() throws Exception {
+    public void testGetThemeFromContextNonString() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        Map context = Collections.singletonMap("theme", 12);
+        Map<String, Object> context = Collections.singletonMap("theme", 12);
         ActionContext.getContext().put("attr", context);
 
         TextField txtFld = new TextField(stack, req, res);
         assertEquals("12", txtFld.getTheme());
     }
 
-    public void testMergeTemplateNullEngineException() throws Exception {
+    public void testMergeTemplateNullEngineException() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
@@ -189,7 +188,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         }
     }
 
-    public void testBuildTemplate() throws Exception {
+    public void testBuildTemplate() {
         String defaultTemplateName = "default";
         String customTemplateName = "custom";
         ValueStack stack = ActionContext.getContext().getValueStack();
@@ -205,14 +204,14 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals(customTemplateName, customTemplate.getName());
     }
 
-    public void testGetTemplateDirExplicit() throws Exception {
+    public void testGetTemplateDirExplicit() {
         String explicitTemplateDir = "explicitTemplateDirectory";
         String attrTemplateDir = "attrTemplateDirectory";
         String defaultTemplateDir = "defaultTemplateDirectory";
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        Map context = Collections.singletonMap("templateDir", attrTemplateDir);
+        Map<String, Object> context = Collections.singletonMap("templateDir", attrTemplateDir);
         ActionContext.getContext().put("attr", context);
 
         TextField txtFld = new TextField(stack, req, res);
@@ -222,13 +221,13 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals(explicitTemplateDir, txtFld.getTemplateDir());
     }
 
-    public void testGetTemplateDirAttr() throws Exception {
+    public void testGetTemplateDirAttr() {
         String attrTemplateDir = "attrTemplateDirectory";
         String defaultTemplateDir = "defaultTemplateDirectory";
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        Map context = Collections.singletonMap("templateDir", attrTemplateDir);
+        Map<String, Object> context = Collections.singletonMap("templateDir", attrTemplateDir);
         ActionContext.getContext().put("attr", context);
 
         TextField txtFld = new TextField(stack, req, res);
@@ -237,7 +236,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals(attrTemplateDir, txtFld.getTemplateDir());
     }
 
-    public void testGetTemplateDirDefault() throws Exception {
+    public void testGetTemplateDirDefault() {
         String defaultTemplateDir = "defaultTemplateDirectory";
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
@@ -249,7 +248,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals(defaultTemplateDir, txtFld.getTemplateDir());
     }
 
-    public void testGetTemplateDirNoneSet() throws Exception {
+    public void testGetTemplateDirNoneSet() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();

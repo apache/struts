@@ -136,7 +136,7 @@ public class ChainResultTest extends XWorkTestCase {
         assertEquals("%{foo}", result.getInvocation().getProxy().getNamespace());
     }
 
-    private class NamespaceActionNameTestActionProxyFactory implements ActionProxyFactory {
+    private static class NamespaceActionNameTestActionProxyFactory implements ActionProxyFactory {
         private final ActionProxy returnVal;
         private final String expectedActionName;
         private final String expectedNamespace;

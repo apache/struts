@@ -160,7 +160,7 @@ public class AliasInterceptor extends AbstractInterceptor {
             ValueStack stack = ac.getValueStack();
             Object obj = stack.findValue(aliasExpression);
 
-            if (obj != null && obj instanceof Map) {
+            if (obj instanceof Map) {
                 //get secure stack
                 ValueStack newStack = valueStackFactory.createValueStack(stack);
                 boolean clearableStack = newStack instanceof ClearableValueStack;

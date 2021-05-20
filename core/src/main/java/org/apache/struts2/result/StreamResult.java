@@ -240,15 +240,16 @@ public class StreamResult extends StrutsResultSupport {
 
             LOG.debug("Set the content length: {}", contentLength);
             if (contentLength != null) {
-                String _contentLength = conditionalParse(contentLength, invocation);
-                int _contentLengthAsInt;
+                String translatedContentLength = conditionalParse(contentLength, invocation);
+                int contentLengthAsInt;
                 try {
-                    _contentLengthAsInt = Integer.parseInt(_contentLength);
-                    if (_contentLengthAsInt >= 0) {
-                        oResponse.setContentLength(_contentLengthAsInt);
+                    contentLengthAsInt = Integer.parseInt(translatedContentLength);
+                    if (contentLengthAsInt >= 0) {
+                        oResponse.setContentLength(contentLengthAsInt);
                     }
                 } catch (NumberFormatException e) {
-                    LOG.warn("failed to recognize {} as a number, contentLength header will not be set", _contentLength, e);
+                    LOG.warn("failed to recognize {} as a number, contentLength header will not be set",
+                            translatedContentLength, e);
                 }
             }
 

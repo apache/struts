@@ -217,7 +217,6 @@ public class Component {
         if (currPosition >= 0) {
             int start = componentStack.size() - currPosition - 1;
 
-            //for (int i = componentStack.size() - 2; i >= 0; i--) {
             for (int i = start; i >= 0; i--) {
                 Component component = (Component) componentStack.get(i);
                 if (clazz.isAssignableFrom(component.getClass()) && component != this) {
@@ -401,7 +400,7 @@ public class Component {
      * @return the action url.
      */
     protected String determineActionURL(String action, String namespace, String method,
-                                        HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
+                                        HttpServletRequest req, HttpServletResponse res, Map<String, Object> parameters, String scheme,
                                         boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort,
                                         boolean escapeAmp) {
         String finalAction = findString(action);

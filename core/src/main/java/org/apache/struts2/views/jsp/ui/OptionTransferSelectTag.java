@@ -66,10 +66,12 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     protected String upDownOnRightOnclick;
 
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new OptionTransferSelect(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -342,4 +344,37 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     public String getSelectAllOnclick() {
         return this.selectAllOnclick;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.allowAddToLeft = null;
+        this.allowAddToRight = null;
+        this.allowAddAllToLeft = null;
+        this.allowAddAllToRight = null;
+        this.allowSelectAll = null;
+        this.allowUpDownOnLeft = null;
+        this.allowUpDownOnRight = null;
+        this.leftTitle = null;
+        this.rightTitle = null;
+        this.buttonCssClass = null;
+        this.buttonCssStyle = null;
+        this.addToLeftLabel = null;
+        this.addToRightLabel = null;
+        this.addAllToLeftLabel = null;
+        this.addAllToRightLabel = null;
+        this.selectAllLabel = null;
+        this.leftUpLabel = null;
+        this.leftDownLabel = null;
+        this.rightUpLabel = null;
+        this.rightDownLabel = null;
+        this.addToLeftOnclick = null;
+        this.addToRightOnclick = null;
+        this.addAllToLeftOnclick = null;
+        this.addAllToRightOnclick = null;
+        this.selectAllOnclick = null;
+        this.upDownOnLeftOnclick = null;
+        this.upDownOnRightOnclick = null;
+     }
+
 }

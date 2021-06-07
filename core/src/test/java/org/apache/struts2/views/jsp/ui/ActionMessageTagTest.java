@@ -45,6 +45,13 @@ public class ActionMessageTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ActionMessageTagTest.class.getResource("actionmessage-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionMessageTag freshTag = new ActionMessageTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testActionMessageEscape() throws Exception {
@@ -61,6 +68,13 @@ public class ActionMessageTagTest extends AbstractUITagTest {
 
            assertEquals(normalize("<ul class=\"actionMessage\"><li><span>&lt;p&gt;hey&lt;/p&gt;</span></li></ul>", true),
                    normalize(writer.toString(), true));
+
+           // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+           ActionMessageTag freshTag = new ActionMessageTag();
+           freshTag.setPageContext(pageContext);
+           assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                   "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                   strutsBodyTagsAreReflectionEqual(tag, freshTag));
        }
 
        public void testActionErrorsDontEscape() throws Exception {
@@ -77,6 +91,13 @@ public class ActionMessageTagTest extends AbstractUITagTest {
 
            assertEquals(normalize("<ul class=\"actionMessage\"><li><span><p>hey</p></span></li></ul>", true),
                    normalize(writer.toString(), true));
+
+           // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+           ActionMessageTag freshTag = new ActionMessageTag();
+           freshTag.setPageContext(pageContext);
+           assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                   "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                   strutsBodyTagsAreReflectionEqual(tag, freshTag));
        }
 
 
@@ -90,6 +111,13 @@ public class ActionMessageTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ActionMessageTagTest.class.getResource("actionmessage-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionMessageTag freshTag = new ActionMessageTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
      public void testYesActionMessagesWithEmptyMessages() throws Exception {
@@ -102,7 +130,14 @@ public class ActionMessageTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-       assertTrue(StringUtils.isBlank(writer.toString()));
+        assertTrue(StringUtils.isBlank(writer.toString()));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionMessageTag freshTag = new ActionMessageTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testNullMessage() throws Exception {
@@ -116,8 +151,16 @@ public class ActionMessageTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ActionMessageTagTest.class.getResource("actionmessage-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionMessageTag freshTag = new ActionMessageTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    @Override
     public Action getAction() {
         return new InternalActionSupport();
     }
@@ -142,6 +185,7 @@ public class ActionMessageTagTest extends AbstractUITagTest {
             this.justNullElement = justNullElement;
         }
 
+        @Override
         public Collection getActionMessages() {
             if (justNullElement) {
                 return Arrays.asList(null);
@@ -157,6 +201,7 @@ public class ActionMessageTagTest extends AbstractUITagTest {
             }
         }
 
+        @Override
         public boolean hasActionMessages() {
             return canHaveActionMessage;
         }

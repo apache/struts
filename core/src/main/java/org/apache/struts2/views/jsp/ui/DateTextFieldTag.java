@@ -35,10 +35,12 @@ public class DateTextFieldTag extends AbstractUITag {
 
     protected String format;
     
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new DateTextField(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -46,8 +48,14 @@ public class DateTextFieldTag extends AbstractUITag {
         textField.setFormat(format);
     }
 
-	public void setFormat(String format) {
-		this.format = format;
-	}
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.format = null;
+     }
 
 }

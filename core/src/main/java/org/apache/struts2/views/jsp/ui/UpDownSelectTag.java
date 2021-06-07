@@ -42,10 +42,12 @@ public class UpDownSelectTag extends SelectTag {
     protected String selectAllLabel;
 
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new UpDownSelect(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -118,4 +120,16 @@ public class UpDownSelectTag extends SelectTag {
     public void setSelectAllLabel(String selectAllLabel) {
         this.selectAllLabel = selectAllLabel;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.allowMoveUp = null;
+        this.allowMoveDown = null;
+        this.allowSelectAll = null;
+        this.moveUpLabel = null;
+        this.moveDownLabel = null;
+        this.selectAllLabel = null;
+     }
+
 }

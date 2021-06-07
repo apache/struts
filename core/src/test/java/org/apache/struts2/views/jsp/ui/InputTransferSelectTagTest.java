@@ -48,5 +48,12 @@ public class InputTransferSelectTagTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(InputTransferSelectTagTest.class.getResource("inputtransferselect-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        InputTransferSelectTag freshTag = new InputTransferSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 }

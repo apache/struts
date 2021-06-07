@@ -38,10 +38,12 @@ public class SubmitTag extends AbstractClosingTag {
     protected String type;
     protected String src;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Submit(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -71,4 +73,14 @@ public class SubmitTag extends AbstractClosingTag {
     public void setSrc(String src) {
         this.src = src;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.action = null;
+        this.method = null;
+        this.type = null;
+        this.src = null;
+     }
+
 }

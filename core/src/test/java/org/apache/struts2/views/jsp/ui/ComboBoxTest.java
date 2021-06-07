@@ -77,6 +77,13 @@ public class ComboBoxTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ComboBoxTag.class.getResource("ComboBox-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComboBoxTag freshTag = new ComboBoxTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithEmptyOptionAndHeader() throws Exception {
@@ -104,6 +111,13 @@ public class ComboBoxTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ComboBoxTag.class.getResource("ComboBox-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComboBoxTag freshTag = new ComboBoxTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithMap() throws Exception {
@@ -131,6 +145,13 @@ public class ComboBoxTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ComboBoxTag.class.getResource("ComboBox-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComboBoxTag freshTag = new ComboBoxTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testJsCallNamingUsesEscapedId() throws Exception {
@@ -152,6 +173,13 @@ public class ComboBoxTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ComboBoxTag.class.getResource("ComboBox-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComboBoxTag freshTag = new ComboBoxTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 }

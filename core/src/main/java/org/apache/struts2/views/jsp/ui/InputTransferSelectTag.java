@@ -53,10 +53,12 @@ public class InputTransferSelectTag extends AbstractListTag {
     protected String headerKey;
     protected String headerValue;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new InputTransferSelect(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -200,4 +202,25 @@ public class InputTransferSelectTag extends AbstractListTag {
     public void setHeaderValue(String headerValue) {
         this.headerValue = headerValue;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.size = null;
+        this.multiple = null;
+        this.allowRemoveAll = null;
+        this.allowUpDown = null;
+        this.leftTitle = null;
+        this.rightTitle = null;
+        this.buttonCssClass = null;
+        this.buttonCssStyle = null;
+        this.addLabel = null;
+        this.removeLabel = null;
+        this.removeAllLabel = null;
+        this.upLabel = null;
+        this.downLabel = null;
+        this.headerKey = null;
+        this.headerValue = null;
+     }
+
 }

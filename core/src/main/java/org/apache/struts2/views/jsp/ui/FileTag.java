@@ -36,10 +36,12 @@ public class FileTag extends AbstractUITag {
     protected String accept;
     protected String size;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new File(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -55,4 +57,12 @@ public class FileTag extends AbstractUITag {
     public void setSize(String size) {
         this.size = size;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.accept = null;
+        this.size = null;
+     }
+
 }

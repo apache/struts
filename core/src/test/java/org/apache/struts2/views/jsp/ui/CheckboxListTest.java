@@ -40,6 +40,7 @@ public class CheckboxListTest extends AbstractUITagTest {
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
+    @Override
     protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
         Map<String, PropertyHolder> result = super.initializedGenericTagTestProperties();
         new PropertyHolder("value", "hello").addToMap(result);
@@ -98,6 +99,13 @@ public class CheckboxListTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(CheckboxListTag.class.getResource("CheckboxList-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        CheckboxListTag freshTag = new CheckboxListTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testMultipleWithDisabledOn() throws Exception {
@@ -125,6 +133,13 @@ public class CheckboxListTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(CheckboxListTag.class.getResource("CheckboxList-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        CheckboxListTag freshTag = new CheckboxListTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimple() throws Exception {
@@ -150,6 +165,13 @@ public class CheckboxListTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(CheckboxListTag.class.getResource("CheckboxList-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        CheckboxListTag freshTag = new CheckboxListTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleWithDisableOn() throws Exception {
@@ -174,5 +196,12 @@ public class CheckboxListTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(CheckboxListTag.class.getResource("CheckboxList-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        CheckboxListTag freshTag = new CheckboxListTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 }

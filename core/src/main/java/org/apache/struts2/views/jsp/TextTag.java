@@ -41,10 +41,12 @@ public class TextTag extends ContextBeanTag {
     private boolean escapeXml = false;
     private boolean escapeCsv = false;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Text(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -81,5 +83,16 @@ public class TextTag extends ContextBeanTag {
     public void setEscapeCsv(boolean escapeCsv) {
         this.escapeCsv = escapeCsv;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.name = null;
+        this.searchValueStack = null;
+        this.escapeHtml = false;
+        this.escapeJavaScript = false;
+        this.escapeXml = false;
+        this.escapeCsv = false;
+     }
 
 }

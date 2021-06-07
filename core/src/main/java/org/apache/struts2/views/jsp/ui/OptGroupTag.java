@@ -40,10 +40,12 @@ public class OptGroupTag extends ComponentTagSupport {
     protected String listCssStyle;
     protected String listTitle;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new OptGroup(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -89,4 +91,18 @@ public class OptGroupTag extends ComponentTagSupport {
     public void setListTitle(String listTitle) {
         this.listTitle = listTitle;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.list = null;
+        this.label = null;
+        this.disabled = null;
+        this.listKey = null;
+        this.listValue = null;
+        this.listCssClass = null;
+        this.listCssStyle = null;
+        this.listTitle = null;
+    }
+
 }

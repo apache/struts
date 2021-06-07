@@ -35,10 +35,12 @@ public class IncludeTag extends ComponentTagSupport {
 
     protected String value;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Include(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -48,4 +50,11 @@ public class IncludeTag extends ComponentTagSupport {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.value = null;
+    }
+
 }

@@ -39,10 +39,12 @@ public class BeanTag extends ContextBeanTag {
 
     protected String name;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Bean(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -52,4 +54,11 @@ public class BeanTag extends ContextBeanTag {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.name = null;
+    }
+
 }

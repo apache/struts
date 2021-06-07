@@ -48,10 +48,12 @@ public class URLTag extends ContextBeanTag {
     protected String anchor;
     protected String forceAddSchemeHostAndPort;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new URL(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -136,4 +138,24 @@ public class URLTag extends ContextBeanTag {
     public void setForceAddSchemeHostAndPort(String forceAddSchemeHostAndPort) {
         this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.includeParams = null;
+        this.scheme = null;
+        this.value = null;
+        this.action = null;
+        this.namespace = null;
+        this.method = null;
+        this.encode = null;
+        this.includeContext = null;
+        this.escapeAmp = null;
+        this.portletMode = null;
+        this.windowState = null;
+        this.portletUrlType = null;
+        this.anchor = null;
+        this.forceAddSchemeHostAndPort = null;
+     }
+
 }

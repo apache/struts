@@ -66,24 +66,18 @@ public interface ExcludedPatternsChecker {
 
         private final boolean excluded;
         private final String excludedPattern;
-        private final boolean log;
 
         public static IsExcluded yes(Pattern excludedPattern) {
-            return new IsExcluded(true, excludedPattern.pattern(),true);
-        }
-
-        public static IsExcluded yes(Pattern excludedPattern, Boolean log) {
-            return new IsExcluded(true, excludedPattern.pattern(), log);
+            return new IsExcluded(true, excludedPattern.pattern());
         }
 
         public static IsExcluded no(Set<Pattern> excludedPatterns) {
-            return new IsExcluded(false, excludedPatterns.toString(),true);
+            return new IsExcluded(false, excludedPatterns.toString());
         }
 
-        private IsExcluded(boolean excluded, String excludedPattern, boolean log) {
+        private IsExcluded(boolean excluded, String excludedPattern) {
             this.excluded = excluded;
             this.excludedPattern = excludedPattern;
-            this.log = log;
         }
 
         public boolean isExcluded() {
@@ -93,22 +87,13 @@ public interface ExcludedPatternsChecker {
         public String getExcludedPattern() {
             return excludedPattern;
         }
-        
-        /**
-         * Do we want a warning message to be logged. For ignored patterns.
-         *
-         * @return true, if log message is required
-         */
-        public boolean isLog() {
-            return log;
-        }
 
         @Override
         public String toString() {
             return "IsExcluded { " +
                     "excluded=" + excluded +
                     ", excludedPattern=" + excludedPattern +
-                    ", log=" + log +" }";
+                    " }";
         }
     }
 

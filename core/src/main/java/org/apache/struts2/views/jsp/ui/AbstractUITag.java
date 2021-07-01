@@ -18,9 +18,7 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.struts2.components.UIBean;
-import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.views.jsp.ComponentTagSupport;
 
 import javax.servlet.jsp.JspException;
@@ -40,7 +38,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String disabled;
     protected String label;
     protected String labelSeparator;
-    protected String labelposition;
+    protected String labelPosition;
     protected String requiredPosition;
     protected String errorPosition;
     protected String name;
@@ -92,7 +90,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setDisabled(disabled);
         uiBean.setLabel(label);
         uiBean.setLabelSeparator(labelSeparator);
-        uiBean.setLabelposition(labelposition);
+        uiBean.setLabelPosition(labelPosition);
         uiBean.setRequiredPosition(requiredPosition);
         uiBean.setErrorPosition(errorPosition);
         uiBean.setName(name);
@@ -169,8 +167,17 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.label = label;
     }
 
+    /**
+     * Deprecated since 2.5.27
+     * @deprecated use {@link #setLabelPosition(String)} instead
+     */
+    @Deprecated
     public void setLabelposition(String labelPosition) {
-        this.labelposition = labelPosition;
+        this.labelPosition = labelPosition;
+    }
+
+    public void setLabelPosition(String labelPosition) {
+        this.labelPosition = labelPosition;
     }
 
     public void setRequiredPosition(String requiredPosition) {

@@ -135,6 +135,10 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.cssClass = cssClass;
     }
 
+    /**
+     * @deprecated Use {@link #setCssClass(String)} instead
+     */
+    @Deprecated
     public void setClass(String cssClass) {
         this.cssClass = cssClass;
     }

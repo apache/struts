@@ -92,6 +92,13 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("DoubleSelect-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DoubleSelectTag freshTag = new DoubleSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
     
     public void testOnchange() throws Exception {
@@ -156,6 +163,13 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("DoubleSelect-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DoubleSelectTag freshTag = new DoubleSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -219,7 +233,12 @@ public class DoubleSelectTest extends AbstractUITagTest {
 
         verify(SelectTag.class.getResource("DoubleSelect-2.txt"));
 
-
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DoubleSelectTag freshTag = new DoubleSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
     
     public void testDoubleWithDotName() throws Exception {
@@ -277,6 +296,13 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("DoubleSelect-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DoubleSelectTag freshTag = new DoubleSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGenericSimple() throws Exception {

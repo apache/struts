@@ -46,6 +46,13 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithoutParamsWithoutFieldErrors() throws Exception {
@@ -56,6 +63,13 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
      public void testFieldErrorsEscape() throws Exception {
@@ -72,6 +86,13 @@ public class FieldErrorTagTest extends AbstractUITagTest {
 
         assertEquals(normalize("<ul class=\"errorMessage\"><li><span>&lt;p&gt;hey&lt;/p&gt;</span></li></ul>", true),
                 normalize(writer.toString(), true));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testFieldErrorsDontEscape() throws Exception {
@@ -88,6 +109,13 @@ public class FieldErrorTagTest extends AbstractUITagTest {
 
         assertEquals(normalize("<ul class=\"errorMessage\"><li><span><p>hey</p></span></li></ul>", true),
                 normalize(writer.toString(), true));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithParamsWithFieldErrors1() throws Exception {
@@ -111,6 +139,23 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag1, freshParamTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag2, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
      public void testWithFieldName() throws Exception {
@@ -122,6 +167,13 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-6.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithParamsWithFieldErrors2() throws Exception {
@@ -144,6 +196,23 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag1, freshParamTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag2, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -161,6 +230,20 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag1, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithParamsWithoutFieldErrors1() throws Exception {
@@ -182,6 +265,23 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag1, freshParamTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag2, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithParamsWithoutFieldErrors2() throws Exception {
@@ -203,6 +303,23 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag1, freshParamTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag2, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -220,6 +337,20 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag1, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithNullFieldErrors() throws Exception {
@@ -237,9 +368,24 @@ public class FieldErrorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(FieldErrorTagTest.class.getResource("fielderror-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(pTag1, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FieldErrorTag freshTag = new FieldErrorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
+    @Override
     public Action getAction() {
         return new InternalAction();
     }
@@ -258,6 +404,7 @@ public class FieldErrorTagTest extends AbstractUITagTest {
             this.returnNullForFieldErrors = returnNullForFieldErrors;
         }
 
+        @Override
         public Map<String, List<String>> getFieldErrors() {
             if (haveFieldErrors) {
                 List err1 = new ArrayList();
@@ -280,6 +427,7 @@ public class FieldErrorTagTest extends AbstractUITagTest {
             }
         }
 
+        @Override
         public boolean hasFieldErrors() {
             return haveFieldErrors;
         }

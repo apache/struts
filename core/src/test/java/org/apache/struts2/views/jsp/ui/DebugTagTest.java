@@ -54,6 +54,13 @@ public class DebugTagTest extends AbstractUITagTest {
         String result = writer.toString();
         assertTrue(StringUtils.isNotEmpty(result));
         assertTrue("Property 'checkStackProperty' should be in Debug Tag output", StringUtils.contains(result, "<td>checkStackProperty</td>"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DebugTag freshTag = new DebugTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDevModeDisabled() throws Exception {
@@ -62,6 +69,13 @@ public class DebugTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertTrue("nothing to see here, devMode=false", StringUtils.isEmpty(writer.toString()));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DebugTag freshTag = new DebugTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testTagAttributeOverrideDevModeTrue() throws Exception {
@@ -73,6 +87,13 @@ public class DebugTagTest extends AbstractUITagTest {
         String result = writer.toString();
         assertTrue(StringUtils.isNotEmpty(result));
         assertTrue("Property 'checkStackProperty' should be in Debug Tag output", StringUtils.contains(result, "<td>checkStackProperty</td>"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DebugTag freshTag = new DebugTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testTagAttributeOverrideDevModeFalse() throws Exception {
@@ -82,6 +103,13 @@ public class DebugTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertTrue("nothing to see here, devMode=false and overrideDevMode=false", StringUtils.isEmpty(writer.toString()));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DebugTag freshTag = new DebugTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     private void setDevMode(final boolean devMode) {

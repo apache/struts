@@ -35,10 +35,12 @@ public class ElseIfTag extends ComponentTagSupport {
 
     protected String test;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ElseIf(stack);
     }
 
+    @Override
     protected void populateParams() {
         ((ElseIf) getComponent()).setTest(test);
     }
@@ -46,4 +48,11 @@ public class ElseIfTag extends ComponentTagSupport {
     public void setTest(String test) {
         this.test = test;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.test = null;
+    }
+
 }

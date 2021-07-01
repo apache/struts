@@ -49,6 +49,13 @@ public class FileTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("File-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FileTag freshTag = new FileTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -59,6 +66,7 @@ public class FileTest extends AbstractUITagTest {
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
+    @Override
     protected Map initializedGenericTagTestProperties() {
         Map result = super.initializedGenericTagTestProperties();
         new PropertyHolder("accept", "someAccepted").addToMap(result);

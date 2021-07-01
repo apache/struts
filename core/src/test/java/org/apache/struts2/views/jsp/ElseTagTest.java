@@ -54,6 +54,13 @@ public class ElseTagTest extends StrutsInternalTestCase {
             fail();
         }
         assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ElseTag freshTag = new ElseTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(elseTag, freshTag));
     }
 
     public void testTestNull() {
@@ -63,12 +70,20 @@ public class ElseTagTest extends StrutsInternalTestCase {
 
         try {
             result = elseTag.doStartTag();
+            elseTag.doEndTag();
         } catch (JspException e) {
             e.printStackTrace();
             fail();
         }
 
         assertEquals(TagSupport.SKIP_BODY, result);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ElseTag freshTag = new ElseTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(elseTag, freshTag));
     }
 
     public void testTestTrue() {
@@ -79,14 +94,23 @@ public class ElseTagTest extends StrutsInternalTestCase {
 
         try {
             result = elseTag.doStartTag();
+            elseTag.doEndTag();
         } catch (JspException e) {
             e.printStackTrace();
             fail();
         }
 
         assertEquals(TagSupport.SKIP_BODY, result);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ElseTag freshTag = new ElseTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(elseTag, freshTag));
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // create the needed objects

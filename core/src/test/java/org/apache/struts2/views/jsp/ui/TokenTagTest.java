@@ -87,6 +87,13 @@ public class TokenTagTest extends AbstractUITagTest {
 			assertNotNull(token);
 			final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
 			assertEquals(token, pageContext.getSession().getAttribute(sessionTokenName));
+
+            // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+            TokenTag freshTag = new TokenTag();
+            freshTag.setPageContext(pageContext);
+            assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                    "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                    strutsBodyTagsAreReflectionEqual(tag, freshTag));
         } catch (JspException e) {
             e.printStackTrace();
             fail();

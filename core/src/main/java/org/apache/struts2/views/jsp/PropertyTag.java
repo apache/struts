@@ -40,10 +40,12 @@ public class PropertyTag extends ComponentTagSupport {
     private boolean escapeXml = false;
     private boolean escapeCsv = false;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Property(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -83,4 +85,16 @@ public class PropertyTag extends ComponentTagSupport {
     public void setEscapeXml(boolean escapeXml) {
         this.escapeXml = escapeXml;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.defaultValue = null;
+        this.value = null;
+        this.escapeHtml = true;
+        this.escapeJavaScript = false;
+        this.escapeXml = false;
+        this.escapeCsv = false;
+    }
+
 }

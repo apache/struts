@@ -27,6 +27,7 @@ import org.apache.struts2.util.FastByteArrayOutputStream;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.jsp.JspException;
 
 /**
  * Contains common functonalities for Struts JSP Tags.
@@ -77,4 +78,34 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
             return bodyContent.getString().trim();
         }
     }
+
+    @Override
+    public int doEndTag() throws JspException {
+        clearTagStateForTagPoolingServers();
+        return super.doEndTag();
+    }
+
+    /**
+     * Provide a mechanism to clear tag state, to handle servlet container JSP tag pooling
+     * behaviour with some servers, such as Glassfish.
+     * 
+     * Usage: Override this method in descendant classes to clear any state that might cause issues should the 
+     *        servlet container re-use a cached instance of the tag object.  If the descendant class does not
+     *        declare any new field members then it should not be strictly necessary to call this method there.
+     *        Typically that means calling the ancestor's {@link ComponentTagSupport#clearTagStateForTagPoolingServers()}
+     *        method first, then resetting instance variables at the current level to their default state.
+     * 
+     * Note: If the descendant overrides {@link StrutsBodyTagSupport#doEndTag()}, and does not call
+     *       super.doEndTag(), then the descendant should call this method in the descendant doEndTag() method
+     *       to ensure consistent clearing of tag state.
+     */
+    protected void clearTagStateForTagPoolingServers() {
+        // Default implementation.
+        this.setBodyContent(null);  // Always clear the tag body (if any) after tag completion.
+        this.setId(null);           // Always clear the tag id (if any) after tag completion.
+        // Note: The pageContext and parent Tag state are NOT cleared, only the "user-defined" tag state should be cleared.
+        //       Calling setPageContext(null) and setParent(null) appears too dangerous to consider, and the container
+        //       should always set them, even if a tag instance from a pool is re-used.
+    }
+
 }

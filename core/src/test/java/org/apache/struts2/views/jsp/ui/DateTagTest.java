@@ -48,6 +48,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(formatted, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCustomFormatWithTimezone() throws Exception {
@@ -65,6 +72,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(formatted, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCustomFormatWithTimezoneAsExpression() throws Exception {
@@ -83,6 +97,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(formatted, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCustomFormatCalendar() throws Exception {
@@ -97,6 +118,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(formatted, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCustomFormatLong() throws Exception {
@@ -112,6 +140,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(formatted, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDefaultFormat() throws Exception {
@@ -125,6 +160,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(formatted, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCustomFormatAndComponent() throws Exception {
@@ -148,6 +190,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doEndTag();
 
         assertEquals(formatted, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSetId() throws Exception {
@@ -163,6 +212,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(formatted, context.get("myId"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testFutureNiceHour() throws Exception {
@@ -178,6 +234,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("in one hour", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testPastNiceHour() throws Exception {
@@ -193,6 +256,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("one hour ago", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testFutureNiceHourMinSec() throws Exception {
@@ -209,6 +279,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("in 2 hours, 33 minutes", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testPastNiceHourMin() throws Exception {
@@ -225,6 +302,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("4 hours, 55 minutes ago", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testFutureLessOneMin() throws Exception {
@@ -240,6 +324,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("in an instant", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testFutureLessOneHour() throws Exception {
@@ -255,6 +346,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("in 36 minutes", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testFutureLessOneYear() throws Exception {
@@ -270,6 +368,13 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("in 40 days", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testFutureTwoYears() throws Exception {
@@ -289,6 +394,13 @@ public class DateTagTest extends AbstractTagTest {
         // hmmm the Date component isn't the best to calculate the excat difference so we'll just check
         // that it starts with in 2 years
         assertTrue(writer.toString().startsWith("in 2 years"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testNoDateObjectInContext() throws Exception {
@@ -299,14 +411,23 @@ public class DateTagTest extends AbstractTagTest {
         tag.doEndTag();
         //should return a blank
         assertEquals("", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         tag = new DateTag();
         tag.setPageContext(pageContext);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         tag = null;

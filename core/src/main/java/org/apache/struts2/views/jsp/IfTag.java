@@ -35,10 +35,12 @@ public class IfTag extends ComponentTagSupport {
 
     String test;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new If(stack);
     }
 
+    @Override
     protected void populateParams() {
         ((If) getComponent()).setTest(test);
     }
@@ -46,4 +48,11 @@ public class IfTag extends ComponentTagSupport {
     public void setTest(String test) {
         this.test = test;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.test = null;
+    }
+
 }

@@ -35,10 +35,12 @@ public class I18nTag extends ComponentTagSupport {
 
     protected String name;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new I18n(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -48,4 +50,11 @@ public class I18nTag extends ComponentTagSupport {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.name = null;
+    }
+
 }

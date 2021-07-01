@@ -30,6 +30,13 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testErrorStyle() throws Exception {
@@ -38,6 +45,13 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testErrorClass() throws Exception {
@@ -46,6 +60,13 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testStyleAndErrorStyle() throws Exception {
@@ -55,6 +76,13 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
      public void testStyleAndErrorClass() throws Exception {
@@ -64,6 +92,13 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     @Override

@@ -70,6 +70,20 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         request.verify();
         jspWriter.verify();
         pageContext.verify();
+
+        try {
+            tag.doEndTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
     }
 
     public void testNull() {
@@ -99,6 +113,20 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         request.verify();
         jspWriter.verify();
         pageContext.verify();
+
+        try {
+            tag.doEndTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimple() {
@@ -129,6 +157,20 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         request.verify();
         jspWriter.verify();
         pageContext.verify();
+
+        try {
+            tag.doEndTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
     }
 
     public void testTopOfStack() {
@@ -158,6 +200,20 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         request.verify();
         jspWriter.verify();
         pageContext.verify();
+
+        try {
+            tag.doEndTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -183,6 +239,13 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             tag.setValue("%{formatTitle()}");
             tag.doStartTag();
             tag.doEndTag();
+
+            // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+            PropertyTag freshTag = new PropertyTag();
+            freshTag.setPageContext(pageContext);
+            assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                    "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                    objectsAreReflectionEqual(tag, freshTag));
         }
 
         // verify test
@@ -213,7 +276,14 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         tag.setPageContext(pageContext);
         tag.setValue("%{formatTitle()}");
         tag.doStartTag();
-        tag.doEndTag();}
+        tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
         request.verify();
@@ -243,7 +313,14 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         tag.setPageContext(pageContext);
         tag.setValue("%{formatTitle()}");
         tag.doStartTag();
-        tag.doEndTag();}
+        tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
         request.verify();
@@ -273,7 +350,14 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         tag.setPageContext(pageContext);
         tag.setValue("%{formatTitle()}");
         tag.doStartTag();
-        tag.doEndTag();}
+        tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
         request.verify();
@@ -301,7 +385,14 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         tag.setPageContext(pageContext);
         tag.setValue("formatTitle()");
         tag.doStartTag();
-        tag.doEndTag();}
+        tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
         request.verify();
@@ -329,7 +420,14 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         tag.setPageContext(pageContext);
         tag.setValue("formatTitle()");
         tag.doStartTag();
-        tag.doEndTag();}
+        tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
         request.verify();
@@ -357,7 +455,14 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         tag.setPageContext(pageContext);
         tag.setValue("%{formatTitle()}");
         tag.doStartTag();
-        tag.doEndTag();}
+        tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));}
 
         // verify test
         request.verify();
@@ -366,6 +471,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
     }
 
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         stack = ActionContext.getContext().getValueStack();
@@ -388,6 +494,7 @@ public class PropertyTagTest extends StrutsInternalTestCase {
             return "Foo is: " + title;
         }
 
+        @Override
         public String toString() {
             return formatTitle();
         }

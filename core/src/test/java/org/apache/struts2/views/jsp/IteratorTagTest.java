@@ -59,7 +59,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
         // one
         int result = tag.doStartTag();
-        assertEquals(result, TagSupport.EVAL_BODY_INCLUDE);
+        assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
         assertEquals(stack.peek(), "one");
         assertEquals(stack.getContext().get("myId"), "one");
 
@@ -68,37 +68,44 @@ public class IteratorTagTest extends AbstractUITagTest {
 
         // two
         result = tag.doAfterBody();
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertEquals(stack.peek(), "two");
         assertEquals(stack.getContext().get("myId"), "two");
 
 
         // three
         result = tag.doAfterBody();
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertEquals(stack.peek(), "three");
         assertEquals(stack.getContext().get("myId"), "three");
 
 
         // four
         result = tag.doAfterBody();
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertEquals(stack.peek(), "four");
         assertEquals(stack.getContext().get("myId"), "four");
 
 
         // five
         result = tag.doAfterBody();
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertEquals(stack.peek(), "five");
         assertEquals(stack.getContext().get("myId"), "five");
 
 
         result = tag.doAfterBody();
-        assertEquals(result, TagSupport.SKIP_BODY);
+        assertEquals(TagSupport.SKIP_BODY, result);
 
         result = tag.doEndTag();
-        assertEquals(result, TagSupport.EVAL_PAGE);
+        assertEquals(TagSupport.EVAL_PAGE, result);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorTag freshTag = new IteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
     
     public void testIteratingWithIdSpecifiedAndNullElementOnCollection() throws Exception {
@@ -117,7 +124,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
         // one
         int result = tag.doStartTag();
-        assertEquals(result, TagSupport.EVAL_BODY_INCLUDE);
+        assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
         assertEquals(stack.peek(), "one");
         assertEquals(stack.getContext().get("myId"), "one");
 
@@ -126,22 +133,29 @@ public class IteratorTagTest extends AbstractUITagTest {
 
         // two
         result = tag.doAfterBody();
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertNull(stack.peek());
         assertNull(stack.getContext().get("myId"));
 
 
         // three
         result = tag.doAfterBody();
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertEquals(stack.peek(), "three");
         assertEquals(stack.getContext().get("myId"), "three");
 
         result = tag.doAfterBody();
-        assertEquals(result, TagSupport.SKIP_BODY);
+        assertEquals(TagSupport.SKIP_BODY, result);
 
         result = tag.doEndTag();
-        assertEquals(result, TagSupport.EVAL_PAGE);
+        assertEquals(TagSupport.EVAL_PAGE, result);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorTag freshTag = new IteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -232,6 +246,22 @@ public class IteratorTagTest extends AbstractUITagTest {
 
         assertEquals(TagSupport.SKIP_BODY, result);
         assertEquals(3, stack.size());
+
+        try {
+            result = tag.doEndTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        assertEquals(TagSupport.EVAL_PAGE, result);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorTag freshTag = new IteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testStatus() {
@@ -252,7 +282,7 @@ public class IteratorTagTest extends AbstractUITagTest {
             fail();
         }
 
-        assertEquals(result, TagSupport.EVAL_BODY_INCLUDE);
+        assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
         assertEquals("test1", stack.getRoot().peek());
         assertEquals(4, stack.size());
 
@@ -272,7 +302,7 @@ public class IteratorTagTest extends AbstractUITagTest {
             fail();
         }
 
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertEquals("test2", stack.getRoot().peek());
         assertEquals(4, stack.size());
 
@@ -292,7 +322,7 @@ public class IteratorTagTest extends AbstractUITagTest {
             fail();
         }
 
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertEquals("test3", stack.getRoot().peek());
         assertEquals(4, stack.size());
 
@@ -304,6 +334,22 @@ public class IteratorTagTest extends AbstractUITagTest {
         assertEquals(3, status.getCount());
         assertTrue(status.isOdd());
         assertFalse(status.isEven());
+
+        try {
+            result = tag.doEndTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        assertEquals(TagSupport.EVAL_PAGE, result);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorTag freshTag = new IteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testEmptyArray() {
@@ -661,7 +707,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         List values = new ArrayList();
         try {
             int result = tag.doStartTag();
-            assertEquals(result, TagSupport.EVAL_BODY_INCLUDE);
+            assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
             values.add(stack.getRoot().peek());
         } catch (JspException e) {
             e.printStackTrace();
@@ -676,6 +722,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         ListUtils.isEqualList(Arrays.asList(expectedValues), values);
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -700,7 +747,7 @@ public class IteratorTagTest extends AbstractUITagTest {
             fail();
         }
 
-        assertEquals(result, TagSupport.EVAL_BODY_INCLUDE);
+        assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
         assertEquals("test1", stack.getRoot().peek());
         assertEquals(4, stack.size());
 
@@ -711,7 +758,7 @@ public class IteratorTagTest extends AbstractUITagTest {
             fail();
         }
 
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertEquals("test2", stack.getRoot().peek());
         assertEquals(4, stack.size());
 
@@ -722,7 +769,7 @@ public class IteratorTagTest extends AbstractUITagTest {
             fail();
         }
 
-        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
         assertEquals("test3", stack.getRoot().peek());
         assertEquals(4, stack.size());
 
@@ -733,7 +780,7 @@ public class IteratorTagTest extends AbstractUITagTest {
             fail();
         }
 
-        assertEquals(result, TagSupport.SKIP_BODY);
+        assertEquals(TagSupport.SKIP_BODY, result);
         assertEquals(3, stack.size());
     }
 
@@ -747,13 +794,22 @@ public class IteratorTagTest extends AbstractUITagTest {
             fail();
         }
 
-        assertEquals(result, TagSupport.SKIP_BODY);
+        assertEquals(TagSupport.SKIP_BODY, result);
         try {
             result = tag.doEndTag();
         } catch (JspException e) {
             e.printStackTrace();
             fail();
         }
+
+        assertEquals(TagSupport.EVAL_PAGE, result);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorTag freshTag = new IteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     class Foo {

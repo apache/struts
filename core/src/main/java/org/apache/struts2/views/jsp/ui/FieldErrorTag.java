@@ -37,10 +37,12 @@ public class FieldErrorTag extends AbstractUITag {
     protected boolean escape = true;
 
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new FieldError(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -56,5 +58,12 @@ public class FieldErrorTag extends AbstractUITag {
     public void setEscape(boolean escape) {
         this.escape = escape;
     }
-}
 
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.fieldName = null;
+        this.escape = true;
+     }
+
+}

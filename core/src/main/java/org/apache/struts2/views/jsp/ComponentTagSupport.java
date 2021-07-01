@@ -35,12 +35,14 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
 
     public abstract Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res);
 
+    @Override
     public int doEndTag() throws JspException {
         component.end(pageContext.getOut(), getBody());
-        component = null;
+        clearTagStateForTagPoolingServers();  // Moved the component reference clear into this method call.
         return EVAL_PAGE;
     }
 
+    @Override
     public int doStartTag() throws JspException {
         ValueStack stack = getStack();
         component = getBean(stack, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
@@ -63,4 +65,11 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
     public Component getComponent() {
         return component;
     }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        component = null;
+    }
+
 }

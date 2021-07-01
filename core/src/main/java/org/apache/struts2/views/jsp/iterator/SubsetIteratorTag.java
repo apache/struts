@@ -193,6 +193,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
         this.var = var;
     }
 
+    @Override
     public int doStartTag() throws JspException {
 
         // source
@@ -272,12 +273,24 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
         return EVAL_BODY_INCLUDE;
     }
 
+    @Override
     public int doEndTag() throws JspException {
-
+        // pop resulting subset iterator from stack at end tag
         getStack().pop();
-
         subsetIteratorFilter = null;
+        clearTagStateForTagPoolingServers();  // Clean-up, including subsetIteratorFilter reference.
 
         return EVAL_PAGE;
+    }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.countAttr = null;
+        this.sourceAttr = null;
+        this.startAttr = null;
+        this.deciderAttr = null;
+        this.var = null;
+        this.subsetIteratorFilter = null;
     }
 }

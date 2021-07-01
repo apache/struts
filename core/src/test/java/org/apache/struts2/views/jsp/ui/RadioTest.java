@@ -50,6 +50,13 @@ public class RadioTest extends AbstractUITagTest {
 		tag.doEndTag();
 		
 		verify(RadioTag.class.getResource("Radio-3.txt"));
+
+                // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+                RadioTag freshTag = new RadioTag();
+                freshTag.setPageContext(pageContext);
+                assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        strutsBodyTagsAreReflectionEqual(tag, freshTag));
 	}
 	
     public void testMapChecked() throws Exception {
@@ -74,6 +81,13 @@ public class RadioTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(RadioTag.class.getResource("Radio-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        RadioTag freshTag = new RadioTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
     
     public void testMapCheckedNull() throws Exception {
@@ -96,6 +110,13 @@ public class RadioTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(RadioTag.class.getResource("Radio-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        RadioTag freshTag = new RadioTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimple() throws Exception {
@@ -119,6 +140,13 @@ public class RadioTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(RadioTag.class.getResource("Radio-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        RadioTag freshTag = new RadioTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleWithStringMap() throws Exception {
@@ -134,6 +162,13 @@ public class RadioTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(RadioTag.class.getResource("Radio-6.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        RadioTag freshTag = new RadioTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleWithLabelSeparator() throws Exception {
@@ -158,6 +193,13 @@ public class RadioTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(RadioTag.class.getResource("Radio-5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        RadioTag freshTag = new RadioTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGenericSimple() throws Exception {
@@ -194,6 +236,13 @@ public class RadioTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(RadioTag.class.getResource("Radio-7.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        RadioTag freshTag = new RadioTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testNotExistingListValueKey() throws Exception {
@@ -209,6 +258,13 @@ public class RadioTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Radio-8.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        RadioTag freshTag = new RadioTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     private void prepareTagGeneric(RadioTag tag) {

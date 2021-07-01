@@ -50,6 +50,13 @@ public class ElseIfTagTest extends StrutsInternalTestCase {
         tag.doEndTag();
 
         assertEquals(result, TagSupport.EVAL_BODY_INCLUDE);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ElseIfTag freshTag = new ElseIfTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIfIsFalseElseIfIsFalse() throws Exception {
@@ -63,6 +70,13 @@ public class ElseIfTagTest extends StrutsInternalTestCase {
         tag.doEndTag();
 
         assertEquals(result, TagSupport.SKIP_BODY);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ElseIfTag freshTag = new ElseIfTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIfIsTrueElseIfIsTrue() throws Exception {
@@ -76,6 +90,13 @@ public class ElseIfTagTest extends StrutsInternalTestCase {
         tag.doEndTag();
 
         assertEquals(result, TagSupport.SKIP_BODY);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ElseIfTag freshTag = new ElseIfTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIfIsTrueElseIfIsFalse() throws Exception {
@@ -89,9 +110,17 @@ public class ElseIfTagTest extends StrutsInternalTestCase {
         tag.doEndTag();
 
         assertEquals(result, TagSupport.SKIP_BODY);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ElseIfTag freshTag = new ElseIfTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
     }
 
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         stack = ActionContext.getContext().getValueStack();

@@ -110,6 +110,7 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
         this.var = var;
     }
 
+    @Override
     public int doStartTag() throws JspException {
         // Source
         Object srcToSort;
@@ -144,13 +145,25 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
         return EVAL_BODY_INCLUDE;
     }
 
+    @Override
     public int doEndTag() throws JspException {
         int returnVal =  super.doEndTag();
 
         // pop sorted list from stack at the end of tag
         getStack().pop();
         sortIteratorFilter = null;
+        // The super.doEndTag() above should ensure clearTagStateForTagPoolingServers() is called correctly, 
+        // which should clean-up the sortIteratorFilter reference.
 
         return returnVal;
+    }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.comparatorAttr = null;
+        this.sourceAttr = null;
+        this.var = null;
+        this.sortIteratorFilter = null;
     }
 }

@@ -21,6 +21,8 @@ package org.apache.struts2;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
@@ -111,4 +113,26 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
         StrutsTestCaseHelper.tearDown();
     }
 
+    /**
+     * Compare if two objects are considered equal according to their fields as accessed 
+     * via reflection.
+     * 
+     * Utilizes {@link EqualsBuilder#reflectionEquals(java.lang.Object, java.lang.Object, boolean)} to perform 
+     * the check, and compares transient fields as well.  This may fail when run while a security manager is
+     * active, due to a need to user reflection.
+     * 
+     * 
+     * @param obj1 the first {@link Object} to compare against the other.
+     * @param obj2 the second {@link Object} to compare against the other.
+     * @return true if the objects are equal based on field comparisons by reflection, false otherwise.
+     */
+    protected boolean objectsAreReflectionEqual(Object obj1, Object obj2) {
+        boolean result = false;
+        if (obj1 == obj2) {
+            result = true;
+        } else if (obj1 != null && obj2 != null) {
+            result = EqualsBuilder.reflectionEquals(obj1, obj2, true);
+        }
+        return result;
+    }
 }

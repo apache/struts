@@ -38,10 +38,12 @@ public class TextareaTag extends AbstractUITag {
     protected String rows;
     protected String wrap;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TextArea(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -66,6 +68,15 @@ public class TextareaTag extends AbstractUITag {
 
     public void setWrap(String wrap) {
         this.wrap = wrap;
+    }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.cols = null;
+        this.readonly = null;
+        this.rows = null;
+        this.wrap = null;
     }
 
 }

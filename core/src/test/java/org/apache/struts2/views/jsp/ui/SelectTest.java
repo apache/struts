@@ -46,6 +46,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-8.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -87,6 +94,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-10.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -130,6 +144,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testInteger() throws Exception {
@@ -169,6 +190,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-14.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testNumericString() throws Exception {
@@ -209,6 +237,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-15.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public class BigDecimalObject {
@@ -345,6 +380,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testMultiple() throws Exception {
@@ -377,6 +419,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -415,6 +464,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-12.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimple() throws Exception {
@@ -445,6 +501,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
     
     public void testSimpleWithNulls() throws Exception {
@@ -475,6 +538,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-9.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testExtended() throws Exception {
@@ -505,6 +575,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-7.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
      }
 
     public void testGenericSimple() throws Exception {
@@ -533,6 +610,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testMultipleOff() throws Exception {
@@ -549,6 +633,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-6.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -584,6 +675,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-11.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleIntegerWithValueWorkaround() throws Exception {
@@ -619,6 +717,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-11.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
     
     public void testEnumList() throws Exception {
@@ -635,6 +740,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-13.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testNotExistingListValueKey() throws Exception {
@@ -650,6 +762,13 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-16.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public class IdName {

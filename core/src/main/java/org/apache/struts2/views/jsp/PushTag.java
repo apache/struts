@@ -35,10 +35,12 @@ public class PushTag extends ComponentTagSupport {
 
     protected String value;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Push(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -48,4 +50,11 @@ public class PushTag extends ComponentTagSupport {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.value = null;
+    }
+
 }

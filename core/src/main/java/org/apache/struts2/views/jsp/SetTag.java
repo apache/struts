@@ -37,10 +37,12 @@ public class SetTag extends ContextBeanTag {
     protected String value;
     protected boolean trimBody = true;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Set(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -77,4 +79,13 @@ public class SetTag extends ContextBeanTag {
             return (bodyContent == null ? null : bodyContent.getString());
         }
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.scope = null;
+        this.value = null;
+        this.trimBody = true;
+     }
+
 }

@@ -64,6 +64,20 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.doEndTag();
 
         verify(TooltipTest.class.getResource("tooltip-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshFormTag = new FormTag();
+        freshFormTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(formTag, freshFormTag));
     }
 
     public void testWithoutFormOverridingNoJS() throws Exception {
@@ -98,6 +112,20 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.doEndTag();
 
         verify(TooltipTest.class.getResource("tooltip-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshFormTag = new FormTag();
+        freshFormTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(formTag, freshFormTag));
     }
     
     public void testWithoutFormOverridingNew() throws Exception {
@@ -130,6 +158,20 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.doEndTag();
 
         verify(TooltipTest.class.getResource("tooltip-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshFormTag = new FormTag();
+        freshFormTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(formTag, freshFormTag));
     }
 
     public void testWithFormOverriding() throws Exception {
@@ -162,6 +204,20 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.doEndTag();
 
         verify(TooltipTest.class.getResource("tooltip-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshFormTag = new FormTag();
+        freshFormTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(formTag, freshFormTag));
     }
     
     public void testWithFormOverridingNew() throws Exception {
@@ -192,6 +248,20 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.doEndTag();
 
         verify(TooltipTest.class.getResource("tooltip-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshFormTag = new FormTag();
+        freshFormTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(formTag, freshFormTag));
     }
 
     public void testWithPartialFormOverriding() throws Exception {
@@ -230,6 +300,20 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.doEndTag();
 
         verify(TooltipTest.class.getResource("tooltip-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshFormTag = new FormTag();
+        freshFormTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(formTag, freshFormTag));
     }
 
     public void testWithPartialFormOverridingNew() throws Exception {
@@ -265,6 +349,20 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.doEndTag();
 
         verify(TooltipTest.class.getResource("tooltip-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshFormTag = new FormTag();
+        freshFormTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(formTag, freshFormTag));
     }
 
     public void testUsingParamValueToSetConfigurations() throws Exception {
@@ -313,6 +411,20 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.doEndTag();
 
         verify(TooltipTest.class.getResource("tooltip-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshFormTag = new FormTag();
+        freshFormTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(formTag, freshFormTag));
     }
 
 
@@ -365,8 +477,30 @@ public class TooltipTest extends AbstractUITagTest {
         System.out.println(writer.toString());
 
         verify(TooltipTest.class.getResource("tooltip-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(textFieldParamTag, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FormTag freshFormTag = new FormTag();
+        freshFormTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(formTag, freshFormTag));
     }
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
 

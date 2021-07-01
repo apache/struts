@@ -51,6 +51,7 @@ public class TextTagTest extends AbstractTagTest {
     private TextTag tag;
 
 
+    @Override
     public Action getAction() {
         TestAction action = new TestAction();
         action.setFoo(fooValue);
@@ -72,6 +73,13 @@ public class TextTagTest extends AbstractTagTest {
 
         assertEquals(startStatus, BodyTag.EVAL_BODY_BUFFERED);
         assertEquals("Sample Of Default Message", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testExpressionsEvaluated() throws Exception {
@@ -81,6 +89,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCorrectI18NKey() throws Exception {
@@ -90,6 +105,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCorrectI18NKey2() throws Exception {
@@ -99,6 +121,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testMessageFormatWorks() throws Exception {
@@ -122,6 +151,13 @@ public class TextTagTest extends AbstractTagTest {
         ((Text) tag.component).addParameter(param3);
         tag.doEndTag();
         assertEquals(expected, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleKeyValueWorks() throws JspException {
@@ -131,6 +167,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     private Locale getForeignLocale() {
@@ -170,6 +213,14 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value1, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
         final StringBuffer buffer = writer.getBuffer();
         buffer.delete(0, buffer.length());
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack();
@@ -178,10 +229,16 @@ public class TextTagTest extends AbstractTagTest {
         newStack.push(container.inject(TestAction1.class));
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertNotSame(ActionContext.getContext().getValueStack().peek(), newStack.peek());
-
+        tag.setName(key);  // Required as WW-5124 fix clears tag state.
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value2, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testTextTagUsesLocaleFromValueStack() throws JspException {
@@ -200,6 +257,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doEndTag();
         assertEquals(value_default, writer.toString());
 
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
         final StringBuffer buffer = writer.getBuffer();
         buffer.delete(0, buffer.length());
         String value_int = getLocalizedMessage(foreignLocale);
@@ -210,9 +274,16 @@ public class TextTagTest extends AbstractTagTest {
         assertNotSame(newStack.getContext().get(ActionContext.LOCALE), ActionContext.getContext().getLocale());
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertEquals(ActionContext.getContext().getValueStack().peek(), newStack.peek());
+        tag.setName(key);  // Required as WW-5124 fix clears tag state.
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value_int, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
      public void testTextTagCanSearchStackToFindValue() throws JspException {
@@ -230,10 +301,16 @@ public class TextTagTest extends AbstractTagTest {
         newStack.push(testAction);
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
 
-
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("bar", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testTextTagDoNotSearchStackByDefault() throws JspException {
@@ -250,10 +327,16 @@ public class TextTagTest extends AbstractTagTest {
         newStack.push(testAction);
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
 
-
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("result", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithNoMessageAndBodyIsNotEmptyBodyIsReturned() throws Exception {
@@ -267,6 +350,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(bodyText, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithNoMessageAndNoDefaultKeyReturned() throws JspException {
@@ -275,6 +365,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(key, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testNoNameDefined() throws Exception {
@@ -286,6 +383,8 @@ public class TextTagTest extends AbstractTagTest {
         } catch (StrutsException e) {
             assertEquals(msg, e.getMessage());
         }
+
+        // The doEndTag() call is expected not to complete.  Cannot perform basic sanity check of clearTagStateForTagPoolingServers() behaviour.
     }
 
     public void testBlankNameDefined() throws Exception {
@@ -293,6 +392,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals("", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testPutId() throws Exception {
@@ -303,6 +409,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doEndTag();
         assertEquals("", writer.toString());
         assertEquals("No foo here", stack.findString("myId")); // is in stack now
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testEscapeHtml() throws Exception {
@@ -313,6 +426,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testEscapeXml() throws Exception {
@@ -323,6 +443,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testEscapeJavaScript() throws Exception {
@@ -333,6 +460,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testEscapeCsv() throws Exception {
@@ -343,6 +477,13 @@ public class TextTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(value, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextTag freshTag = new TextTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -350,6 +491,7 @@ public class TextTagTest extends AbstractTagTest {
      *
      * @throws Exception
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         tag = new TextTag();
@@ -357,6 +499,7 @@ public class TextTagTest extends AbstractTagTest {
         ActionContext.setContext(new ActionContext(stack.getContext()));
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
     }

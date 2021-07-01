@@ -35,10 +35,12 @@ public class LabelTag extends AbstractUITag {
 
     protected String forAttr;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Label(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -48,4 +50,11 @@ public class LabelTag extends AbstractUITag {
     public void setFor(String aFor) {
         this.forAttr = aFor;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.forAttr = null;
+     }
+
 }

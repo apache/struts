@@ -34,10 +34,12 @@ public class CheckboxTag extends AbstractUITag {
 
     protected String fieldValue;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Checkbox(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -47,4 +49,11 @@ public class CheckboxTag extends AbstractUITag {
     public void setFieldValue(String aValue) {
         this.fieldValue = aValue;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.fieldValue = null;
+     }
+
 }

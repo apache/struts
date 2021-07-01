@@ -44,6 +44,13 @@ public class LabelTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(LabelTest.class.getResource("Label-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        LabelTag freshTag = new LabelTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleWithLabelposition() throws Exception {
@@ -61,6 +68,13 @@ public class LabelTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(LabelTest.class.getResource("Label-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        LabelTag freshTag = new LabelTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -71,6 +85,7 @@ public class LabelTest extends AbstractUITagTest {
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
+    @Override
     protected Map initializedGenericTagTestProperties() {
         Map result = new HashMap();
         new PropertyHolder("title", "someTitle").addToMap(result);
@@ -95,6 +110,13 @@ public class LabelTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(LabelTest.class.getResource("Label-5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        LabelTag freshTag = new LabelTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGenericSimple() throws Exception {
@@ -126,6 +148,13 @@ public class LabelTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(LabelTest.class.getResource("Label-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        LabelTag freshTag = new LabelTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
      public void testWithKeyValueFromStack() throws Exception {
@@ -147,6 +176,13 @@ public class LabelTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(LabelTest.class.getResource("Label-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        LabelTag freshTag = new LabelTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithJustKeyValueFromStack() throws Exception {
@@ -166,6 +202,13 @@ public class LabelTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(LabelTest.class.getResource("Label-6.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        LabelTag freshTag = new LabelTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithCssErrorClass() throws Exception {
@@ -186,6 +229,13 @@ public class LabelTest extends AbstractUITagTest {
         tag.doEndTag();
  
         verify(LabelTest.class.getResource("Label-7.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        LabelTag freshTag = new LabelTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithCssErrorStyle() throws Exception {
@@ -206,6 +256,13 @@ public class LabelTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(LabelTest.class.getResource("Label-8.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        LabelTag freshTag = new LabelTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 }

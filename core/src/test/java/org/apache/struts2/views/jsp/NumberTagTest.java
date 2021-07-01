@@ -44,6 +44,13 @@ public class NumberTagTest extends AbstractTagTest {
 
         // then
         assertEquals("120", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        NumberTag freshTag = new NumberTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
     
     public void testSimpleCurrencyUSFormat() throws Exception {
@@ -64,6 +71,12 @@ public class NumberTagTest extends AbstractTagTest {
 
         // then
         assertEquals("$120.00", writer.toString());
+
+        NumberTag freshTag = new NumberTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
     
     public void testSimpleCurrencyPLFormat() throws Exception {
@@ -88,6 +101,12 @@ public class NumberTagTest extends AbstractTagTest {
         String expected = format.format(120.0f);
 
         assertEquals(expected, writer.toString());
+
+        NumberTag freshTag = new NumberTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleRoundingCeiling() throws Exception {
@@ -112,6 +131,12 @@ public class NumberTagTest extends AbstractTagTest {
         String expected = format.format(120.45f);
 
         assertEquals(expected, writer.toString());
+
+        NumberTag freshTag = new NumberTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 }

@@ -67,6 +67,13 @@ public class SortIteratorTagTest extends AbstractTagTest {
 
         assertFalse(sortedIterator.hasNext());
         tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SortIteratorTag freshTag = new SortIteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSortWithIdIteratorAvailableInStackTop() throws Exception {
@@ -104,6 +111,13 @@ public class SortIteratorTagTest extends AbstractTagTest {
         }
 
         tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SortIteratorTag freshTag = new SortIteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -141,6 +155,13 @@ public class SortIteratorTagTest extends AbstractTagTest {
         }
 
         tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SortIteratorTag freshTag = new SortIteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSortWithIllegalSource() throws Exception {
@@ -159,6 +180,8 @@ public class SortIteratorTagTest extends AbstractTagTest {
             // ok
             assertTrue(true);
         }
+
+        // The doEndTag() call is expected not to complete.  Cannot perform basic sanity check of clearTagStateForTagPoolingServers() behaviour.
     }
 
     public void testSortWithIllegalComparator() throws Exception {
@@ -178,6 +201,7 @@ public class SortIteratorTagTest extends AbstractTagTest {
             assertTrue(true);
         }
 
+        // The doEndTag() call is expected not to complete.  Cannot perform basic sanity check of clearTagStateForTagPoolingServers() behaviour.
     }
 
     public Action getAction() {

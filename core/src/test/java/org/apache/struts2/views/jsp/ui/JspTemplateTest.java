@@ -47,5 +47,12 @@ public class JspTemplateTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
         rdMock.verify();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        CheckboxTag freshTag = new CheckboxTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 }

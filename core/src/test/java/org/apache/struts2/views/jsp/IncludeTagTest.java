@@ -65,6 +65,13 @@ public class IncludeTagTest extends AbstractTagTest {
         assertEquals("", writer.toString());
         
         verify(mockRequestDispatcher);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IncludeTag freshTag = new IncludeTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeWithParameters() throws Exception {
@@ -86,6 +93,13 @@ public class IncludeTagTest extends AbstractTagTest {
         assertEquals("", writer.toString());
         
         verify(mockRequestDispatcher);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IncludeTag freshTag = new IncludeTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeRelative2Dots() throws Exception {
@@ -105,7 +119,14 @@ public class IncludeTagTest extends AbstractTagTest {
         assertEquals("/car/view.jsp", request.getRequestDispatherString());
         assertEquals("", writer.toString());
         
-        verify(mockRequestDispatcher);        
+        verify(mockRequestDispatcher);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IncludeTag freshTag = new IncludeTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeSetUseResponseEncodingTrue() throws Exception {
@@ -133,6 +154,13 @@ public class IncludeTagTest extends AbstractTagTest {
         assertEquals("", writer.toString());  // Nothing gets written for mock-include
 
         verify(mockRequestDispatcher);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IncludeTag freshTag = new IncludeTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeSetUseResponseEncodingFalse() throws Exception {
@@ -160,8 +188,16 @@ public class IncludeTagTest extends AbstractTagTest {
         assertEquals("", writer.toString());  // Nothing gets written for mock-include
 
         verify(mockRequestDispatcher);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IncludeTag freshTag = new IncludeTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         request.setupGetRequestDispatcher(new MockRequestDispatcher());
@@ -174,6 +210,7 @@ public class IncludeTagTest extends AbstractTagTest {
         tag.setPageContext(pageContext);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         tag = null;

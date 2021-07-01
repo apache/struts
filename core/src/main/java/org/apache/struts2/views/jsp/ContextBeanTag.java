@@ -24,6 +24,7 @@ import org.apache.struts2.components.ContextBean;
 public abstract class ContextBeanTag extends ComponentTagSupport {
     private String var;
 
+    @Override
     protected void populateParams() {
         super.populateParams();
         
@@ -34,4 +35,11 @@ public abstract class ContextBeanTag extends ComponentTagSupport {
     public void setVar(String var) {
         this.var = var;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.var = null;
+    }
+
 }

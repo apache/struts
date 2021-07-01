@@ -47,6 +47,13 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verifyResource("href-1.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleBadQuote() throws Exception {
@@ -58,6 +65,13 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verifyResource("href-2.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDynamicAttribute() throws Exception {
@@ -72,6 +86,13 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verifyResource("Anchor-2.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDynamicAttributeAsExpression() throws Exception {
@@ -86,6 +107,13 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verifyResource("Anchor-3.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     private void createAction() {

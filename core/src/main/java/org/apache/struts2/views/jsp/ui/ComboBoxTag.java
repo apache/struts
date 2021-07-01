@@ -60,10 +60,12 @@ public class ComboBoxTag extends TextFieldTag {
         this.listValue = listValue;
     }
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ComboBox(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -78,4 +80,16 @@ public class ComboBoxTag extends TextFieldTag {
     public void setList(String list) {
         this.list = list;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.list = null;
+        this.listKey = null;
+        this.listValue = null;
+        this.headerKey = null;
+        this.headerValue = null;
+        this.emptyOption = null;
+     }
+
 }

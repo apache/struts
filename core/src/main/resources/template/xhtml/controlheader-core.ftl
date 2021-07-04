@@ -22,10 +22,10 @@
 	Only show message if errors are available.
 	This will be done if ActionSupport is used.
 -->
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
 <#if (parameters.errorposition!"top") == 'top'>
 <#if hasFieldErrors>
-<#list fieldErrors[parameters.name] as error>
+<#list fieldErrors.get(parameters.name) as error>
 <tr errorFor="${parameters.id}">
     <td class="tdErrorMessage" colspan="2"><#rt/>
         <span class="errorMessage">${error}</span><#t/>
@@ -34,17 +34,17 @@
 </#list>
 </#if>
 </#if>
-<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
-<#assign labelpos = parameters.form.labelposition/>
-<#elseif parameters.labelposition??>
-<#assign labelpos = parameters.labelposition/>
+<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
+<#assign labelPos = parameters.form.labelPosition/>
+<#elseif parameters.labelPosition??>
+<#assign labelPos = parameters.labelPosition/>
 </#if>
 <#--
 	if the label position is top,
 	then give the label it's own row in the table
 -->
 <tr>
-<#if (labelpos!"") == 'top'>
+<#if (labelPos!"") == 'top'>
     <td class="tdLabelTop" colspan="2"><#rt/>
 <#else>
     <td class="tdLabel"><#rt/>
@@ -73,7 +73,7 @@ ${parameters.labelseparator!":"}<#t/>
 </#if>
     </td><#lt/>
 <#-- add the extra row -->
-<#if (labelpos!"") == 'top'>
+<#if (labelPos!"") == 'top'>
 </tr>
 <tr>
 </#if>

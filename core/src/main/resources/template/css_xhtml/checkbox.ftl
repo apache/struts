@@ -23,12 +23,12 @@ NOTE: The 'header' stuff that follows is in this one file for checkbox due to th
 that for checkboxes we do not want the label field to show up as checkboxes handle their own
 lables
 -->
-<#assign hasFieldErrors = fieldErrors?? && fieldErrors[parameters.name]??/>
+<#assign hasFieldErrors = fieldErrors?? && fieldErrors.get(parameters.name)??/>
 <div <#rt/><#if parameters.id??>id="wwgrp_${parameters.id}"<#rt/></#if> class="wwgrp">
 
 <#if hasFieldErrors>
 <div <#rt/><#if parameters.id??>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">
-<#list fieldErrors[parameters.name] as error>
+<#list fieldErrors.get(parameters.name) as error>
     <div<#rt/>
     <#if parameters.id??>
      errorFor="${parameters.id}"<#rt/>
@@ -39,12 +39,12 @@ lables
 </#list>
 </div><#t/>
 </#if>
-<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
-<#assign labelpos = parameters.form.labelposition/>
-<#elseif parameters.labelposition??>
-<#assign labelpos = parameters.labelposition/>
+<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
+<#assign labelPos = parameters.form.labelPosition/>
+<#elseif parameters.labelPosition??>
+<#assign labelPos = parameters.labelPosition/>
 </#if>
-<#if (labelpos!"") == 'left'>
+<#if (labelPos!"") == 'left'>
 <span <#rt/>
 <#if parameters.id??>id="wwlbl_${parameters.id}"<#rt/></#if> class="wwlbl">
 <label<#t/>
@@ -60,7 +60,7 @@ lables
 </span>
 </#if>
 
-<#if (labelpos!"top") == 'top'>
+<#if (labelPos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
@@ -72,14 +72,14 @@ lables
 </#if>
 
 <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
-<#if (labelpos!"") != 'left'>
-<#if (labelpos!"top") == 'top'>
+<#if (labelPos!"") != 'left'>
+<#if (labelPos!"top") == 'top'>
 </div> <#rt/>
 <#else>
 </span>  <#rt/>
 </#if>
 <#if parameters.label??>
-<#if (labelpos!"top") == 'top'>
+<#if (labelPos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
@@ -98,7 +98,7 @@ lables
 </#if>
 </#if>
 <#if parameters.label??>
-<#if (labelpos!"top") == 'top'>
+<#if (labelPos!"top") == 'top'>
 </div> <#rt/>
 <#else>
 </span> <#rt/>

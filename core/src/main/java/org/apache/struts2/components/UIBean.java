@@ -641,7 +641,7 @@ public abstract class UIBean extends Component {
 
     public void evaluateParams() {
         String gotTheme = getTheme();
-        
+
         addParameter("templateDir", getTemplateDir());
         addParameter("theme", gotTheme);
         addParameter("template", template != null ? findString(template) : getDefaultTemplate());
@@ -685,7 +685,9 @@ public abstract class UIBean extends Component {
         }
 
         if (labelPosition != null) {
-            addParameter("labelposition", findString(labelPosition));
+            String labelPosition = findString(this.labelPosition);
+            addParameter("labelposition", labelPosition);
+            addParameter("labelPosition", labelPosition);
         }
 
         if (requiredPosition != null) {
@@ -695,7 +697,7 @@ public abstract class UIBean extends Component {
         if (errorPosition != null) {
             addParameter("errorposition", findString(errorPosition));
         }
-        
+
         if (requiredLabel != null) {
             addParameter("required", findValue(requiredLabel, Boolean.class));
         }
@@ -1066,7 +1068,8 @@ public abstract class UIBean extends Component {
         this.cssClass = cssClass;
     }
 
-    @StrutsTagAttribute(description="The css class to use for element - it's an alias of cssClass attribute.")
+    @Deprecated
+    @StrutsTagAttribute(description="(Deprecated) The css class to use for element - it's an alias of cssClass attribute.")
     public void setClass(String cssClass) {
         this.cssClass = cssClass;
     }
@@ -1111,8 +1114,18 @@ public abstract class UIBean extends Component {
         this.labelSeparator = labelseparator;
     }
 
-    @StrutsTagAttribute(description="Define label position of form element (top/left)")
+    /**
+     * Deprecated since 2.5.27
+     * @deprecated use {@link #setLabelPosition(String)} instead
+     */
+    @StrutsTagAttribute(description="(Deprecated) Define label position of form element (top/left)")
+    @Deprecated
     public void setLabelposition(String labelPosition) {
+        this.labelPosition = labelPosition;
+    }
+
+    @StrutsTagAttribute(description="Define label position of form element (top/left)")
+    public void setLabelPosition(String labelPosition) {
         this.labelPosition = labelPosition;
     }
 
@@ -1125,7 +1138,7 @@ public abstract class UIBean extends Component {
     public void setErrorPosition(String errorPosition) {
         this.errorPosition = errorPosition;
     }
-    
+
     @StrutsTagAttribute(description="The name to set for element")
     public void setName(String name) {
         this.name = name;

@@ -1076,8 +1076,12 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
                     InputSource in = new InputSource(is);
 
                     in.setSystemId(url.toString());
-
-                    docs.add(DomHelper.parse(in, dtdMappings));
+                    
+                    Document helperDoc = DomHelper.parse(in, dtdMappings);
+                    if (helperDoc != null) {
+                        docs.add(helperDoc);
+                    }
+                    
                     loadedFileUrls.add(url.toString());
                 } catch (StrutsException e) {
                     if (includeElement != null) {

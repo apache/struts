@@ -112,7 +112,7 @@
         <jackson.version>2.10.5</jackson.version>
         <jackson-databind.version>2.10.5.1</jackson-databind.version>
         <log4j2.version>2.13.3</log4j2.version>
-        <ognl.version>3.2.16</ognl.version>
+        <ognl.version>3.2.20</ognl.version>
         <slf4j.version>1.7.30</slf4j.version>
         <spring.platformVersion>4.3.29.RELEASE</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
@@ -364,7 +364,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>6.1.2</version>
+                    <version>6.2.2</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
@@ -934,7 +934,7 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.6</version>
+                <version>2.9.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -1121,9 +1121,20 @@
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
-                <version>1.4.16</version>
+                <version>1.4.17</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.github.x-stream</groupId>
+                        <artifactId>mxparser</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>io.github.x-stream</groupId>
+                <artifactId>mxparser</artifactId>
+                <version>1.2.1</version>
+            </dependency>
             <dependency>
                 <groupId>javax.persistence</groupId>
                 <artifactId>persistence-api</artifactId>

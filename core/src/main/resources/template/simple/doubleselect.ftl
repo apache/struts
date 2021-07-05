@@ -18,6 +18,7 @@
  * under the License.
  */
 -->
+<#global dynamic_attributes_ignore = "second-"/>
 <#include "/${parameters.templateDir}/simple/select.ftl" />
 <#assign startCount = 0/>
 <#if parameters.headerKey?? && parameters.headerValue??>
@@ -60,6 +61,8 @@
 <#if parameters.doubleDisabled!false>
         disabled="disabled"<#rt/>
 </#if>
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/prefixed-dynamic-attributes.ftl" />
+<@prefixedDynamicAttributes prefix="second-"/>
         >
 </select>
 <#if parameters.doubleMultiple!false>

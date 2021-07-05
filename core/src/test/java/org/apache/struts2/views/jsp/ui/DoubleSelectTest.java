@@ -87,13 +87,13 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.setCssStyle("s1");
         tag.setDoubleCssClass("c2");
         tag.setDoubleCssStyle("s2");
-        
+
         tag.doStartTag();
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("DoubleSelect-1.txt"));
     }
-    
+
     public void testOnchange() throws Exception {
         TestAction testAction = (TestAction) action;
 
@@ -151,7 +151,7 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.setCssStyle("s1");
         tag.setDoubleCssClass("c2");
         tag.setDoubleCssStyle("s2");
-        
+
         tag.doStartTag();
         tag.doEndTag();
 
@@ -221,7 +221,7 @@ public class DoubleSelectTest extends AbstractUITagTest {
 
 
     }
-    
+
     public void testDoubleWithDotName() throws Exception {
         TestAction testAction = (TestAction) action;
 
@@ -283,6 +283,15 @@ public class DoubleSelectTest extends AbstractUITagTest {
         DoubleSelectTag tag = new DoubleSelectTag();
         prepareTagGeneric(tag);
         verifyGenericProperties(tag, "simple", new String[]{"value"});
+    }
+
+    public void testGenericSimpleWithDynamicAttributes() throws Exception {
+        DoubleSelectTag tag = new DoubleSelectTag();
+        tag.setDynamicAttribute(null, "first-name", "firstName");
+        tag.setDynamicAttribute(null, "second-name", "secondName");
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "simple", new String[]{"value"});
+        verify(SelectTag.class.getResource("DoubleSelect-5.txt"));
     }
 
     public void testGenericXhtml() throws Exception {

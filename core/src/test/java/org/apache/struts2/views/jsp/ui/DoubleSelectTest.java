@@ -287,6 +287,15 @@ public class DoubleSelectTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "simple", new String[]{"value"});
     }
 
+    public void testGenericSimpleWithDynamicAttributes() throws Exception {
+        DoubleSelectTag tag = new DoubleSelectTag();
+        tag.setDynamicAttribute(null, "first-name", "firstName");
+        tag.setDynamicAttribute(null, "second-name", "secondName");
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "simple", new String[]{"value"});
+        verify(SelectTag.class.getResource("DoubleSelect-5.txt"));
+    }
+
     public void testGenericXhtml() throws Exception {
         DoubleSelectTag tag = new DoubleSelectTag();
         prepareTagGeneric(tag);

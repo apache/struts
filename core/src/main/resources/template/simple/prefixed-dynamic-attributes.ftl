@@ -18,20 +18,11 @@
  * under the License.
  */
 -->
+<#macro prefixedDynamicAttributes prefix>
 <#if (parameters.dynamicAttributes?? && parameters.dynamicAttributes?size > 0)><#rt/>
 <#assign aKeys = parameters.dynamicAttributes.keySet()><#rt/>
 <#list aKeys as aKey><#rt/>
-<#if dynamic_attributes_ignore??>
-<#if !aKey?starts_with(dynamic_attributes_ignore)>
-<#assign keyValue = parameters.dynamicAttributes.get(aKey)/>
-<#if keyValue?is_string>
-    <#assign value = struts.translateVariables(keyValue)!keyValue/>
-<#else>
-    <#assign value = keyValue?string/>
-</#if>
- ${aKey}="${value}"<#rt/>
-</#if>
-<#else>
+<#if aKey?starts_with(prefix)>
 <#assign keyValue = parameters.dynamicAttributes.get(aKey)/>
 <#if keyValue?is_string>
     <#assign value = struts.translateVariables(keyValue)!keyValue/>
@@ -42,3 +33,4 @@
 </#if>
 </#list><#rt/>
 </#if><#rt/>
+</#macro>

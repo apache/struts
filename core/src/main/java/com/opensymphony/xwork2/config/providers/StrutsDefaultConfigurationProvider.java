@@ -33,6 +33,7 @@ import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.DefaultTextProvider;
 import com.opensymphony.xwork2.DefaultUnknownHandlerManager;
+import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
@@ -54,6 +55,7 @@ import com.opensymphony.xwork2.conversion.impl.CollectionConverter;
 import com.opensymphony.xwork2.conversion.impl.DateConverter;
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
@@ -212,6 +214,8 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
 
                 .factory(ExcludedPatternsChecker.class, DefaultExcludedPatternsChecker.class, Scope.PROTOTYPE)
                 .factory(AcceptedPatternsChecker.class, DefaultAcceptedPatternsChecker.class, Scope.PROTOTYPE)
+                .factory(NotExcludedAcceptedPatternsChecker.class, DefaultNotExcludedAcceptedPatternsChecker.class
+                        , Scope.SINGLETON)
 
                 .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON)
         ;

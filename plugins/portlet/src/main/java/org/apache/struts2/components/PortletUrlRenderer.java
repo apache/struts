@@ -192,7 +192,9 @@ public class PortletUrlRenderer implements UrlRenderer {
                 } else {
                     id = action.substring(slash + 1);
                 }
-                formComponent.addParameter("id", formComponent.escape(id));
+                String escapedId = formComponent.escape(id);
+                formComponent.addParameter("id", escapedId);
+                formComponent.addParameter("escapedId", escapedId);
             }
         }
     }

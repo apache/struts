@@ -31,6 +31,8 @@ public class MockResult implements Result {
 
     public static final String DEFAULT_PARAM = "foo";
 
+    private ActionInvocation invocation;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -41,7 +43,7 @@ public class MockResult implements Result {
     }
 
     public void execute(ActionInvocation invocation) throws Exception {
-        // no op
+        this.invocation = invocation;
     }
 
     @Override
@@ -53,4 +55,7 @@ public class MockResult implements Result {
         // no op
     }
 
+    public ActionInvocation getInvocation() {
+        return invocation;
+    }
 }

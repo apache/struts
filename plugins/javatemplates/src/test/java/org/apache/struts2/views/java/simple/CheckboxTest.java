@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.views.java.simple;
 
+import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.components.Checkbox;
 import org.apache.struts2.components.UIBean;
 
@@ -68,6 +69,7 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
     protected void setUp() throws Exception {
         super.setUp();
         tag = new Checkbox(stack, request, response);
+        tag.setNotExcludedAcceptedPatterns(new DefaultNotExcludedAcceptedPatternsChecker());
     }
 
     @Override

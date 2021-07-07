@@ -18,9 +18,7 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -102,7 +100,7 @@ public class StrutsUtil {
             return responseWrapper.getData();
         }
         catch (Exception e) {
-            LOG.debug("Cannot include {}", aName.toString(), e);
+            LOG.debug("Cannot include {}", aName, e);
             throw e;
         }
     }
@@ -125,7 +123,7 @@ public class StrutsUtil {
     }
 
     public String getText(String text) {
-        return (String) stack.findValue("getText('" + text + "')");
+        return (String) stack.findValue("getText('" + text.replace('\'', '"') + "')");
     }
 
     /*

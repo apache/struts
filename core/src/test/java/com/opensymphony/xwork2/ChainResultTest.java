@@ -20,6 +20,7 @@ package com.opensymphony.xwork2;
 
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.util.ValueStack;
 import junit.framework.TestCase;
 import org.apache.struts2.StrutsException;
@@ -124,7 +125,18 @@ public class ChainResultTest extends XWorkTestCase {
         }
     }
 
-    private class NamespaceActionNameTestActionProxyFactory implements ActionProxyFactory {
+    public void testNamespaceChain() throws Exception {
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "chain_with_namespace", null, null);
+        ((SimpleAction)proxy.getAction()).setBlah("%{foo}");
+
+        proxy.execute();
+
+        assertTrue(proxy.getInvocation().getResult() instanceof MockResult);
+        MockResult result = (MockResult) proxy.getInvocation().getResult();
+        assertEquals("%{foo}", result.getInvocation().getProxy().getNamespace());
+    }
+
+    private static class NamespaceActionNameTestActionProxyFactory implements ActionProxyFactory {
         private final ActionProxy returnVal;
         private final String expectedActionName;
         private final String expectedNamespace;

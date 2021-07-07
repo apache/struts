@@ -132,6 +132,7 @@ public class ConstantConfig {
     private Set<String> devModeExcludedPackageNames;
     private BeanConfig excludedPatternsChecker;
     private BeanConfig acceptedPatternsChecker;
+    private BeanConfig notExcludedAcceptedPatternsChecker;
     private Set<Pattern> overrideExcludedPatterns;
     private Set<Pattern> overrideAcceptedPatterns;
     private Set<Pattern> additionalExcludedPatterns;
@@ -261,6 +262,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, StringUtils.join(devModeExcludedPackageNames, ','));
         map.put(StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER, beanConfToString(excludedPatternsChecker));
         map.put(StrutsConstants.STRUTS_ACCEPTED_PATTERNS_CHECKER, beanConfToString(acceptedPatternsChecker));
+        map.put(StrutsConstants.STRUTS_NOT_EXCLUDED_ACCEPTED_PATTERNS_CHECKER, beanConfToString(notExcludedAcceptedPatternsChecker));
         map.put(StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, StringUtils.join(overrideExcludedPatterns, ','));
         map.put(StrutsConstants.STRUTS_OVERRIDE_ACCEPTED_PATTERNS, StringUtils.join(overrideAcceptedPatterns, ','));
         map.put(StrutsConstants.STRUTS_ADDITIONAL_EXCLUDED_PATTERNS, StringUtils.join(additionalExcludedPatterns, ','));
@@ -1226,6 +1228,18 @@ public class ConstantConfig {
 
     public void setAcceptedPatternsChecker(Class<?> clazz) {
         this.acceptedPatternsChecker = new BeanConfig(clazz, clazz.getName());
+    }
+
+    public BeanConfig getNotExcludedAcceptedPatternsChecker() {
+        return notExcludedAcceptedPatternsChecker;
+    }
+
+    public void setNotExcludedAcceptedPatternsChecker(BeanConfig notExcludedAcceptedPatternsChecker) {
+        this.notExcludedAcceptedPatternsChecker = notExcludedAcceptedPatternsChecker;
+    }
+
+    public void setNotExcludedAcceptedPatternsChecker(Class<?> clazz) {
+        this.notExcludedAcceptedPatternsChecker = new BeanConfig(clazz, clazz.getName());
     }
 
     public Set<Pattern> getOverrideExcludedPatterns() {

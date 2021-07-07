@@ -33,7 +33,7 @@ END SNIPPET: supported-validators
 -->
 <#if ((parameters.validate!false == true) && (parameters.performValidation!false == true))>
 <script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
-    function validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}() {
+    function validateForm_${parameters.escapedId}() {
         <#--
             In case of multiselect fields return only the first value.
         -->
@@ -54,7 +54,7 @@ END SNIPPET: supported-validators
             }
             return field.value;
         }
-        form = document.getElementById("${parameters.id}");
+        form = document.getElementById("${parameters.id?js_string}");
         clearErrorMessages(form);
         clearErrorLabels(form);
 
@@ -62,10 +62,10 @@ END SNIPPET: supported-validators
         var continueValidation = true;
     <#list parameters.tagNames as tagName>
         <#list tag.getValidators("${tagName}") as aValidator>
-        // field name: ${aValidator.fieldName}
+        // field name: ${aValidator.fieldName?js_string}
         // validator name: ${aValidator.validatorType}
-        if (form.elements['${aValidator.fieldName}']) {
-            field = form.elements['${aValidator.fieldName}'];
+        if (form.elements['${aValidator.fieldName?js_string}']) {
+            field = form.elements['${aValidator.fieldName?js_string}'];
             <#if aValidator.validatorType = "field-visitor">
                 <#assign validator = aValidator.fieldValidator >
                 //visitor validator switched to: ${validator.validatorType}

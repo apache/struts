@@ -21,8 +21,8 @@
 <#if parameters.validate!false == true>
 	<script type="text/javascript" src="${base}${parameters.staticContentPath}/xhtml/validation.js" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
 	<#if parameters.onsubmit??>
-		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}();")}
+		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.escapedId}();")}
 	<#else>
-		${tag.addParameter('onsubmit', "return validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}();")}
+		${tag.addParameter('onsubmit', "return validateForm_${parameters.escapedId}();")}
 	</#if>
 </#if>

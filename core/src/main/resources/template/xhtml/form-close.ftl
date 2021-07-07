@@ -24,7 +24,7 @@
 <#if parameters.focusElement??>
 <script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
     StrutsUtils.addOnLoad(function() {
-        var element = document.getElementById("${parameters.focusElement}");
+        var element = document.getElementById("${parameters.focusElement?js_string}");
         if(element) {
             element.focus();
         }

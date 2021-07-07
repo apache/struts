@@ -114,8 +114,8 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals(bean.escape("hello[world"), "hello_world");
         assertEquals(bean.escape("hello.world"), "hello_world");
         assertEquals(bean.escape("hello]world"), "hello_world");
-        assertEquals(bean.escape("hello!world"), "hello!world");
-        assertEquals(bean.escape("hello!@#$%^&*()world"), "hello!@#$%^&*()world");
+        assertEquals(bean.escape("hello!world"), "hello_world");
+        assertEquals(bean.escape("hello!@#$%^&*()world"), "hello__________world");
     }
 
     public void testEscapeId() {

@@ -117,7 +117,7 @@ public class TextfieldTest extends AbstractUITagTest {
         testAction.setFoo("bar");
 
         TextFieldModel model = new TextFieldModel(stack, request, response);
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("name", "myname");
         params.put("value", "%{foo}");
         params.put("size", "10");
@@ -172,6 +172,7 @@ public class TextfieldTest extends AbstractUITagTest {
         tag.setName("myname");
         tag.setValue("%{foo}");
         tag.setSize("10");
+        tag.setDynamicAttribute(null, "anotherAttr", "%{foo}");
 
         tag.doStartTag();
         tag.doEndTag();

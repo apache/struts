@@ -19,6 +19,8 @@
 package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import net.sf.jasperreports.engine.*;
@@ -131,6 +133,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     private final static Logger LOG = LogManager.getLogger(JasperReportsResult.class);
 
     protected String dataSource;
+    private String parsedDataSource;
     protected String format;
     protected String documentName;
     protected String contentDisposition;
@@ -150,12 +153,16 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      * additional report parameters from the action.
      */
     protected String reportParameters;
+    private String parsedReportParameters;
 
     /**
      * Names an exporter parameters map stack value,
      * allowing the use of custom export parameters.
      */
     protected String exportParameters;
+    private String parsedExportParameters;
+
+    private NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns;
 
     /**
      * Default ctor.
@@ -171,6 +178,11 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      */
     public JasperReportsResult(String location) {
         super(location);
+    }
+
+    @Inject
+    public void setNotExcludedAcceptedPatterns(NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns) {
+        this.notExcludedAcceptedPatterns = notExcludedAcceptedPatterns;
     }
 
     public String getImageServletUrl() {
@@ -265,8 +277,16 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         ValueStackDataSource stackDataSource = null;
 
         Connection conn = (Connection) stack.findValue(connection);
-        if (conn == null)
-            stackDataSource = new ValueStackDataSource(stack, dataSource, wrapField);
+        if (conn == null) {
+            boolean evaluated = parsedDataSource != null && !parsedDataSource.equals(dataSource);
+            boolean reevaluate = !evaluated || isAcceptableExpression(parsedDataSource);
+            if (reevaluate) {
+                stackDataSource = new ValueStackDataSource(stack, parsedDataSource, wrapField);
+            } else {
+                throw new ServletException(String.format("Error building dataSource for excluded or not accepted [%s]",
+                        parsedDataSource));
+            }
+        }
 
         if ("https".equalsIgnoreCase(request.getScheme())) {
             // set the the HTTP Header to work around IE SSL weirdness
@@ -297,7 +317,9 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         }
 
         // Add any report parameters from action to param map.
-        Map reportParams = (Map) stack.findValue(reportParameters);
+        boolean evaluated = parsedReportParameters != null && !parsedReportParameters.equals(reportParameters);
+        boolean reevaluate = !evaluated || isAcceptableExpression(parsedReportParameters);
+        Map reportParams = reevaluate ? (Map) stack.findValue(parsedReportParameters) : null;
         if (reportParams != null) {
         	LOG.debug("Found report parameters; adding to parameters...");
             parameters.putAll(reportParams);
@@ -372,7 +394,9 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
                 throw new ServletException("Unknown report format: " + format);
             }
 
-            Map exportParams = (Map) stack.findValue(exportParameters);
+            evaluated = parsedExportParameters != null && !parsedExportParameters.equals(exportParameters);
+            reevaluate = !evaluated || isAcceptableExpression(parsedExportParameters);
+            Map exportParams = reevaluate ? (Map) stack.findValue(parsedExportParameters) : null;
             if (exportParams != null) {
                 LOG.debug("Found export parameters; adding to exporter parameters...");
                 exporter.getParameters().putAll(exportParams);
@@ -427,8 +451,9 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             LOG.error(message);
             throw new RuntimeException(message);
         }
-        if (dataSource != null)
-            dataSource = conditionalParse(dataSource, invocation);
+        if (dataSource != null) {
+            parsedDataSource = conditionalParse(dataSource, invocation);
+        }
 
         format = conditionalParse(format, invocation);
         if (StringUtils.isEmpty(format)) {
@@ -443,8 +468,8 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             documentName = conditionalParse(documentName, invocation);
         }
 
-        reportParameters = conditionalParse(reportParameters, invocation);
-        exportParameters = conditionalParse(exportParameters, invocation);
+        parsedReportParameters = conditionalParse(reportParameters, invocation);
+        parsedExportParameters = conditionalParse(exportParameters, invocation);
     }
 
     /**
@@ -469,4 +494,22 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         return baos;
     }
 
+    /**
+     * Checks if expression doesn't contain vulnerable code
+     *
+     * @param expression of result
+     * @return true|false
+     * @since 2.5.27
+     */
+    protected boolean isAcceptableExpression(String expression) {
+        NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);
+        if (isAllowed.isAllowed()) {
+            return true;
+        }
+
+        LOG.warn("Expression [{}] isn't allowed by pattern [{}]! See Accepted / Excluded patterns at\n" +
+                "https://struts.apache.org/security/", expression, isAllowed.getAllowedPattern());
+
+        return false;
+    }
 }

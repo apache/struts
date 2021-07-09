@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Used across different interceptors to check if given string matches one of the excluded patterns.
+ * Used across different interceptors to check if given string matches one of the accepted patterns.
  */
 public interface AcceptedPatternsChecker {
 

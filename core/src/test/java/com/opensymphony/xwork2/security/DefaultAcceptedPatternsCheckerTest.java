@@ -174,4 +174,32 @@ public class DefaultAcceptedPatternsCheckerTest extends XWorkTestCase {
 
         assertTrue("dmi isn't accepted", accepted.isAccepted());
     }
+
+
+    public static final AcceptedPatternsChecker ACCEPT_ALL_PATTERNS_CHECKER = new AcceptedPatternsChecker() {
+        @Override
+        public IsAccepted isAccepted(String value) {
+            return IsAccepted.yes(".*");
+        }
+
+        @Override
+        public void setAcceptedPatterns(String commaDelimitedPatterns) {
+
+        }
+
+        @Override
+        public void setAcceptedPatterns(String[] patterns) {
+
+        }
+
+        @Override
+        public void setAcceptedPatterns(Set<String> patterns) {
+
+        }
+
+        @Override
+        public Set<Pattern> getAcceptedPatterns() {
+            return null;
+        }
+    };
 }

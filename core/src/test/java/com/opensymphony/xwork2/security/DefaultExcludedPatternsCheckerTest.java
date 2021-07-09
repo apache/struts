@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.XWorkTestCase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -218,4 +219,32 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
             // Expected result
         }
     }
+
+
+    public static final ExcludedPatternsChecker NO_EXCLUSION_PATTERNS_CHECKER = new ExcludedPatternsChecker() {
+        @Override
+        public IsExcluded isExcluded(String value) {
+            return IsExcluded.no(new HashSet<Pattern>());
+        }
+
+        @Override
+        public void setExcludedPatterns(String commaDelimitedPatterns) {
+
+        }
+
+        @Override
+        public void setExcludedPatterns(String[] patterns) {
+
+        }
+
+        @Override
+        public void setExcludedPatterns(Set<String> patterns) {
+
+        }
+
+        @Override
+        public Set<Pattern> getExcludedPatterns() {
+            return null;
+        }
+    };
 }

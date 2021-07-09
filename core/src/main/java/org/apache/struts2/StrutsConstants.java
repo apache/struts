@@ -322,6 +322,7 @@ public final class StrutsConstants {
     /** Dedicated services to check if passed string is excluded/accepted */
     public static final String STRUTS_EXCLUDED_PATTERNS_CHECKER = "struts.excludedPatterns.checker";
     public static final String STRUTS_ACCEPTED_PATTERNS_CHECKER = "struts.acceptedPatterns.checker";
+    public static final String STRUTS_NOT_EXCLUDED_ACCEPTED_PATTERNS_CHECKER = "struts.notExcludedAcceptedPatterns.checker";
 
     /** Constant is used to override framework's default excluded patterns */
     public static final String STRUTS_OVERRIDE_EXCLUDED_PATTERNS = "struts.override.excludedPatterns";

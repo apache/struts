@@ -102,7 +102,7 @@ public class StrutsUtil {
             return responseWrapper.getData();
         }
         catch (Exception e) {
-            LOG.debug("Cannot include {}", aName.toString(), e);
+            LOG.debug("Cannot include {}", aName, e);
             throw e;
         }
     }
@@ -125,7 +125,7 @@ public class StrutsUtil {
     }
 
     public String getText(String text) {
-        return (String) stack.findValue("getText('" + text + "')");
+        return (String) stack.findValue("getText('" + text.replace('\'', '"') + "')");
     }
 
     /*

@@ -23,6 +23,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.Evaluated;
 import com.opensymphony.xwork2.LocalizedTextProvider;
@@ -100,6 +102,9 @@ public class AliasInterceptor extends AbstractInterceptor {
     protected LocalizedTextProvider localizedTextProvider;
     protected boolean devMode = false;
 
+    private ExcludedPatternsChecker excludedPatterns;
+    private AcceptedPatternsChecker acceptedPatterns;
+
     @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
         this.devMode = Boolean.parseBoolean(mode);
@@ -113,6 +118,16 @@ public class AliasInterceptor extends AbstractInterceptor {
     @Inject
     public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
         this.localizedTextProvider = localizedTextProvider;
+    }
+
+    @Inject
+    public void setExcludedPatterns(ExcludedPatternsChecker excludedPatterns) {
+        this.excludedPatterns = excludedPatterns;
+    }
+
+    @Inject
+    public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
+        this.acceptedPatterns = acceptedPatterns;
     }
 
     /**
@@ -145,7 +160,7 @@ public class AliasInterceptor extends AbstractInterceptor {
             ValueStack stack = ac.getValueStack();
             Object obj = stack.findValue(aliasExpression);
 
-            if (obj != null && obj instanceof Map) {
+            if (obj instanceof Map) {
                 //get secure stack
                 ValueStack newStack = valueStackFactory.createValueStack(stack);
                 boolean clearableStack = newStack instanceof ClearableValueStack;
@@ -167,7 +182,13 @@ public class AliasInterceptor extends AbstractInterceptor {
                 for (Object o : aliases.entrySet()) {
                     Map.Entry entry = (Map.Entry) o;
                     String name = entry.getKey().toString();
+                    if (isNotAcceptableExpression(name)) {
+                        continue;
+                    }
                     String alias = (String) entry.getValue();
+                    if (isNotAcceptableExpression(alias)) {
+                        continue;
+                    }
                     Evaluated value = new Evaluated(stack.findValue(name));
                     if (!value.isDefined()) {
                         // workaround
@@ -206,5 +227,65 @@ public class AliasInterceptor extends AbstractInterceptor {
         
         return invocation.invoke();
     }
-    
+
+    protected boolean isAccepted(String paramName) {
+        AcceptedPatternsChecker.IsAccepted result = acceptedPatterns.isAccepted(paramName);
+        if (result.isAccepted()) {
+            return true;
+        }
+
+        LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
+                        "https://struts.apache.org/security/#accepted--excluded-patterns",
+                paramName, result.getAcceptedPattern());
+
+        return false;
+    }
+
+    protected boolean isExcluded(String paramName) {
+        ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
+        if (!result.isExcluded()) {
+            return false;
+        }
+
+        LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
+                        "https://struts.apache.org/security/#accepted--excluded-patterns",
+                paramName, result.getExcludedPattern());
+
+        return true;
+    }
+
+    /**
+     * Checks if expression contains vulnerable code
+     *
+     * @param expression of interceptor
+     * @return true|false
+     */
+    protected boolean isNotAcceptableExpression(String expression) {
+        return isExcluded(expression) || !isAccepted(expression);
+    }
+
+    /**
+     * Sets a comma-delimited list of regular expressions to match
+     * parameters that are allowed in the parameter map (aka whitelist).
+     * <p>
+     * Don't change the default unless you know what you are doing in terms
+     * of security implications.
+     * </p>
+     *
+     * @param commaDelim A comma-delimited list of regular expressions
+     */
+    public void setAcceptParamNames(String commaDelim) {
+        acceptedPatterns.setAcceptedPatterns(commaDelim);
+    }
+
+    /**
+     * Sets a comma-delimited list of regular expressions to match
+     * parameters that should be removed from the parameter map.
+     *
+     * @param commaDelim A comma-delimited list of regular expressions
+     */
+    public void setExcludeParams(String commaDelim) {
+        excludedPatterns.setExcludedPatterns(commaDelim);
+    }
+
 }

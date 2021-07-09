@@ -19,6 +19,8 @@
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -100,6 +102,8 @@ public class StreamResult extends StrutsResultSupport {
     protected int bufferSize = 1024;
     protected boolean allowCaching = true;
 
+    private NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns;
+
     public StreamResult() {
         super();
     }
@@ -113,6 +117,11 @@ public class StreamResult extends StrutsResultSupport {
      */
     public boolean getAllowCaching() {
         return allowCaching;
+    }
+
+    @Inject
+    public void setNotExcludedAcceptedPatterns(NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns) {
+        this.notExcludedAcceptedPatterns = notExcludedAcceptedPatterns;
     }
 
     /**
@@ -219,14 +228,17 @@ public class StreamResult extends StrutsResultSupport {
         OutputStream oOutput = null;
 
         try {
-            if (inputStream == null) {
+            String parsedInputName = conditionalParse(inputName, invocation);
+            boolean evaluated = parsedInputName != null && !parsedInputName.equals(inputName);
+            boolean reevaluate = !evaluated || isAcceptableExpression(parsedInputName);
+            if (inputStream == null && reevaluate) {
                 LOG.debug("Find the inputstream from the invocation variable stack");
-                inputStream = (InputStream) invocation.getStack().findValue(conditionalParse(inputName, invocation));
+                inputStream = (InputStream) invocation.getStack().findValue(parsedInputName);
             }
 
             if (inputStream == null) {
-                String msg = ("Can not find a java.io.InputStream with the name [" + inputName + "] in the invocation stack. " +
-                    "Check the <param name=\"inputName\"> tag specified for this action.");
+                String msg = ("Can not find a java.io.InputStream with the name [" + parsedInputName + "] in the invocation stack. " +
+                    "Check the <param name=\"inputName\"> tag specified for this action is correct, not excluded and accepted.");
                 LOG.error(msg);
                 throw new IllegalArgumentException(msg);
             }
@@ -243,15 +255,16 @@ public class StreamResult extends StrutsResultSupport {
 
             LOG.debug("Set the content length: {}", contentLength);
             if (contentLength != null) {
-                String _contentLength = conditionalParse(contentLength, invocation);
-                int _contentLengthAsInt;
+                String translatedContentLength = conditionalParse(contentLength, invocation);
+                int contentLengthAsInt;
                 try {
-                    _contentLengthAsInt = Integer.parseInt(_contentLength);
-                    if (_contentLengthAsInt >= 0) {
-                        oResponse.setContentLength(_contentLengthAsInt);
+                    contentLengthAsInt = Integer.parseInt(translatedContentLength);
+                    if (contentLengthAsInt >= 0) {
+                        oResponse.setContentLength(contentLengthAsInt);
                     }
                 } catch(NumberFormatException e) {
-                    LOG.warn("failed to recognize {} as a number, contentLength header will not be set", _contentLength, e);
+                    LOG.warn("failed to recognize {} as a number, contentLength header will not be set",
+                            translatedContentLength, e);
                 }
             }
 
@@ -292,4 +305,22 @@ public class StreamResult extends StrutsResultSupport {
         }
     }
 
+    /**
+     * Checks if expression doesn't contain vulnerable code
+     *
+     * @param expression of result
+     * @return true|false
+     * @since 2.5.27
+     */
+    protected boolean isAcceptableExpression(String expression) {
+        NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);
+        if (isAllowed.isAllowed()) {
+            return true;
+        }
+
+        LOG.warn("Expression [{}] isn't allowed by pattern [{}]! See Accepted / Excluded patterns at\n" +
+                "https://struts.apache.org/security/", expression, isAllowed.getAllowedPattern());
+
+        return false;
+    }
 }

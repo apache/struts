@@ -28,6 +28,10 @@ import org.apache.struts2.dispatcher.HttpParameters;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsCheckerTest.ACCEPT_ALL_PATTERNS_CHECKER;
+import static com.opensymphony.xwork2.security.DefaultExcludedPatternsCheckerTest.NO_EXCLUSION_PATTERNS_CHECKER;
+import static org.junit.Assert.assertNotEquals;
+
 
 /**
  * AliasInterceptorTest
@@ -64,6 +68,92 @@ public class AliasInterceptorTest extends XWorkTestCase {
         assertEquals("name to be copied", actionOne.getAliasSource());
         assertEquals(actionOne.getAliasSource(), actionOne.getAliasDest());
         assertNull(actionOne.getBlah());    //  WW-5087
+    }
+
+    public void testNameNotAccepted() throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        params.put("aliasSource", "source here");
+
+        Map<String, String> httpParams = new HashMap<>();
+        httpParams.put("name", "getAliasSource()");
+        httpParams.put("value", "aliasDest");
+        params.put("parameters", HttpParameters.create(httpParams).build());
+
+
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, params);
+        SimpleAction actionOne = (SimpleAction) proxy.getAction();
+        actionOne.setAliasSource("name to be copied");
+
+        // prevent ERROR result
+        actionOne.setFoo(-1);
+        actionOne.setBar(1);
+
+        proxy.execute();
+        assertEquals("name to be copied", actionOne.getAliasSource());
+        assertNotEquals(actionOne.getAliasSource(), actionOne.getAliasDest());
+
+        proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, params);
+        ((AliasInterceptor)proxy.getConfig().getInterceptors().get(1).getInterceptor())
+                .setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
+        ((AliasInterceptor)proxy.getConfig().getInterceptors().get(1).getInterceptor())
+                .setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+
+        actionOne = (SimpleAction) proxy.getAction();
+        actionOne.setAliasSource("name to be copied");
+
+        // prevent ERROR result
+        actionOne.setFoo(-1);
+        actionOne.setBar(1);
+
+        proxy.execute();
+        assertEquals("name to be copied", actionOne.getAliasSource());
+        assertEquals(actionOne.getAliasSource(), actionOne.getAliasDest());
+    }
+
+    public void testValueNotAccepted() throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        params.put("aliasSource", "source here");
+
+        Map<String, String> httpParams = new HashMap<>();
+        httpParams.put("name", "aliasSource");
+        httpParams.put("value", "[0].aliasDest");
+        params.put("parameters", HttpParameters.create(httpParams).build());
+
+
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
+        container.inject(provider);
+        loadConfigurationProviders(provider);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, params);
+        SimpleAction actionOne = (SimpleAction) proxy.getAction();
+        actionOne.setAliasSource("name to be copied");
+
+        // prevent ERROR result
+        actionOne.setFoo(-1);
+        actionOne.setBar(1);
+
+        proxy.execute();
+        assertEquals("name to be copied", actionOne.getAliasSource());
+        assertNotEquals(actionOne.getAliasSource(), actionOne.getAliasDest());
+
+        proxy = actionProxyFactory.createActionProxy("", "dynamicAliasTest", null, params);
+        ((AliasInterceptor) proxy.getConfig().getInterceptors().get(1).getInterceptor())
+                .setExcludedPatterns(NO_EXCLUSION_PATTERNS_CHECKER);
+        ((AliasInterceptor) proxy.getConfig().getInterceptors().get(1).getInterceptor())
+                .setAcceptedPatterns(ACCEPT_ALL_PATTERNS_CHECKER);
+
+        actionOne = (SimpleAction) proxy.getAction();
+        actionOne.setAliasSource("name to be copied");
+
+        // prevent ERROR result
+        actionOne.setFoo(-1);
+        actionOne.setBar(1);
+
+        proxy.execute();
+        assertEquals("name to be copied", actionOne.getAliasSource());
+        assertEquals(actionOne.getAliasSource(), actionOne.getAliasDest());
     }
 
     public void testNotExisting() throws Exception {

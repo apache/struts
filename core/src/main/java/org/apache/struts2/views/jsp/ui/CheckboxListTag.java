@@ -33,7 +33,16 @@ public class CheckboxListTag extends AbstractRequiredListTag {
 
     private static final long serialVersionUID = 4023034029558150010L;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new CheckboxList(stack, req, res);
+    }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 }

@@ -51,7 +51,29 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ActionErrorTag freshTag = new ActionErrorTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        // AcionErrorTag has no additional state set here, so it compares as equal with the default tag clear state as well.
+        assertTrue("Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testNoActionErrors_clearTagStateSet() throws Exception {
+        ActionErrorTag tag = new ActionErrorTag();
+        ((InternalActionSupport)action).setHasActionErrors(false);
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        //assertEquals("", writer.toString());
+        verify(ActionErrorTagTest.class.getResource("actionerror-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionErrorTag freshTag = new ActionErrorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -74,7 +96,34 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ActionErrorTag freshTag = new ActionErrorTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        // AcionErrorTag sets escape true by default and has no additional state set here, so it compares as equal with the default tag clear state as well.
+        assertTrue("Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+     public void testActionErrorsEscape_clearTagStateSet() throws Exception {
+
+        ActionErrorTag tag = new ActionErrorTag();
+        TestAction testAction = new TestAction();
+        testAction.addActionError("<p>hey</p>");
+        stack.pop();
+        stack.push(testAction);
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setEscape(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        assertEquals(normalize("<ul class=\"errorMessage\"><li><span>&lt;p&gt;hey&lt;/p&gt;</span></li></ul>", true),
+                normalize(writer.toString(), true));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionErrorTag freshTag = new ActionErrorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -97,7 +146,33 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ActionErrorTag freshTag = new ActionErrorTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testActionErrorsDontEscape_clearTagStateSet() throws Exception {
+
+        ActionErrorTag tag = new ActionErrorTag();
+        TestAction testAction = new TestAction();
+        testAction.addActionError("<p>hey</p>");
+        stack.pop();
+        stack.push(testAction);
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setEscape(false);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        assertEquals(normalize("<ul class=\"errorMessage\"><li><span><p>hey</p></span></li></ul>", true),
+                normalize(writer.toString(), true));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionErrorTag freshTag = new ActionErrorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -116,7 +191,29 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ActionErrorTag freshTag = new ActionErrorTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testHaveActionErrors_clearTagStateSet() throws Exception {
+
+        ActionErrorTag tag = new ActionErrorTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setId("someid");
+        ((InternalActionSupport)action).setHasActionErrors(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(ActionErrorTagTest.class.getResource("actionerror-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionErrorTag freshTag = new ActionErrorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -136,7 +233,30 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ActionErrorTag freshTag = new ActionErrorTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testNullError_clearTagStateSet() throws Exception {
+
+        ActionErrorTag tag = new ActionErrorTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setId("someid");
+        ((InternalActionSupport)action).setHasActionErrors(true);
+        ((InternalActionSupport)action).addActionError(null);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(ActionErrorTagTest.class.getResource("actionerror-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionErrorTag freshTag = new ActionErrorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -156,11 +276,33 @@ public class ActionErrorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ActionErrorTag freshTag = new ActionErrorTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+     public void testEmptyErrorList_clearTagStateSet() throws Exception {
+
+        ActionErrorTag tag = new ActionErrorTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setId("someid");
+        ((InternalActionSupport)action).setHasActionErrors(true);
+        ((InternalActionSupport)action).setJustNullElement(true);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        assertTrue(StringUtils.isBlank(writer.toString()));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ActionErrorTag freshTag = new ActionErrorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
 
     @Override
     public Action getAction() {

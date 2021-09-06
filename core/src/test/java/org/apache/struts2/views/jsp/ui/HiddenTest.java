@@ -48,7 +48,33 @@ public class HiddenTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         HiddenTag freshTag = new HiddenTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimple_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        HiddenTag tag = new HiddenTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("myname");
+        tag.setValue("%{foo}");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Hidden-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        HiddenTag freshTag = new HiddenTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -72,7 +98,34 @@ public class HiddenTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         HiddenTag freshTag = new HiddenTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testDisabled_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        HiddenTag tag = new HiddenTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("myname");
+        tag.setValue("%{foo}");
+        tag.setDisabled("true");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Hidden-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        HiddenTag freshTag = new HiddenTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -103,7 +156,41 @@ public class HiddenTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         HiddenTag freshTag = new HiddenTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testDynamicAttributesWithActionInvocation_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setId(27357L);
+
+        MockActionInvocation ai = new MockActionInvocation();
+        ai.setAction(action);
+        ActionContext.getContext().setActionInvocation(ai);
+
+        HiddenTag tag = new HiddenTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setId("einszwei");
+        tag.setName("first");
+        tag.setValue("%{id}");
+        tag.setDynamicAttribute("", "data-wuffmiauww", "%{id}");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        assertSame(stack.pop(), testAction);
+        assertNotSame(stack.pop(), tag);
+
+        verify(TextFieldTag.class.getResource("Hidden-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        HiddenTag freshTag = new HiddenTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -130,7 +217,37 @@ public class HiddenTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         HiddenTag freshTag = new HiddenTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testDynamicAttributesWithStack_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setId(27357L);
+
+        HiddenTag tag = new HiddenTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setId("einszwei");
+        tag.setName("first");
+        tag.setValue("%{id}");
+        tag.setDynamicAttribute("", "data-wuffmiauww", "%{id}");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        assertSame(stack.pop(), testAction);
+        assertNotSame(stack.pop(), tag);
+
+        verify(TextFieldTag.class.getResource("Hidden-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        HiddenTag freshTag = new HiddenTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }

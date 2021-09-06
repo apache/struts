@@ -52,7 +52,38 @@ public class InputTransferSelectTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         InputTransferSelectTag freshTag = new InputTransferSelectTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithRequired_clearTagStateSet() throws Exception {
+        List list = new ArrayList();
+        list.add("Item One");
+        list.add("Item Two");
+
+        TestAction testaction = (TestAction) action;
+        testaction.setCollection(list);
+
+        InputTransferSelectTag tag = new InputTransferSelectTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+
+        tag.setName("collection");
+        tag.setList("collection");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        //System.out.println(writer.toString());
+        verify(InputTransferSelectTagTest.class.getResource("inputtransferselect-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        InputTransferSelectTag freshTag = new InputTransferSelectTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }

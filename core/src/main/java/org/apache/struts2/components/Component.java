@@ -68,6 +68,7 @@ public class Component {
     protected Map parameters;
     protected ActionMapper actionMapper;
     protected boolean throwExceptionOnELFailure;
+    protected boolean performClearTagStateForTagPoolingServers = false;
     private UrlHelper urlHelper;
 
     /**
@@ -560,4 +561,24 @@ public class Component {
         return standardAttributes;
     }
 
+    /**
+     * Request that the tag state be cleared during {@link org.apache.struts2.views.jsp.StrutsBodyTagSupport#doEndTag()} processing,
+     * which may help with certain edge cases with tag logic running on servers that implement JSP Tag Pooling.
+     * 
+     * <em>Note:</em> All Tag classes that extend {@link org.apache.struts2.views.jsp.StrutsBodyTagSupport} must implement a setter for 
+     * this attribute (same name), and it must be defined at the Tag class level.
+     * Defining a setter in the superclass alone is insufficient (results in "Cannot find a setter method for the attribute").
+     * 
+     * See {@link org.apache.struts2.views.jsp.StrutsBodyTagSupport#clearTagStateForTagPoolingServers()  for additional details.
+     * 
+     * @param performClearTagStateForTagPoolingServers true if tag state should be cleared, false otherwise.
+     */
+    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing (if applicable)", type="Boolean", defaultValue="false", required = false)
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        this.performClearTagStateForTagPoolingServers = performClearTagStateForTagPoolingServers;
+    }
+
+    public boolean getPerformClearTagStateForTagPoolingServers() {
+        return this.performClearTagStateForTagPoolingServers;
+    }
 }

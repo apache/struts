@@ -176,6 +176,12 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
         this.var = var;
     }
 
+    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing", type="Boolean", defaultValue="false", required = false)
+    @Override
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
     @Override
     public int doStartTag() throws JspException {
 
@@ -242,7 +248,10 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     @Override
-    public void clearTagStateForTagPoolingServers() {
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
         super.clearTagStateForTagPoolingServers();
         this.countAttr = null;
         this.separatorAttr = null;

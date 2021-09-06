@@ -37,6 +37,8 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
 
     private static final long serialVersionUID = -1201668454354226175L;
 
+    private boolean performClearTagStateForTagPoolingServers = false;
+
     protected ValueStack getStack() {
         return TagUtils.getStack(pageContext);
     }
@@ -86,6 +88,36 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
     }
 
     /**
+     * Request that the tag state be cleared during {@link StrutsBodyTagSupport#doEndTag()} processing,
+     * which may help with certain edge cases with tag logic running on servers that implement JSP Tag Pooling.
+     * 
+     * <em>Note:</em> Even though the Tag classes extend this class {@link StrutsBodyTagSupport}, and this method
+     * {@link StrutsBodyTagSupport#setPerformClearTagStateForTagPoolingServers(boolean)} exists in the method hierarchy,
+     * the JSP processing requires us to explicitly override it in <em>every Tag class<em> in order for the Tag handler
+     * method to be visible to the JSP processing. 
+     * Defining a setter in the superclass alone is insufficient (results in "Cannot find a setter method for the attribute").
+     * 
+     * See {@link StrutsBodyTagSupport#clearTagStateForTagPoolingServers()} for additional details.
+     * 
+     * <em>Warning:</em> Setting this value to true may allow for the desired behaviour, but doing so
+     * may violate the JSP specification.  <em>Set to true at your own risk</em>.
+     * 
+     * @param performClearTagStateForTagPoolingServers true if tag state should be cleared, false otherwise.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        this.performClearTagStateForTagPoolingServers = performClearTagStateForTagPoolingServers;
+    }
+
+    /**
+     * Allow descendant tags to check if the tag state should be cleared during {@link StrutsBodyTagSupport#doEndTag()} processing,
+     * 
+     * @return true if tag state should be cleared, false (default) otherwise.
+     */
+    protected boolean getPerformClearTagStateForTagPoolingServers() {
+        return this.performClearTagStateForTagPoolingServers;
+    }
+
+    /**
      * Provide a mechanism to clear tag state, to handle servlet container JSP tag pooling
      * behaviour with some servers, such as Glassfish.
      * 
@@ -101,11 +133,19 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
      */
     protected void clearTagStateForTagPoolingServers() {
         // Default implementation.
+        if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
         this.setBodyContent(null);  // Always clear the tag body (if any) after tag completion.
         this.setId(null);           // Always clear the tag id (if any) after tag completion.
         // Note: The pageContext and parent Tag state are NOT cleared, only the "user-defined" tag state should be cleared.
         //       Calling setPageContext(null) and setParent(null) appears too dangerous to consider, and the container
-        //       should always set them, even if a tag instance from a pool is re-used.
+        //       should always set them, even if a tag instance from a pool is re-used.  Also, clearing those two
+        //       values likely violates the JSP specification.
+        // Note: We intentionally do NOT reset performClearTagStateForTagPoolingServers to false here, for two reasons.
+        //       Firstly, if a tag pool re-uses the instance, in order to qualify/match the tag parameters should be
+        //       the same, including performClearTagStateForTagPoolingServers.  Secondly, if we change the state of
+        //       the control flag during clearing, it makes unit testing virtually impossible.
     }
 
 }

@@ -81,7 +81,40 @@ public class ComboBoxTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ComboBoxTag freshTag = new ComboBoxTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimple_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("hello");
+
+        ArrayList collection = new ArrayList();
+        collection.add("foo");
+        collection.add("bar");
+        collection.add("baz");
+        testAction.setCollection(collection);
+
+        ComboBoxTag tag = new ComboBoxTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setId("cb");
+        tag.setList("collection");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(ComboBoxTag.class.getResource("ComboBox-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComboBoxTag freshTag = new ComboBoxTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -115,7 +148,44 @@ public class ComboBoxTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ComboBoxTag freshTag = new ComboBoxTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithEmptyOptionAndHeader_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("banana");
+
+        List l = new ArrayList();
+        l.add("apple");
+        l.add("banana");
+        l.add("pineaple");
+        l.add("grapes");
+        testAction.setCollection(l);
+
+        ComboBoxTag tag = new ComboBoxTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("My Favourite Fruit");
+        tag.setName("myFavouriteFruit");
+        tag.setEmptyOption("true");
+        tag.setHeaderKey("-1");
+        tag.setHeaderValue("--- Please Select ---");
+        tag.setList("collection");
+        tag.setValue("%{foo}");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(ComboBoxTag.class.getResource("ComboBox-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComboBoxTag freshTag = new ComboBoxTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -149,7 +219,44 @@ public class ComboBoxTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ComboBoxTag freshTag = new ComboBoxTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testWithMap_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("banana");
+
+        Map m = new LinkedHashMap();
+        m.put("apple", "apple");
+        m.put("banana", "banana");
+        m.put("pineaple", "pineaple");
+        m.put("grapes", "grapes");
+        testAction.setMap(m);
+
+        ComboBoxTag tag = new ComboBoxTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("My Favourite Fruit");
+        tag.setName("myFavouriteFruit");
+        tag.setHeaderKey("-1");
+        tag.setHeaderValue("--- Please Select ---");
+        tag.setEmptyOption("true");
+        tag.setList("map");
+        tag.setValue("%{foo}");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(ComboBoxTag.class.getResource("ComboBox-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComboBoxTag freshTag = new ComboBoxTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -177,7 +284,38 @@ public class ComboBoxTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ComboBoxTag freshTag = new ComboBoxTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testJsCallNamingUsesEscapedId_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("hello");
+
+        ArrayList collection = new ArrayList();
+        collection.add("foo");
+        testAction.setCollection(collection);
+
+        ComboBoxTag tag = new ComboBoxTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setId("cb.bc");
+        tag.setList("collection");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(ComboBoxTag.class.getResource("ComboBox-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComboBoxTag freshTag = new ComboBoxTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }

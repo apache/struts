@@ -33,7 +33,16 @@ public class ComponentTag extends AbstractUITag {
 
     private static final long serialVersionUID = 5448365363044104731L;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new GenericUIBean(stack, req, res);
+    }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 }

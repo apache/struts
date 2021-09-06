@@ -171,4 +171,22 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         return objectsAreReflectionEqual(tag1, tag2);
     }
 
+    /**
+     * Helper method to simplify setting the performClearTagStateForTagPoolingServers state for a 
+     * {@link ComponentTagSupport} tag's {@link Component} to match expectations for the test.
+     * 
+     * The component reference is not available to the tag until after the doStartTag() method is called.
+     * We need to ensure the component's {@link Component#performClearTagStateForTagPoolingServers} state matches
+     * what we set for the Tag when a non-default (true) value is used, so this method accesses the component instance,
+     * sets the value specified and forces the tag's parameters to be repopulated again.
+     * 
+     * @param tag The ComponentTagSupport tag upon whose component we will set the performClearTagStateForTagPoolingServers state.
+     * @param performClearTagStateForTagPoolingServers true to clear tag state, false otherwise
+     */
+    protected void setComponentTagClearTagState(ComponentTagSupport tag, boolean performClearTagStateForTagPoolingServers) {
+        tag.component.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+        //tag.populateParams();  // Not safe to call after doStartTag() ... breaks some tests.
+        tag.populatePerformClearTagStateForTagPoolingServersParam();  // Only populate the performClearTagStateForTagPoolingServers parameter for the Tag.
+    }
+
 }

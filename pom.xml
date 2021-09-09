@@ -126,11 +126,6 @@
         <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
         <sonar.exclusions>apps/**</sonar.exclusions>
     </properties>
-    
-    <properties>
-        <sonar.organization>theredhatter</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    </properties>
 
     <profiles>
         <profile>

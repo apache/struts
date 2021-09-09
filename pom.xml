@@ -123,7 +123,8 @@
         <fluido-skin.version>1.9</fluido-skin.version>
 
         <!-- Sonar -->
-        <sonar.host.url>https://builds.apache.org/analysis/</sonar.host.url>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>theredhatter</sonar.organization>
         <sonar.exclusions>apps/**</sonar.exclusions>
     </properties>
 

@@ -32,12 +32,12 @@
 </tr>
 </#list>
 </#if>
-<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
-<#assign labelpos = parameters.form.labelposition/>
-<#elseif parameters.labelposition??>
-<#assign labelpos = parameters.labelposition/>
+<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
+<#assign labelPos = parameters.form.labelPosition/>
+<#elseif parameters.labelPosition??>
+<#assign labelPos = parameters.labelPosition/>
 </#if>
-<#if (labelpos!"") == 'top'>
+<#if (labelPos!"") == 'top'>
 <tr>
     <td colspan="2">
 <#if parameters.label??> <label<#t/>
@@ -71,7 +71,7 @@ ${parameters.label?html}<#t/>
 <#else>
 <tr>
 	<td class="tdCheckboxLabel">
-<#if (labelpos!"") == 'left'>
+<#if (labelPos!"") == 'left'>
 <#if parameters.label??> <label<#t/>
 <#if parameters.id??>
  for="${parameters.id?html}"<#rt/>
@@ -96,7 +96,7 @@ ${parameters.label?html}<#t/>
 </label><#t/>
 </#if>
 </#if>
-<#if (labelpos!"") == 'right'>
+<#if (labelPos!"") == 'right'>
     <#if parameters.required!false>
         <span class="required">*</span><#t/>
     </#if>
@@ -107,10 +107,10 @@ ${parameters.label?html}<#t/>
     </td>
     <td class="tdCheckboxInput">
 
-<#if (labelpos!"") != 'top'>
+<#if (labelPos!"") != 'top'>
  <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
-</#if>                    
-<#if (labelpos!"") != 'top' && (labelpos!"") != 'left'>
+</#if>
+<#if (labelPos!"") != 'top' && (labelPos!"") != 'left'>
 <#if parameters.label??> <label<#t/>
 <#if parameters.id??>
  for="${parameters.id?html}"<#rt/>

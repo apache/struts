@@ -33,17 +33,17 @@
     </td><#lt/>
 </tr>
 </#if>
-<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
-<#assign labelpos = parameters.form.labelposition/>
-<#elseif parameters.labelposition??>
-<#assign labelpos = parameters.labelposition/>
+<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
+<#assign labelPos = parameters.form.labelPosition/>
+<#elseif parameters.labelPosition??>
+<#assign labelpos = parameters.labelPosition/>
 </#if>
 <#--
 	if the label position is top,
 	then give the label it's own row in the table
 -->
 <tr>
-<#if (labelpos!"") == 'top'>
+<#if (labelPos!"") == 'top'>
     <td class="tdLabelTop" colspan="2"><#rt/>
 <#else>
     <td class="tdLabel"><#rt/>
@@ -72,7 +72,7 @@ ${parameters.labelseparator!":"?html}<#t/>
 </#if>
     </td><#lt/>
 <#-- add the extra row -->
-<#if (labelpos!"") == 'top'>
+<#if (labelPos!"") == 'top'>
 </tr>
 <tr>
 </#if>

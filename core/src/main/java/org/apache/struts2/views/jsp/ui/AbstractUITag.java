@@ -341,7 +341,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.disabled = null;
         this.label = null;
         this.labelSeparator = null;
-        this.labelposition = null;
+        this.labelPosition = null;
         this.requiredPosition = null;
         this.errorPosition = null;
         this.name = null;

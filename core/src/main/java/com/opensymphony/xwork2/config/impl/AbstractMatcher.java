@@ -45,6 +45,7 @@ import java.util.regex.Pattern;
 public abstract class AbstractMatcher<E> implements Serializable {
 
     private static final Logger LOG = LogManager.getLogger(AbstractMatcher.class);
+    private static final Pattern WILDCARD_PATTERN = Pattern.compile("\\{(.)\\}");
 
     /**
      * <p> Handles all wildcard pattern matching. </p>
@@ -216,8 +217,7 @@ public abstract class AbstractMatcher<E> implements Serializable {
 			return null;
 		}
 
-		Pattern wildcardPattern = Pattern.compile("\\{(.)\\}");
-		Matcher wildcardMatcher = wildcardPattern.matcher(val);
+		Matcher wildcardMatcher = WILDCARD_PATTERN.matcher(val);
 
 		StringBuilder result = new StringBuilder();
 		while (wildcardMatcher.find()) {

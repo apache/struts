@@ -19,12 +19,19 @@
 package com.opensymphony.xwork2.config.impl;
 
 import com.opensymphony.xwork2.util.PatternMatcher;
+
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * <p> Matches patterns against pre-compiled wildcard expressions pulled from
@@ -38,6 +45,7 @@ import java.util.*;
 public abstract class AbstractMatcher<E> implements Serializable {
 
     private static final Logger LOG = LogManager.getLogger(AbstractMatcher.class);
+    private static final Pattern WILDCARD_PATTERN = Pattern.compile("\\{(.)\\}");
 
     /**
      * <p> Handles all wildcard pattern matching. </p>
@@ -204,31 +212,21 @@ public abstract class AbstractMatcher<E> implements Serializable {
      * @param vars A Map of wildcard-matched strings
      * @return The new value
      */
-    protected String convertParam(String val, Map<String, String> vars) {
-        if (val == null) {
-            return null;
-        } 
-        
-        int len = val.length();
-        StringBuilder ret = new StringBuilder();
-        char c;
-        String varVal;
-        for (int x=0; x<len; x++) {
-            c = val.charAt(x);
-            if (x < len - 2 && 
-                    c == '{' && '}' == val.charAt(x+2)) {
-                varVal = vars.get(String.valueOf(val.charAt(x + 1)));
-                if (varVal != null) {
-                    ret.append(varVal);
-                } 
-                x += 2;
-            } else {
-                ret.append(c);
-            }
-        }
-        
-        return ret.toString();
-    }
+	protected String convertParam(String val, Map<String, String> vars) {
+		if (val == null) {
+			return null;
+		}
+
+		Matcher wildcardMatcher = WILDCARD_PATTERN.matcher(val);
+
+		StringBuilder result = new StringBuilder();
+		while (wildcardMatcher.find()) {
+			wildcardMatcher.appendReplacement(result, vars.getOrDefault(wildcardMatcher.group(1), ""));
+		}
+		wildcardMatcher.appendTail(result);
+
+		return result.toString();
+	}
 
     /**
      * <p> Stores a compiled wildcard pattern and the object it came

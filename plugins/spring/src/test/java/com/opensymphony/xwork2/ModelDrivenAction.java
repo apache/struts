@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,9 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+package com.opensymphony.xwork2;
 
-<beans>
-    <bean id="spring-object-factory" class="com.opensymphony.xwork2.spring.SpringObjectFactory"/>
-</beans>
+
+/**
+ * ModelDrivenAction
+ *
+ * @author Jason Carreira
+ *         Created Apr 8, 2003 6:27:29 PM
+ */
+public class ModelDrivenAction extends ActionSupport implements ModelDriven {
+
+    private String foo;
+    private TestBean model = new TestBean();
+
+
+    public void setFoo(String foo) {
+        this.foo = foo;
+    }
+
+    public String getFoo() {
+        return foo;
+    }
+
+    /**
+     * @return the model to be pushed onto the ValueStack after the Action itself
+     */
+    public Object getModel() {
+        return model;
+    }
+}

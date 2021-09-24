@@ -19,7 +19,6 @@
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.spring.SpringObjectFactory;
 import junit.framework.TestCase;
 
 import java.net.URL;
@@ -33,16 +32,16 @@ public class ResolverUtilTest extends TestCase {
         Set<Class<? extends ObjectFactory>> impls = resolver.getClasses();
         
         assertTrue(impls.contains(ObjectFactory.class));
-        assertTrue(impls.contains(SpringObjectFactory.class));
+        assertTrue(impls.contains(DummyObjectFactory.class));
     }
     
     public void testMissingSomeFind() throws Exception {
         ResolverUtil<ObjectFactory> resolver = new ResolverUtil<>();
-        resolver.findImplementations(ObjectFactory.class, "com.opensymphony.xwork2.spring");
+        resolver.findImplementations(ObjectFactory.class, "com.opensymphony.xwork2.util");
         Set<Class<? extends ObjectFactory>> impls = resolver.getClasses();
         
         assertFalse(impls.contains(ObjectFactory.class));
-        assertTrue(impls.contains(SpringObjectFactory.class));
+        assertTrue(impls.contains(DummyObjectFactory.class));
     }
     
     public void testFindNamedResource() throws Exception {

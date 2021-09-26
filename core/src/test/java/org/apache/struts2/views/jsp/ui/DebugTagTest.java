@@ -135,6 +135,8 @@ public class DebugTagTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        PrepareOperations.clearDevModeOverride();  // Clear DevMode override. Avoid ThreadLocal side-effects if test thread re-used.
     }
 
     public void testTagAttributeOverrideDevModeTrue_clearTagStateSet() throws Exception {
@@ -156,6 +158,8 @@ public class DebugTagTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        PrepareOperations.clearDevModeOverride();  // Clear DevMode override. Avoid ThreadLocal side-effects if test thread re-used.
     }
 
     public void testTagAttributeOverrideDevModeFalse() throws Exception {
@@ -173,6 +177,8 @@ public class DebugTagTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        PrepareOperations.clearDevModeOverride();  // Clear DevMode override. Avoid ThreadLocal side-effects if test thread re-used.
     }
 
     public void testTagAttributeOverrideDevModeFalse_clearTagStateSet() throws Exception {
@@ -192,6 +198,8 @@ public class DebugTagTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
+        PrepareOperations.clearDevModeOverride();  // Clear DevMode override. Avoid ThreadLocal side-effects if test thread re-used.
     }
 
     private void setDevMode(final boolean devMode) {

@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 
@@ -74,9 +75,13 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
     /**
      * Sets up the configuration settings, XWork configuration, and
      * message resources
+     * 
+     * @throws java.lang.Exception
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
+        PrepareOperations.clearDevModeOverride();  // Clear DevMode override every time (consistent ThreadLocal state for tests).
         initDispatcher(null);
     }
     
@@ -103,6 +108,7 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
         return initDispatcher(params);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         // maybe someone else already destroyed Dispatcher

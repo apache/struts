@@ -63,5 +63,5 @@ public interface OValValidationManager {
      *                  updated.
      * @return a list of xml configurers for the given class and context.
      */
-    List<Configurer> getConfigurers(Class clazz, String context, boolean validateJPAAnnotations);
+    List<Configurer> getConfigurers(Class<?> clazz, String context, boolean validateJPAAnnotations);
 }

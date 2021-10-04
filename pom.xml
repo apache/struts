@@ -1115,13 +1115,13 @@
             <dependency>
                 <groupId>net.sf.oval</groupId>
                 <artifactId>oval</artifactId>
-                <version>1.90</version>
+                <version>3.2.1</version>
             </dependency>
 
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
-                <version>1.4.17</version>
+                <version>1.4.18</version>
                 <exclusions>
                     <exclusion>
                         <groupId>io.github.x-stream</groupId>

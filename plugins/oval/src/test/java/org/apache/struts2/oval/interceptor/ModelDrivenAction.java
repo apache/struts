@@ -28,10 +28,10 @@ import com.opensymphony.xwork2.ModelDriven;
 public class ModelDrivenAction extends ActionSupport implements ModelDriven<Person> {
 
 	@AssertValid
-	private Person model = new Person();
+	private Person person = new Person();
 
 	public Person getModel() {
-		return model;
+		return person;
 	}
 
 }

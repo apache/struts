@@ -203,6 +203,30 @@
             </build>
         </profile>
         <profile>
+            <id>jdk17</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <configuration>
+                                <argLine>
+                                    --illegal-access=permit
+                                    --add-opens java.base/java.lang=ALL-UNNAMED
+                                    --add-opens java.base/java.util=ALL-UNNAMED
+                                    -Dillegal-access=permit
+                                </argLine>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
             <id>travis-coveralls</id>
             <build>
                 <pluginManagement>

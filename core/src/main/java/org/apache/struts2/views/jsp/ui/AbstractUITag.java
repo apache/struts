@@ -78,6 +78,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     // dynamic attributes.
     protected Map<String, String> dynamicAttributes = new HashMap<>();
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -127,6 +128,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setDynamicAttributes(dynamicAttributes);
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -312,12 +314,24 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.labelSeparator = labelSeparator;
     }
 
+    @Override
     public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
         dynamicAttributes.put(localName, String.valueOf(value));
     }
 
     @Override
-    public void clearTagStateForTagPoolingServers() {
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
         super.clearTagStateForTagPoolingServers();
         this.cssClass = null;
         this.cssErrorClass = null;

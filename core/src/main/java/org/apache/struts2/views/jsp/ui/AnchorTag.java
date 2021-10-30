@@ -158,8 +158,19 @@ public class AnchorTag extends AbstractClosingTag {
         this.escapeHtmlBody = escapeHtmlBody;
     }
 
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
     @Override
-    public void clearTagStateForTagPoolingServers() {
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+        if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
         super.clearTagStateForTagPoolingServers();
         this.href = null;
         this.includeParams = null;

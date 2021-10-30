@@ -139,8 +139,19 @@ public class URLTag extends ContextBeanTag {
         this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
     }
 
-   @Override
-    public void clearTagStateForTagPoolingServers() {
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
         super.clearTagStateForTagPoolingServers();
         this.includeParams = null;
         this.scheme = null;

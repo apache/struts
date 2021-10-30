@@ -22,6 +22,7 @@ import org.apache.struts2.components.ListUIBean;
 
 public abstract class AbstractRequiredListTag extends AbstractListTag {
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -29,4 +30,11 @@ public abstract class AbstractRequiredListTag extends AbstractListTag {
         listUIBean.setThrowExceptionOnNullValueAttribute(true);
     }
 
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
 }

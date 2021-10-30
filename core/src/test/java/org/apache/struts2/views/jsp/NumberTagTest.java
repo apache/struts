@@ -48,11 +48,40 @@ public class NumberTagTest extends AbstractTagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         NumberTag freshTag = new NumberTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
-    
+
+    public void testSimpleFloatFormat_clearTagStateSet() throws Exception {
+        // given
+        context.put(ActionContext.LOCALE, Locale.US);
+
+        TestAction testAction = (TestAction) action;
+        testAction.setFloatNumber(120.0f);
+
+        NumberTag tag = new NumberTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setName("floatNumber");
+
+        // when
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        // then
+        assertEquals("120", writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        NumberTag freshTag = new NumberTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
     public void testSimpleCurrencyUSFormat() throws Exception {
         // given
         context = ActionContext.of(context).withLocale(Locale.US).getContextMap();
@@ -74,11 +103,40 @@ public class NumberTagTest extends AbstractTagTest {
 
         NumberTag freshTag = new NumberTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
-    
+
+    public void testSimpleCurrencyUSFormat_clearTagStateSet() throws Exception {
+        // given
+        context.put(ActionContext.LOCALE, Locale.US);
+
+        TestAction testAction = (TestAction) action;
+        testAction.setFloatNumber(120.0f);
+
+        NumberTag tag = new NumberTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setName("floatNumber");
+        tag.setType("currency");
+
+        // when
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        // then
+        assertEquals("$120.00", writer.toString());
+
+        NumberTag freshTag = new NumberTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
     public void testSimpleCurrencyPLFormat() throws Exception {
         // given
         context = ActionContext.of(context).withLocale(new Locale("pl", "PL")).getContextMap();
@@ -105,7 +163,40 @@ public class NumberTagTest extends AbstractTagTest {
 
         NumberTag freshTag = new NumberTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimpleCurrencyPLFormat_clearTagStateSet() throws Exception {
+        // given
+        context.put(ActionContext.LOCALE, new Locale("pl", "PL"));
+
+        TestAction testAction = (TestAction) action;
+        testAction.setFloatNumber(120.0f);
+
+        NumberTag tag = new NumberTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setName("floatNumber");
+        tag.setType("currency");
+
+        // when
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        // then
+        NumberFormat format = NumberFormat.getCurrencyInstance((Locale) context.get(ActionContext.LOCALE));
+        format.setRoundingMode(RoundingMode.CEILING);
+        String expected = format.format(120.0f);
+
+        assertEquals(expected, writer.toString());
+
+        NumberTag freshTag = new NumberTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -136,7 +227,40 @@ public class NumberTagTest extends AbstractTagTest {
 
         NumberTag freshTag = new NumberTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimpleRoundingCeiling_clearTagStateSet() throws Exception {
+        // given
+        context.put(ActionContext.LOCALE, Locale.US);
+
+        TestAction testAction = (TestAction) action;
+        testAction.setFloatNumber(120.45f);
+
+        NumberTag tag = new NumberTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setName("floatNumber");
+        tag.setRoundingMode("down");
+
+        // when
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        // then
+        NumberFormat format = NumberFormat.getInstance((Locale) context.get(ActionContext.LOCALE));
+        format.setRoundingMode(RoundingMode.DOWN);
+        String expected = format.format(120.45f);
+
+        assertEquals(expected, writer.toString());
+
+        NumberTag freshTag = new NumberTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }

@@ -71,7 +71,49 @@ public class SortIteratorTagTest extends AbstractTagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         SortIteratorTag freshTag = new SortIteratorTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSortWithoutId_clearTagStateSet() throws Exception {
+        SortIteratorTag tag = new SortIteratorTag();
+
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setComparator("comparator");
+        tag.setSource("source");
+
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+
+        // if not an Iterator, just let the ClassCastException be thrown as error instead of failure
+        Iterator sortedIterator = (Iterator) stack.findValue("top");
+
+        assertNotNull(sortedIterator);
+        // 1
+        assertTrue(sortedIterator.hasNext());
+        assertEquals(sortedIterator.next(), new Integer(1));
+        // 2
+        assertTrue(sortedIterator.hasNext());
+        assertEquals(sortedIterator.next(), new Integer(2));
+        // 3.
+        assertTrue(sortedIterator.hasNext());
+        assertEquals(sortedIterator.next(), new Integer(3));
+        // 4.
+        assertTrue(sortedIterator.hasNext());
+        assertEquals(sortedIterator.next(), new Integer(4));
+        // 5
+        assertTrue(sortedIterator.hasNext());
+        assertEquals(sortedIterator.next(), new Integer(5));
+
+        assertFalse(sortedIterator.hasNext());
+        tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SortIteratorTag freshTag = new SortIteratorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -115,11 +157,55 @@ public class SortIteratorTagTest extends AbstractTagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         SortIteratorTag freshTag = new SortIteratorTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
+    public void testSortWithIdIteratorAvailableInStackTop_clearTagStateSet() throws Exception {
 
+        SortIteratorTag tag = new SortIteratorTag();
+
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setVar("myId");
+        tag.setComparator("comparator");
+        tag.setSource("source");
+
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+
+        {
+            Iterator sortedIterator = (Iterator) stack.findValue("top");
+
+            assertNotNull(sortedIterator);
+            // 1
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(1));
+            // 2
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(2));
+            // 3
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(3));
+            // 4
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(4));
+            // 5
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(5));
+
+            assertFalse(sortedIterator.hasNext());
+        }
+
+        tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SortIteratorTag freshTag = new SortIteratorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
 
     public void testSortWithIdIteratorAvailableInPageContext() throws Exception {
         SortIteratorTag tag = new SortIteratorTag();
@@ -159,7 +245,52 @@ public class SortIteratorTagTest extends AbstractTagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         SortIteratorTag freshTag = new SortIteratorTag();
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSortWithIdIteratorAvailableInPageContext_clearTagStateSet() throws Exception {
+        SortIteratorTag tag = new SortIteratorTag();
+
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setVar("myId");
+        tag.setComparator("comparator");
+        tag.setSource("source");
+
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+
+        {
+            Iterator sortedIterator = (Iterator) pageContext.getAttribute("myId");
+
+            assertNotNull(sortedIterator);
+            // 1
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(1));
+            // 2
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(2));
+            // 3
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(3));
+            // 4
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(4));
+            // 5
+            assertTrue(sortedIterator.hasNext());
+            assertEquals(sortedIterator.next(), new Integer(5));
+
+            assertFalse(sortedIterator.hasNext());
+        }
+
+        tag.doEndTag();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SortIteratorTag freshTag = new SortIteratorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }

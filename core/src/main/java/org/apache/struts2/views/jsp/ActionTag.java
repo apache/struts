@@ -39,10 +39,12 @@ public class ActionTag extends ContextBeanTag {
     protected boolean flush = true;
     protected boolean rethrowException;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ActionComponent(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -86,6 +88,17 @@ public class ActionTag extends ContextBeanTag {
 
     public void setRethrowException(boolean rethrowException) {
         this.rethrowException = rethrowException;
+    }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.name = null;
+        this.namespace = null;
+        this.executeResult = false;
+        this.ignoreContextParams = false;
+        this.flush = true;
+        this.rethrowException = false;
     }
 
 }

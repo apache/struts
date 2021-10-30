@@ -35,10 +35,12 @@ public class PasswordTag extends TextFieldTag {
 
     protected String showPassword;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Password(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -52,4 +54,11 @@ public class PasswordTag extends TextFieldTag {
     public void setShowPassword(String showPassword) {
         this.showPassword = showPassword;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.showPassword = null;
+     }
+
 }

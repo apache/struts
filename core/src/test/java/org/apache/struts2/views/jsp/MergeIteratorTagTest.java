@@ -82,6 +82,26 @@ public class MergeIteratorTagTest extends AbstractTagTest {
         assertTrue(mergedIterator.hasNext());
         assertEquals(mergedIterator.next(), "C");
         assertFalse(mergedIterator.hasNext());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(iterator1ParamTag, freshParamTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(iterator2ParamTag, freshParamTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(iterator3ParamTag, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        MergeIteratorTag freshTag = new MergeIteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -134,6 +154,26 @@ public class MergeIteratorTagTest extends AbstractTagTest {
         assertTrue(mergedIterator.hasNext());
         assertEquals(mergedIterator.next(), "C");
         assertFalse(mergedIterator.hasNext());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ParamTag freshParamTag = new ParamTag();
+        freshParamTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(iterator1ParamTag, freshParamTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(iterator2ParamTag, freshParamTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(iterator3ParamTag, freshParamTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        MergeIteratorTag freshTag = new MergeIteratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 

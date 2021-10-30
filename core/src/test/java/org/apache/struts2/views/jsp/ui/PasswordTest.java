@@ -40,6 +40,13 @@ public class PasswordTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(PasswordTag.class.getResource("Password-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PasswordTag freshTag = new PasswordTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGenericSimple() throws Exception {

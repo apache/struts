@@ -23,6 +23,7 @@ import org.apache.struts2.components.ClosingUIBean;
 public abstract class AbstractClosingTag extends AbstractUITag {
     protected String openTemplate;
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -32,4 +33,11 @@ public abstract class AbstractClosingTag extends AbstractUITag {
     public void setOpenTemplate(String openTemplate) {
         this.openTemplate = openTemplate;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.openTemplate = null;
+    }
+
 }

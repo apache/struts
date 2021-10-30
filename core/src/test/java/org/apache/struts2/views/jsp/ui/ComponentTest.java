@@ -19,7 +19,6 @@
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.TestAction;
-import org.apache.struts2.components.Component;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 
@@ -46,6 +45,13 @@ public class ComponentTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ComponentTag.class.getResource("Component-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIdIsEvaludatedAgainstStack2() throws Exception {
@@ -63,6 +69,13 @@ public class ComponentTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ComponentTag.class.getResource("Component-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        TextFieldTag freshTag = new TextFieldTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -83,6 +96,13 @@ public class ComponentTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ComponentTag.class.getResource("Component-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComponentTag freshTag = new ComponentTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -111,6 +131,13 @@ public class ComponentTest extends AbstractUITagTest {
 
         //        System.out.println(writer);
         verify(ComponentTag.class.getResource("Component-param.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        ComponentTag freshTag = new ComponentTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testTagAttributeExclusion() throws Exception {
@@ -122,6 +149,9 @@ public class ComponentTest extends AbstractUITagTest {
         tag.doStartTag();
 
         assertTrue(tag.includeContext);
+
+        // Calling tag.doEndTag() results in an exception.
+        // Aa a result, a basic sanity check of clearTagStateForTagPoolingServers() cannot be called.
     }
 
 }

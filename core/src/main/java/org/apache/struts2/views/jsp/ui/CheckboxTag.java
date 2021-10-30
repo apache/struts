@@ -35,10 +35,12 @@ public class CheckboxTag extends AbstractUITag {
     protected String fieldValue;
     protected String submitUnchecked;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Checkbox(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -53,4 +55,11 @@ public class CheckboxTag extends AbstractUITag {
     public void setSubmitUnchecked(String aValue) {
         this.submitUnchecked = aValue;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.fieldValue = null;
+    }
+
 }

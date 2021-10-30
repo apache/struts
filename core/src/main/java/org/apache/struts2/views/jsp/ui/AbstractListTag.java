@@ -30,6 +30,7 @@ public abstract class AbstractListTag extends AbstractUITag {
     protected String listCssStyle;
     protected String listTitle;
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -75,4 +76,18 @@ public abstract class AbstractListTag extends AbstractUITag {
     public void setListTitle(String listTitle) {
         this.listTitle = listTitle;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.list = null;
+        this.listKey = null;
+        this.listValue = null;
+        this.listValueKey = null;
+        this.listLabelKey = null;
+        this.listCssClass = null;
+        this.listCssStyle = null;
+        this.listTitle = null;
+     }
+
 }

@@ -37,10 +37,12 @@ public class TextFieldTag extends AbstractUITag {
     protected String size;
     protected String type;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TextField(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -66,4 +68,14 @@ public class TextFieldTag extends AbstractUITag {
     public void setType(String type) {
         this.type = type;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.maxlength = null;
+        this.readonly = null;
+        this.size = null;
+        this.type = null;
+    }
+
 }

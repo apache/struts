@@ -47,10 +47,12 @@ public class FormTag extends AbstractClosingTag {
     protected String focusElement;
     protected boolean includeContext = true;
     
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Form(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
         Form form = ((Form) component);
@@ -121,4 +123,23 @@ public class FormTag extends AbstractClosingTag {
     public void setIncludeContext(boolean includeContext) {
         this.includeContext = includeContext;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.action = null;
+        this.target = null;
+        this.enctype = null;
+        this.method = null;
+        this.namespace = null;
+        this.validate = null;
+        this.onsubmit = null;
+        this.onreset = null;
+        this.portletMode = null;
+        this.windowState = null;
+        this.acceptcharset = null;
+        this.focusElement = null;
+        this.includeContext = true;
+     }
+
 }

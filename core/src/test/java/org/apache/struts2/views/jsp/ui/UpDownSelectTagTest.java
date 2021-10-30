@@ -48,6 +48,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithPartialSelected() throws Exception {
@@ -66,6 +73,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithHeaderAndEmptyOption() throws Exception {
@@ -84,6 +98,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithHeaderOnly() throws Exception {
@@ -102,6 +123,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithEmptyOptionOnly() throws Exception {
@@ -118,6 +146,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
@@ -136,6 +171,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-6.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDisableMoveUpButton() throws Exception {
@@ -152,6 +194,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-7.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDisableMoveDownButton() throws Exception {
@@ -168,6 +217,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-8.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testChangeSelectAllButtonText() throws Exception {
@@ -184,6 +240,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-9.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testChangeMoveUpButtonText() throws Exception {
@@ -200,6 +263,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-10.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testChangeMoveDownButtonText() throws Exception {
@@ -216,6 +286,13 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(UpDownSelectTagTest.class.getResource("updownselecttag-11.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        UpDownSelectTag freshTag = new UpDownSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGenericSimple() throws Exception {
@@ -237,6 +314,7 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
 
 
     // ===============================
+    @Override
     public Action getAction() {
         return new ActionSupport() {
 

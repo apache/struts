@@ -316,4 +316,51 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         dynamicAttributes.put(localName, String.valueOf(value));
     }
 
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.cssClass = null;
+        this.cssErrorClass = null;
+        this.cssStyle = null;
+        this.cssErrorStyle = null;
+        this.title = null;
+        this.disabled = null;
+        this.label = null;
+        this.labelSeparator = null;
+        this.labelposition = null;
+        this.requiredPosition = null;
+        this.errorPosition = null;
+        this.name = null;
+        this.requiredLabel = null;
+        this.tabindex = null;
+        this.value = null;
+        this.template = null;
+        this.theme = null;
+        this.templateDir = null;
+        this.onclick = null;
+        this.ondblclick = null;
+        this.onmousedown = null;
+        this.onmouseup = null;
+        this.onmouseover = null;
+        this.onmousemove = null;
+        this.onmouseout = null;
+        this.onfocus = null;
+        this.onblur = null;
+        this.onkeypress = null;
+        this.onkeydown = null;
+        this.onkeyup = null;
+        this.onselect = null;
+        this.onchange = null;
+        this.accesskey = null;
+        this.id = null;
+        this.key = null;
+        this.tooltip = null;
+        this.tooltipConfig = null;
+        this.javascriptTooltip = null;
+        this.tooltipDelay = null;
+        this.tooltipCssClass = null;
+        this.tooltipIconPath = null;
+        this.dynamicAttributes.clear();
+    }
+
 }

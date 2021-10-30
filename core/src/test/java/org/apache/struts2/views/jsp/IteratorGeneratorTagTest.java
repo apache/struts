@@ -65,6 +65,13 @@ public class IteratorGeneratorTagTest extends AbstractTagTest {
 
 
         assertNotSame(afterTopOfStack, topOfStack);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorGeneratorTag freshTag = new IteratorGeneratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGeneratorWithSeparator() throws Exception {
@@ -97,6 +104,13 @@ public class IteratorGeneratorTagTest extends AbstractTagTest {
 
         assertFalse(((Iterator)topOfStack).hasNext());
         assertNotSame(afterTopOfStack, topOfStack);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorGeneratorTag freshTag = new IteratorGeneratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGeneratorWithConverter() throws Exception {
@@ -129,6 +143,13 @@ public class IteratorGeneratorTagTest extends AbstractTagTest {
 
         assertFalse(((Iterator)topOfStack).hasNext());
         assertNotSame(afterTopOfStack, topOfStack);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorGeneratorTag freshTag = new IteratorGeneratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGeneratorWithId() throws Exception {
@@ -159,6 +180,13 @@ public class IteratorGeneratorTagTest extends AbstractTagTest {
         assertEquals(((Iterator)pageContextIterator).next(), "eee");
 
         assertFalse(((Iterator)pageContextIterator).hasNext());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorGeneratorTag freshTag = new IteratorGeneratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGeneratorWithCount() throws Exception {
@@ -186,9 +214,17 @@ public class IteratorGeneratorTagTest extends AbstractTagTest {
 
         assertFalse(((Iterator)topOfStack).hasNext());
         assertNotSame(topOfStack, afterTopOfStack);
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        IteratorGeneratorTag freshTag = new IteratorGeneratorTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
 
+    @Override
     public Action getAction() {
         return new ActionSupport() {
             public Converter getMyConverter() {

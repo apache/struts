@@ -39,5 +39,12 @@ public class HeadTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(HeadTagTest.class.getResource("HeadTagTest-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        HeadTag freshTag = new HeadTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 }

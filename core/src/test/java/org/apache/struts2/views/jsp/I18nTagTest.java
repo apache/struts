@@ -35,6 +35,7 @@ public class I18nTagTest extends StrutsInternalTestCase {
     MockPageContext pageContext;
     ValueStack stack;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // create the needed objects
@@ -76,6 +77,13 @@ public class I18nTagTest extends StrutsInternalTestCase {
             e.printStackTrace();
             fail();
         }
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        I18nTag freshTag = new I18nTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
     }
 
     /**

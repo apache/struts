@@ -39,10 +39,12 @@ public class SelectTag extends AbstractRequiredListTag {
     protected String multiple;
     protected String size;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Select(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -73,5 +75,15 @@ public class SelectTag extends AbstractRequiredListTag {
     public void setSize(String size) {
         this.size = size;
     }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.emptyOption = null;
+        this.headerKey = null;
+        this.headerValue = null;
+        this.multiple = null;
+        this.size = null;
+     }
 
 }

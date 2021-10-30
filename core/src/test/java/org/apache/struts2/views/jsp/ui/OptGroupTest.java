@@ -52,6 +52,23 @@ public class OptGroupTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(SelectTag.class.getResource("OptGroup-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(selectTag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptGroupTag freshOptGroupTag = new OptGroupTag();
+        freshOptGroupTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag1, freshOptGroupTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag2, freshOptGroupTag));
     }
 
 
@@ -84,6 +101,23 @@ public class OptGroupTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(SelectTag.class.getResource("OptGroup-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(selectTag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptGroupTag freshOptGroupTag = new OptGroupTag();
+        freshOptGroupTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag1, freshOptGroupTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag2, freshOptGroupTag));
     }
 
 
@@ -116,6 +150,23 @@ public class OptGroupTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(SelectTag.class.getResource("OptGroup-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(selectTag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptGroupTag freshOptGroupTag = new OptGroupTag();
+        freshOptGroupTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag1, freshOptGroupTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag2, freshOptGroupTag));
     }
     
     public void testOptGroupWithMultipleSelectIntKey() throws Exception {
@@ -147,6 +198,23 @@ public class OptGroupTest extends AbstractUITagTest {
 
       //System.out.println(writer.toString());
       verify(SelectTag.class.getResource("OptGroup-7.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(selectTag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptGroupTag freshOptGroupTag = new OptGroupTag();
+        freshOptGroupTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag1, freshOptGroupTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag2, freshOptGroupTag));
   }
     
     public void testOptGroupNumbers() throws Exception {
@@ -183,6 +251,23 @@ public class OptGroupTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(SelectTag.class.getResource("OptGroup-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(selectTag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptGroupTag freshOptGroupTag = new OptGroupTag();
+        freshOptGroupTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag1, freshOptGroupTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag2, freshOptGroupTag));
     }
 
     public void testOptGroupForHtmlEncoding() throws Exception {
@@ -214,6 +299,23 @@ public class OptGroupTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(SelectTag.class.getResource("OptGroup-5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(selectTag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptGroupTag freshOptGroupTag = new OptGroupTag();
+        freshOptGroupTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag1, freshOptGroupTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag2, freshOptGroupTag));
     }
 
     public void testOptGroupWithValueKey() throws Exception {
@@ -251,6 +353,23 @@ public class OptGroupTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(SelectTag.class.getResource("OptGroup-6.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(selectTag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptGroupTag freshOptGroupTag = new OptGroupTag();
+        freshOptGroupTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag1, freshOptGroupTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag2, freshOptGroupTag));
     }
 
     public void testOptGroupListAttributes() throws Exception {
@@ -288,5 +407,22 @@ public class OptGroupTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(SelectTag.class.getResource("OptGroup-8.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SelectTag freshTag = new SelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(selectTag, freshTag));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptGroupTag freshOptGroupTag = new OptGroupTag();
+        freshOptGroupTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag1, freshOptGroupTag));
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(optGroupTag2, freshOptGroupTag));
     }
 }

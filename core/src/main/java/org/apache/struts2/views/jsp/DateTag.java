@@ -37,10 +37,12 @@ public class DateTag extends ContextBeanTag {
     protected boolean nice;
     protected String timezone;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Date(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
         Date d = (Date)component;
@@ -65,5 +67,14 @@ public class DateTag extends ContextBeanTag {
     public void setTimezone(String timezone) {
         this.timezone = timezone;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.name = null;
+        this.format = null;
+        this.nice = false;
+        this.timezone = null;
+     }
 
 }

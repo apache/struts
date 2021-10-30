@@ -26,6 +26,8 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ */
 public class HiddenTest extends AbstractUITagTest {
 
     public void testSimple() throws Exception {
@@ -42,6 +44,13 @@ public class HiddenTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Hidden-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        HiddenTag freshTag = new HiddenTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDisabled() throws Exception {
@@ -59,6 +68,13 @@ public class HiddenTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Hidden-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        HiddenTag freshTag = new HiddenTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDynamicAttributesWithActionInvocation() throws Exception {
@@ -83,6 +99,13 @@ public class HiddenTest extends AbstractUITagTest {
         assertNotSame(stack.pop(), tag);
 
         verify(TextFieldTag.class.getResource("Hidden-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        HiddenTag freshTag = new HiddenTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDynamicAttributesWithStack() throws Exception {
@@ -103,6 +126,13 @@ public class HiddenTest extends AbstractUITagTest {
         assertNotSame(stack.pop(), tag);
 
         verify(TextFieldTag.class.getResource("Hidden-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        HiddenTag freshTag = new HiddenTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -111,8 +141,9 @@ public class HiddenTest extends AbstractUITagTest {
      * String, String[])} as properties to verify.<br> This implementation extends testdata from AbstractUITag.
      *
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
-     * as key.
+     *         as key.
      */
+    @Override
     protected Map initializedGenericTagTestProperties() {
         Map result = new HashMap();
         new PropertyHolder("name", "someName").addToMap(result);

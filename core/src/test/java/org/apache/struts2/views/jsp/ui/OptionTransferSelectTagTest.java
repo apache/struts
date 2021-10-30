@@ -92,6 +92,13 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptionTransferSelectTag freshTag = new OptionTransferSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithPartialSelectedOnBothSides() throws Exception {
@@ -165,6 +172,13 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptionTransferSelectTag freshTag = new OptionTransferSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithoutHeaderOnBothSides() throws Exception {
@@ -232,6 +246,13 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptionTransferSelectTag freshTag = new OptionTransferSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithoutHeaderOnOneSide() throws Exception {
@@ -302,6 +323,13 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptionTransferSelectTag freshTag = new OptionTransferSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithoutEmptyOptionOnBothSides() throws Exception {
@@ -375,6 +403,13 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptionTransferSelectTag freshTag = new OptionTransferSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testWithoutEmptyOptionOnOneSide() throws Exception {
@@ -448,6 +483,13 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-6.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptionTransferSelectTag freshTag = new OptionTransferSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDisableSomeButtons() throws Exception {
@@ -524,5 +566,12 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
 
         //System.out.println(writer.toString());
         verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-7.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptionTransferSelectTag freshTag = new OptionTransferSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 }

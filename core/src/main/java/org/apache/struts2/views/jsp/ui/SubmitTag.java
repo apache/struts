@@ -39,10 +39,12 @@ public class SubmitTag extends AbstractClosingTag {
     protected String src;
     protected boolean escapeHtmlBody = true;  // Default - escape HTML body
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Submit(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -84,4 +86,14 @@ public class SubmitTag extends AbstractClosingTag {
     public void setEscapeHtmlBody(boolean escapeHtmlBody) {
         this.escapeHtmlBody = escapeHtmlBody;
     }
+
+    @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.action = null;
+        this.method = null;
+        this.type = null;
+        this.src = null;
+    }
+
 }

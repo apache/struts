@@ -40,10 +40,12 @@ public class TextareaTag extends AbstractUITag {
     protected String maxlength;
     protected String minlength;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TextArea(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -78,6 +80,15 @@ public class TextareaTag extends AbstractUITag {
 
     public void setMinlength(String minlength) {
         this.minlength = minlength;
+    }
+
+   @Override
+    public void clearTagStateForTagPoolingServers() {
+        super.clearTagStateForTagPoolingServers();
+        this.cols = null;
+        this.readonly = null;
+        this.rows = null;
+        this.wrap = null;
     }
 
 }

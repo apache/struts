@@ -69,12 +69,15 @@ public class DebugTagTest extends AbstractUITagTest {
 
     public void testDevModeEnabled_clearTagStateSet() throws Exception {
         setDevMode(true);
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();
         String result = writer.toString();
+
+        assertTrue("Nonce value not included", result.contains("nonce=\"r4nd0m\""));
         assertTrue(StringUtils.isNotEmpty(result));
         assertTrue("Property 'checkStackProperty' should be in Debug Tag output", StringUtils.contains(result, "<td>checkStackProperty</td>"));
 

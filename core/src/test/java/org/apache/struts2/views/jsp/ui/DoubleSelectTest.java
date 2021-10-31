@@ -161,6 +161,8 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.setDoubleCssClass("c2");
         tag.setDoubleCssStyle("s2");
 
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();

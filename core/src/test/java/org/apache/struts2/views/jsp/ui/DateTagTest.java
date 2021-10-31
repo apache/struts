@@ -129,9 +129,9 @@ public class DateTagTest extends AbstractTagTest {
 
     public void testCustomFormatWithTimezone_clearTagStateSet() throws Exception {
         String format = "yyyy/MM/dd hh:mm:ss";
-        Date now = Calendar.getInstance(TimeZone.getTimeZone("UTC+1")).getTime();
+        Date now = Calendar.getInstance(TimeZone.getTimeZone("GMT+1")).getTime();
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+1"));
         String formatted = sdf.format(now);
         context.put("myDate", now);
 
@@ -139,7 +139,7 @@ public class DateTagTest extends AbstractTagTest {
         tag.setName("myDate");
         tag.setNice(false);
         tag.setFormat(format);
-        tag.setTimezone("UTC+1");
+        tag.setTimezone("GMT+1");
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();
@@ -181,12 +181,12 @@ public class DateTagTest extends AbstractTagTest {
 
     public void testCustomFormatWithTimezoneAsExpression_clearTagStateSet() throws Exception {
         String format = "yyyy/MM/dd hh:mm:ss";
-        Date now = Calendar.getInstance(TimeZone.getTimeZone("UTC+2")).getTime();
+        Date now = Calendar.getInstance(TimeZone.getTimeZone("GMT+2")).getTime();
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC+2"));
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
         String formatted = sdf.format(now);
         context.put("myDate", now);
-        context.put("myTimezone", "UTC+2");
+        context.put("myTimezone", "GMT+2");
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setName("myDate");

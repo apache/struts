@@ -119,6 +119,8 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         tag.setValue("mySelectedMapIds");
         tag.setEmptyOption("false");
 
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();

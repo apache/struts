@@ -435,8 +435,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testWithAltSyntax1_clearTagStateSet() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
         stack.push(foo);
@@ -510,8 +508,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testEscapeJavaScript_clearTagStateSet() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
         foo.setTitle("\t\b\n\f\r\"\'/\\");
         stack.push(foo);
@@ -585,8 +581,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
      public void testEscapeXml_clearTagStateSet() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
         foo.setTitle("<>'\"&");
         stack.push(foo);
@@ -660,8 +654,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testEscapeCsv_clearTagStateSet() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
         foo.setTitle("\"something,\",\"");
         stack.push(foo);
@@ -733,8 +725,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testWithAltSyntax2_clearTagStateSet() throws Exception {
         // setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
-
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
         stack.push(foo);
@@ -804,8 +794,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
    public void testWithoutAltSyntax1_clearTagStateSet() throws Exception {
         //      setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");}});
-
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
         stack.push(foo);
@@ -874,8 +862,6 @@ public class PropertyTagTest extends StrutsInternalTestCase {
 
     public void testWithoutAltSyntax2_clearTagStateSet() throws Exception {
         //      setups
-        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");}});
-
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
         stack.push(foo);

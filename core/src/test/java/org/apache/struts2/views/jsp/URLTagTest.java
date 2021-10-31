@@ -1572,10 +1572,14 @@ public class URLTagTest extends AbstractUITagTest {
         context.put(ServletActionContext.HTTP_RESPONSE, response);
         context.put(ServletActionContext.SERVLET_CONTEXT, servletContext);
 
-        ActionContext.setContext(new ActionContext(context));
+        ActionContext actionContext = ActionContext.of(context)
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(servletContext)
+            .bind();
         
         // Make sure we have an action invocation available
-        ActionContext.getContext().setActionInvocation(new DefaultActionInvocation(null, true));
+        ActionContext.getContext().withActionInvocation(new DefaultActionInvocation(null, true));
         DefaultActionProxyFactory apFactory = new DefaultActionProxyFactory();
         apFactory.setContainer(container);
         ActionProxy ap = apFactory.createActionProxy("/", "hello", null, null);

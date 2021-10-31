@@ -91,7 +91,6 @@ public class TextTag extends ContextBeanTag {
         }
         super.clearTagStateForTagPoolingServers();
         this.name = null;
-        this.searchValueStack = null;
         this.escapeHtml = false;
         this.escapeJavaScript = false;
         this.escapeXml = false;

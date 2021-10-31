@@ -158,6 +158,8 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
         tag.setDoubleHeaderKey("Double Header Key");
         tag.setDoubleHeaderValue("Double Header Value");
 
+        stack.getActionContext().getSession().put("nonce", "r4nd0m");
+
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();

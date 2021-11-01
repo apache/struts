@@ -41,9 +41,9 @@ public class JacksonXmlHandlerTest extends XWorkTestCase {
         name = "<name>Jan</name>";
         age = "<age>12</age>";
         parents = "<parents>" +
-                            "<parents>Adam</parents>" +
-                            "<parents>Ewa</parents>" +
-                            "</parents>";  
+                    "<parents>Adam</parents>" +
+                    "<parents>Ewa</parents>" +
+                    "</parents>";  
         prefix = "<SimpleBean>";
         suffix = "</SimpleBean>";
         xml = prefix + name + age + parents + suffix;
@@ -66,12 +66,11 @@ public class JacksonXmlHandlerTest extends XWorkTestCase {
 
         // then
         stream.flush();
-        assertTrue(actual.length()==xml.length()&&
-            actual.contains(prefix)&&
-            actual.contains(suffix)&&
-            actual.contains(name)&&
-            actualcontains(age)&&
-            actual.contains(parents));
+        assertTrue(actual.length() == xml.length() &&
+            actual.startsWith(suffix) &&
+            actual.contains(name) &&
+            actual.contains(age) &&
+            actual.endsWith(parents));
     }
 
     public void testXmlToObject() throws Exception {

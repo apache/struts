@@ -48,8 +48,8 @@ public class DefaultOValValidationManager implements OValValidationManager {
     private static final Logger LOG = LogManager.getLogger(DefaultOValValidationManager.class);
 
     protected static final String VALIDATION_CONFIG_SUFFIX = "-validation.xml";
-    protected final Map<String, List<Configurer>> validatorCache = new HashMap<String, List<Configurer>>();
-    protected final Map<String, Configurer> validatorFileCache = new HashMap<String, Configurer>();
+    protected final Map<String, List<Configurer>> validatorCache = new HashMap<>();
+    protected final Map<String, Configurer> validatorFileCache = new HashMap<>();
 
     protected boolean validateJPAAnnotations;
 
@@ -66,7 +66,7 @@ public class DefaultOValValidationManager implements OValValidationManager {
         this.fileManager = fileManagerFactory.getFileManager();
     }
 
-    public synchronized List<Configurer> getConfigurers(Class clazz, String context, boolean validateJPAAnnotations) {
+    public synchronized List<Configurer> getConfigurers(Class<?> clazz, String context, boolean validateJPAAnnotations) {
         this.validateJPAAnnotations =validateJPAAnnotations;
         final String validatorKey = buildValidatorKey(clazz, context);
 
@@ -75,14 +75,14 @@ public class DefaultOValValidationManager implements OValValidationManager {
                 List<Configurer> configurers = buildXMLConfigurers(clazz, context, true, null);
 
                 //add an annotation configurer
-                addAditionalConfigurers(configurers);
+                addAdditionalConfigurers(configurers);
                 validatorCache.put(validatorKey, configurers);
             }
         } else {
             List<Configurer> configurers = buildXMLConfigurers(clazz, context, false, null);
 
             //add an annotation configurer
-            addAditionalConfigurers(configurers);
+            addAdditionalConfigurers(configurers);
             validatorCache.put(validatorKey, configurers);
         }
 
@@ -90,7 +90,7 @@ public class DefaultOValValidationManager implements OValValidationManager {
         return validatorCache.get(validatorKey);
     }
 
-    private void addAditionalConfigurers(List<Configurer> configurers) {
+    private void addAdditionalConfigurers(List<Configurer> configurers) {
         AnnotationsConfigurer annotationsConfigurer = new AnnotationsConfigurer();
         configurers.add(annotationsConfigurer);
 
@@ -102,24 +102,21 @@ public class DefaultOValValidationManager implements OValValidationManager {
         }
     }
 
-    protected static String buildValidatorKey(Class clazz, String context) {
-        StringBuilder sb = new StringBuilder(clazz.getName());
-        sb.append("/");
-        sb.append(context);
-        return sb.toString();
+    protected static String buildValidatorKey(Class<?> clazz, String context) {
+        return clazz.getName() + "/" + context;
     }
 
-    private List<Configurer> buildXMLConfigurers(Class clazz, String context, boolean checkFile, Set<String> checked) {
-        List<Configurer> configurers = new ArrayList<Configurer>();
+    private List<Configurer> buildXMLConfigurers(Class<?> clazz, String context, boolean checkFile, Set<String> checked) {
+        List<Configurer> configurers = new ArrayList<>();
 
         if (checked == null) {
-            checked = new TreeSet<String>();
+            checked = new TreeSet<>();
         } else if (checked.contains(clazz.getName())) {
             return configurers;
         }
 
         if (clazz.isInterface()) {
-            for (Class anInterface : clazz.getInterfaces()) {
+            for (Class<?> anInterface : clazz.getInterfaces()) {
                 configurers.addAll(buildXMLConfigurers(anInterface, context, checkFile, checked));
             }
         } else {
@@ -129,7 +126,7 @@ public class DefaultOValValidationManager implements OValValidationManager {
         }
 
         // look for validators for implemented interfaces
-        for (Class anInterface1 : clazz.getInterfaces()) {
+        for (Class<?> anInterface1 : clazz.getInterfaces()) {
             if (checked.contains(anInterface1.getName())) {
                 continue;
             }
@@ -160,19 +157,19 @@ public class DefaultOValValidationManager implements OValValidationManager {
     }
 
 
-    protected XMLConfigurer buildAliasValidatorConfigs(Class aClass, String context, boolean checkFile) {
+    protected XMLConfigurer buildAliasValidatorConfigs(Class<?> aClass, String context, boolean checkFile) {
         String fileName = aClass.getName().replace('.', '/') + "-" + context + VALIDATION_CONFIG_SUFFIX;
 
         return loadFile(fileName, aClass, checkFile);
     }
 
-    protected XMLConfigurer buildClassValidatorConfigs(Class aClass, boolean checkFile) {
+    protected XMLConfigurer buildClassValidatorConfigs(Class<?> aClass, boolean checkFile) {
         String fileName = aClass.getName().replace('.', '/') + VALIDATION_CONFIG_SUFFIX;
 
         return loadFile(fileName, aClass, checkFile);
     }
 
-    protected XMLConfigurer loadFile(String fileName, Class clazz, boolean checkFile) {
+    protected XMLConfigurer loadFile(String fileName, Class<?> clazz, boolean checkFile) {
         URL fileUrl = ClassLoaderUtil.getResource(fileName, clazz);
         if ((checkFile && fileManager.fileNeedsReloading(fileUrl)) || !validatorFileCache.containsKey(fileName)) {
 

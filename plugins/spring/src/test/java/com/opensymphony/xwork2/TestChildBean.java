@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,9 +16,50 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+package com.opensymphony.xwork2;
 
-<beans>
-    <bean id="spring-object-factory" class="com.opensymphony.xwork2.spring.SpringObjectFactory"/>
-</beans>
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+
+/**
+ * TestBean
+ */
+public class TestChildBean {
+
+    private Date birth;
+    private String name;
+    private int count;
+
+
+    public TestChildBean() {
+        Calendar cal = new GregorianCalendar(1900, 01, 01);
+        setBirth(cal.getTime());
+    }
+
+
+    public void setBirth(Date birth) {
+        this.birth = birth;
+    }
+
+    public Date getBirth() {
+        return birth;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}

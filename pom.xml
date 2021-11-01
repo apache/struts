@@ -188,6 +188,12 @@
                 <!-- TODO delete coveralls.skip property after fix of https://github.com/cobertura/cobertura/issues/271 -->
                 <coveralls.skip>true</coveralls.skip>
             </properties>
+        </profile>
+        <profile>
+            <id>jdk17</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
             <build>
                 <pluginManagement>
                     <plugins>
@@ -195,8 +201,12 @@
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-surefire-plugin</artifactId>
                             <configuration>
-                                <!-- TODO delete forkCount=0 after fix of https://issues.apache.org/jira/browse/SUREFIRE-1588 -->
-                                <forkCount>0</forkCount>
+                                <argLine>
+                                    --illegal-access=permit
+                                    --add-opens java.base/java.lang=ALL-UNNAMED
+                                    --add-opens java.base/java.util=ALL-UNNAMED
+                                    -Dillegal-access=permit
+                                </argLine>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -304,7 +314,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>4.2.1</version>
+                    <version>5.1.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -1116,13 +1126,13 @@
             <dependency>
                 <groupId>net.sf.oval</groupId>
                 <artifactId>oval</artifactId>
-                <version>1.90</version>
+                <version>3.2.1</version>
             </dependency>
 
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
-                <version>1.4.17</version>
+                <version>1.4.18</version>
                 <exclusions>
                     <exclusion>
                         <groupId>io.github.x-stream</groupId>

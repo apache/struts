@@ -16,49 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.spring;
+package com.opensymphony.xwork2;
 
-import com.opensymphony.xwork2.Action;
 
 /**
- * @author Mike
+ * ModelDrivenAction
+ *
+ * @author Jason Carreira
+ *         Created Apr 8, 2003 6:27:29 PM
  */
-public class ExternalReferenceAction implements Action 
-{
-    private Foo foo;
-    private Bar bar;
+public class ModelDrivenAction extends ActionSupport implements ModelDriven {
 
-    public String execute() throws Exception {
-        return SUCCESS;
+    private String foo;
+    private TestBean model = new TestBean();
+
+
+    public void setFoo(String foo) {
+        this.foo = foo;
     }
 
-    /**
-     * @return Returns the foo.
-     */
-    public Foo getFoo() {
+    public String getFoo() {
         return foo;
     }
 
     /**
-     * @param foo
-     *            The foo to set.
+     * @return the model to be pushed onto the ValueStack after the Action itself
      */
-    public void setFoo(Foo foo) {
-        this.foo = foo;
-    }
-
-    /**
-     * @return Returns the bar.
-     */
-    public Bar getBar() {
-        return bar;
-    }
-
-    /**
-     * @param bar
-     *            The bar to set.
-     */
-    public void setBar(Bar bar) {
-        this.bar = bar;
+    public Object getModel() {
+        return model;
     }
 }

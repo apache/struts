@@ -35,9 +35,9 @@ public class ValidationInMethods extends ActionSupport {
         return null;
     }
 
-    @IsInvariant 
+    @IsInvariant
     @NotNull
-    public String getTheManingOfLife() {
+    public String getTheMeaningOfLife() {
         return null;
     }
 

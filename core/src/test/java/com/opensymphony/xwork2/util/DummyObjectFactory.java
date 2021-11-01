@@ -16,30 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.spring;
+package com.opensymphony.xwork2.util;
 
-/**
- * @author Mike
- */
-public class Foo 
-{	
-	String name = null;
-	
-	public Foo() {
-		name = "not set";
-	}
-	
-	public Foo(String name) {
-		this.name = name;
-	}
-	
-	public String getName()
-	{
-		return name;
-	}
-	
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+import com.opensymphony.xwork2.ObjectFactory;
+
+public class DummyObjectFactory extends ObjectFactory {
+
 }

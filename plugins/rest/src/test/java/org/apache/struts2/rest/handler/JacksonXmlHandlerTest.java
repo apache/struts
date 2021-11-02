@@ -67,10 +67,11 @@ public class JacksonXmlHandlerTest extends XWorkTestCase {
         // then
         stream.flush();
         assertTrue(actual.length() == xml.length() &&
-            actual.startsWith(suffix) &&
+            actual.startsWith(prefix) &&
             actual.contains(name) &&
             actual.contains(age) &&
-            actual.endsWith(parents));
+            actual.contains(parents) &&
+            actual.endsWith(suffix));
     }
 
     public void testXmlToObject() throws Exception {

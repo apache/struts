@@ -62,10 +62,10 @@ public class JacksonXmlHandlerTest extends XWorkTestCase {
         // when
         Writer stream = new StringWriter();
         handler.fromObject(ai, obj, null, stream);
-        String actual = stream.toString();
 
         // then
         stream.flush();
+        String actual = stream.toString();
         assertTrue(actual.length() == xml.length() &&
             actual.startsWith(prefix) &&
             actual.contains(name) &&

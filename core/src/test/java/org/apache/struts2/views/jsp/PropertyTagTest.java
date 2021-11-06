@@ -895,6 +895,109 @@ public class PropertyTagTest extends StrutsInternalTestCase {
         pageContext.verify();
     }
 
+    public void testSimple_release() {
+        PropertyTag tag = new PropertyTag();
+
+        Foo foo = new Foo();
+        foo.setTitle("test");
+
+        stack.push(foo);
+
+        MockJspWriter jspWriter = new MockJspWriter();
+        jspWriter.setExpectedData("test");
+
+        MockPageContext pageContext = new MockPageContext();
+        pageContext.setJspWriter(jspWriter);
+        pageContext.setRequest(request);
+
+        tag.setPageContext(pageContext);
+        tag.setValue("title");
+
+        try {
+            tag.doStartTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        request.verify();
+        jspWriter.verify();
+        pageContext.verify();
+
+        try {
+            tag.doEndTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
+
+        // Test release at least once in unit tests (with clear tag state not set).
+        tag.release();
+        assertTrue("Tag state after release() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() and release() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimple_release_clearTagStateSet() {
+        PropertyTag tag = new PropertyTag();
+
+        Foo foo = new Foo();
+        foo.setTitle("test");
+
+        stack.push(foo);
+
+        MockJspWriter jspWriter = new MockJspWriter();
+        jspWriter.setExpectedData("test");
+
+        MockPageContext pageContext = new MockPageContext();
+        pageContext.setJspWriter(jspWriter);
+        pageContext.setRequest(request);
+
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setValue("title");
+
+        try {
+            tag.doStartTag();
+            setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        request.verify();
+        jspWriter.verify();
+        pageContext.verify();
+
+        try {
+            tag.doEndTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        PropertyTag freshTag = new PropertyTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
+
+        // Test release at least once in unit tests (with clear tag state set).
+        tag.release();
+        assertTrue("Tag state after release() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() and release() calls are not working properly.",
+                objectsAreReflectionEqual(tag, freshTag));
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

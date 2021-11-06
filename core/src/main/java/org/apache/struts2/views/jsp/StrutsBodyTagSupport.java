@@ -83,6 +83,31 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
     }
 
     /**
+     * Release state for a Struts JSP Tag handler.
+     * 
+     * According to the JSP API documentation, the page compiler guarantees that the release() method
+     * will be invoked on the Tag handler before releasing it to the GC (garbage collector).  It does
+     * not specify <em>when</em> the release() call will be made, though, and timing likely depends
+     * on the implementation of the JSP/servlet engine being used.
+     */
+    @Override
+    public void release() {
+        // Ensure release() performs the clearTagStateForTagPoolingServers tag state clearing processing with
+        // the clear state flag forced to true (if not already set to true), to ensure cleanup.
+        // The performClearTagStateForTagPoolingServers flag state is preserved for consistency, in case 
+        // release() is called by framework code.
+        final boolean originalPerformClearTagState = getPerformClearTagStateForTagPoolingServers();
+        if (originalPerformClearTagState == true) {
+            clearTagStateForTagPoolingServers();
+        } else {
+            setPerformClearTagStateForTagPoolingServers(true);
+            clearTagStateForTagPoolingServers();
+            setPerformClearTagStateForTagPoolingServers(originalPerformClearTagState);
+        }
+        super.release();
+    }
+
+    /**
      * Request that the tag state be cleared during {@link StrutsBodyTagSupport#doEndTag()} processing,
      * which may help with certain edge cases with tag logic running on servers that implement JSP Tag Pooling.
      * 

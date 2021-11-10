@@ -128,6 +128,46 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertSame(expr0, expr2);
     }
 
+    public void testExpressionIsCachedIrrespectiveOfItsExecutionStatus() throws OgnlException {
+        Foo foo = new Foo();
+        OgnlContext context = (OgnlContext) ognlUtil.createDefaultContext(foo);
+
+        // Expression which executes with success
+        try {
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_FINAL_PUBLIC_ATTRIBUTE", context, foo);
+            assertEquals("Successfully executed expression must have been cached", ognlUtil.expressionCacheSize(), 1);
+        } catch (Exception ex) {
+            fail("Expression execution should have succeeded here. Exception: " + ex);
+        }
+        // Expression which executes with failure
+        try {
+            ognlUtil.getValue("@com.opensymphony.xwork2.ognl.OgnlUtilTest@STATIC_PRIVATE_ATTRIBUTE", context, foo);
+            fail("Expression execution should have failed here");
+        } catch (Exception ex) {
+            assertEquals("Expression with failed execution must have been cached nevertheless", ognlUtil.expressionCacheSize(), 2);
+        }
+    }
+
+    public void testMethodExpressionIsCachedIrrespectiveOfItsExecutionStatus() throws Exception {
+        Foo foo = new Foo();
+        OgnlContext context = (OgnlContext) ognlUtil.createDefaultContext(foo);
+
+        // Method expression which executes with success
+        try {
+            ognlUtil.callMethod("getBar()", context, foo);
+            assertTrue("Successfully executed method expression must have been cached", ognlUtil.expressionCacheSize() == 1);
+        } catch (Exception ex) {
+            fail("Method expression execution should have succeeded here. Exception: " + ex);
+        }
+        // Method expression which executes with failure
+        try {
+            ognlUtil.callMethod("getNonExistingMethod()", context, foo);
+            fail("Expression execution should have failed here");
+        } catch (Exception ex) {
+            assertEquals("Method expression with failed execution must have been cached nevertheless", ognlUtil.expressionCacheSize(), 2);
+        }
+    }
+
     public void testClearExpressionCache() throws OgnlException {
         ognlUtil.setEnableExpressionCache("true");
         // Test that the expression cache is functioning as expected.

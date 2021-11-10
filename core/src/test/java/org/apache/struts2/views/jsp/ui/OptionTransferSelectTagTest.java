@@ -548,8 +548,8 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
         tag.setDoubleName("list2");
         tag.setDoubleList("list2");
 
-        tag.setDynamicAttribute(null, "left-name", "leftName");
-        tag.setDynamicAttribute(null, "right-name", "rightName");
+        tag.setDynamicAttribute(null, "collection", "leftName");
+        tag.setDynamicAttribute(null, "right-collection", "rightName");
 
         tag.doStartTag();
         tag.doEndTag();

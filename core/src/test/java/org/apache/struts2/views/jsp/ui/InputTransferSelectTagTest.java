@@ -57,7 +57,7 @@ public class InputTransferSelectTagTest extends AbstractUITagTest {
 
         InputTransferSelectTag tag = new InputTransferSelectTag();
         tag.setPageContext(pageContext);
-        tag.setDynamicAttribute(null, "input-name", "inputName");
+        tag.setDynamicAttribute(null, "input-collection-name", "inputName");
         tag.setDynamicAttribute(null, "collection-name", "collectionName");
 
         tag.setName("collection");

@@ -29,7 +29,7 @@
 <#else>
     <#assign value = keyValue?string/>
 </#if>
- ${aKey}="${value}"<#rt/>
+ ${aKey?keep_after(prefix)}="${value}"<#rt/>
 </#if>
 </#list><#rt/>
 </#if><#rt/>

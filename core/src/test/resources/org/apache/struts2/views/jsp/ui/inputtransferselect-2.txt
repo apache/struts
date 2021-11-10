@@ -1,10 +1,10 @@
 <tr>
   <td class="tdLabel"></td>
   <td class="tdInput">
-    <script type="text/javascript" src="/struts/inputtransferselect.js"></script>
+    <script type="text/javascript" src="/static/inputtransferselect.js"></script>
     <table>
       <tr>
-        <td><input type="text" name="collection_input" id="collection_input" input-name="inputName"/></td>
+        <td><input type="text" name="collection_input" id="collection_input" collection-name="inputName" /></td>
         <td class="tdTransferSelect">
           <input type="button" value="-&gt;"
             onclick="addOption(document.getElementById('collection_input'),document.getElementById('collection'))" />

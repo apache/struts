@@ -2,12 +2,12 @@
   title="someTitle" onclick="onclick1" ondblclick="ondblclick1" onmousedown="onmousedown1" onmouseup="onmouseup1"
   onmouseover="onmouseover1" onmousemove="onmousemove1" onmouseout="onmouseout1" onfocus="onfocus1" onblur="onblur1"
   onkeypress="onkeypress1" onkeydown="onkeydown1" onkeyup="onkeyup1" onselect="onchange"
-  onchange="someIdRedirect(this.selectedIndex)" first-name="firstName">
+  onchange="someIdRedirect(this.selectedIndex)" select-name="firstName">
   <option value="BE">Belgium</option>
   <option value="FR" selected="selected">France</option>
 </select>
 <br />
-<select name="region" disabled="disabled" id="region" title="someTitle" second-name="secondName"></select>
+<select name="region" disabled="disabled" id="region" title="someTitle" select-name="secondName"></select>
 <script type="text/javascript">
   var someIdGroup = newArray(2 + 0);
   for (var i = 0; i < (2 + 0); i++) {

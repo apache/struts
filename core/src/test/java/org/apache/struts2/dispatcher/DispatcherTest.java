@@ -81,6 +81,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         du.prepare(req, res);
 
         assertEquals(req.getCharacterEncoding(), "utf-8");
+        assertEquals(res.getCharacterEncoding(), "utf-8");
     }
 
     public void testEncodingForXMLHttpRequest() throws Exception {
@@ -99,6 +100,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         // then
         assertEquals(req.getCharacterEncoding(), "UTF-8");
+        assertEquals(res.getCharacterEncoding(), "UTF-8");
     }
 
     public void testSetEncodingIfDiffer() throws Exception {
@@ -121,6 +123,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         // then
 
         assertEquals(req.getCharacterEncoding(), "utf-8");
+        assertEquals(res.getCharacterEncoding(), "utf-8");
         mock.verify();
     }
 
@@ -135,6 +138,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         du.prepare(req, res);
 
         assertEquals("utf-8", req.getCharacterEncoding());
+        assertEquals("utf-8", res.getCharacterEncoding());
     }
 
     public void testPrepareMultipartRequest() throws Exception {

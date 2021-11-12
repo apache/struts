@@ -25,6 +25,41 @@ pipeline {
         }
       }
     }
+    stage('JDK 17') {
+      agent {
+        label 'ubuntu'
+      }
+      tools {
+        jdk 'jdk_17_latest'
+        maven 'maven_3_latest'
+      }
+      environment {
+        MAVEN_OPTS = "-Xmx1024m"
+      }
+      stages {
+        stage('Build') {
+          steps {
+            sh 'mvn -B clean install -DskipTests -DskipAssembly'
+          }
+        }
+        stage('Test') {
+          steps {
+            sh 'mvn -B test'
+          }
+          post {
+            always {
+              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
+            }
+          }
+        }
+      }
+      post {
+        always {
+          cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+        }
+      }
+    }
     stage('JDK 11') {
       agent {
         label 'ubuntu'
@@ -45,7 +80,6 @@ pipeline {
         stage('Test') {
           steps {
             sh 'mvn -B test'
-            // step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
           }
           post {
             always {

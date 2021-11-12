@@ -28,6 +28,7 @@
 <#if parameters.leftTitle??><#t/>
 	<label for="leftTitle">${parameters.leftTitle}</label><br />
 </#if><#t/>
+<#global dynamic_attributes_ignore = "right-"/>
 <#include "/${parameters.templateDir}/simple/select.ftl" />
 <#if parameters.allowUpDownOnLeft!true>
 <input type="button"
@@ -247,6 +248,8 @@
     <#if parameters.doubleAccesskey??><#t/>
     accesskey="<#outputformat 'JavaScript'>${parameters.doubleAccesskey}</#outputformat>"
     </#if>
+	<#include "/${parameters.templateDir}/${parameters.expandTheme}/prefixed-dynamic-attributes.ftl" />
+	<@prefixedDynamicAttributes prefix="right-"/>
 >
 	<#if parameters.doubleHeaderKey?? && parameters.doubleHeaderValue??><#t/>
     <option value="${parameters.doubleHeaderKey}">${parameters.doubleHeaderValue}</option>

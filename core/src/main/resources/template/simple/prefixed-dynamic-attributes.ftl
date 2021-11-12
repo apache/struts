@@ -18,22 +18,19 @@
  * under the License.
  */
 -->
-<#function acceptKey(key)>
-  <#if dynamic_attributes_ignore??>
-    <#return !key?starts_with(dynamic_attributes_ignore) >
-  <#else>
-    <#return true>
-  </#if>
-</#function>
+<#macro prefixedDynamicAttributes prefix>
 <#if (parameters.dynamicAttributes?? && parameters.dynamicAttributes?size > 0)><#rt/>
 <#assign aKeys = parameters.dynamicAttributes.keySet()><#rt/>
-<#list aKeys?filter(acceptKey) as aKey><#rt/>
+<#list aKeys as aKey><#rt/>
+<#if aKey?starts_with(prefix)>
 <#assign keyValue = parameters.dynamicAttributes.get(aKey)/>
 <#if keyValue?is_string>
-  <#assign value = struts.translateVariables(keyValue)!keyValue/>
+    <#assign value = struts.translateVariables(keyValue)!keyValue/>
 <#else>
-  <#assign value = keyValue?string/>
+    <#assign value = keyValue?string/>
 </#if>
- ${aKey}="${value}"<#rt/>
+ ${aKey?keep_after(prefix)}="${value}"<#rt/>
+</#if>
 </#list><#rt/>
 </#if><#rt/>
+</#macro>

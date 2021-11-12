@@ -18,19 +18,16 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- *
- */
 public class InputTransferSelectTagTest extends AbstractUITagTest {
 
     public void testWithRequired() throws Exception {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add("Item One");
         list.add("Item Two");
 
@@ -47,7 +44,6 @@ public class InputTransferSelectTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        //System.out.println(writer.toString());
         verify(InputTransferSelectTagTest.class.getResource("inputtransferselect-1.txt"));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
@@ -88,5 +84,27 @@ public class InputTransferSelectTagTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testDynamicAttributes() throws Exception {
+        List<String> list = new ArrayList<>();
+        list.add("Item One");
+        list.add("Item Two");
+
+        TestAction testaction = (TestAction) action;
+        testaction.setCollection(list);
+
+        InputTransferSelectTag tag = new InputTransferSelectTag();
+        tag.setPageContext(pageContext);
+        tag.setDynamicAttribute(null, "input-collection-name", "inputName");
+        tag.setDynamicAttribute(null, "collection-name", "collectionName");
+
+        tag.setName("collection");
+        tag.setList("collection");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(InputTransferSelectTagTest.class.getResource("inputtransferselect-2.txt"));
     }
 }

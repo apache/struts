@@ -1142,4 +1142,85 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testDynamicAttributes() throws Exception {
+        List left = new ArrayList();
+        left.add("Left1");
+        left.add("Left2");
+
+        List right = new ArrayList();
+        right.add("Right1");
+        right.add("Right2");
+
+        TestAction testaction = (TestAction) action;
+        testaction.setCollection(left);
+        testaction.setList2(right);
+
+        OptionTransferSelectTag tag = new OptionTransferSelectTag();
+        tag.setPageContext(pageContext);
+
+        tag.setName("collection");
+        tag.setList("collection");
+
+        tag.setDoubleName("list2");
+        tag.setDoubleList("list2");
+
+        tag.setDynamicAttribute(null, "collection", "leftName");
+        tag.setDynamicAttribute(null, "right-collection", "rightName");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        //System.out.println(writer.toString());
+        verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-8.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptionTransferSelectTag freshTag = new OptionTransferSelectTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testDynamicAttributes_clearTagStateSet() throws Exception {
+        List left = new ArrayList();
+        left.add("Left1");
+        left.add("Left2");
+
+        List right = new ArrayList();
+        right.add("Right1");
+        right.add("Right2");
+
+        TestAction testaction = (TestAction) action;
+        testaction.setCollection(left);
+        testaction.setList2(right);
+
+        OptionTransferSelectTag tag = new OptionTransferSelectTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+
+        tag.setName("collection");
+        tag.setList("collection");
+
+        tag.setDoubleName("list2");
+        tag.setDoubleList("list2");
+
+        tag.setDynamicAttribute(null, "collection", "leftName");
+        tag.setDynamicAttribute(null, "right-collection", "rightName");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        //System.out.println(writer.toString());
+        verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-8.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        OptionTransferSelectTag freshTag = new OptionTransferSelectTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
 }

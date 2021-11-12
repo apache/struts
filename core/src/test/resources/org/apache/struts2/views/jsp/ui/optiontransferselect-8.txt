@@ -1,0 +1,50 @@
+<tr>
+  <td class="tdLabel"></td>
+  <td class="tdInput">
+    <script type="text/javascript" src="/static/optiontransferselect.js"></script>
+    <table>
+      <tr>
+        <td>
+          <select name="collection" size="15" id="collection" multiple="multiple" collection="leftName">
+            <option value="Left1" selected="selected">Left1</option>
+            <option value="Left2" selected="selected">Left2</option>
+          </select>
+          <input type="hidden" id="__multiselect_collection" name="__multiselect_collection" value="" />
+          <input type="button" onclick="moveOptionDown(document.getElementById('collection'),'key',''); " value="v" />
+          <input type="button" onclick="moveOptionUp(document.getElementById('collection'),'key',''); " value="^" />
+        </td>
+        <td class="tdTransferSelect">
+          <input type="button" value="&lt;-"
+            onclick="moveSelectedOptions(document.getElementById('list2'),document.getElementById('collection'),false,'');" />
+          <br />
+          <br />
+          <input type="button" value="-&gt;"
+            onclick="moveSelectedOptions(document.getElementById('collection'),document.getElementById('list2'),false,'');" />
+          <br />
+          <br />
+          <input type="button" value="&lt;&lt;--"
+            onclick="moveAllOptions(document.getElementById('list2'),document.getElementById('collection'),false,'');" />
+          <br />
+          <br />
+          <input type="button" value="--&gt;&gt;"
+            onclick="moveAllOptions(document.getElementById('collection'),document.getElementById('list2'),false,'');" />
+          <br />
+          <br />
+          <input type="button" value="&lt;*&gt;"
+            onclick="selectAllOptions(document.getElementById('collection'));selectAllOptions(document.getElementById('list2'));" />
+          <br />
+          <br />
+        </td>
+        <td>
+          <select name="list2" size="15" multiple="multiple" id="list2" collection="rightName">
+            <option value="Right1" selected="selected">Right1</option>
+            <option value="Right2" selected="selected">Right2</option>
+          </select>
+          <input type="hidden" id="__multiselect_list2" name="__multiselect_list2" value="" />
+          <input type="button" onclick="moveOptionDown(document.getElementById('list2'),'key','');" value="v" />
+          <input type="button" onclick="moveOptionUp(document.getElementById('list2'),'key','');" value="^" />
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>

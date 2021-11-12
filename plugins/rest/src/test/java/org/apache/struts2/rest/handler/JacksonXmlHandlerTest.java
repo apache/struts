@@ -32,20 +32,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class JacksonXmlHandlerTest extends XWorkTestCase {
 
-    private String xml;
+    private String xml, prefix, suffix, name, age, parents;
     private JacksonXmlHandler handler;
     private ActionInvocation ai;
 
     public void setUp() throws Exception {
         super.setUp();
-        xml = "<SimpleBean>" +
-                "<name>Jan</name>" +
-                "<age>12</age>" +
-                "<parents>" +
-                "<parents>Adam</parents>" +
-                "<parents>Ewa</parents>" +
-                "</parents>" +
-                "</SimpleBean>";
+        name = "<name>Jan</name>";
+        age = "<age>12</age>";
+        parents = "<parents>" +
+                    "<parents>Adam</parents>" +
+                    "<parents>Ewa</parents>" +
+                    "</parents>";  
+        prefix = "<SimpleBean>";
+        suffix = "</SimpleBean>";
+        xml = prefix + name + age + parents + suffix;
+
         handler = new JacksonXmlHandler();
         ai = new MockActionInvocation();
     }
@@ -63,7 +65,13 @@ public class JacksonXmlHandlerTest extends XWorkTestCase {
 
         // then
         stream.flush();
-        assertEquals(xml, stream.toString());
+        String actual = stream.toString();
+        assertTrue(actual.length() == xml.length() &&
+            actual.startsWith(prefix) &&
+            actual.contains(name) &&
+            actual.contains(age) &&
+            actual.contains(parents) &&
+            actual.endsWith(suffix));
     }
 
     public void testXmlToObject() throws Exception {

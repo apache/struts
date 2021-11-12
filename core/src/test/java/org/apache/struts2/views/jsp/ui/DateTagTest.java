@@ -33,6 +33,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import org.apache.struts2.components.Component;
+import org.apache.struts2.components.DateTextField;
 
 /**
  * Unit test for {@link org.apache.struts2.components.Date}.
@@ -903,6 +905,59 @@ public class DateTagTest extends AbstractTagTest {
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    /**
+     * Artificial code coverage test for {@link DateTextFieldTag} within the DateTagTest
+     * since that tag does not have its own unit tests, and it also appears to be
+     * a broken tag.  The code coverage tests can be moved if the tag is fixed, or
+     * removed if the tag is dropped.
+     * 
+     * @throws Exception 
+     */
+    public void testDateTextFieldTag_artificialCoverageTest() throws Exception {
+        final String format = "yyyy/MM/dd hh:mm:ss";
+        DateTextFieldTag dateTextFieldTag = createDateTextFieldTag();
+        dateTextFieldTag.setFormat(format);
+        dateTextFieldTag.doStartTag();
+        // Cannot call doEndTag(), as the missing datetextfield.ftl causes an exception.
+        dateTextFieldTag.populateParams();
+
+        Component bean = dateTextFieldTag.getBean(stack, request, response);
+        assertNotNull("DateTextField component instance is null ?", bean);
+        assertTrue("DateTextField component not a DateTextField ?", bean instanceof DateTextField);
+
+        dateTextFieldTag.setPerformClearTagStateForTagPoolingServers(false);
+        dateTextFieldTag.clearTagStateForTagPoolingServers();
+        dateTextFieldTag.setPerformClearTagStateForTagPoolingServers(true);
+        dateTextFieldTag.clearTagStateForTagPoolingServers();
+        dateTextFieldTag.release();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after forced clearing of tag state.
+        DateTextFieldTag freshTag = new DateTextFieldTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(dateTextFieldTag, freshTag));
+    }
+
+    /**
+     * Utility method to create a new {@link DateTextFieldTag} instance for code coverage tests.
+     * 
+     * Note: There is no datetextfield.ftl template for the tag, so it does not appear that it can
+     *       actually be used in practice.  We can perform basic coverage tests from within this
+     *       unit test class until the {@link DateTextFieldTag} is fixed or removed.
+     * 
+     * @return a basic {@link DateTextFieldTag} instance
+     * @throws Exception 
+     */
+    private DateTextFieldTag createDateTextFieldTag() throws Exception {
+        DateTextFieldTag tag = new DateTextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setName("myDate");
+        tag.setId("myDate");
+        return tag;
     }
 
     @Override

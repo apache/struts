@@ -113,16 +113,11 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
 
-        String input1 = "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>";
-        String input2 = "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>";
-        String input34 = "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
-                       + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
-
         String result = stringWriter.toString();
-        assertTrue(result.equals(input1 + input1 + input34)
-                || result.equals(input1 + input2 + input34)
-                || result.equals(input2 + input1 + input34)
-                || result.equals(input2 + input2 + input34));
+        assertTrue((result.contains("<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>")
+                 || result.contains("<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"))
+                 && result.endsWith("<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
+                 + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>"));
     }
 
     public void testManualListInTemplate() throws Exception {

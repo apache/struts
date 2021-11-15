@@ -206,6 +206,7 @@
                                     --add-opens java.base/java.util=ALL-UNNAMED
                                     -Dillegal-access=permit
                                 </argLine>
+                            	<forkCount>1.5C</forkCount>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -222,6 +223,7 @@
                             <artifactId>maven-surefire-plugin</artifactId>
                             <configuration>
                                 <argLine>${argLine}</argLine>
+                            	<forkCount>1.5C</forkCount>
                             </configuration>
                         </plugin>
                         <plugin>
@@ -303,6 +305,7 @@
                             <value>false</value>
                           </property>
                         </properties>
+                            	<forkCount>1.5C</forkCount>
                     </configuration>
                 </plugin>
                 <plugin>

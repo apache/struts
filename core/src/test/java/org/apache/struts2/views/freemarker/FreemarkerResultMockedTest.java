@@ -38,6 +38,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
 
@@ -113,15 +118,12 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
 
-        String expected =
-            "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
-                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
-                + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
-                + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
-
         String result = stringWriter.toString();
-
-        assertEquals(expected, result);
+        assertThat(result, allOf(startsWith("<input type=\"text\" name=\"test\" value=\"\" id=\"test\""),
+                                 containsString("foo=\"bar\""),
+                                 containsString("placeholder=\"input\""),
+                                 endsWith("<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
+                                        + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>")));
     }
 
     public void testManualListInTemplate() throws Exception {

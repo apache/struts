@@ -40,6 +40,7 @@ import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import ognl.NullHandler;
 import ognl.Ognl;
+import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 import ognl.SimpleNode;

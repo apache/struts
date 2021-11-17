@@ -573,7 +573,7 @@ public class Component {
      *
      * @param expression of the component
      * @return true|false
-     * @since 2.5.27
+     * @since 2.6
      */
     protected boolean isAcceptableExpression(String expression) {
         NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);

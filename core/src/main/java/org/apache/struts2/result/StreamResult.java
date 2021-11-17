@@ -295,7 +295,7 @@ public class StreamResult extends StrutsResultSupport {
      *
      * @param expression of result
      * @return true|false
-     * @since 2.5.27
+     * @since 2.6
      */
     protected boolean isAcceptableExpression(String expression) {
         NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);

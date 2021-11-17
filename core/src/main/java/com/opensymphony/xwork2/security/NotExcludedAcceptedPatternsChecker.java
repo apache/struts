@@ -21,7 +21,7 @@ package com.opensymphony.xwork2.security;
 /**
  * Used across different places to check if given string is not excluded and is accepted
  * @see <a href="https://securitylab.github.com/research/apache-struts-double-evaluation/">here</a>
- * @since 2.5.27
+ * @since 2.6
  */
 public interface NotExcludedAcceptedPatternsChecker extends ExcludedPatternsChecker, AcceptedPatternsChecker {
 

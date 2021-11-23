@@ -30,6 +30,7 @@ import java.util.Map;
  * Abstract base class for all UI tags.
  */
 public abstract class AbstractUITag extends ComponentTagSupport implements DynamicAttributes {
+
     protected String cssClass;
     protected String cssErrorClass;
     protected String cssStyle;
@@ -38,6 +39,8 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String disabled;
     protected String label;
     protected String labelSeparator;
+    @Deprecated
+    protected String labelposition;
     protected String labelPosition;
     protected String requiredPosition;
     protected String errorPosition;
@@ -90,7 +93,11 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setDisabled(disabled);
         uiBean.setLabel(label);
         uiBean.setLabelSeparator(labelSeparator);
-        uiBean.setLabelPosition(labelPosition);
+        if (labelposition != null) {
+            uiBean.setLabelposition(labelposition);
+        } else {
+            uiBean.setLabelPosition(labelPosition);
+        }
         uiBean.setRequiredPosition(requiredPosition);
         uiBean.setErrorPosition(errorPosition);
         uiBean.setName(name);
@@ -176,8 +183,8 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
      * @deprecated use {@link #setLabelPosition(String)} instead
      */
     @Deprecated
-    public void setLabelposition(String labelPosition) {
-        this.labelPosition = labelPosition;
+    public void setLabelposition(String labelposition) {
+        this.labelposition = labelposition;
     }
 
     public void setLabelPosition(String labelPosition) {

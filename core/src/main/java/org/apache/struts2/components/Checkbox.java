@@ -91,7 +91,7 @@ public class Checkbox extends UIBean {
     @Override
     @StrutsTagAttribute(description="(Deprecated) Define label position of form element (top/left), also 'right' is supported when using 'xhtml' theme")
     public void setLabelposition(String labelPosition) {
-        super.setLabelPosition(labelPosition);
+        super.setLabelposition(labelPosition);
     }
 
     @Override

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,5 +18,6 @@
  * under the License.
  */
 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="test" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e65f69ca-7c62-4b4b-abc6-2e1a8710f23e">
-</jasperReport>
+<@s.iterator value="{'a','b','c'}" status="stat">
+    <@s.textfield id="itemId%{#stat.index}" name="items[%{#stat.index}].name" theme="simple"/>
+</@s.iterator>

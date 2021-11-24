@@ -125,23 +125,29 @@ public class Param extends Component {
             if (component instanceof UnnamedParametric) {
                 ((UnnamedParametric) component).addParameter(findValue(value));
             } else {
-                String name = findString(this.name);
+                String translatedName = findString(this.name);
 
-                if (name == null) {
+                if (translatedName == null) {
                     throw new StrutsException("No name found for following expression: " + this.name);
                 }
 
-                Object value = findValue(this.value);
+                boolean evaluated = !translatedName.equals(this.name);
+                boolean reevaluate = !evaluated || isAcceptableExpression(translatedName);
+                if (!reevaluate) {
+                    throw new StrutsException("Excluded or not accepted name found: " + translatedName);
+                }
+
+                Object foundValue = findValue(this.value);
                 if (suppressEmptyParameters) {
-                    if (value != null && StringUtils.isNotBlank(value.toString())) {
-                        component.addParameter(name, value);
+                    if (foundValue != null && StringUtils.isNotBlank(foundValue.toString())) {
+                        component.addParameter(translatedName, foundValue);
                     } else {
-                        component.addParameter(name, null);
+                        component.addParameter(translatedName, null);
                     }
-                } else if (value == null || StringUtils.isBlank(value.toString())) {
-                    component.addParameter(name, "");
+                } else if (foundValue == null || StringUtils.isBlank(foundValue.toString())) {
+                    component.addParameter(translatedName, "");
                 } else {
-                    component.addParameter(name, value);
+                    component.addParameter(translatedName, foundValue);
                 }
             }
         } else {
@@ -158,7 +164,8 @@ public class Param extends Component {
 
         return super.end(writer, "");
     }
-    
+
+    @Override
     public boolean usesBody() {
         return true;
     }
@@ -193,7 +200,7 @@ public class Param extends Component {
          * Adds the given value as a parameter to the outer tag.
          * @param value  the value
          */
-        public void addParameter(Object value);
+        void addParameter(Object value);
     }
 
 }

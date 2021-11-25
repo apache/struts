@@ -93,7 +93,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setDisabled(disabled);
         uiBean.setLabel(label);
         uiBean.setLabelSeparator(labelSeparator);
-        if (labelposition != null) {
+        if (labelposition != null && labelPosition == null) {
             uiBean.setLabelposition(labelposition);
         } else {
             uiBean.setLabelPosition(labelPosition);

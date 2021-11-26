@@ -525,4 +525,36 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
         //System.out.println(writer.toString());
         verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-7.txt"));
     }
+
+    public void testDynamicAttributes() throws Exception {
+        List left = new ArrayList();
+        left.add("Left1");
+        left.add("Left2");
+
+        List right = new ArrayList();
+        right.add("Right1");
+        right.add("Right2");
+
+        TestAction testaction = (TestAction) action;
+        testaction.setCollection(left);
+        testaction.setList2(right);
+
+        OptionTransferSelectTag tag = new OptionTransferSelectTag();
+        tag.setPageContext(pageContext);
+
+        tag.setName("collection");
+        tag.setList("collection");
+
+        tag.setDoubleName("list2");
+        tag.setDoubleList("list2");
+
+        tag.setDynamicAttribute(null, "collection", "leftName");
+        tag.setDynamicAttribute(null, "right-collection", "rightName");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        //System.out.println(writer.toString());
+        verify(OptionTransferSelectTagTest.class.getResource("optiontransferselect-8.txt"));
+    }
 }

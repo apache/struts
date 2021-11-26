@@ -29,7 +29,6 @@
 	<label for="leftTitle">${parameters.leftTitle}</label><br />
 </#if><#t/>
 
-
 <input type="text"<#rt/>
  name="${parameters.name!""}_input"<#rt/>
 <#if parameters.disabled!false>
@@ -55,6 +54,8 @@
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/prefixed-dynamic-attributes.ftl" />
+<@prefixedDynamicAttributes prefix="input-"/>
 />
 
 
@@ -94,9 +95,10 @@
 <#if parameters.rightTitle?has_content><#t/>
 	<label for="rightTitle">${parameters.rightTitle}</label><br />
 </#if><#t/>
+<#global dynamic_attributes_ignore = "input-"/>
 <#include "/${parameters.templateDir}/simple/select.ftl" />
 <#if parameters.allowUpDown!true>
-<input type="button" 
+<input type="button"
 <#if parameters.headerKey?has_content>
 	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
 <#else>
@@ -106,7 +108,7 @@
 	value="${parameters.downLabel}"
 </#if>
 />
-<input type="button" 
+<input type="button"
 <#if parameters.headerKey?has_content>
 	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
 <#else>

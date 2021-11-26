@@ -18,11 +18,6 @@
  * under the License.
  */
 -->
-<#if parameters.validate!false == true>
-	<script type="text/javascript" src="${base}${parameters.staticContentPath}/xhtml/validation.js" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
-	<#if parameters.onsubmit??>
-		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.escapedId}();")}
-	<#else>
-		${tag.addParameter('onsubmit', "return validateForm_${parameters.escapedId}();")}
-	</#if>
-</#if>
+<@s.iterator value="{'a','b','c'}" status="stat">
+    <@s.textfield id="itemId%{#stat.index}" name="items[%{#stat.index}].name" theme="simple"/>
+</@s.iterator>

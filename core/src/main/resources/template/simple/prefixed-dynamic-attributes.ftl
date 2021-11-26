@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,5 +18,19 @@
  * under the License.
  */
 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="test" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e65f69ca-7c62-4b4b-abc6-2e1a8710f23e">
-</jasperReport>
+<#macro prefixedDynamicAttributes prefix>
+<#if (parameters.dynamicAttributes?? && parameters.dynamicAttributes?size > 0)><#rt/>
+<#assign aKeys = parameters.dynamicAttributes.keySet()><#rt/>
+<#list aKeys as aKey><#rt/>
+<#if aKey?starts_with(prefix)>
+<#assign keyValue = parameters.dynamicAttributes.get(aKey)/>
+<#if keyValue?is_string>
+    <#assign value = struts.translateVariables(keyValue)!keyValue/>
+<#else>
+    <#assign value = keyValue?string/>
+</#if>
+ ${aKey?keep_after(prefix)}="${value}"<#rt/>
+</#if>
+</#list><#rt/>
+</#if><#rt/>
+</#macro>

@@ -1,0 +1,39 @@
+<select name="someName" disabled="disabled" tabindex="99" id="someId" class="cssClass1" style="cssStyle1"
+  title="someTitle" onclick="onclick1" ondblclick="ondblclick1" onmousedown="onmousedown1" onmouseup="onmouseup1"
+  onmouseover="onmouseover1" onmousemove="onmousemove1" onmouseout="onmouseout1" onfocus="onfocus1" onblur="onblur1"
+  onkeypress="onkeypress1" onkeydown="onkeydown1" onkeyup="onkeyup1" onselect="onchange"
+  onchange="someIdRedirect(this.selectedIndex)" select-name="firstName">
+  <option value="BE">Belgium</option>
+  <option value="FR" selected="selected">France</option>
+</select>
+<br />
+<select name="region" disabled="disabled" id="region" title="someTitle" select-name="secondName"></select>
+<script type="text/javascript">
+  var someIdGroup = newArray(2 + 0);
+  for (var i = 0; i < (2 + 0); i++) {
+    someIdGroup[i] = [];
+  }
+  someIdGroup[0][0] = newOption("Antwerp", "AN");
+  someIdGroup[0][1] = newOption("Gent", "GN");
+  someIdGroup[0][2] = newOption("Brugge", "BRG");
+  someIdGroup[1][0] = newOption("Paris", "PA");
+  someIdGroup[1][1] = newOption("Bordeaux", "BOR");
+  var someIdTemp = document.inputForm.region;
+  someIdRedirect(1);
+  function someIdRedirect(x) {
+    var selected = false;
+    for (var m = someIdTemp.options.length - 1; m >= 0; m--) {
+      someIdTemp.remove(m);
+    }
+    for (var i = 0; i < someIdGroup[x].length; i++) {
+      someIdTemp.options[i] = newOption(someIdGroup[x][i].text, someIdGroup[x][i].value);
+      if (someIdTemp.options[i].value == 'BOR') {
+        someIdTemp.options[i].selected = true;
+        selected = true;
+      }
+    }
+    if ((someIdTemp.options.length > 0) && (!selected)) {
+      someIdTemp.options[0].selected = true;
+    }
+  }
+</script>

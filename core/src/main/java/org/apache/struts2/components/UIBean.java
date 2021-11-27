@@ -1106,6 +1106,7 @@ public abstract class UIBean extends Component {
     @StrutsTagAttribute(description="(Deprecated) Define label position of form element (top/left)")
     @Deprecated
     public void setLabelposition(String labelPosition) {
+        LOG.warn("\"labelposition\" attribute is deprecated, please use \"labelPosition\" instead!");
         this.labelPosition = labelPosition;
     }
 

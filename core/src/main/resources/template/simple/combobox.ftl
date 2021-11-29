@@ -21,7 +21,7 @@
 <script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
 	function autoPopulate_${parameters.escapedId}(targetElement) {
 		<#if parameters.headerKey?? && parameters.headerValue??>
-		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey}') {
+		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey?js_string}') {
 			return;
 		}
 		</#if>
@@ -30,7 +30,7 @@
 		    return;
 		}
 		</#if>
-		targetElement.form.elements['${parameters.name}'].value=targetElement.options[targetElement.selectedIndex].value;
+		targetElement.form.elements['${parameters.name?js_string}'].value=targetElement.options[targetElement.selectedIndex].value;
 	}
 </script>
 <#include "/${parameters.templateDir}/simple/text.ftl" />

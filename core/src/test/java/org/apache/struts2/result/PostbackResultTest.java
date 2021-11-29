@@ -93,6 +93,46 @@ public class PostbackResultTest extends StrutsInternalTestCase {
         control.verify();
     }
 
+    public void testExpressionNamespace() throws Exception {
+
+        ActionContext context = ActionContext.getContext();
+        context.getContextMap().put("namespaceName", "${1-1}");
+        context.getContextMap().put("actionName", "${1-1}");
+        context.getContextMap().put("methodName", "${1-1}");
+        ValueStack stack = context.getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        context.put(ServletActionContext.HTTP_REQUEST, req);
+        context.put(ServletActionContext.HTTP_RESPONSE, res);
+
+        PostbackResult result = new PostbackResult();
+        result.setNamespace("/myNamespace${#namespaceName}");
+        result.setActionName("myAction${#actionName}");
+        result.setMethod("myMethod${#methodName}");
+        result.setPrependServletContext(false);
+
+        IMocksControl control = createControl();
+        ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
+        expect(mockInvocation.getInvocationContext()).andReturn(context).anyTimes();
+        expect(mockInvocation.getStack()).andReturn(stack).anyTimes();
+
+        control.replay();
+        result.setActionMapper(container.getInstance(ActionMapper.class));
+        result.execute(mockInvocation);
+        assertEquals("<!DOCTYPE html><html><body><form action=\"/myNamespace${1-1}/myAction${1-1}!myMethod${1-1}.action\" method=\"POST\">" +
+                "<script>setTimeout(function(){document.forms[0].submit();},0);</script></html>", res.getContentAsString());
+
+        req = new MockHttpServletRequest();
+        res = new MockHttpServletResponse();
+        context.put(ServletActionContext.HTTP_REQUEST, req);
+        context.put(ServletActionContext.HTTP_RESPONSE, res);
+        result.execute(mockInvocation);
+        assertEquals("<!DOCTYPE html><html><body><form action=\"/myNamespace0/myAction0!myMethod0.action\" method=\"POST\">" +
+                "<script>setTimeout(function(){document.forms[0].submit();},0);</script></html>", res.getContentAsString());
+
+        control.verify();
+    }
+
     public void testPassingNullInvocation() throws Exception{
         Result result = new PostbackResult();
         try {

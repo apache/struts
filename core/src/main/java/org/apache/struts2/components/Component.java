@@ -19,6 +19,7 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.BooleanUtils;
@@ -74,6 +75,8 @@ public class Component {
     protected boolean performClearTagStateForTagPoolingServers = false;
     private UrlHelper urlHelper;
 
+    private NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns;
+
     /**
      * Constructor.
      *
@@ -116,6 +119,11 @@ public class Component {
     @Inject
     public void setUrlHelper(UrlHelper urlHelper) {
         this.urlHelper = urlHelper;
+    }
+
+    @Inject
+    public void setNotExcludedAcceptedPatterns(NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns) {
+        this.notExcludedAcceptedPatterns = notExcludedAcceptedPatterns;
     }
 
     /**
@@ -210,7 +218,6 @@ public class Component {
         if (currPosition >= 0) {
             int start = componentStack.size() - currPosition - 1;
 
-            //for (int i = componentStack.size() - 2; i >= 0; i--) {
             for (int i = start; i >= 0; i--) {
                 Component component = (Component) componentStack.get(i);
                 if (clazz.isAssignableFrom(component.getClass()) && component != this) {
@@ -378,16 +385,6 @@ public class Component {
     }
 
     /**
-     * Detects if expression already contains %{...}
-     *
-     * @param expression a string to examined
-     * @return true if expression contains %{...}
-     */
-    protected boolean recursion(String expression) {
-        return ComponentUtils.containsExpression(expression);
-    }
-
-    /**
      * Renders an action URL by consulting the {@link org.apache.struts2.dispatcher.mapper.ActionMapper}.
      *
      * @param action                    the action
@@ -404,7 +401,7 @@ public class Component {
      * @return the action url.
      */
     protected String determineActionURL(String action, String namespace, String method,
-                                        HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
+                                        HttpServletRequest req, HttpServletResponse res, Map<String, Object> parameters, String scheme,
                                         boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort,
                                         boolean escapeAmp) {
         String finalAction = findString(action);
@@ -591,5 +588,24 @@ public class Component {
 
     public boolean getPerformClearTagStateForTagPoolingServers() {
         return this.performClearTagStateForTagPoolingServers;
+    }
+
+    /**
+     * Checks if expression doesn't contain vulnerable code
+     *
+     * @param expression of the component
+     * @return true|false
+     * @since 2.6
+     */
+    protected boolean isAcceptableExpression(String expression) {
+        NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);
+        if (isAllowed.isAllowed()) {
+            return true;
+        }
+
+        LOG.warn("Expression [{}] isn't allowed by pattern [{}]! See Accepted / Excluded patterns at\n" +
+                "https://struts.apache.org/security/", expression, isAllowed.getAllowedPattern());
+
+        return false;
     }
 }

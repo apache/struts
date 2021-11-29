@@ -536,18 +536,14 @@ public class OgnlUtil {
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkEnableEvalExpression(tree, context);
+                expressions.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
             checkEnableEvalExpression(tree, context);
         }
 
-        final T exec = task.execute(tree);
-        // if cache is enabled and it's a valid expression, puts it in
-        if (enableExpressionCache) {
-            expressions.putIfAbsent(expression, tree);
-        }
-        return exec;
+        return task.execute(tree);
     }
 
     private <T> Object compileAndExecuteMethod(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
@@ -557,18 +553,14 @@ public class OgnlUtil {
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkSimpleMethod(tree, context);
+                expressions.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
             checkSimpleMethod(tree, context);
         }
 
-        final T exec = task.execute(tree);
-        // if cache is enabled and it's a valid expression, puts it in
-        if (enableExpressionCache) {
-            expressions.putIfAbsent(expression, tree);
-        }
-        return exec;
+        return task.execute(tree);
     }
 
     public Object compile(String expression, Map<String, Object> context) throws OgnlException {

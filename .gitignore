@@ -43,3 +43,6 @@ test-output
 
 # Sonar
 /.sonar/
+
+# Tidelift CLI scanner
+.tidelift

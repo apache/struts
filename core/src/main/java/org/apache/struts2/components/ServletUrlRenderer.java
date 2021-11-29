@@ -191,7 +191,9 @@ public class ServletUrlRenderer implements UrlRenderer {
 
             // if the id isn't specified, use the action name
             if (formComponent.getId() == null && actionName != null) {
-                formComponent.addParameter("id", formComponent.escape(actionName));
+                String escapedId = formComponent.escape(actionName);
+                formComponent.addParameter("id", escapedId);
+                formComponent.addParameter("escapedId", escapedId);
             }
         } else if (action != null) {
             // Since we can't find an action alias in the configuration, we just
@@ -226,7 +228,9 @@ public class ServletUrlRenderer implements UrlRenderer {
                 } else {
                     id = result.substring(slash + 1);
                 }
-                formComponent.addParameter("id", formComponent.escape(id));
+                String escapedId = formComponent.escape(id);
+                formComponent.addParameter("id", escapedId);
+                formComponent.addParameter("escapedId", escapedId);
             }
         }
 

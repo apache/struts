@@ -110,6 +110,13 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
         this.var = var;
     }
 
+    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing", type="Boolean", defaultValue="false", required = false)
+    @Override
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
     public int doStartTag() throws JspException {
         // Source
         Object srcToSort;
@@ -144,13 +151,28 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
         return EVAL_BODY_INCLUDE;
     }
 
+    @Override
     public int doEndTag() throws JspException {
         int returnVal =  super.doEndTag();
 
         // pop sorted list from stack at the end of tag
         getStack().pop();
         sortIteratorFilter = null;
+        // The super.doEndTag() above should ensure clearTagStateForTagPoolingServers() is called correctly, 
+        // which should clean-up the sortIteratorFilter reference.
 
         return returnVal;
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.comparatorAttr = null;
+        this.sourceAttr = null;
+        this.var = null;
+        this.sortIteratorFilter = null;
     }
 }

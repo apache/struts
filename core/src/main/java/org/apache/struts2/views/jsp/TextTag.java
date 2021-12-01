@@ -39,10 +39,12 @@ public class TextTag extends ContextBeanTag {
     private boolean escapeXml = false;
     private boolean escapeCsv = false;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Text(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -73,5 +75,26 @@ public class TextTag extends ContextBeanTag {
     public void setEscapeCsv(boolean escapeCsv) {
         this.escapeCsv = escapeCsv;
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.name = null;
+        this.escapeHtml = false;
+        this.escapeJavaScript = false;
+        this.escapeXml = false;
+        this.escapeCsv = false;
+     }
 
 }

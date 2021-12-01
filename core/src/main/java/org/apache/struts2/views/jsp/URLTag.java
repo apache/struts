@@ -48,10 +48,12 @@ public class URLTag extends ContextBeanTag {
     protected String anchor;
     protected String forceAddSchemeHostAndPort;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new URL(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -136,4 +138,35 @@ public class URLTag extends ContextBeanTag {
     public void setForceAddSchemeHostAndPort(String forceAddSchemeHostAndPort) {
         this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.includeParams = null;
+        this.scheme = null;
+        this.value = null;
+        this.action = null;
+        this.namespace = null;
+        this.method = null;
+        this.encode = null;
+        this.includeContext = null;
+        this.escapeAmp = null;
+        this.portletMode = null;
+        this.windowState = null;
+        this.portletUrlType = null;
+        this.anchor = null;
+        this.forceAddSchemeHostAndPort = null;
+     }
+
 }

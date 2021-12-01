@@ -42,7 +42,8 @@ import org.apache.struts2.views.jsp.iterator.MergeIteratorTag;
 import org.apache.struts2.views.jsp.ui.TextFieldTag;
 import org.apache.struts2.views.jsp.ui.UpDownSelectTag;
 
-import com.opensymphony.xwork2.ActionContext;
+import java.util.HashMap;
+import org.apache.struts2.StrutsException;
 
 /**
  * Test case for method findAncestor(Class) in Component and some commons
@@ -541,5 +542,53 @@ public class ComponentTest extends AbstractTagTest {
         assertFalse("Submit htmlEscapeBody not false after set false ?", submit.escapeHtmlBody());
         submit.setEscapeHtmlBody(true);
         assertTrue("Submit htmlEscapeBody not true after set true ?", submit.escapeHtmlBody());
+    }
+
+    /**
+     * Attempt some code coverage tests for {@link Component} that can be achieved without
+     * too much difficulty.
+     * 
+     * @throws Exception 
+     */
+    public void testComponent_coverageTest() throws Exception {
+        HashMap<String, Object> propertyMap = new HashMap<>();
+        Exception exception = new Exception("Generic exception");
+        Property property = new Property(stack);
+        ActionComponent actionComponent = new ActionComponent(stack, request, response);
+
+        try {
+            actionComponent.setName("componentName");
+            // Simulate component attribute with a hyphen in its name.
+            propertyMap.put("hyphen-keyname-for-coverage", "hyphen-keyname-for-coverage-value");
+            propertyMap.put("someKeyName", "someKeyValue");
+            actionComponent.copyParams(propertyMap);
+            actionComponent.addAllParameters(propertyMap);
+            try {
+                actionComponent.findString(null, "fieldName", "errorMessage");
+                fail("null expr parameter should cause a StrutsException");
+            } catch (StrutsException se) {
+                // expected
+            }
+            assertNull("completeExpression of a null expression returned non-null result ?", actionComponent.completeExpression(null));
+            try {
+                actionComponent.findValue(null, "fieldName", "errorMessage");
+                fail("null expr parameter should cause a StrutsException");
+            } catch (StrutsException se) {
+                // expected
+            }
+            try {
+                actionComponent.findValue("", "fieldName", "errorMessage");
+                fail("empty expr parameter should cause a StrutsException due to finding a null value");
+            } catch (StrutsException se) {
+                // expected
+            }
+            assertNotNull("the toString() method with Exception parameter returned null result ?", actionComponent.toString(exception));
+            assertFalse("Initial performClearTagStateForTagPoolingServers not false ?", actionComponent.getPerformClearTagStateForTagPoolingServers());
+            actionComponent.setPerformClearTagStateForTagPoolingServers(true);
+            assertTrue("performClearTagStateForTagPoolingServers false after setting to true ?", actionComponent.getPerformClearTagStateForTagPoolingServers());
+        }
+        finally {
+            property.getComponentStack().pop();
+        }
     }
 }

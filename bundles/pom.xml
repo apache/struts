@@ -29,7 +29,7 @@
 
     <artifactId>struts2-osgi-bundles</artifactId>
     <packaging>pom</packaging>
-    <name>Struts 2 OSGi Bundles</name>
+    <name>DEPRECATED: Struts 2 OSGi Bundles - since 2.6</name>
 
     <modules>
         <module>admin</module>

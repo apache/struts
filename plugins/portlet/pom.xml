@@ -29,7 +29,7 @@
 
     <artifactId>struts2-portlet-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>Struts 2 Portlet Plugin</name>
+    <name>DEPRECATED: Struts 2 Portlet Plugin - since 2.6</name>
 
     <dependencies>
         <!-- junit and related JARs are needed for 'compile'! -->

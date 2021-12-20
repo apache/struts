@@ -94,7 +94,7 @@ pipeline {
           }
           steps {
             withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-              sh 'mvn sonar:sonar -DskipAssembly -Dsonar.projectKey=apache_struts -Dsonar.organization=apache -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONARCLOUD_TOKEN}'
+              sh 'mvn sonar:sonar -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN}'
             }
           }
         }

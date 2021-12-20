@@ -29,7 +29,7 @@
 
     <artifactId>struts2-osgi-admin-bundle</artifactId>
     <packaging>bundle</packaging>
-    <name>Struts 2 OSGi Admin Bundle</name>
+    <name>DEPRECATED: Struts 2 OSGi Admin Bundle - since 2.6</name>
 
     <dependencies>
         <dependency>
@@ -37,7 +37,7 @@
             <artifactId>struts2-osgi-plugin</artifactId>
         </dependency>
     </dependencies>
-   
+
     <build>
         <plugins>
             <plugin>

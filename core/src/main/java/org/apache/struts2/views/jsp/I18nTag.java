@@ -35,10 +35,12 @@ public class I18nTag extends ComponentTagSupport {
 
     protected String name;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new I18n(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -48,4 +50,22 @@ public class I18nTag extends ComponentTagSupport {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.name = null;
+    }
+
 }

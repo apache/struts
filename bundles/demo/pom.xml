@@ -29,10 +29,10 @@
 
     <artifactId>struts2-osgi-demo-bundle</artifactId>
     <packaging>bundle</packaging>
-    <name>Struts 2 OSGi Demo Bundle</name>
+    <name>DEPRECATED: Struts 2 OSGi Demo Bundle - since 2.6</name>
 
     <dependencies>
-       
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-velocity-plugin</artifactId>
@@ -42,7 +42,7 @@
             <groupId>commons-digester</groupId>
             <artifactId>commons-digester</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-convention-plugin</artifactId>
@@ -52,7 +52,7 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-osgi-plugin</artifactId>
         </dependency>
-        
+
     </dependencies>
 
     <build>

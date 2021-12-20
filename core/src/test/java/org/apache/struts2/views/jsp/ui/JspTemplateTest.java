@@ -47,5 +47,38 @@ public class JspTemplateTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
         rdMock.verify();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        CheckboxTag freshTag = new CheckboxTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testCheckBox_clearTagStateSet()  throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("true");
+
+        CheckboxTag tag = new CheckboxTag();
+        Mock rdMock = new Mock(RequestDispatcher.class);
+        rdMock.expect("include",C.args(C.isA(HttpServletRequest.class), C.isA(HttpServletResponse.class)));
+        RequestDispatcher dispatcher = (RequestDispatcher) rdMock.proxy();
+        request.setupGetRequestDispatcher(dispatcher);
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setTemplate("/test/checkbox.jsp");
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+        rdMock.verify();
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        CheckboxTag freshTag = new CheckboxTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 }

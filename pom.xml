@@ -104,16 +104,16 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2020-07-11T19:40:00Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2021-12-19T11:50:38Z</project.build.outputTimestamp>
         <java.version>1.8</java.version>
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.2</asm.version>
         <jackson.version>2.10.5</jackson.version>
         <jackson-databind.version>2.10.5.1</jackson-databind.version>
-        <log4j2.version>2.13.3</log4j2.version>
+        <log4j2.version>2.17.0</log4j2.version>
         <ognl.version>3.2.20</ognl.version>
-        <slf4j.version>1.7.30</slf4j.version>
+        <slf4j.version>1.7.32</slf4j.version>
         <spring.platformVersion>4.3.29.RELEASE</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
@@ -342,10 +342,10 @@
                         <useDefaultExcludes>true</useDefaultExcludes>
                         <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
                         <licenses>
-                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20"/>
+                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20" />
                         </licenses>
                         <licenseFamilies>
-                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily"/>
+                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily" />
                         </licenseFamilies>
                         <includes>
                             <include>pom.xml</include>
@@ -375,7 +375,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>6.2.2</version>
+                    <version>6.5.1</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>

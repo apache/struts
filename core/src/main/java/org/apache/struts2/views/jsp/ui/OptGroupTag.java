@@ -40,10 +40,12 @@ public class OptGroupTag extends ComponentTagSupport {
     protected String listCssStyle;
     protected String listTitle;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new OptGroup(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -89,4 +91,29 @@ public class OptGroupTag extends ComponentTagSupport {
     public void setListTitle(String listTitle) {
         this.listTitle = listTitle;
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.list = null;
+        this.label = null;
+        this.disabled = null;
+        this.listKey = null;
+        this.listValue = null;
+        this.listCssClass = null;
+        this.listCssStyle = null;
+        this.listTitle = null;
+    }
+
 }

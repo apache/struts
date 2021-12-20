@@ -39,10 +39,12 @@ public class ActionTag extends ContextBeanTag {
     protected boolean flush = true;
     protected boolean rethrowException;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ActionComponent(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -86,6 +88,28 @@ public class ActionTag extends ContextBeanTag {
 
     public void setRethrowException(boolean rethrowException) {
         this.rethrowException = rethrowException;
+    }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.name = null;
+        this.namespace = null;
+        this.executeResult = false;
+        this.ignoreContextParams = false;
+        this.flush = true;
+        this.rethrowException = false;
     }
 
 }

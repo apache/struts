@@ -173,4 +173,11 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+  <scm>
+    <tag>HEAD</tag>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
+    <url>https://github.com/apache/struts/</url>
+  </scm>
 </project>

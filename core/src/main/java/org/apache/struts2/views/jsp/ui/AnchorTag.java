@@ -49,10 +49,12 @@ public class AnchorTag extends AbstractClosingTag {
     protected String forceAddSchemeHostAndPort;
     protected boolean escapeHtmlBody = true;  // Default - escape HTML body
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Anchor(stack, req, res);
     }
     
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -120,6 +122,7 @@ public class AnchorTag extends AbstractClosingTag {
         this.scheme = scheme;
     }
 
+    @Override
     public void setValue(String value) {
         this.value = value;
     }
@@ -154,6 +157,36 @@ public class AnchorTag extends AbstractClosingTag {
     public void setEscapeHtmlBody(boolean escapeHtmlBody) {
         this.escapeHtmlBody = escapeHtmlBody;
     }
-}
 
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    @Override
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+        if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.href = null;
+        this.includeParams = null;
+        this.scheme = null;
+        this.action = null;
+        this.namespace = null;
+        this.method = null;
+        this.encode = null;
+        this.includeContext = null;
+        this.escapeAmp = null;
+        this.portletMode = null;
+        this.windowState = null;
+        this.portletUrlType = null;
+        this.anchor = null;
+        this.forceAddSchemeHostAndPort = null;
+    }
+
+}
 

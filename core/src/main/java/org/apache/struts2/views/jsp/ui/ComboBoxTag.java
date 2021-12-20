@@ -60,10 +60,12 @@ public class ComboBoxTag extends TextFieldTag {
         this.listValue = listValue;
     }
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ComboBox(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -78,4 +80,27 @@ public class ComboBoxTag extends TextFieldTag {
     public void setList(String list) {
         this.list = list;
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.list = null;
+        this.listKey = null;
+        this.listValue = null;
+        this.headerKey = null;
+        this.headerValue = null;
+        this.emptyOption = null;
+     }
+
 }

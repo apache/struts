@@ -27,8 +27,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Orders</title>
-    <s:link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet"></s:link>
-    <s:link href="${pageContext.request.contextPath}/css/app.css" rel="stylesheet"></s:link>
+    <!-- Using a standard HTML link tag with JSP EL to get the contextPath may be simpler, but this is an equivalent for s:link -->
+    <s:set var="pageContextPath"><%=((HttpServletRequest)request).getContextPath()%></s:set>
+    <s:link href="%{#pageContextPath}/css/bootstrap.min.css" rel="stylesheet"></s:link>
+    <s:link href="%{#pageContextPath}/css/app.css" rel="stylesheet"></s:link>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

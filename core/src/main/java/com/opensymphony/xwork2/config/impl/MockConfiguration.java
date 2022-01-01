@@ -53,7 +53,7 @@ public class MockConfiguration implements Configuration {
         new StrutsDefaultConfigurationProvider().register(builder, props);
         builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
         builder.constant(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
-        builder.constant(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, "true");
+        builder.constant(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, "true");
         builder.constant(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, "false");
         container = builder.create(true);
     }

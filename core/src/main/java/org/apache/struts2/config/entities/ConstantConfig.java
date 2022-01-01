@@ -101,7 +101,7 @@ public class ConstantConfig {
     private Boolean elThrowExceptionOnFailure;
     private Boolean ognlLogMissingProperties;
     private Boolean ognlEnableExpressionCache;
-    private Boolean ognlEnableOGNLEvalExpression;
+    private Boolean ognlEnableEvalExpression;
     private Boolean disableRequestAttributeValueStackLookup;
     private BeanConfig viewUrlHelper;
     private BeanConfig converterCollection;
@@ -230,8 +230,8 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_UNKNOWN_HANDLER_MANAGER, beanConfToString(unknownHandlerManager));
         map.put(StrutsConstants.STRUTS_EL_THROW_EXCEPTION, Objects.toString(elThrowExceptionOnFailure, null));
         map.put(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, Objects.toString(ognlLogMissingProperties, null));
-        map.put(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, Objects.toString(ognlEnableExpressionCache, null));
-        map.put(StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, Objects.toString(ognlEnableOGNLEvalExpression, null));
+        map.put(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, Objects.toString(ognlEnableExpressionCache, null));
+        map.put(StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, Objects.toString(ognlEnableEvalExpression, null));
         map.put(StrutsConstants.STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP, Objects.toString(disableRequestAttributeValueStackLookup, null));
         map.put(StrutsConstants.STRUTS_URL_HELPER, beanConfToString(viewUrlHelper));
         map.put(StrutsConstants.STRUTS_CONVERTER_COLLECTION, beanConfToString(converterCollection));
@@ -922,12 +922,12 @@ public class ConstantConfig {
         this.ognlEnableExpressionCache = ognlEnableExpressionCache;
     }
 
-    public Boolean getOgnlEnableOGNLEvalExpression() {
-        return ognlEnableOGNLEvalExpression;
+    public Boolean getOgnlEnableEvalExpression() {
+        return ognlEnableEvalExpression;
     }
 
-    public void setOgnlEnableOGNLEvalExpression(Boolean ognlEnableOGNLEvalExpression) {
-        this.ognlEnableOGNLEvalExpression = ognlEnableOGNLEvalExpression;
+    public void setOgnlEnableEvalExpression(Boolean ognlEnableEvalExpression) {
+        this.ognlEnableEvalExpression = ognlEnableEvalExpression;
     }
 
     public Boolean getDisableRequestAttributeValueStackLookup() {

@@ -35,13 +35,13 @@ public final class StrutsConstants {
     /** The encoding to use for localization messages */
     public static final String STRUTS_I18N_ENCODING = "struts.i18n.encoding";
 
-    /** 
+    /**
      * Whether the default bundles should be searched for messages first.  Can be used to modify the
      * standard processing order for message lookup in TextProvider implementations.
      * <p>
      * Note: This control flag may not be meaningful to all provider implementations, and should be false by default.
      * </p>
-     * 
+     *
      * @since 2.6
      */
     public static final String STRUTS_I18N_SEARCH_DEFAULTBUNDLES_FIRST = "struts.i18n.search.defaultbundles.first";
@@ -104,10 +104,10 @@ public final class StrutsConstants {
 
     /** Update freemarker templates cache in seconds */
     public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY = "struts.freemarker.templatesCache.updateDelay";
-    
+
     /** Cache model instances at BeanWrapper level */
     public static final String STRUTS_FREEMARKER_BEANWRAPPER_CACHE = "struts.freemarker.beanwrapperCache";
-    
+
     /** Maximum strong sizing for MruCacheStorage for freemarker */
     public static final String STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE = "struts.freemarker.mru.max.strong.size";
 
@@ -188,7 +188,7 @@ public final class StrutsConstants {
      * You can specify different prefixes that will be handled by different mappers
      */
     public static final String PREFIX_BASED_MAPPER_CONFIGURATION = "struts.mapper.prefixMapping";
-    
+
     /** Whether the Struts filter should serve static content or not */
     public static final String STRUTS_SERVE_STATIC_CONTENT = "struts.serve.static";
 
@@ -262,11 +262,29 @@ public final class StrutsConstants {
     @Deprecated
     public static final String STRUTS_LOG_MISSING_PROPERTIES = STRUTS_OGNL_LOG_MISSING_PROPERTIES;
 
-    /** Enables caching of parsed OGNL expressions */
-    public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
+    /**
+     * Enables caching of parsed OGNL expressions
+     * @since 2.6
+     */
+    public static final String STRUTS_OGNL_ENABLE_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
 
-    /** Enables evaluation of OGNL expressions */
-    public static final String STRUTS_ENABLE_OGNL_EVAL_EXPRESSION = "struts.ognl.enableOGNLEvalExpression";
+    /**
+     * Enables caching of parsed OGNL expressions
+     * @deprecated as of 2.6.  Use {@link #STRUTS_OGNL_ENABLE_EXPRESSION_CACHE} instead.
+     */
+    public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = STRUTS_OGNL_ENABLE_EXPRESSION_CACHE;
+
+    /**
+     * Enables evaluation of OGNL expressions
+     * @since 2.6
+     */
+    public static final String STRUTS_OGNL_ENABLE_EVAL_EXPRESSION = "struts.ognl.enableEvalExpression";
+
+    /**
+     * Enables evaluation of OGNL expressions
+     * @deprecated as of 2.6.  Use {@link #STRUTS_OGNL_ENABLE_EVAL_EXPRESSION} instead.
+     */
+    public static final String STRUTS_ENABLE_OGNL_EVAL_EXPRESSION = STRUTS_OGNL_ENABLE_EVAL_EXPRESSION;
 
     /** The maximum length of an expression (OGNL) */
     public static final String STRUTS_OGNL_EXPRESSION_MAX_LENGTH = "struts.ognl.expressionMaxLength";

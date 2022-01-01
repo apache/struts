@@ -22,28 +22,26 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-
 
 /**
  * Interceptor that implements Cross-Origin Embedder Policy on incoming requests used to protect a
  * document from loading any non-same-origin resources which don't explicitly grant the document
  * permission to be loaded.
  *
- *
  * @see <a href="https://web.dev/why-coop-coep/#coep">https://web.dev/why-coop-coep/#coep</a>
  * @see <a href="https://wicg.github.io/cross-origin-embedder-policy/">https://wicg.github.io/cross-origin-embedder-policy/</a>
  **/
 public class CoepInterceptor extends AbstractInterceptor implements PreResultListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CoepInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(CoepInterceptor.class);
+
     private static final String REQUIRE_COEP_HEADER = "require-corp";
     private static final String COEP_ENFORCING_HEADER = "Cross-Origin-Embedder-Policy";
     private static final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
@@ -64,28 +62,29 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
         HttpServletResponse res = invocation.getInvocationContext().getServletResponse();
         final String path = req.getContextPath();
 
-        if (exemptedPaths.contains(path)){
+        if (exemptedPaths.contains(path)) {
             // no need to add headers
-            LOG.debug(String.format("Skipping COEP header for exempted path %s", path));
-        } else if (!disabled){
+            LOG.debug("Skipping COEP header for exempted path {}", path);
+        } else if (!disabled) {
             res.setHeader(header, REQUIRE_COEP_HEADER);
         }
     }
 
-    public void setExemptedPaths(String paths){
+    public void setExemptedPaths(String paths) {
         this.exemptedPaths.addAll(TextParseUtil.commaDelimitedStringToSet(paths));
     }
 
-    public void setEnforcingMode(String mode){
+    public void setEnforcingMode(String mode) {
         boolean enforcingMode = Boolean.parseBoolean(mode);
-        if (enforcingMode){
+        if (enforcingMode) {
             header = COEP_ENFORCING_HEADER;
         } else {
             header = COEP_REPORT_HEADER;
         }
     }
 
-    public void setDisabled(String value){
+    public void setDisabled(String value) {
         disabled = Boolean.parseBoolean(value);
     }
+
 }

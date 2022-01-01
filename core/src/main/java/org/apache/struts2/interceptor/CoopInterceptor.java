@@ -22,14 +22,13 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.Set;
-
 
 /**
  * Interceptor that implements Cross-Origin Opener Policy on incoming requests. COOP is a mitigation against
@@ -42,7 +41,8 @@ import java.util.Set;
  **/
 public class CoopInterceptor extends AbstractInterceptor implements PreResultListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CoopInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(CoopInterceptor.class);
+
     private static final String SAME_ORIGIN = "same-origin";
     private static final String SAME_ORIGIN_ALLOW_POPUPS = "same-origin-allow-popups";
     private static final String UNSAFE_NONE = "unsafe-none";
@@ -63,30 +63,31 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
         String path = request.getContextPath();
 
-        if (isExempted(path)){
+        if (isExempted(path)) {
             // no need to add headers
-            LOG.debug(String.format("Skipping COOP header for exempted path %s", path));
+            LOG.debug("Skipping COOP header for exempted path {}", path);
         } else {
             response.setHeader(COOP_HEADER, getMode());
         }
     }
 
-    public boolean isExempted(String path){
+    public boolean isExempted(String path) {
         return exemptedPaths.contains(path);
     }
 
-    public void setExemptedPaths(String paths){
+    public void setExemptedPaths(String paths) {
         exemptedPaths.addAll(TextParseUtil.commaDelimitedStringToSet(paths));
     }
 
-    private String getMode(){
+    private String getMode() {
         return mode;
     }
 
     public void setMode(String mode) {
-        if (!(mode.equals(SAME_ORIGIN) || mode.equals(SAME_ORIGIN_ALLOW_POPUPS) || mode.equals(UNSAFE_NONE))){
+        if (!(mode.equals(SAME_ORIGIN) || mode.equals(SAME_ORIGIN_ALLOW_POPUPS) || mode.equals(UNSAFE_NONE))) {
             throw new IllegalArgumentException(String.format("Mode '%s' not recognized!", mode));
         }
         this.mode = mode;
     }
+
 }

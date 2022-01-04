@@ -298,4 +298,27 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
     }
 
+    public void testTagAttributeTakesPrecedenceOverInjectEscapeHtmlBodyFlag() throws Exception {
+        // given
+        initDispatcherWithConfigs("struts-default.xml, struts-escape-body.xml");
+        String escapeHtmlBody = container.getInstance(String.class, StrutsConstants.STRUTS_UI_ESCAPE_HTML_BODY);
+        assertEquals("true", escapeHtmlBody);
+
+        createMocks();
+
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setEscapeHtmlBody("false");
+
+        // when
+        tag.doStartTag();
+
+        // then
+        Anchor component = (Anchor) tag.getComponent();
+        assertFalse(component.escapeHtmlBody());
+
+        tag.doEndTag();
+    }
+
 }

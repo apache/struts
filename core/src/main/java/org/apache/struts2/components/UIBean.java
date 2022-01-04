@@ -21,6 +21,7 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +31,7 @@ import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
+import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.TextProviderHelper;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.ContextUtil;
@@ -1258,20 +1260,25 @@ public abstract class UIBean extends Component {
 
     public void setDynamicAttributes(Map<String, String> tagDynamicAttributes) {
         for (Map.Entry<String, String> entry : tagDynamicAttributes.entrySet()) {
-            String key = entry.getKey();
+            String attrName = entry.getKey();
+            String attrValue = entry.getValue();
 
-            if (!isValidTagAttribute(key)) {
-                dynamicAttributes.put(key, entry.getValue());
+            if (!isValidTagAttribute(attrName)) {
+                if (ComponentUtils.altSyntax(getStack()) && ComponentUtils.isExpression(attrValue)) {
+                    dynamicAttributes.put(attrName, String.valueOf(ObjectUtils.defaultIfNull(findString(attrValue), attrValue)));
+                } else {
+                    dynamicAttributes.put(attrName, attrValue);
+                }
             }
         }
     }
 
-    @Override
     /**
      * supports dynamic attributes for freemarker ui tags
-     * @see https://issues.apache.org/jira/browse/WW-3174
-     * @see https://issues.apache.org/jira/browse/WW-4166
+     * @see "https://issues.apache.org/jira/browse/WW-3174"
+     * @see "https://issues.apache.org/jira/browse/WW-4166"
      */
+    @Override
     public void copyParams(Map params) {
         super.copyParams(params);
         for (Object o : params.entrySet()) {

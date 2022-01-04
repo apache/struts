@@ -35,13 +35,13 @@ public final class StrutsConstants {
     /** The encoding to use for localization messages */
     public static final String STRUTS_I18N_ENCODING = "struts.i18n.encoding";
 
-    /** 
+    /**
      * Whether the default bundles should be searched for messages first.  Can be used to modify the
      * standard processing order for message lookup in TextProvider implementations.
      * <p>
      * Note: This control flag may not be meaningful to all provider implementations, and should be false by default.
      * </p>
-     * 
+     *
      * @since 2.6
      */
     public static final String STRUTS_I18N_SEARCH_DEFAULTBUNDLES_FIRST = "struts.i18n.search.defaultbundles.first";
@@ -104,10 +104,10 @@ public final class StrutsConstants {
 
     /** Update freemarker templates cache in seconds */
     public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY = "struts.freemarker.templatesCache.updateDelay";
-    
+
     /** Cache model instances at BeanWrapper level */
     public static final String STRUTS_FREEMARKER_BEANWRAPPER_CACHE = "struts.freemarker.beanwrapperCache";
-    
+
     /** Maximum strong sizing for MruCacheStorage for freemarker */
     public static final String STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE = "struts.freemarker.mru.max.strong.size";
 
@@ -131,6 +131,9 @@ public final class StrutsConstants {
 
     /** A path to static content, by default and from historical point of view it's /static. */
     public static final String STRUTS_UI_STATIC_CONTENT_PATH = "struts.ui.staticContentPath";
+
+    /** A global flag to enable/disable html body escaping in tags, can be overwritten per tag */
+    public static final String STRUTS_UI_ESCAPE_HTML_BODY = "struts.ui.escapeHtmlBody";
 
     /** The maximize size of a multipart request (file upload) */
     public static final String STRUTS_MULTIPART_MAXSIZE = "struts.multipart.maxSize";
@@ -188,7 +191,7 @@ public final class StrutsConstants {
      * You can specify different prefixes that will be handled by different mappers
      */
     public static final String PREFIX_BASED_MAPPER_CONFIGURATION = "struts.mapper.prefixMapping";
-    
+
     /** Whether the Struts filter should serve static content or not */
     public static final String STRUTS_SERVE_STATIC_CONTENT = "struts.serve.static";
 
@@ -362,4 +365,5 @@ public final class StrutsConstants {
     public static final String STRUTS_CHAINING_COPY_FIELD_ERRORS = "struts.chaining.copyFieldErrors";
     public static final String STRUTS_CHAINING_COPY_MESSAGES = "struts.chaining.copyMessages";
     public static final String STRUTS_OBJECT_FACTORY_CLASSLOADER = "struts.objectFactory.classloader";
+
 }

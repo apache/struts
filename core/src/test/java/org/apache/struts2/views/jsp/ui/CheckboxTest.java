@@ -40,8 +40,8 @@ public class CheckboxTest extends AbstractUITagTest {
      *         as key.
      */
     @Override
-    protected Map initializedGenericTagTestProperties() {
-        Map result = super.initializedGenericTagTestProperties();
+    protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
+        Map<String, PropertyHolder> result = super.initializedGenericTagTestProperties();
         new PropertyHolder("value", "true").addToMap(result);
         return result;
     }

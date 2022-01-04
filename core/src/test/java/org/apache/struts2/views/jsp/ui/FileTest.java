@@ -96,8 +96,8 @@ public class FileTest extends AbstractUITagTest {
      *         as key.
      */
     @Override
-    protected Map initializedGenericTagTestProperties() {
-        Map result = super.initializedGenericTagTestProperties();
+    protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
+        Map<String, PropertyHolder> result = super.initializedGenericTagTestProperties();
         new PropertyHolder("accept", "someAccepted").addToMap(result);
         new PropertyHolder("size", "101").addToMap(result);
         new PropertyHolder("value", "", "").addToMap(result);

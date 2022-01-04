@@ -630,8 +630,8 @@ public class SubmitTest extends AbstractUITagTest {
      *         as key.
      */
     @Override
-    protected Map initializedGenericTagTestProperties() {
-        Map result = new HashMap();
+    protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
+        Map<String, PropertyHolder> result = new HashMap<>();
         new PropertyHolder("title", "someTitle").addToMap(result);
         new PropertyHolder("cssClass", "cssClass1", "class=\"cssClass1\"").addToMap(result);
         new PropertyHolder("cssStyle", "cssStyle1", "style=\"cssStyle1\"").addToMap(result);
@@ -652,8 +652,6 @@ public class SubmitTest extends AbstractUITagTest {
 
     /**
      * Test that by default submit tag body is HTML-escaped.
-     * 
-     * @throws Exception 
      */
     public void testSubmitWithBodyHTMLEscaped() throws Exception {
         TestAction testAction = (TestAction) action;
@@ -670,6 +668,7 @@ public class SubmitTest extends AbstractUITagTest {
         StrutsBodyContent body = new StrutsBodyContent(null);
         body.print("should HTML escape: < & >");
         tag.setBodyContent(body);
+        tag.setEscapeHtmlBody(true);
         tag.doStartTag();
         tag.doEndTag();
 
@@ -678,8 +677,6 @@ public class SubmitTest extends AbstractUITagTest {
 
     /**
      * Test that with htmlEscapeBody false submit tag body is not HTML-escaped.
-     * 
-     * @throws Exception 
      */
     public void testSubmitWithBodyNotHTMLEscaped() throws Exception {
         TestAction testAction = (TestAction) action;

@@ -130,8 +130,8 @@ public class TextareaTest extends AbstractUITagTest {
      *         as key.
      */
     @Override
-    protected Map initializedGenericTagTestProperties() {
-        Map result = super.initializedGenericTagTestProperties();
+    protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
+        Map<String, PropertyHolder> result = super.initializedGenericTagTestProperties();
         new PropertyHolder("cols", "10").addToMap(result);
         new PropertyHolder("rows", "11").addToMap(result);
         new PropertyHolder("readonly", "true", "readonly=\"readonly\"").addToMap(result);

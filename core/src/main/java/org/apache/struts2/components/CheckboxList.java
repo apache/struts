@@ -48,7 +48,7 @@ import com.opensymphony.xwork2.util.ValueStack;
         allowDynamicAttributes = true)
 public class CheckboxList extends ListUIBean {
     final public static String TEMPLATE = "checkboxlist";
-    
+
     public CheckboxList(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -56,9 +56,19 @@ public class CheckboxList extends ListUIBean {
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
-    
+
     public void evaluateExtraParams() {
     	super.evaluateExtraParams();
+    }
+
+    /**
+     * Checkboxlist tag requires lazy evaluation as list of tags is dynamically generated using <s:iterator/>
+     *
+     * @return boolean true by default
+     */
+    @Override
+    protected boolean lazyEvaluation() {
+        return true;
     }
 
 }

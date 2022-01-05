@@ -1264,8 +1264,8 @@ public abstract class UIBean extends Component {
             String attrValue = entry.getValue();
 
             if (!isValidTagAttribute(attrName)) {
-                if (ComponentUtils.altSyntax(getStack()) && ComponentUtils.isExpression(attrValue)) {
-                    dynamicAttributes.put(attrName, String.valueOf(ObjectUtils.defaultIfNull(findString(attrValue), attrValue)));
+                if (ComponentUtils.altSyntax(getStack()) && ComponentUtils.containsExpression(attrValue) && !lazyEvaluation()) {
+                    dynamicAttributes.put(attrName, ObjectUtils.defaultIfNull(findString(attrValue), attrValue));
                 } else {
                     dynamicAttributes.put(attrName, attrValue);
                 }
@@ -1288,6 +1288,16 @@ public abstract class UIBean extends Component {
                 dynamicAttributes.put(key, entry.getValue());
             }
         }
+    }
+
+    /**
+     * Used to avoid evaluating attributes in {@link #evaluateParams()} or {@link #evaluateExtraParams()}
+     * as evaluation will happen in tag's template
+     *
+     * @return boolean false if evaluation should be performed in ftl
+     */
+    protected boolean lazyEvaluation() {
+        return false;
     }
 
 }

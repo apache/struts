@@ -20,6 +20,7 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1265,7 +1266,8 @@ public abstract class UIBean extends Component {
 
             if (!isValidTagAttribute(attrName)) {
                 if (ComponentUtils.altSyntax(getStack()) && ComponentUtils.containsExpression(attrValue) && !lazyEvaluation()) {
-                    dynamicAttributes.put(attrName, ObjectUtils.defaultIfNull(findString(attrValue), attrValue));
+                    String translated = TextParseUtil.translateVariables('%', attrValue, stack);
+                    dynamicAttributes.put(attrName, ObjectUtils.defaultIfNull(translated, attrValue));
                 } else {
                     dynamicAttributes.put(attrName, attrValue);
                 }

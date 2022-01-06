@@ -372,7 +372,7 @@ public class TextfieldTest extends AbstractUITagTest {
         tag.setName("myname");
         tag.setValue("%{foo}");
         tag.setSize("10");
-        tag.setDynamicAttribute(null, "anotherAttr", "%{foo}");
+        tag.setDynamicAttribute(null, "anotherAttr", "another_%{foo}");
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).

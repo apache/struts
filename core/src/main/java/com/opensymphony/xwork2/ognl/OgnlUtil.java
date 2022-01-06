@@ -98,12 +98,12 @@ public class OgnlUtil {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
-    @Inject(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE)
+    @Inject(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE)
     protected void setEnableExpressionCache(String cache) {
         enableExpressionCache = BooleanUtils.toBoolean(cache);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, required = false)
+    @Inject(value = StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, required = false)
     protected void setEnableEvalExpression(String evalExpression) {
         this.enableEvalExpression = BooleanUtils.toBoolean(evalExpression);
         if (this.enableEvalExpression) {
@@ -566,7 +566,7 @@ public class OgnlUtil {
     public Object compile(String expression, Map<String, Object> context) throws OgnlException {
         return compileAndExecute(expression, context, tree -> tree);
     }
-    
+
     private void checkEnableEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
         if (!enableEvalExpression && isEvalExpression(tree, context)) {
             throw new OgnlException("Eval expressions/chained expressions have been disabled!");

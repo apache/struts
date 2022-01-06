@@ -224,8 +224,8 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
         props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, Boolean.FALSE.toString());
         props.setProperty(StrutsConstants.STRUTS_DEVMODE, Boolean.FALSE.toString());
         props.setProperty(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, Boolean.FALSE.toString());
-        props.setProperty(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, Boolean.TRUE.toString());
-        props.setProperty(StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, Boolean.FALSE.toString());
+        props.setProperty(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, Boolean.TRUE.toString());
+        props.setProperty(StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, Boolean.FALSE.toString());
         props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, Boolean.FALSE.toString());
         props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, Boolean.FALSE.toString());
         props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Boolean.TRUE.toString());

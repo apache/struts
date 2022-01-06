@@ -285,8 +285,8 @@ public class DefaultConfiguration implements Configuration {
 
         builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
         builder.constant(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, "false");
-        builder.constant(StrutsConstants.STRUTS_ENABLE_OGNL_EVAL_EXPRESSION, "false");
-        builder.constant(StrutsConstants.STRUTS_ENABLE_OGNL_EXPRESSION_CACHE, "true");
+        builder.constant(StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, "false");
+        builder.constant(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, "true");
         builder.constant(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "false");
         builder.constant(StrutsConstants.STRUTS_I18N_RELOAD, "false");
 

@@ -69,6 +69,42 @@ public class AnchorTest extends AbstractTest {
         assertEquals(expected, output);
     }
 
+    public void testEnableEscapeBody() {
+        tag.setName("name_");
+        tag.setHref("http://sometest.com?ab=10");
+        tag.setEscapeHtmlBody(true);
+        tag.evaluateParams();
+
+        map.putAll(tag.getParameters());
+        context.getParameters().put("body", s("<i class='i-image'/>"));
+
+        theme.renderTag(getTagName(), context);
+        theme.renderTag(getTagName() + "-close", context);
+
+        String output = writer.getBuffer().toString();
+        String expected = s("<a name='name_' id='name_' href='http://sometest.com?ab=10'>&lt;i class=&quot;i-image&quot;/&gt;</a>");
+
+        assertEquals(expected, output);
+    }
+
+    public void testDefaultDisabledEscapeBody() {
+        tag.setName("name_");
+        tag.setHref("http://sometest.com?ab=10");
+        //tag.setEscapeHtmlBody(true);
+        tag.evaluateParams();
+
+        map.putAll(tag.getParameters());
+        context.getParameters().put("body", s("<i class='i-image'/>"));
+
+        theme.renderTag(getTagName(), context);
+        theme.renderTag(getTagName() + "-close", context);
+
+        String output = writer.getBuffer().toString();
+        String expected = s("<a name='name_' id='name_' href='http://sometest.com?ab=10'><i class='i-image'/></a>");
+
+        assertEquals(expected, output);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

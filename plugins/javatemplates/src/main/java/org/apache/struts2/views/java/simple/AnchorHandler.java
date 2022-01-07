@@ -45,8 +45,10 @@ public class AnchorHandler extends AbstractTagHandler implements TagGenerator {
                     .addIfExists("tabindex", params.get("tabindex"));
             start("a", attrs);
             String body = (String) params.get("body");
-            if (StringUtils.isNotEmpty(body))
-                characters(body, false);
+            Boolean escapeHtmlBody = (Boolean) params.get("escapeHtmlBody");
+            if (StringUtils.isNotEmpty(body)) {
+                characters(body, escapeHtmlBody);
+            }
             end("a");
         }
     }

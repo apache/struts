@@ -85,8 +85,11 @@ public class Submit extends FormButton {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        if (src != null)
+        if (src != null) {
             addParameter("src", findString(src));
+        }
+
+        addParameter("escapeHtmlBody", escapeHtmlBody);
     }
 
     /**
@@ -103,7 +106,7 @@ public class Submit extends FormButton {
         this.src = src;
     }
 
-    @StrutsTagAttribute(description = "Specifies whether to HTML-escape the tag body or not", type = "Boolean", defaultValue = "true")
+    @StrutsTagAttribute(description = "Specifies whether to HTML-escape the tag body or not", type = "Boolean", defaultValue = "false")
     public void setEscapeHtmlBody(boolean escapeHtmlBody) {
         this.escapeHtmlBody = escapeHtmlBody;
     }

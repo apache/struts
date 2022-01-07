@@ -112,6 +112,8 @@ public class Anchor extends ClosingUIBean {
                 addParameter("href", ensureAttributeSafelyNotEscaped(builtHref));
             }
         }
+
+        addParameter("escapeHtmlBody", escapeHtmlBody);
     }
 
     @Inject(StrutsConstants.STRUTS_URL_INCLUDEPARAMS)
@@ -264,7 +266,7 @@ public class Anchor extends ClosingUIBean {
         urlProvider.setForceAddSchemeHostAndPort(forceAddSchemeHostAndPort);
     }
 
-    @StrutsTagAttribute(description = "Specifies whether to HTML-escape the tag body or not", type = "Boolean", defaultValue = "true")
+    @StrutsTagAttribute(description = "Specifies whether to HTML-escape the tag body or not", type = "Boolean", defaultValue = "false")
     public void setEscapeHtmlBody(boolean escapeHtmlBody) {
         this.escapeHtmlBody = escapeHtmlBody;
     }

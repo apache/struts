@@ -92,7 +92,7 @@ public class TextfieldTest extends AbstractUITagTest {
 
         verify(TextFieldTag.class.getResource("Textfield-3.txt"));
     }
-    
+
     public void testLabelSeparatorJsp() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -172,13 +172,14 @@ public class TextfieldTest extends AbstractUITagTest {
         tag.setName("myname");
         tag.setValue("%{foo}");
         tag.setSize("10");
+        tag.setDynamicAttribute(null, "anotherAttr", "another_%{foo}");
 
         tag.doStartTag();
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Textfield-5.txt"));
     }
-    
+
     public void testSimple_recursionTestNoValue() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("%{1+1}");

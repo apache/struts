@@ -30,7 +30,7 @@
         <#assign itemKeyStr = stack.findString('top')>
     </#if>
     <#if parameters.listLabelKey??>
-    <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale 
+    <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale
        file for it's localized value.  This is then used as a label -->
         <#assign itemValue = struts.getText(stack.findString(parameters.listLabelKey))/>
     <#elseif parameters.listValue??>
@@ -95,9 +95,10 @@
     <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
     <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
     <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+    <#global evaluate_dynamic_attributes = true/>
     <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
         />
-<label<#rt/> 
+<label<#rt/>
     <#if parameters.id?has_content>
         for="${parameters.id?html}-${itemCount}"<#rt/>
     <#else>
@@ -106,7 +107,6 @@
         class="checkboxLabel">${itemValue?html}</label>
 </@s.iterator>
     <#else>
-    &nbsp;
 </#if>
 <input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.name?html}"
        value=""<#rt/>

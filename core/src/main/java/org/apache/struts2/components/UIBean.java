@@ -32,6 +32,7 @@ import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
+import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.TextProviderHelper;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -1278,7 +1279,7 @@ public abstract class UIBean extends Component {
             String attrValue = entry.getValue();
 
             if (!isValidTagAttribute(attrName)) {
-                if (ComponentUtils.altSyntax(getStack()) && ComponentUtils.containsExpression(attrValue) && !lazyEvaluation()) {
+                if (ComponentUtils.containsExpression(attrValue) && !lazyEvaluation()) {
                     String translated = TextParseUtil.translateVariables('%', attrValue, stack);
                     dynamicAttributes.put(attrName, ObjectUtils.defaultIfNull(translated, attrValue));
                 } else {

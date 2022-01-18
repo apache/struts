@@ -27,7 +27,7 @@
         <#assign itemKeyStr = stack.findString('top')>
     </#if>
     <#if parameters.listValueKey??>
-        <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale 
+        <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale
              file for it's localized value.  This is then used as a label -->
         <#assign valueKey = stack.findString(parameters.listValueKey)!''/>
         <#if valueKey?has_content>
@@ -94,6 +94,7 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+<#global evaluate_dynamic_attributes = true/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 /><#rt/>
 <label for="${parameters.id}${itemKeyStr?replace(".", "_")}"<#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl"/>><#rt/>

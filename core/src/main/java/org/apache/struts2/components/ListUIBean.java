@@ -195,7 +195,6 @@ public abstract class ListUIBean extends UIBean {
         this.listTitle = listTitle;
     }
 
-
     public void setThrowExceptionOnNullValueAttribute(boolean throwExceptionOnNullValueAttribute) {
         this.throwExceptionOnNullValueAttribute = throwExceptionOnNullValueAttribute;
     }

@@ -20,7 +20,9 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +33,7 @@ import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.dispatcher.StaticContentLoader;
+import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.TextProviderHelper;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.ContextUtil;
@@ -1272,10 +1275,16 @@ public abstract class UIBean extends Component {
 
     public void setDynamicAttributes(Map<String, String> tagDynamicAttributes) {
         for (Map.Entry<String, String> entry : tagDynamicAttributes.entrySet()) {
-            String entryKey = entry.getKey();
+            String attrName = entry.getKey();
+            String attrValue = entry.getValue();
 
-            if (!isValidTagAttribute(entryKey)) {
-                dynamicAttributes.put(entryKey, entry.getValue());
+            if (!isValidTagAttribute(attrName)) {
+                if (ComponentUtils.containsExpression(attrValue) && !lazyEvaluation()) {
+                    String translated = TextParseUtil.translateVariables('%', attrValue, stack);
+                    dynamicAttributes.put(attrName, ObjectUtils.defaultIfNull(translated, attrValue));
+                } else {
+                    dynamicAttributes.put(attrName, attrValue);
+                }
             }
         }
     }
@@ -1294,6 +1303,16 @@ public abstract class UIBean extends Component {
                 dynamicAttributes.put(entryKey, entry.getValue());
             }
         }
+    }
+
+    /**
+     * Used to avoid evaluating attributes in {@link #evaluateParams()} or {@link #evaluateExtraParams()}
+     * as evaluation will happen in tag's template
+     *
+     * @return boolean false if evaluation should be performed in ftl
+     */
+    protected boolean lazyEvaluation() {
+        return false;
     }
 
 }

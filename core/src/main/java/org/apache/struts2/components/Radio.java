@@ -57,7 +57,7 @@ import javax.servlet.http.HttpServletResponse;
         allowDynamicAttributes = true)
 public class Radio extends ListUIBean {
     final public static String TEMPLATE = "radiomap";
-    
+
     public Radio(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -65,8 +65,19 @@ public class Radio extends ListUIBean {
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
-    
+
     public void evaluateExtraParams() {
     	super.evaluateExtraParams();
     }
+
+    /**
+     * Radio tag requires lazy evaluation as list of tags is dynamically generated using <s:iterator/>
+     *
+     * @return boolean true by default
+     */
+    @Override
+    protected boolean lazyEvaluation() {
+        return true;
+    }
+
 }

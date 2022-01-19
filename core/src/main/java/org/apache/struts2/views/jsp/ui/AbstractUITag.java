@@ -23,7 +23,7 @@ import org.apache.struts2.views.jsp.ComponentTagSupport;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.DynamicAttributes;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -79,7 +79,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String tooltipIconPath;
 
     // dynamic attributes.
-    protected Map<String, String> dynamicAttributes = new LinkedHashMap<>();
+    protected Map<String, String> dynamicAttributes = new HashMap<>();
 
     protected void populateParams() {
         super.populateParams();

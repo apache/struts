@@ -24,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
+import org.fest.assertions.Assertions;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -213,24 +214,28 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * Attempt to verify the contents of this.writer against the contents of the URL specified.  verify() performs a
      * trim on both ends
      *
-     * @param url the HTML snippet that we want to validate against
+     * @param urls the HTML snippets that we want to validate against any of them
      * @throws Exception if the validation failed
      */
-    public void verify(URL url) throws Exception {
-        if (url == null) {
-            fail("unable to verify a null URL");
-        } else if (this.writer == null) {
-            fail("AbstractJspWriter.writer not initialized.  Unable to verify");
-        }
+    public void verify(URL... urls) throws Exception {
+        List<String> bufferStrings = new ArrayList<>();
+        for(URL url : urls) {
+            if (url == null) {
+                fail("unable to verify a null URL");
+            } else if (this.writer == null) {
+                fail("AbstractJspWriter.writer not initialized.  Unable to verify");
+            }
 
-        StringBuilder buffer = new StringBuilder(128);
-        try (InputStream in = url.openStream()) {
-	        byte[] buf = new byte[4096];
-	        int nbytes;
-	
-	        while ((nbytes = in.read(buf)) > 0) {
-	            buffer.append(new String(buf, 0, nbytes));
-	        }
+            StringBuilder buffer = new StringBuilder(128);
+            try (InputStream in = url.openStream()) {
+                byte[] buf = new byte[4096];
+                int nbytes;
+
+                while ((nbytes = in.read(buf)) > 0) {
+                    buffer.append(new String(buf, 0, nbytes));
+                }
+            }
+            bufferStrings.add(normalize(buffer.toString(), true));
         }
 
         /**
@@ -238,9 +243,12 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
          * normalize the strings first to account for line termination differences between platforms.
          */
         String writerString = normalize(writer.toString(), true);
-        String bufferString = normalize(buffer.toString(), true);
 
-        assertEquals(bufferString, writerString);
+        if (bufferStrings.size() == 1) {
+            assertEquals(bufferStrings.get(0), writerString);
+        } else {
+            Assertions.assertThat(writerString).isIn(bufferStrings);
+        }
     }
 
     protected void setUp() throws Exception {

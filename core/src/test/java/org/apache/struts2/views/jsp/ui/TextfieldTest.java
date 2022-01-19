@@ -178,7 +178,8 @@ public class TextfieldTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(TextFieldTag.class.getResource("Textfield-5.txt"));
+        verify(TextFieldTag.class.getResource("Textfield-5.txt"),
+                TextFieldTag.class.getResource("Textfield-5jdk8.txt"));
     }
 
     public void testSimple_recursionTestNoValue() throws Exception {

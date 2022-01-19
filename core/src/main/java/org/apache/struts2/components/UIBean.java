@@ -40,7 +40,6 @@ import org.apache.struts2.views.util.ContextUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -504,7 +503,7 @@ public abstract class UIBean extends Component {
     protected String tooltipIconPath;
 
     // dynamic attributes
-    protected Map<String, Object> dynamicAttributes = new HashMap<>();
+    protected Map<String, Object> dynamicAttributes = new LinkedHashMap<>();
 
     protected String defaultTemplateDir;
     protected String defaultUITheme;

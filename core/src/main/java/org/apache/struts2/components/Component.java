@@ -68,6 +68,7 @@ public class Component {
     protected static ConcurrentMap<Class<?>, Collection<String>> standardAttributesMap = new ConcurrentHashMap<>();
 
     protected boolean devMode = false;
+    protected boolean escapeHtmlBody = false;
     protected ValueStack stack;
     protected Map<String, Object> parameters;
     protected ActionMapper actionMapper;
@@ -114,6 +115,11 @@ public class Component {
     @Inject(StrutsConstants.STRUTS_EL_THROW_EXCEPTION)
     public void setThrowExceptionsOnELFailure(String throwException) {
         this.throwExceptionOnELFailure = BooleanUtils.toBoolean(throwException);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_UI_ESCAPE_HTML_BODY, required = false)
+    public void setEscapeHtmlBody(String escapeHtmlBody) {
+        this.escapeHtmlBody = BooleanUtils.toBoolean(escapeHtmlBody);
     }
 
     @Inject
@@ -213,13 +219,13 @@ public class Component {
      * @return the component if found, <tt>null</tt> if not.
      */
     protected Component findAncestor(Class<?> clazz) {
-        Stack componentStack = getComponentStack();
+        Stack<Component> componentStack = getComponentStack();
         int currPosition = componentStack.search(this);
         if (currPosition >= 0) {
             int start = componentStack.size() - currPosition - 1;
 
             for (int i = start; i >= 0; i--) {
-                Component component = (Component) componentStack.get(i);
+                Component component = componentStack.get(i);
                 if (clazz.isAssignableFrom(component.getClass()) && component != this) {
                     return component;
                 }
@@ -536,7 +542,7 @@ public class Component {
      * @since 2.6
      */
     public boolean escapeHtmlBody() {
-        return true;
+        return escapeHtmlBody;
     }
 
     /**
@@ -572,16 +578,16 @@ public class Component {
     /**
      * Request that the tag state be cleared during {@link org.apache.struts2.views.jsp.StrutsBodyTagSupport#doEndTag()} processing,
      * which may help with certain edge cases with tag logic running on servers that implement JSP Tag Pooling.
-     * 
-     * <em>Note:</em> All Tag classes that extend {@link org.apache.struts2.views.jsp.StrutsBodyTagSupport} must implement a setter for 
+     *
+     * <em>Note:</em> All Tag classes that extend {@link org.apache.struts2.views.jsp.StrutsBodyTagSupport} must implement a setter for
      * this attribute (same name), and it must be defined at the Tag class level.
      * Defining a setter in the superclass alone is insufficient (results in "Cannot find a setter method for the attribute").
-     * 
+     *
      * See {@link org.apache.struts2.views.jsp.StrutsBodyTagSupport#clearTagStateForTagPoolingServers()  for additional details.
-     * 
+     *
      * @param performClearTagStateForTagPoolingServers true if tag state should be cleared, false otherwise.
      */
-    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing (if applicable)", type="Boolean", defaultValue="false", required = false)
+    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing (if applicable)", type="Boolean", defaultValue="false")
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         this.performClearTagStateForTagPoolingServers = performClearTagStateForTagPoolingServers;
     }

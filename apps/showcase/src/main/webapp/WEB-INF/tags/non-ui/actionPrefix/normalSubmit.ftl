@@ -32,10 +32,10 @@
 		<div class="col-md-12">
 
 			<p>You have come to this page because you did a normal submit.<p/>
-	
+
 			<p>The text you've enter is %{text}<p/>
 
-			<@s.a href="javascript:history.back();" cssClass="btn btn-info" escapeHtmlBody="false"><i class="icon icon-arrow-left"></i> Back</@s.a>
+			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back</@s.a>
 		</div>
 	</div>
 </div>

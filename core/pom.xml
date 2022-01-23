@@ -342,7 +342,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <optional>true</optional>
+            <scope>test</scope>
         </dependency>
 
         <!-- The Servlet API mocks in Spring Framework 4.x only supports Servlet 3.0 and higher.

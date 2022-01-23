@@ -18,17 +18,15 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
+import org.apache.struts2.components.Anchor;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import javax.servlet.jsp.JspException;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 
-
-/**
- */
 public class AnchorTest extends AbstractUITagTest {
 
     public void testBeanInfo() throws Exception {
@@ -72,7 +70,7 @@ public class AnchorTest extends AbstractUITagTest {
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPerformClearTagStateForTagPoolingServers(true);
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is unequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -111,7 +109,7 @@ public class AnchorTest extends AbstractUITagTest {
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPerformClearTagStateForTagPoolingServers(true);
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is unequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -156,7 +154,7 @@ public class AnchorTest extends AbstractUITagTest {
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPerformClearTagStateForTagPoolingServers(true);
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is unequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -201,7 +199,7 @@ public class AnchorTest extends AbstractUITagTest {
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPerformClearTagStateForTagPoolingServers(true);
         freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is unequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
@@ -211,7 +209,7 @@ public class AnchorTest extends AbstractUITagTest {
         testAction.setFoo("bar");
     }
 
-    private AnchorTag createTag() throws JspException {
+    private AnchorTag createTag() {
         AnchorTag tag = new AnchorTag();
         tag.setPageContext(pageContext);
 
@@ -221,8 +219,6 @@ public class AnchorTest extends AbstractUITagTest {
 
     /**
      * Test anchor tag body supported
-     * 
-     * @throws Exception 
      */
     public void testSimpleWithBody() throws Exception {
         createAction();
@@ -242,8 +238,6 @@ public class AnchorTest extends AbstractUITagTest {
 
     /**
      * Test that by default anchor tag body is HTML-escaped.
-     * 
-     * @throws Exception 
      */
     public void testSimpleWithBodyHTMLEscaped() throws Exception {
         createAction();
@@ -254,6 +248,7 @@ public class AnchorTest extends AbstractUITagTest {
         StrutsBodyContent body = new StrutsBodyContent(null);
         body.print("should HTML escape: < & >");
         tag.setBodyContent(body);
+        tag.setEscapeHtmlBody("true");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -263,15 +258,13 @@ public class AnchorTest extends AbstractUITagTest {
 
     /**
      * Test that with htmlEscapeBody false anchor tag body is not HTML-escaped.
-     * 
-     * @throws Exception 
      */
     public void testSimpleWithBodyNotHTMLEscaped() throws Exception {
         createAction();
 
         AnchorTag tag = createTag();
         tag.setHref("a");
-        tag.setEscapeHtmlBody(false);
+        tag.setEscapeHtmlBody("false");
 
         StrutsBodyContent body = new StrutsBodyContent(null);
         body.print("should not HTML escape: < & >");
@@ -282,4 +275,50 @@ public class AnchorTest extends AbstractUITagTest {
 
         verifyResource("href-5.txt");
     }
+
+    public void testInjectEscapeHtmlBodyFlag() throws Exception {
+        // given
+        initDispatcherWithConfigs("struts-default.xml, struts-escape-body.xml");
+        String escapeHtmlBody = container.getInstance(String.class, StrutsConstants.STRUTS_UI_ESCAPE_HTML_BODY);
+        assertEquals("true", escapeHtmlBody);
+
+        createMocks();
+
+        createAction();
+
+        AnchorTag tag = createTag();
+
+        // when
+        tag.doStartTag();
+
+        // then
+        Anchor component = (Anchor) tag.getComponent();
+        assertTrue(component.escapeHtmlBody());
+
+        tag.doEndTag();
+    }
+
+    public void testTagAttributeTakesPrecedenceOverInjectEscapeHtmlBodyFlag() throws Exception {
+        // given
+        initDispatcherWithConfigs("struts-default.xml, struts-escape-body.xml");
+        String escapeHtmlBody = container.getInstance(String.class, StrutsConstants.STRUTS_UI_ESCAPE_HTML_BODY);
+        assertEquals("true", escapeHtmlBody);
+
+        createMocks();
+
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setEscapeHtmlBody("false");
+
+        // when
+        tag.doStartTag();
+
+        // then
+        Anchor component = (Anchor) tag.getComponent();
+        assertFalse(component.escapeHtmlBody());
+
+        tag.doEndTag();
+    }
+
 }

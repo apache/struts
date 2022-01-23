@@ -65,13 +65,13 @@ public class SimpleTheme extends DefaultTheme {
         setName("simple");
     }
 
-    private class FactoryList extends ArrayList<TagHandlerFactory> {
+    private static class FactoryList extends ArrayList<TagHandlerFactory> {
 
         private static final long serialVersionUID = -1551895041394434032L;
 
-        public FactoryList(Class... classes) {
+        public FactoryList(Class<?>... classes) {
             super();
-            for (Class cls : classes) {
+            for (Class<?> cls : classes) {
                 add(new DefaultTagHandlerFactory(cls));
             }
             add(new DefaultTagHandlerFactory(XHTMLTagSerializer.class));

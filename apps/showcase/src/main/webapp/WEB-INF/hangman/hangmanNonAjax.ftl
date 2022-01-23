@@ -125,7 +125,7 @@
 			<#else>
 			<img src="<@s.property value="%{#looseImageUrl}" />" width="381" height="44" />
 			</#if>
-			<@s.a href="%{#startHref}" escapeHtmlBody="false">
+			<@s.a href="%{#startHref}">
 				<img src="<@s.property value="%{#startImageUrl}" />" width="250" height="43" />
 			</@s.a>
 			<#else>
@@ -139,7 +139,7 @@
 
 		      <@s.a href="%{#url}"
 		              id="%{#currentCharacter}"
-                              escapeHtmlBody="false"
+
 		              >
 		        <img height="36" alt="" src="<@s.property value="%{#chalkboardImageUrl}" />" width="36" border="0" />
 		      </@s.a>

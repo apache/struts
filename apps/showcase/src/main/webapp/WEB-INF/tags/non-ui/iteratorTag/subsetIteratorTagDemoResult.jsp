@@ -42,7 +42,7 @@
 		    </s:subset>
 
 			<s:url var="url" action="showSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" />
-			<s:a href="%{#url}" cssClass="btn btn-info" escapeHtmlBody="false"><i class="icon icon-arrow-left"></i> Back To Input</s:a>
+			<s:a href="%{#url}" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back To Input</s:a>
 		</div>
 	</div>
 </div>

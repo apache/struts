@@ -75,7 +75,7 @@ public class Submit extends FormButton {
             value = "Submit";
         }
 
-        if (((key != null)) && (value == null)) {
+        if ((key != null) && (value == null)) {
             this.value = "%{getText('"+key +"')}";
         }
 

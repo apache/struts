@@ -57,13 +57,13 @@
 
 				<@s.textfield label="Enter Some Text" name="text" />
 
-				<@s.submit action="actionPrefix" value="%{'action prefix'}" cssClass="btn" escapeHtmlBody="false" />
+				<@s.submit action="actionPrefix" value="%{'action prefix'}" cssClass="btn" />
 
-				<@s.submit method="alternateMethod" value="%{'method prefix'}" cssClass="btn" escapeHtmlBody="false" />
+				<@s.submit method="alternateMethod" value="%{'method prefix'}" cssClass="btn" />
 
-				<@s.submit value="Normal Submit" cssClass="btn" escapeHtmlBody="false" />
+				<@s.submit value="Normal Submit" cssClass="btn" />
 
-	            <@s.submit action="redirectActionPrefixAction" value="%{'redirectAction without prefix'}" cssClass="btn" escapeHtmlBody="false" />
+	            <@s.submit action="redirectActionPrefixAction" value="%{'redirectAction without prefix'}" cssClass="btn" />
 
 	        </@s.form>
 		</div>

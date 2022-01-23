@@ -32,13 +32,13 @@
 		<div class="col-md-12">
 
 			<p>You have come to this page because you used an 'redirect-action' prefix.<p/>
-	
+
 			<p>Because this is a <strong>redirect-action</strong>, the text will be lost, due to a redirection
 			implies a new request being issued from the client.<p/>
 
 			The text you've enter is ${text!''}<p/>
 
-			<@s.a href="javascript:history.back();" cssClass="btn btn-info" escapeHtmlBody="false"><i class="icon icon-arrow-left"></i> Back</@s.a>
+			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back</@s.a>
 		</div>
 	</div>
 </div>

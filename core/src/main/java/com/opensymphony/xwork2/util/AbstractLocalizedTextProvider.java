@@ -306,13 +306,13 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * A helper method for {@link ResourceBundle} bundle reload logic.
-     * 
-     * Uses standard {@link ResourceBundle} methods to clear the bundle caches for the 
+     *
+     * Uses standard {@link ResourceBundle} methods to clear the bundle caches for the
      * {@link ClassLoader} instances that this class is aware of at the time of the call.
-     * 
-     * The <code>clearCache()</code> methods have been available since Java 1.6, so 
+     *
+     * The <code>clearCache()</code> methods have been available since Java 1.6, so
      * it is anticipated the logic will work on any subsequent JVM versions.
-     * 
+     *
      * @since 2.6
      */
     private void clearResourceBundleClassloaderCaches() {
@@ -326,14 +326,14 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
     /**
      * "Hacky" helper method that attempts to clear the Tomcat <code>ResourceEntry</code>
      * {@link Map} using knowledge of the Tomcat source code.
-     * 
-     * It relies on the {@link #TOMCAT_RESOURCE_ENTRIES_FIELD} field name, base class name 
+     *
+     * It relies on the {@link #TOMCAT_RESOURCE_ENTRIES_FIELD} field name, base class name
      * {@link #TOMCAT_WEBAPP_CLASSLOADER_BASE}. and descendant class names {@link #TOMCAT_WEBAPP_CLASSLOADER},
      * {@link #TOMCAT_PARALLEL_WEBAPP_CLASSLOADER}, to keep the values identified in the constants.
      * It appears to be valid for Tomcat versions 7-10 so far, but could become invalid at any time in the future
      * when the resource handling logic in Tomcat changes.
-     * 
-     * Note: With Java 9+, calling this method may result in "Illegal reflective access" warnings.  Be aware 
+     *
+     * Note: With Java 9+, calling this method may result in "Illegal reflective access" warnings.  Be aware
      *       its logic may fail in a future version of Java that blocks the reflection calls needed for this method.
      */
     private void clearTomcatCache() {
@@ -367,10 +367,10 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
 
     /**
      * Helper method that is intended to clear a {@link Map} instance by name.
-     * 
+     *
      * This method relies on reflection to perform its operations, and may be blocked in Java 9 and later,
      * depending on the accessibility of the field.
-     * 
+     *
      * @param cl The {@link Class} of the obj parameter.
      * @param obj The {@link Object} from which the named field is to be extracted (may be <code>null</code> for a static field).
      * @param name The name of the field containing a {@link Map} reference.
@@ -433,9 +433,9 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * Set the {@link #searchDefaultBundlesFirst} flag state.  This flag may be used by descendant TextProvider
      * implementations to determine if default bundles should be searched for messages first (before the standard
      * flow of the {@link LocalizedTextProvider} implementation the descendant provides).
-     * 
+     *
      * @param searchDefaultBundlesFirst provide {@link String} "true" or "false" to set the flag state accordingly.
-     * 
+     *
      * @since 2.6
      */
     @Inject(value = StrutsConstants.STRUTS_I18N_SEARCH_DEFAULTBUNDLES_FIRST, required = false)
@@ -490,7 +490,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
         }
         return bundle;
     }
-    
+
     /**
      * Clears all the internal lists.
      *
@@ -566,17 +566,17 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * against the default resource bundles.  The default resource bundles are searched for a value using key first, then
      * alternateKey when the first search fails, then utilizing defaultMessage (which may be <code>null</code>) if <em>both</em>
      * key lookup operations fail.
-     * 
+     *
      * <p>
      * A known use case is when a key indexes a collection (e.g. user.phone[0]) for which some specific keys may exist, but not all,
      * along with a general key (e.g. user.phone[*]).  In such cases the specific key would be passed in the key parameter and the
      * general key would be passed in the alternateKey parameter.
      * </p>
-     * 
+     *
      * @param key             the initial key to search for a value within the default resource bundles.
      * @param alternateKey    the alternate (fall-back) key to search for a value within the default resource bundles, if the initial key lookup fails.
      * @param locale          the {@link Locale} to be used for the default resource bundle lookup.
-     * @param valueStack      the {@link ValueStack} associated with the operation. 
+     * @param valueStack      the {@link ValueStack} associated with the operation.
      * @param args            the argument array for parameterized messages (may be <code>null</code>).
      * @param defaultMessage  the default message {@link String} to use if both key lookup operations fail.
      * @return the {@link GetDefaultMessageReturnArg} result containing the processed message lookup (by key first, then alternateKey if key's lookup fails).
@@ -616,11 +616,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
             MessageFormat mf = buildMessageFormat(message, locale);
             return formatWithNullDetection(mf, args);
         } catch (MissingResourceException e) {
-            if (devMode) {
-                LOG.warn("Missing key [{}] in bundle [{}]!", key, bundleName);
-            } else {
-                LOG.debug("Missing key [{}] in bundle [{}]!", key, bundleName);
-            }
+            LOG.debug("Missing key [{}] in bundle [{}]!", key, bundleName);
             return null;
         }
     }

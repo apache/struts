@@ -71,11 +71,6 @@ public class TextProviderHelper {
                 } else {
                     LOG.warn("Could not locate the message resource '{}' as there is no TextProvider in the ValueStack.", key);
                 }
-                if (defaultMessage.equals(msg)) {
-                    LOG.warn("The default value expression '{}' was evaluated and did not match a property. The literal value '{}' will be used.", defaultMessage, defaultMessage);
-                } else {
-                    LOG.warn("The default value expression '{}' evaluated to '{}'", defaultMessage, msg);
-                }
             }
         }
         return msg;

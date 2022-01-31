@@ -250,6 +250,31 @@ public final class StrutsConstants {
     public static final String STRUTS_EL_THROW_EXCEPTION = "struts.el.throwExceptionOnFailure";
 
     /**
+     * Specifies a maximum number of cached BeanInfo used by OgnlUtility.  Not specified/set by default.  If
+     * a positive integer is specified, it will set a limit whose behaviour depends on whether the
+     * normal (default) cache or optional LRU cache is in place.
+     * 
+     * For the normal (default) cache, exceeding the maximum will cause the entire cache to flush (clear).
+     * For the optional LRU cache, once the maximum is reached, the least-recently-used (LRU) entry will be 
+     * removed when a new entry needs to be added (cache is fully-utilized).
+     * 
+     * @since 2.6
+     */
+    public static final String STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE = "struts.ognl.beanInfoCacheMaxSize";
+
+    /**
+     * Set the cache mode of the BeanInfo cache used by OgnlUtility.  A value of true means enable
+     * least-recently-used (LRU) mode, a value of false (or any non-true value) means to use the
+     * default cache.
+     * 
+     * Note:  When enabling LRU cache mode you must also set a maximum size (via {@link #STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE})
+     * for it to be effective.  Otherwise, there is no condition to evict a LRU entry (cache has no limit).
+     * 
+     * @since 2.6
+     */
+    public static final String STRUTS_OGNL_BEANINFO_CACHE_LRU_MODE = "struts.ognl.beanInfoCacheLRUMode";
+
+    /**
      * Logs properties that are not found (very verbose)
      * @since 2.6
      */
@@ -273,6 +298,31 @@ public final class StrutsConstants {
      * @deprecated as of 2.6.  Use {@link #STRUTS_OGNL_ENABLE_EXPRESSION_CACHE} instead.
      */
     public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = STRUTS_OGNL_ENABLE_EXPRESSION_CACHE;
+
+    /**
+     * Specifies a maximum number of cached parsed OGNL expressions.  Not specified/set by default.  If
+     * a positive integer is specified, it will set a limit whose behaviour depends on whether the
+     * normal (default) cache or optional LRU cache is in place.
+     * 
+     * For the normal (default) cache, exceeding the maximum will cause the entire cache to flush (clear).
+     * For the optional LRU cache, once the maximum is reached, the least-recently-used (LRU) entry will be 
+     * removed when a new entry needs to be added (cache is fully-utilized).
+     * 
+     * @since 2.6
+     */
+    public static final String STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE = "struts.ognl.expressionCacheMaxSize";
+
+    /**
+     * Set the cache mode of the parsed OGNL expression cache.  A value of true means enable
+     * least-recently-used (LRU) mode, a value of false (or any non-true value) means to use the
+     * default cache.
+     * 
+     * Note:  When enabling LRU cache mode you must also set a maximum size (via {@link #STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE})
+     * for it to be effective.  Otherwise, there is no condition to evict a LRU entry (cache has no limit).
+     * 
+     * @since 2.6
+     */
+    public static final String STRUTS_OGNL_EXPRESSION_CACHE_LRU_MODE = "struts.ognl.expressionCacheLRUMode";
 
     /**
      * Enables evaluation of OGNL expressions

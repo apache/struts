@@ -29,6 +29,7 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -40,7 +41,7 @@ import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Format Date object in different ways.
  * <p>
  * The date tag will allow you to format a Date in a quick and easy way.
@@ -56,6 +57,12 @@ import java.util.List;
  *
  * <p>
  * <b>Note</b>: If the requested Date object isn't found on the stack, a blank will be returned.
+ * </p>
+ *
+ * <p>
+ * <b>Note</b>: Since Struts 2.6 a new Java 8 API has been used to format the Date, it's based on
+ * <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a>
+ * which uses a bit different patterns.
  * </p>
  *
  * <p>
@@ -130,8 +137,8 @@ import java.util.List;
  *      <td>if one is not found DateFormat.MEDIUM format will be used</td>
  *   </tr>
  * </table>
- *
- *
+ * <p>
+ * <p>
  * <!-- END SNIPPET: javadoc -->
  *
  * <p><b>Examples</b></p>
@@ -145,9 +152,8 @@ import java.util.List;
  * </pre>
  *
  * <code>Date</code>
- *
  */
-@StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
+@StrutsTag(name = "date", tldBodyContent = "empty", tldTagClass = "org.apache.struts2.views.jsp.DateTag", description = "Render a formatted date.")
 public class Date extends ContextBean {
 
     private static final Logger LOG = LogManager.getLogger(Date.class);
@@ -292,6 +298,8 @@ public class Date extends ContextBean {
             date = Instant.ofEpochMilli((long) dateObject).atZone(tz);
         } else if (dateObject instanceof LocalDateTime) {
             date = ((LocalDateTime) dateObject).atZone(tz);
+        } else if (dateObject instanceof LocalDate) {
+            date = ((LocalDate) dateObject).atStartOfDay(tz);
         } else if (dateObject instanceof Instant) {
             date = ((Instant) dateObject).atZone(tz);
         } else {
@@ -300,18 +308,18 @@ public class Date extends ContextBean {
                 String developerNotification = "";
                 if (tp != null) {
                     developerNotification = findProviderInStack().getText(
-                            "devmode.notification",
-                            "Developer Notification:\n{0}",
-                            new String[]{
-                                    "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
-                                            + (dateObject != null ? dateObject.getClass() : "null") + ") isn't supported!"
-                            }
+                        "devmode.notification",
+                        "Developer Notification:\n{0}",
+                        new String[]{
+                            "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
+                                + (dateObject != null ? dateObject.getClass() : "null") + ") isn't supported!"
+                        }
                     );
                 }
                 LOG.warn(developerNotification);
             } else {
                 LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't supported!",
-                        name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
+                    name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
             }
         }
 
@@ -338,11 +346,11 @@ public class Date extends ContextBean {
                         // returned string is the same as input =
                         // DATETAG_PROPERTY
                         if (globalFormat != null
-                                && !DATETAG_PROPERTY.equals(globalFormat)) {
+                            && !DATETAG_PROPERTY.equals(globalFormat)) {
                             dtf = DateTimeFormatter.ofPattern(globalFormat, ActionContext.getContext().getLocale());
                         } else {
                             dtf = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-                                    .withLocale(ActionContext.getContext().getLocale());
+                                .withLocale(ActionContext.getContext().getLocale());
                         }
                     } else {
                         dtf = DateTimeFormatter.ofPattern(format, ActionContext.getContext().getLocale());
@@ -378,17 +386,17 @@ public class Date extends ContextBean {
         return tz;
     }
 
-    @StrutsTagAttribute(description="Date or DateTime format pattern", rtexprvalue=false)
+    @StrutsTagAttribute(description = "Date or DateTime format pattern")
     public void setFormat(String format) {
         this.format = format;
     }
 
-    @StrutsTagAttribute(description="Whether to print out the date nicely", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether to print out the date nicely", type = "Boolean", defaultValue = "false")
     public void setNice(boolean nice) {
         this.nice = nice;
     }
 
-    @StrutsTagAttribute(description = "The specific timezone in which to format the date", required = false)
+    @StrutsTagAttribute(description = "The specific timezone in which to format the date")
     public void setTimezone(String timezone) {
         this.timezone = timezone;
     }
@@ -400,7 +408,7 @@ public class Date extends ContextBean {
         return name;
     }
 
-    @StrutsTagAttribute(description="The date value to format", required=true)
+    @StrutsTagAttribute(description = "The date value to format", required = true)
     public void setName(String name) {
         this.name = name;
     }

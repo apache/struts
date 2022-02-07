@@ -60,7 +60,7 @@ public class CheckboxHandler extends AbstractTagHandler implements TagGenerator 
                     .add("value", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(fieldValue)))
                     .addIfTrue("disabled", disabled);
             start("input", attrs);
+            end("input");
         }
-        end("input");
     }
 }

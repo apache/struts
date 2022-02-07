@@ -35,6 +35,7 @@ public class CheckboxHandler extends AbstractTagHandler implements TagGenerator 
         String id = (String) params.get("id");
         String name = (String) params.get("name");
         Object disabled = params.get("disabled");
+        boolean submitUnchecked = (Boolean) params.get("submitUnchecked");
 
         attrs.add("type", "checkbox")
                 .add("name", name)
@@ -51,13 +52,15 @@ public class CheckboxHandler extends AbstractTagHandler implements TagGenerator 
         end("input");
 
         //hidden input
-        attrs = new Attributes();
-        attrs.add("type", "hidden")
-                .add("id", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
-                .add("name", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
-                .add("value", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(fieldValue)))
-                .addIfTrue("disabled", disabled);
-        start("input", attrs);
+        if (submitUnchecked) {
+            attrs = new Attributes();
+            attrs.add("type", "hidden")
+                    .add("id", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
+                    .add("name", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
+                    .add("value", "__checkbox_" + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(fieldValue)))
+                    .addIfTrue("disabled", disabled);
+            start("input", attrs);
+        }
         end("input");
     }
 }

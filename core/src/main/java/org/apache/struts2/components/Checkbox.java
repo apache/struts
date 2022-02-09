@@ -75,7 +75,8 @@ public class Checkbox extends UIBean {
         }
 
         if (submitUnchecked != null) {
-            addParameter("submitUnchecked", findValue(submitUnchecked, Boolean.class));
+            Object parsedValue = findValue(submitUnchecked, Boolean.class);
+            addParameter("submitUnchecked", parsedValue == null ? Boolean.valueOf(submitUnchecked) : parsedValue);
         } else {
             addParameter("submitUnchecked", false);
         }

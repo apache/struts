@@ -47,7 +47,7 @@ public class SubmitTest extends AbstractCommonAttributesTest {
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
-        String expected = s("<button name='name' type='submit' value='val1' tabindex='1' id='id1' class='class1' style='style1'><span>hey hey hey, here I go now</span></button>");
+        String expected = s("<button name='name' type='submit' value='val1' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1'><span>hey hey hey, here I go now</span></button>");
         assertEquals(expected, output);
     }
 
@@ -69,7 +69,7 @@ public class SubmitTest extends AbstractCommonAttributesTest {
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
-        String expected = s("<button name='name' type='submit' value='val1' tabindex='1' id='id1' class='class1' style='style1'>Just as soon as I belong, than its time I disappear</button>");
+        String expected = s("<button name='name' type='submit' value='val1' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1'>Just as soon as I belong, than its time I disappear</button>");
         assertEquals(expected, output);
     }
 
@@ -91,7 +91,7 @@ public class SubmitTest extends AbstractCommonAttributesTest {
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
-        String expected = s("<input name='name' type='submit' value='val1' tabindex='1' id='id1' class='class1' style='style1'></input>");
+        String expected = s("<input name='name' type='submit' value='val1' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1'></input>");
         assertEquals(expected, output);
     }
 
@@ -112,7 +112,7 @@ public class SubmitTest extends AbstractCommonAttributesTest {
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
-        String expected = s("<input name='name' type='submit' value='val1' tabindex='1' id='id1' class='class1' style='style1'></input>");
+        String expected = s("<input name='name' type='submit' value='val1' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1'></input>");
         assertEquals(expected, output);
     }
 

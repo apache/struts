@@ -40,8 +40,12 @@ public class LinkHandler extends AbstractTagHandler implements TagGenerator {
                 .addIfExists("referrerpolicy", params.get("referrerpolicy"))
                 .addIfExists("type", params.get("type"))
                 .addIfExists("as", params.get("as"))
-                .addIfExists("disabled", params.get("disabled"))
                 .addIfExists("title", params.get("title"));
+
+        // see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-disabled
+        if ("stylesheet".equals(params.get("rel"))) {
+            attrs.addIfTrue("disabled", params.get("disabled"));
+        }
 
         start("link", attrs);
         end("link");

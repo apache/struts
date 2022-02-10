@@ -43,7 +43,7 @@ public class AnchorTest extends AbstractTest {
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
-        String expected = s("<a name='name_' id='id_' class='class' style='style' href='http://sometest.com?ab=10' title='title' tabindex='1'></a>");
+        String expected = s("<a name='name_' id='id_' class='class' style='style' href='http://sometest.com?ab=10' disabled='disabled' title='title' tabindex='1'></a>");
         assertEquals(expected, output);
     }
 

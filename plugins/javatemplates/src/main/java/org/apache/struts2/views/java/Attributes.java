@@ -28,7 +28,7 @@ import java.util.LinkedHashMap;
  */
 public class Attributes extends LinkedHashMap<String, String> {
 
-    private static final long serialVersionUID = 4103241472140545630L; 
+    private static final long serialVersionUID = 4103241472140545630L;
 
     public Attributes add(String key, String value) {
         return add(key, value, true);
@@ -74,13 +74,15 @@ public class Attributes extends LinkedHashMap<String, String> {
      * @return this
      */
     public Attributes addIfTrue(String attrName, Object paramValue) {
-        if (paramValue != null) {
-            if ((paramValue instanceof Boolean && ((Boolean) paramValue).booleanValue()) ||
-                    (Boolean.valueOf(paramValue.toString()).booleanValue())) {
-                put(attrName, attrName);
-            }
+        if (paramValue != null && isTrue(paramValue)) {
+            put(attrName, attrName);
         }
         return this;
+    }
+
+    private boolean isTrue(Object paramValue) {
+        return (paramValue instanceof Boolean && (Boolean) paramValue)
+            || (Boolean.parseBoolean(paramValue.toString()));
     }
 
     /**

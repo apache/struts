@@ -41,7 +41,7 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
-        String expected = s("<input type='checkbox' name='name_' value='xyz' tabindex='1' id='id_' class='class' style='style' title='title'></input><input type='hidden' id='__checkbox_id_' name='__checkbox_name_' value='__checkbox_xyz'></input>");
+        String expected = s("<input type='checkbox' name='name_' value='xyz' tabindex='1' id='id_' class='class' style='style' title='title'></input>");
         assertEquals(expected, output);
     }
 
@@ -60,7 +60,7 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
-        String expected = s("<input type='checkbox' name='name_' value='xyz' disabled='disabled' tabindex='1' id='id_' class='class' style='style' title='title'></input>");
+        String expected = s("<input type='checkbox' name='name_' value='xyz' disabled='disabled' tabindex='1' id='id_' class='class' style='style' title='title'></input><input type='hidden' id='__checkbox_id_' name='__checkbox_name_' value='__checkbox_xyz' disabled='disabled'></input>");
         assertEquals(expected, output);
     }
 
@@ -72,7 +72,7 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
-        String expected = s("<input type='checkbox' name='name_' value='true' checked='checked' id='name_'></input><input type='hidden' id='__checkbox_name_' name='__checkbox_name_' value='__checkbox_true'></input>");
+        String expected = s("<input type='checkbox' name='name_' value='true' checked='checked' id='name_'></input>");
         assertEquals(expected, output);
     }
 

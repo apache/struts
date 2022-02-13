@@ -52,7 +52,7 @@ public class CheckboxHandler extends AbstractTagHandler implements TagGenerator 
         start("input", attrs);
         end("input");
 
-        if (!submitUnchecked) {
+        if (submitUnchecked) {
             //hidden input
             attrs = new Attributes();
 

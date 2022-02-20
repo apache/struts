@@ -222,7 +222,7 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
 
                 .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON)
 
-                .factory(DateFormatter.class, "simpleDateFormat", SimpleDateFormatAdapter.class, Scope.SINGLETON)
+                .factory(DateFormatter.class, "simpleDateFormatter", SimpleDateFormatAdapter.class, Scope.SINGLETON)
                 .factory(DateFormatter.class, "dateTimeFormatter", DateTimeFormatterAdapter.class, Scope.SINGLETON)
         ;
 

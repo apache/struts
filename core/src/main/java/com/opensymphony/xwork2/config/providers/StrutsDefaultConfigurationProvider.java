@@ -56,6 +56,9 @@ import com.opensymphony.xwork2.conversion.impl.DateConverter;
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionAnnotationProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultConversionFileProcessor;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
+import org.apache.struts2.components.date.DateFormatter;
+import org.apache.struts2.components.date.DateTimeFormatterAdapter;
+import org.apache.struts2.components.date.SimpleDateFormatAdapter;
 import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
 import com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
@@ -218,6 +221,9 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                         , Scope.SINGLETON)
 
                 .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON)
+
+                .factory(DateFormatter.class, "simpleDateFormat", SimpleDateFormatAdapter.class, Scope.SINGLETON)
+                .factory(DateFormatter.class, "dateTimeFormatter", DateTimeFormatterAdapter.class, Scope.SINGLETON)
         ;
 
         props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());

@@ -702,11 +702,13 @@ public abstract class UIBean extends Component {
         }
 
         if (requiredLabel != null) {
-            addParameter("required", findValue(requiredLabel, Boolean.class));
+            Object parsedValue = findValue(requiredLabel, Boolean.class);
+            addParameter("required", parsedValue == null ? Boolean.valueOf(requiredLabel) : parsedValue);
         }
 
         if (disabled != null) {
-            addParameter("disabled", findValue(disabled, Boolean.class));
+            Object parsedValue = findValue(disabled, Boolean.class);
+            addParameter("disabled", parsedValue == null ? Boolean.valueOf(disabled) : parsedValue);
         }
 
         if (tabindex != null) {
@@ -886,9 +888,9 @@ public abstract class UIBean extends Component {
                 this.addParameter("tooltipDelay", findString(this.tooltipDelay));
 
             if (this.javascriptTooltip != null) {
-                Boolean jsTooltips = (Boolean) findValue(this.javascriptTooltip, Boolean.class);
+                Object jsTooltips = findValue(this.javascriptTooltip, Boolean.class);
                 //TODO use a Boolean model when tooltipConfig is dropped
-                this.addParameter("jsTooltipEnabled", jsTooltips.toString());
+                this.addParameter("jsTooltipEnabled", jsTooltips == null ? this.javascriptTooltip : jsTooltips.toString());
 
                 if (form != null)
                     form.addParameter("hasTooltip", jsTooltips);
@@ -968,7 +970,7 @@ public abstract class UIBean extends Component {
             // 1] UI component's tooltipConfig attribute  OR
             // 2] <param name="tooltip" value="" /> param tag value attribute
 
-            result = new LinkedHashMap<>((Map) tooltipConfigObj);
+            result = new LinkedHashMap<String, String>((Map) tooltipConfigObj);
         } else if (tooltipConfigObj instanceof String) {
 
             // we get this if its configured using

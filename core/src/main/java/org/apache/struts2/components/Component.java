@@ -384,9 +384,8 @@ public class Component {
                 return expression;
             }
         } else {
-            expression = stripExpression(expression);
-
-            return getStack().findValue(expression, toType, throwExceptionOnELFailure);
+            String strippedExpression = stripExpression(expression);
+            return getStack().findValue(strippedExpression, toType, throwExceptionOnELFailure);
         }
     }
 

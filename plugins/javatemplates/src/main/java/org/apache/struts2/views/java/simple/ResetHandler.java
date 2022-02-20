@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import org.apache.struts2.views.java.TagGenerator;
-import org.apache.struts2.views.java.Attributes;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.views.java.Attributes;
+import org.apache.struts2.views.java.TagGenerator;
 
 import java.io.IOException;
 import java.util.Map;
@@ -34,12 +34,13 @@ public class ResetHandler extends AbstractTagHandler implements TagGenerator {
         boolean isButton = "button".equals(params.get("type"));
 
         attrs.addDefaultToEmpty("name", params.get("name"))
-                .add("type", "reset")
-                .addIfExists("value", params.get("nameValue"))
-                .addIfExists("tabindex", params.get("tabindex"))
-                .addIfExists("id", params.get("id"))
-                .addIfExists("class", params.get("cssClass"))
-                .addIfExists("style", params.get("cssStyle"));
+            .add("type", "reset")
+            .addIfExists("value", params.get("nameValue"))
+            .addIfTrue("disabled", params.get("disabled"))
+            .addIfExists("tabindex", params.get("tabindex"))
+            .addIfExists("id", params.get("id"))
+            .addIfExists("class", params.get("cssClass"))
+            .addIfExists("style", params.get("cssStyle"));
 
         if (!isButton)
             attrs.addIfExists("title", params.get("title"));

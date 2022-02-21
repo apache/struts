@@ -30,15 +30,11 @@ import java.util.Locale;
 public class SimpleDateFormatAdapter implements DateFormatter {
 
     @Override
-    public String format(TemporalAccessor temporal, String format, String defaultFormat) {
+    public String format(TemporalAccessor temporal, String format) {
         DateFormat df;
         Locale locale = ActionContext.getContext().getLocale();
         if (format == null) {
-            if (defaultFormat != null) {
-                df = new SimpleDateFormat(defaultFormat, locale);
-            } else {
-                df = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, locale);
-            }
+            df = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, locale);
         } else {
             df = new SimpleDateFormat(format, locale);
         }

@@ -23,11 +23,18 @@ import java.time.temporal.TemporalAccessor;
 /**
  * Allows defines a wrapper around different formatting APIs, like old SimpleDateFormat
  * and new DateTimeFormatter introduced in Java 8 Date/Time API
- *
+ * <p>
  * New instance will be injected using {@link org.apache.struts2.StrutsConstants#STRUTS_DATE_FORMATTER}
  */
 public interface DateFormatter {
 
-    String format(TemporalAccessor temporal, String format, String defaultFormat);
+    /**
+     * Formats provided temporal with the given format
+     *
+     * @param temporal Java 8 {@link TemporalAccessor}
+     * @param format   implementation specific format
+     * @return a string representation of the formatted `temporal`
+     */
+    String format(TemporalAccessor temporal, String format);
 
 }

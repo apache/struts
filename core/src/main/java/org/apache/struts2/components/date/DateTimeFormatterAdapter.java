@@ -28,16 +28,12 @@ import java.util.Locale;
 public class DateTimeFormatterAdapter implements DateFormatter {
 
     @Override
-    public String format(TemporalAccessor temporal, String format, String defaultFormat) {
+    public String format(TemporalAccessor temporal, String format) {
         DateTimeFormatter dtf;
         Locale locale = ActionContext.getContext().getLocale();
         if (format == null) {
-            if (defaultFormat != null) {
-                dtf = DateTimeFormatter.ofPattern(defaultFormat, locale);
-            } else {
-                dtf = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-                    .withLocale(locale);
-            }
+            dtf = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                .withLocale(locale);
         } else {
             dtf = DateTimeFormatter.ofPattern(format, locale);
         }

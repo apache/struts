@@ -23,7 +23,6 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.date.DateFormatter;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -355,15 +354,17 @@ public class Date extends ContextBean {
     }
 
     private String formatDate(TextProvider textProvider, ZonedDateTime date) {
-        // if the format is not specified, fall back using the defined property DATETAG_PROPERTY
-        String globalFormat = textProvider.getText(Date.DATETAG_PROPERTY);
-        if (DATETAG_PROPERTY.equals(globalFormat)) {
-            // if tp.getText can not find the property then the
-            // returned string is the same as input = DATETAG_PROPERTY
-            globalFormat = null;
+        String useFormat = format;
+        if (useFormat == null) {
+            // if the format is not specified, fall back using the defined property DATETAG_PROPERTY
+            useFormat = textProvider.getText(DATETAG_PROPERTY);
+            if (DATETAG_PROPERTY.equals(useFormat)) {
+                // if tp.getText can not find the property then the
+                // returned string is the same as input = DATETAG_PROPERTY
+                useFormat = null;
+            }
         }
-
-        return dateFormatter.format(date, format, globalFormat);
+        return dateFormatter.format(date, useFormat);
     }
 
     private ZoneId getTimeZone() {

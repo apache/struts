@@ -18,29 +18,29 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.components.date.DateFormatter;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p>
  * Format Date object in different ways.
  * <p>
  * The date tag will allow you to format a Date in a quick and easy way.
@@ -56,6 +56,12 @@ import java.util.List;
  *
  * <p>
  * <b>Note</b>: If the requested Date object isn't found on the stack, a blank will be returned.
+ * </p>
+ *
+ * <p>
+ * <b>Note</b>: Since Struts 2.6 a new Java 8 API has been used to format the Date, it's based on
+ * <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a>
+ * which uses a bit different patterns.
  * </p>
  *
  * <p>
@@ -130,8 +136,8 @@ import java.util.List;
  *      <td>if one is not found DateFormat.MEDIUM format will be used</td>
  *   </tr>
  * </table>
- *
- *
+ * <p>
+ * <p>
  * <!-- END SNIPPET: javadoc -->
  *
  * <p><b>Examples</b></p>
@@ -145,12 +151,12 @@ import java.util.List;
  * </pre>
  *
  * <code>Date</code>
- *
  */
-@StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
+@StrutsTag(name = "date", tldBodyContent = "empty", tldTagClass = "org.apache.struts2.views.jsp.DateTag", description = "Render a formatted date.")
 public class Date extends ContextBean {
 
     private static final Logger LOG = LogManager.getLogger(Date.class);
+
     /**
      * Property name to fall back when no format is specified
      */
@@ -202,17 +208,18 @@ public class Date extends ContextBean {
 
     private String timezone;
 
+    private DateFormatter dateFormatter;
+
     public Date(ValueStack stack) {
         super(stack);
     }
 
-    private TextProvider findProviderInStack() {
-        for (Object o : getStack().getRoot()) {
-            if (o instanceof TextProvider) {
-                return (TextProvider) o;
-            }
-        }
-        return null;
+    /**
+     * An instance of {@link DateFormatter}
+     */
+    @Inject
+    public void setDateFormatter(DateFormatter dateFormatter) {
+        this.dateFormatter = dateFormatter;
     }
 
     /**
@@ -280,6 +287,8 @@ public class Date extends ContextBean {
 
     @Override
     public boolean end(Writer writer, String body) {
+        TextProvider textProvider = findProviderInStack();
+
         ZonedDateTime date = null;
         final ZoneId tz = getTimeZone();
         // find the name on the valueStack
@@ -292,26 +301,27 @@ public class Date extends ContextBean {
             date = Instant.ofEpochMilli((long) dateObject).atZone(tz);
         } else if (dateObject instanceof LocalDateTime) {
             date = ((LocalDateTime) dateObject).atZone(tz);
+        } else if (dateObject instanceof LocalDate) {
+            date = ((LocalDate) dateObject).atStartOfDay(tz);
         } else if (dateObject instanceof Instant) {
             date = ((Instant) dateObject).atZone(tz);
         } else {
             if (devMode) {
-                TextProvider tp = findProviderInStack();
                 String developerNotification = "";
-                if (tp != null) {
-                    developerNotification = findProviderInStack().getText(
-                            "devmode.notification",
-                            "Developer Notification:\n{0}",
-                            new String[]{
-                                    "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
-                                            + (dateObject != null ? dateObject.getClass() : "null") + ") isn't supported!"
-                            }
+                if (textProvider != null) {
+                    developerNotification = textProvider.getText(
+                        "devmode.notification",
+                        "Developer Notification:\n{0}",
+                        new String[]{
+                            "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
+                                + (dateObject != null ? dateObject.getClass() : "null") + ") isn't supported!"
+                        }
                     );
                 }
                 LOG.warn(developerNotification);
             } else {
                 LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't supported!",
-                        name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
+                    name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
             }
         }
 
@@ -321,33 +331,11 @@ public class Date extends ContextBean {
         }
         String msg;
         if (date != null) {
-            TextProvider tp = findProviderInStack();
-            if (tp != null) {
+            if (textProvider != null) {
                 if (nice) {
-                    msg = formatTime(tp, date);
+                    msg = formatTime(textProvider, date);
                 } else {
-                    DateTimeFormatter dtf;
-                    if (format == null) {
-                        String globalFormat = null;
-
-                        // if the format is not specified, fall back using the
-                        // defined property DATETAG_PROPERTY
-                        globalFormat = tp.getText(DATETAG_PROPERTY);
-
-                        // if tp.getText can not find the property then the
-                        // returned string is the same as input =
-                        // DATETAG_PROPERTY
-                        if (globalFormat != null
-                                && !DATETAG_PROPERTY.equals(globalFormat)) {
-                            dtf = DateTimeFormatter.ofPattern(globalFormat, ActionContext.getContext().getLocale());
-                        } else {
-                            dtf = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-                                    .withLocale(ActionContext.getContext().getLocale());
-                        }
-                    } else {
-                        dtf = DateTimeFormatter.ofPattern(format, ActionContext.getContext().getLocale());
-                    }
-                    msg = dtf.format(date);
+                    msg = formatDate(textProvider, date);
                 }
                 if (msg != null) {
                     try {
@@ -365,6 +353,20 @@ public class Date extends ContextBean {
         return super.end(writer, "");
     }
 
+    private String formatDate(TextProvider textProvider, ZonedDateTime date) {
+        String useFormat = format;
+        if (useFormat == null) {
+            // if the format is not specified, fall back using the defined property DATETAG_PROPERTY
+            useFormat = textProvider.getText(DATETAG_PROPERTY);
+            if (DATETAG_PROPERTY.equals(useFormat)) {
+                // if tp.getText can not find the property then the
+                // returned string is the same as input = DATETAG_PROPERTY
+                useFormat = null;
+            }
+        }
+        return dateFormatter.format(date, useFormat);
+    }
+
     private ZoneId getTimeZone() {
         ZoneId tz = ZoneId.systemDefault();
         if (timezone != null) {
@@ -378,17 +380,26 @@ public class Date extends ContextBean {
         return tz;
     }
 
-    @StrutsTagAttribute(description="Date or DateTime format pattern", rtexprvalue=false)
+    private TextProvider findProviderInStack() {
+        for (Object o : getStack().getRoot()) {
+            if (o instanceof TextProvider) {
+                return (TextProvider) o;
+            }
+        }
+        return null;
+    }
+
+    @StrutsTagAttribute(description = "Date or DateTime format pattern")
     public void setFormat(String format) {
         this.format = format;
     }
 
-    @StrutsTagAttribute(description="Whether to print out the date nicely", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether to print out the date nicely", type = "Boolean", defaultValue = "false")
     public void setNice(boolean nice) {
         this.nice = nice;
     }
 
-    @StrutsTagAttribute(description = "The specific timezone in which to format the date", required = false)
+    @StrutsTagAttribute(description = "The specific timezone in which to format the date")
     public void setTimezone(String timezone) {
         this.timezone = timezone;
     }
@@ -400,7 +411,7 @@ public class Date extends ContextBean {
         return name;
     }
 
-    @StrutsTagAttribute(description="The date value to format", required=true)
+    @StrutsTagAttribute(description = "The date value to format", required = true)
     public void setName(String name) {
         this.name = name;
     }

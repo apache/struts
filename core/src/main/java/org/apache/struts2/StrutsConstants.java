@@ -18,6 +18,7 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.components.date.DateFormatter;
 import org.apache.struts2.dispatcher.mapper.CompositeActionMapper;
 
 /**
@@ -384,4 +385,6 @@ public final class StrutsConstants {
     public static final String STRUTS_CHAINING_COPY_MESSAGES = "struts.chaining.copyMessages";
     public static final String STRUTS_OBJECT_FACTORY_CLASSLOADER = "struts.objectFactory.classloader";
 
+    /** See {@link org.apache.struts2.components.Date#setDateFormatter(DateFormatter)} */
+    public static final String STRUTS_DATE_FORMATTER = "struts.date.formatter";
 }

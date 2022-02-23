@@ -216,7 +216,7 @@
     <bean type="com.opensymphony.xwork2.UnknownHandlerManager" class="com.opensymphony.xwork2.DefaultUnknownHandlerManager" name="struts" />
 
     <bean type="org.apache.struts2.dispatcher.DispatcherErrorHandler" name="struts" class="org.apache.struts2.dispatcher.DefaultDispatcherErrorHandler" />
-    
+
     <!--  Silly workarounds for OGNL since there is currently no way to flush its internal caches -->
     <bean type="ognl.PropertyAccessor" name="java.util.ArrayList" class="com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor" />
     <bean type="ognl.PropertyAccessor" name="java.util.HashSet" class="com.opensymphony.xwork2.ognl.accessor.XWorkCollectionPropertyAccessor" />
@@ -227,6 +227,9 @@
     <bean type="com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker" name="struts" class="com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker" scope="singleton" />
 
     <bean type="com.opensymphony.xwork2.config.providers.ValueSubstitutor" class="com.opensymphony.xwork2.config.providers.EnvsValueSubstitutor" scope="singleton"/>
+
+    <bean type="org.apache.struts2.components.date.DateFormatter" name="simpleDateFormatter" class="org.apache.struts2.components.date.SimpleDateFormatAdapter" scope="singleton"/>
+    <bean type="org.apache.struts2.components.date.DateFormatter" name="dateTimeFormatter" class="org.apache.struts2.components.date.DateTimeFormatterAdapter" scope="singleton"/>
 
     <package name="struts-default" abstract="true">
         <result-types>

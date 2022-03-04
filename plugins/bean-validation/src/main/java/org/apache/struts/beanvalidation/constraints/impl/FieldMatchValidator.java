@@ -20,17 +20,20 @@
  */
 package org.apache.struts.beanvalidation.constraints.impl;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts.beanvalidation.constraints.FieldMatch;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
 
     private static final Logger LOG = LogManager.getLogger(FieldMatchValidator.class);
+
     private String firstFieldName;
     private String secondFieldName;
 
@@ -41,13 +44,23 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
 
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         try {
-            final Object firstObj = PropertyUtils.getProperty(value, this.firstFieldName);
-            final Object secondObj = PropertyUtils.getProperty(value, this.secondFieldName);
+            final Object firstObj = readPropertyValue(value, this.firstFieldName);
+            final Object secondObj = readPropertyValue(value, this.secondFieldName);
             return firstObj == null && secondObj == null || firstObj != null && firstObj.equals(secondObj);
         } catch (final Exception ex) {
             LOG.info("Error while getting values from object", ex);
             return false;
         }
-
     }
+
+    private Object readPropertyValue(Object bean, String propertyName) throws Exception {
+        BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+        for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
+            if (propertyName.equals(descriptor.getName())) {
+                return descriptor.getReadMethod().invoke(bean);
+            }
+        }
+        return null;
+    }
+
 }

@@ -91,6 +91,9 @@ import com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.LocalizedTextProvider;
+import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
+import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
 import com.opensymphony.xwork2.util.StrutsLocalizedTextProvider;
 import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.PatternMatcher;
@@ -127,19 +130,24 @@ import java.util.Set;
 
 public class StrutsDefaultConfigurationProvider implements ConfigurationProvider {
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public void init(Configuration configuration) throws ConfigurationException {
     }
 
+    @Override
     public void loadPackages() throws ConfigurationException {
     }
 
+    @Override
     public boolean needsReload() {
         return false;
     }
 
+    @Override
     public void register(ContainerBuilder builder, LocatableProperties props)
             throws ConfigurationException {
 
@@ -218,6 +226,9 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                         , Scope.SINGLETON)
 
                 .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON)
+
+                .factory(OgnlCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSIONCACHE_FACTORY, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
+                .factory(OgnlCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFOCACHE_FACTORY, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
         ;
 
         props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());

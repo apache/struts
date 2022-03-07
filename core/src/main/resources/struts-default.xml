@@ -228,6 +228,9 @@
 
     <bean type="com.opensymphony.xwork2.config.providers.ValueSubstitutor" class="com.opensymphony.xwork2.config.providers.EnvsValueSubstitutor" scope="singleton"/>
 
+    <bean type="com.opensymphony.xwork2.ognl.OgnlCacheFactory" name="struts.ognl.expressionCacheFactory" class="com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.ognl.OgnlCacheFactory" name="struts.ognl.beanInfoCacheFactory" class="com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory" scope="singleton"/>
+
     <package name="struts-default" abstract="true">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>

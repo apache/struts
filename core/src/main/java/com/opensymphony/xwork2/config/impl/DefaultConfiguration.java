@@ -28,6 +28,9 @@ import com.opensymphony.xwork2.conversion.*;
 import com.opensymphony.xwork2.conversion.impl.*;
 import com.opensymphony.xwork2.factory.*;
 import com.opensymphony.xwork2.inject.*;
+import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
+import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
@@ -282,6 +285,9 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
 
         builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
+
+        builder.factory(OgnlCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSIONCACHE_FACTORY, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON);
+        builder.factory(OgnlCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFOCACHE_FACTORY, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON);
 
         builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
         builder.constant(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, "false");

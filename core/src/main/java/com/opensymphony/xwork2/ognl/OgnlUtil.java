@@ -38,10 +38,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 
@@ -58,14 +55,10 @@ public class OgnlUtil {
     // Flag used to reduce flooding logs with WARNs about using DevMode excluded packages
     private final AtomicBoolean warnReported = new AtomicBoolean(false);
 
-    private final AtomicBoolean useLRUExpressionCache = new AtomicBoolean(false);
-    private final AtomicBoolean useLRUBeanInfoCache = new AtomicBoolean(false);
-    private final AtomicInteger expressionsCacheMaxSize = new AtomicInteger(25000);
-    private final AtomicInteger beanInfoCacheMaxSize = new AtomicInteger(25000);
-    private final ConcurrentMap<String, Object> expressionsCache = new ConcurrentHashMap<>();
-    private final LRUCache<String, Object> expressionsCacheLRU = new LRUCache<>(expressionsCacheMaxSize.get(), 16, 0.75f);
-    private final ConcurrentMap<Class<?>, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
-    private final LRUCache<Class<?>, BeanInfo> beanInfoCacheLRU = new LRUCache<>(beanInfoCacheMaxSize.get(), 16, 0.75f);
+    private final OgnlCacheFactory<String, Object> ognlExpressionCacheFactory;
+    private final OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory;
+    private final OgnlCache<String, Object> expressionCache;
+    private final OgnlCache<Class<?>, BeanInfo> beanInfoCache;
     private TypeConverter defaultConverter;
 
     private boolean devMode;
@@ -85,7 +78,25 @@ public class OgnlUtil {
     private boolean allowStaticMethodAccess;
     private boolean disallowProxyMemberAccess;
 
+    /**
+     * Construct a new OgnlUtil instance for use with the framework
+     */
     public OgnlUtil() {
+        this(null, null);  // Instantiate default Expression and BeanInfo caches (null factories)
+    }
+
+    /**
+     * Construct a new OgnlUtil instance for use with the framework, with optional
+     * cache factories for Ognl Expression and BeanInfo caches.
+     * 
+     * @param ognlExpressionCacheFactory factory for Expression cache instance.  If null, use default
+     * @param ognlBeanInfoCacheFactory  for BeanInfo cache instance.  If null, use default
+     */
+    @Inject
+    public OgnlUtil(
+            @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSIONCACHE_FACTORY, required = false) OgnlCacheFactory<String, Object> ognlExpressionCacheFactory,
+            @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFOCACHE_FACTORY, required = false) OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
+    ) {
         excludedClasses = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
@@ -93,6 +104,19 @@ public class OgnlUtil {
         devModeExcludedClasses = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
+        this.ognlExpressionCacheFactory = ognlExpressionCacheFactory;
+        this.ognlBeanInfoCacheFactory = ognlBeanInfoCacheFactory;
+
+        if (ognlExpressionCacheFactory != null) {
+            this.expressionCache = ognlExpressionCacheFactory.buildOgnlCache(ognlExpressionCacheFactory.getCacheMaxSize(), 16, 0.75f, ognlExpressionCacheFactory.getUseLRUCache());
+        } else {
+            this.expressionCache = new OgnlDefaultCache<>(25000, 16, 0.75f);
+        }
+        if (ognlBeanInfoCacheFactory != null) {
+            this.beanInfoCache = ognlBeanInfoCacheFactory.buildOgnlCache(ognlBeanInfoCacheFactory.getCacheMaxSize(), 16, 0.75f, ognlBeanInfoCacheFactory.getUseLRUCache());
+        } else {
+            this.beanInfoCache = new OgnlDefaultCache<>(25000, 16, 0.75f);
+        }
     }
 
     @Inject
@@ -111,25 +135,13 @@ public class OgnlUtil {
     }
 
     @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, required = false)
-    protected void setExpressionsCacheMaxSize(String maxSize) {
-        expressionsCacheMaxSize.set(Integer.parseInt(maxSize));
-        expressionsCacheLRU.setEvictionLimit(expressionsCacheMaxSize.get());
+    protected void setExpressionCacheMaxSize(String maxSize) {
+        expressionCache.setEvictionLimit(Integer.parseInt(maxSize));
     }
 
     @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, required = false)
     protected void setBeanInfoCacheMaxSize(String maxSize) {
-        beanInfoCacheMaxSize.set(Integer.parseInt(maxSize));
-        beanInfoCacheLRU.setEvictionLimit(beanInfoCacheMaxSize.get());
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_LRU_MODE, required = false)
-    protected void setUseLRUExpressionCache(String useLRUMode) {
-        useLRUExpressionCache.set(BooleanUtils.toBoolean(useLRUMode));
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_LRU_MODE, required = false)
-    protected void setUseLRUBeanInfoCache(String useLRUMode) {
-        useLRUBeanInfoCache.set(BooleanUtils.toBoolean(useLRUMode));
+        beanInfoCache.setEvictionLimit(Integer.parseInt(maxSize));
     }
 
     @Inject(value = StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, required = false)
@@ -302,8 +314,7 @@ public class OgnlUtil {
      * @since 2.5.21
      */
     public void clearExpressionCache() {
-        expressionsCache.clear();
-        expressionsCacheLRU.clear();
+        expressionCache.clear();
     }
 
     /**
@@ -314,11 +325,7 @@ public class OgnlUtil {
      * @since 2.5.21
      */
     public int expressionCacheSize() {
-        if (useLRUExpressionCache.get()) {
-            return expressionsCacheLRU.size();
-        } else {
-            return expressionsCache.size();
-        }
+        return expressionCache.size();
     }
 
     /**
@@ -336,7 +343,6 @@ public class OgnlUtil {
      */
     public void clearBeanInfoCache() {
         beanInfoCache.clear();
-        beanInfoCacheLRU.clear();
     }
 
     /**
@@ -347,11 +353,7 @@ public class OgnlUtil {
      * @since 2.5.21
      */
     public int beanInfoCacheSize() {
-        if (useLRUBeanInfoCache.get()) {
-            return beanInfoCacheLRU.size();
-        } else {
-            return beanInfoCache.size();
-        }
+        return beanInfoCache.size();
     }
 
     /**
@@ -571,18 +573,11 @@ public class OgnlUtil {
     private <T> Object compileAndExecute(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
         Object tree;
         if (enableExpressionCache) {
-            final Map<String, Object> expressionsCacheRef = (useLRUExpressionCache.get() ? expressionsCacheLRU.backingMapReference() : expressionsCache);
-            tree = expressionsCacheRef.get(expression);
+            tree = expressionCache.get(expression);
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkEnableEvalExpression(tree, context);
-                expressionsCacheRef.putIfAbsent(expression, tree);
-                if (! useLRUExpressionCache.get()) {
-                    // If using a standard cache, after attempting to add an expression check cache size against the limit.
-                    if (expressionsCacheRef.size() > expressionsCacheMaxSize.get()) {
-                        expressionsCacheRef.clear();  // Non-LRU cache has exceeded maximum configured size, so flush.
-                    }
-                }
+                expressionCache.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
@@ -595,18 +590,11 @@ public class OgnlUtil {
     private <T> Object compileAndExecuteMethod(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
         Object tree;
         if (enableExpressionCache) {
-            final Map<String, Object> expressionsCacheRef = (useLRUExpressionCache.get() ? expressionsCacheLRU.backingMapReference() : expressionsCache);
-            tree = expressionsCacheRef.get(expression);
+            tree = expressionCache.get(expression);
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkSimpleMethod(tree, context);
-                expressionsCacheRef.putIfAbsent(expression, tree);
-                if (! useLRUExpressionCache.get()) {
-                    // If using a standard cache, after attempting to add an expression check cache size against the limit.
-                    if (expressionsCacheRef.size() > expressionsCacheMaxSize.get()) {
-                        expressionsCacheRef.clear();  // Non-LRU cache has exceeded maximum configured size, so flush.
-                    }
-                }
+                expressionCache.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
@@ -812,18 +800,11 @@ public class OgnlUtil {
      * @throws IntrospectionException is thrown if an exception occurs during introspection.
      */
     public BeanInfo getBeanInfo(Class<?> clazz) throws IntrospectionException {
-        final Map<Class<?>, BeanInfo> beanInfoCacheRef = (useLRUBeanInfoCache.get() ? beanInfoCacheLRU.backingMapReference() : beanInfoCache);
-        synchronized (beanInfoCacheRef) {
-            BeanInfo beanInfo = beanInfoCacheRef.get(clazz);
+        synchronized (beanInfoCache) {
+            BeanInfo beanInfo = beanInfoCache.get(clazz);
             if (beanInfo == null) {
                 beanInfo = Introspector.getBeanInfo(clazz, Object.class);
-                beanInfoCacheRef.putIfAbsent(clazz, beanInfo);
-                if (! useLRUBeanInfoCache.get()) {
-                    // If using a standard cache, after attempting to add beanInfo check cache size against the limit.
-                    if (beanInfoCacheRef.size() > beanInfoCacheMaxSize.get()) {
-                        beanInfoCacheRef.clear();  // Non-LRU cache has exceeded maximum configured size, so flush.
-                    }
-                }
+                beanInfoCache.putIfAbsent(clazz, beanInfo);
             }
             return beanInfo;
         }
@@ -882,66 +863,4 @@ public class OgnlUtil {
         T execute(Object tree) throws OgnlException;
     }
 
-    /**
-     * A basic LRUCache implementation that utilizes a {@link Collections#synchronizedMap(java.util.Map)}
-     * backed by a {@link LinkedHashMap}.  May be replaced by a more efficient implementation in the future.
-     * 
-     * @param <Key> Key type for the LRUCache
-     * @param <Value> Value type for the LRUCache
-     */
-    protected class LRUCache<Key, Value> {
-        private final Map<Key, Value> lruCache;
-        private final AtomicInteger cacheEvictionLimit = new AtomicInteger(25000);
-
-        public LRUCache(int evictionLimit, int initialCapacity, float loadFactor) {
-            this.cacheEvictionLimit.set(evictionLimit);
-            // Access-order mode selected (order mode true in LinkedHashMap constructor).
-            lruCache = Collections.synchronizedMap (new LinkedHashMap<Key, Value>(initialCapacity, loadFactor, true) {
-                @Override
-                protected boolean removeEldestEntry(Map.Entry<Key,Value> eldest) {
-                    return (this.size() > cacheEvictionLimit.get());
-                }
-            });
-        }
-
-        public Value get(Key key) {
-            return lruCache.get(key);
-        }
-
-        public void put(Key key, Value value) {
-            lruCache.put(key, value);
-        }
-
-        public void putIfAbsent(Key key, Value value) {
-            lruCache.putIfAbsent(key, value);
-        }
-
-        public int size() {
-            return lruCache.size();
-        }
-
-        public void clear() {
-            lruCache.clear();
-        }
-
-        /**
-         * Since the {@link LRUCache} is only intended to be used internally, we can cheat a bit
-         * and allow access to the backing map directly via its reference.  Allows it to be used
-         * like the other {@link Map} caches within the module.
-         * 
-         * @return The Map that backs the LRU cache.
-         */
-        public Map<Key, Value> backingMapReference() {
-            return lruCache;
-        }
-
-        public int getEvictionLimit() {
-            return this.cacheEvictionLimit.get();
-        }
-
-        public void setEvictionLimit(int cacheEvictionLimit) {
-            this.cacheEvictionLimit.set(cacheEvictionLimit);
-        }
-
-    }
 }

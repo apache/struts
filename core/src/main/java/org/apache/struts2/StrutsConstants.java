@@ -250,6 +250,18 @@ public final class StrutsConstants {
     public static final String STRUTS_EL_THROW_EXCEPTION = "struts.el.throwExceptionOnFailure";
 
     /**
+     * Specifies an OGNL expression cache factory implementation.  A default implementation is provided, but
+     * could be replaced by a custom one if desired.
+     */
+    public static final String STRUTS_OGNL_EXPRESSIONCACHE_FACTORY = "struts.ognl.expressionCacheFactory";
+
+    /**
+     * Specifies an OGNL BeanInfo cache factory implementation.  A default implementation is provided, but
+     * could be replaced by a custom one if desired.
+     */
+    public static final String STRUTS_OGNL_BEANINFOCACHE_FACTORY = "struts.ognl.beanInfoCacheFactory";
+
+    /**
      * Specifies a maximum number of cached BeanInfo used by OgnlUtility.  Not specified/set by default.  If
      * a positive integer is specified, it will set a limit whose behaviour depends on whether the
      * normal (default) cache or optional LRU cache is in place.

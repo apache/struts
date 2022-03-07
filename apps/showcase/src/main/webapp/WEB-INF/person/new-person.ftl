@@ -59,7 +59,7 @@
 					</div>
 				</div>
 			    <div class="form-actions">
-				    <@s.submit value="Create person" cssClass="btn btn-primary" escapeHtmlBody="false"/>
+				    <@s.submit value="Create person" cssClass="btn btn-primary"/>
 			    </div>
 			</@s.form>
 		</div>

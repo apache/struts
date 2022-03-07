@@ -1,4 +1,3 @@
-<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,29 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<html>
-<head>
-	<title>Struts2 Showcase - Non UI Tags - Action Prefix (Freemarker)</title>
-</head>
-<body>
-<div class="page-header">
-	<h1>Non Ui Tag - Action Prefix (Freemarker)</h1>
-</div>
+package org.apache.struts2.components.date;
 
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
+import com.opensymphony.xwork2.ActionContext;
 
-			<p>You have come to this page because you used an <strong>action</strong> prefix.<p/>
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
+import java.util.Locale;
 
-			<p>The text you've entered is ${text!''}<p/>
+public class SimpleDateFormatAdapter implements DateFormatter {
 
-			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back</@s.a>
-		</div>
-	</div>
-</div>
-</body>
-</html>
+    @Override
+    public String format(TemporalAccessor temporal, String format) {
+        DateFormat df;
+        Locale locale = ActionContext.getContext().getLocale();
+        if (format == null) {
+            df = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, locale);
+        } else {
+            df = new SimpleDateFormat(format, locale);
+        }
+        return df.format(new Date(Instant.from(temporal).toEpochMilli()));
+    }
 
-
+}

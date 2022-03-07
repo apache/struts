@@ -45,25 +45,23 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  * </p>
  *
  * <ul>
- *
  * <li>{@link ServletContextAware}</li>
- *
+ * <li>{@link org.apache.struts2.action.ServletContextAware}</li>
  * <li>{@link ServletRequestAware}</li>
- *
+ * <li>{@link org.apache.struts2.action.ServletRequestAware}</li>
  * <li>{@link ServletResponseAware}</li>
- *
+ * <li>{@link org.apache.struts2.action.ServletResponseAware}</li>
  * <li>{@link ParameterAware} - deprecated since 2.5.4, please use {@link HttpParametersAware}</li>
- *
  * <li>{@link HttpParametersAware}</li>
- *
+ * <li>{@link org.apache.struts2.action.ParametersAware}</li>
  * <li>{@link RequestAware}</li>
- *
+ * <li>{@link org.apache.struts2.action.ServletRequestAware}</li>
  * <li>{@link SessionAware}</li>
- *
+ * <li>{@link org.apache.struts2.action.SessionAware}</li>
  * <li>{@link ApplicationAware}</li>
- *
+ * <li>{@link org.apache.struts2.action.ApplicationAware}</li>
  * <li>{@link PrincipalAware}</li>
- *
+ * <li>{@link org.apache.struts2.action.PrincipalAware}</li>
  * </ul>
  *
  * <!-- END SNIPPET: description -->
@@ -101,13 +99,19 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  * </pre>
  *
  * @see ServletContextAware
+ * @see org.apache.struts2.action.ServletContextAware
  * @see ServletRequestAware
+ * @see org.apache.struts2.action.ServletRequestAware
  * @see ServletResponseAware
+ * @see org.apache.struts2.action.ServletResponseAware
  * @see ParameterAware
- * @see ParametersAware
+ * @see org.apache.struts2.action.ParametersAware
  * @see SessionAware
+ * @see org.apache.struts2.action.SessionAware
  * @see ApplicationAware
+ * @see org.apache.struts2.action.ApplicationAware
  * @see PrincipalAware
+ * @see org.apache.struts2.action.PrincipalAware
  */
 public class ServletConfigInterceptor extends AbstractInterceptor implements StrutsStatics {
 
@@ -159,7 +163,7 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
         if (action instanceof ApplicationAware) {
             ((ApplicationAware) action).setApplication(context.getApplication());
         }
-        
+
         if (action instanceof org.apache.struts2.action.ApplicationAware) {
             ((org.apache.struts2.action.ApplicationAware) action).withApplication(context.getApplication());
         }
@@ -167,7 +171,7 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
         if (action instanceof SessionAware) {
             ((SessionAware) action).setSession(context.getSession());
         }
-        
+
         if (action instanceof org.apache.struts2.action.SessionAware) {
             ((org.apache.struts2.action.SessionAware) action).withSession(context.getSession());
         }
@@ -179,7 +183,7 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
         if (action instanceof PrincipalAware) {
             HttpServletRequest request = context.getServletRequest();
             if(request != null) {
-                // We are in servtlet environment, so principal information resides in HttpServletRequest
+                // We are in servlet environment, so principal information resides in HttpServletRequest
                 ((PrincipalAware) action).setPrincipalProxy(new ServletPrincipalProxy(request));
             }
         }

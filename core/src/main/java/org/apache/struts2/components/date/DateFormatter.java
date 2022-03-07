@@ -1,4 +1,3 @@
-<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,29 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<html>
-<head>
-	<title>Struts2 Showcase - Non UI Tags - Action Prefix (Freemarker)</title>
-</head>
-<body>
-<div class="page-header">
-	<h1>Non Ui Tag - Action Prefix (Freemarker)</h1>
-</div>
+package org.apache.struts2.components.date;
 
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
+import java.time.temporal.TemporalAccessor;
 
-			<p>You have come to this page because you used an <strong>action</strong> prefix.<p/>
+/**
+ * Allows defines a wrapper around different formatting APIs, like old SimpleDateFormat
+ * and new DateTimeFormatter introduced in Java 8 Date/Time API
+ * <p>
+ * New instance will be injected using {@link org.apache.struts2.StrutsConstants#STRUTS_DATE_FORMATTER}
+ */
+public interface DateFormatter {
 
-			<p>The text you've entered is ${text!''}<p/>
+    /**
+     * Formats provided temporal with the given format
+     *
+     * @param temporal Java 8 {@link TemporalAccessor}
+     * @param format   implementation specific format
+     * @return a string representation of the formatted `temporal`
+     */
+    String format(TemporalAccessor temporal, String format);
 
-			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back</@s.a>
-		</div>
-	</div>
-</div>
-</body>
-</html>
-
-
+}

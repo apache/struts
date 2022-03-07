@@ -18,6 +18,7 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.components.date.DateFormatter;
 import org.apache.struts2.dispatcher.mapper.CompositeActionMapper;
 
 /**
@@ -131,6 +132,9 @@ public final class StrutsConstants {
 
     /** A path to static content, by default and from historical point of view it's /static. */
     public static final String STRUTS_UI_STATIC_CONTENT_PATH = "struts.ui.staticContentPath";
+
+    /** A global flag to enable/disable html body escaping in tags, can be overwritten per tag */
+    public static final String STRUTS_UI_ESCAPE_HTML_BODY = "struts.ui.escapeHtmlBody";
 
     /** The maximize size of a multipart request (file upload) */
     public static final String STRUTS_MULTIPART_MAXSIZE = "struts.multipart.maxSize";
@@ -442,4 +446,7 @@ public final class StrutsConstants {
     public static final String STRUTS_CHAINING_COPY_FIELD_ERRORS = "struts.chaining.copyFieldErrors";
     public static final String STRUTS_CHAINING_COPY_MESSAGES = "struts.chaining.copyMessages";
     public static final String STRUTS_OBJECT_FACTORY_CLASSLOADER = "struts.objectFactory.classloader";
+
+    /** See {@link org.apache.struts2.components.Date#setDateFormatter(DateFormatter)} */
+    public static final String STRUTS_DATE_FORMATTER = "struts.date.formatter";
 }

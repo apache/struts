@@ -38,7 +38,8 @@ import java.lang.annotation.Target;
  *
  * <p>
  * Application wide conversion:<br>
- * The conversion rules will be assembled within the <code>xwork-conversion.properties</code> file within the classpath root.
+ * The conversion rules will be assembled within the <code>struts-conversion.properties</code> or
+ * <code>xwork-conversion.properties</code> (deprecated) file within the classpath root.
  * Set type to: <code>type = ConversionType.APPLICATION</code>
  * </p>
  * <!-- END SNIPPET: description -->

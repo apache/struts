@@ -47,13 +47,13 @@ public class AnchorTag extends AbstractClosingTag {
     protected String portletUrlType;
     protected String anchor;
     protected String forceAddSchemeHostAndPort;
-    protected boolean escapeHtmlBody = true;  // Default - escape HTML body
+    protected String escapeHtmlBody;
 
     @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Anchor(stack, req, res);
     }
-    
+
     @Override
     protected void populateParams() {
         super.populateParams();
@@ -80,10 +80,12 @@ public class AnchorTag extends AbstractClosingTag {
         if (escapeAmp != null) {
             tag.setEscapeAmp(BooleanUtils.toBoolean(escapeAmp));
         }
-	if (forceAddSchemeHostAndPort != null) {
+        if (forceAddSchemeHostAndPort != null) {
             tag.setForceAddSchemeHostAndPort(BooleanUtils.toBoolean(forceAddSchemeHostAndPort));
         }
-        tag.setEscapeHtmlBody(escapeHtmlBody);
+        if (escapeHtmlBody != null) {
+            tag.setEscapeHtmlBody(escapeHtmlBody);
+        }
     }
 
     public void setHref(String href) {
@@ -149,12 +151,12 @@ public class AnchorTag extends AbstractClosingTag {
 
     /**
      * Set via parameter to control if body content should be HTML-escaped.
-     * 
-     * @param escapeHtmlBody 
-     * 
+     *
+     * @param escapeHtmlBody
+     *
      * @since 2.6
      */
-    public void setEscapeHtmlBody(boolean escapeHtmlBody) {
+    public void setEscapeHtmlBody(String escapeHtmlBody) {
         this.escapeHtmlBody = escapeHtmlBody;
     }
 

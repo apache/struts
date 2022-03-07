@@ -1,4 +1,3 @@
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,5 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<body>Type conversion meta data classes.</body>
+package org.apache.struts2.components.date;
+
+import com.opensymphony.xwork2.ActionContext;
+
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.TemporalAccessor;
+import java.util.Locale;
+
+public class DateTimeFormatterAdapter implements DateFormatter {
+
+    @Override
+    public String format(TemporalAccessor temporal, String format) {
+        DateTimeFormatter dtf;
+        Locale locale = ActionContext.getContext().getLocale();
+        if (format == null) {
+            dtf = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                .withLocale(locale);
+        } else {
+            dtf = DateTimeFormatter.ofPattern(format, locale);
+        }
+        return dtf.format(temporal);
+    }
+
+}

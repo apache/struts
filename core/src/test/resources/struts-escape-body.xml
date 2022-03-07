@@ -1,4 +1,5 @@
-<#--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,28 +19,13 @@
  * under the License.
  */
 -->
-<html>
-<head>
-	<title>Struts2 Showcase - Non UI Tags - Action Prefix (Freemarker)</title>
-</head>
-<body>
-<div class="page-header">
-	<h1>Non Ui Tag - Action Prefix (Freemarker)</h1>
-</div>
+<!DOCTYPE struts PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 2.6//EN"
+          "http://struts.apache.org/dtds/struts-2.6.dtd">
+<struts>
+    <constant name="struts.ui.escapeHtmlBody" value="true"/>
 
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
+    <package name="default" extends="struts-default">
+    </package>
 
-			<p>You have come to this page because you used an <strong>action</strong> prefix.<p/>
-
-			<p>The text you've entered is ${text!''}<p/>
-
-			<@s.a href="javascript:history.back();" cssClass="btn btn-info"><i class="icon icon-arrow-left"></i> Back</@s.a>
-		</div>
-	</div>
-</div>
-</body>
-</html>
-
-
+</struts>

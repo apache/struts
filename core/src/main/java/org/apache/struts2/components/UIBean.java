@@ -20,7 +20,9 @@ package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +33,7 @@ import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.dispatcher.StaticContentLoader;
+import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.TextProviderHelper;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.ContextUtil;
@@ -699,11 +702,13 @@ public abstract class UIBean extends Component {
         }
 
         if (requiredLabel != null) {
-            addParameter("required", findValue(requiredLabel, Boolean.class));
+            Object parsedValue = findValue(requiredLabel, Boolean.class);
+            addParameter("required", parsedValue == null ? Boolean.valueOf(requiredLabel) : parsedValue);
         }
 
         if (disabled != null) {
-            addParameter("disabled", findValue(disabled, Boolean.class));
+            Object parsedValue = findValue(disabled, Boolean.class);
+            addParameter("disabled", parsedValue == null ? Boolean.valueOf(disabled) : parsedValue);
         }
 
         if (tabindex != null) {
@@ -883,9 +888,9 @@ public abstract class UIBean extends Component {
                 this.addParameter("tooltipDelay", findString(this.tooltipDelay));
 
             if (this.javascriptTooltip != null) {
-                Boolean jsTooltips = (Boolean) findValue(this.javascriptTooltip, Boolean.class);
+                Object jsTooltips = findValue(this.javascriptTooltip, Boolean.class);
                 //TODO use a Boolean model when tooltipConfig is dropped
-                this.addParameter("jsTooltipEnabled", jsTooltips.toString());
+                this.addParameter("jsTooltipEnabled", jsTooltips == null ? this.javascriptTooltip : jsTooltips.toString());
 
                 if (form != null)
                     form.addParameter("hasTooltip", jsTooltips);
@@ -965,7 +970,7 @@ public abstract class UIBean extends Component {
             // 1] UI component's tooltipConfig attribute  OR
             // 2] <param name="tooltip" value="" /> param tag value attribute
 
-            result = new LinkedHashMap<>((Map) tooltipConfigObj);
+            result = new LinkedHashMap<String, String>((Map) tooltipConfigObj);
         } else if (tooltipConfigObj instanceof String) {
 
             // we get this if its configured using
@@ -1272,10 +1277,16 @@ public abstract class UIBean extends Component {
 
     public void setDynamicAttributes(Map<String, String> tagDynamicAttributes) {
         for (Map.Entry<String, String> entry : tagDynamicAttributes.entrySet()) {
-            String entryKey = entry.getKey();
+            String attrName = entry.getKey();
+            String attrValue = entry.getValue();
 
-            if (!isValidTagAttribute(entryKey)) {
-                dynamicAttributes.put(entryKey, entry.getValue());
+            if (!isValidTagAttribute(attrName)) {
+                if (ComponentUtils.containsExpression(attrValue) && !lazyEvaluation()) {
+                    String translated = TextParseUtil.translateVariables('%', attrValue, stack);
+                    dynamicAttributes.put(attrName, ObjectUtils.defaultIfNull(translated, attrValue));
+                } else {
+                    dynamicAttributes.put(attrName, attrValue);
+                }
             }
         }
     }
@@ -1294,6 +1305,16 @@ public abstract class UIBean extends Component {
                 dynamicAttributes.put(entryKey, entry.getValue());
             }
         }
+    }
+
+    /**
+     * Used to avoid evaluating attributes in {@link #evaluateParams()} or {@link #evaluateExtraParams()}
+     * as evaluation will happen in tag's template
+     *
+     * @return boolean false if evaluation should be performed in ftl
+     */
+    protected boolean lazyEvaluation() {
+        return false;
     }
 
 }

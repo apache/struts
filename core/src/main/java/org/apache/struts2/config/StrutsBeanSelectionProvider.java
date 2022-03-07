@@ -54,13 +54,12 @@ import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.UrlRenderer;
+import org.apache.struts2.components.date.DateFormatter;
 import org.apache.struts2.dispatcher.DispatcherErrorHandler;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -421,6 +420,8 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(AcceptedPatternsChecker.class, StrutsConstants.STRUTS_ACCEPTED_PATTERNS_CHECKER, builder, props, Scope.PROTOTYPE);
         alias(NotExcludedAcceptedPatternsChecker.class, StrutsConstants.STRUTS_NOT_EXCLUDED_ACCEPTED_PATTERNS_CHECKER
                 , builder, props, Scope.SINGLETON);
+
+        alias(DateFormatter.class, StrutsConstants.STRUTS_DATE_FORMATTER, builder, props, Scope.SINGLETON);
 
         switchDevMode(props);
     }

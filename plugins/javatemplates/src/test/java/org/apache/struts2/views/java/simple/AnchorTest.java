@@ -43,7 +43,7 @@ public class AnchorTest extends AbstractTest {
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
-        String expected = s("<a name='name_' id='id_' class='class' style='style' href='http://sometest.com?ab=10' title='title' tabindex='1'></a>");
+        String expected = s("<a name='name_' id='id_' class='class' style='style' href='http://sometest.com?ab=10' disabled='disabled' title='title' tabindex='1'></a>");
         assertEquals(expected, output);
     }
 
@@ -66,6 +66,42 @@ public class AnchorTest extends AbstractTest {
         String expected = "<a name=\"name_\" id=\"name_\" href=\"http://sometest.com?ab=10\" onclick=\"alert('click')\" " +
                 "ondblclick=\"alert('dbclick')\" onfocus=\"alert('focus')\" onkeypress=\"alert('keypress')\" " +
                 "onkeydown=\"alert('keydown')\" onselect=\"alert('select')\" onchange=\"alert('change)\"></a>";
+        assertEquals(expected, output);
+    }
+
+    public void testEnableEscapeBody() {
+        tag.setName("name_");
+        tag.setHref("http://sometest.com?ab=10");
+        tag.setEscapeHtmlBody(true);
+        tag.evaluateParams();
+
+        map.putAll(tag.getParameters());
+        context.getParameters().put("body", s("<i class='i-image'/>"));
+
+        theme.renderTag(getTagName(), context);
+        theme.renderTag(getTagName() + "-close", context);
+
+        String output = writer.getBuffer().toString();
+        String expected = s("<a name='name_' id='name_' href='http://sometest.com?ab=10'>&lt;i class=&quot;i-image&quot;/&gt;</a>");
+
+        assertEquals(expected, output);
+    }
+
+    public void testDefaultDisabledEscapeBody() {
+        tag.setName("name_");
+        tag.setHref("http://sometest.com?ab=10");
+        //tag.setEscapeHtmlBody(true);
+        tag.evaluateParams();
+
+        map.putAll(tag.getParameters());
+        context.getParameters().put("body", s("<i class='i-image'/>"));
+
+        theme.renderTag(getTagName(), context);
+        theme.renderTag(getTagName() + "-close", context);
+
+        String output = writer.getBuffer().toString();
+        String expected = s("<a name='name_' id='name_' href='http://sometest.com?ab=10'><i class='i-image'/></a>");
+
         assertEquals(expected, output);
     }
 

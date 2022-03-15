@@ -22,9 +22,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import freemarker.template.Configuration;
-import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -39,8 +37,8 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
 
@@ -194,7 +192,64 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         assertEquals(expected, stringWriter.toString());
     }
 
-    private void init() throws MalformedURLException, URISyntaxException {
+    public void testIterator() throws Exception {
+        File file = new File(FreeMarkerResultTest.class.getResource("iterator.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/iterator.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/text.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/text.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/css.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/css.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/css.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/scripting-events.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/common-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/dynamic-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        EasyMock.replay(servletContext);
+
+        init();
+
+        stack.push(new Object() {
+            List<Object> items = null;
+
+            public List<Object> getItems() {
+                if (items == null) {
+                    items = new ArrayList<>(3);
+                    for (int i = 0; i < 3; i++) {
+                        final int finalI = i;
+                        items.add(new Object() {
+                            public String getName() {
+                                return "value" + finalI;
+                            }
+                        });
+                    }
+                }
+                return items;
+            }
+        });
+
+        request.setRequestURI("/tutorial/test11.action");
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
+        dispatcher.serviceAction(request, response, mapping);
+        String result = stringWriter.toString();
+        for (int i = 0; i < 3; i++) {
+            assertTrue(result.contains("id=\"itemId" + i + "\""));
+            assertTrue(result.contains("name=\"items[" + i + "].name\""));
+            assertTrue(result.contains("value=\"value" + i + "\""));
+        }
+    }
+
+    private void init() {
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         response = new StrutsMockHttpServletResponse();

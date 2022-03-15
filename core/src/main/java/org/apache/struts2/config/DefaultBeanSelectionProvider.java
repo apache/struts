@@ -50,6 +50,7 @@ import com.opensymphony.xwork2.factory.ResultFactory;
 import com.opensymphony.xwork2.factory.ValidatorFactory;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -424,6 +425,8 @@ public class DefaultBeanSelectionProvider extends AbstractBeanSelectionProvider 
         /** Checker is used mostly in interceptors, so there be one instance of checker per interceptor with Scope.PROTOTYPE **/
         alias(ExcludedPatternsChecker.class, StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER, builder, props, Scope.PROTOTYPE);
         alias(AcceptedPatternsChecker.class, StrutsConstants.STRUTS_ACCEPTED_PATTERNS_CHECKER, builder, props, Scope.PROTOTYPE);
+        alias(NotExcludedAcceptedPatternsChecker.class, StrutsConstants.STRUTS_NOT_EXCLUDED_ACCEPTED_PATTERNS_CHECKER
+                , builder, props, Scope.SINGLETON);
 
         switchDevMode(props);
 

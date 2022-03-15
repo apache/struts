@@ -19,6 +19,7 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.BooleanUtils;
@@ -70,6 +71,8 @@ public class Component {
     protected boolean throwExceptionOnELFailure;
     private UrlHelper urlHelper;
 
+    private NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns;
+
     /**
      * Constructor.
      *
@@ -112,6 +115,12 @@ public class Component {
     public void setUrlHelper(UrlHelper urlHelper) {
         this.urlHelper = urlHelper;
     }
+
+    @Inject
+    public void setNotExcludedAcceptedPatterns(NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns) {
+        this.notExcludedAcceptedPatterns = notExcludedAcceptedPatterns;
+    }
+
     /**
      * Gets the OGNL value stack associated with this component.
      * @return the OGNL value stack associated with this component.
@@ -276,7 +285,7 @@ public class Component {
     }
 
     /**
-     * If altsyntax (%{...}) is applied, simply strip the "%{" and "}" off. 
+     * If altsyntax (%{...}) is applied, simply strip the "%{" and "}" off.
      * @param expr the expression (must be not null)
      * @return the stripped expression if altSyntax is enabled. Otherwise
      * the parameter expression is returned as is.
@@ -296,7 +305,7 @@ public class Component {
     /**
      * Adds the surrounding %{ } to the expression for proper processing.
      * @param expr the expression.
-     * @return the modified expression if altSyntax is enabled, or the parameter 
+     * @return the modified expression if altSyntax is enabled, or the parameter
      * expression otherwise.
      */
 	protected String completeExpressionIfAltSyntax(String expr) {
@@ -383,15 +392,6 @@ public class Component {
     }
 
     /**
-     * Detects if altSyntax is enabled and then checks if expression contains %{...}
-     * @param expr a string to examined
-     * @return true if altSyntax is enabled and expr contains %{...}
-     */
-    protected boolean recursion(String expr) {
-        return ComponentUtils.altSyntax(stack) && ComponentUtils.containsExpression(expr);
-    }
-
-    /**
      * Renders an action URL by consulting the {@link org.apache.struts2.dispatcher.mapper.ActionMapper}.
      * @param action      the action
      * @param namespace   the namespace
@@ -407,7 +407,7 @@ public class Component {
      * @return the action url.
      */
     protected String determineActionURL(String action, String namespace, String method,
-                                        HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
+                                        HttpServletRequest req, HttpServletResponse res, Map<String, Object> parameters, String scheme,
                                         boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort,
                                         boolean escapeAmp) {
         String finalAction = findString(action);
@@ -560,4 +560,22 @@ public class Component {
         return standardAttributes;
     }
 
+    /**
+     * Checks if expression doesn't contain vulnerable code
+     *
+     * @param expression of the component
+     * @return true|false
+     * @since 2.5.27
+     */
+    protected boolean isAcceptableExpression(String expression) {
+        NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);
+        if (isAllowed.isAllowed()) {
+            return true;
+        }
+
+        LOG.warn("Expression [{}] isn't allowed by pattern [{}]! See Accepted / Excluded patterns at\n" +
+                "https://struts.apache.org/security/", expression, isAllowed.getAllowedPattern());
+
+        return false;
+    }
 }

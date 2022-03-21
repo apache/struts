@@ -33,6 +33,11 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory {
     private final AtomicInteger cacheMaxSize = new AtomicInteger(25000);
 
     @Override
+    public OgnlCache<Key, Value> buildOgnlCache() {
+        return buildOgnlCache(getCacheMaxSize(), 16, 0.75f, getUseLRUCache());
+    }
+
+    @Override
     public OgnlCache<Key, Value> buildOgnlCache(int evictionLimit, int initialCapacity, float loadFactor, boolean lruCache) {
         if (lruCache) {
             return new OgnlLRUCache<>(evictionLimit, initialCapacity, loadFactor);

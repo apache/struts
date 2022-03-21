@@ -80,7 +80,10 @@ public class OgnlUtil {
 
     /**
      * Construct a new OgnlUtil instance for use with the framework
+     * 
+     * @deprecated It is recommended to utilize the {@link OgnlUtil#OgnlUtil(com.opensymphony.xwork2.ognl.OgnlCacheFactory, com.opensymphony.xwork2.ognl.OgnlCacheFactory) method instead.
      */
+    @Deprecated
     public OgnlUtil() {
         this(null, null);  // Instantiate default Expression and BeanInfo caches (null factories)
     }
@@ -108,12 +111,12 @@ public class OgnlUtil {
         this.ognlBeanInfoCacheFactory = ognlBeanInfoCacheFactory;
 
         if (ognlExpressionCacheFactory != null) {
-            this.expressionCache = ognlExpressionCacheFactory.buildOgnlCache(ognlExpressionCacheFactory.getCacheMaxSize(), 16, 0.75f, ognlExpressionCacheFactory.getUseLRUCache());
+            this.expressionCache = ognlExpressionCacheFactory.buildOgnlCache();
         } else {
             this.expressionCache = new OgnlDefaultCache<>(25000, 16, 0.75f);
         }
         if (ognlBeanInfoCacheFactory != null) {
-            this.beanInfoCache = ognlBeanInfoCacheFactory.buildOgnlCache(ognlBeanInfoCacheFactory.getCacheMaxSize(), 16, 0.75f, ognlBeanInfoCacheFactory.getUseLRUCache());
+            this.beanInfoCache = ognlBeanInfoCacheFactory.buildOgnlCache();
         } else {
             this.beanInfoCache = new OgnlDefaultCache<>(25000, 16, 0.75f);
         }

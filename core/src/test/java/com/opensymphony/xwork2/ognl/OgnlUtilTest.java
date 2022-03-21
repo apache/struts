@@ -1857,6 +1857,32 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     /**
+     * Unit test primarily for code coverage 
+     */
+    public void testOgnlDefaultCacheFactoryCoverage() {
+        OgnlCache<String, Object> ognlCache;
+        DefaultOgnlCacheFactory defaultOgnlCacheFactory = new DefaultOgnlCacheFactory<String, Object>();
+        // Normal cache
+        defaultOgnlCacheFactory.setCacheMaxSize("12");
+        defaultOgnlCacheFactory.setUseLRUCache("false");
+        ognlCache = defaultOgnlCacheFactory.buildOgnlCache();
+        assertNotNull("No param build method result null ?", ognlCache);
+        assertEquals("Eviction limit for cache mismatches limit for factory ?", 12, ognlCache.getEvictionLimit() );
+        ognlCache = defaultOgnlCacheFactory.buildOgnlCache(6, 6, 0.75f, false);
+        assertNotNull("No param build method result null ?", ognlCache);
+        assertEquals("Eviction limit for cache mismatches limit for factory ?", 6, ognlCache.getEvictionLimit() );
+        // LRU cache
+        defaultOgnlCacheFactory.setCacheMaxSize("30");
+        defaultOgnlCacheFactory.setUseLRUCache("true");
+        ognlCache = defaultOgnlCacheFactory.buildOgnlCache();
+        assertNotNull("No param build method result null ?", ognlCache);
+        assertEquals("Eviction limit for cache mismatches limit for factory ?", 30, ognlCache.getEvictionLimit() );
+        ognlCache = defaultOgnlCacheFactory.buildOgnlCache(15, 15, 0.75f, false);
+        assertNotNull("No param build method result null ?", ognlCache);
+        assertEquals("Eviction limit for cache mismatches limit for factory ?", 15, ognlCache.getEvictionLimit() );
+    }
+
+    /**
      * Generate a new OgnlUtil instance (not configured by the {@link ContainerBuilder}) that can be used for
      * basic tests, with its Expression and BeanInfo factories set to LRU mode.
      * 
@@ -1867,7 +1893,9 @@ public class OgnlUtilTest extends XWorkTestCase {
         final DefaultOgnlCacheFactory expressionFactory = new DefaultOgnlExpressionCacheFactory<String, Object>();
         final DefaultOgnlCacheFactory beanInfoFactory = new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>();
         expressionFactory.setUseLRUCache("true");
+        expressionFactory.setCacheMaxSize("25");
         beanInfoFactory.setUseLRUCache("true");
+        beanInfoFactory.setCacheMaxSize("25");
         result = new OgnlUtil(expressionFactory, beanInfoFactory);
         return result;
     }

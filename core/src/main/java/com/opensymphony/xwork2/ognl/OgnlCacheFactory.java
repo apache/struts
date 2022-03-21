@@ -23,6 +23,7 @@ package com.opensymphony.xwork2.ognl;
  * @param <Value> The type for the cache value entries
  */
 public interface OgnlCacheFactory<Key, Value> {
+    OgnlCache<Key, Value> buildOgnlCache();
     OgnlCache<Key, Value> buildOgnlCache(int evictionLimit, int initialCapacity, float loadFactor, boolean lruCache);
     int getCacheMaxSize();
     boolean getUseLRUCache();

@@ -18,28 +18,34 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.conversion.TypeConversionException;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.util.ValueStack;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.conversion.TypeConversionException;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.util.ValueStack;
 
 public class DateConverter extends DefaultTypeConverter {
 
     private final static Logger LOG = LogManager.getLogger(DateConverter.class);
 
     @Override
-    public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
+    public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName,
+            Object value, Class toType) {
         Date result = null;
 
         if (value instanceof String && ((String) value).length() > 0) {
@@ -52,15 +58,12 @@ public class DateConverter extends DefaultTypeConverter {
             } else if (java.sql.Timestamp.class == toType) {
                 Date check = null;
                 SimpleDateFormat dtfmt = (SimpleDateFormat) DateFormat.getDateTimeInstance(DateFormat.SHORT,
-                        DateFormat.MEDIUM,
-                        locale);
-                SimpleDateFormat fullfmt = new SimpleDateFormat(dtfmt.toPattern() + MILLISECOND_FORMAT,
-                        locale);
+                        DateFormat.MEDIUM, locale);
+                SimpleDateFormat fullfmt = new SimpleDateFormat(dtfmt.toPattern() + MILLISECOND_FORMAT, locale);
 
-                SimpleDateFormat dfmt = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT,
-                        locale);
+                SimpleDateFormat dfmt = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
 
-                SimpleDateFormat[] fmts = {fullfmt, dtfmt, dfmt};
+                SimpleDateFormat[] fmts = { fullfmt, dtfmt, dfmt };
                 for (SimpleDateFormat fmt : fmts) {
                     try {
                         check = fmt.parse(sa);
@@ -85,24 +88,46 @@ public class DateConverter extends DefaultTypeConverter {
                     } catch (ParseException ignore) {
                     }
                 }
-            }
-            //final fallback for dates without time
-            if (df == null) {
-                df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-            }
-            try {
-                df.setLenient(false); // let's use strict parsing (XW-341)
-                result = df.parse(sa);
-                if (!(Date.class == toType)) {
+
+                // final fallback for dates without time
+                if (df == null) {
+                    df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+                }
+                try {
+                    df.setLenient(false); // let's use strict parsing (XW-341)
+                    result = df.parse(sa);
+                    if (!(Date.class == toType)) {
+                        try {
+                            Constructor<?> constructor = toType.getConstructor(new Class[] { long.class });
+                            return constructor.newInstance(new Object[] { Long.valueOf(result.getTime()) });
+                        } catch (Exception e) {
+                            throw new TypeConversionException(
+                                    "Couldn't create class " + toType + " using default (long) constructor", e);
+                        }
+                    }
+                } catch (ParseException e) {
+                    throw new TypeConversionException("Could not parse date", e);
+                }
+            } else if (java.time.LocalDateTime.class == toType) {
+                DateTimeFormatter dtf = null;
+                TemporalAccessor check;
+                DateTimeFormatter[] dfs = getLocalDateFormats(ActionContext.of(context), locale);
+
+                for (DateTimeFormatter df1 : dfs) {
                     try {
-                        Constructor<?> constructor = toType.getConstructor(new Class[]{long.class});
-                        return constructor.newInstance(new Object[]{Long.valueOf(result.getTime())});
-                    } catch (Exception e) {
-                        throw new TypeConversionException("Couldn't create class " + toType + " using default (long) constructor", e);
+                        check = df1.parse(sa);
+                        dtf = df1;
+                        if (check != null) {
+                            break;
+                        }
+                    } catch (DateTimeParseException ignore) {
                     }
                 }
-            } catch (ParseException e) {
-                throw new TypeConversionException("Could not parse date", e);
+
+                if (dtf != null) {
+                    return LocalDateTime.parse(sa, dtf);
+                }
+
             }
         } else if (Date.class.isAssignableFrom(value.getClass())) {
             result = (Date) value;
@@ -111,16 +136,16 @@ public class DateConverter extends DefaultTypeConverter {
     }
 
     /**
-     * The user defined global date format,
-     * see {@link org.apache.struts2.components.Date#DATETAG_PROPERTY}
+     * The user defined global date format, see
+     * {@link org.apache.struts2.components.Date#DATETAG_PROPERTY}
      *
      * @param context current ActionContext
-     * @param locale current Locale to convert to
-     * @return defined global format
+     * 
+     * @return defined global date string format
      */
-    protected DateFormat getGlobalDateFormat(ActionContext context, Locale locale) {
+    protected String getGlobalDateString(ActionContext context) {
         final String dateTagProperty = org.apache.struts2.components.Date.DATETAG_PROPERTY;
-        SimpleDateFormat globalDateFormat = null;
+        String globalDateString = null;
 
         final TextProvider tp = findProviderInStack(context.getValueStack());
 
@@ -130,23 +155,28 @@ public class DateConverter extends DefaultTypeConverter {
             // is the same as input = DATETAG_PROPERTY
             if (globalFormat != null && !dateTagProperty.equals(globalFormat)) {
                 LOG.debug("Found \"{}\" as \"{}\"", dateTagProperty, globalFormat);
-                globalDateFormat = new SimpleDateFormat(globalFormat, locale);
+                globalDateString = globalFormat;
             } else {
                 LOG.debug("\"{}\" has not been defined, ignoring it", dateTagProperty);
             }
         }
 
-        return globalDateFormat;
+        return globalDateString;
     }
 
     /**
      * Retrieves the list of date formats to be used when converting dates
+     * 
      * @param context the current ActionContext
-     * @param locale the current locale of the action
+     * @param locale  the current locale of the action
      * @return a list of DateFormat to be used for date conversion
      */
     private DateFormat[] getDateFormats(ActionContext context, Locale locale) {
-        DateFormat globalDateFormat = getGlobalDateFormat(context, locale);
+        DateFormat globalDateFormat = null;
+        String globalFormat = getGlobalDateString(context);
+        if (globalFormat != null) {
+            globalDateFormat = new SimpleDateFormat(globalFormat, locale);
+        }
 
         DateFormat dt1 = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, locale);
         DateFormat dt2 = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM, locale);
@@ -156,15 +186,44 @@ public class DateConverter extends DefaultTypeConverter {
         DateFormat d2 = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
         DateFormat d3 = DateFormat.getDateInstance(DateFormat.LONG, locale);
 
-        DateFormat rfc3339         = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        DateFormat rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         DateFormat rfc3339dateOnly = new SimpleDateFormat("yyyy-MM-dd");
 
         final DateFormat[] dateFormats;
 
         if (globalDateFormat == null) {
-            dateFormats = new DateFormat[]{dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly};
+            dateFormats = new DateFormat[] { dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly };
         } else {
-            dateFormats = new DateFormat[]{globalDateFormat, dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly};
+            dateFormats = new DateFormat[] { globalDateFormat, dt1, dt2, dt3, rfc3339, d1, d2, d3, rfc3339dateOnly };
+        }
+
+        return dateFormats;
+    }
+
+    /**
+     * Retrieves the list of date formats to be used when converting dates
+     * 
+     * @param context the current ActionContext
+     * @param locale  the current locale of the action
+     * 
+     * @return a list of DateTimeFormatter to be used for date conversion
+     */
+    private DateTimeFormatter[] getLocalDateFormats(ActionContext context, Locale locale) {
+        DateTimeFormatter globalDateFormat = null;
+        String globalFormat = getGlobalDateString(context);
+        if (globalFormat != null) {
+            globalDateFormat = DateTimeFormatter.ofPattern(globalFormat, locale);
+        }
+
+        // Basic support LocalDateTime.now()
+        DateTimeFormatter df1 = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+        final DateTimeFormatter[] dateFormats;
+
+        if (globalDateFormat == null) {
+            dateFormats = new DateTimeFormatter[] { df1 };
+        } else {
+            dateFormats = new DateTimeFormatter[] { globalDateFormat, df1 };
         }
 
         return dateFormats;

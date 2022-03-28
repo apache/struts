@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Member;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -98,6 +99,8 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
         } else if (toType.isArray()) {
             result = doConvertToArray(context, o, member, propertyName, value, toType);
         } else if (Date.class.isAssignableFrom(toType)) {
+            result = doConvertToDate(context, value, toType);
+        } else if (LocalDateTime.class.isAssignableFrom(toType)) {
             result = doConvertToDate(context, value, toType);
         } else if (Calendar.class.isAssignableFrom(toType)) {
             result = doConvertToCalendar(context, value);

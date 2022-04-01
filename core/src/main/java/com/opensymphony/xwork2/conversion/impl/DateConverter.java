@@ -152,8 +152,8 @@ public class DateConverter extends DefaultTypeConverter {
         if (tp != null) {
             String globalFormat = tp.getText(dateTagProperty);
             // if tp.getText can not find the property then the returned string
-            // is the same as input = DATETAG_PROPERTY
-            if (globalFormat != null && !dateTagProperty.equals(globalFormat)) {
+            // is the same as input = DATETAG_PROPERTY (blank to suppress tp warnings)
+            if (globalFormat != null && !"".equals(globalFormat) && !dateTagProperty.equals(globalFormat)) {
                 LOG.debug("Found \"{}\" as \"{}\"", dateTagProperty, globalFormat);
                 globalDateString = globalFormat;
             } else {
@@ -174,6 +174,7 @@ public class DateConverter extends DefaultTypeConverter {
     private DateFormat[] getDateFormats(ActionContext context, Locale locale) {
         DateFormat globalDateFormat = null;
         String globalFormat = getGlobalDateString(context);
+        //
         if (globalFormat != null) {
             globalDateFormat = new SimpleDateFormat(globalFormat, locale);
         }

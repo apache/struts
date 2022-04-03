@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.6//EN"
+	"http://struts.apache.org/dtds/struts-2.6.dtd">
+    
+<struts>
+
+    <bean name="struts" class="org.apache.struts2.views.velocity.VelocityManager" />
+
+    <bean type="org.apache.struts2.components.template.TemplateEngine" name="vm"
+          class="org.apache.struts2.views.velocity.template.VelocityTemplateEngine" />
+
+    <bean type="org.apache.struts2.views.TagLibraryDirectiveProvider" name="s"
+          class="org.apache.struts2.views.velocity.VelocityTagLibrary" />
+
+    <package name="velocity-default" extends="struts-default">
+        <result-types>
+            <result-type name="velocity" class="org.apache.struts2.views.velocity.result.VelocityResult"/>
+        </result-types>
+    </package>
+
+    <bean-selection name="velocityBeans" class="org.apache.struts2.views.velocity.VelocityBeanSelectionProvider"/>
+
+</struts>

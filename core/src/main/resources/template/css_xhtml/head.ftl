@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,5 +18,5 @@
  * under the License.
  */
 -->
-<link rel="stylesheet" href="<@s.url value='/struts/css_xhtml/styles.css' includeParams='none' encode='false' />" type="text/css" />
+<link <#include "/${parameters.templateDir}/simple/nonce.ftl" /> rel="stylesheet" href="<@s.url value='${parameters.staticContentPath}/css_xhtml/styles.css' includeParams='none' encode='false' />" type="text/css" />
 <#include "/${parameters.templateDir}/simple/head.ftl" />

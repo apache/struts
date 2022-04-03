@@ -1,0 +1,6 @@
+https://struts.apache.org/getting-started/
+https://struts.apache.org/security/
+https://struts.apache.org/core-developers/
+https://struts.apache.org/tag-developers/
+https://struts.apache.org/maven-archetypes/
+https://struts.apache.org/plugins/

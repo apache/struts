@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.interceptor;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -36,6 +34,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class CreateSessionInterceptorTest extends StrutsInternalTestCase {
 
+    private MockActionInvocation invocation;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        invocation = new MockActionInvocation();
+        invocation.setInvocationContext(ActionContext.getContext());
+    }
+
     public void testCreateSession() throws Exception {
         Mock httpServletRequestMock = new Mock(HttpServletRequest.class);
         httpServletRequestMock.expects(new InvokeOnceMatcher()).method("getSession").with(new IsEqual(Boolean.FALSE));
@@ -46,7 +53,8 @@ public class CreateSessionInterceptorTest extends StrutsInternalTestCase {
         ServletActionContext.setRequest(request);
 
         CreateSessionInterceptor interceptor = new CreateSessionInterceptor();
-        interceptor.intercept(new MockActionInvocation());
+
+        interceptor.intercept(invocation);
 
         httpServletRequestMock.verify();
     }

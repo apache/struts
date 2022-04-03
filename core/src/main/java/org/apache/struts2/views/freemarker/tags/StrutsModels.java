@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.freemarker.tags;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.components.Script;
 
 /**
  * Provides @s.tag access for various tags.
@@ -76,6 +74,8 @@ public class StrutsModels {
     protected ElseModel elseModel;
     protected ElseIfModel elseIfModel;
     protected InputTransferSelectModel inputtransferselect;
+    protected ScriptModel script;
+    protected LinkModel link;
 
 
     public StrutsModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -163,6 +163,14 @@ public class StrutsModels {
         return label;
     }
 
+    public LinkModel getLink() {
+        if (link == null) {
+            link = new LinkModel(stack, req, res);
+        }
+
+        return link;
+    }
+
     public PasswordModel getPassword() {
         if (password == null) {
             password = new PasswordModel(stack, req, res);
@@ -177,6 +185,14 @@ public class StrutsModels {
         }
 
         return radio;
+    }
+
+    public ScriptModel getScript() {
+        if (script == null) {
+            script = new ScriptModel(stack, req, res);
+        }
+
+        return script;
     }
 
     public SelectModel getSelect() {

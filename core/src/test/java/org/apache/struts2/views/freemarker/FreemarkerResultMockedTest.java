@@ -1,16 +1,31 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import freemarker.template.Configuration;
-import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
@@ -21,10 +36,15 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
 
@@ -100,25 +120,12 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
 
-        // TODO lukaszlenart: remove expectedJDK15 and if() after switching to Java 1.6
-        String expectedJDK17 =
-                "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
-                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" placeholder=\"input\" foo=\"bar\"/>"
-                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
-                        + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
-        String expectedJDK18 =
-                "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
-                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" foo=\"bar\" placeholder=\"input\"/>"
-                        + "<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
-                        + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>";
-
         String result = stringWriter.toString();
-
-        if (result.contains("id=\"test\" foo=\"bar\"")) {
-            assertEquals(expectedJDK18, result);
-        } else {
-            assertEquals(expectedJDK17, result);
-        }
+        assertThat(result, allOf(startsWith("<input type=\"text\" name=\"test\" value=\"\" id=\"test\""),
+                                 containsString("foo=\"bar\""),
+                                 containsString("placeholder=\"input\""),
+                                 endsWith("<input type=\"text\" name=\"test\" value=\"\" id=\"test\" break=\"true\"/>"
+                                        + "<input type=\"text\" name=\"required\" value=\"\" id=\"required\" required=\"true\"/>")));
     }
 
     public void testManualListInTemplate() throws Exception {
@@ -152,10 +159,10 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
         dispatcher.serviceAction(request, response, mapping);
         String expected = "<input type=\"radio\" name=\"client\" id=\"client_foo\" value=\"foo\"/><label for=\"client_foo\">foo</label>\n"
-                + "<input type=\"radio\" name=\"client\" id=\"client_bar\" value=\"bar\"/><label for=\"client_bar\">bar</label>\n"
-                + "\n"
-                + "<input type=\"radio\" name=\"car\" id=\"carford\" value=\"ford\"/><label for=\"carford\">Ford Motor Co</label>\n"
-                + "<input type=\"radio\" name=\"car\" id=\"cartoyota\" value=\"toyota\"/><label for=\"cartoyota\">Toyota</label>\n";
+            + "<input type=\"radio\" name=\"client\" id=\"client_bar\" value=\"bar\"/><label for=\"client_bar\">bar</label>\n"
+            + "\n"
+            + "<input type=\"radio\" name=\"car\" id=\"carford\" value=\"ford\"/><label for=\"carford\">Ford Motor Co</label>\n"
+            + "<input type=\"radio\" name=\"car\" id=\"cartoyota\" value=\"toyota\"/><label for=\"cartoyota\">Toyota</label>\n";
         assertEquals(normalize(expected), normalize(stringWriter.toString()));
     }
 
@@ -177,7 +184,148 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         assertEquals(expected, stringWriter.toString());
     }
 
-    private void init() throws MalformedURLException, URISyntaxException {
+    public void testSequenceForSelect() throws Exception {
+        File file = new File(FreeMarkerResultTest.class.getResource("select.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/select.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/select.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/select.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/select.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/optgroup.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/optgroup.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/optgroup.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/css.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/css.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/css.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/scripting-events.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/common-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/dynamic-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/empty.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/empty.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/empty.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/xhtml/empty.ftl")).andReturn(file.getAbsolutePath());
+
+        EasyMock.replay(servletContext);
+
+        init();
+
+        request.setRequestURI("/tutorial/test9.action");
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
+        dispatcher.serviceAction(request, response, mapping);
+        String result = stringWriter.toString();
+        assertTrue(result.contains("<option value=\"a\">a</option>"));
+        assertTrue(result.contains("<option value=\"1\">1</option>"));
+        assertTrue(result.contains("<option value=\"key\">value</option>"));
+        assertTrue(result.contains("<option value=\"optgroupKey1\">optgroupValue1</option>"));
+        assertTrue(result.contains("<option value=\"optgroupKey3\">optgroupKey3</option>"));
+        assertTrue(result.contains("<option value=\"2\">2</option>"));
+    }
+
+    public void testNonce() throws Exception {
+        File file = new File(ClassLoaderUtil.getResource("template/simple/common-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/xhtml/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~xhtml/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/dynamic-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/xhtml/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~xhtml/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/nonce.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/nonce.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/script.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/script.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/script-close.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/script-close.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/link.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/link.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(FreeMarkerResultTest.class.getResource("nonceTest.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/nonceTest.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.replay(servletContext);
+
+        init();
+
+        request.setRequestURI("/tutorial/test10.action");
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
+        dispatcher.serviceAction(request, response, mapping);
+
+        assertTrue(stringWriter.toString().contains("<link nonce=\""));
+        assertTrue(stringWriter.toString().contains("<script nonce=\""));
+    }
+
+    public void testIterator() throws Exception {
+        File file = new File(FreeMarkerResultTest.class.getResource("iterator.ftl").toURI());
+        EasyMock.expect(servletContext.getRealPath("/tutorial/org/apache/struts2/views/freemarker/iterator.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/text.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/text.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/css.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/css.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/css.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/scripting-events.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/scripting-events.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/common-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/common-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        file = new File(ClassLoaderUtil.getResource("template/simple/dynamic-attributes.ftl", getClass()).toURI());
+        EasyMock.expect(servletContext.getRealPath("/template/simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~simple/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
+
+        EasyMock.replay(servletContext);
+
+        init();
+
+        stack.push(new Object() {
+            List<Object> items = null;
+
+            public List<Object> getItems() {
+                if (items == null) {
+                    items = new ArrayList<>(3);
+                    for (int i = 0; i < 3; i++) {
+                        int finalI = i;
+                        items.add(new Object() {
+                            public String getName() {
+                                return "value" + finalI;
+                            }
+                        });
+                    }
+                }
+                return items;
+            }
+        });
+
+        request.setRequestURI("/tutorial/test11.action");
+        ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);
+        dispatcher.serviceAction(request, response, mapping);
+        String result = stringWriter.toString();
+        for (int i = 0; i < 3; i++) {
+            assertTrue(result.contains("id=\"itemId" + i + "\""));
+            assertTrue(result.contains("name=\"items[" + i + "].name\""));
+            assertTrue(result.contains("value=\"value" + i + "\""));
+        }
+    }
+
+    private void init() {
         stringWriter = new StringWriter();
         writer = new PrintWriter(stringWriter);
         response = new StrutsMockHttpServletResponse();
@@ -185,14 +333,12 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         request = new MockHttpServletRequest();
         stack = ActionContext.getContext().getValueStack();
 
-        context = new ActionContext(stack.getContext());
-        context.put(StrutsStatics.HTTP_RESPONSE, response);
-        context.put(StrutsStatics.HTTP_REQUEST, request);
-        context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
+        context = ActionContext.of(stack.getContext())
+            .withServletResponse(response)
+            .withServletRequest(request)
+            .withServletContext(servletContext)
+            .bind();
 
-        ServletActionContext.setServletContext(servletContext);
-        ServletActionContext.setRequest(request);
-        ServletActionContext.setResponse(response);
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
 
         invocation = new MockActionInvocation();

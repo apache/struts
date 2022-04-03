@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,35 +18,50 @@
  */
 package org.apache.struts2.oval.interceptor;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.Validateable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.PrefixMethodInvocationUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 import net.sf.oval.ConstraintViolation;
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.Configurer;
 import net.sf.oval.context.FieldContext;
+import net.sf.oval.context.IterableElementContext;
+import net.sf.oval.context.MapKeyContext;
+import net.sf.oval.context.MapValueContext;
 import net.sf.oval.context.MethodReturnValueContext;
 import net.sf.oval.context.OValContext;
+import net.sf.oval.exception.ExpressionEvaluationException;
+import net.sf.oval.expression.ExpressionLanguage;
+import net.sf.oval.expression.ExpressionLanguageOGNLImpl;
+import net.sf.oval.localization.context.OValContextRenderer;
+import ognl.Ognl;
+import ognl.OgnlException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.oval.annotation.Profiles;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /*
  This interceptor provides validation using the OVal validation framework
  */
-public class OValValidationInterceptor extends MethodFilterInterceptor {
+public class OValValidationInterceptor extends MethodFilterInterceptor implements MethodNameExtractor {
+
+    public static final String STRUTS_OVAL_VALIDATE_JPAANNOTATIONS = "struts.oval.validateJPAAnnotations";
+
     private static final Logger LOG = LogManager.getLogger(OValValidationInterceptor.class);
 
     protected final static String VALIDATE_PREFIX = "validate";
@@ -57,17 +70,30 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     protected boolean alwaysInvokeValidate = true;
     protected boolean programmatic = true;
     protected OValValidationManager validationManager;
-    private boolean validateJPAAnnotations;
+    protected boolean validateJPAAnnotations;
+    protected TextProviderFactory textProviderFactory;
+
+    private final ExpressionLanguage ognlExpressionLanguage;
+
+    public OValValidationInterceptor() {
+        ognlExpressionLanguage = new ExpressionLanguageOGNL();
+        Validator.setContextRenderer(new StrutsContextRenderer());
+    }
 
     @Inject
     public void setValidationManager(OValValidationManager validationManager) {
         this.validationManager = validationManager;
     }
 
+    @Inject
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProviderFactory = textProviderFactory;
+    }
+
     /**
      * Enable OVal support for JPA
      */
-    @Inject(value = "struts.oval.validateJPAAnnotations")
+    @Inject(value = STRUTS_OVAL_VALIDATE_JPAANNOTATIONS)
     public void setValidateJPAAnnotations(String validateJPAAnnotations) {
         this.validateJPAAnnotations = Boolean.parseBoolean(validateJPAAnnotations);
     }
@@ -122,8 +148,8 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
 
             try {
                 PrefixMethodInvocationUtil.invokePrefixMethod(
-                        invocation,
-                        new String[]{VALIDATE_PREFIX, ALT_VALIDATE_PREFIX});
+                    invocation,
+                    new String[]{VALIDATE_PREFIX, ALT_VALIDATE_PREFIX});
             } catch (Exception e) {
                 // If any exception occurred while doing reflection, we want
                 // validate() to be executed
@@ -143,39 +169,39 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
     }
 
     protected void performOValValidation(Object action, ValueStack valueStack, String methodName, String context) throws NoSuchMethodException {
-        Class clazz = action.getClass();
+        Class<?> clazz = action.getClass();
         //read validation from xmls
         List<Configurer> configurers = validationManager.getConfigurers(clazz, context, validateJPAAnnotations);
 
         Validator validator = configurers.isEmpty() ? new Validator() : new Validator(configurers);
+        // Note: For Oval <= 1.70, API requires "validator.addExpressionLanguage("ognl", ognlExpressionLanguage)".
+        validator.getExpressionLanguageRegistry().registerExpressionLanguage("ognl", ognlExpressionLanguage);  // Usage for Oval >= 1.80 due to API changes
         //if the method is annotated with a @Profiles annotation, use those profiles
-        Method method = clazz.getMethod(methodName, new Class[0]);
-        if (method != null) {
-            Profiles profiles = method.getAnnotation(Profiles.class);
-            if (profiles != null) {
-                String[] profileNames = profiles.value();
-                if (profileNames != null && profileNames.length > 0) {
-                    validator.disableAllProfiles();
-                    LOG.debug("Enabling profiles [{}]", StringUtils.join(profileNames, ","));
-                    for (String profileName : profileNames)
-                        validator.enableProfile(profileName);
-                }
+        Method method = clazz.getMethod(methodName);
+        Profiles profiles = method.getAnnotation(Profiles.class);
+        if (profiles != null) {
+            String[] profileNames = profiles.value();
+            if (profileNames != null && profileNames.length > 0) {
+                validator.disableAllProfiles();
+                LOG.debug("Enabling profiles [{}]", StringUtils.join(profileNames, ","));
+                for (String profileName : profileNames)
+                    validator.enableProfile(profileName);
             }
         }
 
         //perform validation
         List<ConstraintViolation> violations = validator.validate(action);
-        addValidationErrors(violations.toArray(new ConstraintViolation[violations.size()]), action, valueStack, null);
+        addValidationErrors(violations.toArray(new ConstraintViolation[0]), action, valueStack, null);
     }
 
-	private void addValidationErrors(ConstraintViolation[] violations, Object action, ValueStack valueStack, String parentFieldname) {
-		if (violations != null) {
-            ValidatorContext validatorContext = new DelegatingValidatorContext(action);
+    private void addValidationErrors(ConstraintViolation[] violations, Object action, ValueStack valueStack, String parentFieldname) {
+        if (violations != null) {
+            ValidatorContext validatorContext = new DelegatingValidatorContext(action, textProviderFactory);
             for (ConstraintViolation violation : violations) {
                 //translate message
                 String key = violation.getMessage();
 
-                String message = key;
+                String message;
                 // push context variable into stack, to allow use ${max}, ${min} etc in error messages
                 valueStack.push(violation.getMessageVariables());
                 //push the validator into the stack
@@ -188,71 +214,65 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
                 }
 
                 if (isActionError(violation)) {
-                	LOG.debug("Adding action error '{}'", message);
+                    LOG.debug("Adding action error '{}'", message);
                     validatorContext.addActionError(message);
                 } else {
-                    ValidationError validationError = buildValidationError(violation, message);
+                    ValidationError validationError = buildValidationError(violation.getContextPath(), message);
 
                     // build field name
                     String fieldName = validationError.getFieldName();
                     if (parentFieldname != null) {
-                    	fieldName = parentFieldname + "." + fieldName;
+                        fieldName = parentFieldname + "." + fieldName;
                     }
 
-                	LOG.debug("Adding field error [{}] with message '{}'", fieldName, validationError.getMessage());
+                    LOG.debug("Adding field error [{}] with message '{}'", fieldName, validationError.getMessage());
                     validatorContext.addFieldError(fieldName, validationError.getMessage());
-
-                    // don't add "model." prefix to fields of model in model driven action
-                    if ((action instanceof ModelDriven) && "model".equals(fieldName)) {
-                    	fieldName = null;
-                    }
 
                     // add violations of member object fields
                     addValidationErrors(violation.getCauses(), action, valueStack, fieldName);
                 }
             }
         }
-	}
-
-
+    }
 
 
     /**
      * Get field name and message, used to add the validation error to fieldErrors
      */
-    protected ValidationError buildValidationError(ConstraintViolation violation, String message) {
-        OValContext context = violation.getContext();
-        if (context instanceof FieldContext) {
-            Field field = ((FieldContext) context).getField();
-            String className = field.getDeclaringClass().getName();
-
-            //the default OVal message shows the field name as ActionClass.fieldName
-            String finalMessage = StringUtils.removeStart(message, className + ".");
-
-            return new ValidationError(field.getName(), finalMessage);
-        } else if (context instanceof MethodReturnValueContext) {
-            Method method = ((MethodReturnValueContext) context).getMethod();
-            String className = method.getDeclaringClass().getName();
-            String methodName = method.getName();
-
-            //the default OVal message shows the field name as ActionClass.fieldName
-            String finalMessage = StringUtils.removeStart(message, className + ".");
-
-            String fieldName = null;
-            if (methodName.startsWith("get")) {
-                fieldName = StringUtils.uncapitalize(StringUtils.removeStart(methodName, "get"));
-            } else if (methodName.startsWith("is")) {
-                fieldName = StringUtils.uncapitalize(StringUtils.removeStart(methodName, "is"));
+    protected ValidationError buildValidationError(List<OValContext> contextPath, String message) {
+        StringBuilder fieldName = new StringBuilder();
+        String finalMessage = message;
+        for (OValContext context : contextPath) {
+            if (fieldName.length() > 0) {
+                fieldName.append(".");
             }
 
-            //the result will have the full method name, like "getName()", replace it by "name" (obnly if it is a field)
-            if (fieldName != null)
-                finalMessage = finalMessage.replaceAll(methodName + "\\(.*?\\)", fieldName);
+            if (context instanceof FieldContext) {
+                Field field = ((FieldContext) context).getField();
+                String className = field.getDeclaringClass().getName();
 
-            return new ValidationError(StringUtils.defaultString(fieldName, methodName), finalMessage);
+                //the default OVal message shows the field name as ActionClass.fieldName
+                finalMessage = StringUtils.removeStart(finalMessage, className + ".");
+                fieldName.append(field.getName());
+            } else if (context instanceof MethodReturnValueContext) {
+                Method method = ((MethodReturnValueContext) context).getMethod();
+                String className = method.getDeclaringClass().getName();
+                String methodName = method.getName();
+
+                //the default OVal message shows the field name as ActionClass.fieldName
+                finalMessage = StringUtils.removeStart(message, className + ".");
+                fieldName.append(extractName(method));
+
+                //the result will have the full method name, like "getName()", replace it by "name" (obnly if it is a field)
+                if (fieldName.length() == 0) {
+                    finalMessage = finalMessage.replaceAll(methodName + "\\(.*?\\)", fieldName.toString());
+                }
+            } else {
+                fieldName.append(context.toStringUnqualified());
+            }
         }
 
-        return new ValidationError(violation.getCheckName(), message);
+        return new ValidationError(fieldName.toString(), message);
     }
 
     /**
@@ -262,9 +282,9 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
         return false;
     }
 
-    class ValidationError {
-        private String fieldName;
-        private String message;
+    static class ValidationError {
+        private final String fieldName;
+        private final String message;
 
         ValidationError(String fieldName, String message) {
             this.fieldName = fieldName;
@@ -279,4 +299,65 @@ public class OValValidationInterceptor extends MethodFilterInterceptor {
             return message;
         }
     }
+
+}
+
+class ExpressionLanguageOGNL extends ExpressionLanguageOGNLImpl {
+
+    private static final Logger LOG = LogManager.getLogger(ExpressionLanguageOGNL.class);
+
+    public Object evaluate(final String expression, final Map<String, ?> values) throws ExpressionEvaluationException {
+        try {
+            LOG.debug("Evaluating OGNL expression: {}", expression);
+            return Ognl.getValue(expression, ActionContext.getContext().getContextMap(), values);
+        } catch (final OgnlException ex) {
+            throw new ExpressionEvaluationException("Evaluating script with OGNL failed.", ex);
+        }
+    }
+}
+
+class StrutsContextRenderer implements OValContextRenderer, MethodNameExtractor {
+
+    @Override
+    public String render(final OValContext context) {
+        return context.toStringUnqualified();
+    }
+
+    @Override
+    public String render(List<OValContext> contextPath) {
+        final StringBuilder sb = new StringBuilder(3 * contextPath.size());
+        boolean isFirst = true;
+        for (final OValContext ctx : contextPath) {
+            final boolean isContainerElementContext = ctx instanceof IterableElementContext || ctx instanceof MapKeyContext || ctx instanceof MapValueContext;
+            if (isFirst) {
+                isFirst = false;
+            } else if (isContainerElementContext) {
+                // do nothing special
+            } else {
+                sb.append('.');
+            }
+
+            if (ctx instanceof MethodReturnValueContext) {
+                sb.append(extractName(((MethodReturnValueContext) ctx).getMethod()));
+            } else {
+                sb.append(render(ctx));
+            }
+        }
+        return sb.toString();
+    }
+
+}
+
+interface MethodNameExtractor {
+
+    default String extractName(Method method) {
+        String methodName = method.getName();
+        if (methodName.startsWith("get")) {
+            return StringUtils.uncapitalize(StringUtils.removeStart(methodName, "get"));
+        } else if (methodName.startsWith("is")) {
+            return StringUtils.uncapitalize(StringUtils.removeStart(methodName, "is"));
+        }
+        return methodName;
+    }
+
 }

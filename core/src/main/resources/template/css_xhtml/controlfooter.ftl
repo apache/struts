@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,27 +20,27 @@
 -->
 ${parameters.after!}<#t/>
     <#lt/>
-<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
-<#assign labelpos = parameters.form.labelposition/>
-<#elseif parameters.labelposition??>
-<#assign labelpos = parameters.labelposition/>
+<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
+<#assign labelPos = parameters.form.labelPosition/>
+<#elseif parameters.labelPosition??>
+<#assign labelPos = parameters.labelPosition/>
 </#if>
-<#if (labelpos!"top") == 'top'>
+<#if (labelPos!"top") == 'top'>
 </div> <#rt/>
 <#else>
 </span> <#rt/>
 </#if>
 <#if (parameters.errorposition!"top") == 'bottom'>
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
 <#if hasFieldErrors>
 <div <#rt/><#if parameters.id??>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">
-<#list fieldErrors[parameters.name] as error>
+<#list fieldErrors.get(parameters.name) as error>
     <div<#rt/>
     <#if parameters.id??>
      errorFor="${parameters.id}"<#rt/>
     </#if>
     class="errorMessage">
-             ${error?html}
+             ${error}
     </div><#t/>
 </#list>
 </div><#t/>

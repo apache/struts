@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="simple-action" class="com.opensymphony.xwork2.SimpleAction" scope="prototype"/>
+
+    <bean id="dependency-action" class="com.opensymphony.xwork2.SimpleAction" scope="prototype">
+        <property name="blah"><value>injected</value></property>
+    </bean>
+
+    <bean id="execute-interceptor" class="com.opensymphony.xwork2.spring.ExecuteInterceptor"/>
+
+    <bean id="proxied-action" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="singleton"><value>false</value></property>  
+		<property name="proxyTargetClass"><value>true</value></property>
+		<property name="interceptorNames">
+			<list>
+				<value>execute-interceptor</value>
+                <!-- When "singleton" is false, the target appears to be required here to 
+                     ensure that the config works as it should -->
+                <value>simple-action</value>
+			</list>
+		</property>
+	</bean>
+
+    <bean id="auto-proxied-action" class="com.opensymphony.xwork2.SimpleAction" scope="prototype"/>
+
+    <bean id="xwork-actions-proxy-creator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="proxyTargetClass"><value>true</value></property>
+		<property name="interceptorNames">
+			<list>
+				<value>execute-interceptor</value>
+			</list>
+		</property>
+        <property name="beanNames"><value>auto-proxied-action</value></property>
+    </bean>
+    
+    <bean id="springResult" class="com.opensymphony.xwork2.spring.SpringResult" init-method="initialize">
+		<property name="stringParameter" value="my string"/>
+	</bean>
+
+    <bean id="pointcutted-test-bean" class="com.opensymphony.xwork2.TestBean">
+        <property name="name"><value>WW-4105</value></property>
+        <property name="count"><value>1</value></property>
+    </bean>
+    <bean id="pointcutted-test-sub-bean" class="com.opensymphony.xwork2.TestSubBean">
+        <property name="issueId"><value>WW-4105</value></property>
+    </bean>
+    <bean id="test-aspect" class="com.opensymphony.xwork2.spring.TestAspect" />
+    <aop:config>
+        <aop:aspect id="myAspect" ref="test-aspect">
+            <aop:pointcut id="testBeanGetName"
+                expression="execution(String com.opensymphony.xwork2.TestBean.getName()) and bean(pointcutted-test-bean)" />
+            <aop:after-returning pointcut-ref="testBeanGetName"
+                method="setName" returning="name" />
+            <aop:pointcut id="testBeanGetCount"
+                expression="execution(int com.opensymphony.xwork2.TestBean.getCount()) and bean(pointcutted-test-bean)" />
+            <aop:after-returning pointcut-ref="testBeanGetCount"
+                method="setCount" returning="count" />
+            <aop:pointcut id="testSubBeanGetIssueId"
+                expression="execution(String com.opensymphony.xwork2.TestSubBean.getIssueId()) and bean(pointcutted-test-sub-bean)" />
+            <aop:after-returning pointcut-ref="testSubBeanGetIssueId"
+                method="setIssueId" returning="issueId" />
+            <aop:pointcut id="testBeanSetCount"
+                expression="execution(void com.opensymphony.xwork2.TestBean.setCount(int)) and args(count2) and bean(pointcutted-test-sub-bean)" />
+            <aop:before pointcut-ref="testBeanSetCount"
+                method="setCount2" arg-names="count2"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

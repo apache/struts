@@ -34,9 +34,9 @@ import java.util.List;
  */
 public class MultipleFileUploadUsingListAction extends ActionSupport {
 
-	private List<File> uploads = new ArrayList<File>();
-	private List<String> uploadFileNames = new ArrayList<String>();
-	private List<String> uploadContentTypes = new ArrayList<String>();
+	private List<File> uploads = new ArrayList<>();
+	private List<String> uploadFileNames = new ArrayList<>();
+	private List<String> uploadContentTypes = new ArrayList<>();
 
 
 	public List<File> getUpload() {

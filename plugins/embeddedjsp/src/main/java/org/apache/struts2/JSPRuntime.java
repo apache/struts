@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,12 +19,15 @@
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.HttpJspPage;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -48,16 +49,22 @@ public abstract class JSPRuntime {
     public static void handle(String location, boolean flush) throws Exception {
         final HttpServletResponse response = ServletActionContext.getResponse();
         final HttpServletRequest request = ServletActionContext.getRequest();
-        final UrlHelper urlHelper = ServletActionContext.getContext().getInstance(UrlHelper.class);
 
         int i = location.indexOf("?");
         if (i > 0) {
             //extract params from the url and add them to the request
-            Map<String, Object> parameters = ActionContext.getContext().getParameters();
+            final UrlHelper urlHelperGetInstance = ServletActionContext.getContext().getInstance(UrlHelper.class);
+            final UrlHelper contextUrlHelper = (urlHelperGetInstance != null ? urlHelperGetInstance : (UrlHelper) ActionContext.getContext().get(StrutsConstants.STRUTS_URL_HELPER));
+            final UrlHelper urlHelper = (contextUrlHelper != null ? contextUrlHelper : new DefaultUrlHelper());
             String query = location.substring(i + 1);
             Map<String, Object> queryParams = urlHelper.parseQueryString(query, true);
-            if (queryParams != null && !queryParams.isEmpty())
-                parameters.putAll(queryParams);
+            if (queryParams != null && !queryParams.isEmpty()) {
+                Map<String, Parameter> newParams = new HashMap<>();
+                for (Map.Entry<String, Object> entry : queryParams.entrySet()) {
+                    newParams.put(entry.getKey(), new Parameter.Request(entry.getKey(), entry.getValue()));
+                }
+                ActionContext.getContext().getParameters().appendAll(newParams);
+            }
             location = location.substring(0, i);
         }
 

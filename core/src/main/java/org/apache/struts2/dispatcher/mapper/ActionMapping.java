@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.Result;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,7 +42,9 @@ public class ActionMapping {
     /**
      * Constructs an ActionMapping
      */
-    public ActionMapping() {}
+    public ActionMapping() {
+        params = new HashMap<>();
+    }
 
     /**
      * Constructs an ActionMapping with a default result
@@ -95,7 +95,7 @@ public class ActionMapping {
      * @return The method
      */
     public String getMethod() {
-        if (null != method && "".equals(method)) {
+        if ("".equals(method)) {
             return null;
         } else {
             return method;

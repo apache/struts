@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
@@ -29,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.views.util.UrlHelper;
 
 import javax.servlet.RequestDispatcher;
@@ -36,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 import java.util.Map;
-
 
 /**
  * <!-- START SNIPPET: description -->
@@ -140,16 +137,21 @@ public class ServletDispatcherResult extends StrutsResultSupport {
 
             //add parameters passed on the location to #parameters
             // see WW-2120
-            if (StringUtils.isNotEmpty(finalLocation) && finalLocation.indexOf("?") > 0) {
-                String queryString = finalLocation.substring(finalLocation.indexOf("?") + 1);
-                Map<String, Object> parameters = getParameters(invocation);
+            if (StringUtils.isNotEmpty(finalLocation) && finalLocation.indexOf('?') > 0) {
+                String queryString = finalLocation.substring(finalLocation.indexOf('?') + 1);
+                HttpParameters parameters = getParameters(invocation);
                 Map<String, Object> queryParams = urlHelper.parseQueryString(queryString, true);
-                if (queryParams != null && !queryParams.isEmpty())
-                    parameters.putAll(queryParams);
+                if (queryParams != null && !queryParams.isEmpty()) {
+                    parameters = HttpParameters.create(queryParams).withParent(parameters).build();
+                    invocation.getInvocationContext().setParameters(parameters);
+                    // put to extraContext, see Dispatcher#createContextMap
+                    invocation.getInvocationContext().getContextMap().put("parameters", parameters);
+                }
             }
 
             // if the view doesn't exist, let's do a 404
             if (dispatcher == null) {
+                LOG.warn("Location {} not found!", finalLocation);
                 response.sendError(404, "result '" + finalLocation + "' not found");
                 return;
             }
@@ -171,9 +173,8 @@ public class ServletDispatcherResult extends StrutsResultSupport {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<String, Object> getParameters(ActionInvocation invocation) {
-        return (Map<String, Object>) invocation.getInvocationContext().getContextMap().get("parameters");
+    protected HttpParameters getParameters(ActionInvocation invocation) {
+        return invocation.getInvocationContext().getParameters();
     }
 
 }

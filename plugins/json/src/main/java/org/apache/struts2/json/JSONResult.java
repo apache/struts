@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,29 +18,27 @@
  */
 package org.apache.struts2.json;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.WildcardUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.json.smd.SMDGenerator;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.WildcardUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -70,7 +66,7 @@ import com.opensymphony.xwork2.util.WildcardUtil;
  */
 public class JSONResult implements Result {
 
-    private static final long serialVersionUID = 8624350183189931165L;
+    private static final long serialVersionUID = 233903199020467341L;
 
     private static final Logger LOG = LogManager.getLogger(JSONResult.class);
 
@@ -102,17 +98,23 @@ public class JSONResult implements Result {
     private String wrapPrefix;
     private String wrapSuffix;
     private boolean devMode = false;
-    
+    private JSONUtil jsonUtil;
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setDefaultEncoding(String val) {
         this.defaultEncoding = val;
     }
-    
-    @Inject(StrutsConstants.STRUTS_DEVMODE) 
+
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String val) {
-    	this.devMode = BooleanUtils.toBoolean(val);
+        this.devMode = BooleanUtils.toBoolean(val);
     }
-    
+
+    @Inject
+    public void setJsonUtil(JSONUtil jsonUtil) {
+        this.jsonUtil = jsonUtil;
+    }
+
     /**
      * Gets a list of regular expressions of properties to exclude from the JSON
      * output.
@@ -183,13 +185,17 @@ public class JSONResult implements Result {
     }
 
     public void execute(ActionInvocation invocation) throws Exception {
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
+        }
+
         ActionContext actionContext = invocation.getInvocationContext();
-        HttpServletRequest request = (HttpServletRequest) actionContext.get(StrutsStatics.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) actionContext.get(StrutsStatics.HTTP_RESPONSE);
-        
+        HttpServletRequest request = actionContext.getServletRequest();
+        HttpServletResponse response = actionContext.getServletResponse();
+
         // only permit caching bean information when struts devMode = false
         cacheBeanInfo = !devMode;
-        
+
         try {
             Object rootObject;
             rootObject = readRootObject(invocation);
@@ -208,19 +214,28 @@ public class JSONResult implements Result {
     }
 
     protected Object findRootObject(ActionInvocation invocation) {
+        ValueStack stack = invocation.getStack();
         Object rootObject;
         if (this.root != null) {
-            ValueStack stack = invocation.getStack();
+            LOG.debug("Root was defined as [{}], searching stack for it", this.root);
             rootObject = stack.findValue(root);
         } else {
-            rootObject = invocation.getStack().peek(); // model overrides action
+            LOG.debug("Root was not defined, searching for #action");
+            rootObject = stack.findValue("#action");
+            if (rootObject instanceof ModelDriven) {
+                LOG.debug("Action is an instance of ModelDriven, assuming model is on the top of the stack and using it");
+                rootObject = stack.peek();
+            } else if (rootObject == null) {
+                LOG.debug("Neither #action nor ModelDriven, peeking up object from the top of the stack");
+                rootObject = stack.peek();
+            }
         }
         return rootObject;
     }
 
     protected String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
-        String json = JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
-                                         enumAsBean, excludeNullProperties, defaultDateFormat, cacheBeanInfo);
+        String json = jsonUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy,
+            enumAsBean, excludeNullProperties, defaultDateFormat, cacheBeanInfo);
         json = addCallbackIfApplicable(request, json);
         return json;
     }
@@ -231,11 +246,10 @@ public class JSONResult implements Result {
 
     protected void writeToResponse(HttpServletResponse response, String json, boolean gzip) throws IOException {
         JSONUtil.writeJSONToResponse(new SerializationParams(response, getEncoding(), isWrapWithComments(),
-                json, false, gzip, noCache, statusCode, errorCode, prefix, contentType, wrapPrefix,
-                wrapSuffix));
+            json, false, gzip, noCache, statusCode, errorCode, prefix, contentType, wrapPrefix,
+            wrapSuffix));
     }
 
-    @SuppressWarnings("unchecked")
     protected org.apache.struts2.json.smd.SMD buildSMDObject(ActionInvocation invocation) {
         return new SMDGenerator(findRootObject(invocation), excludeProperties, ignoreInterfaces).generate(invocation);
     }
@@ -244,7 +258,7 @@ public class JSONResult implements Result {
      * Retrieve the encoding
      *
      * @return The encoding associated with this template (defaults to the value
-     *         of param 'encoding', if empty default to 'struts.i18n.encoding' property)
+     * of param 'encoding', if empty default to 'struts.i18n.encoding' property)
      */
     protected String getEncoding() {
         String encoding = this.encoding;
@@ -282,7 +296,9 @@ public class JSONResult implements Result {
     }
 
     /**
-     * Sets the root object to be serialized, defaults to the Action
+     * Sets the root object to be serialized, defaults to the Action.
+     * If the Action implements {@link ModelDriven}, the Model will be used instead,
+     * with the logic assuming the Model was pushed onto the top of the stack.
      *
      * @param root OGNL expression of root object to be serialized
      */
@@ -323,9 +339,9 @@ public class JSONResult implements Result {
     }
 
     /**
-     * @param ignoreInterfaces  Controls whether interfaces should be inspected for method annotations
-     * You may need to set to this true if your action is a proxy as annotations
-     * on methods are not inherited
+     * @param ignoreInterfaces Controls whether interfaces should be inspected for method annotations
+     *                         You may need to set to this true if your action is a proxy as annotations
+     *                         on methods are not inherited
      */
     public void setIgnoreInterfaces(boolean ignoreInterfaces) {
         this.ignoreInterfaces = ignoreInterfaces;
@@ -333,8 +349,8 @@ public class JSONResult implements Result {
 
     /**
      * @param enumAsBean Controls how Enum's are serialized : If true, an Enum is serialized as a
-     * name=value pair (name=name()) (default) If false, an Enum is serialized
-     * as a bean with a special property _name=name()
+     *                   name=value pair (name=name()) (default) If false, an Enum is serialized
+     *                   as a bean with a special property _name=name()
      */
     public void setEnumAsBean(boolean enumAsBean) {
         this.enumAsBean = enumAsBean;
@@ -419,7 +435,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * @param wrapPrefix  Text to be inserted at the begining of the response
+     * @param wrapPrefix Text to be inserted at the begining of the response
      */
     public void setWrapPrefix(String wrapPrefix) {
         this.wrapPrefix = wrapPrefix;
@@ -430,7 +446,7 @@ public class JSONResult implements Result {
     }
 
     /**
-     * @param wrapSuffix  Text to be inserted at the end of the response
+     * @param wrapSuffix Text to be inserted at the end of the response
      */
     public void setWrapSuffix(String wrapSuffix) {
         this.wrapSuffix = wrapSuffix;
@@ -439,7 +455,7 @@ public class JSONResult implements Result {
     /**
      * If defined will be used instead of {@link #defaultEncoding}, you can define it with result
      * &lt;result name=&quot;success&quot; type=&quot;json&quot;&gt;
-     *     &lt;param name=&quot;encoding&quot;&gt;UTF-8&lt;/param&gt;
+     * &lt;param name=&quot;encoding&quot;&gt;UTF-8&lt;/param&gt;
      * &lt;/result&gt;
      *
      * @param encoding valid encoding string
@@ -452,7 +468,7 @@ public class JSONResult implements Result {
         return defaultDateFormat;
     }
 
-    @Inject(required=false,value="struts.json.dateformat")
+    @Inject(required = false, value = JSONConstants.DATE_FORMAT)
     public void setDefaultDateFormat(String defaultDateFormat) {
         this.defaultDateFormat = defaultDateFormat;
     }

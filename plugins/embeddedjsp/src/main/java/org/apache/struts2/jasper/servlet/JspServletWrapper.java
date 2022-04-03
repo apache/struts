@@ -1,20 +1,21 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-
 package org.apache.struts2.jasper.servlet;
 
 import java.io.FileNotFoundException;
@@ -31,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.tagext.TagInfo;
 
-import org.apache.AnnotationProcessor;
 import org.apache.struts2.jasper.JasperException;
 import org.apache.struts2.jasper.JspCompilationContext;
 import org.apache.struts2.jasper.Options;
@@ -40,8 +40,10 @@ import org.apache.struts2.jasper.compiler.JavacErrorDetail;
 import org.apache.struts2.jasper.compiler.JspRuntimeContext;
 import org.apache.struts2.jasper.compiler.Localizer;
 import org.apache.struts2.jasper.runtime.JspSourceDependent;
+import org.apache.struts2.jasper.runtime.InstanceHelper;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.InstanceManager;
 
 /**
  * The JSP engine (a.k.a Jasper).
@@ -143,10 +145,9 @@ public class JspServletWrapper {
                     try {
                         servletClass = ctxt.load();
                         servlet = (Servlet) servletClass.newInstance();
-                        AnnotationProcessor annotationProcessor = (AnnotationProcessor) config.getServletContext().getAttribute(AnnotationProcessor.class.getName());
-                        if (annotationProcessor != null) {
-                           annotationProcessor.processAnnotations(servlet);
-                           annotationProcessor.postConstruct(servlet);
+                        final InstanceManager instanceManager = InstanceHelper.getServletInstanceManager(config);
+                        if (instanceManager != null) {
+                            InstanceHelper.postConstruct(instanceManager, servlet);
                         }
                     } catch (IllegalAccessException e) {
                         throw new JasperException(e);
@@ -423,10 +424,10 @@ public class JspServletWrapper {
     public void destroy() {
         if (theServlet != null) {
             theServlet.destroy();
-            AnnotationProcessor annotationProcessor = (AnnotationProcessor) config.getServletContext().getAttribute(AnnotationProcessor.class.getName());
-            if (annotationProcessor != null) {
+            final InstanceManager instanceManager = InstanceHelper.getServletInstanceManager(config);
+            if (instanceManager != null) {
                 try {
-                    annotationProcessor.preDestroy(theServlet);
+                    InstanceHelper.preDestroy(instanceManager, theServlet);
                 } catch (Exception e) {
                     // Log any exception, since it can't be passed along
                     log.error(Localizer.getMessage("jsp.error.file.not.found",

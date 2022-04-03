@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -52,7 +49,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         assertTrue(o instanceof TestAction);
     }
 
-    public void testIsTrueMethod() throws Exception {
+    public void testIsTrueMethod() {
         stack.push(new Object() {
             public String getMyString() {
                 return "myString";
@@ -67,7 +64,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         assertFalse(strutsUtil.isTrue("getMyBoolean(false)"));
     }
 
-    public void testFindStringMethod() throws Exception {
+    public void testFindStringMethod() {
         stack.push(new Object() {
             public String getMyString() {
                 return "myString";
@@ -92,13 +89,13 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
     }
 
 
-    public void testUrlEncodeMethod() throws Exception {
+    public void testUrlEncodeMethod() {
         assertEquals(
                 strutsUtil.urlEncode("http://www.opensymphony.com/action2/index.jsp?param1=value1"),
                 "http%3A%2F%2Fwww.opensymphony.com%2Faction2%2Findex.jsp%3Fparam1%3Dvalue1");
     }
 
-    public void testBuildUrlMethod() throws Exception {
+    public void testBuildUrlMethod() {
         request.setContextPath("/myContextPath");
         assertEquals(strutsUtil.buildUrl("/someUrl?param1=value1"), "/myContextPath/someUrl?param1=value1");
     }
@@ -126,21 +123,29 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
 
 
 
-    public void testGetTextMethod() throws Exception {
+    public void testGetTextMethod() {
         // this should be in xwork-messages.properties (included by default
         // by LocalizedTextUtil
-        assertNotNull(strutsUtil.getText("xwork.error.action.execution"));
-        assertEquals(strutsUtil.getText("xwork.error.action.execution"), "Error during Action invocation");
+        String expression = "xwork.error.action.execution";
+        String text = strutsUtil.getText(expression);
+        assertNotNull(text);
+        assertEquals(text, "Error during Action invocation");
+    }
+
+    public void testGetTextMethodWithSingleQuote() {
+        String expression = "xwork.error.action.execution') + getText('xwork.error.action.execution";
+        String text = strutsUtil.getText(expression);
+        assertNull(text);
     }
 
 
-    public void testGetContextMethod() throws Exception {
+    public void testGetContextMethod() {
         request.setContextPath("/myContext");
         assertEquals(strutsUtil.getContext(), "/myContext");
     }
 
 
-    public void testMakeSelectListMethod() throws Exception {
+    public void testMakeSelectListMethod() {
         String[] selectedList = new String[] { "Car", "Airplane", "Bus" };
         List list = new ArrayList();
         list.add("Lorry");
@@ -155,41 +160,55 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         assertEquals(listMade.size(), 3);
         assertEquals(((ListEntry)listMade.get(0)).getKey(), "Lorry");
         assertEquals(((ListEntry)listMade.get(0)).getValue(), "Lorry");
-        assertEquals(((ListEntry)listMade.get(0)).getIsSelected(), false);
+        assertFalse(((ListEntry) listMade.get(0)).getIsSelected());
         assertEquals(((ListEntry)listMade.get(1)).getKey(), "Car");
         assertEquals(((ListEntry)listMade.get(1)).getValue(), "Car");
-        assertEquals(((ListEntry)listMade.get(1)).getIsSelected(), true);
+        assertTrue(((ListEntry) listMade.get(1)).getIsSelected());
         assertEquals(((ListEntry)listMade.get(2)).getKey(), "Helicopter");
         assertEquals(((ListEntry)listMade.get(2)).getValue(), "Helicopter");
-        assertEquals(((ListEntry)listMade.get(2)).getIsSelected(), false);
+        assertFalse(((ListEntry) listMade.get(2)).getIsSelected());
     }
 
-    public void testToInt() throws Exception {
-        assertEquals(strutsUtil.toInt(11l), 11);
-    }
-
-
-    public void testToLong() throws Exception {
-        assertEquals(strutsUtil.toLong(11), 11l);
+    public void testToInt() {
+        assertEquals(strutsUtil.toInt(11L), 11);
     }
 
 
-    public void testToString() throws Exception {
+    public void testToLong() {
+        assertEquals(strutsUtil.toLong(11), 11L);
+    }
+
+
+    public void testToString() {
         assertEquals(strutsUtil.toString(1), "1");
-        assertEquals(strutsUtil.toString(11l), "11");
+        assertEquals(strutsUtil.toString(11L), "11");
     }
 
-    public void testTranslateVariables() throws Exception {
+    public void testTranslateVariables() {
         stack.push(new Object() {
             public String getFoo() {
                 return "bar";
             }
         });
-        Object obj1 = strutsUtil.translateVariables("try: %{foo}");
+        String obj1 = strutsUtil.translateVariables("try: %{foo}");
 
         assertNotNull(obj1);
-        assertTrue(obj1 instanceof String);
         assertEquals(obj1, "try: bar");
+    }
+
+    public void testTranslateVariablesRecursion() {
+        stack.push(new Object() {
+            public String getFoo() {
+                return "%{bar}";
+            }
+            public String getBar() {
+                return "bar";
+            }
+        });
+        String obj1 = strutsUtil.translateVariables("try: %{foo}");
+
+        assertNotNull(obj1);
+        assertEquals("try: %{bar}", obj1);
     }
 
     // === Junit Hook
@@ -214,7 +233,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
 
     // === internal class to assist in testing
 
-    class InternalMockHttpServletRequest extends MockHttpServletRequest {
+    static class InternalMockHttpServletRequest extends MockHttpServletRequest {
         InternalMockRequestDispatcher dispatcher = null;
         public RequestDispatcher getRequestDispatcher(String path) {
             dispatcher = new InternalMockRequestDispatcher(path);
@@ -226,7 +245,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         }
     }
 
-    class InternalMockRequestDispatcher extends MockRequestDispatcher {
+    static class InternalMockRequestDispatcher extends MockRequestDispatcher {
         private String url;
         boolean included = false;
         public InternalMockRequestDispatcher(String url) {

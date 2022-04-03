@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.osgi.loaders;
 
 import com.opensymphony.xwork2.inject.Inject;
@@ -36,6 +33,7 @@ public class StaticContentBundleResourceLoader extends DefaultStaticContentLoade
 
     private BundleAccessor bundleAccessor;
 
+    @Override
     protected URL findResource(String path) throws IOException {
         return bundleAccessor.loadResourceFromAllBundles(path);
     }

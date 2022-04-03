@@ -1,0 +1,120 @@
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<html>
+<head>
+	<title>Struts2 Showcase - Async Example</title>
+	<script>
+        function User () {
+            this.lastIndex = 0;
+            this.sendMessage = function(message) {
+                $.ajax({
+                    async: false,
+                    url: "sendMessage",
+                    data: {
+                        message: message
+                    }
+                });
+            };
+            this.receiveNewMessages = function() {
+                $.ajax({
+                    url: "receiveNewMessages",
+                    context: this,
+                    data: {
+                        lastIndex: this.lastIndex
+                    },
+                    success: function (result) {
+                        if (result != null) {//result is null on timeout
+                            var msgs = $('#msgs');
+                            var messages = msgs.val();
+                            msgs.val(messages + result + '\n');
+                            this.lastIndex += result.length;
+                        }
+                        this.receiveNewMessages();
+                    }
+                });
+            };
+            this.receiveNewMessages();
+        }
+
+        var user;
+        
+        function sendMessage() {
+            var msg = $('#msg');
+            var message = msg.val();
+            if (message.length > 0) {
+                user.sendMessage(message);
+                msg.val('');
+            }
+            return false;
+        }
+
+        $(function() {
+            user = new User();
+        });
+
+	</script>
+</head>
+
+<body>
+<div class="page-header">
+	<h1>Async Example</h1>
+</div>
+
+
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+
+			<p>
+				These examples illustrate Struts build in support for async request processing.
+			</p>
+			<p>
+				When you have a process that takes a long time, it can make your app not scalable under heavy load conditions.
+				Scalability limitations include running out of memory or exhausting the pool of container threads.
+				To create scalable web applications, you must ensure that no threads associated with a request
+				are sitting idle, so the container can use them to process new requests.
+				Asynchronous processing refers to assigning these blocking operations to a new thread and returning
+				the thread associated with the request immediately to the container.
+                <br/> Reference: <a href="https://docs.oracle.com/javaee/7/tutorial/servlets012.htm">Asynchronous Processing</a>
+				<br/> An interesting and vital use case for the async request processing is server push.
+				A good solution is to use the Servlet 3.0+ asynchronous feature.
+			</p>
+
+			<br/>
+            <h2>Example: A minimal chat room using server push</h2>
+            <h3>Open current page in different tabs, browsers and computers then send messages.</h3>
+            <h4>This is a minimal chat room which uses server push to retrieve new messages.
+            It doesn't poll the server frequently to check if a new message is available to display.
+            Instead it waits for the server to push back new messages. This approach has two obvious advantages:
+            low-lag communication without requests being sent, and no waste of server resources and network bandwidth.</h4>
+            <h5>Reference: <a href="https://www.javaworld.com/article/2077995/java-concurrency/java-concurrency-asynchronous-processing-support-in-servlet-3-0.html">
+                Asynchronous processing support in Servlet 3.0</a></h5>
+            <textarea id="msgs" cols="40" rows="5" title="messages" readonly></textarea><br/>
+			<form>
+				<input name="msg" id="msg" type="text" title="message" required />
+				<input type="submit" value="Send" onclick="return sendMessage();" />
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

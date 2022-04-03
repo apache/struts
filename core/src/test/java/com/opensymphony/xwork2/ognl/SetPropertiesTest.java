@@ -1,21 +1,20 @@
 /*
- * Copyright 2002-2003,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/*
- * Created on 6/10/2003
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.ognl;
 
@@ -58,7 +57,7 @@ public class SetPropertiesTest extends XWorkTestCase {
     }
     public void testOgnlUtilEmptyStringAsLong() {
         Bar bar = new Bar();
-        Map context = Ognl.createDefaultContext(bar);
+        Map context = Ognl.createDefaultContext(bar, new SecurityMemberAccess(false, true));
         context.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
         bar.setId(null);
 
@@ -145,7 +144,11 @@ public class SetPropertiesTest extends XWorkTestCase {
                     public Object create(Context context) throws Exception {
                         return new MockObjectTypeDeterminer(null,Cat.class,null,allowAdditions);
                     }
-                    
+
+                    @Override
+                    public Class type() {
+                        return Cat.class;
+                    }
                 });
             }
         });
@@ -245,6 +248,7 @@ public class SetPropertiesTest extends XWorkTestCase {
         Bar bar2 = new Bar();
         bar2.setId(new Long(22));
         barColl.add(bar2);
+        foo.setAnnotatedBarCollection(barColl);
         //try modifying bar1 and bar2
         //check the logs here to make sure
         //the Map is being created
@@ -263,13 +267,31 @@ public class SetPropertiesTest extends XWorkTestCase {
                 assertEquals(bar1Title, next.getTitle());
             }
         }
+        Bar bar3 = new Bar();
+        bar3.setId(new Long(33));
+        barColl.add(bar3);
+        Bar bar4 = new Bar();
+        bar4.setId(new Long(44));
+        barColl.add(bar4);
+        String bar1TitleByAnnotation = "The Phantom Menace By Annotation";
+        String bar2TitleByAnnotation = "The Clone Wars By Annotation";
+        vs.setValue("annotatedBarCollection(44).title", bar2TitleByAnnotation);
+        vs.setValue("annotatedBarCollection(33).title", bar1TitleByAnnotation);
+        for (Object aBarColl : barColl) {
+            Bar next = (Bar) aBarColl;
+            if (next.getId().intValue() == 44) {
+                assertEquals(bar2TitleByAnnotation, next.getTitle());
+            } else if (next.getId().intValue() == 33) {
+                assertEquals(bar1TitleByAnnotation, next.getTitle());
+            }
+        }
         //now test adding to a collection
         String bar3Title = "Revenge of the Sith";
         String bar4Title = "A New Hope";
         vs.setValue("barCollection.makeNew[4].title", bar4Title, true);
         vs.setValue("barCollection.makeNew[0].title", bar3Title, true);
 
-        assertEquals(4, barColl.size());
+        assertEquals(6, barColl.size());
 
         for (Object aBarColl : barColl) {
             Bar next = (Bar) aBarColl;
@@ -280,6 +302,24 @@ public class SetPropertiesTest extends XWorkTestCase {
             }
         }
 
+        //now test adding to a collection by annotation
+        String bar3TitleByAnnotation = "Revenge of the Sith By Annotation";
+        String bar4TitleByAnnotation = "A New Hope By Annotation";
+        vs.setValue("annotatedBarCollection.makeNew[5].title", bar4TitleByAnnotation, true);
+        vs.setValue("annotatedBarCollection.makeNew[1].title", bar3TitleByAnnotation, true);
+
+        assertEquals(8, barColl.size());
+
+        for (Object aBarColl : barColl) {
+            Bar next = (Bar) aBarColl;
+            if (next.getId() == null) {
+                assertNotNull(next.getTitle());
+                assertTrue(next.getTitle().equals(bar4TitleByAnnotation)
+                        || next.getTitle().equals(bar3TitleByAnnotation)
+                        || next.getTitle().equals(bar4Title)
+                        || next.getTitle().equals(bar3Title));
+            }
+        }
     }
     public void testAddingToCollectionBasedOnPermission() {
         final MockObjectTypeDeterminer determiner = new MockObjectTypeDeterminer(Long.class,Bar.class,"id",true);
@@ -291,7 +331,11 @@ public class SetPropertiesTest extends XWorkTestCase {
                     public Object create(Context context) throws Exception {
                         return determiner;
                     }
-                    
+
+                    @Override
+                    public Class type() {
+                        return determiner.getClass();
+                    }
                 }, Scope.SINGLETON);
             }
         });

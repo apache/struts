@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="WebApp_9" version="2.4" 
-	xmlns="http://java.sun.com/xml/ns/j2ee" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<web-app id="starter" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
     <display-name>Struts Showcase Application</display-name>
-	
+
+    <context-param>
+        <param-name>org.apache.tiles.definition.DefinitionsFactory.DEFINITIONS_CONFIG</param-name>
+        <param-value>
+            /WEB-INF/tiles.xml
+        </param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>async</filter-name>
+        <filter-class>org.apache.struts2.showcase.async.AsyncFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+
     <filter>
         <filter-name>struts-prepare</filter-name>
         <filter-class>org.apache.struts2.dispatcher.filter.StrutsPrepareFilter</filter-class>
@@ -21,6 +51,11 @@
        <filter-name>sitemesh</filter-name>
        <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
    </filter>
+
+    <filter-mapping>
+        <filter-name>async</filter-name>
+        <url-pattern>/async/*</url-pattern>
+    </filter-mapping>
 
     <filter-mapping>
         <filter-name>struts-prepare</filter-name>
@@ -62,7 +97,7 @@
 
     <servlet>
         <servlet-name>dwr</servlet-name>
-        <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
+        <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
         <init-param>
             <param-name>debug</param-name>
             <param-value>true</param-value>
@@ -95,6 +130,13 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>strutsServlet</servlet-name>
+        <servlet-class>org.apache.struts2.dispatcher.servlet.StrutsServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>dwr</servlet-name>
         <url-pattern>/dwr/*</url-pattern>
@@ -108,6 +150,11 @@
     <servlet-mapping>
         <servlet-name>sitemesh-velocity</servlet-name>
         <url-pattern>*.vm</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>strutsServlet</servlet-name>
+        <url-pattern>/async/receiveNewMessages</url-pattern>
     </servlet-mapping>
 
     <!-- END SNIPPET: dwr -->

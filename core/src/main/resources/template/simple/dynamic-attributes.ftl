@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,15 +18,26 @@
  * under the License.
  */
 -->
+<#function acceptKey(key)>
+  <#if dynamic_attributes_ignore??>
+    <#return !key?starts_with(dynamic_attributes_ignore) >
+  <#else>
+    <#return true>
+  </#if>
+</#function>
 <#if (parameters.dynamicAttributes?? && parameters.dynamicAttributes?size > 0)><#rt/>
 <#assign aKeys = parameters.dynamicAttributes.keySet()><#rt/>
-<#list aKeys as aKey><#rt/>
-  <#assign keyValue = parameters.dynamicAttributes.get(aKey)/>
-  <#if keyValue?is_string>
-      <#assign value = struts.translateVariables(keyValue)!keyValue/>
+<#list aKeys?filter(acceptKey) as aKey><#rt/>
+<#assign keyValue = parameters.dynamicAttributes.get(aKey)/>
+<#if keyValue?is_string>
+  <#if evaluate_dynamic_attributes!false == true>
+    <#assign value = struts.translateVariables(keyValue)!keyValue/><#rt/>
   <#else>
-      <#assign value = keyValue?string/>
+    <#assign value = keyValue/><#rt/>
   </#if>
- ${aKey}="${value?html}"<#rt/>
+<#else>
+  <#assign value = keyValue?string/>
+</#if>
+ ${aKey}="${value}"<#rt/>
 </#list><#rt/>
 </#if><#rt/>

@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ObjectFactory;
@@ -42,7 +60,7 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
     }
 
     protected void alias(Class type, String key, ContainerBuilder builder, Properties props, Scope scope) {
-        if (!builder.contains(type)) {
+        if (!builder.contains(type, Container.DEFAULT_NAME)) {
             String foundName = props.getProperty(key, DEFAULT_BEAN_NAME);
             if (builder.contains(type, foundName)) {
                 LOG.trace("Choosing bean ({}) for ({})", foundName, type.getName());
@@ -71,12 +89,6 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
         }
     }
 
-    protected void convertIfExist(LocatableProperties props, String fromKey, String toKey) {
-        if (props.containsKey(fromKey)) {
-            props.setProperty(toKey, props.getProperty(fromKey));
-        }
-    }
-
     static class ObjectFactoryDelegateFactory implements Factory {
 
         String name;
@@ -94,6 +106,11 @@ public abstract class AbstractBeanSelectionProvider implements BeanSelectionProv
             } catch (ClassNotFoundException ex) {
                 throw new ConfigurationException("Unable to load bean "+type.getName()+" ("+name+")");
             }
+        }
+
+        @Override
+        public Class type() {
+            return type;
         }
     }
 }

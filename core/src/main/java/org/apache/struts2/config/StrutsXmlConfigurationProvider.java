@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -54,28 +51,39 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      *
      * @param errorIfMissing If we should throw an exception if the file can't be found
      */
+    @Deprecated
     public StrutsXmlConfigurationProvider(boolean errorIfMissing) {
         this("struts.xml", errorIfMissing, null);
+    }
+
+    /**
+     * Constructs the configuration provider based on the provided config file
+     *
+     * @param filename file with Struts configuration
+     */
+    public StrutsXmlConfigurationProvider(String filename) {
+        this(filename, false, null);
     }
 
     /**
      * Constructs the configuration provider
      *
      * @param filename The filename to look for
-     * @param errorIfMissing If we should throw an exception if the file can't be found
+     * @param errorIfMissing If we should throw an exception if the file can't be found, @deprecated and should be dropped
      * @param ctx Our ServletContext
      */
-    public StrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
+    public StrutsXmlConfigurationProvider(String filename, @Deprecated boolean errorIfMissing, ServletContext ctx) {
         super(filename, errorIfMissing);
         this.servletContext = ctx;
         this.filename = filename;
-        reloadKey = "configurationReload-"+filename;
+        reloadKey = "configurationReload-" + filename;
         Map<String,String> dtdMappings = new HashMap<String,String>(getDtdMappings());
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN", "struts-2.1.7.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.3//EN", "struts-2.3.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.5//EN", "struts-2.5.dtd");
+        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.6//EN", "struts-2.6.dtd");
         setDtdMappings(dtdMappings);
         File file = new File(filename);
         if (file.getParent() != null) {
@@ -92,6 +100,9 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
             containerBuilder.factory(ServletContext.class, new Factory<ServletContext>() {
                 public ServletContext create(Context context) throws Exception {
                     return servletContext;
+                }
+                public Class<? extends ServletContext> type() {
+                    return servletContext.getClass();
                 }
             });
         }

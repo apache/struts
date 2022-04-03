@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.conversion;
 
@@ -21,6 +24,7 @@ import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
 import com.opensymphony.xwork2.conversion.annotations.ConversionType;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,7 +53,7 @@ public class ConversionTestAction implements Action {
         return convertInt;
     }
 
-    @TypeConversion(type = ConversionType.APPLICATION, converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+    @TypeConversion(type = ConversionType.APPLICATION)
     public void setConvertInt( String convertInt ) {
         this.convertInt = convertInt;
     }
@@ -67,7 +71,7 @@ public class ConversionTestAction implements Action {
         return users;
     }
 
-    @TypeConversion(rule = ConversionRule.COLLECTION, converter = "java.lang.String")
+    @TypeConversion(rule = ConversionRule.COLLECTION, converterClass = String.class)
     public void setUsers( List users ) {
         this.users = users;
     }
@@ -76,7 +80,7 @@ public class ConversionTestAction implements Action {
         return keyValues;
     }
 
-    @TypeConversion(rule = ConversionRule.MAP, converter = "java.math.BigInteger")
+    @TypeConversion(rule = ConversionRule.MAP, converterClass = BigInteger.class)
     public void setKeyValues( HashMap keyValues ) {
         this.keyValues = keyValues;
     }
@@ -90,7 +94,7 @@ public class ConversionTestAction implements Action {
      *                   Application level exceptions should be handled by returning
      *                   an error value, such as Action.ERROR.
      */
-    @TypeConversion(type = ConversionType.APPLICATION, key = "java.util.Date", converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+    @TypeConversion(type = ConversionType.APPLICATION, key = "java.util.Date")
     public String execute() throws Exception {
         return SUCCESS;
     }

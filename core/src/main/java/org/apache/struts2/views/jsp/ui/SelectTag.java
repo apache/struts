@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +25,6 @@ import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Select;
 
 import com.opensymphony.xwork2.util.ValueStack;
-
 
 /**
  * @see Select
@@ -43,10 +39,12 @@ public class SelectTag extends AbstractRequiredListTag {
     protected String multiple;
     protected String size;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Select(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -77,5 +75,26 @@ public class SelectTag extends AbstractRequiredListTag {
     public void setSize(String size) {
         this.size = size;
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.emptyOption = null;
+        this.headerKey = null;
+        this.headerValue = null;
+        this.multiple = null;
+        this.size = null;
+     }
 
 }

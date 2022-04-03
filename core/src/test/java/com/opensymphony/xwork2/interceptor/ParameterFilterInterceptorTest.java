@@ -1,23 +1,27 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,21 +34,20 @@ import java.util.Map;
  */
 public class ParameterFilterInterceptorTest extends XWorkTestCase {
 
-    ActionInvocation invocation;
-    ParameterFilterInterceptor interceptor;
-    Mock mockInvocation;
-    ValueStack stack;
-    Map<String, Object> contextMap;
+    private ActionInvocation invocation;
+    private ParameterFilterInterceptor interceptor;
+    private Mock mockInvocation;
+    private ValueStack stack;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        contextMap = new HashMap<>();
         stack = ActionContext.getContext().getValueStack();
         mockInvocation = new Mock(ActionInvocation.class);
+        mockInvocation.expectAndReturn("getInvocationContext", ActionContext.getContext());
         mockInvocation.expectAndReturn("getStack", stack);
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
-        mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(contextMap));
+        mockInvocation.expectAndReturn("getInvocationContext", ActionContext.getContext());
         mockInvocation.matchAndReturn("getAction", new SimpleAction());
         invocation = (ActionInvocation) mockInvocation.proxy();
         interceptor = new ParameterFilterInterceptor();
@@ -85,9 +88,8 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
     public void testTreeBlocking() throws Exception {
         runFilterTest("blah.deblah","blah,blah.deblah.deblah",false,
                 new String[] {"blah", "blah.deblah", "blah.deblah.deblah"});
-        Collection paramNames=getParameterNames();
-        assertEquals(1, paramNames.size());
-        assertEquals(paramNames.iterator().next(),"blah.deblah");
+        assertEquals(1, getParameterNames().size());
+        assertEquals(getParameterNames().iterator().next(),"blah.deblah");
     }
     
     public void testEnsureOnlyPropsBlocked() throws Exception {
@@ -111,11 +113,11 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
             params.put(paramName, "irrelevant what this is");
 
         }
-        contextMap.put(ActionContext.PARAMETERS, params);
+        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
     }
     
-    private Collection getParameterNames() {
-        return ((Map)contextMap.get(ActionContext.PARAMETERS)).keySet();
+    private Collection<String> getParameterNames() {
+        return ActionContext.getContext().getParameters().keySet();
     }
     
     public void runAction() throws Exception  {

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,8 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.util;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.*;
@@ -31,7 +31,6 @@ import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 import java.util.LinkedList;
 
-
 /**
  * A speedy implementation of ByteArrayOutputStream. It's not synchronized, and it
  * does not copy buffers when it's expanded. There's also no copying of the internal buffer
@@ -39,6 +38,9 @@ import java.util.LinkedList;
  *
  */
 public class FastByteArrayOutputStream extends OutputStream {
+
+    private static final Logger LOG = LogManager.getLogger(FastByteArrayOutputStream.class);
+
     private static final int DEFAULT_BLOCK_SIZE = 8192;
 
     private LinkedList<byte[]> buffers;
@@ -148,7 +150,7 @@ public class FastByteArrayOutputStream extends OutputStream {
         // Append bytes to current buffer
         // Previous data maybe partially decoded, this part will appended to previous
         in.put(bytes, 0, length);
-        // To begin of data
+        // To begin processing of data
         in.flip();
         decodeAndWriteBuffered(writer, in, out, decoder, endOfInput);
     }
@@ -162,7 +164,7 @@ public class FastByteArrayOutputStream extends OutputStream {
             if (in.hasRemaining()) {
                 // Move remaining to top of buffer
                 in.compact();
-                if (result.isOverflow() && !result.isError() && !result.isMalformed()) {
+                if (result.isOverflow() && !result.isError()) {  // isError covers isMalformed and isUnmappable
                     // Not all buffer chars decoded, spin it again
                     // Set to begin
                     in.flip();
@@ -171,16 +173,24 @@ public class FastByteArrayOutputStream extends OutputStream {
                 // Clean up buffer
                 in.clear();
             }
-        } while (in.hasRemaining() && result.isOverflow() && !result.isError() && !result.isMalformed());
+        } while (in.hasRemaining() && result.isOverflow() && !result.isError());  // isError covers isMalformed and isUnmappable
+
+        if (result.isError()) {
+            if (LOG.isWarnEnabled()) {
+                // Provide a log warning when the decoding fails (prior to 2.5.19 it failed silently).
+                // Note: Set FastByteArrayOutputStream's Logger level to error or higher to suppress this log warning.
+                LOG.warn("Buffer decoding-in-to-out [{}] failed, coderResult [{}]", decoder.charset().name(), result.toString());
+            }
+        }
     }
 
     private static CoderResult decodeAndWrite(Writer writer, ByteBuffer in, CharBuffer out, CharsetDecoder decoder, boolean endOfInput) throws IOException {
         CoderResult result = decoder.decode(in, out, endOfInput);
-        // To begin of decoded data
+        // To begin processing of decoded data
         out.flip();
         // Output
         writer.write(out.toString());
-        // clear output to avoid infinitive loops, see WW-4383
+        // Clear output to avoid infinite loops, see WW-4383
         out.clear();
         return result;
     }

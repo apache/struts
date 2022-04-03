@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.TestAction;
@@ -53,6 +50,44 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-10.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testButtonSimpleWithBody_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setTheme("simple");
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("yoyoyoyoy");
+        tag.setValue("%{foo}");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("foo");
+        tag.setBodyContent(body);
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-10.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDefaultValues() throws Exception {
@@ -60,6 +95,7 @@ public class SubmitTest extends AbstractUITagTest {
         testAction.setFoo("bar");
 
         SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setPageContext(pageContext);
         tag.setLabel("mylabel");
         tag.setName("myname");
@@ -69,6 +105,39 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testDefaultValues_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("myname");
+        tag.setTitle("mytitle");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-2.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimple() throws Exception {
@@ -87,6 +156,41 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimple_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("myname");
+        tag.setValue("%{foo}");
+        tag.setDisabled("true");
+        tag.setTabindex("1");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testButtonSimple() throws Exception {
@@ -105,6 +209,41 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testButtonSimple_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setValue("%{foo}");
+        tag.setDisabled("true");
+        tag.setTabindex("1");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-3.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testButtonWithLabel() throws Exception {
@@ -122,6 +261,40 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testButtonWithLabel_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setValue("%{foo}");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-4.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testImageSimple() throws Exception {
@@ -139,6 +312,40 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testImageSimple_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setType("image");
+        tag.setName("myname");
+        tag.setValue("%{foo}");
+        tag.setDisabled("true");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-5.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testImageWithSrc() throws Exception {
@@ -157,6 +364,41 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-6.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testImageWithSrc_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setType("image");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setValue("%{foo}");
+        tag.setSrc("some.gif");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-6.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleThemeImageUsingActionAndMethod() throws Exception {
@@ -176,6 +418,42 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-7.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimpleThemeImageUsingActionAndMethod_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setTheme("simple");
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setAction("manager");
+        tag.setMethod("update");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-7.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleThemeImageUsingActionOnly() throws Exception {
@@ -195,6 +473,42 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-8.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimpleThemeImageUsingActionOnly_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setTheme("simple");
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setAction("manager");
+        tag.setMethod(null); // no method
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-8.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleThemeImageUsingMethodOnly() throws Exception {
@@ -214,6 +528,42 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-9.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimpleThemeImageUsingMethodOnly_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setTheme("simple");
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setAction(null); // no action
+        tag.setMethod("update");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-9.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleThemeInput() throws Exception {
@@ -233,6 +583,42 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         assertEquals("<input type=\"submit\" value=\"Submit\" id=\"myname\" name=\"myname\"/>", writer.toString().trim());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimpleThemeInput_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setTheme("simple");
+        tag.setType("input");
+        tag.setName("myname");
+        tag.setLabel("mylabel");
+        tag.setAction(null);
+        tag.setMethod(null);
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        assertEquals("<input type=\"submit\" value=\"Submit\" id=\"myname\" name=\"myname\"/>", writer.toString().trim());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        SubmitTag freshTag = new SubmitTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -243,8 +629,9 @@ public class SubmitTest extends AbstractUITagTest {
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
-    protected Map initializedGenericTagTestProperties() {
-        Map result = new HashMap();
+    @Override
+    protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
+        Map<String, PropertyHolder> result = new HashMap<>();
         new PropertyHolder("title", "someTitle").addToMap(result);
         new PropertyHolder("cssClass", "cssClass1", "class=\"cssClass1\"").addToMap(result);
         new PropertyHolder("cssStyle", "cssStyle1", "style=\"cssStyle1\"").addToMap(result);
@@ -263,4 +650,53 @@ public class SubmitTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
+    /**
+     * Test that by default submit tag body is HTML-escaped.
+     */
+    public void testSubmitWithBodyHTMLEscaped() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setTheme("simple");
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("yoyoyoyoy");
+        tag.setValue("%{foo}");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("should HTML escape: < & >");
+        tag.setBodyContent(body);
+        tag.setEscapeHtmlBody(true);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-11.txt"));
+    }
+
+    /**
+     * Test that with htmlEscapeBody false submit tag body is not HTML-escaped.
+     */
+    public void testSubmitWithBodyNotHTMLEscaped() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setTheme("simple");
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setLabel("yoyoyoyoy");
+        tag.setValue("%{foo}");
+        tag.setEscapeHtmlBody(false);
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("should not HTML escape: < & >");
+        tag.setBodyContent(body);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-12.txt"));
+    }
 }

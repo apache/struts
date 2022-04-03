@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.osgi;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -57,46 +54,62 @@ public class DefaultBundleAccessor implements BundleAccessor {
     private Map<Bundle, Set<String>> packagesByBundle = new HashMap<>();
     private OsgiHost osgiHost;
 
+    /**
+     * This is a "defective" Singleton, possibly due to framework initialization requirements.
+     * 
+     * Do NOT call this constructor directly, use {@link getInstance instead}.
+     */
     public DefaultBundleAccessor() {
-        self = this;
+        if (self == null) {
+            self = this;  // First instantiation
+        } else {
+            // Copy current "singleton" to avoid loosing state, and then replace the old instance.
+            this.bundleContext = self.bundleContext;
+            this.packageToBundle = self.packageToBundle;
+            this.packagesByBundle = self.packagesByBundle;
+            this.osgiHost = self.osgiHost;
+            self = this;
+        }
     }
 
     public static DefaultBundleAccessor getInstance() {
         return self;
     }
 
+    @Override
     public Object getService(ServiceReference ref) {
         return bundleContext != null ? bundleContext.getService(ref) : null;
     }
 
+    @Override
     public ServiceReference getServiceReference(String className) {
         return bundleContext != null ? bundleContext.getServiceReference(className) : null;
     }
 
+    @Override
     public ServiceReference[] getAllServiceReferences(String className) {
         if (bundleContext != null) {
             try {
                 return bundleContext.getServiceReferences(className, null);
             } catch (InvalidSyntaxException e) {
                 //cannot happen we are passing null as the param
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Invalid syntax for service lookup", e);
-                }
+                LOG.error("Invalid syntax for service lookup", e);
             }
         }
-
         return null;
     }
 
+    @Override
     public ServiceReference[] getServiceReferences(String className, String params) throws InvalidSyntaxException {
         return bundleContext != null ? bundleContext.getServiceReferences(className, params) : null;
     }
 
     /**
-     *  Add as Bundle -&gt; Package mapping
+     * Add as Bundle -&gt; Package mapping
      * @param bundle the bundle where the package was loaded from
-     * @param packageName the anme of the loaded package
+     * @param packageName the name of the loaded package
      */
+    @Override
     public void addPackageFromBundle(Bundle bundle, String packageName) {
         this.packageToBundle.put(packageName, bundle.getSymbolicName());
         Set<String> pkgs = packagesByBundle.get(bundle);
@@ -107,6 +120,7 @@ public class DefaultBundleAccessor implements BundleAccessor {
         pkgs.add(packageName);
     }
 
+    @Override
     public Class<?> loadClass(String className) throws ClassNotFoundException {
         Bundle bundle = getCurrentBundle();
         if (bundle != null) {
@@ -120,6 +134,11 @@ public class DefaultBundleAccessor implements BundleAccessor {
 
     private Bundle getCurrentBundle() {
         ActionContext ctx = ActionContext.getContext();
+
+        if (ctx == null) {
+            throw new IllegalStateException("Unable to get current bundle, ActionContext is null");  // Better than a NPE.
+        }
+
         String bundleName = (String) ctx.get(CURRENT_BUNDLE_NAME);
         if (bundleName == null) {
             ActionInvocation inv = ctx.getActionInvocation();
@@ -149,10 +168,10 @@ public class DefaultBundleAccessor implements BundleAccessor {
             }
             return resources;
         }
-
         return null;
     }
 
+    @Override
     public URL loadResourceFromAllBundles(String name) throws IOException {
         for (Map.Entry<String, Bundle> entry : osgiHost.getActiveBundles().entrySet()) {
             Enumeration e = entry.getValue().getResources(name);
@@ -160,10 +179,10 @@ public class DefaultBundleAccessor implements BundleAccessor {
                 return (URL) e.nextElement();
             }
         }
-
         return null;
     }
 
+    @Override
     public InputStream loadResourceFromAllBundlesAsStream(String name) throws IOException {
         URL url = loadResourceFromAllBundles(name);
         if (url != null) {
@@ -183,21 +202,19 @@ public class DefaultBundleAccessor implements BundleAccessor {
             try {
                 return translate ? OsgiUtil.translateBundleURLToJarURL(url, getCurrentBundle()) : url;
             } catch (Exception e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to translate bundle URL to jar URL", e);
-                }
-
+                LOG.error("Unable to translate bundle URL to jar URL", e);
                 return null;
             }
         }
-
         return null;
     }
 
+    @Override
     public Set<String> getPackagesByBundle(Bundle bundle) {
         return packagesByBundle.get(bundle);
     }
 
+    @Override
     public InputStream loadResourceAsStream(String name) throws IOException {
         URL url = loadResource(name);
         if (url != null) {
@@ -206,10 +223,12 @@ public class DefaultBundleAccessor implements BundleAccessor {
         return null;
     }
 
+    @Override
     public void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }
 
+    @Override
     public void setOsgiHost(OsgiHost osgiHost) {
         this.osgiHost = osgiHost;
     }

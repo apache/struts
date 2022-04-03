@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,61 +29,46 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * <!-- START SNIPPET: description -->
- * <p>
  * A custom Result type for sending raw data (via an InputStream) directly to the
  * HttpServletResponse. Very useful for allowing users to download content.
- * </p>
- * <!-- END SNIPPET: description -->
- * <p>
+ *
  * <b>This result type takes the following parameters:</b>
- * </p>
- * <!-- START SNIPPET: params -->
  *
  * <ul>
- *
  * <li><b>contentType</b> - the stream mime-type as sent to the web browser
  * (default = <code>text/plain</code>).</li>
- *
  * <li><b>contentLength</b> - the stream length in bytes (the browser displays a
  * progress bar).</li>
- *
  * <li><b>contentDisposition</b> - the content disposition header value for
  * specifing the file name (default = <code>inline</code>, values are typically
  * <i>attachment;filename="document.pdf"</i>.</li>
- *
  * <li><b>inputName</b> - the name of the InputStream property from the chained
  * action (default = <code>inputStream</code>).</li>
- *
  * <li><b>bufferSize</b> - the size of the buffer to copy from input to output
  * (default = <code>1024</code>).</li>
- *
  * <li><b>allowCaching</b> if set to 'false' it will set the headers 'Pragma' and 'Cache-Control'
  * to 'no-cahce', and prevent client from caching the content. (default = <code>true</code>)
- *
  * <li><b>contentCharSet</b> if set to a string, ';charset=value' will be added to the
  * content-type header, where value is the string set. If set to an expression, the result
  * of evaluating the expression will be used. If not set, then no charset will be set on
  * the header</li>
  * </ul>
- * 
- * <p>These parameters can also be set by exposing a similarly named getter method on your Action.  For example, you can
- * provide <code>getContentType()</code> to override that parameter for the current action.</p>
  *
- * <!-- END SNIPPET: params -->
  * <p>
- * <b>Example:</b>
+ * These parameters can also be set by exposing a similarly named getter method on your Action.  For example, you can
+ * provide <code>getContentType()</code> to override that parameter for the current action.
  * </p>
  *
- * <pre><!-- START SNIPPET: example -->
+ * <b>Example:</b>
+ *
+ * <pre>
  * &lt;result name="success" type="stream"&gt;
  *   &lt;param name="contentType"&gt;image/jpeg&lt;/param&gt;
  *   &lt;param name="inputName"&gt;imageStream&lt;/param&gt;
  *   &lt;param name="contentDisposition"&gt;attachment;filename="document.pdf"&lt;/param&gt;
  *   &lt;param name="bufferSize"&gt;1024&lt;/param&gt;
  * &lt;/result&gt;
- * <!-- END SNIPPET: example --></pre>
- *
+ * </pre>
  */
 public class StreamResult extends StrutsResultSupport {
 
@@ -98,11 +81,13 @@ public class StreamResult extends StrutsResultSupport {
     protected String contentType = "text/plain";
     protected String contentLength;
     protected String contentDisposition = "inline";
-    protected String contentCharSet ;
+    protected String contentCharSet;
     protected String inputName = "inputStream";
     protected InputStream inputStream;
     protected int bufferSize = 1024;
     protected boolean allowCaching = true;
+
+    private NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns;
 
     public StreamResult() {
         super();
@@ -112,7 +97,12 @@ public class StreamResult extends StrutsResultSupport {
         this.inputStream = in;
     }
 
-     /**
+    @Inject
+    public void setNotExcludedAcceptedPatterns(NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns) {
+        this.notExcludedAcceptedPatterns = notExcludedAcceptedPatterns;
+    }
+
+    /**
      * @return Returns the whether or not the client should be requested to allow caching of the data stream.
      */
     public boolean getAllowCaching() {
@@ -218,115 +208,104 @@ public class StreamResult extends StrutsResultSupport {
      * @see StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
      */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
+        LOG.debug("Find the Response in context");
 
-        // Override any parameters using values on the stack
-        resolveParamsFromStack(invocation.getStack(), invocation);
+        OutputStream oOutput = null;
 
-        // Find the Response in context
-        HttpServletResponse oResponse = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
-        try (OutputStream oOutput = oResponse.getOutputStream()) {
-            if (inputStream == null) {
-                // Find the inputstream from the invocation variable stack
-                inputStream = (InputStream) invocation.getStack().findValue(conditionalParse(inputName, invocation));
+        try {
+            String parsedInputName = conditionalParse(inputName, invocation);
+            boolean evaluated = parsedInputName != null && !parsedInputName.equals(inputName);
+            boolean reevaluate = !evaluated || isAcceptableExpression(parsedInputName);
+            if (inputStream == null && reevaluate) {
+                LOG.debug("Find the inputstream from the invocation variable stack");
+                inputStream = (InputStream) invocation.getStack().findValue(parsedInputName);
             }
 
             if (inputStream == null) {
-                String msg = ("Can not find a java.io.InputStream with the name [" + inputName + "] in the invocation stack. " +
-                    "Check the <param name=\"inputName\"> tag specified for this action.");
+                String msg = ("Can not find a java.io.InputStream with the name [" + parsedInputName + "] in the invocation stack. " +
+                    "Check the <param name=\"inputName\"> tag specified for this action is correct, not excluded and accepted.");
                 LOG.error(msg);
                 throw new IllegalArgumentException(msg);
             }
 
-            // Set the content type
-            if (contentCharSet != null && ! contentCharSet.equals("")) {
-                oResponse.setContentType(conditionalParse(contentType, invocation)+";charset="+contentCharSet);
-            }
-            else {
+
+            HttpServletResponse oResponse = invocation.getInvocationContext().getServletResponse();
+
+            LOG.debug("Set the content type: {};charset{}", contentType, contentCharSet);
+            if (contentCharSet != null && !contentCharSet.equals("")) {
+                oResponse.setContentType(conditionalParse(contentType, invocation) + ";charset=" + conditionalParse(contentCharSet, invocation));
+            } else {
                 oResponse.setContentType(conditionalParse(contentType, invocation));
             }
 
-            // Set the content length
+            LOG.debug("Set the content length: {}", contentLength);
             if (contentLength != null) {
-                String _contentLength = conditionalParse(contentLength, invocation);
-                int _contentLengthAsInt = -1;
+                String translatedContentLength = conditionalParse(contentLength, invocation);
+                int contentLengthAsInt;
                 try {
-                    _contentLengthAsInt = Integer.parseInt(_contentLength);
-                    if (_contentLengthAsInt >= 0) {
-                        oResponse.setContentLength(_contentLengthAsInt);
+                    contentLengthAsInt = Integer.parseInt(translatedContentLength);
+                    if (contentLengthAsInt >= 0) {
+                        oResponse.setContentLength(contentLengthAsInt);
                     }
-                }
-                catch(NumberFormatException e) {
-                    LOG.warn("failed to recognize {} as a number, contentLength header will not be set", _contentLength, e);
+                } catch (NumberFormatException e) {
+                    LOG.warn("failed to recognize {} as a number, contentLength header will not be set",
+                            translatedContentLength, e);
                 }
             }
 
-            // Set the content-disposition
+            LOG.debug("Set the content-disposition: {}", contentDisposition);
             if (contentDisposition != null) {
                 oResponse.addHeader("Content-Disposition", conditionalParse(contentDisposition, invocation));
             }
 
-            // Set the cache control headers if neccessary
+            LOG.debug("Set the cache control headers if necessary: {}", allowCaching);
             if (!allowCaching) {
                 oResponse.addHeader("Pragma", "no-cache");
                 oResponse.addHeader("Cache-Control", "no-cache");
             }
 
-            LOG.debug("Streaming result [{}] type=[{}] length=[{}] content-disposition=[{}] charset=[{}]",
-                    inputName, contentType, contentLength, contentDisposition, contentCharSet);
+            oOutput = oResponse.getOutputStream();
 
-            // Copy input to output
-        	LOG.debug("Streaming to output buffer +++ START +++");
+            LOG.debug("Streaming result [{}] type=[{}] length=[{}] content-disposition=[{}] charset=[{}]",
+                inputName, contentType, contentLength, contentDisposition, contentCharSet);
+
+            LOG.debug("Streaming to output buffer +++ START +++");
             byte[] oBuff = new byte[bufferSize];
             int iSize;
             while (-1 != (iSize = inputStream.read(oBuff))) {
                 LOG.debug("Sending stream ... {}", iSize);
                 oOutput.write(oBuff, 0, iSize);
             }
-        	LOG.debug("Streaming to output buffer +++ END +++");
+            LOG.debug("Streaming to output buffer +++ END +++");
 
             // Flush
             oOutput.flush();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (oOutput != null) {
+                oOutput.close();
+            }
         }
     }
 
     /**
-     * Tries to lookup the parameters on the stack.  Will override any existing parameters
+     * Checks if expression doesn't contain vulnerable code
      *
-     * @param stack The current value stack
-     * @param invocation the action invocation
+     * @param expression of result
+     * @return true|false
+     * @since 2.6
      */
-    protected void resolveParamsFromStack(ValueStack stack, ActionInvocation invocation) {
-        String disposition = stack.findString("contentDisposition");
-        if (disposition != null) {
-            setContentDisposition(disposition);
+    protected boolean isAcceptableExpression(String expression) {
+        NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);
+        if (isAllowed.isAllowed()) {
+            return true;
         }
 
-        String contentType = stack.findString("contentType");
-        if (contentType != null) {
-            setContentType(contentType);
-        }
+        LOG.warn("Expression [{}] isn't allowed by pattern [{}]! See Accepted / Excluded patterns at\n" +
+                "https://struts.apache.org/security/", expression, isAllowed.getAllowedPattern());
 
-        String inputName = stack.findString("inputName");
-        if (inputName != null) {
-            setInputName(inputName);
-        }
-
-        String contentLength = stack.findString("contentLength");
-        if (contentLength != null) {
-            setContentLength(contentLength);
-        }
-
-        Integer bufferSize = (Integer) stack.findValue("bufferSize", Integer.class);
-        if (bufferSize != null) {
-            setBufferSize(bufferSize);
-        }
-
-        if (contentCharSet != null ) {
-            contentCharSet = conditionalParse(contentCharSet, invocation);
-        }
-        else {
-            contentCharSet = stack.findString("contentCharSet");
-        }
+        return false;
     }
-
 }

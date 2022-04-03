@@ -1,10 +1,31 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.opensymphony.xwork2.security;
 
 import com.opensymphony.xwork2.XWorkTestCase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
 
@@ -137,4 +158,91 @@ public class DefaultExcludedPatternsCheckerTest extends XWorkTestCase {
         }
     }
 
+    public void testExcludedPatternsImmutable() throws Exception {
+        ExcludedPatternsChecker checker = new DefaultExcludedPatternsChecker();
+
+        Set<Pattern> excludedPatternSet = checker.getExcludedPatterns();
+        assertNotNull("default excluded patterns null?", excludedPatternSet);
+        assertFalse("default excluded patterns empty?", excludedPatternSet.isEmpty());
+        try {
+            excludedPatternSet.add(Pattern.compile("SomeRegexPattern") );
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+        try {
+            excludedPatternSet.clear();
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+
+        checker.setExcludedPatterns(DefaultExcludedPatternsChecker.EXCLUDED_PATTERNS);
+        excludedPatternSet = checker.getExcludedPatterns();
+        assertNotNull("default excluded patterns null?", excludedPatternSet);
+        assertFalse("default excluded patterns empty?", excludedPatternSet.isEmpty());
+        try {
+            excludedPatternSet.add(Pattern.compile("SomeRegexPattern") );
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+        try {
+            excludedPatternSet.clear();
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+
+        String[] testPatternArray = {"exactmatch1", "exactmatch2", "exactmatch3", "exactmatch4"};
+        checker.setExcludedPatterns(testPatternArray);
+        excludedPatternSet = checker.getExcludedPatterns();
+        assertNotNull("default excluded patterns null?", excludedPatternSet);
+        assertFalse("default excluded patterns empty?", excludedPatternSet.isEmpty());
+        assertTrue("replaced default accepted patterns not size " + testPatternArray.length + "?",
+                excludedPatternSet.size() == testPatternArray.length);
+        for (String testPatternArray1 : testPatternArray) {
+            assertTrue(testPatternArray1 + " not excluded?", checker.isExcluded(testPatternArray1).isExcluded());
+        }
+        try {
+            excludedPatternSet.add(Pattern.compile("SomeRegexPattern") );
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+        try {
+            excludedPatternSet.clear();
+            fail ("excluded patterns modifiable?");
+        } catch(UnsupportedOperationException uoe) {
+            // Expected result
+        }
+    }
+
+
+    public static final ExcludedPatternsChecker NO_EXCLUSION_PATTERNS_CHECKER = new ExcludedPatternsChecker() {
+        @Override
+        public IsExcluded isExcluded(String value) {
+            return IsExcluded.no(new HashSet<>());
+        }
+
+        @Override
+        public void setExcludedPatterns(String commaDelimitedPatterns) {
+
+        }
+
+        @Override
+        public void setExcludedPatterns(String[] patterns) {
+
+        }
+
+        @Override
+        public void setExcludedPatterns(Set<String> patterns) {
+
+        }
+
+        @Override
+        public Set<Pattern> getExcludedPatterns() {
+            return null;
+        }
+    };
 }

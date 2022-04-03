@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2;
 
@@ -20,9 +23,9 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 
 import java.util.*;
-
 
 /**
 * <!-- START SNIPPET: description -->
@@ -199,13 +202,14 @@ public class ActionChainResult implements Result {
      * @param invocation the DefaultActionInvocation calling the action call stack
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        // if the finalNamespace wasn't explicitly defined, assume the current one
-        if (this.namespace == null) {
-            this.namespace = invocation.getProxy().getNamespace();
+        if (invocation == null) {
+            throw new IllegalArgumentException("Invocation cannot be null!");
         }
 
-        ValueStack stack = ActionContext.getContext().getValueStack();
-        String finalNamespace = TextParseUtil.translateVariables(namespace, stack);
+        ValueStack stack = invocation.getInvocationContext().getValueStack();
+        String finalNamespace = this.namespace != null
+                ? TextParseUtil.translateVariables(namespace, stack)
+                : invocation.getProxy().getNamespace();
         String finalActionName = TextParseUtil.translateVariables(actionName, stack);
         String finalMethodName = this.methodName != null
                 ? TextParseUtil.translateVariables(this.methodName, stack)
@@ -213,18 +217,19 @@ public class ActionChainResult implements Result {
 
         if (isInChainHistory(finalNamespace, finalActionName, finalMethodName)) {
             addToHistory(finalNamespace, finalActionName, finalMethodName);
-            throw new XWorkException("Infinite recursion detected: " + ActionChainResult.getChainHistory().toString());
+            throw new StrutsException("Infinite recursion detected: " + ActionChainResult.getChainHistory().toString());
         }
 
-        if (ActionChainResult.getChainHistory().isEmpty() && invocation != null && invocation.getProxy() != null) {
+        if (ActionChainResult.getChainHistory().isEmpty() && invocation.getProxy() != null) {
             addToHistory(finalNamespace, invocation.getProxy().getActionName(), invocation.getProxy().getMethod());
         }
         addToHistory(finalNamespace, finalActionName, finalMethodName);
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.VALUE_STACK, ActionContext.getContext().getValueStack());
-        extraContext.put(ActionContext.PARAMETERS, ActionContext.getContext().getParameters());
-        extraContext.put(CHAIN_HISTORY, ActionChainResult.getChainHistory());
+        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+            .withValueStack(invocation.getInvocationContext().getValueStack())
+            .withParameters(invocation.getInvocationContext().getParameters())
+            .with(CHAIN_HISTORY, ActionChainResult.getChainHistory())
+            .getContextMap();
 
         LOG.debug("Chaining to action {}", finalActionName);
 

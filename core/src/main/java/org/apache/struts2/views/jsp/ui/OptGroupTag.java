@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +27,6 @@ import org.apache.struts2.views.jsp.ComponentTagSupport;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-/**
- *
- */
 public class OptGroupTag extends ComponentTagSupport {
 
     private static final long serialVersionUID = 7367401003498678762L;
@@ -42,11 +36,16 @@ public class OptGroupTag extends ComponentTagSupport {
     protected String disabled;
     protected String listKey;
     protected String listValue;
+    protected String listCssClass;
+    protected String listCssStyle;
+    protected String listTitle;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new OptGroup(stack, req, res);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -56,6 +55,9 @@ public class OptGroupTag extends ComponentTagSupport {
         optGroup.setDisabled(disabled);
         optGroup.setListKey(listKey);
         optGroup.setListValue(listValue);
+        optGroup.setListCssClass(listCssClass);
+        optGroup.setListCssStyle(listCssStyle);
+        optGroup.setListTitle(listTitle);
     }
 
     public void setList(String list) {
@@ -77,4 +79,41 @@ public class OptGroupTag extends ComponentTagSupport {
     public void setListValue(String listValue) {
         this.listValue = listValue;
     }
+
+    public void setListCssClass(String listCssClass) {
+        this.listCssClass = listCssClass;
+    }
+
+    public void setListCssStyle(String listCssStyle) {
+        this.listCssStyle = listCssStyle;
+    }
+
+    public void setListTitle(String listTitle) {
+        this.listTitle = listTitle;
+    }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.list = null;
+        this.label = null;
+        this.disabled = null;
+        this.listKey = null;
+        this.listValue = null;
+        this.listCssClass = null;
+        this.listCssStyle = null;
+        this.listTitle = null;
+    }
+
 }

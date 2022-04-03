@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
@@ -20,7 +23,6 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 
 import java.util.HashMap;
 
@@ -34,11 +36,7 @@ public class DefaultWorkflowInterceptorTest extends XWorkTestCase {
 
     DefaultWorkflowInterceptor interceptor;
     private ActionInvocation invocation;
-    private Action action;
-    private ActionProxy proxy;
-    private ActionConfig config;
     private String result = "testing123";
-
 
     public void testInvokesActionInvocationIfNoErrors() throws Exception {
         ValidationInterceptor validationInterceptor = create();
@@ -168,31 +166,26 @@ public class DefaultWorkflowInterceptorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        config = new ActionConfig.Builder("", "name", "").build();
-        action = EasyMock.createNiceMock(ValidateAction.class);
+        ActionConfig config = new ActionConfig.Builder("", "name", "").build();
+        Action action = EasyMock.createNiceMock(ValidateAction.class);
         invocation = EasyMock.createNiceMock(ActionInvocation.class);
         interceptor = new DefaultWorkflowInterceptor();
-        proxy = EasyMock.createNiceMock(ActionProxy.class);
+        ActionProxy proxy = EasyMock.createNiceMock(ActionProxy.class);
 
         EasyMock.expect(invocation.getProxy()).andReturn(proxy).anyTimes();
         EasyMock.expect(invocation.getAction()).andReturn(action).anyTimes();
-        EasyMock.expect(invocation.invoke()).andAnswer(new IAnswer<String>() {
-            public String answer() throws Throwable {
-                return result;
-            }
-        }).anyTimes();
+        EasyMock.expect(invocation.invoke()).andAnswer(() -> result).anyTimes();
 
         EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
         EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
-
 
         EasyMock.replay(invocation);
         EasyMock.replay(action);
         EasyMock.replay(proxy);
 
-        ActionContext actionContext = new ActionContext(new HashMap<String, Object>());
-        ActionContext.setContext(actionContext);
-        actionContext.setActionInvocation(invocation);
+        ActionContext.of(new HashMap<>())
+            .withActionInvocation(invocation)
+            .bind();
     }
 
     @Override
@@ -203,7 +196,7 @@ public class DefaultWorkflowInterceptorTest extends XWorkTestCase {
     protected ValidationInterceptor create() {
         ObjectFactory objectFactory = container.getInstance(ObjectFactory.class);
         return (ValidationInterceptor) objectFactory.buildInterceptor(
-                new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), new HashMap<String, String>());
+                new InterceptorConfig.Builder("model", ValidationInterceptor.class.getName()).build(), new HashMap<>());
     }
 
     

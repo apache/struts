@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -133,7 +130,7 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
         response.setWriter(writer);
         servletContext = new StrutsMockServletContext();
         stack = ActionContext.getContext().getValueStack();
-        context = new ActionContext(stack.getContext());
+        context = ActionContext.of(stack.getContext()).bind();
         context.put(StrutsStatics.HTTP_RESPONSE, response);
         context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
         invocation = new MockActionInvocation();

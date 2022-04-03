@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,12 +18,12 @@
  * under the License.
  */
 -->
-<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
-<#assign labelpos = parameters.form.labelposition/>
-<#elseif parameters.labelposition??>
-<#assign labelpos = parameters.labelposition/>
+<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
+<#assign labelPos = parameters.form.labelPosition/>
+<#elseif parameters.labelPosition??>
+<#assign labelPos = parameters.labelPosition/>
 </#if>
-<#if (labelpos!"top") == 'top'>
+<#if (labelPos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>

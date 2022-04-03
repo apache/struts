@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -28,7 +26,7 @@
 		<td>
 			<ul>
 			<#list actionNames as name>
-                <@s.url var="showConfig" action="showConfig" includeParams="none">
+                <@s.url var="showConfig" action="showConfig" includeParams="none" escapeAmp="false">
                     <@s.param name="namespace">${namespace}</@s.param>
                     <@s.param name="actionName">${name}</@s.param>
                 </@s.url>

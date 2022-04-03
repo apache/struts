@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,19 +22,19 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
 <label<#rt/>
 <#if parameters.id??>
- id="${parameters.id?html}"<#rt/>
+ id="${parameters.id}"<#rt/>
 </#if>
 <#if parameters.cssClass??>
- class="${parameters.cssClass?html}"<#rt/>
+ class="${parameters.cssClass}"<#rt/>
 </#if>
 <#if parameters.cssStyle??>
- style="${parameters.cssStyle?html}"<#rt/>
+ style="${parameters.cssStyle}"<#rt/>
 </#if>
 <#if parameters.cssClass??>
- class="${parameters.cssClass?html}"<#rt/>
+ class="${parameters.cssClass}"<#rt/>
 </#if>
 <#if parameters.for??>
- for="${parameters.for?html}"<#rt/>
+ for="${parameters.for}"<#rt/>
 </#if>
 ><#rt/>
 <#if parameters.nameValue??>

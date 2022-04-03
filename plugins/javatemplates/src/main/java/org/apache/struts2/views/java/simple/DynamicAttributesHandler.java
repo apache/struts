@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.java.simple;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -45,7 +42,7 @@ public class DynamicAttributesHandler extends AbstractTagHandler {
     protected void processDynamicAttributes(Attributes a) {
         Map<String, String> dynamicAttributes = (Map<String, String>) context.getParameters().get("dynamicAttributes");
         for (Map.Entry<String, String> entry : dynamicAttributes.entrySet()) {
-            if (altSyntax && ComponentUtils.isExpression(entry.getValue())) {
+            if (ComponentUtils.isExpression(entry.getValue())) {
                 String value = ObjectUtils.defaultIfNull(findString(entry.getValue()), entry.getValue());
                 a.put(entry.getKey(), value);
             } else {

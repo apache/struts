@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
@@ -19,7 +22,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
-
 
 /**
  * <!-- START SNIPPET: description -->
@@ -103,7 +105,7 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
      * Refreshes the model instance on the value stack, if it has changed
      */
     protected static class RefreshModelBeforeResult implements PreResultListener {
-        private Object originalModel = null;
+        private Object originalModel;
         protected ModelDriven action;
 
 
@@ -120,10 +122,12 @@ public class ModelDrivenInterceptor extends AbstractInterceptor {
             Object newModel = action.getModel();
 
             // Check to see if the new model instance is already on the stack
-            for (Object item : root) {
-                if (item.equals(newModel)) {
-                    needsRefresh = false;
-                    break;
+            if (newModel != null) {
+                for (Object item : root) {
+                    if (item == newModel) {
+                        needsRefresh = false;
+                        break;
+                    }
                 }
             }
 

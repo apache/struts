@@ -1,26 +1,28 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.config;
 
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -47,10 +49,6 @@ public class ConfigurationManager {
     private boolean providersChanged = false;
     private boolean reloadConfigs = true; // for the first time
 
-    public ConfigurationManager() {
-        this("xwork");
-    }
-    
     public ConfigurationManager(String name) {
         this.defaultFrameworkBeanName = name;
     }
@@ -87,8 +85,8 @@ public class ConfigurationManager {
     /**
      * <p>
      * Get the current list of ConfigurationProviders. If no custom ConfigurationProviders have been added, this method
-     * will return a list containing only the default ConfigurationProvider, XMLConfigurationProvider. If a custom
-     * ConfigurationProvider has been added, then the XmlConfigurationProvider must be added by hand.
+     * will return a list containing only a default ConfigurationProvider, {@link StrutsDefaultConfigurationProvider}.
+     * If a custom ConfigurationProvider has been added, then the StrutsDefaultConfigurationProvider must be added by hand.
      * </p>
      *
      * <p>
@@ -102,8 +100,7 @@ public class ConfigurationManager {
         providerLock.lock();
         try {
             if (containerProviders.size() == 0) {
-                containerProviders.add(new XWorkConfigurationProvider());
-                containerProviders.add(new XmlConfigurationProvider("xwork.xml", false));
+                containerProviders.add(new StrutsDefaultConfigurationProvider());
             }
 
             return containerProviders;
@@ -161,7 +158,7 @@ public class ConfigurationManager {
      */
     public synchronized void destroyConfiguration() {
         clearContainerProviders(); // let's destroy the ConfigurationProvider first
-        containerProviders = new CopyOnWriteArrayList<ContainerProvider>();
+        containerProviders = new CopyOnWriteArrayList<>();
         if (configuration != null)
             configuration.destroy(); // let's destroy it first, before nulling it.
         configuration = null;
@@ -188,10 +185,10 @@ public class ConfigurationManager {
     }
 
     private void updateReloadConfigsFlag() {
-        reloadConfigs = Boolean.parseBoolean(configuration.getContainer().getInstance(String.class, XWorkConstants.RELOAD_XML_CONFIGURATION));
+        reloadConfigs = Boolean.parseBoolean(configuration.getContainer().getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD));
         if (LOG.isDebugEnabled()) {
             LOG.debug("Updating [{}], current value is [{}], new value [{}]",
-                    XWorkConstants.RELOAD_XML_CONFIGURATION, String.valueOf(reloadConfigs), String.valueOf(reloadConfigs));
+                    StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, String.valueOf(reloadConfigs), String.valueOf(reloadConfigs));
         }
     }
 

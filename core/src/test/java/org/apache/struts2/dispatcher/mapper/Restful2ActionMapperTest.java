@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.dispatcher.mapper;
 
+import com.opensymphony.xwork2.inject.Container;
 import org.apache.struts2.StrutsInternalTestCase;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -53,7 +51,7 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
             .namespace("/my").build();
         config.addPackageConfig("mvns", pkg);
         config.addPackageConfig("my", pkg2);
-        configManager = new ConfigurationManager() {
+        configManager = new ConfigurationManager(Container.DEFAULT_NAME) {
             public Configuration getConfiguration() {
                 return config;
             }

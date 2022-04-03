@@ -25,19 +25,23 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.OgnlTextParser;
+import com.opensymphony.xwork2.util.TextParser;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.jasper.runtime.InstanceHelper;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
+import org.apache.tomcat.InstanceManager;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.Servlet;
@@ -52,10 +56,12 @@ import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
+
 public class EmbeddedJSPResultTest extends TestCase {
     private HttpServletRequest request;
     private MockHttpServletResponse response;
     private MockServletContext context;
+    private MockServletConfig config;
     private EmbeddedJSPResult result;
 
     public void testScriptlet() throws Exception {
@@ -104,7 +110,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         result.setLocation("org/apache/struts2/simple0.jsp");
         result.execute(null);
 
-        assertEquals("hello", response.getContentAsString());
+        assertEquals("hello", response.getContentAsString().trim());
     }
 
     //ok i give up..i don't know why this doesn't work from maven
@@ -120,14 +126,14 @@ public class EmbeddedJSPResultTest extends TestCase {
         result.setLocation("org/apache/struts2/el.jsp");
         result.execute(null);
 
-        assertEquals("somethingelseText", response.getContentAsString());
+        assertEquals("somethingelseText", response.getContentAsString().trim());
     }
 
     public void testAbsolutePath() throws Exception {
         result.setLocation("/org/apache/struts2/simple0.jsp");
         result.execute(null);
 
-        assertEquals("hello", response.getContentAsString());
+        assertEquals("hello", response.getContentAsString().trim());
     }
 
     public void testTag0() throws Exception {
@@ -202,7 +208,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         CyclicBarrier startBarrier = new CyclicBarrier(numThreads + 1);
         CyclicBarrier endBarrier = new CyclicBarrier(numThreads + 1);
 
-        List<ServletGetRunnable> runnables = new ArrayList<ServletGetRunnable>(numThreads);
+        List<ServletGetRunnable> runnables = new ArrayList<>(numThreads);
 
         //create the threads
         for (int i = 0; i < numThreads; i++) {
@@ -229,6 +235,77 @@ public class EmbeddedJSPResultTest extends TestCase {
         assertEquals("WhoamI?", StringUtils.deleteWhitespace(response.getContentAsString()));
     }
 
+    public void testNotURLClassLoader() throws Exception {
+        ClassLoader parentClassLoader = Thread.currentThread().getContextClassLoader();
+        NotURLClassLoader loader = new NotURLClassLoader(parentClassLoader);
+        Thread.currentThread().setContextClassLoader(loader);
+
+        try {
+            result.setLocation("org/apache/struts2/tag0.jsp");
+            result.execute(null);
+
+            assertEquals("Thissessionisnotsecure.OtherText", StringUtils.deleteWhitespace(response.getContentAsString()));
+        } finally {
+            Thread.currentThread().setContextClassLoader(parentClassLoader);
+        }
+    }
+
+    public void testComplex() throws Exception {
+        result.setLocation("org/apache/struts2/complex0.jsp");
+        result.execute(null);
+
+        String responseString = response.getContentAsString();
+        assertNotNull("result is null?", responseString);
+        int titleIndex = responseString.indexOf("<title>Struts2 Embedded JSP Plugin - Complex Test Page</title>");
+        int responseLength = responseString.length();
+        int testValue1Index = responseString.indexOf("testvalue1 set/if worked.");
+        int testValue5Index = responseString.indexOf("testvalue5 set/if worked.");
+        int lastGroupIndex = responseString.indexOf("End include tests<br/>");
+        int lastHtmlIndex = responseString.indexOf("</html>");
+        assertTrue("Did not find title index (" + titleIndex + ") ?", titleIndex > 0);
+        assertTrue("Test value 1 not present or index (" + testValue1Index + ") not > title index (" + titleIndex + ") ?",
+            testValue1Index > titleIndex);
+        assertTrue("Test value 5 not present or index (" + testValue5Index + ") not > test value 1 index (" + testValue1Index + ") ?",
+            testValue5Index > testValue1Index);
+        assertTrue("Last group index not present or index (" + lastGroupIndex + ") not > test value 5 index (" + testValue5Index + ") ?",
+            lastGroupIndex > testValue5Index);
+        assertTrue("Last html index not present or index (" + lastHtmlIndex + ") not > last group index (" + lastGroupIndex + ") ?",
+            lastHtmlIndex > lastGroupIndex);
+        // complex0.jsp length 3439 in Windows and estimated 3221 in Linux/Unix (with 218 lines, Windows has around 218 additional
+        //   characters (crlf vs. lf).  Test length larger than the min(Windows,Linux)), rounded down to the nearest 100.
+        assertTrue("Response length (" + responseLength + ") not at least length: 3200 ?", responseLength > 3200);
+    }
+
+    public void testInstanceHelper() throws Exception {
+        InstanceManager instanceManagerServlet = InstanceHelper.getServletInstanceManager(config);
+        InstanceManager instanceManagerClassLoader = InstanceHelper.getClassLoaderInstanceManager(context.getClassLoader());
+        assertNotNull("instanceManager (servlet) is null ?", instanceManagerServlet);
+        assertNotNull("instanceManager (classloader) is null ?", instanceManagerClassLoader);
+        assertEquals("instanceManager (servlet) is not equal to instanceManager (classloader) ?", instanceManagerServlet, instanceManagerClassLoader);
+        final Double instanceDouble = (double) 0;
+        final Long instanceLong = 0L;
+        final Object instanceObject = new Object();
+        final String instanceString = "test string";
+        final MockHttpServletRequest intanceMockHttpServletRequest = new MockHttpServletRequest();
+        intanceMockHttpServletRequest.setContextPath("context path");
+        InstanceHelper.postConstruct(instanceManagerServlet, instanceDouble);
+        InstanceHelper.postConstruct(instanceManagerServlet, instanceLong);
+        InstanceHelper.postConstruct(instanceManagerServlet, instanceObject);
+        InstanceHelper.postConstruct(instanceManagerServlet, instanceString);
+        InstanceHelper.postConstruct(instanceManagerServlet, intanceMockHttpServletRequest);
+        assertEquals("test string value changed after postConstruct ?", instanceString, "test string");
+        assertEquals("mock servlet request context path value changed after postConstruct ?",
+            intanceMockHttpServletRequest.getContextPath(), "context path");
+        InstanceHelper.preDestroy(instanceManagerServlet, instanceDouble);
+        InstanceHelper.preDestroy(instanceManagerServlet, instanceLong);
+        InstanceHelper.preDestroy(instanceManagerServlet, instanceObject);
+        InstanceHelper.preDestroy(instanceManagerServlet, instanceString);
+        InstanceHelper.preDestroy(instanceManagerServlet, intanceMockHttpServletRequest);
+        assertEquals("test string value changed after preDestroy ?", instanceString, "test string");
+        assertEquals("mock servlet request context path value changed after preDestroy ?",
+            intanceMockHttpServletRequest.getContextPath(), "context path");
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -238,6 +315,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         request = EasyMock.createNiceMock(HttpServletRequest.class);
         response = new MockHttpServletResponse();
         context = new MockServletContext();
+        config = new MockServletConfig(context);
 
         final Map params = new HashMap();
 
@@ -246,26 +324,14 @@ public class EmbeddedJSPResultTest extends TestCase {
 
         EasyMock.expect(request.getSession()).andReturn(session).anyTimes();
         EasyMock.expect(request.getParameterMap()).andReturn(params).anyTimes();
-        EasyMock.expect(request.getParameter("username")).andAnswer(new IAnswer<String>() {
-            public String answer() throws Throwable {
-                return ((String[]) params.get("username"))[0];
-            }
-        });
+        EasyMock.expect(request.getParameter("username")).andAnswer(() -> ActionContext.getContext().getParameters().get("username").getValue());
         EasyMock.expect(request.getAttribute("something")).andReturn("somethingelse").anyTimes();
 
         EasyMock.replay(request);
 
-        ActionContext actionContext = new ActionContext(new HashMap<String, Object>());
-        ActionContext.setContext(actionContext);
-        actionContext.setParameters(params);
-        ServletActionContext.setRequest(request);
-        ServletActionContext.setResponse(response);
-        ServletActionContext.setServletContext(context);
-
         //mock value stack
-        Map stackContext = new HashMap();
         ValueStack valueStack = EasyMock.createNiceMock(ValueStack.class);
-        EasyMock.expect(valueStack.getContext()).andReturn(stackContext).anyTimes();
+        EasyMock.expect(valueStack.getActionContext()).andReturn(ActionContext.getContext()).anyTimes();
         EasyMock.replay(valueStack);
 
         //mock converter
@@ -279,7 +345,7 @@ public class EmbeddedJSPResultTest extends TestCase {
         EasyMock.expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
         TextParser parser = new OgnlTextParser();
         EasyMock.expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();
-        EasyMock.expect(container.getInstanceNames(FileManager.class)).andReturn(new HashSet<String>()).anyTimes();
+        EasyMock.expect(container.getInstanceNames(FileManager.class)).andReturn(new HashSet<>()).anyTimes();
         EasyMock.expect(container.getInstance(FileManager.class)).andReturn(fileManager).anyTimes();
 
         UrlHelper urlHelper = new DefaultUrlHelper();
@@ -288,10 +354,15 @@ public class EmbeddedJSPResultTest extends TestCase {
         EasyMock.expect(container.getInstance(FileManagerFactory.class)).andReturn(fileManagerFactory).anyTimes();
 
         EasyMock.replay(container);
-        stackContext.put(ActionContext.CONTAINER, container);
-        actionContext.setContainer(container);
 
-        actionContext.setValueStack(valueStack);
+        ActionContext.of(new HashMap<>())
+            .withParameters(HttpParameters.create(params).build())
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(context)
+            .withContainer(container)
+            .withValueStack(valueStack)
+            .bind();
     }
 
 }
@@ -333,7 +404,7 @@ class ServletGetRunnable implements Runnable {
     }
 
     public void run() {
-        ActionContext.setContext(actionContext);
+        actionContext = ActionContext.bind(actionContext);
         //wait to start all threads at once..or try at least
         try {
             startBarrier.await();
@@ -357,7 +428,7 @@ class ServletGetRunnable implements Runnable {
 }
 
 class CountingClassLoaderInterface extends ClassLoaderInterfaceDelegate {
-    public Map<String, Integer> counters = new HashMap<String, Integer>();
+    public Map<String, Integer> counters = new HashMap<>();
 
     public CountingClassLoaderInterface(ClassLoader classLoader) {
         super(classLoader);
@@ -370,5 +441,12 @@ class CountingClassLoaderInterface extends ClassLoaderInterfaceDelegate {
         counters.put(name, counter);
 
         return super.getResourceAsStream(name);
+    }
+}
+
+class NotURLClassLoader extends ClassLoader {
+
+    NotURLClassLoader(ClassLoader parentClassLoader) {
+        super(parentClassLoader);
     }
 }

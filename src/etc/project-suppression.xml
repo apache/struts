@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <cpe>cpe:/a:apache:struts</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2011-5057</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2012-0391</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2012-0392</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2012-0393</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2012-0394</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2012-0838</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2013-1965</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2013-1966</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2013-2115</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2013-2134</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2013-2135</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2014-0094</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2014-0113</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2015-5169</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2016-0785</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-core-1.3.8.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2016-4003</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-annotations-1.0.6.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.struts/struts\-annotations@.*$</packageUrl>
+        <cpe>cpe:/a:apache:struts</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-tiles-1.3.8.jar]]></notes>
+        <gav regex="true">^org\.apache\.struts:struts\-tiles\:1\.3\.8.*$</gav>
+        <cpe>cpe:/a:apache:struts</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: struts-taglib-1.3.8.jar]]></notes>
+        <gav regex="true">^org\.apache\.struts:struts\-taglib\:1\.3\.8.*$</gav>
+        <cpe>cpe:/a:apache:struts</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: dom4j-1.1.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/dom4j/dom4j@.*$</packageUrl>
+        <vulnerabilityName>CVE-2018-1000632</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: bsh-2.0b4.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.beanshell/bsh@.*$</packageUrl>
+        <vulnerabilityName>CVE-2016-2510</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ file name: plexus-utils-1.2.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus/plexus\-utils@.*$</packageUrl>
+        <cpe>cpe:/a:plexus-utils_project:plexus-utils</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: plexus-utils-1.2.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus/plexus\-utils@.*$</packageUrl>
+        <vulnerabilityName>CVE-2017-1000487</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: plexus-utils-1.2.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus/plexus\-utils@.*$</packageUrl>
+        <vulnerabilityName>Directory traversal in org.codehaus.plexus.util.Expand</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: plexus-utils-1.2.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus/plexus\-utils@.*$</packageUrl>
+        <vulnerabilityName>Possible XML Injection</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: oval-1.90.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
+        <cpe>cpe:/a:apache:groovy</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: oval-1.90.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
+        <cpe>cpe:/a:apache:log4j</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: oval-1.90.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
+        <cpe>cpe:/a:jruby:jruby</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: oval-1.90.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
+        <cpe>cpe:/a:xstream_project:xstream</cpe>
+    </suppress>
+    <!-- TestNG -->
+    <suppress>
+        <notes><![CDATA[file name: guava-19.0.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
+        <cve>CVE-2018-10237</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: snakeyaml-1.21.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
+        <cve>CVE-2017-18640</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: testng-7.1.0.jar: jquery-3.4.1.min.js]]></notes>
+        <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+        <cve>CVE-2020-11022</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: testng-7.1.0.jar: jquery-3.4.1.min.js]]></notes>
+        <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+        <cve>CVE-2020-11023</cve>
+    </suppress>
+    <!-- TestNG -->
+</suppressions>

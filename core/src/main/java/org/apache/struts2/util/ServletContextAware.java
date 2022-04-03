@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,16 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.util;
 
 import javax.servlet.ServletContext;
 
-
 /**
  * For components that have a dependence on the Servlet context.
+ *
+ * @deprecated please use {@link org.apache.struts2.action.ServletContextAware} instead
  */
+@Deprecated
 public interface ServletContextAware {
 
+    /**
+     * @deprecated please use {@link org.apache.struts2.action.ServletContextAware#withServletContext(ServletContext)} instead
+     */
+    @Deprecated
     public void setServletContext(ServletContext context);
 }

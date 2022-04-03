@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +26,6 @@ import org.apache.struts2.components.Radio;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-
 /**
  * @see Radio
  */
@@ -37,7 +33,16 @@ public class RadioTag extends AbstractRequiredListTag {
 
     private static final long serialVersionUID = -6497403399521333624L;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Radio(stack, req, res);
+    }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 }

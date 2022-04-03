@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,11 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
-
 
 /**
  * <p>
@@ -37,13 +33,17 @@ import javax.servlet.http.HttpServletRequest;
  * Note that using this interface makes the Action tied to a servlet environment, so it should be
  * avoided if possible since things like unit testing will become more difficult.
  * </p>
+ * @deprecated please use {@link org.apache.struts2.action.ServletRequestAware} instead
  */
+@Deprecated
 public interface ServletRequestAware {
 
     /**
      * Sets the HTTP request object in implementing classes.
      *
      * @param request the HTTP request.
+     * @deprecated please use {@link org.apache.struts2.action.ServletRequestAware#withServletRequest(HttpServletRequest)}
      */
+    @Deprecated
     public void setServletRequest(HttpServletRequest request);
 }

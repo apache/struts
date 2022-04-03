@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -27,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
 import javax.servlet.ServletContext;
@@ -45,38 +44,58 @@ public class OsgiInterceptor extends AbstractInterceptor {
 
     private BundleContext bundleContext;
 
+    @Override
     public String intercept(ActionInvocation invocation) throws Exception {
+        LOG.trace("OSGi Interceptor - intercept() called - ActionInvocation: [{}]", invocation);
+
         if (bundleContext != null) {
             Object action = invocation.getAction();
+            injectBundleContext(action);
+            injectServicesUsingDeprecatedInterface(action);
+            injectServices(action);
+        } else {
+            LOG.warn("The OSGi interceptor was not able to find the BundleContext in the ServletContext");
+        }
 
-            //inject BundleContext
-            if (action instanceof BundleContextAware)
-                ((BundleContextAware)action).setBundleContext(bundleContext);
+        return invocation.invoke();
+    }
 
-            //inject service implementations
-            if (action instanceof ServiceAware) {
-                Type[] types = action.getClass().getGenericInterfaces();
-                if (types != null) {
-                    for (Type type : types) {
-                        if (type instanceof ParameterizedType) {
-                            ParameterizedType parameterizedType = (ParameterizedType) type;
-                            if (parameterizedType.getRawType() instanceof Class) {
-                                Class clazz = (Class) parameterizedType.getRawType();
-                                if (ServiceAware.class.equals(clazz)) {
-                                    Class serviceClass = (Class) parameterizedType.getActualTypeArguments()[0];
-                                    ServiceReference[] refs = bundleContext.getAllServiceReferences(serviceClass.getName(), null);
-                                    //get the services
-                                    if (refs != null) {
-                                        List services = new ArrayList(refs.length);
-                                        for (ServiceReference ref : refs) {
-                                            Object service = bundleContext.getService(ref);
-                                            //wow, that's a lot of nested ifs
-                                            if (service != null)
-                                                services.add(service);
+    private void injectBundleContext(Object action) {
+        if (action instanceof BundleContextAware) {
+            ((BundleContextAware) action).setBundleContext(bundleContext);
+        }
+        if (action instanceof org.apache.struts2.osgi.action.BundleContextAware) {
+            ((org.apache.struts2.osgi.action.BundleContextAware) action).withBundleContext(bundleContext);
+        }
+    }
+
+    @Deprecated
+    private void injectServicesUsingDeprecatedInterface(Object action) throws InvalidSyntaxException {
+        //inject service implementations
+        if (action instanceof ServiceAware) {
+            Type[] types = action.getClass().getGenericInterfaces();
+            if (types != null) {
+                for (Type type : types) {
+                    if (type instanceof ParameterizedType) {
+                        ParameterizedType parameterizedType = (ParameterizedType) type;
+                        if (parameterizedType.getRawType() instanceof Class) {
+                            Class clazz = (Class) parameterizedType.getRawType();
+                            if (ServiceAware.class.equals(clazz)) {
+                                Class serviceClass = (Class) parameterizedType.getActualTypeArguments()[0];
+                                ServiceReference[] refs = bundleContext.getAllServiceReferences(serviceClass.getName(), null);
+                                //get the services
+                                if (refs != null) {
+                                    List services = new ArrayList(refs.length);
+                                    for (ServiceReference ref : refs) {
+                                        Object service = bundleContext.getService(ref);
+                                        //wow, that's a lot of nested ifs
+                                        if (service != null) {
+                                            services.add(service);
                                         }
+                                    }
 
-                                        if (!services.isEmpty())
-                                            ((ServiceAware)action).setServices(services);
+                                    if (!services.isEmpty()) {
+                                        ((ServiceAware) action).setServices(services);
                                     }
                                 }
                             }
@@ -84,15 +103,49 @@ public class OsgiInterceptor extends AbstractInterceptor {
                     }
                 }
             }
-        } else if (LOG.isWarnEnabled()){
-            LOG.warn("The OSGi interceptor was not able to find the BundleContext in the ServletContext");          
         }
+    }
 
-        return invocation.invoke();
+    private void injectServices(Object action) throws InvalidSyntaxException {
+        //inject service implementations
+        if (action instanceof org.apache.struts2.osgi.action.ServiceAware) {
+            Type[] types = action.getClass().getGenericInterfaces();
+            if (types != null) {
+                for (Type type : types) {
+                    if (type instanceof ParameterizedType) {
+                        ParameterizedType parameterizedType = (ParameterizedType) type;
+                        if (parameterizedType.getRawType() instanceof Class) {
+                            Class clazz = (Class) parameterizedType.getRawType();
+                            if (org.apache.struts2.osgi.action.ServiceAware.class.equals(clazz)) {
+                                Class serviceClass = (Class) parameterizedType.getActualTypeArguments()[0];
+                                ServiceReference[] refs = bundleContext.getAllServiceReferences(serviceClass.getName(), null);
+                                //get the services
+                                if (refs != null) {
+                                    List<Object> services = new ArrayList<>(refs.length);
+                                    for (ServiceReference ref : refs) {
+                                        Object service = bundleContext.getService(ref);
+                                        //wow, that's a lot of nested ifs
+                                        if (service != null) {
+                                            services.add(service);
+                                        }
+                                    }
+
+                                    if (!services.isEmpty()) {
+                                        ((org.apache.struts2.osgi.action.ServiceAware) action).withServices(services);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Inject
     public void setServletContext(ServletContext servletContext) {
+        LOG.trace("OSGi Interceptor - setServletContext() called - ServletContext: [{}] ", servletContext);
+
         this.bundleContext = (BundleContext) servletContext.getAttribute(OsgiHost.OSGI_BUNDLE_CONTEXT);
     }
 

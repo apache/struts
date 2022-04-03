@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,11 +19,10 @@
  */
 -->
 <#if parameters.validate!false == true>
-	<script type="text/javascript" src="${base}/struts/xhtml/validation.js"></script>
-	<script type="text/javascript" src="${base}/struts/utils.js"></script>
+	<script type="text/javascript" src="${base}${parameters.staticContentPath}/xhtml/validation.js" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
 	<#if parameters.onsubmit??>
-		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}();")}
+		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.escapedId}();")}
 	<#else>
-		${tag.addParameter('onsubmit', "return validateForm_${parameters.id?replace('[^a-zA-Z0-9_]', '_', 'r')}();")}
+		${tag.addParameter('onsubmit', "return validateForm_${parameters.escapedId}();")}
 	</#if>
 </#if>

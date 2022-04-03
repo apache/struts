@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,14 +22,15 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 /**
- * Default implementation of TagHandlerFactory 
+ * Default implementation of TagHandlerFactory
  */
 public class DefaultTagHandlerFactory implements TagHandlerFactory {
-   private static final Logger LOG = LogManager.getLogger(DefaultTagHandlerFactory.class);
-          
-    private Class tagHandlerClass;
 
-    public DefaultTagHandlerFactory(Class tagHandlerClass) {
+    private static final Logger LOG = LogManager.getLogger(DefaultTagHandlerFactory.class);
+
+    private final Class<?> tagHandlerClass;
+
+    public DefaultTagHandlerFactory(Class<?> tagHandlerClass) {
         this.tagHandlerClass = tagHandlerClass;
     }
 
@@ -43,7 +42,7 @@ public class DefaultTagHandlerFactory implements TagHandlerFactory {
         } catch (Exception e) {
             LOG.error("Failed to instantiate tag handler class [{}]", tagHandlerClass.getName(), e);
         }
-        
+
         return null;
     }
 

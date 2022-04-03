@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
 	"http://struts.apache.org/dtds/struts-2.5.dtd">
@@ -14,28 +34,33 @@
 
 	<package name="validation" extends="json-default" namespace="/validation">
         <action name="index">
-            <result>/WEB-INF/validation/index.jsp</result>
+            <result>index.jsp</result>
         </action>
 
 	    <action name="quizBasic" class="org.apache.struts2.showcase.validation.QuizAction">
-            <result name="input">quiz-basic.jsp</result>
-            <result>quiz-success.jsp</result>
+            <result name="input">/WEB-INF/validation/quiz-basic.jsp</result>
+            <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>
 
         <action name="quizClient" class="org.apache.struts2.showcase.validation.QuizAction">
-            <result name="input">quiz-client.jsp</result>
-            <result>quiz-success.jsp</result>
+            <result name="input">/WEB-INF/validation/quiz-client.jsp</result>
+            <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>
 
+		<action name="quizDwr" class="org.apache.struts2.showcase.validation.QuizAction">
+			<result name="input">/WEB-INF/validation/quiz-dwr.jsp</result>
+			<result>/WEB-INF/validation/quiz-success.jsp</result>
+		</action>
+
         <action name="quizClientCss" class="org.apache.struts2.showcase.validation.QuizAction">
-            <result name="input">quiz-client-css.jsp</result>
-            <result>quiz-success.jsp</result>
+            <result name="input">/WEB-INF/validation/quiz-client-css.jsp</result>
+            <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>
 
         <action name="quizAjax" class="org.apache.struts2.showcase.validation.QuizAction">
             <interceptor-ref name="jsonValidationWorkflowStack"/>
-            <result name="input">quiz-ajax.jsp</result>
-            <result>quiz-success.jsp</result>
+            <result name="input">/WEB-INF/validation/quiz-ajax.jsp</result>
+            <result>/WEB-INF/validation/quiz-success.jsp</result>
         </action>
 
 		<!-- =========================================== -->

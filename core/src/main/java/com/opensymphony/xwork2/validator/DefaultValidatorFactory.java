@@ -1,28 +1,32 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.Initializable;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -34,7 +38,6 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-
 /**
  * Default validator factory
  *
@@ -42,7 +45,7 @@ import java.util.zip.ZipInputStream;
  * @author Jason Carreira
  * @author James House
  */
-public class DefaultValidatorFactory implements ValidatorFactory {
+public class DefaultValidatorFactory implements ValidatorFactory, Initializable {
 
     protected Map<String, String> validators = new HashMap<>();
     private static Logger LOG = LogManager.getLogger(DefaultValidatorFactory.class);
@@ -53,6 +56,10 @@ public class DefaultValidatorFactory implements ValidatorFactory {
     public DefaultValidatorFactory(@Inject ObjectFactory objectFactory, @Inject ValidatorFileParser parser) {
         this.objectFactory = objectFactory;
         this.validatorFileParser = parser;
+    }
+
+    @Override
+    public void init() {
         parseValidators();
     }
 
@@ -68,7 +75,7 @@ public class DefaultValidatorFactory implements ValidatorFactory {
             validator = objectFactory.buildValidator(className, cfg.getParams(), ActionContext.getContext().getContextMap());
         } catch (Exception e) {
             final String msg = "There was a problem creating a Validator of type " + className + " : caused by " + e.getMessage();
-            throw new XWorkException(msg, e, cfg);
+            throw new StrutsException(msg, e, cfg);
         }
 
         // set other configured properties

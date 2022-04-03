@@ -1,24 +1,30 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.ognl;
 
-import ognl.DefaultMemberAccess;
+import com.opensymphony.xwork2.util.ProxyUtil;
+import ognl.MemberAccess;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
@@ -31,85 +37,180 @@ import java.util.regex.Pattern;
  * Allows access decisions to be made on the basis of whether a member is static or not.
  * Also blocks or allows access to properties.
  */
-public class SecurityMemberAccess extends DefaultMemberAccess {
+public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
+    private final boolean allowStaticFieldAccess;
     private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();
     private Set<Pattern> acceptProperties = Collections.emptySet();
     private Set<Class<?>> excludedClasses = Collections.emptySet();
     private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
     private Set<String> excludedPackageNames = Collections.emptySet();
+    private boolean disallowProxyMemberAccess;
 
-    public SecurityMemberAccess(boolean method) {
-        super(false);
-        allowStaticMethodAccess = method;
+    /**
+     * SecurityMemberAccess
+     *   - access decisions based on whether member is static (or not)
+     *   - block or allow access to properties (configurable-after-construction)
+     * 
+     * @param allowStaticMethodAccess
+     * @param allowStaticFieldAccess
+     */
+    public SecurityMemberAccess(boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
+        this.allowStaticMethodAccess = allowStaticMethodAccess;
+        this.allowStaticFieldAccess = allowStaticFieldAccess;
     }
 
-    public boolean getAllowStaticMethodAccess() {
+    public final boolean getAllowStaticMethodAccess() {
         return allowStaticMethodAccess;
+    }
+
+    public final boolean getAllowStaticFieldAccess() {
+        return allowStaticFieldAccess;
+    }
+
+    @Override
+    public Object setup(Map context, Object target, Member member, String propertyName) {
+        Object result = null;
+
+        if (isAccessible(context, target, member, propertyName)) {
+            final AccessibleObject accessible = (AccessibleObject) member;
+
+            if (!accessible.isAccessible()) {
+                result = Boolean.FALSE;
+                accessible.setAccessible(true);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void restore(Map context, Object target, Member member, String propertyName, Object state) {
+        if (state != null) {
+            final AccessibleObject accessible = (AccessibleObject) member;
+            final boolean stateboolean = ((Boolean) state).booleanValue();  // Using twice (avoid unboxing)
+            if (!stateboolean) {
+                accessible.setAccessible(stateboolean);
+            }
+            else {
+                throw new IllegalArgumentException("Improper restore state [" + stateboolean + "] for target [" + target +
+                                                   "], member [" + member + "], propertyName [" + propertyName + "]");
+            }
+        }
     }
 
     @Override
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+        LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
+
+        final int memberModifiers = member.getModifiers();
+
+        if (!checkPublicMemberAccess(memberModifiers)) {
+            LOG.warn("Access to non-public [{}] is blocked!", member);
+            return false;
+        }
+
+        if (!checkStaticFieldAccess(member, memberModifiers)) {
+            LOG.warn("Access to static field [{}] is blocked!", member);
+            return false;
+        }
+
         if (checkEnumAccess(target, member)) {
-            LOG.trace("Allowing access to enum: {}", target);
+            LOG.trace("Allowing access to enum: target [{}], member [{}]", target, member);
             return true;
         }
 
-        Class targetClass = target.getClass();
-        Class memberClass = member.getDeclaringClass();
-
-        if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
-            LOG.debug("Support for accessing static methods [target: {}, member: {}, property: {}] is deprecated!", target, member, propertyName);
-            if (!isClassExcluded(member.getDeclaringClass())) {
-                targetClass = member.getDeclaringClass();
-            }
-        }
-
-        if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
-            LOG.warn("Package of target [{}] or package of member [{}] are excluded!", target, member);
+        if (!checkStaticMethodAccess(member, memberModifiers)) {
+            LOG.warn("Access to static method [{}] is blocked!", member);
             return false;
         }
 
-        if (isClassExcluded(targetClass)) {
-            LOG.warn("Target class [{}] is excluded!", target);
-            return false;
-        }
+        final Class memberClass = member.getDeclaringClass();
 
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", member);
             return false;
         }
 
-        boolean allow = true;
-        if (!checkStaticMethodAccess(member)) {
-            LOG.warn("Access to static [{}] is blocked!", member);
-            allow = false;
-        }
+        // target can be null in case of accessing static fields, since OGNL 3.2.8
+        final Class targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
 
-        //failed static test
-        if (!allow) {
+        if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
+            LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!", targetClass.getPackage(), targetClass,
+                    target, memberClass.getPackage(), member);
             return false;
         }
 
-        // Now check for standard scope rules
-        return super.isAccessible(context, target, member, propertyName) && isAcceptableProperty(propertyName);
+        if (isClassExcluded(targetClass)) {
+            LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
+            return false;
+        }
+
+        if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
+            LOG.warn("Access to proxy is blocked! Target class [{}] of target [{}], member [{}]", targetClass, target, member);
+            return false;
+        }
+
+        return isAcceptableProperty(propertyName);
     }
 
-    protected boolean checkStaticMethodAccess(Member member) {
-        int modifiers = member.getModifiers();
-        if (Modifier.isStatic(modifiers)) {
+    /**
+     * Check access for static method (via modifiers).
+     * 
+     * Note: For non-static members, the result is always true.
+     * 
+     * @param member
+     * @param memberModifiers
+     * 
+     * @return
+     */
+    protected boolean checkStaticMethodAccess(Member member, int memberModifiers) {
+        if (Modifier.isStatic(memberModifiers) && !(member instanceof Field)) {
+            if (allowStaticMethodAccess) {
+                LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
+            }
             return allowStaticMethodAccess;
         } else {
             return true;
         }
     }
 
+    /**
+     * Check access for static field (via modifiers).
+     * 
+     * Note: For non-static members, the result is always true.
+     * 
+     * @param member
+     * @param memberModifiers
+     * 
+     * @return
+     */
+    protected boolean checkStaticFieldAccess(Member member, int memberModifiers) {
+        if (Modifier.isStatic(memberModifiers) && member instanceof Field) {
+            return allowStaticFieldAccess;
+        } else {
+            return true;
+        }
+    }
+
+   /**
+     * Check access for public members (via modifiers)
+     * 
+     * Returns true if-and-only-if the member is public.
+     * 
+     * @param memberModifiers
+     * 
+     * @return
+     */
+    protected boolean checkPublicMemberAccess(int memberModifiers) {
+        return Modifier.isPublic(memberModifiers);
+    }
+
     protected boolean checkEnumAccess(Object target, Member member) {
         if (target instanceof Class) {
-            Class clazz = (Class) target;
+            final Class clazz = (Class) target;
             if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values")) {
                 return true;
             }
@@ -122,8 +223,8 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             LOG.warn("The use of the default (unnamed) package is discouraged!");
         }
         
-        final String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
-        final String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
+        String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
+        String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
 
         for (Pattern pattern : excludedPackageNamePatterns) {
             if (pattern.matcher(targetPackageName).matches() || pattern.matcher(memberPackageName).matches()) {
@@ -131,9 +232,11 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             }
         }
 
+        targetPackageName = targetPackageName + ".";
+        memberPackageName = memberPackageName + ".";
+
         for (String packageName: excludedPackageNames) {
-            if (targetPackageName.startsWith(packageName) || targetPackageName.equals(packageName)
-                    || memberPackageName.startsWith(packageName) || memberPackageName.equals(packageName)) {
+            if (targetPackageName.startsWith(packageName) || memberPackageName.startsWith(packageName)) {
                 return true;
             }
         }
@@ -204,5 +307,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     public void setExcludedPackageNames(Set<String> excludedPackageNames) {
         this.excludedPackageNames = excludedPackageNames;
+    }
+
+    public void setDisallowProxyMemberAccess(boolean disallowProxyMemberAccess) {
+        this.disallowProxyMemberAccess = disallowProxyMemberAccess;
     }
 }

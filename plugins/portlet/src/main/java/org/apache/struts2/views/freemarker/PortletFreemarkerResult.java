@@ -1,6 +1,4 @@
 /*
- * $Id: PortletFreemarkerResult.java 564599 2007-08-10 14:05:17Z nilsga $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

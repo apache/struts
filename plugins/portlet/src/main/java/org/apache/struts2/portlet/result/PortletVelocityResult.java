@@ -1,6 +1,4 @@
 /*
- * $Id: PortletVelocityResult.java 582626 2007-10-07 13:26:12Z mrdon $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -161,11 +159,11 @@ public class PortletVelocityResult extends StrutsResultSupport {
         velocityManager.init(servletContext);
 
         boolean usedJspFactory = false;
-        PageContext pageContext = (PageContext) ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT);
+        PageContext pageContext = ActionContext.getContext().getPageContext();
 
         if (pageContext == null && servlet != null) {
             pageContext = jspFactory.getPageContext(servlet, request, response, null, true, 8192, true);
-            ActionContext.getContext().put(ServletActionContext.PAGE_CONTEXT, pageContext);
+            ActionContext.getContext().withPageContext(pageContext);
             usedJspFactory = true;
         }
 

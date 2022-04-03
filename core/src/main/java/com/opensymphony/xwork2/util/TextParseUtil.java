@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.util;
 
@@ -30,8 +33,6 @@ import java.util.*;
  * @author tm_jee
  */
 public class TextParseUtil {
-
-    private static final int MAX_RECURSION = 1;
 
     /**
      * Converts all instances of ${...}, and %{...} in <code>expression</code> to the value returned
@@ -108,7 +109,7 @@ public class TextParseUtil {
      * @return Converted object from variable translation.
      */
     public static Object translateVariables(char open, String expression, ValueStack stack, Class asType, ParsedValueEvaluator evaluator) {
-        return translateVariables(new char[]{open} , expression, stack, asType, evaluator, MAX_RECURSION);
+        return translateVariables(new char[]{open} , expression, stack, asType, evaluator, TextParser.DEFAULT_LOOP_COUNT);
     }
 
     /**
@@ -122,7 +123,7 @@ public class TextParseUtil {
      * @return Converted object from variable translation.
      */
     public static Object translateVariables(char[] openChars, String expression, ValueStack stack, Class asType, ParsedValueEvaluator evaluator) {
-        return translateVariables(openChars, expression, stack, asType, evaluator, MAX_RECURSION);
+        return translateVariables(openChars, expression, stack, asType, evaluator, TextParser.DEFAULT_LOOP_COUNT);
     }
 
     /**
@@ -163,7 +164,7 @@ public class TextParseUtil {
             }
         };
 
-        TextParser parser = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(TextParser.class);
+        TextParser parser = stack.getActionContext().getContainer().getInstance(TextParser.class);
 
         return parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
     }
@@ -178,7 +179,7 @@ public class TextParseUtil {
      * @return converted objects
      */
     public static Collection<String>  translateVariablesCollection(String expression, ValueStack stack, boolean excludeEmptyElements, ParsedValueEvaluator evaluator) {
-        return translateVariablesCollection(new char[]{'$', '%'}, expression, stack, excludeEmptyElements, evaluator, MAX_RECURSION);
+        return translateVariablesCollection(new char[]{'$', '%'}, expression, stack, excludeEmptyElements, evaluator, TextParser.DEFAULT_LOOP_COUNT);
     }
 
     /**
@@ -204,8 +205,8 @@ public class TextParseUtil {
             }
         };
 
-        Map<String, Object> context = stack.getContext();
-        TextParser parser = ((Container)context.get(ActionContext.CONTAINER)).getInstance(TextParser.class);
+        ActionContext actionContext = stack.getActionContext();
+        TextParser parser = actionContext.getContainer().getInstance(TextParser.class);
 
         Object result = parser.evaluate(openChars, expression, ognlEval, maxLoopCount);
 
@@ -215,10 +216,10 @@ public class TextParseUtil {
             Collection<Object> casted = (Collection<Object>)result;
             resultCol = new ArrayList<>();
 
-            XWorkConverter conv = ((Container)context.get(ActionContext.CONTAINER)).getInstance(XWorkConverter.class);
+            XWorkConverter conv = actionContext.getContainer().getInstance(XWorkConverter.class);
 
             for (Object element : casted) {
-                String stringElement = (String)conv.convertValue(context, element, String.class);
+                String stringElement = (String) conv.convertValue(actionContext.getContextMap(), element, String.class);
                 if (shallBeIncluded(stringElement, excludeEmptyElements)) {
                     if (evaluator != null) {
                         stringElement = evaluator.evaluate(stringElement).toString();

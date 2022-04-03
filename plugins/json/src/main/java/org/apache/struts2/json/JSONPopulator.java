@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -205,8 +203,12 @@ public class JSONPopulator {
                 newCollection = (Collection) clazz.newInstance();
             } catch (InstantiationException ex) {
                 // fallback if clazz represents an interface or abstract class
-                if (Set.class.isAssignableFrom(clazz)) {
+                if (SortedSet.class.isAssignableFrom(clazz)) {
+                    newCollection = new TreeSet();
+                } else if (Set.class.isAssignableFrom(clazz)) {
                     newCollection = new HashSet();
+                } else if (Queue.class.isAssignableFrom(clazz)) {
+                    newCollection = new ArrayDeque();
                 } else {
                     newCollection = new ArrayList();
                 }

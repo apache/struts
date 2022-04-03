@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.spring;
 
 import com.opensymphony.xwork2.inject.Container;
@@ -35,8 +32,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 
-
-
 /**
  * <p>
  * Struts object factory that integrates with Spring.
@@ -48,7 +43,11 @@ import javax.servlet.ServletContext;
  * </p>
  */
 public class StrutsSpringObjectFactory extends SpringObjectFactory {
+
     private static final Logger LOG = LogManager.getLogger(StrutsSpringObjectFactory.class);
+
+    public StrutsSpringObjectFactory() {
+    }
 
     /**
      * Constructs the spring object factory
@@ -58,7 +57,6 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
      * @param enableAopSupport enable AOP support
      * @param servletContext The servlet context
      * @param devMode development mode
-     * @param container container
      * @since 2.1.3
      */
     @Inject
@@ -71,7 +69,6 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject(StrutsConstants.STRUTS_DEVMODE) String devMode,
             @Inject Container container) {
           
-        super();
         boolean useClassCache = BooleanUtils.toBoolean(useClassCacheStr);
         LOG.info("Initializing Struts-Spring integration...");
 
@@ -97,9 +94,9 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             return;
         }
         
-        String watchList = container.getInstance(String.class, "struts.class.reloading.watchList");
-        String acceptClasses = container.getInstance(String.class, "struts.class.reloading.acceptClasses");
-        String reloadConfig = container.getInstance(String.class, "struts.class.reloading.reloadConfig");
+        String watchList = container.getInstance(String.class, SpringConstants.STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_WATCH_LIST);
+        String acceptClasses = container.getInstance(String.class, SpringConstants.STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_ACCEPT_CLASSES);
+        String reloadConfig = container.getInstance(String.class, SpringConstants.STRUTS_OBJECTFACTORY_SPRING_CLASS_RELOADING_RELOAD_CONFIG);
 
         if ("true".equals(devMode)
                 && StringUtils.isNotBlank(watchList)
@@ -107,14 +104,17 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             //prevent class caching
             useClassCache = false;
 
-            ClassReloadingXMLWebApplicationContext reloadingContext = (ClassReloadingXMLWebApplicationContext) appContext;
-            reloadingContext.setupReloading(watchList.split(","), acceptClasses, servletContext, "true".equals(reloadConfig));
-            LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!\n{}", watchList);
+            try (ClassReloadingXMLWebApplicationContext reloadingContext = (ClassReloadingXMLWebApplicationContext) appContext) {
+                reloadingContext.setupReloading(watchList.split(","), acceptClasses, servletContext,
+                        "true".equals(reloadConfig));
+                LOG.info("Class reloading is enabled. Make sure this is not used on a production environment!\n{}",
+                        watchList);
 
-            setClassLoader(reloadingContext.getReloadingClassLoader());
+                setClassLoader(reloadingContext.getReloadingClassLoader());
 
-            //we need to reload the context, so our isntance of the factory is picked up
-            reloadingContext.refresh();
+                // we need to reload the context, so our isntance of the factory is picked up
+                reloadingContext.refresh();
+            }
         }
 
         this.setApplicationContext(appContext);

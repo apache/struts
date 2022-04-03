@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,17 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * InvocationSessionStore
@@ -60,10 +55,21 @@ public class InvocationSessionStore {
             return null;
         }
 
-        ValueStack stack = invocationContext.invocation.getStack();
-        ActionContext.getContext().setValueStack(stack);
+        final ActionInvocation savedInvocation = invocationContext.invocation;
+        if (savedInvocation != null) {
+            // WW-5026 - Preserve the previous PageContext (even if null) and restore it to the
+            // ActionContext after loading the savedInvocation context.  The saved context's PageContext
+            // would already be closed at this point (causing failures if used for output).
+            final ActionContext previousActionContext = ActionContext.getContext();
 
-        return invocationContext.invocation.deserialize(ActionContext.getContext());
+            savedInvocation
+                .getInvocationContext()
+                .withPageContext(previousActionContext.getPageContext())
+                .withValueStack(savedInvocation.getStack())
+                .bind();
+        }
+
+        return savedInvocation;
     }
 
     /**
@@ -75,14 +81,14 @@ public class InvocationSessionStore {
      * @param invocation the action invocation
      */
     public static void storeInvocation(String key, String token, ActionInvocation invocation) {
-        InvocationContext invocationContext = new InvocationContext(invocation.serialize(), token);
-        Map invocationMap = getInvocationMap();
+        InvocationContext invocationContext = new InvocationContext(invocation, token);
+        Map<String, Object> invocationMap = getInvocationMap();
         invocationMap.put(key, invocationContext);
         setInvocationMap(invocationMap);
     }
 
-    static void setInvocationMap(Map invocationMap) {
-        Map session = ActionContext.getContext().getSession();
+    static void setInvocationMap(Map<String, Object> invocationMap) {
+        Map<String, Object> session = ActionContext.getContext().getSession();
 
         if (session == null) {
             throw new IllegalStateException("Unable to access the session.");
@@ -91,17 +97,17 @@ public class InvocationSessionStore {
         session.put(INVOCATION_MAP_KEY, invocationMap);
     }
 
-    static Map getInvocationMap() {
-        Map session = ActionContext.getContext().getSession();
+    static Map<String, Object> getInvocationMap() {
+        Map<String, Object> session = ActionContext.getContext().getSession();
 
         if (session == null) {
             throw new IllegalStateException("Unable to access the session.");
         }
 
-        Map invocationMap = (Map) session.get(INVOCATION_MAP_KEY);
+        Map<String, Object> invocationMap = (Map<String, Object>) session.get(INVOCATION_MAP_KEY);
 
         if (invocationMap == null) {
-            invocationMap = new HashMap();
+            invocationMap = new HashMap<>();
             setInvocationMap(invocationMap);
         }
 
@@ -113,7 +119,9 @@ public class InvocationSessionStore {
 
         private static final long serialVersionUID = -286697666275777888L;
 
-        ActionInvocation invocation;
+        //WW-4873 transient since 2.5.15
+        transient ActionInvocation invocation;
+
         String token;
 
         public InvocationContext(ActionInvocation invocation, String token) {

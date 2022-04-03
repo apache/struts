@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.validator;
 
@@ -24,6 +27,7 @@ import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.SimpleAnnotationAction;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.test.AnnotationDataAware2;
@@ -58,6 +62,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
     protected final String alias = "annotationValidationAlias";
 
     AnnotationActionValidatorManager annotationActionValidatorManager;
+    private TextProviderFactory tpf;
 
     @Override protected void setUp() throws Exception {
         super.setUp();
@@ -77,7 +82,9 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
         EasyMock.replay(invocation);
         EasyMock.replay(proxy);
 
-        ActionContext.getContext().setActionInvocation(invocation);
+        ActionContext.getContext().withActionInvocation(invocation);
+
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 
     @Override protected void tearDown() throws Exception {
@@ -124,7 +131,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             bean.setName("foo");
             bean.setCount(99);
 
-            ValidatorContext context = new GenericValidatorContext(bean);
+            ValidatorContext context = new DummyValidatorContext(bean, tpf);
             annotationActionValidatorManager.validate(bean, "beanMessageBundle", context);
             assertTrue(context.hasErrors());
             assertTrue(context.hasFieldErrors());
@@ -252,7 +259,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             bean.setName("foo");
             bean.setCount(150);
 
-            ValidatorContext context = new GenericValidatorContext(bean);
+            ValidatorContext context = new DummyValidatorContext(bean, tpf);
             annotationActionValidatorManager.validate(bean, "beanMessageBundle", context);
             assertTrue(context.hasErrors());
             assertTrue(context.hasFieldErrors());
@@ -290,7 +297,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             user.setEmail("bad_email");
             user.setEmail2("bad_email");
 
-            ValidatorContext context = new GenericValidatorContext(user);
+            ValidatorContext context = new DummyValidatorContext(user, tpf);
             annotationActionValidatorManager.validate(user, null, context);
             assertTrue(context.hasFieldErrors());
 
@@ -332,13 +339,13 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             user.setEmail("mark_bad_email_for_field_val@foo.com");
             user.setEmail2("mark_bad_email_for_field_val@foo.com");
 
-            ValidatorContext context = new GenericValidatorContext(user);
+            ValidatorContext context = new DummyValidatorContext(user, tpf);
             annotationActionValidatorManager.validate(user, null, context);
             assertTrue(context.hasFieldErrors());
 
             // check field errors
             // we have an error in this field level, email does not ends with mycompany.com
-            List l = (List) context.getFieldErrors().get("email");
+            List l = context.getFieldErrors().get("email");
             assertNotNull(l);
             assertEquals(1, l.size()); // because email-field-val is short-circuit
             assertEquals("Email not from the right company.", l.get(0));
@@ -370,12 +377,12 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
         user.setEmail("rainer_h(at)example.com");
 
 
-        ValidatorContext context = new GenericValidatorContext(user);
+        ValidatorContext context = new DummyValidatorContext(user, tpf);
         annotationActionValidatorManager.validate(user, null, context);
     	
     	// check field level errors
         // shouldn't have any because action error prevents validation of anything else
-        List l = (List) context.getFieldErrors().get("email2");
+        List l = context.getFieldErrors().get("email2");
         assertNull(l);
     	
     	
@@ -401,7 +408,7 @@ public class AnnotationActionValidatorManagerTest extends XWorkTestCase {
             user.setEmail("mark@mycompany.com");
             user.setEmail2("mark@mycompany.com");
 
-            ValidatorContext context = new GenericValidatorContext(user);
+            ValidatorContext context = new DummyValidatorContext(user, tpf);
             annotationActionValidatorManager.validate(user, null, context);
             assertFalse(context.hasErrors());
         } catch (ValidationException ex) {

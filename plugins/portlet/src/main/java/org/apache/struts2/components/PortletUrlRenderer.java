@@ -1,6 +1,4 @@
 /*
- * $Id: PortletUrlRenderer.java 612406 2008-01-16 10:05:06Z nilsga $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -139,7 +137,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 	}
 
     private String createDefaultUrl(UrlProvider urlComponent) {
-        ActionInvocation ai = (ActionInvocation) urlComponent.getStack().getContext().get(ActionContext.ACTION_INVOCATION);
+        ActionInvocation ai = urlComponent.getStack().getActionContext().getActionInvocation();
         String action = ai.getProxy().getActionName();
         return portletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getParameters(),
                 urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
@@ -167,7 +165,7 @@ public class PortletUrlRenderer implements UrlRenderer {
         if (formComponent.action != null) {
             action = formComponent.findString(formComponent.action);
         } else {
-            ActionInvocation ai = (ActionInvocation) formComponent.getStack().getContext().get(ActionContext.ACTION_INVOCATION);
+            ActionInvocation ai = formComponent.getStack().getActionContext().getActionInvocation();
             action = ai.getProxy().getActionName();
         }
 
@@ -194,7 +192,9 @@ public class PortletUrlRenderer implements UrlRenderer {
                 } else {
                     id = action.substring(slash + 1);
                 }
-                formComponent.addParameter("id", formComponent.escape(id));
+                String escapedId = formComponent.escape(id);
+                formComponent.addParameter("id", escapedId);
+                formComponent.addParameter("escapedId", escapedId);
             }
         }
     }

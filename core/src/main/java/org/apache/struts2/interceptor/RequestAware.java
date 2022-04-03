@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.interceptor;
+
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Map;
 
@@ -31,13 +30,17 @@ import java.util.Map;
  * <p>
  * This interface is only relevant if the Action is used in a servlet environment.
  * </p>
+ * @deprecated please use {@link org.apache.struts2.action.ParametersAware} instead
  */
+@Deprecated
 public interface RequestAware {
 
     /**
      * Sets the Map of request attributes in the implementing class.
      *
      * @param request a Map of HTTP request attribute name/value pairs.
+     * @deprecated please use {@link org.apache.struts2.action.ParametersAware#withParameters(HttpParameters)} instead
      */
+    @Deprecated
     public void setRequest(Map<String,Object> request);
 }

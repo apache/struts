@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -97,7 +94,7 @@ public class ValueStackDataSource implements JRRewindableDataSource {
         Object value = valueStack.findValue(expression);
         LOG.debug("Field [{}] = [{}]", field.getName(), value);
 
-        if (!wrapField && MakeIterator.isIterable(value) && !field.getValueClass().isInstance(value)) {
+        if (!wrapField && MakeIterator.isIterable(value) && field.getValueClass().isInstance(value)) {
             return value;
         } else if (MakeIterator.isIterable(value)) {
             // wrap value with ValueStackDataSource if not already wrapped

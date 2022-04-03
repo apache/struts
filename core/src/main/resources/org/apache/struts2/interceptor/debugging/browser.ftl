@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -54,7 +52,6 @@
         }
     </style>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script>
         function expand(src, path) {
           var baseUrl = location.href;
@@ -62,24 +59,33 @@
           baseUrl = (i > 0 ? baseUrl.substring(0, i) : baseUrl) + "&object=" + path;
           if (baseUrl.indexOf("decorate") < 0) {
              baseUrl += "&decorate=false";
-          } 
-          jQuery.get(baseUrl, function(data) {
-              var div = document.createElement("div");
-              div.innerHTML = data;
-              src.parentNode.appendChild(div);
-              
-              src.innerHTML = "Collapse";
-              var oldonclick = src.onclick;
-              src.onclick = function() {
-                src.innerHTML = "Expand";
-                src.parentNode.removeChild(div);
-                src.onclick = oldonclick;
-              };
-          });
+          }
+
+          var request = new XMLHttpRequest();
+          request.open('GET', baseUrl, true);
+          request.onreadystatechange = function() {
+            if (this.readyState === 4) {
+              if (this.status >= 200 && this.status < 400) {
+                var div = document.createElement("div");
+                console.log(this.responseText);
+                div.innerHTML = this.responseText;
+                src.parentNode.appendChild(div);
+
+                src.innerHTML = "Collapse";
+                var oldonclick = src.onclick;
+                src.onclick = function() {
+                  src.innerHTML = "Expand";
+                  src.parentNode.removeChild(div);
+                  src.onclick = oldonclick;
+                };
+              }
+            }
+          };
+          request.send();
         }
     </script>
 
 <body>
-    ${debugHtml}
+    ${debugHtml?no_esc}
 </body>
 </html>

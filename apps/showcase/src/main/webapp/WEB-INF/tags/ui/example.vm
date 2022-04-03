@@ -1,3 +1,21 @@
+#*
+* Licensed to the Apache Software Foundation (ASF) under one
+* or more contributor license agreements.  See the NOTICE file
+* distributed with this work for additional information
+* regarding copyright ownership.  The ASF licenses this file
+* to you under the Apache License, Version 2.0 (the
+* "License"); you may not use this file except in compliance
+* with the License.  You may obtain a copy of the License at
+*
+*  http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied.  See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*#
 <html>
 <head>
 	<title>Struts2 Showcase - UI Tags Example (Velocity)</title>
@@ -13,16 +31,20 @@
 		<div class="col-md-12">
 
 			#sform ("action=exampleSubmitVelocity" "method=post" "enctype=multipart/form-data")
-			    #stextfield ("label=Name" "name=name")
-			    #stextarea ("label=Biography" "name=bio" "cols=20" "rows=3")
-			    #sselect ("label=Favourite Color" "list={'Red', 'Blue', 'Green'}" "name=favouriteColor" "emptyOption=true" "headerKey=None" "headerValue=None")
-			    #sselect ("label=Favourite Language" "list=favouriteLanguages" "name=favouriteLanguage" "listKey=key" "listValue=description" "emptyOption=true" "headerKey=None" "headerValue=None")
-			    #scheckboxlist ("label=Friends" "list={'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}" "name=friends")
-			    #scheckbox ("label=Age 18+" "name=legalAge")
-			    #sdoubleselect ("label=State" "name=region" "list={'North', 'South'}" "value='North'" "doubleValue='Florida'" "doubleList=top == 'North' ? {'Oregon', 'Washington'} : {'Texas', 'Florida'}" "doubleName=state" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
-			    #sdoubleselect ("label=Favourite Vehical" "name=favouriteVehicalType" "list=vehicalTypeList" "listKey=key" "listValue=description" "value='MotorcycleKey'" "doubleValue='YamahaKey'" "doubleList=vehicalSpecificList" "doubleListKey=key" "doubleListValue=description" "doubleName=favouriteVehicalSpecific" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
-			    #sfile ("label=Picture" "name=picture")
-			    #soptiontransferselect ("label=Favourite Cartoons Characters" "name=leftSideCartoonCharacters" "leftTitle=Left Title" "rightTitle=Right Title" "list={'Popeye', 'He-Man', 'Spiderman'}" "multiple=true" "headerKey=headerKey" "headerValue=--- Please Select ---" "emptyOption=true" "doubleList={'Superman', 'Mickey Mouse', 'Donald Duck'}" "doubleName=rightSideCartoonCharacters" "doubleHeaderKey=doubleHeaderKey" "doubleHeaderValue=--- Please Select ---" "doubleEmptyOption=true" "doubleMultiple=true" )
+			    #stextfield ("label=Name" "name=name" "tooltip=Enter your Name here")
+                            #stextfield ("label=Birthday" "name=birthday" "tooltip=Select Your Birthday")
+                            #stextfield ("label=Wake up time" "name=wakeup" "tooltip=Enter the time you wake up")
+			    #stextarea ("label=Biography" "name=bio" "tooltip=Enter your Biography" "cols=20" "rows=3")
+			    #sselect ("label=Favourite Color" "tooltip=Choose Your Favourite Color" "list={'Red', 'Blue', 'Green'}" "name=favouriteColor" "emptyOption=true" "headerKey=None" "headerValue=None")
+			    #sselect ("label=Favourite Language" "tooltip=Choose Your Favourite Language" "list=favouriteLanguages" "name=favouriteLanguage" "listKey=key" "listValue=description" "emptyOption=true" "headerKey=None" "headerValue=None")
+			    #scheckboxlist ("label=Friends" "tooltip=Choose your Friends" "list={'Wes', 'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}" "name=friends")
+                            #sradio ("label=Best Friend" "tooltip=Choose your Best Friend" "list={'Wes', 'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}" "name=bestFriend" "cssErrorClass=foo")
+			    #scheckbox ("label=Age 18+" "name=legalAge" "tooltip=Confirm that you are Over 18")
+			    #sdoubleselect ("label=State" "name=region" "tooltip=Choose Your State" "list={'North', 'South'}" "value='North'" "doubleValue='Florida'" "doubleList=top == 'North' ? {'Oregon', 'Washington'} : {'Texas', 'Florida'}" "doubleName=state" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
+			    #sdoubleselect ("label=Favourite Vehicle" "name=favouriteVehicalType" "tooltip=Choose your Vehicle" "list=vehicalTypeList" "listKey=key" "listValue=description" "value='MotorcycleKey'" "doubleValue='YamahaKey'" "doubleList=vehicalSpecificList" "doubleListKey=key" "doubleListValue=description" "doubleName=favouriteVehicalSpecific" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
+			    #sfile ("label=Picture" "name=picture" "tooltip=Upload Your Picture")
+			    #soptiontransferselect ("label=Favourite Cartoon Characters" "name=leftSideCartoonCharacters" "tooltip=Select Your Favourite Cartoon Characters" "leftTitle=Left Title" "rightTitle=Right Title" "list={'Popeye', 'He-Man', 'Spiderman'}" "multiple=true" "headerKey=headerKey" "headerValue=--- Please Select ---" "emptyOption=true" "doubleList={'Superman', 'Mickey Mouse', 'Donald Duck'}" "doubleName=rightSideCartoonCharacters" "doubleHeaderKey=doubleHeaderKey" "doubleHeaderValue=--- Please Select ---" "doubleEmptyOption=true" "doubleMultiple=true" )
+                            #stextarea ("label=Your Thoughts" "name=thoughts" "tooltip=Enter your thoughts here" "cols=20" "rows=3")
 			    #ssubmit("cssClass=btn btn-primary")
 			    #sreset("cssClass=btn btn-danger")
 			#end

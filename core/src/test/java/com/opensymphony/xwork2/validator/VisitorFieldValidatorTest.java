@@ -1,31 +1,45 @@
 /*
- * Copyright 2002-2003,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import org.easymock.EasyMock;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * VisitorFieldValidatorTest
  *
  * @author Jason Carreira
- *         Created Aug 4, 2003 1:26:01 AM
+ * Created Aug 4, 2003 1:26:01 AM
  */
 public class VisitorFieldValidatorTest extends XWorkTestCase {
 
@@ -35,10 +49,11 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        action = new VisitorValidatorTestAction();
+        ActionContext.getContext().withLocale(Locale.US);  // Force US Locale for date conversion tests on JDK9+
+        action = container.inject(VisitorValidatorTestAction.class);
 
         TestBean bean = action.getBean();
-        Calendar cal = new GregorianCalendar(1900, 01, 01);
+        Calendar cal = new GregorianCalendar(1900, Calendar.FEBRUARY, 1);
         bean.setBirth(cal.getTime());
         bean.setCount(-1);
 
@@ -51,12 +66,12 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
         EasyMock.expect(invocation.invoke()).andReturn(Action.SUCCESS).anyTimes();
         EasyMock.expect(proxy.getMethod()).andReturn("execute").anyTimes();
         EasyMock.expect(proxy.getConfig()).andReturn(config).anyTimes();
-        
+
 
         EasyMock.replay(invocation);
         EasyMock.replay(proxy);
 
-        ActionContext.getContext().setActionInvocation(invocation);
+        ActionContext.getContext().withActionInvocation(invocation);
     }
 
     public void testArrayValidation() throws Exception {
@@ -97,12 +112,12 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
         assertEquals(1, beanCountMessages.size());
 
         String beanCountMessage = beanCountMessages.get(0);
-        assertEquals("bean: Model: Count must be between 1 and 100, current value is -1.", beanCountMessage);
+        assertEquals("bean: TestBean model: Count must be between 1 and 100, current value is -1.", beanCountMessage);
     }
 
     public void testCollectionValidation() throws Exception {
-        List testBeanList = action.getTestBeanList();
-        TestBean testBean = (TestBean) testBeanList.get(0);
+        List<TestBean> testBeanList = action.getTestBeanList();
+        TestBean testBean = testBeanList.get(0);
         testBean.setName("foo");
         validate("validateList");
 
@@ -135,7 +150,7 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
         assertEquals(3, fieldErrors.size());
         assertTrue(fieldErrors.containsKey("bean.count"));
         assertTrue(fieldErrors.containsKey("bean.name"));
-        assertTrue(!fieldErrors.containsKey("bean.birth"));
+        assertFalse(fieldErrors.containsKey("bean.birth"));
 
         //the error from the action should be there too
         assertTrue(fieldErrors.containsKey("context"));
@@ -147,7 +162,7 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
 
         Map<String, List<String>> fieldErrors = action.getFieldErrors();
         assertEquals(3, fieldErrors.size());
-        assertTrue(!fieldErrors.containsKey("bean.count"));
+        assertFalse(fieldErrors.containsKey("bean.count"));
         assertTrue(fieldErrors.containsKey("bean.name"));
         assertTrue(fieldErrors.containsKey("bean.birth"));
 
@@ -161,29 +176,29 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
 
         Map<String, List<String>> fieldErrors = action.getFieldErrors();
         assertEquals(5, fieldErrors.size());
-        assertTrue(!fieldErrors.containsKey("bean.count"));
+        assertFalse(fieldErrors.containsKey("bean.count"));
         assertTrue(fieldErrors.containsKey("bean.name"));
         assertTrue(fieldErrors.containsKey("bean.birth"));
 
         assertTrue(fieldErrors.containsKey("bean.child.name"));
         assertTrue(fieldErrors.containsKey("bean.child.birth"));
-        
+
         //the error from the action should be there too
         assertTrue(fieldErrors.containsKey("context"));
     }
 
     public void testVisitorChildConversionValidation() throws Exception {
         //add conversion error
-        Map<String, Object> conversionErrors = new HashMap<>();
-        conversionErrors.put("bean.child.count", "bar");
-        ActionContext.getContext().setConversionErrors(conversionErrors);
+        Map<String, ConversionData> conversionErrors = new HashMap<>();
+        conversionErrors.put("bean.child.count", new ConversionData("bar", Integer.class));
+        ActionContext.getContext().withConversionErrors(conversionErrors);
 
         validate("visitorChildValidation");
         assertTrue(action.hasFieldErrors());
 
         Map<String, List<String>> fieldErrors = action.getFieldErrors();
         assertEquals(6, fieldErrors.size());
-        assertTrue(!fieldErrors.containsKey("bean.count"));
+        assertFalse(fieldErrors.containsKey("bean.count"));
         assertTrue(fieldErrors.containsKey("bean.name"));
         assertTrue(fieldErrors.containsKey("bean.birth"));
 
@@ -200,12 +215,11 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        ActionContext.setContext(null);
+        ActionContext.clear();
     }
 
     private void validate(String context) throws ValidationException {
-        ActionContext actionContext = ActionContext.getContext();
-        actionContext.setName(context);
+        ActionContext.getContext().withActionName(context);
         container.getInstance(ActionValidatorManager.class).validate(action, context);
     }
 }

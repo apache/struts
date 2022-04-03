@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,38 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
-import freemarker.template.Configuration;
-import freemarker.template.TemplateExceptionHandler;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
-import org.easymock.EasyMock;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-
-import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
 
 /**
  * Test case for FreeMarkerResult.
@@ -66,7 +47,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
     private FreemarkerManager mgr;
     private MockHttpServletRequest request;
 
-    public void testWriteIfCompleted() throws Exception {
+    public void testWriteIfCompleted() {
         FreemarkerResult result = new FreemarkerResult();
         result.setLocation("someFreeMarkerFile.ftl");
         result.setFreemarkerManager(mgr);
@@ -74,20 +55,20 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
         try {
             result.execute(invocation);
-            assertTrue(false);
+            fail();
         } catch (Exception e) {
             assertEquals(0, stringWriter.getBuffer().length());
         }
     }
 
-    public void testWithoutWriteIfCompleted() throws Exception {
+    public void testWithoutWriteIfCompleted() {
         FreemarkerResult result = new FreemarkerResult();
         result.setLocation("someFreeMarkerFile.ftl");
         result.setFreemarkerManager(mgr);
 
         try {
             result.execute(invocation);
-            assertTrue(false);
+            fail();
         } catch (Exception e) {
             assertTrue(stringWriter.getBuffer().length() > 0);
         }
@@ -95,7 +76,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
     public void testContentTypeIsNotOverwritten() throws Exception {
         servletContext.setRealPath(new File(FreeMarkerResultTest.class.getResource(
-                "nested.ftl").toURI()).toURL().getFile());
+            "nested.ftl").toURI()).toURL().getFile());
 
         FreemarkerResult result = new FreemarkerResult();
         result.setLocation("nested.ftl");
@@ -108,7 +89,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
     public void testDefaultContentType() throws Exception {
         servletContext.setRealPath(new File(FreeMarkerResultTest.class.getResource(
-                "nested.ftl").toURI()).toURL().getFile());
+            "nested.ftl").toURI()).toURL().getFile());
 
         FreemarkerResult result = new FreemarkerResult();
         result.setLocation("nested.ftl");
@@ -121,7 +102,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
 
     public void testContentTypeFromTemplate() throws Exception {
         servletContext.setRealPath(new File(FreeMarkerResultTest.class.getResource(
-                "something.ftl").toURI()).toURL().getFile());
+            "something.ftl").toURI()).toURL().getFile());
 
         FreemarkerResult result = new FreemarkerResult();
         result.setLocation("something.ftl");
@@ -153,14 +134,12 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         servletContext = new StrutsMockServletContext();
         stack = ActionContext.getContext().getValueStack();
 
-        context = new ActionContext(stack.getContext());
-        context.put(StrutsStatics.HTTP_RESPONSE, response);
-        context.put(StrutsStatics.HTTP_REQUEST, request);
-        context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
+        context = ActionContext.of(stack.getContext())
+            .withServletResponse(response)
+            .withServletRequest(request)
+            .withServletContext(servletContext)
+            .bind();
 
-        ServletActionContext.setServletContext(servletContext);
-        ServletActionContext.setRequest(request);
-        ServletActionContext.setResponse(response);
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
 
         invocation = new MockActionInvocation();
@@ -168,7 +147,7 @@ public class FreeMarkerResultTest extends StrutsInternalTestCase {
         invocation.setInvocationContext(context);
         invocation.setProxy(new MockActionProxy());
         servletContext.setRealPath(new File(FreeMarkerResultTest.class.getResource(
-                "someFreeMarkerFile.ftl").toURI()).toURL().getFile());
+            "someFreeMarkerFile.ftl").toURI()).toURL().getFile());
     }
 
     protected void tearDown() throws Exception {

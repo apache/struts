@@ -1,19 +1,24 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.conversion.annotations;
+
+import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -33,7 +38,8 @@ import java.lang.annotation.Target;
  *
  * <p>
  * Application wide conversion:<br>
- * The conversion rules will be assembled within the <code>xwork-conversion.properties</code> file within the classpath root.
+ * The conversion rules will be assembled within the <code>struts-conversion.properties</code> or
+ * <code>xwork-conversion.properties</code> (deprecated) file within the classpath root.
  * Set type to: <code>type = ConversionType.APPLICATION</code>
  * </p>
  * <!-- END SNIPPET: description -->
@@ -79,7 +85,13 @@ import java.lang.annotation.Target;
  * <td>converter</td>
  * <td>either this or value</td>
  * <td>&nbsp;</td>
- * <td>The class name of the TypeConverter to be used as converter.</td>
+ * <td>The class or bean name of the TypeConverter to be used as converter.</td>
+ * </tr>
+ * <tr>
+ * <td>converterClass</td>
+ * <td>either this or value</td>
+ * <td>XWorkBasicConverter</td>
+ * <td>The class of the TypeConverter to be used as converter.</td>
  * </tr>
  * <tr>
  * <td>value</td>
@@ -106,27 +118,27 @@ import java.lang.annotation.Target;
  *
  *   private HashMap keyValues = null;
  *
- *   &#64;TypeConversion(type = ConversionType.APPLICATION, converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+ *   &#64;TypeConversion(type = ConversionType.APPLICATION)
  *   public void setConvertInt( String convertInt ) {
  *       this.convertInt = convertInt;
  *   }
  *
- *   &#64;TypeConversion(converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+ *   &#64;TypeConversion(converterClass = XWorkBasicConverter.class)
  *   public void setConvertDouble( String convertDouble ) {
  *       this.convertDouble = convertDouble;
  *   }
  *
- *   &#64;TypeConversion(rule = ConversionRule.COLLECTION, converter = "java.util.String")
+ *   &#64;TypeConversion(rule = ConversionRule.COLLECTION, converterClass = String.class)
  *   public void setUsers( List users ) {
  *       this.users = users;
  *   }
  *
- *   &#64;TypeConversion(rule = ConversionRule.MAP, converter = "java.math.BigInteger")
+ *   &#64;TypeConversion(rule = ConversionRule.MAP, converterClass = BigInteger.class)
  *   public void setKeyValues( HashMap keyValues ) {
  *       this.keyValues = keyValues;
  *   }
  *
- *   &#64;TypeConversion(type = ConversionType.APPLICATION, property = "java.util.Date", converter = "com.opensymphony.xwork2.util.XWorkBasicConverter")
+ *   &#64;TypeConversion(type = ConversionType.APPLICATION, property = "java.util.Date", converterClass = XWorkBasicConverter.class)
  *   public String execute() throws Exception {
  *       return SUCCESS;
  *   }
@@ -170,13 +182,23 @@ public @interface TypeConversion {
     ConversionRule rule() default ConversionRule.PROPERTY;
 
     /**
+     * The class or bean name of the TypeConverter to be used as converter.
+     *
+     * Note: This can not be used with ConversionRule.KEY_PROPERTY!
+     *
+     * @return class or bean name of the TypeConverter to be used as converter
+     * @see {@link #converterClass()}
+     */
+    String converter() default "";
+
+    /**
      * The class of the TypeConverter to be used as converter.
      *
      * Note: This can not be used with ConversionRule.KEY_PROPERTY!
      *
      * @return class of the TypeConverter to be used as converter
      */
-    String converter() default "";
+    Class<?> converterClass() default XWorkBasicConverter.class;
 
     /**
      * If used with ConversionRule.KEY_PROPERTY specify a value here!

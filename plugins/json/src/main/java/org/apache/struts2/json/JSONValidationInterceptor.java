@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.json;
 
 import com.opensymphony.xwork2.Action;
@@ -28,7 +25,7 @@ import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,36 +36,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>Serializes validation and action errors into JSON. This interceptor does not
+ * Serializes validation and action errors into JSON. This interceptor does not
  * perform any validation, so it must follow the 'validation' interceptor on the stack.
- * </p>
- *
- * <p>This stack (defined in struts-default.xml) shows how to use this interceptor with the
- * 'validation' interceptor</p>
- * <pre>
- * &lt;interceptor-stack name="jsonValidationWorkflowStack"&gt;
- *      &lt;interceptor-ref name="basicStack"/&gt;
- *      &lt;interceptor-ref name="validation"&gt;
- *            &lt;param name="excludeMethods"&gt;input,back,cancel&lt;/param&gt;
- *      &lt;/interceptor-ref&gt;
- *      &lt;interceptor-ref name="jsonValidation"/&gt;
- *      &lt;interceptor-ref name="workflow"/&gt;
- * &lt;/interceptor-stack&gt;
- * </pre>
- * <p>If 'validationFailedStatus' is set it will be used as the Response status
- * when validation fails.</p>
- *
- * <p>If the request has a parameter 'struts.validateOnly' execution will return after
- * validation (action won't be executed).</p>
- *
- * <p>If 'struts.validateOnly' is set to false you may want to use {@link JSONActionRedirectResult}.</p>
- *
- * <p>A request parameter named 'struts.enableJSONValidation' must be set to 'true' to
- * use this interceptor</p>
- *
- * <p>If the request has a parameter 'struts.JSONValidation.set.encoding' set to true
- * the character encoding will NOT be set on the response - is needed in portlet environment
- * - for more details see issue WW-3237</p>
  */
 public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
@@ -80,16 +49,10 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
     public static final String DEFAULT_ENCODING = "UTF-8";
 
-    private int validationFailedStatus = -1;
-
-    /**
-     * HTTP status that will be set in the response if validation fails
-     *
-     * @param validationFailedStatus validation failed status
-     */
-    public void setValidationFailedStatus(int validationFailedStatus) {
-        this.validationFailedStatus = validationFailedStatus;
-    }
+    private int validationFailedStatus = HttpServletResponse.SC_BAD_REQUEST;
+    private String validateOnlyParam = VALIDATE_ONLY_PARAM;
+    private String validateJsonParam = VALIDATE_JSON_PARAM;
+    private String noEncodingSetParam = NO_ENCODING_SET_PARAM;
 
     @Override
     protected String doIntercept(ActionInvocation invocation) throws Exception {
@@ -121,13 +84,9 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
     private void setupEncoding(HttpServletResponse response, HttpServletRequest request) {
         if (isSetEncoding(request)) {
-            if (LOG.isDebugEnabled()) {
         	LOG.debug("Default encoding not set!");
-            }
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting up encoding to: [" + DEFAULT_ENCODING + "]!");
-            }
+            LOG.debug("Setting up encoding to: [{}]!", DEFAULT_ENCODING);
             response.setCharacterEncoding(DEFAULT_ENCODING);
         }
     }
@@ -143,16 +102,16 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
         return Action.NONE;
     }
 
-    private boolean isJsonEnabled(HttpServletRequest request) {
-        return "true".equals(request.getParameter(VALIDATE_JSON_PARAM));
+    public boolean isJsonEnabled(HttpServletRequest request) {
+        return Boolean.parseBoolean(request.getParameter(validateJsonParam));
     }
 
-    private boolean isValidateOnly(HttpServletRequest request) {
-        return "true".equals(request.getParameter(VALIDATE_ONLY_PARAM));
+    public boolean isValidateOnly(HttpServletRequest request) {
+        return Boolean.parseBoolean(request.getParameter(validateOnlyParam));
     }
 
-    private boolean isSetEncoding(HttpServletRequest request) {
-        return "true".equals(request.getParameter(NO_ENCODING_SET_PARAM));
+    public boolean isSetEncoding(HttpServletRequest request) {
+        return Boolean.parseBoolean(request.getParameter(noEncodingSetParam));
     }
 
     /**
@@ -221,5 +180,41 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
             sb.deleteCharAt(sb.length() - 1);
         sb.append("]");
         return sb.toString();
+    }
+
+    /**
+     * HTTP status that will be set in the response if validation fails
+     *
+     * @param validationFailedStatus validation failed status
+     */
+    public void setValidationFailedStatus(int validationFailedStatus) {
+        this.validationFailedStatus = validationFailedStatus;
+    }
+
+    /**
+     * Overrides 'struts.validateOnly' param name
+     *
+     * @param validateOnlyParam new param name
+     */
+    public void setValidateOnlyParam(String validateOnlyParam) {
+        this.validateOnlyParam = validateOnlyParam;
+    }
+
+    /**
+     * Overrides 'struts.enableJSONValidation' param name
+     *
+     * @param validateJsonParam new param name
+     */
+    public void setValidateJsonParam(String validateJsonParam) {
+        this.validateJsonParam = validateJsonParam;
+    }
+
+    /**
+     * Overrides 'struts.JSONValidation.no.encoding' param name
+     *
+     * @param noEncodingSetParam new param name
+     */
+    public void setNoEncodingSetParam(String noEncodingSetParam) {
+        this.noEncodingSetParam = noEncodingSetParam;
     }
 }

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -34,7 +31,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
@@ -120,7 +116,16 @@ public class DefaultActionMapper implements ActionMapper {
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
     protected PrefixTrie prefixTrie = null;
-    protected Pattern allowedActionNames = Pattern.compile("^[a-zA-Z0-9_!/\\-]*((.htm[l]?)|(.action))?$");
+
+    protected Pattern allowedNamespaceNames = Pattern.compile("[a-zA-Z0-9._/\\-]*");
+    protected String defaultNamespaceName = "/";
+
+    protected Pattern allowedActionNames = Pattern.compile("[a-zA-Z0-9._!/\\-]*");
+    protected String defaultActionName = "index";
+
+    protected Pattern allowedMethodNames = Pattern.compile("[a-zA-Z_]*[0-9]*");
+    protected String defaultMethodName = "execute";
+
     private boolean allowActionPrefix = false;
     private boolean allowActionCrossNamespaceAccess = false;
 
@@ -137,7 +142,7 @@ public class DefaultActionMapper implements ActionMapper {
                 put(METHOD_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         if (allowDynamicMethodCalls) {
-                            mapping.setMethod(cleanupActionName(key.substring(METHOD_PREFIX.length())));
+                            mapping.setMethod(cleanupMethodName(key.substring(METHOD_PREFIX.length())));
                         }
                     }
                 });
@@ -149,7 +154,7 @@ public class DefaultActionMapper implements ActionMapper {
                             if (allowDynamicMethodCalls) {
                                 int bang = name.indexOf('!');
                                 if (bang != -1) {
-                                    String method = cleanupActionName(name.substring(bang + 1));
+                                    String method = cleanupMethodName(name.substring(bang + 1));
                                     mapping.setMethod(method);
                                     name = name.substring(0, bang);
                                 }
@@ -161,8 +166,8 @@ public class DefaultActionMapper implements ActionMapper {
                                 }
                             }
                             if (!allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
-                                if (actionName.lastIndexOf("/") != -1) {
-                                    actionName = actionName.substring(actionName.lastIndexOf("/") + 1);
+                                if (actionName.lastIndexOf('/') != -1) {
+                                    actionName = actionName.substring(actionName.lastIndexOf('/') + 1);
                                 }
                             }
                             mapping.setName(actionName);
@@ -200,9 +205,34 @@ public class DefaultActionMapper implements ActionMapper {
         this.alwaysSelectFullNamespace = BooleanUtils.toBoolean(alwaysSelectFullNamespace);
     }
 
+    @Inject(value = StrutsConstants.STRUTS_ALLOWED_NAMESPACE_NAMES, required = false)
+    public void setAllowedNamespaceNames(String allowedNamespaceNames) {
+        this.allowedNamespaceNames = Pattern.compile(allowedNamespaceNames);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEFAULT_NAMESPACE_NAME, required = false)
+    public void setDefaultNamespaceName(String defaultNamespaceName) {
+        this.defaultNamespaceName = defaultNamespaceName;
+    }
+
     @Inject(value = StrutsConstants.STRUTS_ALLOWED_ACTION_NAMES, required = false)
     public void setAllowedActionNames(String allowedActionNames) {
         this.allowedActionNames = Pattern.compile(allowedActionNames);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEFAULT_ACTION_NAME, required = false)
+    public void setDefaultActionName(String defaultActionName) {
+        this.defaultActionName = defaultActionName;
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ALLOWED_METHOD_NAMES, required = false)
+    public void setAllowedMethodNames(String allowedMethodNames) {
+        this.allowedMethodNames = Pattern.compile(allowedMethodNames);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEFAULT_METHOD_NAME, required = false)
+    public void setDefaultMethodName(String defaultMethodName) {
+        this.defaultMethodName = defaultMethodName;
     }
 
     @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_ENABLED)
@@ -254,7 +284,7 @@ public class DefaultActionMapper implements ActionMapper {
         ActionMapping mapping = new ActionMapping();
         String uri = RequestUtils.getUri(request);
 
-        int indexOfSemicolon = uri.indexOf(";");
+        int indexOfSemicolon = uri.indexOf(';');
         uri = (indexOfSemicolon > -1) ? uri.substring(0, indexOfSemicolon) : uri;
 
         uri = dropExtension(uri, mapping);
@@ -274,7 +304,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowDynamicMethodCalls) {
             // handle "name!method" convention.
             String name = mapping.getName();
-            int exclamation = name.lastIndexOf("!");
+            int exclamation = name.lastIndexOf('!');
             if (exclamation != -1) {
                 mapping.setName(name.substring(0, exclamation));
 
@@ -324,7 +354,7 @@ public class DefaultActionMapper implements ActionMapper {
      */
     protected void parseNameAndNamespace(String uri, ActionMapping mapping, ConfigurationManager configManager) {
         String namespace, name;
-        int lastSlash = uri.lastIndexOf("/");
+        int lastSlash = uri.lastIndexOf('/');
         if (lastSlash == -1) {
             namespace = "";
             name = uri;
@@ -372,12 +402,30 @@ public class DefaultActionMapper implements ActionMapper {
             }
         }
 
-        mapping.setNamespace(namespace);
+        mapping.setNamespace(cleanupNamespaceName(namespace));
         mapping.setName(cleanupActionName(name));
     }
 
     /**
-     * Cleans up action name from suspicious characters
+     * Checks namespace name against allowed pattern if not matched returns default namespace
+     *
+     * @param rawNamespace name extracted from URI
+     * @return safe namespace name
+     */
+    protected String cleanupNamespaceName(final String rawNamespace) {
+        if (allowedNamespaceNames.matcher(rawNamespace).matches()) {
+            return rawNamespace;
+        } else {
+            LOG.warn(
+                "{} did not match allowed namespace names {} - default namespace {} will be used!",
+                rawNamespace, allowedNamespaceNames, defaultNamespaceName
+            );
+            return defaultNamespaceName;
+        }
+    }
+
+    /**
+     * Checks action name against allowed pattern if not matched returns default action name
      *
      * @param rawActionName action name extracted from URI
      * @return safe action name
@@ -386,7 +434,23 @@ public class DefaultActionMapper implements ActionMapper {
         if (allowedActionNames.matcher(rawActionName).matches()) {
             return rawActionName;
         } else {
-            throw new StrutsException("Action [" + rawActionName + "] does not match allowed action names pattern [" + allowedActionNames + "]!");
+            LOG.warn("{} did not match allowed action names {} - default action {} will be used!", rawActionName, allowedActionNames, defaultActionName);
+            return defaultActionName;
+        }
+    }
+
+    /**
+     * Checks method name (when DMI is enabled) against allowed pattern if not matched returns default action name
+     *
+     * @param rawMethodName method name extracted from URI
+     * @return safe method name
+     */
+    protected String cleanupMethodName(final String rawMethodName) {
+        if (allowedMethodNames.matcher(rawMethodName).matches()) {
+            return rawMethodName;
+        } else {
+            LOG.warn("{} did not match allowed method names {} - default method {} will be used!", rawMethodName, allowedMethodNames, defaultMethodName);
+            return defaultMethodName;
         }
     }
 
@@ -500,7 +564,7 @@ public class DefaultActionMapper implements ActionMapper {
             // Look for the current extension, if available
             ActionContext context = ActionContext.getContext();
             if (context != null) {
-                ActionMapping orig = (ActionMapping) context.get(ServletActionContext.ACTION_MAPPING);
+                ActionMapping orig = context.getActionMapping();
                 if (orig != null) {
                     extension = orig.getExtension();
                 }

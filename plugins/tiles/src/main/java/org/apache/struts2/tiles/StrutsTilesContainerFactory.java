@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.tiles;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
@@ -52,6 +51,7 @@ import org.apache.tiles.ognl.PropertyAccessorDelegateFactory;
 import org.apache.tiles.ognl.ScopePropertyAccessor;
 import org.apache.tiles.ognl.TilesApplicationContextNestedObjectExtractor;
 import org.apache.tiles.ognl.TilesContextPropertyAccessorDelegateFactory;
+import org.apache.tiles.preparer.factory.PreparerFactory;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationResource;
 import org.apache.tiles.request.Request;
@@ -77,9 +77,10 @@ import java.util.Set;
 /**
  * Dedicated Struts factory to build Tiles container with support for:
  * - Freemarker
- * - OGNL (as default)
+ * - I18N using Struts resource bundles
+ * - S2 ro access Struts' ValueStack
+ * - OGNL
  * - EL
- * - Wildcards
  *
  * If you need additional features create your own listener and factory,
  * you can base on code from Tiles' CompleteAutoloadTilesContainerFactory
@@ -109,6 +110,8 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
      */
     public static final String OGNL = "OGNL";
     public static final String EL = "EL";
+    public static final String S2 = "S2";
+    public static final String I18N = "I18N";
 
     @Override
     public TilesContainer createDecoratedContainer(TilesContainer originalContainer, ApplicationContext applicationContext) {
@@ -150,6 +153,8 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
             LocaleResolver resolver) {
 
         BasicAttributeEvaluatorFactory attributeEvaluatorFactory = new BasicAttributeEvaluatorFactory(new DirectAttributeEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator(S2, createStrutsEvaluator());
+        attributeEvaluatorFactory.registerAttributeEvaluator(I18N, createI18NEvaluator());
         attributeEvaluatorFactory.registerAttributeEvaluator(OGNL, createOGNLEvaluator());
 
         ELAttributeEvaluator elEvaluator = createELEvaluator(applicationContext);
@@ -185,14 +190,23 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
             resources.addAll(applicationContext.getResources(definition));
         }
 
+        if (resources.contains(null)) {
+            LOG.warn("Some resources were not found. Definitions: {}. Found resources: {}", definitions, resources);
+        }
+
         List<ApplicationResource> filteredResources = new ArrayList<>();
         for (ApplicationResource resource : resources) {
-            if (Locale.ROOT.equals(resource.getLocale())) {
+            if (resource != null && Locale.ROOT.equals(resource.getLocale())) {
                 filteredResources.add(resource);
             }
         }
 
         return filteredResources;
+    }
+
+    @Override
+    protected PreparerFactory createPreparerFactory(ApplicationContext applicationContext) {
+        return new StrutsPreparerFactory();
     }
 
     protected Set<String> getTilesDefinitions(Map<String, String> params) {
@@ -228,6 +242,14 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         };
         evaluator.setResolver(elResolver);
         return evaluator;
+    }
+
+    protected StrutsAttributeEvaluator createStrutsEvaluator() {
+        return new StrutsAttributeEvaluator();
+    }
+
+    protected I18NAttributeEvaluator createI18NEvaluator() {
+        return new I18NAttributeEvaluator();
     }
 
     protected OGNLAttributeEvaluator createOGNLEvaluator() {

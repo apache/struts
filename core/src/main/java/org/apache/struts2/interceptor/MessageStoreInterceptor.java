@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -27,6 +24,7 @@ import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import org.apache.struts2.result.ServletRedirectResult;
 
@@ -202,13 +200,20 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
         before(invocation);
 
         LOG.trace("Registering listener to store messages before result will be executed");
-        invocation.addPreResultListener(new MessageStorePreResultListener(this));
+        MessageStorePreResultListener preResultListener = createPreResultListener(invocation);
+        preResultListener.init(this);
+
+        invocation.addPreResultListener(preResultListener);
 
         String result = invocation.invoke();
 
         LOG.debug("exit executing MessageStoreInterceptor");
 
         return result;
+    }
+
+    protected MessageStorePreResultListener createPreResultListener(ActionInvocation invocation) {
+        return new MessageStorePreResultListener();
     }
 
     /**
@@ -228,7 +233,7 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
             Object action = invocation.getAction();
             if (action instanceof ValidationAware) {
                 // retrieve error / message from session
-                Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
+                Map<String, Object> session = invocation.getInvocationContext().getSession();
 
                 if (session == null) {
                     LOG.debug("Session is not open, no errors / messages could be retrieve for action [{}]", action);
@@ -275,13 +280,9 @@ public class MessageStoreInterceptor extends AbstractInterceptor {
     protected String getRequestOperationMode(ActionInvocation invocation) {
         String reqOperationMode = NONE;
         if (allowRequestParameterSwitch) {
-            Map reqParams = (Map) invocation.getInvocationContext().get(ActionContext.PARAMETERS);
-            boolean containsParameter = reqParams.containsKey(requestParameterSwitch);
-            if (containsParameter) {
-                String[] reqParamsArr = (String[]) reqParams.get(requestParameterSwitch);
-                if (reqParamsArr != null && reqParamsArr.length > 0) {
-                    reqOperationMode = reqParamsArr[0];
-                }
+            HttpParameters reqParams = invocation.getInvocationContext().getParameters();
+            if (reqParams.contains(requestParameterSwitch)) {
+                reqOperationMode = reqParams.get(requestParameterSwitch).getValue();
             }
         }
         return reqOperationMode;

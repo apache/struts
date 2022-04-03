@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,6 +18,7 @@
  * under the License.
  */
 -->
+<#global dynamic_attributes_ignore = "second-"/>
 <#include "/${parameters.templateDir}/simple/select.ftl" />
 <#assign startCount = 0/>
 <#if parameters.headerKey?? && parameters.headerValue??>
@@ -31,30 +30,30 @@
 
 <br/>
 <select<#rt/>
-        name="${(parameters.doubleName!"")?html}"<#rt/>
+        name="${(parameters.doubleName!"")}"<#rt/>
 <#if parameters.disabled!false>
         disabled="disabled"<#rt/>
 </#if>
 <#if parameters.doubleTabindex?has_content>
-        tabindex="${parameters.doubleTabindex?html}"<#rt/>
+        tabindex="${parameters.doubleTabindex}"<#rt/>
 </#if>
 <#if parameters.doubleId?has_content>
-        id="${parameters.doubleId?html}"<#rt/>
+        id="${parameters.doubleId}"<#rt/>
 </#if>
 <#if parameters.doubleCss?has_content>
-        class="${parameters.doubleCss?html}"<#rt/>
+        class="${parameters.doubleCss}"<#rt/>
 </#if>
 <#if parameters.doubleStyle?has_content>
-        style="${parameters.doubleStyle?html}"<#rt/>
+        style="${parameters.doubleStyle}"<#rt/>
 </#if>
 <#if parameters.title?has_content>
-        title="${parameters.title?html}"<#rt/>
+        title="${parameters.title}"<#rt/>
 </#if>
 <#if parameters.multiple!false>
         multiple="multiple"<#rt/>
 </#if>
 <#if parameters.get("doubleSize")?has_content>
-        size="${parameters.get("doubleSize")?html}"<#rt/>
+        size="${parameters.get("doubleSize")}"<#rt/>
 </#if>
 <#if parameters.doubleMultiple!false>
         multiple="multiple"<#rt/>
@@ -62,21 +61,23 @@
 <#if parameters.doubleDisabled!false>
         disabled="disabled"<#rt/>
 </#if>
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/prefixed-dynamic-attributes.ftl" />
+<@prefixedDynamicAttributes prefix="second-"/>
         >
 </select>
 <#if parameters.doubleMultiple!false>
-<input type="hidden" id="__multiselect_${parameters.doubleId?html}"
-       name="__multiselect_${(parameters.doubleName!"")?html}" value=""<#rt/>
+<input type="hidden" id="__multiselect_${parameters.doubleId}"
+       name="__multiselect_${(parameters.doubleName!"")}" value=""<#rt/>
     <#if parameters.doubleDisabled!false>
        disabled="disabled"<#rt/>
     </#if>
         />
 </#if>
-<script type="text/javascript">
+<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
     <#assign itemCount = startCount/>
-    var ${parameters.id}Group = new Array(${parameters.listSize} + ${startCount});
-    for (var i = 0; i < (${parameters.listSize} + ${startCount}); i++) {
-        ${parameters.id}Group[i] = [];
+    var ${parameters.escapedId}Group = new Array(${parameters.listSize?number?c} + ${startCount});
+    for (var i = 0; i < (${parameters.listSize?number?c} + ${startCount}); i++) {
+        ${parameters.escapedId}Group[i] = [];
     }
 
     <@s.iterator value="parameters.list">
@@ -92,11 +93,11 @@
         </#if>
         <#assign doubleItemCount = 0/>
         <#if parameters.doubleHeaderKey?? && parameters.doubleHeaderValue??>
-        ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${parameters.doubleHeaderValue?js_string}", "${parameters.doubleHeaderKey?js_string}");
+        ${parameters.escapedId}Group[${itemCount}][${doubleItemCount}] = new Option("${parameters.doubleHeaderValue?js_string}", "${parameters.doubleHeaderKey?js_string}");
             <#assign doubleItemCount = doubleItemCount + 1/>
         </#if>
         <#if parameters.doubleEmptyOption??>
-        ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("", "");
+        ${parameters.escapedId}Group[${itemCount}][${doubleItemCount}] = new Option("", "");
             <#assign doubleItemCount = doubleItemCount + 1/>
         </#if>
     <@s.iterator value="${parameters.doubleList}">
@@ -132,15 +133,15 @@
               <#assign itemDoubleTitle = ''/>
             </#if>
         </#if>
-    ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue?js_string}", "${doubleItemKeyStr?js_string}");
+    ${parameters.escapedId}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue?js_string}", "${doubleItemKeyStr?js_string}");
         <#if itemDoubleCssClass??>
-    ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("class","${itemDoubleCssClass?html}");
+    ${parameters.escapedId}Group[${itemCount}][${doubleItemCount}].setAttribute("class","${itemDoubleCssClass}");
         </#if>
         <#if itemDoubleCssStyle??>
-        ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("style","${itemDoubleCssStyle?html}");
+        ${parameters.escapedId}Group[${itemCount}][${doubleItemCount}].setAttribute("style","${itemDoubleCssStyle}");
         </#if>
         <#if itemDoubleTitle??>
-        ${parameters.id}Group[${itemCount}][${doubleItemCount}].setAttribute("title","${itemDoubleTitle?html}");
+        ${parameters.escapedId}Group[${itemCount}][${doubleItemCount}].setAttribute("title","${itemDoubleTitle}");
         </#if>
 
         <#assign doubleItemCount = doubleItemCount + 1/>
@@ -148,7 +149,7 @@
         <#assign itemCount = itemCount + 1/>
     </@s.iterator>
 
-    var ${parameters.id}Temp = document.${parameters.formName}.${parameters.doubleId};
+    var ${parameters.escapedId}Temp = document.${parameters.formName}.${parameters.doubleId};
     <#assign itemCount = startCount/>
     <#assign redirectTo = 0/>
     <@s.iterator value="parameters.list">
@@ -162,34 +163,34 @@
         </#if>
         <#assign itemCount = itemCount + 1/>
     </@s.iterator>
-    ${parameters.id}Redirect(${redirectTo});
-    function ${parameters.id}Redirect(x) {
+    ${parameters.escapedId}Redirect(${redirectTo});
+    function ${parameters.escapedId}Redirect(x) {
         var selected = false;
-        for (var m = ${parameters.id}Temp.options.length - 1; m >= 0; m--) {
-            ${parameters.id}Temp.remove(m);
+        for (var m = ${parameters.escapedId}Temp.options.length - 1; m >= 0; m--) {
+            ${parameters.escapedId}Temp.remove(m);
         }
 
-        for (var i = 0; i < ${parameters.id}Group[x].length; i++) {
-            ${parameters.id}Temp.options[i] = new Option(${parameters.id}Group[x][i].text, ${parameters.id}Group[x][i].value);
+        for (var i = 0; i < ${parameters.escapedId}Group[x].length; i++) {
+            ${parameters.escapedId}Temp.options[i] = new Option(${parameters.escapedId}Group[x][i].text, ${parameters.escapedId}Group[x][i].value);
         <#if parameters.doubleNameValue??>
             <#if parameters.doubleMultiple??>
                 for (var j = 0; j < ${parameters.doubleNameValue}.length; j++) {
-                    if (${parameters.id}Temp.options[i].value == ${parameters.doubleNameValue?js_string}[j]) {
-                        ${parameters.id}Temp.options[i].selected = true;
+                    if (${parameters.escapedId}Temp.options[i].value == ${parameters.doubleNameValue?js_string}[j]) {
+                        ${parameters.escapedId}Temp.options[i].selected = true;
                         selected = true;
                     }
                 }
                 <#else>
-                    if (${parameters.id}Temp.options[i].value == '${parameters.doubleNameValue?js_string}') {
-                        ${parameters.id}Temp.options[i].selected = true;
+                    if (${parameters.escapedId}Temp.options[i].value == '${parameters.doubleNameValue?js_string}') {
+                        ${parameters.escapedId}Temp.options[i].selected = true;
                         selected = true;
                     }
             </#if>
         </#if>
         }
 
-        if ((${parameters.id}Temp.options.length > 0) && (! selected)) {
-            ${parameters.id}Temp.options[0].selected = true;
+        if ((${parameters.escapedId}Temp.options.length > 0) && (! selected)) {
+            ${parameters.escapedId}Temp.options[0].selected = true;
         }
     }
 </script>

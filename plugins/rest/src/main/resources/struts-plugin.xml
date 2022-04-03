@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -32,8 +30,8 @@
 
 	<bean type="org.apache.struts2.rest.ContentTypeHandlerManager" class="org.apache.struts2.rest.DefaultContentTypeHandlerManager" />
 
-    <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="xml" class="org.apache.struts2.rest.handler.XStreamHandler" />
-    <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="json" class="org.apache.struts2.rest.handler.JsonLibHandler" />
+    <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="xml" class="org.apache.struts2.rest.handler.JacksonXmlHandler" />
+    <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="json" class="org.apache.struts2.rest.handler.JacksonJsonHandler" />
     <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="html" class="org.apache.struts2.rest.handler.HtmlHandler" />
     <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="x-www-form-urlencoded" class="org.apache.struts2.rest.handler.FormUrlEncodedHandler" />
     <bean type="org.apache.struts2.rest.handler.ContentTypeHandler" name="multipart/form-data" class="org.apache.struts2.rest.handler.MultipartFormDataHandler" />
@@ -83,7 +81,6 @@
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="debugging"/>
-                <interceptor-ref name="profiling"/>
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="scopedModelDriven"/>
                 <interceptor-ref name="modelDriven">

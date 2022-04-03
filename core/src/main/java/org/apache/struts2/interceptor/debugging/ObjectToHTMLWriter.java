@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.interceptor.debugging;
 
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.beans.IntrospectionException;
 import java.io.Writer;
@@ -36,6 +35,9 @@ import java.util.Set;
  *
  */
 class ObjectToHTMLWriter {
+
+    private static final Logger LOG = LogManager.getLogger(ObjectToHTMLWriter.class);
+
     private PrettyPrintWriter prettyWriter;
 
     ObjectToHTMLWriter(Writer writer) {
@@ -43,36 +45,43 @@ class ObjectToHTMLWriter {
         this.prettyWriter.setEscape(false);
     }
 
-    @SuppressWarnings("unchecked")
     public void write(ReflectionProvider reflectionProvider, Object root, String expr) throws IntrospectionException,
         ReflectionException {
         prettyWriter.startNode("table");
         prettyWriter.addAttribute("class", "debugTable");
 
-        if (root instanceof Map) {
-            for (Object next : ((Map) root).entrySet()) {
-                Map.Entry property = (Map.Entry) next;
+        if (root == null) {
+            LOG.info("Root is null");
+            writeProperty("root", null, expr);
+        } else if (root instanceof Map) {
+            LOG.info("Root is a Map");
+            for (Object next : ((Map<?, ?>) root).entrySet()) {
+                Map.Entry<?, ?> property = (Map.Entry<?, ?>) next;
                 String key = property.getKey().toString();
                 Object value = property.getValue();
                 writeProperty(key, value, expr);
             }
         } else if (root instanceof List) {
-            List list = (List) root;
+            LOG.info("Root is a List");
+            List<?> list = (List<?>) root;
             for (int i = 0; i < list.size(); i++) {
                 Object element = list.get(i);
                 writeProperty(String.valueOf(i), element, expr);
             }
         } else if (root instanceof Set) {
-            Set set = (Set) root;
+            LOG.info("Root is a Set");
+            Set<?> set = (Set<?>) root;
             for (Object next : set) {
                 writeProperty("", next, expr);
             }
         } else if (root.getClass().isArray()) {
+            LOG.info("Root is an Array");
             Object[] objects = (Object[]) root;
             for (int i = 0; i < objects.length; i++) {
                 writeProperty(String.valueOf(i), objects[i], expr);
             }
         } else {
+            LOG.info("Root is {}", root.getClass());
             //print properties
             Map<String, Object> properties = reflectionProvider.getBeanMap(root);
             for (Map.Entry<String, Object> property : properties.entrySet()) {
@@ -102,9 +111,9 @@ class ObjectToHTMLWriter {
         //value cell
         prettyWriter.startNode("td");
         if (value != null) {
+            LOG.info("Writing property [{}] as [{}]", name, value);
             //if is is an empty collection or array, don't write a link
-            if (isEmptyCollection(value) || isEmptyMap(value) || (value.getClass()
-                    .isArray() && ((Object[]) value).length == 0)) {
+            if (isEmptyCollection(value) || isEmptyMap(value) || (value.getClass().isArray() && ((Object[]) value).length == 0)) {
                 prettyWriter.addAttribute("class", "emptyCollection");
                 prettyWriter.setValue("empty");
             } else {
@@ -121,7 +130,7 @@ class ObjectToHTMLWriter {
         prettyWriter.startNode("td");
         if (value != null) {
             prettyWriter.addAttribute("class", "typeColumn");
-            Class clazz = value.getClass();
+            Class<?> clazz = value.getClass();
             prettyWriter.setValue(clazz.getName());
         } else {
             prettyWriter.addAttribute("class", "nullValue");
@@ -138,7 +147,7 @@ class ObjectToHTMLWriter {
      */
     private boolean isEmptyMap(Object value) {
         try {
-            return value instanceof Map && ((Map) value).isEmpty();
+            return value instanceof Map && ((Map<?, ?>) value).isEmpty();
         } catch (Exception e) {
             return true;
         }
@@ -149,14 +158,14 @@ class ObjectToHTMLWriter {
      */
     private boolean isEmptyCollection(Object value) {
         try {
-            return value instanceof Collection && ((Collection) value).isEmpty();
+            return value instanceof Collection && ((Collection<?>) value).isEmpty();
         } catch (Exception e) {
             return true;
         }
     }
 
     private void writeValue(String name, Object value, String expr) {
-        Class clazz = value.getClass();
+        Class<?> clazz = value.getClass();
         if (clazz.isPrimitive() || Number.class.isAssignableFrom(clazz) ||
             clazz.equals(String.class) || Boolean.class.equals(clazz)) {
             prettyWriter.setValue(String.valueOf(value));

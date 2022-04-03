@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -26,14 +24,15 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.5.2-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-plugins</artifactId>
     <packaging>pom</packaging>
-    <name>Struts Plugins</name>
+    <name>Struts 2 Plugins</name>
 
     <modules>
+        <module>async</module>
         <module>bean-validation</module>
         <module>cdi</module>
         <module>config-browser</module>
@@ -42,7 +41,6 @@
         <module>embeddedjsp</module>
         <module>gxp</module>
         <module>jasperreports</module>
-        <module>java8-support</module>
         <module>javatemplates</module>
         <module>jfreechart</module>
         <module>json</module>
@@ -52,13 +50,14 @@
         <module>pell-multipart</module>
         <module>plexus</module>
         <module>portlet</module>
+        <module>portlet-mocks</module>
         <module>portlet-tiles</module>
         <module>rest</module>
-        <module>sitegraph</module>
         <module>sitemesh</module>
         <module>spring</module>
         <module>testng</module>
         <module>tiles</module>
+        <module>velocity</module>
     </modules>
 
     <dependencies>

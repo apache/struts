@@ -1,30 +1,31 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-
 package org.apache.struts2.jasper.runtime;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 
-import org.apache.AnnotationProcessor;
 import org.apache.struts2.jasper.Constants;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.InstanceManager;
 
 /**
  * Pool of tag handlers that can be reused.
@@ -42,7 +43,7 @@ public class TagHandlerPool {
     
     // index of next available tag handler
     private int current;
-    protected AnnotationProcessor annotationProcessor = null;
+    protected InstanceManager instanceManager = null;
 
     public static TagHandlerPool getTagHandlerPool( ServletConfig config) {
         TagHandlerPool result=null;
@@ -78,8 +79,7 @@ public class TagHandlerPool {
         }
         this.handlers = new Tag[maxSize];
         this.current = -1;
-        this.annotationProcessor = 
-            (AnnotationProcessor) config.getServletContext().getAttribute(AnnotationProcessor.class.getName());
+        this.instanceManager = InstanceHelper.getServletInstanceManager(config);
     }
 
     /**
@@ -123,8 +123,10 @@ public class TagHandlerPool {
         // Out of sync block - there is no need for other threads to
         // wait for us to construct a tag for this thread.
         try {
-            Tag instance = (Tag) handlerClass.newInstance();
-            AnnotationHelper.postConstruct(annotationProcessor, instance);
+            final Tag instance = (Tag) handlerClass.newInstance();
+            if (instanceManager != null) {
+                InstanceHelper.postConstruct(instanceManager, instance);
+            }
             return instance;
         } catch (Exception e) {
             throw new JspException(e.getMessage(), e);
@@ -147,9 +149,9 @@ public class TagHandlerPool {
         }
         // There is no need for other threads to wait for us to release
         handler.release();
-        if (annotationProcessor != null) {
+        if (instanceManager != null) {
             try {
-                AnnotationHelper.preDestroy(annotationProcessor, handler);
+                InstanceHelper.preDestroy(instanceManager, handler);
             } catch (Exception e) {
                 log.warn("Error processing preDestroy on tag instance of " 
                         + handler.getClass().getName(), e);
@@ -164,9 +166,9 @@ public class TagHandlerPool {
     public synchronized void release() {
         for (int i = current; i >= 0; i--) {
             handlers[i].release();
-            if (annotationProcessor != null) {
+            if (instanceManager != null) {
                 try {
-                    AnnotationHelper.preDestroy(annotationProcessor, handlers[i]);
+                    InstanceHelper.preDestroy(instanceManager, handlers[i]);
                 } catch (Exception e) {
                     log.warn("Error processing preDestroy on tag instance of " 
                             + handlers[i].getClass().getName(), e);

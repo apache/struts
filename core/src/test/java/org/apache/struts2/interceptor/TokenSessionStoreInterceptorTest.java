@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.interceptor;
 
 import org.apache.struts2.TestConfigurationProvider;
@@ -33,8 +30,8 @@ import com.opensymphony.xwork2.ActionProxy;
 public class TokenSessionStoreInterceptorTest extends TokenInterceptorTest {
 
     public void testCAllExecute2Times() throws Exception {
-        ActionProxy proxy = buildProxy(getActionName());
         setToken(request);
+        ActionProxy proxy = buildProxy(getActionName());
         assertEquals(Action.SUCCESS, proxy.execute());
 
         ActionProxy proxy2 = buildProxy(getActionName());
@@ -45,8 +42,8 @@ public class TokenSessionStoreInterceptorTest extends TokenInterceptorTest {
     }
 
     public void testNullTokenName() throws Exception {
-        ActionProxy proxy = buildProxy(getActionName());
         setToken((String)null);
+        ActionProxy proxy = buildProxy(getActionName());
         proxy.execute();
     }
 

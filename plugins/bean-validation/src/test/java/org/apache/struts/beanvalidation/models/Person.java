@@ -1,14 +1,4 @@
-package org.apache.struts.beanvalidation.models;
-
-import org.hibernate.validator.constraints.Email;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -26,12 +16,43 @@ import javax.validation.constraints.Size;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.struts.beanvalidation.models;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
 public class Person {
 
-    @NotNull(message = "nameNotNull")
-    @Size(min = 2, max = 64, message = "nameSize")
+    public interface NameChecks {
+    }
+
+    public interface FirstNameChecks {
+    }
+
+    public interface StreetChecks {
+    }
+
+    public interface NameAndStreetChecks extends NameChecks, StreetChecks {
+    }
+
+    public interface LongNameChecks extends Default {
+    }
+
+    @NotNull(message = "nameNotNull", groups = {Default.class, NameChecks.class, NameAndStreetChecks.class})
+    @Size.List({
+            @Size(min = 4, max = 64, message = "nameSize", groups = {Default.class, NameChecks.class, NameAndStreetChecks.class}),
+            @Size(min = 20, max = 64, message = "nameSize20", groups = {LongNameChecks.class})
+
+    })
     private String name;
+
+    @NotBlank(message = "firstNameNotBlank", groups = FirstNameChecks.class)
+    private String firstName;
 
     @NotNull(message = "emailNotNull")
     @Email(message = "emailNotValid")
@@ -54,6 +75,14 @@ public class Person {
 
     public String getName() {
         return name;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public void setAddress(Address address) {

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.Action;
@@ -35,6 +32,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+
+import static com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsCheckerTest.NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER;
 
 /**
  * Unit test for {@link StreamResult}.
@@ -78,8 +77,8 @@ public class StreamResultTest extends StrutsInternalTestCase {
 
         result.doExecute("helloworld", mai);
 
-        assertEquals(String.valueOf(contentLength), result.getContentLength());
-        assertEquals("text/plain", result.getContentType());
+        assertEquals(contentLength, response.getContentLength());
+        assertEquals("text/plain", response.getContentType());
         assertEquals("streamForImage", result.getInputName());
         assertEquals(1024, result.getBufferSize()); // 1024 is default
         assertEquals("inline", result.getContentDisposition());
@@ -94,7 +93,7 @@ public class StreamResultTest extends StrutsInternalTestCase {
         result.setContentCharSet("ISO-8859-1");
         result.doExecute("helloworld", mai);
 
-        assertEquals(String.valueOf(contentLength), result.getContentLength());
+        assertEquals(contentLength, response.getContentLength());
         assertEquals("text/plain", result.getContentType());
         assertEquals("streamForImage", result.getInputName());
         assertEquals(1024, result.getBufferSize()); // 1024 is default
@@ -111,8 +110,9 @@ public class StreamResultTest extends StrutsInternalTestCase {
 
         result.doExecute("helloworld", mai);
 
-        assertEquals(String.valueOf(contentLength), result.getContentLength());
+        assertEquals(contentLength, response.getContentLength());
         assertEquals("text/plain", result.getContentType());
+        assertEquals("text/plain;charset=UTF-8", response.getContentType());
         assertEquals("streamForImage", result.getInputName());
         assertEquals(1024, result.getBufferSize()); // 1024 is default
         assertEquals("inline", result.getContentDisposition());
@@ -215,11 +215,42 @@ public class StreamResultTest extends StrutsInternalTestCase {
         assertEquals("filename=\"logo.png\"", response.getHeader("Content-disposition"));
     }
 
+    public void testStreamResultParseExpression() throws Exception {
+        result.setParse(true);
+        result.setInputName("${streamForImageAsExpression}");
+
+        try {
+            result.doExecute("helloworld", mai);
+            fail("double evaluation?!");
+        } catch (IllegalArgumentException e) {
+            assertEquals("Can not find a java.io.InputStream with the name [getStreamForImage()] in the " +
+                    "invocation stack. Check the <param name=\"inputName\"> tag specified for this action is correct, " +
+                    "not excluded and accepted.", e.getMessage());
+        }
+
+        // verify that above test has really effect
+        result.setNotExcludedAcceptedPatterns(NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER);
+        assertNull(result.inputStream);
+        result.doExecute("helloworld", mai);
+        assertNotNull(result.inputStream);
+        container.inject(result);   // roll back pattern checkers
+    }
+
+    public void testStreamResultParseGetter() throws Exception {
+        result.setParse(true);
+        result.setInputName("getStreamForImage()");
+        assertNull(result.inputStream);
+        result.doExecute("helloworld", mai);
+        assertNotNull(result.inputStream);
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         response = new MockHttpServletResponse();
 
         result = new StreamResult();
+        container.inject(result);
+        result.setContentLength("${contentLength}");
         stack = ActionContext.getContext().getValueStack();
 
         MyImageAction action = new MyImageAction();
@@ -245,28 +276,37 @@ public class StreamResultTest extends StrutsInternalTestCase {
         mai = null;
     }
 
-    public class MyImageAction implements Action {
+    public static class MyImageAction implements Action {
 
-        public InputStream getStreamForImage() throws Exception {
+        FileInputStream streamForImage;
+        long contentLength;
+
+        public MyImageAction() throws Exception {
             // just use src/test/log4j2.xml as test file
             URL url = ClassLoaderUtil.getResource("log4j2.xml", StreamResultTest.class);
             File file = new File(new URI(url.toString()));
-            FileInputStream fis = new FileInputStream(file);
-            return fis;
+            streamForImage = new FileInputStream(file);
+            contentLength = file.length();
+        }
+
+        public InputStream getStreamForImage() {
+            return streamForImage;
         }
 
         public String execute() throws Exception {
             return SUCCESS;
         }
 
-        public long getContentLength() throws Exception {
-            URL url = ClassLoaderUtil.getResource("log4j2.xml", StreamResultTest.class);
-            File file = new File(new URI(url.toString()));
-            return file.length();
+        public long getContentLength() {
+            return contentLength;
         }
 
         public String getStreamForImageAsString() {
             return "streamForImage";
+        }
+
+        public String getStreamForImageAsExpression() {
+            return "getStreamForImage()";
         }
 
         public String getContentCharSetMethod() {

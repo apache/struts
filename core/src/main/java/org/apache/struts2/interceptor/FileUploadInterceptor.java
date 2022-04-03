@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.*;
@@ -29,12 +26,13 @@ import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.apache.struts2.util.ContentTypeMatcher;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -233,7 +231,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
 
-        HttpServletRequest request = (HttpServletRequest) ac.get(ServletActionContext.HTTP_REQUEST);
+        HttpServletRequest request = ac.getServletRequest();
 
         if (!(request instanceof MultiPartRequestWrapper)) {
             if (LOG.isDebugEnabled()) {
@@ -254,11 +252,16 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
         MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
 
-        if (multiWrapper.hasErrors()) {
-            for (String error : multiWrapper.getErrors()) {
-                if (validation != null) {
-                    validation.addActionError(error);
+        if (multiWrapper.hasErrors() && validation != null) {
+            TextProvider textProvider = getTextProvider(action);
+            for (LocalizedMessage error : multiWrapper.getErrors()) {
+                String errorMessage;
+                if (textProvider.hasKey(error.getTextKey())) {
+                    errorMessage = textProvider.getText(error.getTextKey(), Arrays.asList(error.getArgs()));
+                } else {
+                    errorMessage = textProvider.getText("struts.messages.error.uploading", error.getDefaultMessage());
                 }
+                validation.addActionError(errorMessage);
             }
         }
 
@@ -277,9 +280,9 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
                 if (isNonEmpty(fileName)) {
                     // get a File object for the uploaded File
-                    File[] files = multiWrapper.getFiles(inputName);
+                    UploadedFile[] files = multiWrapper.getFiles(inputName);
                     if (files != null && files.length > 0) {
-                        List<File> acceptedFiles = new ArrayList<>(files.length);
+                        List<UploadedFile> acceptedFiles = new ArrayList<>(files.length);
                         List<String> acceptedContentTypes = new ArrayList<>(files.length);
                         List<String> acceptedFileNames = new ArrayList<>(files.length);
                         String contentTypeName = inputName + "ContentType";
@@ -294,11 +297,11 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         }
 
                         if (!acceptedFiles.isEmpty()) {
-                            Map<String, Object> params = ac.getParameters();
-
-                            params.put(inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
-                            params.put(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
-                            params.put(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
+                            Map<String, Parameter> newParams = new HashMap<>();
+                            newParams.put(inputName, new Parameter.File(inputName, acceptedFiles.toArray(new UploadedFile[acceptedFiles.size()])));
+                            newParams.put(contentTypeName, new Parameter.File(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()])));
+                            newParams.put(fileNameName, new Parameter.File(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()])));
+                            ac.getParameters().appendAll(newParams);
                         }
                     }
                 } else {
@@ -329,7 +332,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      *                    logging.
      * @return true if the proposed file is acceptable by contentType and size.
      */
-    protected boolean acceptFile(Object action, File file, String filename, String contentType, String inputName, ValidationAware validation) {
+    protected boolean acceptFile(Object action, UploadedFile file, String filename, String contentType, String inputName, ValidationAware validation) {
         boolean fileIsAcceptable = false;
 
         // If it's null the upload failed
@@ -339,6 +342,14 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                 validation.addFieldError(inputName, errMsg);
             }
 
+            if (LOG.isWarnEnabled()) {
+                LOG.warn(errMsg);
+            }
+        } else if (file.getContent() == null) {
+            String errMsg = getTextMessage(action, "struts.messages.error.uploading", new String[]{filename});
+            if (validation != null) {
+                validation.addFieldError(inputName, errMsg);
+            }
             if (LOG.isWarnEnabled()) {
                 LOG.warn(errMsg);
             }
@@ -439,12 +450,8 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     }
 
     private TextProvider getTextProvider(Object action) {
-        TextProviderFactory tpf = new TextProviderFactory();
-        if (container != null) {
-            container.inject(tpf);
-        }
-        LocaleProvider localeProvider = getLocaleProvider(action);
-        return tpf.createInstance(action.getClass(), localeProvider);
+        TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
+        return tpf.createInstance(action.getClass());
     }
 
     private LocaleProvider getLocaleProvider(Object action) {
@@ -452,7 +459,8 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         if (action instanceof LocaleProvider) {
             localeProvider = (LocaleProvider) action;
         } else {
-            localeProvider = container.getInstance(LocaleProvider.class);
+            LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
+            localeProvider = localeProviderFactory.createLocaleProvider();
         }
         return localeProvider;
     }

@@ -1,10 +1,29 @@
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 1.1.1//EN"
-    "http://struts.apache.org/dtds/xwork-1.1.1.dtd"
- >
-
-<xwork>
-	<include file="xwork-test-beans.xml" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+    <include file="xwork-test-beans.xml"/>
     <package name="default">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
@@ -12,14 +31,14 @@
         </result-types>
 
         <interceptors>
-            <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
+            <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor"/>
             <interceptor name="logging" class="com.opensymphony.xwork2.interceptor.LoggingInterceptor"/>
             <interceptor name="test" class="com.opensymphony.xwork2.mock.MockInterceptor">
                 <param name="foo">fooDefault</param>
             </interceptor>
 
             <interceptor-stack name="defaultStack">
-                <interceptor-ref name="timer"/>
+                <interceptor-ref name="noop"/>
             </interceptor-stack>
         </interceptors>
 
@@ -34,7 +53,7 @@
             <param name="bar">23</param>
             <param name="testXW412">foo.jspa?fooID=${fooID}&amp;something=bar</param>
             <param name="testXW412Again">
-            		something
+                something
             </param>
             <param name="testForXW171"></param>
         </action>
@@ -42,19 +61,19 @@
         <action name="Foo" class="com.opensymphony.xwork2.SimpleAction">
             <param name="foo">18</param>
             <param name="bar">24</param>
-            <result name="success" type="mock" />
+            <result name="success" type="mock"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
         <action name="WildCard" class="com.opensymphony.xwork2.SimpleAction">
-            <result name="*" type="mock" />
+            <result name="*" type="mock"/>
             <interceptor-ref name="defaultStack"/>
         </action>
 
         <action name="FooBar" class="com.opensymphony.xwork2.SimpleAction">
             <param name="foo">18</param>
             <param name="bar">24</param>
-            <result name="success" type="mock" />
+            <result name="success" type="mock"/>
             <interceptor-ref name="defaultStack"/>
             <exception-mapping name="runtime" exception="java.lang.RuntimeException" result="exception"/>
         </action>
@@ -78,4 +97,4 @@
         </action>
 
     </package>
-</xwork>
+</struts>

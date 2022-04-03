@@ -1,22 +1,30 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Collection;
+import java.util.Objects;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -84,6 +92,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class StringLengthFieldValidator extends FieldValidatorSupport {
 
+    private static final Logger LOG = LogManager.getLogger(StringLengthFieldValidator.class);
+
     private boolean trim = true;
     private int maxLength = -1;
     private int minLength = -1;
@@ -138,17 +148,37 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
     }
 
     public void validate(Object object) throws ValidationException {
-        String fieldName = getFieldName();
-        String val = (String) getFieldValue(fieldName, object);
+        Object fieldValue = getFieldValue(fieldName, object);
 
-        if (StringUtils.isEmpty(val)) {
-            // use a required validator for these
+        if (fieldValue == null) {
+            LOG.debug("Value for field {} is null, use a required validator", getFieldName());
+        } else if (fieldValue.getClass().isArray()) {
+            Object[] values = (Object[]) fieldValue;
+            for (Object value : values) {
+                validateValue(object, value);
+            }
+        } else if (Collection.class.isAssignableFrom(fieldValue.getClass())) {
+            Collection values = (Collection) fieldValue;
+            for (Object value : values) {
+                validateValue(object, value);
+            }
+        } else {
+            validateValue(object, fieldValue);
+        }
+    }
+
+    protected void validateValue(Object object, Object value) {
+        String stringValue = Objects.toString(value, "");
+
+        if (StringUtils.isEmpty(stringValue)) {
+            LOG.debug("Value is empty, use a required validator");
             return;
         }
+
         if (isTrim()) {
-            val = val.trim();
-            if (val.length() <= 0) {
-                // use a required validator
+            stringValue = stringValue.trim();
+            if (StringUtils.isEmpty(stringValue)) {
+                LOG.debug("Value is empty, use a required validator");
                 return;
             }
         }
@@ -156,10 +186,15 @@ public class StringLengthFieldValidator extends FieldValidatorSupport {
         int minLengthToUse = getMinLength();
         int maxLengthToUse = getMaxLength();
 
-        if ((minLengthToUse > -1) && (val.length() < minLengthToUse)) {
-            addFieldError(fieldName, object);
-        } else if ((maxLengthToUse > -1) && (val.length() > maxLengthToUse)) {
-            addFieldError(fieldName, object);
+        try {
+            setCurrentValue(stringValue);
+            if ((minLengthToUse > -1) && (stringValue.length() < minLengthToUse)) {
+                addFieldError(fieldName, object);
+            } else if ((maxLengthToUse > -1) && (stringValue.length() > maxLengthToUse)) {
+                addFieldError(fieldName, object);
+            }
+        } finally {
+            setCurrentValue(null);
         }
     }
 

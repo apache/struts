@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -75,6 +73,7 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
         public void generate() throws IOException {
             Map<String, Object> params = context.getParameters();
             String body = (String) params.get("body");
+            Boolean escapeHtmlBody = (Boolean) params.get("escapeHtmlBody");
 
             String type = StringUtils.defaultString((String) params.get("type"), "input");
             if ("button".equals(type)) {
@@ -83,16 +82,19 @@ public class SubmitHandler extends AbstractTagHandler implements TagGenerator {
                     characters(body, false);
                 else if (params.containsKey("label")) {
                     String label = (String) params.get("label");
-                    if (StringUtils.isNotEmpty(label))
-                        characters(label, false);
+                    if (StringUtils.isNotEmpty(label)) {
+                        characters(label, escapeHtmlBody);
+                    }
                 }
                 end("button");
             } else if ("image".equals(type)) {
-                if (StringUtils.isNotEmpty(body))
-                    characters(body, false);
+                if (StringUtils.isNotEmpty(body)) {
+                    characters(body, escapeHtmlBody);
+                }
                 end("input");
-            } else
+            } else {
                 end("input");
+            }
         }
     }
 }

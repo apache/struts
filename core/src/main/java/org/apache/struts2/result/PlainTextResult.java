@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
@@ -34,15 +31,8 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
 /**
- * <!-- START SNIPPET: description -->
- *
  * A result that send the content out as plain text. Useful typically when needed
  * to display the raw content of a JSP or Html file for example.
- *
- * <!-- END SNIPPET: description -->
- *
- *
- * <!-- START SNIPPET: params -->
  *
  * <ul>
  *  <li>location (default) = location of the file (jsp/html) to be displayed as plain text.</li>
@@ -51,16 +41,10 @@ import java.nio.charset.Charset;
  *  using a Reader. Some example of charSet would be UTF-8, ISO-8859-1 etc.
  * </ul>
  *
- * <!-- END SNIPPET: params -->
- *
- *
- * <pre>
- * <!-- START SNIPPET: example -->
- *
+ *  <pre>
  * &lt;action name="displayJspRawContent" &gt;
  *   &lt;result type="plainText"&gt;/myJspFile.jsp&lt;/result&gt;
  * &lt;/action&gt;
- *
  *
  * &lt;action name="displayJspRawContent" &gt;
  *   &lt;result type="plainText"&gt;
@@ -68,10 +52,7 @@ import java.nio.charset.Charset;
  *      &lt;param name="charSet"&gt;UTF-8&lt;/param&gt;
  *   &lt;/result&gt;
  * &lt;/action&gt;
- *
- * <!-- END SNIPPET: example -->
  * </pre>
- *
  */
 public class PlainTextResult extends StrutsResultSupport {
 
@@ -116,22 +97,22 @@ public class PlainTextResult extends StrutsResultSupport {
         // verify charset
         Charset charset = readCharset();
 
-        HttpServletResponse response = (HttpServletResponse) invocation.getInvocationContext().get(HTTP_RESPONSE);
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
 
         applyCharset(charset, response);
         applyAdditionalHeaders(response);
         String location = adjustLocation(finalLocation);
 
         try (PrintWriter writer = response.getWriter();
-                InputStream resourceAsStream = readStream(invocation, location);
-                InputStreamReader reader = new InputStreamReader(resourceAsStream, charset == null ? Charset.defaultCharset() : charset)) {
+             InputStream resourceAsStream = readStream(invocation, location);
+             InputStreamReader reader = new InputStreamReader(resourceAsStream, charset == null ? Charset.defaultCharset() : charset)) {
             logWrongStream(finalLocation, resourceAsStream);
             sendStream(writer, reader);
         }
     }
 
     protected InputStream readStream(ActionInvocation invocation, String location) {
-        ServletContext servletContext = (ServletContext) invocation.getInvocationContext().get(SERVLET_CONTEXT);
+        ServletContext servletContext = invocation.getInvocationContext().getServletContext();
         return servletContext.getResourceAsStream(location);
     }
 
@@ -144,7 +125,7 @@ public class PlainTextResult extends StrutsResultSupport {
     protected void sendStream(PrintWriter writer, InputStreamReader reader) throws IOException {
         char[] buffer = new char[BUFFER_SIZE];
         int charRead;
-        while((charRead = reader.read(buffer)) != -1) {
+        while ((charRead = reader.read(buffer)) != -1) {
             writer.write(buffer, 0, charRead);
         }
     }

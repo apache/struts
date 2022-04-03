@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -50,7 +47,7 @@ import java.io.Writer;
  * <ul>
  *      <li>name (String) - the name of the parameter</li>
  *      <li>value (Object) - the value of the parameter</li>
- *      <li>suppressEmptyParameters (boolean) - whether to suppress empty parameters</li>
+ *      <li>suppressEmptyParameters (boolean) - whether to suppress this parameter if empty</li>
  * </ul>
  * <!-- END SNIPPET: params -->
  * <p>
@@ -81,13 +78,11 @@ import java.io.Writer;
  * </p>
  *
  * <pre>
- * &lt;s:a action="eventAdd" accesskey="a"&gt;
- *   &lt;s:text name="title.heading.eventadd" /&gt;
+ * &lt;s:url action="eventAdd"&gt;
  *   &lt;s:param name="bean.searchString" value="%{bean.searchString}" /&gt;
  *   &lt;s:param name="bean.filter" value="%{bean.filter}" /&gt;
- *   &lt;s:param name="bean.pageNum" value="%{pager.pageNumber}" /&gt;
- *   &lt;s:param name="suppressEmptyParameters" value="true"/&gt;
- * &lt;/s:a&gt;
+ *   &lt;s:param name="bean.pageNum" value="%{pager.pageNumber}" suppressEmptyParameters="true" /&gt;
+ * &lt;/s:url&gt;
  * </pre>
  * <!-- END SNIPPET: example -->
  * <p>
@@ -130,32 +125,47 @@ public class Param extends Component {
             if (component instanceof UnnamedParametric) {
                 ((UnnamedParametric) component).addParameter(findValue(value));
             } else {
-                String name = findString(this.name);
+                String translatedName = findString(this.name);
 
-                if (name == null) {
+                if (translatedName == null) {
                     throw new StrutsException("No name found for following expression: " + this.name);
                 }
 
-                Object value = findValue(this.value);
+                boolean evaluated = !translatedName.equals(this.name);
+                boolean reevaluate = !evaluated || isAcceptableExpression(translatedName);
+                if (!reevaluate) {
+                    throw new StrutsException("Excluded or not accepted name found: " + translatedName);
+                }
+
+                Object foundValue = findValue(this.value);
                 if (suppressEmptyParameters) {
-                    if (value != null && StringUtils.isNotBlank(value.toString())) {
-                        component.addParameter(name, value);
+                    if (foundValue != null && StringUtils.isNotBlank(foundValue.toString())) {
+                        component.addParameter(translatedName, foundValue);
+                    } else {
+                        component.addParameter(translatedName, null);
                     }
+                } else if (foundValue == null || StringUtils.isBlank(foundValue.toString())) {
+                    component.addParameter(translatedName, "");
                 } else {
-                    component.addParameter(name, value);
+                    component.addParameter(translatedName, foundValue);
                 }
             }
         } else {
             if (component instanceof UnnamedParametric) {
                 ((UnnamedParametric) component).addParameter(body);
             } else {
-                component.addParameter(findString(name), body);
+                if (!(suppressEmptyParameters && StringUtils.isBlank(body))) {
+                    component.addParameter(findString(name), body);
+                } else {
+                    component.addParameter(findString(name), null);
+                }
             }
         }
 
         return super.end(writer, "");
     }
-    
+
+    @Override
     public boolean usesBody() {
         return true;
     }
@@ -190,7 +200,7 @@ public class Param extends Component {
          * Adds the given value as a parameter to the outer tag.
          * @param value  the value
          */
-        public void addParameter(Object value);
+        void addParameter(Object value);
     }
 
 }

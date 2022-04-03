@@ -25,7 +25,6 @@ import org.apache.struts2.components.Token;
 import org.apache.struts2.components.UIBean;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class TokenTest extends AbstractTest {
@@ -51,9 +50,8 @@ public class TokenTest extends AbstractTest {
         super.setUp();
         this.tag = new Token(stack, request, response);
 
-        Map map = new HashMap();
-        map.put(ActionContext.SESSION, new HashMap());
-        ActionContext.setContext(new ActionContext(map));
+        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
+        actionContext.setSession(new HashMap<>());
     }
 
     @Override

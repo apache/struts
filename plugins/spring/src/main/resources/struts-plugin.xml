@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -31,9 +29,12 @@
     <!--  Make the Spring object factory the automatic default -->
     <constant name="struts.objectFactory" value="spring" />
 
-    <constant name="struts.class.reloading.watchList" value="" />
-    <constant name="struts.class.reloading.acceptClasses" value="" />
-    <constant name="struts.class.reloading.reloadConfig" value="false" />
+    <constant name="struts.objectFactory.spring.class.reloading.watchList" value="" />
+    <constant name="struts.objectFactory.spring.class.reloading.acceptClasses" value="" />
+    <constant name="struts.objectFactory.spring.class.reloading.reloadConfig" value="false" />
+
+    <constant name="struts.disallowProxyMemberAccess" value="true" />
+    <constant name="struts.json.result.excludeProxyProperties" value="true" />
 
     <package name="spring-default">
         <interceptors>

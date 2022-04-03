@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,13 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -128,17 +127,14 @@ public class TokenHelper {
         if (tokenName == null ) {
             return null;
         }
-        Map params = ActionContext.getContext().getParameters();
-        String[] tokens = (String[]) params.get(tokenName);
-        String token;
+        HttpParameters params = ActionContext.getContext().getParameters();
+        Parameter parameter = params.get(tokenName);
 
-        if ((tokens == null) || (tokens.length < 1)) {
+        if (!parameter.isDefined()) {
             LOG.warn("Could not find token mapped to token name: {}", tokenName);
             return null;
         }
-
-        token = tokens[0];
-        return token;
+        return parameter.getValue();
     }
 
     /**
@@ -147,23 +143,19 @@ public class TokenHelper {
      * @return the token name found in the params, or null if it could not be found
      */
     public static String getTokenName() {
-        Map params = ActionContext.getContext().getParameters();
+        HttpParameters params = ActionContext.getContext().getParameters();
 
-        if (!params.containsKey(TOKEN_NAME_FIELD)) {
+        if (!params.contains(TOKEN_NAME_FIELD)) {
         	LOG.warn("Could not find token name in params.");
             return null;
         }
 
-        String[] tokenNames = (String[]) params.get(TOKEN_NAME_FIELD);
-        String tokenName;
-
-        if ((tokenNames == null) || (tokenNames.length < 1)) {
+        Parameter parameter = params.get(TOKEN_NAME_FIELD);
+        if (!parameter.isDefined()) {
         	LOG.warn("Got a null or empty token name.");
             return null;
         }
-
-        tokenName = tokenNames[0];
-        return tokenName;
+        return parameter.getValue();
     }
 
     /**
@@ -193,7 +185,8 @@ public class TokenHelper {
 
         if (!token.equals(sessionToken)) {
             if (LOG.isWarnEnabled()) {
-                LOG.warn(LocalizedTextUtil.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
+                LocalizedTextProvider localizedTextProvider = ActionContext.getContext().getContainer().getInstance(LocalizedTextProvider.class);
+                LOG.warn(localizedTextProvider.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
                         token, sessionToken
                 }));
             }

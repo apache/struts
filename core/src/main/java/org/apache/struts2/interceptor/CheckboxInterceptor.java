@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,16 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,33 +59,32 @@ public class CheckboxInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LogManager.getLogger(CheckboxInterceptor.class);
 
     public String intercept(ActionInvocation ai) throws Exception {
-        Map<String, Object> parameters = ai.getInvocationContext().getParameters();
-        Map<String, String[]> newParams = new HashMap<>();
-        Set<Map.Entry<String, Object>> entries = parameters.entrySet();
+        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        Map<String, Parameter> extraParams = new HashMap<>();
 
-        for (Iterator<Map.Entry<String, Object>> iterator = entries.iterator(); iterator.hasNext();) {
-            Map.Entry<String, Object> entry = iterator.next();
-            String key = entry.getKey();
+        Set<String> checkboxParameters = new HashSet<>();
+        for (Map.Entry<String, Parameter> parameter : parameters.entrySet()) {
+            String name = parameter.getKey();
+            if (name.startsWith("__checkbox_")) {
+                String checkboxName = name.substring("__checkbox_".length());
 
-            if (key.startsWith("__checkbox_")) {
-                String name = key.substring("__checkbox_".length());
-
-                Object values = entry.getValue();
-                iterator.remove();
-                if (values != null && values instanceof String[] && ((String[])values).length > 1) {
-              	    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: {}", name);
+                Parameter value = parameter.getValue();
+                checkboxParameters.add(name);
+                if (value.isMultiple()) {
+                    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: {}", name);
                     continue;
                 }
 
                 // is this checkbox checked/submitted?
-                if (!parameters.containsKey(name)) {
+                if (!parameters.contains(checkboxName)) {
                     // if not, let's be sure to default the value to false
-                    newParams.put(name, new String[]{uncheckedValue});
+                    extraParams.put(checkboxName, new Parameter.Request(checkboxName, uncheckedValue));
                 }
             }
         }
+        parameters.remove(checkboxParameters);
 
-        parameters.putAll(newParams);
+        ai.getInvocationContext().getParameters().appendAll(extraParams);
 
         return ai.invoke();
     }

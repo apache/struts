@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -131,7 +129,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
      */
     @Inject
     public DefaultResultMapBuilder(ServletContext servletContext, Container container,
-            @Inject("struts.convention.relative.result.types") String relativeResultTypes) {
+            @Inject(ConventionConstants.CONVENTION_RELATIVE_RESULT_TYPES) String relativeResultTypes) {
         this.servletContext = servletContext;
         this.relativeResultTypes = new HashSet<>(Arrays.asList(relativeResultTypes.split("\\s*[,]\\s*")));
         this.conventionsService = container.getInstance(ConventionsService.class, container.getInstance(String.class, ConventionConstants.CONVENTION_CONVENTIONS_SERVICE));
@@ -142,7 +140,7 @@ public class DefaultResultMapBuilder implements ResultMapBuilder {
      *          ${namespace}/${actionName}-${result}.${extension}, otherwise in the form
      *          ${namespace}/${actionName}/${result}.${extension}
      */
-    @Inject("struts.convention.result.flatLayout")
+    @Inject(ConventionConstants.CONVENTION_RESULT_FLAT_LAYOUT)
     public void setFlatResultLayout(String flatResultLayout) {
         this.flatResultLayout = BooleanUtils.toBoolean(flatResultLayout);
     }

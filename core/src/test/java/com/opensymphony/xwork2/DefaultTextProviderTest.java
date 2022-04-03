@@ -1,22 +1,22 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2;
-
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import junit.framework.TestCase;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ import java.util.*;
  *
  * @author Claus Ibsen
  */
-public class DefaultTextProviderTest extends TestCase {
+public class DefaultTextProviderTest extends XWorkTestCase {
 
     private DefaultTextProvider tp;
 
@@ -127,19 +127,19 @@ public class DefaultTextProviderTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        ActionContext ctx = new ActionContext(new HashMap<String, Object>());
-        ActionContext.setContext(ctx);
-        ctx.setLocale(Locale.CANADA);
+        super.setUp();
 
-        LocalizedTextUtil.clearDefaultResourceBundles();
-        LocalizedTextUtil.addDefaultResourceBundle(DefaultTextProviderTest.class.getName());
+        ActionContext.of(new HashMap<>()).withLocale(Locale.CANADA).bind();
 
-        tp = new DefaultTextProvider();
+        container.getInstance(LocalizedTextProvider.class).addDefaultResourceBundle(DefaultTextProviderTest.class.getName());
+
+        tp = container.inject(DefaultTextProvider.class);
     }
 
     @Override
     protected void tearDown() throws Exception {
-        ActionContext.setContext(null);
+        super.tearDown();
+        ActionContext.clear();
         tp = null;
     }
 

@@ -1,24 +1,29 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.config.impl;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.*;
 import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.providers.EnvsValueSubstitutor;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
+import com.opensymphony.xwork2.config.providers.ValueSubstitutor;
 import com.opensymphony.xwork2.conversion.*;
 import com.opensymphony.xwork2.conversion.impl.*;
 import com.opensymphony.xwork2.factory.*;
@@ -37,6 +42,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
+import org.apache.struts2.conversion.StrutsTypeConverterHolder;
+import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 
 import java.util.*;
 
@@ -51,7 +59,6 @@ public class DefaultConfiguration implements Configuration {
 
     protected static final Logger LOG = LogManager.getLogger(DefaultConfiguration.class);
 
-
     // Programmatic Action Configurations
     protected Map<String, PackageConfig> packageContexts = new LinkedHashMap<>();
     protected RuntimeConfiguration runtimeConfiguration;
@@ -64,7 +71,7 @@ public class DefaultConfiguration implements Configuration {
     ObjectFactory objectFactory;
 
     public DefaultConfiguration() {
-        this("xwork");
+        this(Container.DEFAULT_NAME);
     }
 
     public DefaultConfiguration(String defaultBeanName) {
@@ -168,6 +175,11 @@ public class DefaultConfiguration implements Configuration {
             public Configuration create(Context context) throws Exception {
                 return DefaultConfiguration.this;
             }
+
+            @Override
+            public Class<? extends Configuration> type() {
+                return DefaultConfiguration.this.getClass();
+            }
         });
 
         ActionContext oldContext = ActionContext.getContext();
@@ -201,7 +213,7 @@ public class DefaultConfiguration implements Configuration {
             rebuildRuntimeConfiguration();
         } finally {
             if (oldContext == null) {
-                ActionContext.setContext(null);
+                ActionContext.clear();
             }
         }
         return packageProviders;
@@ -211,8 +223,7 @@ public class DefaultConfiguration implements Configuration {
         ActionContext context = ActionContext.getContext();
         if (context == null) {
             ValueStack vs = cont.getInstance(ValueStackFactory.class).createValueStack();
-            context = new ActionContext(vs.getContext());
-            ActionContext.setContext(context);
+            context = ActionContext.of(vs.getContext()).bind();
         }
         return context;
     }
@@ -234,7 +245,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ResultFactory.class, DefaultResultFactory.class, Scope.SINGLETON);
         builder.factory(InterceptorFactory.class, DefaultInterceptorFactory.class, Scope.SINGLETON);
         builder.factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class, Scope.SINGLETON);
-        builder.factory(ConverterFactory.class, DefaultConverterFactory.class, Scope.SINGLETON);
+        builder.factory(ConverterFactory.class, StrutsConverterFactory.class, Scope.SINGLETON);
         builder.factory(UnknownHandlerFactory.class, DefaultUnknownHandlerFactory.class, Scope.SINGLETON);
 
         builder.factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON);
@@ -245,31 +256,41 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON);
 
         builder.factory(XWorkConverter.class, Scope.SINGLETON);
-        builder.factory(ConversionPropertiesProcessor.class, DefaultConversionPropertiesProcessor.class, Scope.SINGLETON);
+        builder.factory(ConversionPropertiesProcessor.class, StrutsConversionPropertiesProcessor.class, Scope.SINGLETON);
         builder.factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON);
         builder.factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON);
-        builder.factory(TypeConverterCreator.class, DefaultTypeConverterCreator.class, Scope.SINGLETON);
-        builder.factory(TypeConverterHolder.class, DefaultTypeConverterHolder.class, Scope.SINGLETON);
+        builder.factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON);
+        builder.factory(TypeConverterHolder.class, StrutsTypeConverterHolder.class, Scope.SINGLETON);
 
         builder.factory(XWorkBasicConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, XWorkConstants.COLLECTION_CONVERTER,  CollectionConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, XWorkConstants.ARRAY_CONVERTER, ArrayConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, XWorkConstants.DATE_CONVERTER, DateConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, XWorkConstants.NUMBER_CONVERTER,  NumberConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, XWorkConstants.STRING_CONVERTER, StringConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_COLLECTION,  CollectionConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_ARRAY, ArrayConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_DATE, DateConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_NUMBER,  NumberConverter.class, Scope.SINGLETON);
+        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_STRING, StringConverter.class, Scope.SINGLETON);
+
+        builder.factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON);
+
+        builder.factory(LocalizedTextProvider.class, StrutsLocalizedTextProvider.class, Scope.SINGLETON);
+        builder.factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON);
+        builder.factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON);
 
         builder.factory(TextParser.class, OgnlTextParser.class, Scope.SINGLETON);
-        builder.factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON);
 
         builder.factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON);
         builder.factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON);
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
 
-        builder.constant(XWorkConstants.DEV_MODE, "false");
-        builder.constant(XWorkConstants.LOG_MISSING_PROPERTIES, "false");
-        builder.constant(XWorkConstants.ENABLE_OGNL_EVAL_EXPRESSION, "false");
-        builder.constant(XWorkConstants.ENABLE_OGNL_EXPRESSION_CACHE, "true");
-        builder.constant(XWorkConstants.RELOAD_XML_CONFIGURATION, "false");
+        builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
+
+        builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
+        builder.constant(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, "false");
+        builder.constant(StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, "false");
+        builder.constant(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, "true");
+        builder.constant(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "false");
+        builder.constant(StrutsConstants.STRUTS_I18N_RELOAD, "false");
+
+        builder.constant(StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS, "true");
 
         return builder.create(true);
     }
@@ -320,8 +341,12 @@ public class DefaultConfiguration implements Configuration {
         }
 
         PatternMatcher<int[]> matcher = container.getInstance(PatternMatcher.class);
+        boolean appendNamedParameters = Boolean.parseBoolean(
+                container.getInstance(String.class, StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS)
+        );
+
         return new RuntimeConfigurationImpl(Collections.unmodifiableMap(namespaceActionConfigs),
-                Collections.unmodifiableMap(namespaceConfigs), matcher);
+                Collections.unmodifiableMap(namespaceConfigs), matcher, appendNamedParameters);
     }
 
     private void setDefaultResults(Map<String, ResultConfig> results, PackageConfig packageContext) {
@@ -399,15 +424,18 @@ public class DefaultConfiguration implements Configuration {
 
         public RuntimeConfigurationImpl(Map<String, Map<String, ActionConfig>> namespaceActionConfigs,
                                         Map<String, String> namespaceConfigs,
-                                        PatternMatcher<int[]> matcher) {
+                                        PatternMatcher<int[]> matcher,
+                                        boolean appendNamedParameters)
+        {
             this.namespaceActionConfigs = namespaceActionConfigs;
             this.namespaceConfigs = namespaceConfigs;
 
             this.namespaceActionConfigMatchers = new LinkedHashMap<>();
-            this.namespaceMatcher = new NamespaceMatcher(matcher, namespaceActionConfigs.keySet());
+            this.namespaceMatcher = new NamespaceMatcher(matcher, namespaceActionConfigs.keySet(), appendNamedParameters);
 
-            for (String ns : namespaceActionConfigs.keySet()) {
-                namespaceActionConfigMatchers.put(ns, new ActionConfigMatcher(matcher, namespaceActionConfigs.get(ns), true));
+            for (Map.Entry<String, Map<String, ActionConfig>> entry : namespaceActionConfigs.entrySet()) {
+                ActionConfigMatcher configMatcher = new ActionConfigMatcher(matcher, entry.getValue(), true, appendNamedParameters);
+                namespaceActionConfigMatchers.put(entry.getKey(), configMatcher);
             }
         }
 
@@ -483,11 +511,11 @@ public class DefaultConfiguration implements Configuration {
         public String toString() {
             StringBuilder buff = new StringBuilder("RuntimeConfiguration - actions are\n");
 
-            for (String namespace : namespaceActionConfigs.keySet()) {
-                Map<String, ActionConfig> actionConfigs = namespaceActionConfigs.get(namespace);
+            for (Map.Entry<String, Map<String, ActionConfig>> entry : namespaceActionConfigs.entrySet()) {
+                Map<String, ActionConfig> actionConfigs = entry.getValue();
 
                 for (String s : actionConfigs.keySet()) {
-                    buff.append(namespace).append("/").append(s).append("\n");
+                    buff.append(entry.getKey()).append("/").append(s).append("\n");
                 }
             }
 

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -26,10 +23,8 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
-import org.apache.logging.log4j.LogManager;
-import com.opensymphony.xwork2.util.logging.jdk.JdkLoggerFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.StrutsTestCaseHelper;
@@ -44,15 +39,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 /**
  * Base test case for JUnit testing Struts.
@@ -66,37 +54,6 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     protected Dispatcher dispatcher;
 
     protected DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-
-    static {
-        ConsoleHandler handler = new ConsoleHandler();
-        final SimpleDateFormat df = new SimpleDateFormat("mm:ss.SSS");
-        Formatter formatter = new Formatter() {
-            @Override
-            public String format(LogRecord record) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(record.getLevel());
-                sb.append(':');
-                for (int x = 9 - record.getLevel().toString().length(); x > 0; x--) {
-                    sb.append(' ');
-                }
-                sb.append('[');
-                sb.append(df.format(new Date(record.getMillis())));
-                sb.append("] ");
-                sb.append(formatMessage(record));
-                sb.append('\n');
-                return sb.toString();
-            }
-        };
-        handler.setFormatter(formatter);
-        Logger logger = Logger.getLogger("");
-        if (logger.getHandlers().length > 0)
-            logger.removeHandler(logger.getHandlers()[0]);
-        logger.addHandler(handler);
-        logger.setLevel(Level.WARNING);
-        LoggerFactory.setLoggerFactory(new JdkLoggerFactory());
-    }
-
-    private static final com.opensymphony.xwork2.util.logging.Logger LOG = LoggerFactory.getLogger(StrutsTestCase.class);
 
     /**
      * gets an object from the stack after an action is executed
@@ -151,17 +108,26 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         return proxy;
     }
 
+    /**
+     * A helper method which allows instantiate an action if this action extends
+     * {@link com.opensymphony.xwork2.ActionSupport} or any other action class
+     * that requires framework's dependencies injection.
+     */
+    protected <T> T createAction(Class<T> clazz) {
+        return container.inject(clazz);
+    }
+
     protected void initActionContext(ActionContext actionContext) {
-        actionContext.setParameters(new HashMap<String, Object>(request.getParameterMap()));
+        actionContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
         initSession(actionContext);
         applyAdditionalParams(actionContext);
         // set the action context to the one used by the proxy
-        ActionContext.setContext(actionContext);
+        ActionContext.bind(actionContext);
     }
 
     protected void initSession(ActionContext actionContext) {
         if (actionContext.getSession() == null) {
-            actionContext.setSession(new HashMap<String, Object>());
+            actionContext.withSession(new HashMap<>());
             request.setSession(new MockHttpSession(servletContext));
         }
     }

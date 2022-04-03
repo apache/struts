@@ -1,27 +1,30 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.util.classloader;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.XWorkException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 
 import java.io.File;
 import java.io.InputStream;
@@ -63,10 +66,10 @@ public class ReloadingClassLoader extends ClassLoader {
             if (root != null) {
                 stores = new ResourceStore[]{new FileResourceStore(new File(root.toURI()))};
             } else {
-                throw new XWorkException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false");
+                throw new StrutsException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false");
             }
         } catch (URISyntaxException e) {
-            throw new XWorkException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false", e);
+            throw new StrutsException("Unable to start the reloadable class loader, consider setting 'struts.convention.classes.reload' to false", e);
         } catch (RuntimeException e) {
             // see WW-3121
             // TODO: Fix this for a reloading mechanism to be marked as stable

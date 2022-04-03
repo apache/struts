@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,11 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.LocaleProviderFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.FileManagerFactoryProvider;
+import com.opensymphony.xwork2.config.FileManagerProvider;
+import com.opensymphony.xwork2.config.ServletContextAwareConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
@@ -32,24 +43,26 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.config.DefaultBeanSelectionProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.PropertiesConfigurationProvider;
+import org.apache.struts2.config.StrutsBeanSelectionProvider;
+import org.apache.struts2.config.StrutsJavaConfiguration;
+import org.apache.struts2.config.StrutsJavaConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
@@ -64,8 +77,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Pattern;
 
 /**
  * A utility class the actual dispatcher delegates most of its tasks to. Each instance
@@ -80,6 +100,13 @@ public class Dispatcher {
      * Provide a logging instance.
      */
     private static final Logger LOG = LogManager.getLogger(Dispatcher.class);
+
+    /**
+     * {@link HttpServletRequest#getMethod()}
+     */
+    public static final String REQUEST_POST_METHOD = "POST";
+
+    public static final String MULTIPART_FORM_DATA_REGEX = "^multipart/form-data(?:\\s*;\\s*boundary=[0-9a-zA-Z'()+_,\\-./:=?]{1,70})?(?:\\s*;\\s*charset=[a-zA-Z\\-0-9]{3,14})?";
 
     /**
      * Provide a thread local instance.
@@ -120,6 +147,16 @@ public class Dispatcher {
      * Stores the value of {@link StrutsConstants#STRUTS_MULTIPART_PARSER} setting
      */
     private String multipartHandlerName;
+
+    /**
+     * Stores the value of {@link StrutsConstants#STRUTS_MULTIPART_ENABLED}
+     */
+    private boolean multipartSupportEnabled = true;
+
+    /**
+     * A regular expression used to validate if request is a multipart/form-data request
+     */
+    private Pattern multipartValidationPattern = Pattern.compile(MULTIPART_FORM_DATA_REGEX);
 
     /**
      * Provide list of default configuration files.
@@ -203,42 +240,54 @@ public class Dispatcher {
      * Create the Dispatcher instance for a given ServletContext and set of initialization parameters.
      *
      * @param servletContext Our servlet context
-     * @param initParams The set of initialization parameters
+     * @param initParams     The set of initialization parameters
      */
     public Dispatcher(ServletContext servletContext, Map<String, String> initParams) {
         this.servletContext = servletContext;
         this.initParams = initParams;
     }
 
+    public static Dispatcher getInstance(ServletContext servletContext) {
+        return (Dispatcher) servletContext.getAttribute(StrutsStatics.SERVLET_DISPATCHER);
+    }
+
     /**
      * Modify state of StrutsConstants.STRUTS_DEVMODE setting.
+     *
      * @param mode New setting
      */
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
-        devMode = "true".equals(mode);
+        devMode = Boolean.parseBoolean(mode);
+    }
+
+    public boolean isDevMode() {
+        return devMode;
     }
 
     /**
      * Modify state of StrutsConstants.DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP setting.
+     *
      * @param disableRequestAttributeValueStackLookup New setting
      */
-    @Inject(value=StrutsConstants.STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP, required=false)
+    @Inject(value = StrutsConstants.STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP, required = false)
     public void setDisableRequestAttributeValueStackLookup(String disableRequestAttributeValueStackLookup) {
         this.disableRequestAttributeValueStackLookup = BooleanUtils.toBoolean(disableRequestAttributeValueStackLookup);
     }
 
     /**
      * Modify state of StrutsConstants.STRUTS_LOCALE setting.
+     *
      * @param val New setting
      */
-    @Inject(value=StrutsConstants.STRUTS_LOCALE, required=false)
+    @Inject(value = StrutsConstants.STRUTS_LOCALE, required = false)
     public void setDefaultLocale(String val) {
         defaultLocale = val;
     }
 
     /**
      * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
+     *
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
@@ -248,6 +297,7 @@ public class Dispatcher {
 
     /**
      * Modify state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
+     *
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_MULTIPART_SAVEDIR)
@@ -260,6 +310,16 @@ public class Dispatcher {
         multipartHandlerName = val;
     }
 
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_ENABLED, required = false)
+    public void setMultipartSupportEnabled(String multipartSupportEnabled) {
+        this.multipartSupportEnabled = Boolean.parseBoolean(multipartSupportEnabled);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_VALIDATION_REGEX, required = false)
+    public void setMultipartValidationRegex(String multipartValidationRegex) {
+        this.multipartValidationPattern = Pattern.compile(multipartValidationRegex);
+    }
+
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
@@ -268,6 +328,10 @@ public class Dispatcher {
     @Inject(StrutsConstants.STRUTS_HANDLE_EXCEPTION)
     public void setHandleException(String handleException) {
         this.handleException = Boolean.parseBoolean(handleException);
+    }
+
+    public boolean isHandleException() {
+        return handleException;
     }
 
     @Inject
@@ -279,17 +343,15 @@ public class Dispatcher {
      * Releases all instances bound to this dispatcher instance.
      */
     public void cleanup() {
-
-    	// clean up ObjectFactory
+        // clean up ObjectFactory
         ObjectFactory objectFactory = getContainer().getInstance(ObjectFactory.class);
         if (objectFactory == null) {
-        	LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
+            LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
         }
         if (objectFactory instanceof ObjectFactoryDestroyable) {
             try {
-                ((ObjectFactoryDestroyable)objectFactory).destroy();
-            }
-            catch(Exception e) {
+                ((ObjectFactoryDestroyable) objectFactory).destroy();
+            } catch (Exception e) {
                 // catch any exception that may occurred during destroy() and log it
                 LOG.error("Exception occurred while destroying ObjectFactory [{}]", objectFactory.toString(), e);
             }
@@ -297,6 +359,7 @@ public class Dispatcher {
 
         // clean up Dispatcher itself for this thread
         instance.set(null);
+        servletContext.setAttribute(StrutsStatics.SERVLET_DISPATCHER, null);
 
         // clean up DispatcherListeners
         if (!dispatcherListeners.isEmpty()) {
@@ -312,24 +375,24 @@ public class Dispatcher {
             for (Object config : packageConfig.getAllInterceptorConfigs().values()) {
                 if (config instanceof InterceptorStackConfig) {
                     for (InterceptorMapping interceptorMapping : ((InterceptorStackConfig) config).getInterceptors()) {
-                	    interceptors.add(interceptorMapping.getInterceptor());
+                        interceptors.add(interceptorMapping.getInterceptor());
                     }
                 }
             }
         }
         for (Interceptor interceptor : interceptors) {
-        	interceptor.destroy();
+            interceptor.destroy();
         }
 
         // Clear container holder when application is unloaded / server shutdown
         ContainerHolder.clear();
 
         //cleanup action context
-        ActionContext.setContext(null);
+        ActionContext.clear();
 
         // clean up configuration
-    	configurationManager.destroyConfiguration();
-    	configurationManager = null;
+        configurationManager.destroyConfiguration();
+        configurationManager = null;
     }
 
     private void init_FileManager() throws ClassNotFoundException {
@@ -353,7 +416,7 @@ public class Dispatcher {
     private void init_DefaultProperties() {
         configurationManager.addContainerProvider(new DefaultPropertiesProvider());
     }
-    
+
     private void init_LegacyStrutsProperties() {
         configurationManager.addContainerProvider(new PropertiesConfigurationProvider());
     }
@@ -366,23 +429,39 @@ public class Dispatcher {
         String[] files = configPaths.split("\\s*[,]\\s*");
         for (String file : files) {
             if (file.endsWith(".xml")) {
-                if ("xwork.xml".equals(file)) {
-                    configurationManager.addContainerProvider(createXmlConfigurationProvider(file, false));
-                } else {
-                    configurationManager.addContainerProvider(createStrutsXmlConfigurationProvider(file, false, servletContext));
-                }
+                configurationManager.addContainerProvider(createStrutsXmlConfigurationProvider(file, false, servletContext));
             } else {
                 throw new IllegalArgumentException("Invalid configuration file name");
             }
         }
     }
 
-    protected XmlConfigurationProvider createXmlConfigurationProvider(String filename, boolean errorIfMissing) {
-        return new XmlConfigurationProvider(filename, errorIfMissing);
-    }
-
     protected XmlConfigurationProvider createStrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
         return new StrutsXmlConfigurationProvider(filename, errorIfMissing, ctx);
+    }
+
+    private void init_JavaConfigurations() {
+        String configClasses = initParams.get("javaConfigClasses");
+        if (configClasses != null) {
+            String[] classes = configClasses.split("\\s*[,]\\s*");
+            for (String cname : classes) {
+                try {
+                    Class<?> cls = ClassLoaderUtil.loadClass(cname, this.getClass());
+                    StrutsJavaConfiguration config = (StrutsJavaConfiguration) cls.newInstance();
+                    configurationManager.addContainerProvider(createJavaConfigurationProvider(config));
+                } catch (InstantiationException e) {
+                    throw new ConfigurationException("Unable to instantiate java configuration: " + cname, e);
+                } catch (IllegalAccessException e) {
+                    throw new ConfigurationException("Unable to access java configuration: " + cname, e);
+                } catch (ClassNotFoundException e) {
+                    throw new ConfigurationException("Unable to locate java configuration class: " + cname, e);
+                }
+            }
+        }
+    }
+
+    protected StrutsJavaConfigurationProvider createJavaConfigurationProvider(StrutsJavaConfiguration config) {
+        return new StrutsJavaConfigurationProvider(config);
     }
 
     private void init_CustomConfigurationProviders() {
@@ -392,17 +471,17 @@ public class Dispatcher {
             for (String cname : classes) {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(cname, this.getClass());
-                    ConfigurationProvider prov = (ConfigurationProvider)cls.newInstance();
+                    ConfigurationProvider prov = (ConfigurationProvider) cls.newInstance();
                     if (prov instanceof ServletContextAwareConfigurationProvider) {
-                        ((ServletContextAwareConfigurationProvider)prov).initWithContext(servletContext);
+                        ((ServletContextAwareConfigurationProvider) prov).initWithContext(servletContext);
                     }
                     configurationManager.addContainerProvider(prov);
                 } catch (InstantiationException e) {
-                    throw new ConfigurationException("Unable to instantiate provider: "+cname, e);
+                    throw new ConfigurationException("Unable to instantiate provider: " + cname, e);
                 } catch (IllegalAccessException e) {
-                    throw new ConfigurationException("Unable to access provider: "+cname, e);
+                    throw new ConfigurationException("Unable to access provider: " + cname, e);
                 } catch (ClassNotFoundException e) {
-                    throw new ConfigurationException("Unable to locate provider class: "+cname, e);
+                    throw new ConfigurationException("Unable to locate provider class: " + cname, e);
                 }
             }
         }
@@ -430,19 +509,11 @@ public class Dispatcher {
     }
 
     private void init_AliasStandardObjects() {
-        configurationManager.addContainerProvider(new DefaultBeanSelectionProvider());
+        configurationManager.addContainerProvider(new StrutsBeanSelectionProvider());
     }
 
     private Container init_PreloadConfiguration() {
-        Container container = getContainer();
-
-        boolean reloadi18n = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_I18N_RELOAD));
-        LocalizedTextUtil.setReloadBundles(reloadi18n);
-
-        boolean devMode = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_DEVMODE));
-        LocalizedTextUtil.setDevMode(devMode);
-
-        return container;
+        return getContainer();
     }
 
     private void init_CheckWebLogicWorkaround(Container container) {
@@ -452,7 +523,7 @@ public class Dispatcher {
             paramsWorkaroundEnabled = true;
         } else {
             paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class,
-                    StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
+                StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
         }
     }
 
@@ -461,19 +532,19 @@ public class Dispatcher {
      * and update optional settings, including whether to reload configurations and resource files.
      */
     public void init() {
-
-    	if (configurationManager == null) {
-    		configurationManager = createConfigurationManager(DefaultBeanSelectionProvider.DEFAULT_BEAN_NAME);
-    	}
+        if (configurationManager == null) {
+            configurationManager = createConfigurationManager(Container.DEFAULT_NAME);
+        }
 
         try {
             init_FileManager();
             init_DefaultProperties(); // [1]
             init_TraditionalXmlConfigurations(); // [2]
+            init_JavaConfigurations();
             init_LegacyStrutsProperties(); // [3]
             init_CustomConfigurationProviders(); // [5]
-            init_FilterInitParameters() ; // [6]
-            init_AliasStandardObjects() ; // [7]
+            init_FilterInitParameters(); // [6]
+            init_AliasStandardObjects(); // [7]
 
             Container container = init_PreloadConfiguration();
             container.inject(this);
@@ -486,6 +557,9 @@ public class Dispatcher {
             }
             errorHandler.init(servletContext);
 
+            if (servletContext.getAttribute(StrutsStatics.SERVLET_DISPATCHER) == null) {
+                servletContext.setAttribute(StrutsStatics.SERVLET_DISPATCHER, this);
+            }
         } catch (Exception ex) {
             LOG.error("Dispatcher initialization failed", ex);
             throw new StrutsException(ex);
@@ -515,11 +589,10 @@ public class Dispatcher {
      * @param mapping  the action mapping object
      * @throws ServletException when an unknown error occurs (not a 404, but typically something that
      *                          would end up as a 5xx by the servlet container)
-     *
      * @since 2.3.17
      */
     public void serviceAction(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping)
-            throws ServletException {
+        throws ServletException {
 
         Map<String, Object> extraContext = createContextMap(request, response, mapping);
 
@@ -533,18 +606,26 @@ public class Dispatcher {
             }
         }
         if (stack != null) {
-            extraContext.put(ActionContext.VALUE_STACK, valueStackFactory.createValueStack(stack));
+            extraContext = ActionContext.of(extraContext)
+                .withValueStack(valueStackFactory.createValueStack(stack))
+                .getContextMap();
         }
 
-        String timerKey = "Handling request from Dispatcher";
         try {
-            UtilTimerStack.push(timerKey);
             String namespace = mapping.getNamespace();
             String name = mapping.getName();
             String method = mapping.getMethod();
 
-            ActionProxy proxy = getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
-                    namespace, name, method, extraContext, true, false);
+            ActionProxy proxy;
+
+            //check if we are probably in an async resuming
+            ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
+            if (invocation == null || invocation.isExecuted()) {
+                proxy = getContainer().getInstance(ActionProxyFactory.class).createActionProxy(namespace, name, method,
+                    extraContext, true, false);
+            } else {
+                proxy = invocation.getProxy();
+            }
 
             request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
 
@@ -565,12 +646,13 @@ public class Dispatcher {
             sendError(request, response, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
             if (handleException || devMode) {
+                if (devMode) {
+                    LOG.debug("Dispatcher serviceAction failed", e);
+                }
                 sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
             } else {
                 throw new ServletException(e);
             }
-        } finally {
-            UtilTimerStack.pop(timerKey);
         }
     }
 
@@ -578,7 +660,7 @@ public class Dispatcher {
      * Performs logging of missing action/result configuration exception
      *
      * @param request current {@link HttpServletRequest}
-     * @param e {@link ConfigurationException} that occurred
+     * @param e       {@link ConfigurationException} that occurred
      */
     protected void logConfigurationException(HttpServletRequest request, ConfigurationException e) {
         // WW-2874 Only log error if in devMode
@@ -596,21 +678,20 @@ public class Dispatcher {
     /**
      * Create a context map containing all the wrapped request objects
      *
-     * @param request The servlet request
+     * @param request  The servlet request
      * @param response The servlet response
-     * @param mapping The action mapping
+     * @param mapping  The action mapping
      * @return A map of context objects
-     *
      * @since 2.3.17
      */
-    public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
-            ActionMapping mapping) {
+    public Map<String, Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
+                                                ActionMapping mapping) {
 
         // request map wrapping the http request objects
         Map requestMap = new RequestMap(request);
 
         // parameters map wrapping the http parameters.  ActionMapping parameters are now handled and applied separately
-        Map params = new HashMap(request.getParameterMap());
+        HttpParameters params = HttpParameters.create(request.getParameterMap()).build();
 
         // session map wrapping the http session
         Map session = new SessionMap(request);
@@ -618,7 +699,7 @@ public class Dispatcher {
         // application map wrapping the ServletContext
         Map application = new ApplicationMap(servletContext);
 
-        Map<String,Object> extraContext = createContextMap(requestMap, params, session, application, request, response);
+        Map<String, Object> extraContext = createContextMap(requestMap, params, session, application, request, response);
 
         if (mapping != null) {
             extraContext.put(ServletActionContext.ACTION_MAPPING, mapping);
@@ -631,44 +712,34 @@ public class Dispatcher {
      * <tt>Action</tt> context.
      *
      * @param requestMap     a Map of all request attributes.
-     * @param parameterMap   a Map of all request parameters.
+     * @param parameters     an Object of all request parameters.
      * @param sessionMap     a Map of all session attributes.
      * @param applicationMap a Map of all servlet context attributes.
      * @param request        the HttpServletRequest object.
      * @param response       the HttpServletResponse object.
      * @return a HashMap representing the <tt>Action</tt> context.
-     *
      * @since 2.3.17
      */
-    public HashMap<String,Object> createContextMap(Map requestMap,
-                                    Map parameterMap,
-                                    Map sessionMap,
-                                    Map applicationMap,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response) {
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, new HashMap(parameterMap));
-        extraContext.put(ActionContext.SESSION, sessionMap);
-        extraContext.put(ActionContext.APPLICATION, applicationMap);
-
-        Locale locale;
-        if (defaultLocale != null) {
-            locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
-        } else {
-            locale = request.getLocale();
-        }
-
-        extraContext.put(ActionContext.LOCALE, locale);
-
-        extraContext.put(StrutsStatics.HTTP_REQUEST, request);
-        extraContext.put(StrutsStatics.HTTP_RESPONSE, response);
-        extraContext.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
-
-        // helpers to get access to request/session/application scope
-        extraContext.put("request", requestMap);
-        extraContext.put("session", sessionMap);
-        extraContext.put("application", applicationMap);
-        extraContext.put("parameters", parameterMap);
+    public Map<String, Object> createContextMap(Map<String, Object> requestMap,
+                                                HttpParameters parameters,
+                                                Map<String, Object> sessionMap,
+                                                Map<String, Object> applicationMap,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+            .withParameters(parameters)
+            .withSession(sessionMap)
+            .withApplication(applicationMap)
+            .withLocale(getLocale(request))
+            .withServletRequest(request)
+            .withServletResponse(response)
+            .withServletContext(servletContext)
+            // helpers to get access to request/session/application scope
+            .with("request", requestMap)
+            .with("session", sessionMap)
+            .with("application", applicationMap)
+            .with("parameters", parameters)
+            .getContextMap();
 
         AttributeMap attrMap = new AttributeMap(extraContext);
         extraContext.put("attr", attrMap);
@@ -676,17 +747,44 @@ public class Dispatcher {
         return extraContext;
     }
 
+    protected Locale getLocale(HttpServletRequest request) {
+        Locale locale;
+        if (defaultLocale != null) {
+            try {
+                locale = LocaleUtils.toLocale(defaultLocale);
+            } catch (IllegalArgumentException e) {
+                try {
+                    locale = request.getLocale();
+                    LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, defaulting to request locale [{}]",
+                                    defaultLocale, locale), e);
+                } catch (RuntimeException rex) {
+                    LOG.warn(new ParameterizedMessage("Cannot convert 'struts.locale' = [{}] to proper locale, and cannot get locale from HTTP Request, falling back to system default locale",
+                                    defaultLocale), rex);
+                    locale = Locale.getDefault();
+                }
+            }
+        } else {
+            try {
+                locale = request.getLocale();
+            } catch (RuntimeException rex) {
+                LOG.warn("Cannot get locale from HTTP Request, falling back to system default locale", rex);
+                locale = Locale.getDefault();
+            }
+        }
+        return locale;
+    }
+
     /**
      * Return the path to save uploaded files to (this is configurable).
      *
      * @return the path to save uploaded files to
      */
-    private String getSaveDir() {
+    protected String getSaveDir() {
         String saveDir = multipartSaveDir.trim();
 
         if (saveDir.equals("")) {
             File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-        	LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
+            LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
@@ -720,7 +818,7 @@ public class Dispatcher {
     /**
      * Prepare a request, including setting the encoding and locale.
      *
-     * @param request The request
+     * @param request  The request
      * @param response The response
      */
     public void prepare(HttpServletRequest request, HttpServletResponse response) {
@@ -733,13 +831,11 @@ public class Dispatcher {
             encoding = "UTF-8";
         }
 
-        Locale locale = null;
-        if (defaultLocale != null) {
-            locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
-        }
+        Locale locale = getLocale(request);
 
         if (encoding != null) {
             applyEncoding(request, encoding);
+            applyEncoding(response, encoding);
         }
 
         if (locale != null) {
@@ -759,7 +855,17 @@ public class Dispatcher {
                 request.setCharacterEncoding(encoding);
             }
         } catch (Exception e) {
-            LOG.error("Error setting character encoding to '{}' - ignoring.", encoding, e);
+            LOG.error(new ParameterizedMessage("Error setting character encoding to '{}' on request - ignoring.", encoding), e);
+        }
+    }
+
+    private void applyEncoding(HttpServletResponse response, String encoding) {
+        try {
+            if (!encoding.equals(response.getCharacterEncoding())) {
+                response.setCharacterEncoding(encoding);
+            }
+        } catch (Exception e) {
+            LOG.error(new ParameterizedMessage("Error setting character encoding to '{}' on response - ignoring.", encoding), e);
         }
     }
 
@@ -777,9 +883,8 @@ public class Dispatcher {
      *
      * @param request the HttpServletRequest object.
      * @return a wrapped request or original request.
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper
      * @throws java.io.IOException on any error.
-     *
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper
      * @since 2.3.17
      */
     public HttpServletRequest wrapRequest(HttpServletRequest request) throws IOException {
@@ -788,16 +893,49 @@ public class Dispatcher {
             return request;
         }
 
-        String content_type = request.getContentType();
-        if (content_type != null && content_type.contains("multipart/form-data")) {
-            MultiPartRequest mpr = getMultiPartRequest();
-            LocaleProvider provider = getContainer().getInstance(LocaleProvider.class);
-            request = new MultiPartRequestWrapper(mpr, request, getSaveDir(), provider, disableRequestAttributeValueStackLookup);
+        if (isMultipartSupportEnabled(request) && isMultipartRequest(request)) {
+            MultiPartRequest multiPartRequest = getMultiPartRequest();
+            LocaleProviderFactory localeProviderFactory = getContainer().getInstance(LocaleProviderFactory.class);
+
+            request = new MultiPartRequestWrapper(
+                multiPartRequest,
+                request,
+                getSaveDir(),
+                localeProviderFactory.createLocaleProvider(),
+                disableRequestAttributeValueStackLookup
+            );
         } else {
             request = new StrutsRequestWrapper(request, disableRequestAttributeValueStackLookup);
         }
 
         return request;
+    }
+
+    /**
+     * Checks if support to parse multipart requests is enabled
+     *
+     * @param request current servlet request
+     * @return false if disabled
+     * @since 2.5.11
+     */
+    protected boolean isMultipartSupportEnabled(HttpServletRequest request) {
+        return multipartSupportEnabled;
+    }
+
+    /**
+     * Checks if request is a multipart request (a file upload request)
+     *
+     * @param request current servlet request
+     * @return true if it is a multipart request
+     * @since 2.5.11
+     */
+    protected boolean isMultipartRequest(HttpServletRequest request) {
+        String httpMethod = request.getMethod();
+        String contentType = request.getContentType();
+
+        return REQUEST_POST_METHOD.equalsIgnoreCase(httpMethod) &&
+            contentType != null &&
+            multipartValidationPattern.matcher(contentType.toLowerCase(Locale.ENGLISH)).matches();
     }
 
     /**
@@ -815,7 +953,7 @@ public class Dispatcher {
                 mpr = getContainer().getInstance(MultiPartRequest.class, multiName);
             }
         }
-        if (mpr == null ) {
+        if (mpr == null) {
             mpr = getContainer().getInstance(MultiPartRequest.class);
         }
         return mpr;
@@ -843,7 +981,6 @@ public class Dispatcher {
      * @param response the HttpServletResponse object.
      * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
-     *
      * @since 2.3.17
      */
     public void sendError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {
@@ -884,6 +1021,7 @@ public class Dispatcher {
 
     /**
      * Expose the dependency injection container.
+     *
      * @return Our dependency injection container
      */
     public Container getContainer() {

@@ -1,10 +1,4 @@
-/**
- * <p>This is a SiteMesh Velocity view servlet.</p>
- *
- * <p>It overrides the SiteMesh servlet to rely on the
- * Velocity Manager in Struts instead of creating it's
- * own manager</p>
- *
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -80,7 +74,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
      */
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        Dispatcher dispatcher = (Dispatcher) getServletContext().getAttribute(StrutsStatics.SERVLET_DISPATCHER);
+        Dispatcher dispatcher = Dispatcher.getInstance(getServletContext());
         if (dispatcher == null) {
             throw new IllegalStateException("Unable to find the Dispatcher in the Servlet Context. Is '" + StrutsListener.class.getName() + "' missing in web.xml?");
         }
@@ -95,7 +89,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
         // we can get these now that velocity is initialized
         defaultContentType = getVelocityProperty(VelocityView.CONTENT_TYPE_KEY, VelocityView.DEFAULT_CONTENT_TYPE);
 
-        String encoding = getVelocityProperty(RuntimeConstants.OUTPUT_ENCODING, VelocityView.DEFAULT_OUTPUT_ENCODING);
+        String encoding = getVelocityProperty(RuntimeConstants.ENCODING_DEFAULT, VelocityView.DEFAULT_OUTPUT_ENCODING);
 
         // For non Latin-1 encodings, ensure that the charset is
         // included in the Content-Type header.

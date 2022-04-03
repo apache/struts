@@ -1,7 +1,4 @@
 /*
- * $Id: ShowConfigAction.java 1536698 2013-10-29 13:00:58Z lukaszlenart $
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.config_browser;
 
 import com.opensymphony.xwork2.ObjectFactory;
@@ -28,7 +24,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.beans.PropertyDescriptor;
 import java.util.Set;

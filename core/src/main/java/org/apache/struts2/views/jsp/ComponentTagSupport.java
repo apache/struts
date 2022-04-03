@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,16 +35,19 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
 
     public abstract Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res);
 
+    @Override
     public int doEndTag() throws JspException {
         component.end(pageContext.getOut(), getBody());
-        component = null;
+        component = null;  // Always clear component reference (since clearTagStateForTagPoolingServers() is conditional).
+        clearTagStateForTagPoolingServers();
         return EVAL_PAGE;
     }
 
+    @Override
     public int doStartTag() throws JspException {
         ValueStack stack = getStack();
         component = getBean(stack, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
-        Container container = (Container) stack.getContext().get(ActionContext.CONTAINER);
+        Container container = stack.getActionContext().getContainer();
         container.inject(component);
         
         populateParams();
@@ -60,10 +60,39 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
         }
     }
 
+    /**
+     * Define method to populate component state based on the Tag parameters.
+     * 
+     * Descendants should override this method for custom behaviour, but should <em>always</em> call the ancestor method when doing so.
+     */
     protected void populateParams() {
+        populatePerformClearTagStateForTagPoolingServersParam();
+    }
+
+    /**
+     * Specialized method to populate the performClearTagStateForTagPoolingServers state of the Component to match the value set in the Tag.
+     * 
+     * Generally only unit tests would call this method directly, to avoid calling the whole populateParams() chain again after doStartTag()
+     * has been called.  Doing that can break tag / component state behaviour, but unit tests still need a way to set the
+     * performClearTagStateForTagPoolingServers state for the component (which only comes into being after doStartTag() is called).
+     */
+    protected void populatePerformClearTagStateForTagPoolingServersParam() {
+        if (component != null) {
+            component.setPerformClearTagStateForTagPoolingServers(super.getPerformClearTagStateForTagPoolingServers());
+        }
     }
 
     public Component getComponent() {
         return component;
     }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        component = null;  // Duplicate clear, kept for consistency.
+    }
+
 }

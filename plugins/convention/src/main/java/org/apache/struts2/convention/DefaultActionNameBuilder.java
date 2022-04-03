@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,7 +19,8 @@
 package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <p>
@@ -32,44 +31,36 @@ import org.apache.commons.lang3.StringUtils;
  * action names.
  * </p>
  */
-public class DefaultActionNameBuilder implements ActionNameBuilder {
-    private String actionSuffix = "Action";
+public class DefaultActionNameBuilder extends AbstractActionNameBuilder {
+
+    private static final Logger LOG = LogManager.getLogger(DefaultActionNameBuilder.class);
+
     private boolean lowerCase;
 
     @Inject
-    public DefaultActionNameBuilder(@Inject(value="struts.convention.action.name.lowercase") String lowerCase) {
+    public DefaultActionNameBuilder(
+            @Inject(ConventionConstants.CONVENTION_ACTION_NAME_LOWERCASE) String lowerCase
+    ) {
         this.lowerCase = Boolean.parseBoolean(lowerCase);
-    }
-
-    /**
-     * @param   actionSuffix (Optional) Classes that end with these value will be mapped as actions
-     *          (defaults to "Action")
-     */
-    @Inject(value = "struts.convention.action.suffix", required = false)
-    public void setActionSuffix(String actionSuffix) {
-        if (StringUtils.isNotBlank(actionSuffix)) {
-            this.actionSuffix = actionSuffix;
-        }
     }
 
     public String build(String className) {
         String actionName = className;
 
-        // Truncate Action suffix if found
-        if (actionName.endsWith(actionSuffix)) {
-            actionName = actionName.substring(0, actionName.length() - actionSuffix.length());
-        }
+        checkActionName(actionName);
 
-        // Force initial letter of action to lowercase, if desired
+        LOG.trace("Truncate Action suffix if found");
+        actionName = truncateSuffixIfMatches(actionName);
+
+        LOG.trace("Force initial letter of action to lowercase, if desired");
         if ((lowerCase) && (actionName.length() > 1)) {
             int lowerPos = actionName.lastIndexOf('/') + 1;
-            StringBuilder sb = new StringBuilder();
-            sb.append(actionName.substring(0, lowerPos));
-            sb.append(Character.toLowerCase(actionName.charAt(lowerPos)));
-            sb.append(actionName.substring(lowerPos + 1));
-            actionName = sb.toString();
+            actionName = actionName.substring(0, lowerPos) +
+                    Character.toLowerCase(actionName.charAt(lowerPos)) +
+                    actionName.substring(lowerPos + 1);
         }
 
         return actionName;
     }
+
 }

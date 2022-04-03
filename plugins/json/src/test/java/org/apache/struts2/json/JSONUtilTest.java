@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -45,7 +43,9 @@ public class JSONUtilTest extends TestCase {
         bean1.setEnumField(AnEnum.ValueA);
         bean1.setEnumBean(AnEnumBean.Two);
 
-        String json = JSONUtil.serialize(bean1, JSONUtil.CACHE_BEAN_INFO_DEFAULT);
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setWriter(new DefaultJSONWriter());
+        String json = jsonUtil.serialize(bean1, JSONUtil.CACHE_BEAN_INFO_DEFAULT);
 
         Map result = (Map) JSONUtil.deserialize(json);
         assertEquals("str", result.get("stringField"));
@@ -72,7 +72,9 @@ public class JSONUtilTest extends TestCase {
         // This additional 'listOfLists' pattern should be omitted, but not with current version of JSONUtil
         List<Pattern> includeProperties = JSONUtil.processIncludePatterns(JSONUtil.asSet("listOfLists,listOfLists\\[\\d+\\]\\[\\d+\\]"), JSONUtil.REGEXP_PATTERN);
 
-        String actual = JSONUtil.serialize(bean, null, new ArrayList<Pattern>(includeProperties), false, false);
+        JSONUtil jsonUtil = new JSONUtil();
+        jsonUtil.setWriter(new DefaultJSONWriter());
+        String actual = jsonUtil.serialize(bean, null, new ArrayList<Pattern>(includeProperties), false, false);
 
         assertEquals("{\"listOfLists\":[[\"1\",\"2\"],[\"3\",\"4\"],[\"5\",\"6\"],[\"7\",\"8\"],[\"9\",\"0\"]]}", actual);
     }

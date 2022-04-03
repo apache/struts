@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,11 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.interceptor;
 
 import java.util.Map;
-
 
 /**
  * <p>
@@ -39,7 +35,10 @@ import java.util.Map;
  * Note that all parameter values for a given name will be returned, so the type of the objects in
  * the map is <tt>java.lang.String[]</tt>.
  * </p>
+ *
+ * @deprecated please use {@link org.apache.struts2.action.ParametersAware} instead
  */
+@Deprecated
 public interface ParameterAware {
 
     /**

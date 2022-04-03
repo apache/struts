@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.views.java.simple;
 
+import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.ServletUrlRenderer;
@@ -42,7 +43,7 @@ public class AnchorTest extends AbstractTest {
         theme.renderTag(getTagName(), context);
         theme.renderTag(getTagName() + "-close", context);
         String output = writer.getBuffer().toString();
-        String expected = s("<a name='name_' id='id_' class='class' style='style' href='http://sometest.com?ab=10' title='title' tabindex='1'></a>");
+        String expected = s("<a name='name_' id='id_' class='class' style='style' href='http://sometest.com?ab=10' disabled='disabled' title='title' tabindex='1'></a>");
         assertEquals(expected, output);
     }
 
@@ -68,11 +69,48 @@ public class AnchorTest extends AbstractTest {
         assertEquals(expected, output);
     }
 
+    public void testEnableEscapeBody() {
+        tag.setName("name_");
+        tag.setHref("http://sometest.com?ab=10");
+        tag.setEscapeHtmlBody(true);
+        tag.evaluateParams();
+
+        map.putAll(tag.getParameters());
+        context.getParameters().put("body", s("<i class='i-image'/>"));
+
+        theme.renderTag(getTagName(), context);
+        theme.renderTag(getTagName() + "-close", context);
+
+        String output = writer.getBuffer().toString();
+        String expected = s("<a name='name_' id='name_' href='http://sometest.com?ab=10'>&lt;i class=&quot;i-image&quot;/&gt;</a>");
+
+        assertEquals(expected, output);
+    }
+
+    public void testDefaultDisabledEscapeBody() {
+        tag.setName("name_");
+        tag.setHref("http://sometest.com?ab=10");
+        //tag.setEscapeHtmlBody(true);
+        tag.evaluateParams();
+
+        map.putAll(tag.getParameters());
+        context.getParameters().put("body", s("<i class='i-image'/>"));
+
+        theme.renderTag(getTagName(), context);
+        theme.renderTag(getTagName() + "-close", context);
+
+        String output = writer.getBuffer().toString();
+        String expected = s("<a name='name_' id='name_' href='http://sometest.com?ab=10'><i class='i-image'/></a>");
+
+        assertEquals(expected, output);
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         this.tag = new Anchor(stack, request, response);
         this.tag.setUrlRenderer(new ServletUrlRenderer());
+        this.tag.setNotExcludedAcceptedPatterns(new DefaultNotExcludedAcceptedPatternsChecker());
     }
 
     @Override

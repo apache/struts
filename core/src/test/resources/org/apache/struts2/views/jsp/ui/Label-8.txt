@@ -1,0 +1,7 @@
+<tr errorFor="myname">
+    <td class="tdErrorMessage" colspan="2"><span class="errorMessage">error</span></td>
+</tr>
+<tr>
+    <td class="tdLabel"><label for="myname" class="errorLabel">mylabel:</label></td>
+    <td class="tdInput"><label id="myname" style="cssErrorStyle1" title="mytitle">bar</label></td>
+</tr>

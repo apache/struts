@@ -1,5 +1,5 @@
 <tr> <td class="tdLabel"></td> <td class="tdInput">
-<script type="text/javascript" src="/struts/optiontransferselect.js"></script>
+<script type="text/javascript" src="/static/optiontransferselect.js"></script>
 <table>
 <tr><td>
 <select name="myName" size="5" id="myId" multiple="multiple">

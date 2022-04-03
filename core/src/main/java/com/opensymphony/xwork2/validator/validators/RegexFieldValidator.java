@@ -1,19 +1,21 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-
 package com.opensymphony.xwork2.validator.validators;
 
 import org.apache.logging.log4j.Logger;
@@ -21,6 +23,8 @@ import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collection;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,9 +93,9 @@ public class RegexFieldValidator extends FieldValidatorSupport {
     private String regex;
     private String regexExpression;
     private Boolean caseSensitive = true;
-    private String caseSensitiveExpression = "";
+    private String caseSensitiveExpression = EMPTY_STRING;
     private Boolean trim = true;
-    private String trimExpression = "";
+    private String trimExpression = EMPTY_STRING;
 
     public void validate(Object object) throws ValidationException {
         String fieldName = getFieldName();
@@ -102,17 +106,30 @@ public class RegexFieldValidator extends FieldValidatorSupport {
         LOG.debug("Defined regexp as [{}]", regexToUse);
 
         if (value == null || regexToUse == null) {
+            LOG.debug("Either value is empty (please use a required validator) or regex is empty");
             return;
         }
 
-        // XW-375 - must be a string
-        if (!(value instanceof String)) {
-            return;
+        if (value.getClass().isArray()) {
+            Object[] values = (Object[]) value;
+            for (Object objValue: values) {
+                validateFieldValue(object, Objects.toString(objValue, EMPTY_STRING), regexToUse);
+            }
+        } else if (Collection.class.isAssignableFrom(value.getClass())) {
+            Collection values = (Collection) value;
+            for (Object objValue : values) {
+                validateFieldValue(object, Objects.toString(objValue, EMPTY_STRING), regexToUse);
+            }
+        } else {
+           validateFieldValue(object, Objects.toString(value, EMPTY_STRING), regexToUse);
         }
+    }
 
+    protected void validateFieldValue(Object object, String value, String regexToUse) {
         // string must not be empty
-        String str = ((String) value).trim();
+        String str = value.trim();
         if (str.length() == 0) {
+            LOG.debug("Value is empty, please use a required validator");
             return;
         }
 
@@ -124,14 +141,19 @@ public class RegexFieldValidator extends FieldValidatorSupport {
             pattern = Pattern.compile(regexToUse, Pattern.CASE_INSENSITIVE);
         }
 
-        String compare = (String) value;
-        if ( isTrimed() ) {
+        String compare = value;
+        if (isTrimed()) {
             compare = compare.trim();
         }
-        Matcher matcher = pattern.matcher( compare );
 
-        if (!matcher.matches()) {
-            addFieldError(fieldName, object);
+        try {
+            setCurrentValue(compare);
+            Matcher matcher = pattern.matcher(compare);
+            if (!matcher.matches()) {
+                addFieldError(fieldName, object);
+            }
+        } finally {
+            setCurrentValue(null);
         }
     }
 

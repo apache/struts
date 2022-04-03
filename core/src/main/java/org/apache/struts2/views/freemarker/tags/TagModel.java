@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.freemarker.tags;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -58,7 +55,7 @@ public abstract class TagModel implements TemplateTransformModel {
     public Writer getWriter(Writer writer, Map params)
         throws TemplateModelException, IOException {
         Component bean = getBean();
-        Container container = (Container) stack.getContext().get(ActionContext.CONTAINER);
+        Container container = stack.getActionContext().getContainer();
         container.inject(bean);
 
         Map unwrappedParameters = unwrapParameters(params);

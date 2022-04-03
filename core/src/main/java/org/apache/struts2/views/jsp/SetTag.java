@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +26,6 @@ import org.apache.struts2.components.Set;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-
 /**
  * @see Set
  */
@@ -39,11 +35,14 @@ public class SetTag extends ContextBeanTag {
 
     protected String scope;
     protected String value;
+    protected boolean trimBody = true;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Set(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -63,4 +62,41 @@ public class SetTag extends ContextBeanTag {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public void setTrimBody(boolean trimBody) {
+        this.trimBody = trimBody;
+}
+
+    @Override
+    protected String getBody() {
+        if (trimBody) {
+            if (bodyContent == null) {
+                return null;
+            } else {
+                return bodyContent.getString().trim();
+            }
+        } else {
+            return (bodyContent == null ? null : bodyContent.getString());
+        }
+    }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.scope = null;
+        this.value = null;
+        this.trimBody = true;
+     }
+
 }

@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,16 +18,16 @@
  * under the License.
  */
 -->
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
 <#if parameters.cssClass?has_content && !(hasFieldErrors && parameters.cssErrorClass??)>
- class="${parameters.cssClass?html}"<#rt/>
+ class="${parameters.cssClass}"<#rt/>
 <#elseif parameters.cssClass?has_content && (hasFieldErrors && parameters.cssErrorClass??)>
- class="${parameters.cssClass?html} ${parameters.cssErrorClass?html}"<#rt/>
+ class="${parameters.cssClass} ${parameters.cssErrorClass}"<#rt/>
 <#elseif !(parameters.cssClass?has_content) && (hasFieldErrors && parameters.cssErrorClass??)>
- class="${parameters.cssErrorClass?html}"<#rt/>
+ class="${parameters.cssErrorClass}"<#rt/>
 </#if>
 <#if parameters.cssStyle?has_content && !(hasFieldErrors && (parameters.cssErrorStyle?? || parameters.cssErrorClass??))>
- style="${parameters.cssStyle?html}"<#rt/>
+ style="${parameters.cssStyle}"<#rt/>
 <#elseif hasFieldErrors && parameters.cssErrorStyle??>
- style="${parameters.cssErrorStyle?html}"<#rt/>
+ style="${parameters.cssErrorStyle}"<#rt/>
 </#if>

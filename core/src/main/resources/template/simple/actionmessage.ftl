@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,20 +21,20 @@
 <#if (actionMessages?? && actionMessages?size > 0 && !parameters.isEmptyList)>
 	<ul<#rt/>
 <#if parameters.id??>
- id="${parameters.id?html}"<#rt/>
+ id="${parameters.id}"<#rt/>
 </#if>
 <#if parameters.cssClass??>
- class="${parameters.cssClass?html}"<#rt/>
+ class="${parameters.cssClass}"<#rt/>
 <#else>
  class="actionMessage"<#rt/>
 </#if>
 <#if parameters.cssStyle??>
- style="${parameters.cssStyle?html}"<#rt/>
+ style="${parameters.cssStyle}"<#rt/>
 </#if>
 >
 		<#list actionMessages as message>
             <#if message??>
-                <li><span><#if parameters.escape>${message!?html}<#else>${message!}</#if></span></li>
+                <li><span><#if parameters.escape>${message!}<#else>${message!?no_esc}</#if></span></li>
             </#if>
 		</#list>
 	</ul>

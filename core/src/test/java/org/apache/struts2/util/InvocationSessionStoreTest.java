@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,16 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.util;
 
 import com.mockobjects.dynamic.Mock;
+import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +45,7 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
 
 
     private ActionInvocation invocation;
-    private Map session;
+    private Map<String, Object> session;
     private Mock invocationMock;
     private ValueStack stack;
 
@@ -58,29 +60,91 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
     public void testValueStackReset() {
         ActionContext actionContext = ActionContext.getContext();
         assertEquals(stack, actionContext.getValueStack());
-        InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
-        actionContext.setValueStack(null);
-        assertNull(actionContext.getValueStack());
+
         InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
         assertEquals(stack, actionContext.getValueStack());
+    }
+
+    public void testActionContextReset() {
+        ActionContext actionContext = ActionContext.getContext();
+        InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
+
+        ActionContext actionContext2 = ActionContext.of(new HashMap<>()).bind();
+        actionContext2.setSession(session);
+
+        assertEquals(actionContext2, ActionContext.getContext());
+
+        InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
+        assertEquals(actionContext, ActionContext.getContext());
+    }
+
+    public void testStoreAndLoadFromDeserializedSession() throws Exception {
+        InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(session);//WW-4873 invocation is not serializable but we should not fail at this line
+        oos.close();
+        byte[] b = baos.toByteArray();
+        baos.close();
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(b);
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        session = (Map<String, Object>) ois.readObject();
+        ActionContext.getContext().setSession(session);
+        ois.close();
+        bais.close();
+
+        ActionInvocation savedInvocation = InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
+        assertNull(savedInvocation);//Currently we don't support invocation restore from serialized session
+    }
+
+    public void testStoreAndLoadPreservesPageContext() {
+        // Create mock PageContext to put with the current context (simulating a PageContext
+        // associated with the current (active) process flow).  In real-world processing it
+        // will usually be null, but if non-null it should be preserved/restored upon load of the
+        // saved context.
+        MockPageContext mockPreviousPageContext = new MockPageContext();
+
+        // Create mock PageContext to put with the saved context (simulating a PageContext previously
+        // used and closed after generating JSP output).
+        MockPageContext mockSavedPageContext = new MockPageContext();
+        ActionContext actionContext = ActionContext.getContext()
+            .withPageContext(mockSavedPageContext);
+
+        assertEquals(mockSavedPageContext, ActionContext.getContext().getPageContext());
+
+        InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
+
+        ActionContext actionContext2 = ActionContext.of(new HashMap<>())
+            .withSession(session)
+            .withPageContext(mockPreviousPageContext)
+            .bind();
+
+        assertEquals(actionContext2, ActionContext.getContext());
+
+        actionContext2.withPageContext(mockPreviousPageContext);
+        assertEquals(mockPreviousPageContext, ActionContext.getContext().getPageContext());
+
+        InvocationSessionStore.loadInvocation(INVOCATION_KEY, TOKEN_VALUE);
+        assertEquals(actionContext, ActionContext.getContext());
+        assertEquals(mockPreviousPageContext, ActionContext.getContext().getPageContext());
     }
 
     protected void setUp() throws Exception {
         super.setUp();
         stack = ActionContext.getContext().getValueStack();
 
-        ActionContext actionContext = new ActionContext(stack.getContext());
-        ActionContext.setContext(actionContext);
+        session = new HashMap<>();
 
-        session = new HashMap();
-        actionContext.setSession(session);
+        ActionContext actionContext = ActionContext.of(stack.getContext())
+            .withSession(session)
+            .withValueStack(stack)
+            .bind();
 
         invocationMock = new Mock(ActionInvocation.class);
         invocation = (ActionInvocation) invocationMock.proxy();
-        invocationMock.matchAndReturn("serialize", invocation);
-        invocationMock.matchAndReturn("deserialize", actionContext, invocation);
-
-        actionContext.setValueStack(stack);
+        invocationMock.matchAndReturn("getInvocationContext", actionContext);
         invocationMock.matchAndReturn("getStack", stack);
 
         Mock proxyMock = new Mock(ActionProxy.class);

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,20 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.dispatcher.multipart;
 
 import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
 
 /**
  * <p>
@@ -48,7 +43,7 @@ import java.util.*;
  *
  * <p>
  * The files are uploaded when the object is instantiated. If there are any errors they are logged using
- * {@link #addError(String)}. An action handling a multipart form should first check {@link #hasErrors()}
+ * {@link #addError(LocalizedMessage)}. An action handling a multipart form should first check {@link #hasErrors()}
  * before doing any other processing.
  * </p>
  *
@@ -60,7 +55,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
 
     protected static final Logger LOG = LogManager.getLogger(MultiPartRequestWrapper.class);
 
-    private Collection<String> errors;
+    private Collection<LocalizedMessage> errors;
     private MultiPartRequest multi;
     private Locale defaultLocale = Locale.ENGLISH;
 
@@ -83,7 +78,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         setLocale(request);
         try {
             multi.parse(request, saveDir);
-            for (String error : multi.getErrors()) {
+            for (LocalizedMessage error : multi.getErrors()) {
                 addError(error);
             }
         } catch (IOException e) {
@@ -102,10 +97,10 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         }
     }
 
-    protected String buildErrorMessage(Throwable e, Object[] args) {
+    protected LocalizedMessage buildErrorMessage(Throwable e, Object[] args) {
         String errorKey = "struts.messages.upload.error." + e.getClass().getSimpleName();
         LOG.debug("Preparing error message for key: [{}]", errorKey);
-        return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
+        return new LocalizedMessage(this.getClass(), errorKey, e.getMessage(), args);
     }
 
     /**
@@ -142,7 +137,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @param fieldName input field name
      * @return a File[] object for files associated with the specified input field name
      */
-    public File[] getFiles(String fieldName) {
+    public UploadedFile[] getFiles(String fieldName) {
         if (multi == null) {
             return null;
         }
@@ -234,7 +229,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      *
      * @return the error Collection.
      */
-    public Collection<String> getErrors() {
+    public Collection<LocalizedMessage> getErrors() {
         return errors;
     }
 
@@ -243,7 +238,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      *
      * @param anErrorMessage the error message to report.
      */
-    protected void addError(String anErrorMessage) {
+    protected void addError(LocalizedMessage anErrorMessage) {
         if (!errors.contains(anErrorMessage)) {
             errors.add(anErrorMessage);
         }

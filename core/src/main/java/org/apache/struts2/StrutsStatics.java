@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,26 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2;
 
+import javax.servlet.ServletContext;
 
 /**
  * <p>
- * Constants used by Struts. The constants can be used to get or set objects
- * out of the action context or other collections.
- * </p>
- *
- * <p>
- * Example:
- *
- * <code>ActionContext.getContext().put(HTTP_REQUEST, request);</code>
- *
- * or
- *
- * <code>
- * ActionContext context = ActionContext.getContext();<br>
- * HttpServletRequest request = (HttpServletRequest)context.get(HTTP_REQUEST);</code>
+ * Constants used internally by Struts. Do not use these constants directly,
+ * instead use exposed helpers eg.: {@link org.apache.struts2.dispatcher.Dispatcher#getInstance(ServletContext)}
  * </p>
  */
 public interface StrutsStatics {
@@ -45,34 +31,38 @@ public interface StrutsStatics {
     /**
      * Constant for the HTTP request object.
      */
-    public static final String HTTP_REQUEST = "com.opensymphony.xwork2.dispatcher.HttpServletRequest";
+    String HTTP_REQUEST = "com.opensymphony.xwork2.dispatcher.HttpServletRequest";
 
     /**
      * Constant for the HTTP response object.
      */
-    public static final String HTTP_RESPONSE = "com.opensymphony.xwork2.dispatcher.HttpServletResponse";
+    String HTTP_RESPONSE = "com.opensymphony.xwork2.dispatcher.HttpServletResponse";
 
     /**
      * Constant for an HTTP {@link javax.servlet.RequestDispatcher request dispatcher}.
      */
-    public static final String SERVLET_DISPATCHER = "com.opensymphony.xwork2.dispatcher.ServletDispatcher";
+    String SERVLET_DISPATCHER = "com.opensymphony.xwork2.dispatcher.ServletDispatcher";
 
     /**
      * Constant for the {@link javax.servlet.ServletContext servlet context} object.
      */
-    public static final String SERVLET_CONTEXT = "com.opensymphony.xwork2.dispatcher.ServletContext";
+    String SERVLET_CONTEXT = "com.opensymphony.xwork2.dispatcher.ServletContext";
 
     /**
      * Constant for the JSP {@link javax.servlet.jsp.PageContext page context}.
      */
-    public static final String PAGE_CONTEXT = "com.opensymphony.xwork2.dispatcher.PageContext";
+    String PAGE_CONTEXT = "com.opensymphony.xwork2.dispatcher.PageContext";
 
-    /** Constant for the PortletContext object */
-    public static final String STRUTS_PORTLET_CONTEXT = "struts.portlet.context";
+    /**
+     * Constant for the PortletContext object
+     */
+    String STRUTS_PORTLET_CONTEXT = "struts.portlet.context";
 
     /**
      * Set as an attribute in the request to let other parts of the framework know that the invocation is happening inside an
      * action tag
      */
-    public static final String STRUTS_ACTION_TAG_INVOCATION= "struts.actiontag.invocation";
+    String STRUTS_ACTION_TAG_INVOCATION = "struts.actiontag.invocation";
+
+    String ACTION_MAPPING = "struts.actionMapping";
 }

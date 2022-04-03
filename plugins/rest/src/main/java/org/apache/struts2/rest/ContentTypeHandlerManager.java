@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.rest;
 
+import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,10 +57,16 @@ public interface ContentTypeHandlerManager {
      * @param target The object to return, usually the action object
      * @return The new result code to process
      * @throws IOException If unable to write to the response
+     *
+     * @deprecated use version which requires {@link ActionInvocation}
      */
+    @Deprecated
     String handleResult(ActionConfig actionConfig, Object methodResult, Object target)
             throws IOException;
     
+    String handleResult(ActionInvocation actionInvocation, Object methodResult, Object target)
+            throws IOException;
+
     /**
      * Finds the extension in the url
      * 

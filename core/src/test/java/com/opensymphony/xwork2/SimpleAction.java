@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2003,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2;
 
@@ -51,6 +54,8 @@ public class SimpleAction extends ActionSupport {
     private String aliasDest;
     private Map<String, String> protectedMap = new HashMap<>();
     private Map<String, String> existingMap = new HashMap<>();
+
+    private List<TestBean> beanList;
     
     public static boolean resultCalled;
 
@@ -224,6 +229,10 @@ public class SimpleAction extends ActionSupport {
         return "OK";
     }
 
+    public String nullMethod() {
+        return null;
+    }
+
     @Override
     public String execute() throws Exception {
         if (foo == bar) {
@@ -260,5 +269,13 @@ public class SimpleAction extends ActionSupport {
 
     public void setShortFoo(short shortFoo) {
         this.shortFoo = shortFoo;
+    }
+
+    public List<TestBean> getBeanList() {
+        return beanList;
+    }
+
+    public void setBeanList(List<TestBean> beanList) {
+        this.beanList = beanList;
     }
 }

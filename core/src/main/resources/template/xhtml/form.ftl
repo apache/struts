@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,10 +21,10 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/form-validate.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/form-common.ftl" />
 <#if (parameters.validate!false)>
-  onreset="${parameters.onreset!'clearErrorMessages(this);clearErrorLabels(this);'}"
+  onreset="<#outputformat 'JavaScript'>${parameters.onreset!'clearErrorMessages(this);clearErrorLabels(this);'}</#outputformat>"
 <#else>
   <#if parameters.onreset??>
-  onreset="${parameters.onreset?html}"
+  onreset="<#outputformat 'JavaScript'>${parameters.onreset}</#outputformat>"
   </#if>
 </#if>
 >

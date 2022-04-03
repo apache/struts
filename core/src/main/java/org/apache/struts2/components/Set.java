@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.components;
 
 import java.io.Writer;
@@ -34,8 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * complex expression and then simply reference that variable each time rather than the complex expression. This is
  * useful in both cases: when the complex expression takes time (performance improvement) or is hard to read (code
  * readability improvement).</p>
- * <p>If the tag is used with body content, the evaluation of the value parameter is omitted. Instead, the String to
- * which the body evaluates is set as value for the scoped variable.</p>
+ * <p>If the value parameter is omitted, the String to which the body evaluates is set as value for the scoped variable.</p>
  *
  * <p>The scopes available are as follows:</p>
  * <ul>
@@ -64,6 +60,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <li>scope (String): The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>,
  * <b>request</b>, <b>page</b>, or <b>action</b>. By default it is <b>action</b>.</li>
+ * 
+ * <li>Note: With the <b>action</b> scope, the variable is <em>also</em> assigned to the <b>page</b> scope.
  *
  * </ul>
  *
@@ -86,20 +84,22 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class Set extends ContextBean {
     protected String scope;
     protected String value;
+    protected boolean trimBody = true;
 
     public Set(ValueStack stack) {
         super(stack);
     }
 
+    @Override
     public boolean end(Writer writer, String body) {
         ValueStack stack = getStack();
 
         Object o;
         if (value == null) {
-            if (body != null && !body.equals("")) {
-                o = body;
-            } else {
+            if (body == null) {
                 o = findValue("top");
+            } else {
+                o = body;
             }
         } else {
             o = findValue(value);
@@ -116,6 +116,7 @@ public class Set extends ContextBean {
         } else if ("page".equalsIgnoreCase(scope)) {
             stack.setValue("#attr['" + getVar() + "']", o, false);
         } else {
+            // Default scope is action.  Note: The action acope handling also adds the var to the page scope.
             stack.getContext().put(getVar(), o);
             stack.setValue("#attr['" + getVar() + "']", o, false);
         }
@@ -123,13 +124,15 @@ public class Set extends ContextBean {
         return super.end(writer, body);
     }
 
-    @StrutsTagAttribute(required=true, description="Name used to reference the value pushed into the Value Stack")
+    @StrutsTagAttribute(required=true, description="Name used to reference the value pushed into the Value Stack (default scope: action," +
+                "<em>override</em> with the scope attribute).")
+    @Override
     public void setVar(String var) {
        super.setVar(var);
     }
 
     @StrutsTagAttribute(description="The scope in which to assign the variable. Can be <b>application</b>" +
-                ", <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.", defaultValue="action")
+                ", <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b> (action scope <em>also</em> adds it to the page scope).", defaultValue="action")
     public void setScope(String scope) {
         this.scope = scope;
     }
@@ -137,6 +140,11 @@ public class Set extends ContextBean {
     @StrutsTagAttribute(description="The value that is assigned to the variable named <i>name</i>")
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @StrutsTagAttribute(description="Set to false to prevent the default whitespace-trim of this tag's body content", type="Boolean", defaultValue="true")
+    public void setTrimBody(boolean trimBody) {
+        this.trimBody = trimBody;
     }
 
     @Override

@@ -1,10 +1,28 @@
-<!DOCTYPE xwork PUBLIC
-    "-//Apache Struts//XWork 2.5//EN"
-    "http://struts.apache.org/dtds/xwork-2.5.dtd"
- >
- <!-- "file:///temp/ross/xwork/src/etc/xwork-1.0.dtd"  -->
-
-<xwork>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
     <include file="xwork-test-default.xml"/>
     <package name="default" extends="xwork-test-default">
 
@@ -24,6 +42,25 @@
             </result>
             <interceptor-ref name="debugStack"/>
             <interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="ExceptionFoo" class="com.opensymphony.xwork2.SimpleAction" method="exceptionMethod">
+            <result name="exceptionHandled" type="void" />
+            <interceptor-ref name="debugStack"/>
+            <interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="NullFoo" class="com.opensymphony.xwork2.SimpleAction" method="nullMethod">
+            <interceptor-ref name="debugStack"/>
+            <interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="LazyFoo" class="com.opensymphony.xwork2.SimpleAction">
+          <result name="error" type="void" />
+          <interceptor-ref name="params"/>
+          <interceptor-ref name="lazy">
+            <param name="foo">${blah}</param>
+          </interceptor-ref>
         </action>
 
         <action name="WildCard" class="com.opensymphony.xwork2.SimpleAction">
@@ -57,12 +94,19 @@
         </action>
 
         <action name="aliasTest" class="com.opensymphony.xwork2.SimpleAction">
-           	<param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz" }</param>
+           	<param name="aliases">#{ "aliasSource" : "aliasDest", "bar":"baz", "notExisting":"blah" }</param>
 			<interceptor-ref name="params"/>
          	<interceptor-ref name="alias"/>
          	<result name="success" type="mock" />
         </action>
-      
+
+        <action name="dynamicAliasTest" class="com.opensymphony.xwork2.SimpleAction">
+            <param name="aliases">#{ #parameters['name'] : #parameters['value'] }</param>
+            <interceptor-ref name="params"/>
+            <interceptor-ref name="alias"/>
+            <result name="success" type="mock" />
+        </action>
+
         <action name="packagelessAction" class="PackagelessAction">
         </action>
 
@@ -102,6 +146,21 @@
         <!-- chain resursion detection -->
         <action name="InfiniteRecursionChain" class="com.opensymphony.xwork2.ActionSupport">
                 <result name="success" type="chain">InfiniteRecursionChain</result>
+        </action>
+        <action name="chain_with_namespace" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="error" type="chain">
+                <param name="actionName">chain_without_namespace</param>
+                <param name="namespace">%{blah}</param>
+            </result>
+            <interceptor-ref name="debugStack"/>
+            <interceptor-ref name="defaultStack"/>
+        </action>
+        <action name="chain_without_namespace" class="com.opensymphony.xwork2.SimpleAction">
+            <result name="error" type="chain">
+                <param name="actionName">Foo</param>
+            </result>
+            <interceptor-ref name="debugStack"/>
+            <interceptor-ref name="defaultStack"/>
         </action>
 
    </package>
@@ -237,4 +296,4 @@
         </package>
 
     <include file="includeTest.xml"/>
-</xwork>
+</struts>

@@ -1,62 +1,38 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.util.annotation.Dummy2Class;
+import com.opensymphony.xwork2.util.annotation.Dummy3Class;
 import com.opensymphony.xwork2.util.annotation.DummyClass;
 import com.opensymphony.xwork2.util.annotation.DummyClassExt;
 import com.opensymphony.xwork2.util.annotation.MyAnnotation;
 import com.opensymphony.xwork2.util.annotation.MyAnnotation2;
 import junit.framework.TestCase;
 
-import java.lang.reflect.AnnotatedElement;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-/**
- * @author Dan Oxlade, dan d0t oxlade at gmail d0t c0m
- */
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class AnnotationUtilsTest extends TestCase {
-
-    @SuppressWarnings("unchecked")
-    public void testIsAnnotatedByWithoutAnnotationArgsReturnsFalse() throws Exception {
-        assertFalse(AnnotationUtils.isAnnotatedBy(DummyClass.class));
-        assertFalse(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation")));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void testIsAnnotatedByWithSingleAnnotationArgMatchingReturnsTrue() throws Exception {
-        assertTrue(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation"), MyAnnotation.class));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void testIsAnnotatedByWithMultiAnnotationArgMatchingReturnsTrue() throws Exception {
-        assertFalse(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation"), Deprecated.class));
-        assertTrue(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation"), MyAnnotation.class, Deprecated.class));
-        assertTrue(AnnotationUtils.isAnnotatedBy(DummyClass.class.getMethod("methodWithAnnotation"), Deprecated.class, MyAnnotation.class));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void testGetAnnotedMethodsWithoutAnnotationArgs() throws Exception {
-        Collection<? extends AnnotatedElement> ans = AnnotationUtils.getAnnotatedMethods(DummyClass.class);
-        assertTrue(ans.size() == 1);
-        assertEquals(ans.iterator().next(), DummyClass.class.getMethod("methodWithAnnotation"));
-    }
-
-    @SuppressWarnings("unchecked")
-    public void testGetAnnotatedMethodsWithAnnotationArgs() throws Exception {
-        Collection<? extends AnnotatedElement> ans = AnnotationUtils.getAnnotatedMethods(DummyClass.class, Deprecated.class);
-        assertTrue(ans.isEmpty());
-
-        ans = AnnotationUtils.getAnnotatedMethods(DummyClass.class, Deprecated.class, MyAnnotation.class);
-        assertEquals(1, ans.size());
-
-        ans = AnnotationUtils.getAnnotatedMethods(DummyClass.class, MyAnnotation.class);
-        assertEquals(1, ans.size());
-
-        ans = AnnotationUtils.getAnnotatedMethods(DummyClass.class, MyAnnotation.class, MyAnnotation2.class);
-        assertEquals(1, ans.size());
-
-        ans = AnnotationUtils.getAnnotatedMethods(DummyClassExt.class, MyAnnotation.class, MyAnnotation2.class);
-        assertEquals(2, ans.size());
-    }
 
     public void testFindAnnotationOnClass() {
         MyAnnotation a1 = AnnotationUtils.findAnnotation(DummyClass.class, MyAnnotation.class);
@@ -68,6 +44,27 @@ public class AnnotationUtilsTest extends TestCase {
         MyAnnotation ns = AnnotationUtils.findAnnotation(Dummy2Class.class, MyAnnotation.class);
         assertNotNull(ns);
         assertEquals("package-test", ns.value());
+    }
+
+    public void testFindAnnotationOnParents() {
+        MyAnnotation2 ns = AnnotationUtils.findAnnotation(Dummy3Class.class, MyAnnotation2.class);
+        assertNotNull(ns);
+        assertEquals("abstract-abstract", ns.value());
+    }
+
+    public void testFindAnnotationsOnAll() {
+        List<MyAnnotation> annotations = AnnotationUtils.findAnnotations(DummyClassExt.class, MyAnnotation.class);
+
+        assertThat(annotations)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(5);
+
+        Set<String> values = new HashSet<>();
+        for (MyAnnotation annotation : annotations) {
+            values.add(annotation.value());
+        }
+        assertThat(values).contains("class-test", "package-test", "interface-test", "package2-test");
     }
 
 }

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,27 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.ValueStack;
-
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.export.*;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.HtmlExporter;
+import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.engine.export.JRCsvExporterParameter;
+import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.JRRtfExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.JRXmlExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.result.StrutsResultSupport;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -115,7 +123,7 @@ import java.util.TimeZone;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
- *
+ * <p>
  * or for pdf
  *
  * <pre>
@@ -131,9 +139,10 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
     private static final long serialVersionUID = -2523174799621182907L;
 
-    private final static Logger LOG = LogManager.getLogger(JasperReportsResult.class);
+    private static final Logger LOG = LogManager.getLogger(JasperReportsResult.class);
 
     protected String dataSource;
+    private String parsedDataSource;
     protected String format;
     protected String documentName;
     protected String contentDisposition;
@@ -153,12 +162,16 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      * additional report parameters from the action.
      */
     protected String reportParameters;
+    private String parsedReportParameters;
 
     /**
      * Names an exporter parameters map stack value,
      * allowing the use of custom export parameters.
      */
     protected String exportParameters;
+    private String parsedExportParameters;
+
+    private NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns;
 
     /**
      * Default ctor.
@@ -174,6 +187,11 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      */
     public JasperReportsResult(String location) {
         super(location);
+    }
+
+    @Inject
+    public void setNotExcludedAcceptedPatterns(NotExcludedAcceptedPatternsChecker notExcludedAcceptedPatterns) {
+        this.notExcludedAcceptedPatterns = notExcludedAcceptedPatterns;
     }
 
     public String getImageServletUrl() {
@@ -205,9 +223,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     }
 
     /**
-     * set time zone id
-     *
-     * @param timeZone
+     * @param timeZone set time zone id
      */
     public void setTimeZone(final String timeZone) {
         this.timeZone = timeZone;
@@ -247,8 +263,8 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
         LOG.debug("Creating JasperReport for dataSource = {}, format = {}", dataSource, format);
 
-        HttpServletRequest request = (HttpServletRequest) invocation.getInvocationContext().get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) invocation.getInvocationContext().get(ServletActionContext.HTTP_RESPONSE);
+        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
+        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
 
         // Handle IE special case: it sends a "contype" request first.
         // TODO Set content type to config settings?
@@ -268,8 +284,16 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         ValueStackDataSource stackDataSource = null;
 
         Connection conn = (Connection) stack.findValue(connection);
-        if (conn == null)
-            stackDataSource = new ValueStackDataSource(stack, dataSource, wrapField);
+        if (conn == null) {
+            boolean evaluated = parsedDataSource != null && !parsedDataSource.equals(dataSource);
+            boolean reevaluate = !evaluated || isAcceptableExpression(parsedDataSource);
+            if (reevaluate) {
+                stackDataSource = new ValueStackDataSource(stack, parsedDataSource, wrapField);
+            } else {
+                throw new ServletException(String.format("Error building dataSource for excluded or not accepted [%s]",
+                        parsedDataSource));
+            }
+        }
 
         if ("https".equalsIgnoreCase(request.getScheme())) {
             // set the the HTTP Header to work around IE SSL weirdness
@@ -282,9 +306,9 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Determine the directory that the report file is in and set the reportDirectory parameter
         // For WW 2.1.7:
         //  ServletContext servletContext = ((ServletConfig) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONFIG)).getServletContext();
-        ServletContext servletContext = (ServletContext) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONTEXT);
+        ServletContext servletContext = invocation.getInvocationContext().getServletContext();
         String systemId = servletContext.getRealPath(finalLocation);
-        Map parameters = new ValueStackShadowMap(stack);
+        Map<String, Object> parameters = new ValueStackShadowMap(stack);
         File directory = new File(systemId.substring(0, systemId.lastIndexOf(File.separator)));
         parameters.put("reportDirectory", directory);
         parameters.put(JRParameter.REPORT_LOCALE, invocation.getInvocationContext().getLocale());
@@ -300,9 +324,11 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         }
 
         // Add any report parameters from action to param map.
-        Map reportParams = (Map) stack.findValue(reportParameters);
+        boolean evaluated = parsedReportParameters != null && !parsedReportParameters.equals(reportParameters);
+        boolean reevaluate = !evaluated || isAcceptableExpression(parsedReportParameters);
+        Map reportParams = reevaluate ? (Map) stack.findValue(parsedReportParameters) : null;
         if (reportParams != null) {
-        	LOG.debug("Found report parameters; adding to parameters...");
+            LOG.debug("Found report parameters; adding to parameters...");
             parameters.putAll(reportParams);
         }
 
@@ -314,8 +340,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(systemId));
             if (conn == null) {
                 jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, stackDataSource);
-            }
-            else {
+            } else {
                 jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
             }
         } catch (JRException e) {
@@ -326,7 +351,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Export the print object to the desired output format
         try {
             if (contentDisposition != null || documentName != null) {
-                final StringBuffer tmp = new StringBuffer();
+                final StringBuilder tmp = new StringBuilder();
                 tmp.append((contentDisposition == null) ? "inline" : contentDisposition);
 
                 if (documentName != null) {
@@ -339,43 +364,53 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
                 response.setHeader("Content-disposition", tmp.toString());
             }
 
+            //TODO: replace deprecated logic
             JRExporter exporter;
 
-            if (format.equals(FORMAT_PDF)) {
-                response.setContentType("application/pdf");
-                exporter = new JRPdfExporter();
-            } else if (format.equals(FORMAT_CSV)) {
-                response.setContentType("text/csv");
-                exporter = new JRCsvExporter();
-            } else if (format.equals(FORMAT_HTML)) {
-                response.setContentType("text/html");
+            switch (format) {
+                case FORMAT_PDF:
+                    response.setContentType("application/pdf");
+                    exporter = new JRPdfExporter();
+                    break;
+                case FORMAT_CSV:
+                    response.setContentType("text/csv");
+                    exporter = new JRCsvExporter();
+                    break;
+                case FORMAT_HTML:
+                    response.setContentType("text/html");
 
-                // IMAGES_MAPS seems to be only supported as "backward compatible" from JasperReports 1.1.0
+                    // IMAGES_MAPS seems to be only supported as "backward compatible" from JasperReports 1.1.0
 
-                Map imagesMap = new HashMap();
-                request.getSession(true).setAttribute("IMAGES_MAP", imagesMap);
+                    Map imagesMap = new HashMap();
+                    request.getSession(true).setAttribute("IMAGES_MAP", imagesMap);
 
-                exporter = new JRHtmlExporter();
-                exporter.setParameter(JRHtmlExporterParameter.IMAGES_MAP, imagesMap);
-                exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, request.getContextPath() + imageServletUrl);
+                    exporter = new HtmlExporter();
+                    exporter.setParameter(JRHtmlExporterParameter.IMAGES_MAP, imagesMap);
+                    exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, request.getContextPath() + imageServletUrl);
 
-                // Needed to support chart images:
-                exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-                request.getSession().setAttribute("net.sf.jasperreports.j2ee.jasper_print", jasperPrint);
-            } else if (format.equals(FORMAT_XLS)) {
-                response.setContentType("application/vnd.ms-excel");
-                exporter = new JRXlsExporter();
-            } else if (format.equals(FORMAT_XML)) {
-                response.setContentType("text/xml");
-                exporter = new JRXmlExporter();
-            } else if (format.equals(FORMAT_RTF)) {
-                response.setContentType("application/rtf");
-                exporter = new JRRtfExporter();
-            } else {
-                throw new ServletException("Unknown report format: " + format);
+                    // Needed to support chart images:
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    request.getSession().setAttribute("net.sf.jasperreports.j2ee.jasper_print", jasperPrint);
+                    break;
+                case FORMAT_XLS:
+                    response.setContentType("application/vnd.ms-excel");
+                    exporter = new JRXlsExporter();
+                    break;
+                case FORMAT_XML:
+                    response.setContentType("text/xml");
+                    exporter = new JRXmlExporter();
+                    break;
+                case FORMAT_RTF:
+                    response.setContentType("application/rtf");
+                    exporter = new JRRtfExporter();
+                    break;
+                default:
+                    throw new ServletException("Unknown report format: " + format);
             }
 
-            Map exportParams = (Map) stack.findValue(exportParameters);
+            evaluated = parsedExportParameters != null && !parsedExportParameters.equals(exportParameters);
+            reevaluate = !evaluated || isAcceptableExpression(parsedExportParameters);
+            Map exportParams = reevaluate ? (Map) stack.findValue(parsedExportParameters) : null;
             if (exportParams != null) {
                 LOG.debug("Found export parameters; adding to exporter parameters...");
                 exporter.getParameters().putAll(exportParams);
@@ -387,7 +422,10 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             throw new ServletException(e.getMessage(), e);
         } finally {
             try {
-                conn.close();
+                if (conn != null) {
+                    // avoid NPE if connection was not used for the report
+                    conn.close();
+                }
             } catch (Exception e) {
                 LOG.warn("Could not close db connection properly", e);
             }
@@ -421,14 +459,15 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      * @param invocation Current invocation.
      * @throws Exception on initialization error.
      */
-    private void initializeProperties(ActionInvocation invocation) throws Exception {
+    private void initializeProperties(ActionInvocation invocation) {
         if (dataSource == null && connection == null) {
             String message = "No dataSource specified...";
             LOG.error(message);
             throw new RuntimeException(message);
         }
-        if (dataSource != null)
-            dataSource = conditionalParse(dataSource, invocation);
+        if (dataSource != null) {
+            parsedDataSource = conditionalParse(dataSource, invocation);
+        }
 
         format = conditionalParse(format, invocation);
         if (StringUtils.isEmpty(format)) {
@@ -443,8 +482,8 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             documentName = conditionalParse(documentName, invocation);
         }
 
-        reportParameters = conditionalParse(reportParameters, invocation);
-        exportParameters = conditionalParse(exportParameters, invocation);
+        parsedReportParameters = conditionalParse(reportParameters, invocation);
+        parsedExportParameters = conditionalParse(exportParameters, invocation);
     }
 
     /**
@@ -453,8 +492,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      * @param jasperPrint The Print object to render as CSV
      * @param exporter    The exporter to use to export the report
      * @return A CSV formatted report
-     * @throws net.sf.jasperreports.engine.JRException
-     *          If there is a problem running the report
+     * @throws net.sf.jasperreports.engine.JRException If there is a problem running the report
      */
     private ByteArrayOutputStream exportReportToBytes(JasperPrint jasperPrint, JRExporter exporter) throws JRException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -469,4 +507,22 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         return baos;
     }
 
+    /**
+     * Checks if expression doesn't contain vulnerable code
+     *
+     * @param expression of result
+     * @return true|false
+     * @since 2.6
+     */
+    protected boolean isAcceptableExpression(String expression) {
+        NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);
+        if (isAllowed.isAllowed()) {
+            return true;
+        }
+
+        LOG.warn("Expression [{}] isn't allowed by pattern [{}]! See Accepted / Excluded patterns at\n" +
+                "https://struts.apache.org/security/", expression, isAllowed.getAllowedPattern());
+
+        return false;
+    }
 }

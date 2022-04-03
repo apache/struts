@@ -1,24 +1,31 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.test;
 
 import com.opensymphony.xwork2.conversion.annotations.ConversionRule;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.opensymphony.xwork2.util.KeyProperty;
-import com.opensymphony.xwork2.validator.annotations.*;
+import com.opensymphony.xwork2.validator.annotations.EmailValidator;
+import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
+import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,17 +34,12 @@ import java.util.Map;
 
 /**
  * Test bean.
- *
- * @author Mark Woon
- * @author Rainer Hermanns
  */
-@Validation(
-        validations = @Validations(
-                expressions = {
-                    @ExpressionValidator(expression = "email.startsWith('mark')", message = "Email does not start with mark"),
-                    @ExpressionValidator(expression = "email2.startsWith('mark')", message = "Email2 does not start with mark")
-                }
-        )
+@Validations(
+    expressions = {
+        @ExpressionValidator(expression = "email.startsWith('mark')", message = "Email does not start with mark"),
+        @ExpressionValidator(expression = "email2.startsWith('mark')", message = "Email2 does not start with mark")
+    }
 )
 public class AnnotationUser implements AnnotationUserMarker {
 
@@ -81,13 +83,13 @@ public class AnnotationUser implements AnnotationUserMarker {
         list = l;
     }
 
-    @KeyProperty( value = "name")
-    @TypeConversion( converter = "java.lang.String", rule = ConversionRule.COLLECTION)
+    @KeyProperty(value = "name")
+    @TypeConversion(converterClass = String.class, rule = ConversionRule.COLLECTION)
     public List getList() {
         return list;
     }
 
-    @TypeConversion( converter = "java.lang.String", rule = ConversionRule.MAP)
+    @TypeConversion(converterClass = String.class, rule = ConversionRule.MAP)
     public void setMap(Map m) {
         map = m;
     }

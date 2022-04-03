@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +26,6 @@ import org.apache.struts2.components.Token;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-
 /**
  * @see Token
  */
@@ -37,7 +33,17 @@ public class TokenTag extends AbstractUITag {
 
     private static final long serialVersionUID = 722480798151703457L;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Token(stack, req, res);
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
 }

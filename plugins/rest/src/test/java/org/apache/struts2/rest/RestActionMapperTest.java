@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.rest;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import com.opensymphony.xwork2.inject.Container;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -50,7 +48,7 @@ public class RestActionMapperTest extends TestCase {
         PackageConfig pkg2 = new PackageConfig.Builder("my").namespace("/my").build();
         config.addPackageConfig("mvns", pkg);
         config.addPackageConfig("my", pkg2);
-        configManager = new ConfigurationManager() {
+        configManager = new ConfigurationManager(Container.DEFAULT_NAME) {
             public Configuration getConfiguration() {
                 return config;
             }

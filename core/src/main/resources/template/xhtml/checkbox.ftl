@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,31 +18,31 @@
  * under the License.
  */
 -->
-<#assign hasFieldErrors = fieldErrors?? && fieldErrors[parameters.name]??/>
+<#assign hasFieldErrors = fieldErrors?? && fieldErrors.get(parameters.name)??/>
 <#if hasFieldErrors>
-<#list fieldErrors[parameters.name] as error>
+<#list fieldErrors.get(parameters.name) as error>
 <tr<#rt/>
 <#if parameters.id??>
  errorFor="${parameters.id}"<#rt/>
 </#if>
 >
     <td class="tdCheckboxErrorMessage" colspan="2"><#rt/>
-        <span class="errorMessage">${error?html}</span><#t/>
+        <span class="errorMessage">${error}</span><#t/>
     </td><#lt/>
 </tr>
 </#list>
 </#if>
-<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
-<#assign labelpos = parameters.form.labelposition/>
-<#elseif parameters.labelposition??>
-<#assign labelpos = parameters.labelposition/>
+<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
+<#assign labelPos = parameters.form.labelPosition/>
+<#elseif parameters.labelPosition??>
+<#assign labelPos = parameters.labelPosition/>
 </#if>
-<#if (labelpos!"") == 'top'>
+<#if (labelPos!"") == 'top'>
 <tr>
     <td colspan="2">
 <#if parameters.label??> <label<#t/>
 <#if parameters.id??>
- for="${parameters.id?html}"<#rt/>
+ for="${parameters.id}"<#rt/>
 </#if>
 <#if hasFieldErrors>
  class="checkboxErrorLabel"<#rt/>
@@ -55,7 +53,7 @@
 <#if parameters.required!false && parameters.requiredPosition!"right" != 'right'>
         <span class="required">*</span><#t/>
 </#if>
-${parameters.label?html}<#t/>
+${parameters.label}<#t/>
 <#if parameters.required!false && parameters.requiredPosition!"right" == 'right'>
  <span class="required">*</span><#t/>
 </#if>
@@ -73,10 +71,10 @@ ${parameters.label?html}<#t/>
 <#else>
 <tr>
 	<td class="tdCheckboxLabel">
-<#if (labelpos!"") == 'left'>
+<#if (labelPos!"") == 'left'>
 <#if parameters.label??> <label<#t/>
 <#if parameters.id??>
- for="${parameters.id?html}"<#rt/>
+ for="${parameters.id}"<#rt/>
 </#if>
 <#if hasFieldErrors>
  class="checkboxErrorLabel"<#rt/>
@@ -87,7 +85,7 @@ ${parameters.label?html}<#t/>
 <#if parameters.required!false && parameters.requiredPosition!"right" != 'right'>
         <span class="required">*</span><#t/>
 </#if>
-${parameters.label?html}<#t/>
+${parameters.label}<#t/>
 <#if parameters.required!false && parameters.requiredPosition!"right" == 'right'>
  <span class="required">*</span><#t/>
 </#if>
@@ -98,7 +96,7 @@ ${parameters.label?html}<#t/>
 </label><#t/>
 </#if>
 </#if>
-<#if (labelpos!"") == 'right'>
+<#if (labelPos!"") == 'right'>
     <#if parameters.required!false>
         <span class="required">*</span><#t/>
     </#if>
@@ -109,20 +107,20 @@ ${parameters.label?html}<#t/>
     </td>
     <td class="tdCheckboxInput">
 
-<#if (labelpos!"") != 'top'>
+<#if (labelPos!"") != 'top'>
  <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
-</#if>                    
-<#if (labelpos!"") != 'top' && (labelpos!"") != 'left'>
+</#if>
+<#if (labelPos!"") != 'top' && (labelPos!"") != 'left'>
 <#if parameters.label??> <label<#t/>
 <#if parameters.id??>
- for="${parameters.id?html}"<#rt/>
+ for="${parameters.id}"<#rt/>
 </#if>
 <#if hasFieldErrors>
  class="checkboxErrorLabel"<#rt/>
 <#else>
  class="checkboxLabel"<#rt/>
 </#if>
->${parameters.label?html}</label><#rt/>
+>${parameters.label}</label><#rt/>
 </#if>
 </#if>
 </#if>

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -29,7 +27,6 @@ import org.springframework.util.ClassUtils;
 import org.springframework.core.DecoratingClassLoader;
 
 import java.lang.reflect.Constructor;
-
 
 /**
  *  Same as DefaultListableBeanFactory, but it doesn't use the constructor and class cached in RootBeanDefinition

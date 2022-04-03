@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -42,10 +39,12 @@ public class IteratorTag extends ContextBeanTag {
     protected String end;
     protected String step;
 
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new IteratorComponent(stack);
     }
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -77,11 +76,14 @@ public class IteratorTag extends ContextBeanTag {
         this.step = step;
     }
 
+    @Override
     public int doEndTag() throws JspException {
         component = null;
+        clearTagStateForTagPoolingServers();
         return EVAL_PAGE;
     }
 
+    @Override
     public int doAfterBody() throws JspException {
         boolean again = component.end(pageContext.getOut(), getBody());
 
@@ -98,5 +100,26 @@ public class IteratorTag extends ContextBeanTag {
             return SKIP_BODY;
         }
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.statusAttr = null;
+        this.value = null;
+        this.begin = null;
+        this.end = null;
+        this.step = null;
+     }
 
 }

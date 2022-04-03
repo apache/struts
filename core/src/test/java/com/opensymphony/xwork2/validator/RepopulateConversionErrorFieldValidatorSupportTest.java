@@ -1,23 +1,28 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.RepopulateConversionErrorFieldValidatorSupport;
@@ -83,24 +88,25 @@ public class RepopulateConversionErrorFieldValidatorSupportTest extends XWorkTes
 		ValueStack stack = ActionContext.getContext().getValueStack();
 		MockActionInvocation invocation = new MockActionInvocation();
 		invocation.setStack(stack);
-		ActionContext.getContext().setValueStack(stack);
-		ActionContext.getContext().setActionInvocation(invocation);
+		ActionContext.getContext().withActionInvocation(invocation);
 		
 		String[] conversionErrorValue = new String[] { "some value" };
-		Map<String, Object> conversionErrors = ActionContext.getContext().getConversionErrors();
-		conversionErrors.put("someFieldName", conversionErrorValue);
-		conversionErrors.put("xxxsomeFieldName", conversionErrorValue);
-		
-		action = new ActionSupport();
+		Map<String, ConversionData> conversionErrors = ActionContext.getContext().getConversionErrors();
+		conversionErrors.put("someFieldName", new ConversionData(conversionErrorValue, Integer.class));
+		conversionErrors.put("xxxsomeFieldName", new ConversionData(conversionErrorValue, Integer.class));
+
+		TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
+
+		action = container.inject(ActionSupport.class);
 		validator1 = 
 			new InternalRepopulateConversionErrorFieldValidatorSupport();
 		validator1.setFieldName("someFieldName");
-		validator1.setValidatorContext(new DelegatingValidatorContext(action));
+		validator1.setValidatorContext(new DelegatingValidatorContext(action, tpf));
 		
 		validator2 = 
 			new InternalRepopulateConversionErrorFieldValidatorSupport();
 		validator2.setFieldName("someFieldName");
-		validator2.setValidatorContext(new DelegatingValidatorContext(action) {
+		validator2.setValidatorContext(new DelegatingValidatorContext(action, tpf) {
 			@Override
             public String getFullFieldName(String fieldName) {
 				return "xxx"+fieldName;

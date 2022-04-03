@@ -1,0 +1,1 @@
+<a id="mylink" href="a">should not HTML escape: < & ></a>

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.config_browser;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -27,6 +24,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import com.opensymphony.xwork2.validator.Validator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +36,7 @@ import java.util.List;
  */
 public class ListValidatorsAction extends ActionSupport {
 
-    private static final long serialVersionUID = 1L;
+    private static final Logger LOG = LogManager.getLogger(ListValidatorsAction.class);
 
     private String clazz;
     private String context;

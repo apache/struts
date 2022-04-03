@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.rest;
 
 import com.opensymphony.xwork2.config.Configuration;
@@ -121,6 +118,7 @@ public class RestActionMapper extends DefaultActionMapper {
     private boolean allowDynamicMethodCalls = false;
     
     public RestActionMapper() {
+        this.defaultMethodName = indexMethodName;
     }
     
     public String getIdParameterName() {
@@ -132,52 +130,52 @@ public class RestActionMapper extends DefaultActionMapper {
         this.idParameterName = idParameterName;
     }
 
-    @Inject(required=false,value="struts.mapper.indexMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_INDEX_METHOD_NAME)
     public void setIndexMethodName(String indexMethodName) {
         this.indexMethodName = indexMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.getMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_GET_METHOD_NAME)
     public void setGetMethodName(String getMethodName) {
         this.getMethodName = getMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.postMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_POST_METHOD_NAME)
     public void setPostMethodName(String postMethodName) {
         this.postMethodName = postMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.editMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_EDIT_METHOD_NAME)
     public void setEditMethodName(String editMethodName) {
         this.editMethodName = editMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.newMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_NEW_METHOD_NAME)
     public void setNewMethodName(String newMethodName) {
         this.newMethodName = newMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.deleteMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_DELETE_METHOD_NAME)
     public void setDeleteMethodName(String deleteMethodName) {
         this.deleteMethodName = deleteMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.putMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_PUT_METHOD_NAME)
     public void setPutMethodName(String putMethodName) {
         this.putMethodName = putMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.optionsMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_OPTIONS_METHOD_NAME)
     public void setOptionsMethodName(String optionsMethodName) {
         this.optionsMethodName = optionsMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.postContinueMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_POST_CONTINUE_METHOD_NAME)
     public void setPostContinueMethodName(String postContinueMethodName) {
         this.postContinueMethodName = postContinueMethodName;
     }
 
-    @Inject(required=false,value="struts.mapper.putContinueMethodName")
+    @Inject(required = false, value = RestConstants.REST_MAPPER_PUT_CONTINUE_METHOD_NAME)
     public void setPutContinueMethodName(String putContinueMethodName) {
         this.putContinueMethodName = putContinueMethodName;
     }
@@ -299,7 +297,7 @@ public class RestActionMapper extends DefaultActionMapper {
                 fullName = fullName.substring(0, lastSlashPos);
             }
 
-            mapping.setName(fullName);
+            mapping.setName(cleanupActionName(fullName));
         }
         return mapping;
     }
@@ -320,7 +318,7 @@ public class RestActionMapper extends DefaultActionMapper {
 
             mapping.setName(actionName);
             if (allowDynamicMethodCalls) {
-                mapping.setMethod(cleanupActionName(actionMethod));
+                mapping.setMethod(cleanupMethodName(actionMethod));
             } else {
                 mapping.setMethod(null);
             }
@@ -366,7 +364,7 @@ public class RestActionMapper extends DefaultActionMapper {
             name = uri.substring(namespace.length() + 1);
         }
 
-        mapping.setNamespace(namespace);
+        mapping.setNamespace(cleanupNamespaceName(namespace));
         mapping.setName(name);
     }
 

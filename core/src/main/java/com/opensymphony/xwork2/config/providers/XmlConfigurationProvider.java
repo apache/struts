@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.config.providers;
 
@@ -19,7 +22,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.config.BeanSelectionProvider;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -49,6 +52,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -68,6 +72,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
 
@@ -81,46 +86,36 @@ import java.util.Vector;
  * @author Neo
  * @version $Revision$
  */
-public class XmlConfigurationProvider implements ConfigurationProvider {
+public abstract class XmlConfigurationProvider implements ConfigurationProvider {
 
     private static final Logger LOG = LogManager.getLogger(XmlConfigurationProvider.class);
 
+    private final String configFileName;
+    private final Set<String> loadedFileUrls = new HashSet<>();
+    private final Map<String, Element> declaredPackages = new HashMap<>();
+
     private List<Document> documents;
     private Set<String> includedFileNames;
-    private String configFileName;
     private ObjectFactory objectFactory;
 
-    private Set<String> loadedFileUrls = new HashSet<>();
-    private boolean errorIfMissing;
-    private Map<String, String> dtdMappings;
+    private Map<String, String> dtdMappings = new HashMap<>();
     private Configuration configuration;
+
     private boolean throwExceptionOnDuplicateBeans = true;
-    private Map<String, Element> declaredPackages = new HashMap<>();
 
     private FileManager fileManager;
+    private ValueSubstitutor valueSubstitutor;
 
     public XmlConfigurationProvider() {
-        this("xwork.xml", true);
+        this("struts.xml", true);
     }
 
     public XmlConfigurationProvider(String filename) {
         this(filename, true);
     }
 
-    public XmlConfigurationProvider(String filename, boolean errorIfMissing) {
+    public XmlConfigurationProvider(String filename, @Deprecated boolean notUsed) {
         this.configFileName = filename;
-        this.errorIfMissing = errorIfMissing;
-
-        Map<String, String> mappings = new HashMap<>();
-        mappings.put("-//Apache Struts//XWork 2.5//EN", "xwork-2.5.dtd");
-        mappings.put("-//Apache Struts//XWork 2.3//EN", "xwork-2.3.dtd");
-        mappings.put("-//Apache Struts//XWork 2.1.3//EN", "xwork-2.1.3.dtd");
-        mappings.put("-//Apache Struts//XWork 2.1//EN", "xwork-2.1.dtd");
-        mappings.put("-//Apache Struts//XWork 2.0//EN", "xwork-2.0.dtd");
-        mappings.put("-//Apache Struts//XWork 1.1.1//EN", "xwork-1.1.1.dtd");
-        mappings.put("-//Apache Struts//XWork 1.1//EN", "xwork-1.1.dtd");
-        mappings.put("-//Apache Struts//XWork 1.0//EN", "xwork-1.0.dtd");
-        setDtdMappings(mappings);
     }
 
     public void setThrowExceptionOnDuplicateBeans(boolean val) {
@@ -139,6 +134,11 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
     @Inject
     public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
         this.fileManager = fileManagerFactory.getFileManager();
+    }
+
+    @Inject(required = false)
+    public void setValueSubstitutor(ValueSubstitutor valueSubstitutor) {
+        this.valueSubstitutor = valueSubstitutor;
     }
 
     /**
@@ -171,11 +171,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         final XmlConfigurationProvider xmlConfigurationProvider = (XmlConfigurationProvider) o;
 
-        if ((configFileName != null) ? (!configFileName.equals(xmlConfigurationProvider.configFileName)) : (xmlConfigurationProvider.configFileName != null)) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(configFileName, xmlConfigurationProvider.configFileName);
     }
 
     @Override
@@ -210,14 +206,28 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
                     final String nodeName = child.getNodeName();
 
-                    if ("bean".equals(nodeName)) {
+                    if ("bean-selection".equals(nodeName)) {
+                        String name = child.getAttribute("name");
+                        String impl = child.getAttribute("class");
+                        try {
+                            Class classImpl = ClassLoaderUtil.loadClass(impl, getClass());
+                            if (BeanSelectionProvider.class.isAssignableFrom(classImpl)) {
+                                BeanSelectionProvider provider = (BeanSelectionProvider) classImpl.newInstance();
+                                provider.register(containerBuilder, props);
+                            } else {
+                                throw new ConfigurationException("The bean-provider: name:" + name + " class:" + impl + " does not implement " + BeanSelectionProvider.class.getName(), childNode);
+                            }
+                        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                            throw new ConfigurationException("Unable to load bean-provider: name:" + name + " class:" + impl, e, childNode);
+                        }
+                    } else if ("bean".equals(nodeName)) {
                         String type = child.getAttribute("type");
                         String name = child.getAttribute("name");
                         String impl = child.getAttribute("class");
                         String onlyStatic = child.getAttribute("static");
                         String scopeStr = child.getAttribute("scope");
                         boolean optional = "true".equals(child.getAttribute("optional"));
-                        Scope scope = Scope.SINGLETON;
+                        Scope scope;
                         if ("prototype".equals(scopeStr)) {
                             scope = Scope.PROTOTYPE;
                         } else if ("request".equals(scopeStr)) {
@@ -228,6 +238,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                             scope = Scope.SINGLETON;
                         } else if ("thread".equals(scopeStr)) {
                             scope = Scope.THREAD;
+                        } else {
+                            scope = Scope.SINGLETON;
                         }
 
                         if (StringUtils.isEmpty(name)) {
@@ -270,6 +282,12 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     } else if ("constant".equals(nodeName)) {
                         String name = child.getAttribute("name");
                         String value = child.getAttribute("value");
+
+                        if (valueSubstitutor != null) {
+                            LOG.debug("Substituting value [{}] using [{}]", value, valueSubstitutor.getClass().getName());
+                            value = valueSubstitutor.substitute(value);
+                        }
+
                         props.setProperty(name, value, childNode);
                     } else if (nodeName.equals("unknown-handler-stack")) {
                         List<UnknownHandlerConfig> unknownHandlerStack = new ArrayList<UnknownHandlerConfig>();
@@ -745,7 +763,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 {
                     // if <result ...>something</result> then we add a parameter of 'something' as this is the most used result param
                     if (resultElement.getChildNodes().getLength() >= 1) {
-                        resultParams = new LinkedHashMap<String, String>();
+                        resultParams = new LinkedHashMap<>();
 
                         String paramName = config.getDefaultResultParam();
                         if (paramName != null) {
@@ -763,7 +781,7 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                                 resultParams.put(paramName, val);
                             }
                         } else {
-                            LOG.warn("No default parameter defined for result [{}] of type [{}] ", config.getName(), config.getClassName());
+                            LOG.debug("No default parameter defined for result [{}] of type [{}] ", config.getName(), config.getClassName());
                         }
                     }
                 }
@@ -859,14 +877,23 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
         if (allowedMethodsEls.getLength() > 0) {
             // user defined 'allowed-methods' so used them whatever Strict DMI was enabled or not
             allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
-
-            if (allowedMethodsEls.getLength() > 0) {
-                Node n = allowedMethodsEls.item(0).getFirstChild();
-                if (n != null) {
-                    String s = n.getNodeValue().trim();
-                    if (s.length() > 0) {
-                        allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(s));
+            // Fix for WW-5029 (concatenate all possible text node children)
+            final Node allowedMethodsNode = allowedMethodsEls.item(0);
+            if (allowedMethodsNode != null) {
+                final NodeList allowedMethodsChildren = allowedMethodsNode.getChildNodes();
+                final StringBuilder allowedMethodsSB = new StringBuilder();
+                for (int i = 0; i < allowedMethodsChildren.getLength(); i++) {
+                    Node allowedMethodsChildNode = allowedMethodsChildren.item(i);
+                    if (allowedMethodsChildNode != null && allowedMethodsChildNode.getNodeType() == Node.TEXT_NODE) {
+                        String childNodeValue = allowedMethodsChildNode.getNodeValue();
+                        childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
+                        if (childNodeValue.length() > 0) {
+                            allowedMethodsSB.append(childNodeValue);
+                        }
                     }
+                }
+                if (allowedMethodsSB.length() > 0) {
+                    allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(allowedMethodsSB.toString()));
                 }
             }
         } else if (packageContext.isStrictMethodInvocation()) {
@@ -922,11 +949,23 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
 
         if (globalAllowedMethodsElms.getLength() > 0) {
             Set<String> globalAllowedMethods = new HashSet<>();
-            Node n = globalAllowedMethodsElms.item(0).getFirstChild();
-            if (n != null) {
-                String s = n.getNodeValue().trim();
-                if (s.length() > 0) {
-                    globalAllowedMethods = TextParseUtil.commaDelimitedStringToSet(s);
+            // Fix for WW-5029 (concatenate all possible text node children)
+            Node globaAllowedMethodsNode = globalAllowedMethodsElms.item(0);
+            if (globaAllowedMethodsNode != null) {
+                NodeList globaAllowedMethodsChildren = globaAllowedMethodsNode.getChildNodes();
+                final StringBuilder globalAllowedMethodsSB = new StringBuilder();
+                for (int i = 0; i < globaAllowedMethodsChildren.getLength(); i++) {
+                    Node globalAllowedMethodsChildNode = globaAllowedMethodsChildren.item(i);
+                    if (globalAllowedMethodsChildNode != null && globalAllowedMethodsChildNode.getNodeType() == Node.TEXT_NODE) {
+                        String childNodeValue = globalAllowedMethodsChildNode.getNodeValue();
+                        childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
+                        if (childNodeValue.length() > 0) {
+                            globalAllowedMethodsSB.append(childNodeValue);
+                        }
+                    }
+                }
+                if (globalAllowedMethodsSB.length() > 0) {
+                    globalAllowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(globalAllowedMethodsSB.toString()));
                 }
             }
             packageContext.addGlobalAllowedMethods(globalAllowedMethods);
@@ -1024,12 +1063,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
             }
 
             if (urls == null || !urls.hasNext()) {
-                if (errorIfMissing) {
-                    throw new ConfigurationException("Could not open files of the name " + fileName, ioException);
-                } else {
-                    LOG.trace("Unable to locate configuration files of the name {}, skipping", fileName);
-                    return docs;
-                }
+                LOG.debug("Ignoring file that does not exist: " + fileName, ioException);
+                return docs;
             }
 
             URL url = null;
@@ -1041,10 +1076,14 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                     InputSource in = new InputSource(is);
 
                     in.setSystemId(url.toString());
-
-                    docs.add(DomHelper.parse(in, dtdMappings));
+                    
+                    Document helperDoc = DomHelper.parse(in, dtdMappings);
+                    if (helperDoc != null) {
+                        docs.add(helperDoc);
+                    }
+                    
                     loadedFileUrls.add(url.toString());
-                } catch (XWorkException e) {
+                } catch (StrutsException e) {
                     if (includeElement != null) {
                         throw new ConfigurationException("Unable to load " + url, e, includeElement);
                     } else {

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.xwork2.FileManager;
@@ -28,6 +25,9 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import freemarker.cache.*;
+import freemarker.core.HTMLOutputFormat;
+import freemarker.core.OutputFormat;
+import freemarker.core.TemplateClassResolver;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
@@ -52,7 +52,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 
 /**
  * <p>
@@ -313,23 +312,46 @@ public class FreemarkerManager {
      * @throws TemplateException in case of errors during creating the configuration
      */
     protected Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
-        Configuration configuration = new Configuration(Configuration.VERSION_2_3_0);
+        Version incompatibleImprovements = getFreemarkerVersion(servletContext);
+
+        Configuration configuration = new Configuration(incompatibleImprovements);
 
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 
         if (mruMaxStrongSize > 0) {
+            LOG.debug("Sets Configuration.CACHE_STORAGE_KEY to strong:{}", mruMaxStrongSize);
             configuration.setSetting(Configuration.CACHE_STORAGE_KEY, "strong:" + mruMaxStrongSize);
         }
         if (templateUpdateDelay != null) {
+            LOG.debug("Sets Configuration.TEMPLATE_UPDATE_DELAY_KEY to {}", templateUpdateDelay);
             configuration.setSetting(Configuration.TEMPLATE_UPDATE_DELAY_KEY, templateUpdateDelay);
         }
         if (encoding != null) {
+            LOG.debug("Sets DefaultEncoding to {}", encoding);
             configuration.setDefaultEncoding(encoding);
         }
+        LOG.debug("Disabled localized lookups");
         configuration.setLocalizedLookup(false);
+        LOG.debug("Enabled whitespace stripping");
         configuration.setWhitespaceStripping(true);
+        LOG.debug("Sets NewBuiltinClassResolver to TemplateClassResolver.SAFER_RESOLVER");
+        configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
+        LOG.debug("Sets HTML as an output format and escaping policy");
+        configuration.setAutoEscapingPolicy(Configuration.ENABLE_IF_DEFAULT_AUTO_ESCAPING_POLICY);
+        configuration.setOutputFormat(HTMLOutputFormat.INSTANCE);
 
         return configuration;
+    }
+
+    protected Version getFreemarkerVersion(ServletContext servletContext) {
+        Version incompatibleImprovements = Configuration.VERSION_2_3_28;
+
+        String incompatibleImprovementsParam = servletContext.getInitParameter("freemarker." + Configuration.INCOMPATIBLE_IMPROVEMENTS_KEY_SNAKE_CASE);
+        if (incompatibleImprovementsParam != null) {
+            incompatibleImprovements = new Version(incompatibleImprovementsParam);
+        }
+
+        return incompatibleImprovements;
     }
 
 
@@ -388,7 +410,8 @@ public class FreemarkerManager {
     }
 
     protected ObjectWrapper createObjectWrapper(ServletContext servletContext) {
-        StrutsBeanWrapper wrapper = new StrutsBeanWrapper(altMapWrapper);
+        Version incompatibleImprovements = getFreemarkerVersion(servletContext);
+        StrutsBeanWrapper wrapper = new StrutsBeanWrapper(altMapWrapper, incompatibleImprovements);
         wrapper.setUseCache(cacheBeanWrapper);
         return wrapper;
     }
@@ -506,8 +529,8 @@ public class FreemarkerManager {
         ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
         populateContext(model, stack, action, request, response);
         if (tagLibraries != null) {
-            for (String prefix : tagLibraries.keySet()) {
-                model.put(prefix, tagLibraries.get(prefix).getModels(stack, request, response));
+            for (Map.Entry<String, TagLibraryModelProvider> entry : tagLibraries.entrySet()) {
+                model.put(entry.getKey(), entry.getValue().getModels(stack, request, response));
             }
         }
 

@@ -1,10 +1,27 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -17,12 +34,14 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.validators.ConditionalVisitorFieldValidator;
 import com.opensymphony.xwork2.validator.validators.ConversionErrorFieldValidator;
+import com.opensymphony.xwork2.validator.validators.CreditCardValidator;
 import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.EmailValidator;
 import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.validators.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.LongRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
@@ -30,6 +49,7 @@ import com.opensymphony.xwork2.validator.validators.ShortRangeFieldValidator;
 import com.opensymphony.xwork2.validator.validators.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.validators.URLValidator;
 import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
+import org.apache.struts2.StrutsConstants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,7 +70,7 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         List<Validator> validators = manager.getValidators(AnnotationValidationAction.class, null);
 
         // then
-        assertEquals(validators.size(), 16);
+        assertEquals(validators.size(), 18);
         for (Validator validator : validators) {
             validate(validator);
         }
@@ -89,12 +109,16 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             validateDoubleRangeFieldValidator((DoubleRangeFieldValidator) validator);
         } else if (validator.getValidatorType().equals("email")) {
             validateEmailValidator((EmailValidator) validator);
+        } else if (validator.getValidatorType().equals("creditcard")) {
+            validateCreditCardValidator((CreditCardValidator) validator);
         } else if (validator.getValidatorType().equals("expression")) {
             validateExpressionValidator((ExpressionValidator) validator);
         } else if (validator.getValidatorType().equals("fieldexpression")) {
             validateFieldExpressionValidator((FieldExpressionValidator) validator);
         } else if (validator.getValidatorType().equals("int")) {
             validateIntRangeFieldValidator((IntRangeFieldValidator) validator);
+        } else if (validator.getValidatorType().equals("long")) {
+            validateLongRangeFieldValidator((LongRangeFieldValidator) validator);
         } else if (validator.getValidatorType().equals("required")) {
             validateRequiredFieldValidator((RequiredFieldValidator) validator);
         } else if (validator.getValidatorType().equals("requiredstring")) {
@@ -175,6 +199,16 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         assertEquals(Integer.valueOf(1), validator.getMin());
     }
 
+    private void validateLongRangeFieldValidator(LongRangeFieldValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals("int.key", validator.getMessageKey());
+        assertEquals("Foo is out of range!", validator.getDefaultMessage());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(Long.valueOf(10), validator.getMax());
+        assertEquals(Long.valueOf(1), validator.getMin());
+    }
+
     private void validateFieldExpressionValidator(FieldExpressionValidator validator) {
         assertEquals("foo", validator.getFieldName());
         assertEquals("It is not true!", validator.getDefaultMessage());
@@ -197,6 +231,17 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
         assertEquals(EmailValidator.EMAIL_ADDRESS_PATTERN, validator.getRegex());
         assertEquals("Foo isn't a valid e-mail!", validator.getDefaultMessage());
         assertEquals("email.key", validator.getMessageKey());
+        assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
+        assertEquals(true, validator.isShortCircuit());
+        assertEquals(false, validator.isCaseSensitive());
+        assertEquals(true, validator.isTrimed());
+    }
+
+    private void validateCreditCardValidator(CreditCardValidator validator) {
+        assertEquals("foo", validator.getFieldName());
+        assertEquals(CreditCardValidator.CREDIT_CARD_PATTERN, validator.getRegex());
+        assertEquals("Foo isn't a valid credit card!", validator.getDefaultMessage());
+        assertEquals("creditCard.key", validator.getMessageKey());
         assertTrue(Arrays.equals(new String[]{"one", "two", "three"}, validator.getMessageParameters()));
         assertEquals(true, validator.isShortCircuit());
         assertEquals(false, validator.isCaseSensitive());
@@ -286,12 +331,12 @@ public class AnnotationValidationConfigurationBuilderTest extends XWorkTestCase 
             }
 
             public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-                builder.constant(XWorkConstants.DEV_MODE, true);
+                builder.constant(StrutsConstants.STRUTS_DEVMODE, true);
             }
         });
 
         // ActionContext is destroyed during rebuilding configuration
-        ActionContext.getContext().setLocale(locale);
+        ActionContext.getContext().withLocale(locale);
 
         ActionInvocation invocation = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), true);
         container.inject(invocation);

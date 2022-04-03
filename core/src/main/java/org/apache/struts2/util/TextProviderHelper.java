@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,24 +46,6 @@ public class TextProviderHelper {
      * @return the message if found, otherwise the defaultMessage
      */
     public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack) {
-        return getText(key, defaultMessage, args, stack, true);
-    }
-
-    /**
-     * <p>Get a message from the first TextProvider encountered in the stack.
-     * If the first TextProvider doesn't provide the message the default message is returned.</p>
-     * <p>The search for a TextProvider is iterative from the root of the stack.</p>
-     * <p>This method was refactored from  {@link org.apache.struts2.components.Text} to use a
-     * consistent implementation across UIBean components.</p>
-     * @param key             the message key in the resource bundle
-     * @param defaultMessage  the message to return if not found (evaluated for OGNL)
-     * @param args            an array args to be used in a {@link java.text.MessageFormat} message
-     * @param stack           the value stack to use for finding the text
-     * @param searchStack     search stack for the key
-     *
-     * @return the message if found, otherwise the defaultMessage
-     */
-    public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack, boolean searchStack) {
         String msg = null;
         TextProvider tp = null;
 
@@ -79,25 +59,17 @@ public class TextProviderHelper {
         }
 
         if (msg == null) {
-            // evaluate the defaultMessage as an OGNL expression
-            if (searchStack)
-                msg = stack.findString(defaultMessage);
-            
-            if (msg == null) {
-                // use the defaultMessage literal value
-                msg = defaultMessage;
-            }
+            // use the defaultMessage literal value
+            msg = defaultMessage;
+            msg = StringEscapeUtils.escapeHtml4(msg);
+            msg = StringEscapeUtils.escapeEcmaScript(msg);
+            LOG.debug("Message for key '{}' is null, returns escaped default message [{}]", key, msg);
 
             if (LOG.isWarnEnabled()) {
                 if (tp != null) {
                     LOG.warn("The first TextProvider in the ValueStack ({}) could not locate the message resource with key '{}'", tp.getClass().getName(), key);
                 } else {
                     LOG.warn("Could not locate the message resource '{}' as there is no TextProvider in the ValueStack.", key);
-                }
-                if (defaultMessage.equals(msg)) {
-                    LOG.warn("The default value expression '{}' was evaluated and did not match a property. The literal value '{}' will be used.", defaultMessage, defaultMessage);
-                } else {
-                    LOG.warn("The default value expression '{}' evaluated to '{}'", defaultMessage, msg);
                 }
             }
         }

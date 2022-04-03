@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,20 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
+import org.apache.struts2.components.Anchor;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import javax.servlet.jsp.JspException;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 
-
-/**
- */
 public class AnchorTest extends AbstractUITagTest {
 
     public void testBeanInfo() throws Exception {
@@ -50,6 +45,34 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verifyResource("href-1.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimple_clearTagStateSet() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setHref("a");
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verifyResource("href-1.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is unequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSimpleBadQuote() throws Exception {
@@ -61,6 +84,34 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verifyResource("href-2.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimpleBadQuote_clearTagStateSet() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setHref("a\"");
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verifyResource("href-2.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is unequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDynamicAttribute() throws Exception {
@@ -75,6 +126,37 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verifyResource("Anchor-2.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testDynamicAttribute_clearTagStateSet()  throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setHref("a");
+
+        tag.setDynamicAttribute("uri", "dynAttrName", "dynAttrValue");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verifyResource("Anchor-2.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is unequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDynamicAttributeAsExpression() throws Exception {
@@ -89,6 +171,37 @@ public class AnchorTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verifyResource("Anchor-3.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testDynamicAttributeAsExpression_clearTagStateSet() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setHref("a");
+
+        tag.setDynamicAttribute("uri", "placeholder", "%{foo}");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verifyResource("Anchor-3.txt");
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        AnchorTag freshTag = new AnchorTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is unequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     private void createAction() {
@@ -96,12 +209,116 @@ public class AnchorTest extends AbstractUITagTest {
         testAction.setFoo("bar");
     }
 
-    private AnchorTag createTag() throws JspException {
+    private AnchorTag createTag() {
         AnchorTag tag = new AnchorTag();
         tag.setPageContext(pageContext);
 
         tag.setId("mylink");
         return tag;
+    }
+
+    /**
+     * Test anchor tag body supported
+     */
+    public void testSimpleWithBody() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setHref("a");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("normal body text with nothing to escape");
+        tag.setBodyContent(body);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-3.txt");
+    }
+
+    /**
+     * Test that by default anchor tag body is HTML-escaped.
+     */
+    public void testSimpleWithBodyHTMLEscaped() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setHref("a");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("should HTML escape: < & >");
+        tag.setBodyContent(body);
+        tag.setEscapeHtmlBody("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-4.txt");
+    }
+
+    /**
+     * Test that with htmlEscapeBody false anchor tag body is not HTML-escaped.
+     */
+    public void testSimpleWithBodyNotHTMLEscaped() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setHref("a");
+        tag.setEscapeHtmlBody("false");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("should not HTML escape: < & >");
+        tag.setBodyContent(body);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-5.txt");
+    }
+
+    public void testInjectEscapeHtmlBodyFlag() throws Exception {
+        // given
+        initDispatcherWithConfigs("struts-default.xml, struts-escape-body.xml");
+        String escapeHtmlBody = container.getInstance(String.class, StrutsConstants.STRUTS_UI_ESCAPE_HTML_BODY);
+        assertEquals("true", escapeHtmlBody);
+
+        createMocks();
+
+        createAction();
+
+        AnchorTag tag = createTag();
+
+        // when
+        tag.doStartTag();
+
+        // then
+        Anchor component = (Anchor) tag.getComponent();
+        assertTrue(component.escapeHtmlBody());
+
+        tag.doEndTag();
+    }
+
+    public void testTagAttributeTakesPrecedenceOverInjectEscapeHtmlBodyFlag() throws Exception {
+        // given
+        initDispatcherWithConfigs("struts-default.xml, struts-escape-body.xml");
+        String escapeHtmlBody = container.getInstance(String.class, StrutsConstants.STRUTS_UI_ESCAPE_HTML_BODY);
+        assertEquals("true", escapeHtmlBody);
+
+        createMocks();
+
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setEscapeHtmlBody("false");
+
+        // when
+        tag.doStartTag();
+
+        // then
+        Anchor component = (Anchor) tag.getComponent();
+        assertFalse(component.escapeHtmlBody());
+
+        tag.doEndTag();
     }
 
 }

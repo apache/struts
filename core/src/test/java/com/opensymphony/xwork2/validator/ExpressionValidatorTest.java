@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.validator;
 
@@ -22,6 +25,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.easymock.EasyMock;
 
 import java.util.Collection;
@@ -37,12 +41,14 @@ import java.util.Map;
  */
 public class ExpressionValidatorTest extends XWorkTestCase {
 
+    private TextProviderFactory tpf;
+
     public void testExpressionValidationOfStringLength() throws ValidationException {
         TestBean bean = new TestBean();
         bean.setName("abc");
         ActionContext.getContext().getValueStack().push(bean);
 
-        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        DelegatingValidatorContext context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(bean, "expressionValidation", context);
         assertTrue(context.hasFieldErrors());
 
@@ -54,7 +60,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         assertEquals("Name must be greater than 5 characters, it is currently 'abc'", nameErrors.get(0));
 
         bean.setName("abcdefg");
-        context = new DelegatingValidatorContext(new ValidationAwareSupport());
+        context = new DelegatingValidatorContext(new ValidationAwareSupport(), tpf);
         container.getInstance(ActionValidatorManager.class).validate(bean, "expressionValidation", context);
         assertFalse(context.hasFieldErrors());
     }
@@ -66,7 +72,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         params.put("bar", "7");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -89,7 +95,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         params.put("bar", "7");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
+        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -107,7 +113,7 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         mock.expect("addActionError", C.ANY_ARGS);
 
         ExpressionValidator ev = new ExpressionValidator();
-        ev.setValidatorContext(new DelegatingValidatorContext(mock.proxy()));
+        ev.setValidatorContext(new DelegatingValidatorContext(mock.proxy(), tpf));
         ev.setExpression("{top}");
         ev.setValueStack(ActionContext.getContext().getValueStack());
         ev.validate("Hello"); // {top} will evaluate to Hello that is not a Boolean
@@ -134,7 +140,9 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         EasyMock.replay(invocation);
         EasyMock.replay(proxy);
 
-        ActionContext.getContext().setActionInvocation(invocation);
+        ActionContext.getContext().withActionInvocation(invocation);
+
+        tpf = container.getInstance(TextProviderFactory.class);
     }
 
 }

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -32,10 +30,17 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsException;
 
 import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
 import java.util.*;
+import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -68,7 +73,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     private ConventionsService conventionsService;
     private String nameSeparator;
 
-    protected Set<String> allowedMethods = new HashSet<>();
+    protected Set<String> allowedMethods;
 
     /**
      * Constructs the unknown handler.
@@ -88,9 +93,9 @@ public class ConventionUnknownHandler implements UnknownHandler {
     @Inject
     public ConventionUnknownHandler(Configuration configuration, ObjectFactory objectFactory,
                                     ServletContext servletContext, Container container,
-                                    @Inject("struts.convention.default.parent.package") String defaultParentPackageName,
-                                    @Inject("struts.convention.redirect.to.slash") String redirectToSlash,
-                                    @Inject("struts.convention.action.name.separator") String nameSeparator) {
+                                    @Inject(ConventionConstants.CONVENTION_DEFAULT_PARENT_PACKAGE) String defaultParentPackageName,
+                                    @Inject(ConventionConstants.CONVENTION_REDIRECT_TO_SLASH) String redirectToSlash,
+                                    @Inject(ConventionConstants.CONVENTION_ACTION_NAME_SEPARATOR) String nameSeparator) {
         this.configuration = configuration;
         this.objectFactory = objectFactory;
         this.servletContext = servletContext;
@@ -110,7 +115,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     }
 
     public ActionConfig handleUnknownAction(String namespace, String actionName)
-            throws XWorkException {
+            throws StrutsException {
         // Strip the namespace if it is just a slash
         if (namespace == null || "/".equals(namespace)) {
             namespace = "";
@@ -213,7 +218,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
         params.put(resultTypeConfig.getDefaultResultParam(), path);
 
         PackageConfig pkg = configuration.getPackageConfig(defaultParentPackageName);
-        List<InterceptorMapping> interceptors = InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(), Collections.<String, String>emptyMap(), null, objectFactory);
+        List<InterceptorMapping> interceptors = InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(), Collections.emptyMap(), null, objectFactory);
         ResultConfig config = new ResultConfig.Builder(Action.SUCCESS, resultTypeConfig.getClassName()).
                 addParams(params).build();
         results.put(Action.SUCCESS, config);
@@ -261,7 +266,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
     }
 
     public Result handleUnknownResult(ActionContext actionContext, String actionName,
-                                      ActionConfig actionConfig, String resultCode) throws XWorkException {
+                                      ActionConfig actionConfig, String resultCode) throws StrutsException {
 
         PackageConfig pkg = configuration.getPackageConfig(actionConfig.getPackageName());
         String ns = pkg.getNamespace();
@@ -313,16 +318,18 @@ public class ConventionUnknownHandler implements UnknownHandler {
         try {
             LOG.trace("Checking ServletContext for {}", path);
 
-            if (servletContext.getResource(path) != null) {
-                LOG.trace("Found");
+            URL resource = servletContext.getResource(path);
+            if (resource != null && resource.getPath().endsWith(path)) {
+                LOG.trace("Found resource {}", resource);
                 return buildResult(path, resultCode, resultsByExtension.get(ext), actionContext);
             }
 
             LOG.trace("Checking ClassLoader for {}", path);
 
             String classLoaderPath = path.startsWith("/") ? path.substring(1, path.length()) : path;
-            if (ClassLoaderUtil.getResource(classLoaderPath, getClass()) != null) {
-                LOG.trace("Found");
+            resource = ClassLoaderUtil.getResource(classLoaderPath, getClass());
+            if (resource != null && resource.getPath().endsWith(classLoaderPath)) {
+                LOG.trace("Found resource {}", resource);
                 return buildResult(path, resultCode, resultsByExtension.get(ext), actionContext);
             }
         } catch (MalformedURLException e) {
@@ -345,7 +352,7 @@ public class ConventionUnknownHandler implements UnknownHandler {
         try {
             return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
         } catch (Exception e) {
-            throw new XWorkException("Unable to build convention result", e, resultConfig);
+            throw new StrutsException("Unable to build convention result", e, resultConfig);
         }
     }
 

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.components;
 
 import java.io.Writer;
@@ -26,6 +23,9 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -75,7 +75,7 @@ public class Submit extends FormButton {
             value = "Submit";
         }
 
-        if (((key != null)) && (value == null)) {
+        if ((key != null) && (value == null)) {
             this.value = "%{getText('"+key +"')}";
         }
 
@@ -85,8 +85,11 @@ public class Submit extends FormButton {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        if (src != null)
+        if (src != null) {
             addParameter("src", findString(src));
+        }
+
+        addParameter("escapeHtmlBody", escapeHtmlBody);
     }
 
     /**
@@ -103,6 +106,10 @@ public class Submit extends FormButton {
         this.src = src;
     }
 
+    @StrutsTagAttribute(description = "Specifies whether to HTML-escape the tag body or not", type = "Boolean", defaultValue = "false")
+    public void setEscapeHtmlBody(boolean escapeHtmlBody) {
+        this.escapeHtmlBody = escapeHtmlBody;
+    }
 
     @Override
     public boolean usesBody() {

@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -35,7 +32,7 @@ import java.util.StringTokenizer;
 /**
  * Simple Restfull Action Mapper to support REST application
  * See docs for more information
- * http://struts.apache.org/docs/restfulactionmapper.html
+ * https://struts.apache.org/core-developers/restful-action-mapper.html
  */
 public class RestfulActionMapper implements ActionMapper {
     protected static final Logger LOG = LogManager.getLogger(RestfulActionMapper.class);

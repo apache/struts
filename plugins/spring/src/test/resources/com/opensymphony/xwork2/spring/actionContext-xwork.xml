@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+	<bean type="com.opensymphony.xwork2.ObjectFactory" class="com.opensymphony.xwork2.spring.SpringObjectFactory" />
+	<constant name="applicationContextPath" value="com/opensymphony/xwork2/spring/actionContext-spring.xml" />
+    <constant name="struts.disallowProxyMemberAccess" value="true" />
+    <package name="default">
+        <result-types>
+            <result-type name="null" class="com.opensymphony.xwork2.mock.MockResult" default="true"/>
+            <result-type name="springResult" class="springResult" />
+            <result-type name="chain"
+                class="com.opensymphony.xwork2.ActionChainResult" />
+        </result-types>
+
+        <interceptors>
+            <interceptor name="chain"
+                class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
+            <interceptor name="params"
+                class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"/>
+        </interceptors>
+
+		<action name="simpleAction" class="simple-action"/>
+
+        <action name="dependencyAction" class="dependency-action"/>
+
+        <action name="proxiedAction" class="proxied-action"/>
+
+        <action name="autoProxiedAction" class="auto-proxied-action"/>
+        
+        <action name="simpleActionSpringResult" class="simple-action">
+			<result name="error" type="springResult"/>
+		</action>
+
+        <action name="chainedAOPedTestBeanAction" class="pointcutted-test-bean"
+            method="getName">
+            <result name="WW-4105" type="chain">
+                <param name="actionName">chaintoAOPedTestSubBeanAction</param>
+            </result>
+        </action>
+        <action name="chaintoAOPedTestSubBeanAction" class="pointcutted-test-sub-bean"
+            method="getIssueId">
+            <interceptor-ref name="chain" />
+            <interceptor-ref name="params" />
+            <result name="WW-4105" type="null" />
+            <result name="S2-047" type="null" />
+        </action>
+    </package>
+</struts>

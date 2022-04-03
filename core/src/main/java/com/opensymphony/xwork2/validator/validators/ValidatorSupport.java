@@ -1,20 +1,25 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.validator.validators;
 
+import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.*;
@@ -25,7 +30,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Abstract implementation of the Validator interface suitable for subclassing.
  *
@@ -35,16 +39,24 @@ import java.util.List;
  */
 public abstract class ValidatorSupport implements Validator, ShortCircuitableValidator {
 
-    protected final Logger log = LogManager.getLogger(this.getClass());
+    private static final Logger LOG = LogManager.getLogger(ValidatorSupport.class);
 
-    protected String defaultMessage = "";
-    protected String messageKey;
+    public static final String EMPTY_STRING = "";
+
     private ValidatorContext validatorContext;
     private boolean shortCircuit;
     private String type;
     private String[] messageParameters;
-    protected ValueStack stack;
 
+    protected String defaultMessage = "";
+    protected String messageKey;
+    protected ValueStack stack;
+    protected TextProviderFactory textProviderFactory;
+
+    @Inject
+    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
+        this.textProviderFactory = textProviderFactory;
+    }
 
     public void setValueStack(ValueStack stack) {
         this.stack = stack;
@@ -76,7 +88,7 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
                 defaultMessage = messageKey;
             }
             if (validatorContext == null) {
-                validatorContext = new DelegatingValidatorContext(object);
+                validatorContext = new DelegatingValidatorContext(object, textProviderFactory);
             }
             List<Object> parsedMessageParameters = null;
             if (messageParameters != null) {
@@ -89,7 +101,7 @@ public abstract class ValidatorSupport implements Validator, ShortCircuitableVal
                         } catch (Exception e) {
                             // if there's an exception in parsing, we'll just treat the expression itself as the
                             // parameter
-                            log.warn("exception while parsing message parameter [{}]", messageParameter, e);
+                            LOG.warn("exception while parsing message parameter [{}]", messageParameter, e);
                             parsedMessageParameters.add(messageParameter);
                         }
                     }

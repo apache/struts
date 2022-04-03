@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,38 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.components;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.HashMap;
 
 public class ActionComponentTest extends StrutsInternalTestCase {
 
-    public void testCreateParametersForContext() throws Exception {
+    public void testCreateParametersForContext() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
         Mock mockValueStack = new Mock(ValueStack.class);
-        HashMap ctx = new HashMap();
+        HashMap<String, Object> ctx = new HashMap<>();
         mockValueStack.expectAndReturn("getContext", ctx);
         mockValueStack.expectAndReturn("getContext", ctx);
-        mockValueStack.expectAndReturn("getContext", ctx);
-        
+        mockValueStack.expectAndReturn("getActionContext", ActionContext.getContext());
+
         ActionComponent comp = new ActionComponent((ValueStack) mockValueStack.proxy(), req, res);
         comp.addParameter("foo", "bar");
         comp.addParameter("baz", new String[]{"jim", "sarah"});
-        Map params = comp.createParametersForContext();
+        HttpParameters params = comp.createParametersForContext();
         assertNotNull(params);
-        assertEquals(2, params.size());
-        assertEquals("bar", ((String[])params.get("foo"))[0]);
-        assertEquals(2, ((String[])params.get("baz")).length);
+        assertEquals(2, params.keySet().size());
+        assertEquals("bar", params.get("foo").getValue());
+        assertEquals(2, params.get("baz").getMultipleValues().length);
         mockValueStack.verify();
     }
 }

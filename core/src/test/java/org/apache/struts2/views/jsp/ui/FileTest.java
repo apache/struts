@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import java.util.Map;
@@ -52,6 +49,42 @@ public class FileTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("File-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FileTag freshTag = new FileTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testSimple_clearTagStateSet() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        FileTag tag = new FileTag();
+        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("myname");
+        tag.setAccept("*.txt");
+        tag.setValue("%{foo}");
+        tag.setSize("10");
+        tag.setTitle("mytitle");
+
+        tag.doStartTag();
+        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("File-1.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        FileTag freshTag = new FileTag();
+        freshTag.setPerformClearTagStateForTagPoolingServers(true);
+        freshTag.setPageContext(pageContext);
+        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -62,11 +95,12 @@ public class FileTest extends AbstractUITagTest {
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
-    protected Map initializedGenericTagTestProperties() {
-        Map result = super.initializedGenericTagTestProperties();
+    @Override
+    protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
+        Map<String, PropertyHolder> result = super.initializedGenericTagTestProperties();
         new PropertyHolder("accept", "someAccepted").addToMap(result);
         new PropertyHolder("size", "101").addToMap(result);
-		new PropertyHolder("value", "").addToMap(result);
+        new PropertyHolder("value", "", "").addToMap(result);
         return result;
     }
 

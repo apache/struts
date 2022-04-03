@@ -1,6 +1,4 @@
 /*
- * $Id: RestWorkflowInterceptor.java 666756 2008-06-11 18:11:00Z hermanns $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -27,7 +25,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionSupport;
 import junit.framework.TestCase;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import java.util.HashMap;
@@ -44,7 +41,6 @@ public class RestWorkflowInterceptorTest extends TestCase {
         Mock mockActionInvocation = new Mock(ActionInvocation.class);
         Mock mockActionProxy = new Mock(ActionProxy.class);
         mockActionProxy.expectAndReturn("getConfig", null);
-        mockActionInvocation.expectAndReturn("getProxy", mockActionProxy.proxy());
         mockActionInvocation.expectAndReturn("getAction", action);
         Mock mockContentTypeHandlerManager = new Mock(ContentTypeHandlerManager.class);
         mockContentTypeHandlerManager.expectAndReturn("handleResult", new AnyConstraintMatcher() {
@@ -55,9 +51,10 @@ public class RestWorkflowInterceptorTest extends TestCase {
         }, null);
         wf.setContentTypeHandlerManager((ContentTypeHandlerManager) mockContentTypeHandlerManager.proxy());
 
-        ActionContext.setContext(new ActionContext(new HashMap<String, Object>() {{
-            put(ServletActionContext.ACTION_MAPPING, new ActionMapping());
-        }}));
+        ActionContext.of(new HashMap<>())
+            .withActionMapping(new ActionMapping())
+            .bind();
+
         wf.doIntercept((ActionInvocation) mockActionInvocation.proxy());
         mockContentTypeHandlerManager.verify();
         mockActionInvocation.verify();

@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2006,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
@@ -19,8 +22,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.struts2.dispatcher.HttpParameters;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -153,7 +156,7 @@ import java.util.Map;
  */
 public class ExceptionMappingInterceptor extends AbstractInterceptor {
     
-    protected static final Logger LOG = LogManager.getLogger(ExceptionMappingInterceptor.class);
+    private static final Logger LOG = LogManager.getLogger(ExceptionMappingInterceptor.class);
 
     protected Logger categoryLogger;
     protected boolean logEnabled = false;
@@ -198,9 +201,10 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
             List<ExceptionMappingConfig> exceptionMappings = invocation.getProxy().getConfig().getExceptionMappings();
             ExceptionMappingConfig mappingConfig = this.findMappingFromExceptions(exceptionMappings, e);
             if (mappingConfig != null && mappingConfig.getResult()!=null) {
-                Map parameterMap = mappingConfig.getParams();
+                Map<String, String> mappingParams = mappingConfig.getParams();
                 // create a mutable HashMap since some interceptors will remove parameters, and parameterMap is immutable
-                invocation.getInvocationContext().setParameters(new HashMap<String, Object>(parameterMap));
+                HttpParameters parameters = HttpParameters.create(mappingParams).build();
+                invocation.getInvocationContext().setParameters(parameters);
                 result = mappingConfig.getResult();
                 publishException(invocation, new ExceptionHolder(e));
             } else {

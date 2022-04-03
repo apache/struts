@@ -1,0 +1,56 @@
+<table width="100%">
+    <tr>
+        <td colspan="6"><h4>Dynamic Attributes Allowed:</h4> false</td>
+    </tr>
+    <tr>
+        <td colspan="6">&nbsp;</td>
+    </tr>
+    <tr>
+        <th align="left" valign="top"><h4>Name</h4></th>
+        <th align="left" valign="top"><h4>Required</h4></th>
+        <th align="left" valign="top"><h4>Default</h4></th>
+        <th align="left" valign="top"><h4>Evaluated</h4></th>
+        <th align="left" valign="top"><h4>Type</h4></th>
+        <th align="left" valign="top"><h4>Description</h4></th>
+    </tr>
+        <tr>
+            <td align="left" valign="top">performClearTagStateForTagPoolingServers</td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top">Boolean</td>
+            <td align="left" valign="top">Whether to clear all tag state during doEndTag() processing (if applicable)</td>
+        </tr>
+        <tr>
+            <td align="left" valign="top">scope</td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top">action</td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top">String</td>
+            <td align="left" valign="top">The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b> (action scope <em>also</em> adds it to the page scope).</td>
+        </tr>
+        <tr>
+            <td align="left" valign="top">trimBody</td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top">true</td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top">Boolean</td>
+            <td align="left" valign="top">Set to false to prevent the default whitespace-trim of this tag's body content</td>
+        </tr>
+        <tr>
+            <td align="left" valign="top">value</td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top"></td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top">String</td>
+            <td align="left" valign="top">The value that is assigned to the variable named <i>name</i></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top">var</td>
+            <td align="left" valign="top"><strong>true</strong></td>
+            <td align="left" valign="top"></td>
+            <td align="left" valign="top">false</td>
+            <td align="left" valign="top">String</td>
+            <td align="left" valign="top">Name used to reference the value pushed into the Value Stack (default scope: action,<em>override</em> with the scope attribute).</td>
+        </tr>
+</table>

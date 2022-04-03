@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.dispatcher.mapper;
 
 import com.mockobjects.dynamic.C;
@@ -51,7 +48,7 @@ public class CompositeActionMapperTest extends TestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper3")), mapper2);
         CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "mapper1,mapper2,mapper3");
         
-        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
+        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager(Container.DEFAULT_NAME));
         String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
         mockContainer.verify();
         
@@ -69,7 +66,7 @@ public class CompositeActionMapperTest extends TestCase {
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper2")), mapper2);
         CompositeActionMapper compositeActionMapper = new CompositeActionMapper((Container) mockContainer.proxy(), "mapper1,mapper2");
 
-        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
+        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager(Container.DEFAULT_NAME));
         String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
         mockContainer.verify();
 

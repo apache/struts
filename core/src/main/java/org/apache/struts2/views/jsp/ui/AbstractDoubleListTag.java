@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,14 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.components.DoubleListUIBean;
 
-
-/**
- */
 public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
 
     protected String doubleList;
@@ -72,6 +66,7 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
 
     protected String doubleAccesskey;
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -388,4 +383,59 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
     public void setDoubleAccesskey(String doubleAccesskey) {
         this.doubleAccesskey = doubleAccesskey;
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.doubleList = null;
+        this.doubleListKey = null;
+        this.doubleListValue = null;
+        this.doubleListCssClass = null;
+        this.doubleListCssStyle = null;
+        this.doubleListTitle = null;
+        this.doubleName = null;
+        this.doubleValue = null;
+        this.formName = null;
+        this.emptyOption = null;
+        this.headerKey = null;
+        this.headerValue = null;
+        this.multiple = null;
+        this.size = null;
+        this.doubleId = null;
+        this.doubleDisabled = null;
+        this.doubleMultiple = null;
+        this.doubleSize = null;
+        this.doubleHeaderKey = null;
+        this.doubleHeaderValue = null;
+        this.doubleEmptyOption = null;
+        this.doubleCssClass = null;
+        this.doubleCssStyle = null;
+        this.doubleOnclick = null;
+        this.doubleOndblclick = null;
+        this.doubleOnmousedown = null;
+        this.doubleOnmouseup = null;
+        this.doubleOnmouseover = null;
+        this.doubleOnmousemove = null;
+        this.doubleOnmouseout = null;
+        this.doubleOnfocus = null;
+        this.doubleOnblur = null;
+        this.doubleOnkeypress = null;
+        this.doubleOnkeydown = null;
+        this.doubleOnkeyup = null;
+        this.doubleOnselect = null;
+        this.doubleOnchange = null;
+        this.doubleAccesskey = null;
+     }
+
 }

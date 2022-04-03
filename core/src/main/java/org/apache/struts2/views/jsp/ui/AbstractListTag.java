@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,13 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.components.ListUIBean;
 
-/**
- */
 public abstract class AbstractListTag extends AbstractUITag {
     protected String list;
     protected String listKey;
@@ -35,6 +30,7 @@ public abstract class AbstractListTag extends AbstractUITag {
     protected String listCssStyle;
     protected String listTitle;
 
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -80,4 +76,29 @@ public abstract class AbstractListTag extends AbstractUITag {
     public void setListTitle(String listTitle) {
         this.listTitle = listTitle;
     }
+
+    @Override
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+       if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.list = null;
+        this.listKey = null;
+        this.listValue = null;
+        this.listValueKey = null;
+        this.listLabelKey = null;
+        this.listCssClass = null;
+        this.listCssStyle = null;
+        this.listTitle = null;
+     }
+
 }

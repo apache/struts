@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.Action;
@@ -52,6 +49,7 @@ public class TestAction extends ActionSupport {
     private List list3;
     private SomeEnum status = SomeEnum.COMPLETED;
     private Float floatNumber;
+    private Long id;
 
     private final Map<String, String> texts = new HashMap<String, String>();
 
@@ -216,7 +214,7 @@ public class TestAction extends ActionSupport {
 	public void setStatus(SomeEnum status) {
 		this.status = status;
 	}
-    
+
     public List<SomeEnum> getStatusList() {
     	return Arrays.asList(SomeEnum.values());
     }
@@ -228,4 +226,13 @@ public class TestAction extends ActionSupport {
     public void setFloatNumber(Float floatNumber) {
         this.floatNumber = floatNumber;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

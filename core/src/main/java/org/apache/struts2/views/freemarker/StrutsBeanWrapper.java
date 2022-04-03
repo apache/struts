@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.freemarker;
 
 import java.util.Map;
@@ -33,6 +30,7 @@ import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
+import freemarker.template.Version;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -53,7 +51,8 @@ import freemarker.template.TemplateModel;
 public class StrutsBeanWrapper extends BeansWrapper {
     private boolean altMapWrapper;
 
-    public StrutsBeanWrapper(boolean altMapWrapper) {
+    public StrutsBeanWrapper(boolean altMapWrapper, Version incompatibleImprovements) {
+        super(incompatibleImprovements);
         this.altMapWrapper = altMapWrapper;
     }
 

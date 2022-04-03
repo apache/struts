@@ -20,11 +20,22 @@
  */
 package it.org.apache.struts2.showcase;
 
-public class ActionChainingTest extends ITBaseTest {
-    public void test() {
-        beginAt("/actionchaining/actionChain1!input");
-        assertTextPresent("Action Chain 1 Property 1: Property Set In Action Chain 1");
-        assertTextPresent("Action Chain 2 Property 1: Property Set in Action Chain 2");
-        assertTextPresent("Action Chain 3 Property 1: Property set in Action Chain 3");
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+public class ActionChainingTest {
+    @Test
+    public void test() throws Exception {
+        try (final WebClient webClient = new WebClient()) {
+            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/actionchaining/actionChain1!input");
+
+            final String pageAsText = page.asText();
+            Assert.assertTrue(pageAsText.contains("Action Chain 1 Property 1: Property Set In Action Chain 1"));
+            Assert.assertTrue(pageAsText.contains("Action Chain 2 Property 1: Property Set in Action Chain 2"));
+            Assert.assertTrue(pageAsText.contains("Action Chain 3 Property 1: Property set in Action Chain 3"));
+        }
     }
 }

@@ -11,6 +11,9 @@
 .metadata/
 Servers/
 
+# Java annotation processor (APT)
+.factorypath
+
 #VSCode
 .vscode
 
@@ -24,50 +27,22 @@ Servers/
 .java-version
 
 # Maven
-core/target
-xwork-core/target
-archetypes/struts2-archetype-angularjs/target
-archetypes/struts2-archetype-blank/target
-archetypes/struts2-archetype-convention/target
-archetypes/struts2-archetype-dbportlet/target
-archetypes/struts2-archetype-plugin/target
-archetypes/struts2-archetype-portlet/target
-archetypes/struts2-archetype-starter/target
-archetypes/target
-plugins/convention/target
-plugins/embeddedjsp/target
-plugins/osgi/target
-plugins/cdi/target
-plugins/spring/target
-plugins/jfreechart/target
-apps/rest-showcase/target
-apps/mailreader/target
-apps/portlet/target
-apps/blank/target
-apps/jboss-blank/target
-apps/mailreader/target
-apps/portlet/target
-apps/showcase/target
-apps/target
-bundles/admin/target
-plugins/config-browser/target
-plugins/jasperreports/target
-plugins/json/target
-plugins/portlet-tiles/target
-plugins/portlet/target
-plugins/sitegraph/target
-plugins/sitemesh/target
-plugins/javatemplates/target
-bundles/demo/target
-plugins/rest/target
-plugins/plexus/target
-plugins/testng/target
-plugins/dwr/target
-plugins/gxp/target
-plugins/oval/target
-plugins/junit/target
-plugins/tiles/target
-bundles/target
-plugins/target
-target
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
 plugins/testng/test-output
+test-output
+
+# Sonar
+/.sonar/
+
+# Tidelift CLI scanner
+.tidelift

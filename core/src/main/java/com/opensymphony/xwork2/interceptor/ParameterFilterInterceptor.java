@@ -1,17 +1,20 @@
 /*
- * Copyright 2002-2007,2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
@@ -20,6 +23,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -107,31 +111,29 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
 
-        Map<String, Object> parameters = invocation.getInvocationContext().getParameters();
-        HashSet<String> paramsToRemove = new HashSet<>();
+        HttpParameters parameters = invocation.getInvocationContext().getParameters();
 
         Map<String, Boolean> includesExcludesMap = getIncludesExcludesMap();
 
         for (String param : parameters.keySet()) {
             boolean currentAllowed = !isDefaultBlock();
 
-            for (String currRule : includesExcludesMap.keySet()) {
-                if (param.startsWith(currRule)
-                        && (param.length() == currRule.length()
-                        || isPropertySeparator(param.charAt(currRule.length())))) {
-                    currentAllowed = includesExcludesMap.get(currRule).booleanValue();
+            for (Map.Entry<String, Boolean> entry : includesExcludesMap.entrySet()) {
+                String currRule = entry.getKey();
+
+                if (param.startsWith(currRule) &&
+                    (param.length() == currRule.length() || isPropertySeparator(param.charAt(currRule.length())))
+                ) {
+                    currentAllowed = entry.getValue();
                 }
             }
             if (!currentAllowed) {
-                paramsToRemove.add(param);
+                LOG.debug("Removing param: {}", param);
+                parameters = parameters.remove(param);
             }
         }
 
-        LOG.debug("Params to remove: {}", paramsToRemove);
-
-        for (Object aParamsToRemove : paramsToRemove) {
-            parameters.remove(aParamsToRemove);
-        }
+        invocation.getInvocationContext().setParameters(parameters);
 
         return invocation.invoke();
     }
@@ -142,7 +144,7 @@ public class ParameterFilterInterceptor extends AbstractInterceptor {
      * @param c the char
      * @return <tt>true</tt>, if char is property separator, <tt>false</tt> otherwise.
      */
-    private static boolean isPropertySeparator(char c) {
+    private boolean isPropertySeparator(char c) {
         return c == '.' || c == '(' || c == '[';
     }
 

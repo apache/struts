@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,16 +22,13 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.Locale;
-
 
 /**
  * The Default ActionProxy implementation
@@ -53,6 +48,8 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     protected ActionConfig config;
     protected ActionInvocation invocation;
     protected UnknownHandlerManager unknownHandlerManager;
+    protected LocalizedTextProvider localizedTextProvider;
+
     protected String actionName;
     protected String namespace;
     protected String method;
@@ -113,6 +110,11 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
         this.actionEventListener = listener;
     }
 
+    @Inject
+    public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
+        this.localizedTextProvider = localizedTextProvider;
+    }
+
     public Object getAction() {
         return invocation.getAction();
     }
@@ -143,23 +145,15 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
     public String execute() throws Exception {
         ActionContext nestedContext = ActionContext.getContext();
-        ActionContext.setContext(invocation.getInvocationContext());
+        ActionContext.bind(invocation.getInvocationContext());
 
-        String retCode = null;
-
-        String profileKey = "execute: ";
         try {
-            UtilTimerStack.push(profileKey);
-
-            retCode = invocation.invoke();
+            return invocation.invoke();
         } finally {
             if (cleanupContext) {
-                ActionContext.setContext(nestedContext);
+                ActionContext.bind(nestedContext);
             }
-            UtilTimerStack.pop(profileKey);
         }
-
-        return retCode;
     }
 
 
@@ -180,32 +174,26 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
     }
 
     protected void prepare() {
-        String profileKey = "create DefaultActionProxy: ";
-        try {
-            UtilTimerStack.push(profileKey);
-            config = configuration.getRuntimeConfiguration().getActionConfig(namespace, actionName);
+        config = configuration.getRuntimeConfiguration().getActionConfig(namespace, actionName);
 
-            if (config == null && unknownHandlerManager.hasUnknownHandlers()) {
-                config = unknownHandlerManager.handleUnknownAction(namespace, actionName);
-            }
-            if (config == null) {
-                throw new ConfigurationException(getErrorMessage());
-            }
+        if (config == null && unknownHandlerManager.hasUnknownHandlers()) {
+            config = unknownHandlerManager.handleUnknownAction(namespace, actionName);
+        }
+        if (config == null) {
+            throw new ConfigurationException(getErrorMessage());
+        }
 
-            resolveMethod();
+        resolveMethod();
 
-            if (config.isAllowedMethod(method)) {
-                invocation.init(this);
-            } else {
-                throw new ConfigurationException(prepareNotAllowedErrorMessage());
-            }
-        } finally {
-            UtilTimerStack.pop(profileKey);
+        if (config.isAllowedMethod(method)) {
+            invocation.init(this);
+        } else {
+            throw new ConfigurationException(prepareNotAllowedErrorMessage());
         }
     }
 
     protected String prepareNotAllowedErrorMessage() {
-        return LocalizedTextUtil.findDefaultText(
+        return localizedTextProvider.findDefaultText(
                 "struts.exception.method-not-allowed",
                 Locale.getDefault(),
                 new String[]{method, actionName}
@@ -214,12 +202,12 @@ public class DefaultActionProxy implements ActionProxy, Serializable {
 
     protected String getErrorMessage() {
         if ((namespace != null) && (namespace.trim().length() > 0)) {
-            return LocalizedTextUtil.findDefaultText(
+            return localizedTextProvider.findDefaultText(
                     "xwork.exception.missing-package-action",
                     Locale.getDefault(),
                     new String[]{namespace, actionName});
         } else {
-            return LocalizedTextUtil.findDefaultText(
+            return localizedTextProvider.findDefaultText(
                     "xwork.exception.missing-action",
                     Locale.getDefault(),
                     new String[]{actionName});

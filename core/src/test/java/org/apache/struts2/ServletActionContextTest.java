@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
@@ -40,15 +37,14 @@ import java.util.Map;
  */
 public class ServletActionContextTest extends TestCase implements StrutsStatics {
 
-    ActionContext actionContext;
-    ServletActionContext servletActionContext;
+    private ActionContext actionContext;
     private HttpServletRequest request;
     private HttpServletResponse response;
     private MockServletContext servletContext;
 
 
     public void setUp() {
-        Map extraContext = new HashMap();
+        Map<String, Object> extraContext = new HashMap<>();
 
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
@@ -58,8 +54,7 @@ public class ServletActionContextTest extends TestCase implements StrutsStatics 
         extraContext.put(HTTP_RESPONSE, response);
         extraContext.put(SERVLET_CONTEXT, servletContext);
 
-        actionContext = new ActionContext(extraContext);
-        ServletActionContext.setContext(actionContext);
+        actionContext = ActionContext.of(extraContext).bind();
     }
 
     public void testContextParams() {
@@ -69,7 +64,7 @@ public class ServletActionContextTest extends TestCase implements StrutsStatics 
     }
 
     public void testGetContext() {
-        ActionContext threadContext = ServletActionContext.getContext();
+        ActionContext threadContext = ServletActionContext.getActionContext();
         assertEquals(actionContext, threadContext);
     }
 }

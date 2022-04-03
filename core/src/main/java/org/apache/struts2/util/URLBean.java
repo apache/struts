@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.util;
 
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
@@ -30,10 +28,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * A bean that can generate a URL.
  *
+ * FIXME: remove?
  */
 public class URLBean {
 
@@ -51,7 +49,7 @@ public class URLBean {
 
     public void setRequest(HttpServletRequest request) {
         this.request = request;
-        urlHelper = ServletActionContext.getContext().getInstance(DefaultUrlHelper.class);
+        urlHelper = ActionContext.getContext().getInstance(DefaultUrlHelper.class);
     }
 
     public void setResponse(HttpServletResponse response) {

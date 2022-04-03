@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.jsp.ui;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -50,11 +47,14 @@ public class AnchorTag extends AbstractClosingTag {
     protected String portletUrlType;
     protected String anchor;
     protected String forceAddSchemeHostAndPort;
-    
+    protected String escapeHtmlBody;
+
+    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Anchor(stack, req, res);
     }
-    
+
+    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -80,11 +80,14 @@ public class AnchorTag extends AbstractClosingTag {
         if (escapeAmp != null) {
             tag.setEscapeAmp(BooleanUtils.toBoolean(escapeAmp));
         }
-	    if (forceAddSchemeHostAndPort != null) {
+        if (forceAddSchemeHostAndPort != null) {
             tag.setForceAddSchemeHostAndPort(BooleanUtils.toBoolean(forceAddSchemeHostAndPort));
         }
+        if (escapeHtmlBody != null) {
+            tag.setEscapeHtmlBody(escapeHtmlBody);
+        }
     }
-    
+
     public void setHref(String href) {
         this.href = href;
     }
@@ -121,6 +124,7 @@ public class AnchorTag extends AbstractClosingTag {
         this.scheme = scheme;
     }
 
+    @Override
     public void setValue(String value) {
         this.value = value;
     }
@@ -144,6 +148,47 @@ public class AnchorTag extends AbstractClosingTag {
     public void setForceAddSchemeHostAndPort(String forceAddSchemeHostAndPort) {
         this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
     }
-}
 
+    /**
+     * Set via parameter to control if body content should be HTML-escaped.
+     *
+     * @param escapeHtmlBody
+     *
+     * @since 2.6
+     */
+    public void setEscapeHtmlBody(String escapeHtmlBody) {
+        this.escapeHtmlBody = escapeHtmlBody;
+    }
+
+    /**
+     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
+     */
+    @Override
+    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
+        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
+    }
+
+    @Override
+    protected void clearTagStateForTagPoolingServers() {
+        if (getPerformClearTagStateForTagPoolingServers() == false) {
+            return;  // If flag is false (default setting), do not perform any state clearing.
+        }
+        super.clearTagStateForTagPoolingServers();
+        this.href = null;
+        this.includeParams = null;
+        this.scheme = null;
+        this.action = null;
+        this.namespace = null;
+        this.method = null;
+        this.encode = null;
+        this.includeContext = null;
+        this.escapeAmp = null;
+        this.portletMode = null;
+        this.windowState = null;
+        this.portletUrlType = null;
+        this.anchor = null;
+        this.forceAddSchemeHostAndPort = null;
+    }
+
+}
 

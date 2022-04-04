@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -26,6 +29,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -37,15 +41,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static javax.servlet.http.HttpServletResponse.SC_FOUND;
 
 /**
+ * <!-- START SNIPPET: description -->
+ * <p>
  * Calls the {@link HttpServletResponse#sendRedirect(String) sendRedirect}
  * method to the location specified. The response is told to redirect the
  * browser to the specified location (a new request from the client). The
@@ -54,19 +56,33 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
  * available. This is because actions are built on a single-thread model. The
  * only way to pass data is through the session or with web parameters
  * (url?name=value) which can be OGNL expressions.
- *
+ * </p>
+ * <!-- END SNIPPET: description -->
+ * <p>
  * <b>This result type takes the following parameters:</b>
- *
+ * </p>
+ * <!-- START SNIPPET: params -->
+ * 
  * <ul>
+ * 
  * <li><b>location (default)</b> - the location to go to after execution.</li>
+ * 
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>
- * <li><b>anchor</b> - Optional.  Also known as "fragment" or colloquially as
+ * 
+ * <li><b>anchor</b> - Optional.  Also known as "fragment" or colloquially as 
  * "hash".  You can specify an anchor for a result.</li>
  * </ul>
+ * 
+ * <p>
  * This result follows the same rules from {@link StrutsResultSupport}.
- *
+ * </p>
+ * 
+ * <!-- END SNIPPET: params -->
+ * <p>
  * <b>Example:</b>
+ * </p>
+ *
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;!--
@@ -80,8 +96,9 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
+ * 
  */
-public class ServletRedirectResult extends StrutsResultSupport implements ReflectionExceptionHandler, Redirectable {
+public class ServletRedirectResult extends StrutsResultSupport implements ReflectionExceptionHandler {
 
     private static final long serialVersionUID = 6316947346435301270L;
 
@@ -125,7 +142,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     /**
      * Set the optional anchor value.
-     *
+     * 
      * @param anchor the anchor value
      */
     public void setAnchor(String anchor) {
@@ -135,7 +152,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     /**
      * Sets whether or not to prepend the servlet context path to the redirected
      * URL.
-     *
+     * 
      * @param prependServletContext <tt>true</tt> to prepend the location with the servlet context path, <tt>false</tt> otherwise.
      */
     public void setPrependServletContext(boolean prependServletContext) {
@@ -143,10 +160,6 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     }
 
     public void execute(ActionInvocation invocation) throws Exception {
-        if (invocation == null) {
-            throw new IllegalArgumentException("Invocation cannot be null!");
-        }
-
         if (anchor != null) {
             anchor = conditionalParse(anchor, invocation);
         }
@@ -156,15 +169,15 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     /**
      * Redirects to the location specified by calling
      * {@link HttpServletResponse#sendRedirect(String)}.
-     *
+     * 
      * @param finalLocation the location to redirect to.
-     * @param invocation    an encapsulation of the action execution state.
+     * @param invocation an encapsulation of the action execution state.
      * @throws Exception if an error occurs when redirecting.
      */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
         ActionContext ctx = invocation.getInvocationContext();
-        HttpServletRequest request = ctx.getServletRequest();
-        HttpServletResponse response = ctx.getServletResponse();
+        HttpServletRequest request = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) ctx.get(ServletActionContext.HTTP_RESPONSE);
 
         if (isPathUrl(finalLocation)) {
             if (!finalLocation.startsWith("/")) {
@@ -218,46 +231,35 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     protected List<String> getProhibitedResultParams() {
         return Arrays.asList(
-            DEFAULT_PARAM,
-            "namespace",
-            "method",
-            "encode",
-            "parse",
-            "location",
-            "prependServletContext",
-            "suppressEmptyParameters",
-            "anchor",
-            "statusCode"
+                DEFAULT_PARAM,
+                "namespace",
+                "method",
+                "encode",
+                "parse",
+                "location",
+                "prependServletContext",
+                "suppressEmptyParameters",
+                "anchor",
+                "statusCode"
         );
     }
 
     /**
      * Sends the redirection. Can be overridden to customize how the redirect is
      * handled (i.e. to use a different status code)
-     *
-     * @param response      The response
+     * 
+     * @param response The response
      * @param finalLocation The location URI
      * @throws IOException in case of IO errors
      */
     protected void sendRedirect(HttpServletResponse response, String finalLocation) throws IOException {
-        try {
-            if (SC_FOUND == statusCode) {
-                response.sendRedirect(finalLocation);
-            } else {
-                response.setStatus(statusCode);
-                response.setHeader("Location", finalLocation);
-                try {
-                    response.getWriter().write(finalLocation);
-                } finally {
-                    response.getWriter().close();
-                }
-            }
-        } catch (IOException ioe) {
-            LOG.warn("Unable to redirect to: {}, code: {}; {}", finalLocation, statusCode, ioe);
-            throw ioe;  // Re-throw required to preserve existing default behaviour (no stacktrace in above warn for this reason)
-        } catch (IllegalStateException ise) {
-            LOG.warn("Unable to redirect to: {}, code: {}; isCommited: {}; {}", finalLocation, statusCode, response.isCommitted(), ise);
-            throw ise;  // Re-throw required to preserve existing default behaviour (no stacktrace in above warn for this reason)
+        if (SC_FOUND == statusCode) {
+            response.sendRedirect(finalLocation);
+        } else {
+            response.setStatus(statusCode);
+            response.setHeader("Location", finalLocation);
+            response.getWriter().write(finalLocation);
+            response.getWriter().close();
         }
 
     }
@@ -272,7 +274,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
         try {
             String rawUrl = url;
             if (url.contains("?")) {
-                rawUrl = url.substring(0, url.indexOf('?'));
+                rawUrl = url.substring(0, url.indexOf("?"));
             }
             URI uri = URI.create(rawUrl.replaceAll(" ", "%20"));
             if (uri.isAbsolute()) {
@@ -294,7 +296,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     /**
      * Sets the suppressEmptyParameters option
-     *
+     * 
      * @param suppressEmptyParameters The new value for this option
      */
     public void setSuppressEmptyParameters(boolean suppressEmptyParameters) {
@@ -303,9 +305,10 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
 
     /**
      * Adds a request parameter to be added to the redirect url
-     *
-     * @param key   The parameter name
+     * 
+     * @param key The parameter name
      * @param value The parameter value
+     *
      * @return the servlet redirect result
      */
     public ServletRedirectResult addParameter(String key, Object value) {

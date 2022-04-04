@@ -1,46 +1,38 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Copyright 2002-2007,2009 The Apache Software Foundation.
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkConstants;
+import com.opensymphony.xwork2.conversion.impl.InstantiatingNullHandler;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
-import com.opensymphony.xwork2.util.ClearableValueStack;
-import com.opensymphony.xwork2.util.MemberAccessValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 
 /**
  * This interceptor sets all parameters on the value stack.
@@ -51,11 +43,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected static final int PARAM_NAME_MAX_LENGTH = 100;
 
-    private static final Pattern DMI_IGNORED_PATTERN = Pattern.compile("^(action|method):.*", Pattern.CASE_INSENSITIVE);
-
     private int paramNameMaxLength = PARAM_NAME_MAX_LENGTH;
     private boolean devMode = false;
-    private boolean dmiEnabled = false;
 
     protected boolean ordered = false;
 
@@ -68,7 +57,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         this.valueStackFactory = valueStackFactory;
     }
 
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
@@ -81,11 +70,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject
     public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
         this.acceptedPatterns = acceptedPatterns;
-    }
-
-    @Inject(value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, required = false)
-    protected void setDynamicMethodInvocation(String dmiEnabled) {
-        this.dmiEnabled = Boolean.parseBoolean(dmiEnabled);
     }
 
     /**
@@ -110,10 +94,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     /**
      * Compares based on number of '.' and '[' characters (fewer is higher)
      */
-    static final Comparator<String> rbCollator = (s1, s2) -> {
-        int l1 = countOGNLCharacters(s1);
-        int l2 = countOGNLCharacters(s2);
-        return l1 < l2 ? -1 : (l2 < l1 ? 1 : s1.compareTo(s2));
+    static final Comparator<String> rbCollator = new Comparator<String>() {
+        public int compare(String s1, String s2) {
+            int l1 = countOGNLCharacters(s1),
+                l2 = countOGNLCharacters(s2);
+            return l1 < l2 ? -1 : (l2 < l1 ? 1 : s1.compareTo(s2));
+        }
+
     };
 
     @Override
@@ -121,7 +108,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         Object action = invocation.getAction();
         if (!(action instanceof NoParameters)) {
             ActionContext ac = invocation.getInvocationContext();
-            HttpParameters parameters = retrieveParameters(ac);
+            final Map<String, Object> parameters = retrieveParameters(ac);
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Setting params {}", getParameterLogMap(parameters));
@@ -152,7 +139,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param ac The action context
      * @return The parameter map to apply
      */
-    protected HttpParameters retrieveParameters(ActionContext ac) {
+    protected Map<String, Object> retrieveParameters(ActionContext ac) {
         return ac.getParameters();
     }
 
@@ -167,25 +154,26 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      *                  In subclasses both retrieveParameters() and addParametersToContext() should be overridden.
      *                  </p>
      */
-    protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
+    protected void addParametersToContext(ActionContext ac, Map<String, Object> newParams) {
     }
 
-    protected void setParameters(final Object action, ValueStack stack, HttpParameters parameters) {
-        HttpParameters params;
-        Map<String, Parameter> acceptableParameters;
+    protected void setParameters(final Object action, ValueStack stack, final Map<String, Object> parameters) {
+        Map<String, Object> params;
+        Map<String, Object> acceptableParameters;
         if (ordered) {
-            params = HttpParameters.create().withComparator(getOrderedComparator()).withParent(parameters).build();
+            params = new TreeMap<>(getOrderedComparator());
             acceptableParameters = new TreeMap<>(getOrderedComparator());
+            params.putAll(parameters);
         } else {
-            params = HttpParameters.create().withParent(parameters).build();
+            params = new TreeMap<>(parameters);
             acceptableParameters = new TreeMap<>();
         }
 
-        for (Map.Entry<String, Parameter> entry : params.entrySet()) {
-            String parameterName = entry.getKey();
-
-            if (isAcceptableParameter(parameterName, action)) {
-                acceptableParameters.put(parameterName, entry.getValue());
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String name = entry.getKey();
+            Object value = entry.getValue();
+            if (isAcceptableParameter(name, action)) {
+                acceptableParameters.put(name, entry.getValue());
             }
         }
 
@@ -194,14 +182,14 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (clearableStack) {
             //if the stack's context can be cleared, do that to prevent OGNL
             //from having access to objects in the stack, see XW-641
-            ((ClearableValueStack) newStack).clearContextValues();
+            ((ClearableValueStack)newStack).clearContextValues();
             Map<String, Object> context = newStack.getContext();
             ReflectionContextState.setCreatingNullObjects(context, true);
             ReflectionContextState.setDenyMethodExecution(context, true);
             ReflectionContextState.setReportingConversionErrors(context, true);
 
             //keep locale from original context
-            newStack.getActionContext().withLocale(stack.getActionContext().getLocale());
+            context.put(ActionContext.LOCALE, stack.getContext().get(ActionContext.LOCALE));
         }
 
         boolean memberAccessStack = newStack instanceof MemberAccessValueStack;
@@ -213,11 +201,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             accessValueStack.setExcludeProperties(excludedPatterns.getExcludedPatterns());
         }
 
-        for (Map.Entry<String, Parameter> entry : acceptableParameters.entrySet()) {
+        for (Map.Entry<String, Object> entry : acceptableParameters.entrySet()) {
             String name = entry.getKey();
-            Parameter value = entry.getValue();
+            Object value = entry.getValue();
             try {
-                newStack.setParameter(name, value.getObject());
+                newStack.setParameter(name, value);
             } catch (RuntimeException e) {
                 if (devMode) {
                     notifyDeveloperParameterException(action, name, e.getMessage());
@@ -225,27 +213,22 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             }
         }
 
-        if (clearableStack) {
-            stack.getActionContext().withConversionErrors(newStack.getActionContext().getConversionErrors());
-        }
+        if (clearableStack && (stack.getContext() != null) && (newStack.getContext() != null))
+            stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
 
         addParametersToContext(ActionContext.getContext(), acceptableParameters);
     }
 
     protected void notifyDeveloperParameterException(Object action, String property, String message) {
-        String developerNotification = "Unexpected Exception caught setting '" + property + "' on '" + action.getClass() + ": " + message;
-        if (action instanceof TextProvider) {
-            TextProvider tp = (TextProvider) action;
-            developerNotification = tp.getText("devmode.notification",
-                    "Developer Notification:\n{0}",
-                    new String[]{developerNotification}
-            );
-        }
-
+        String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification",
+                ActionContext.getContext().getLocale(), "Developer Notification:\n{0}",
+                new Object[]{
+                        "Unexpected Exception caught setting '" + property + "' on '" + action.getClass() + ": " + message
+                }
+        );
         LOG.error(developerNotification);
-
+        // see https://issues.apache.org/jira/browse/WW-4066
         if (action instanceof ValidationAware) {
-            // see https://issues.apache.org/jira/browse/WW-4066
             Collection<String> messages = ((ValidationAware) action).getActionMessages();
             messages.add(message);
             ((ValidationAware) action).setActionMessages(messages);
@@ -255,7 +238,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     /**
      * Checks if name of parameter can be accepted or thrown away
      *
-     * @param name   parameter name
+     * @param name parameter name
      * @param action current action
      * @return true if parameter is accepted
      */
@@ -275,27 +258,36 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return rbCollator;
     }
 
-    protected String getParameterLogMap(HttpParameters parameters) {
+    protected String getParameterLogMap(Map<String, Object> parameters) {
         if (parameters == null) {
             return "NONE";
         }
 
         StringBuilder logEntry = new StringBuilder();
-        for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
-            logEntry.append(entry.getKey());
+        for (Map.Entry entry : parameters.entrySet()) {
+            logEntry.append(String.valueOf(entry.getKey()));
             logEntry.append(" => ");
-            logEntry.append(entry.getValue().getValue());
-            logEntry.append(" ");
+            if (entry.getValue() instanceof Object[]) {
+                Object[] valueArray = (Object[]) entry.getValue();
+                logEntry.append("[ ");
+                if (valueArray.length > 0 ) {
+                    for (int indexA = 0; indexA < (valueArray.length - 1); indexA++) {
+                        Object valueAtIndex = valueArray[indexA];
+                        logEntry.append(String.valueOf(valueAtIndex));
+                        logEntry.append(", ");
+                    }
+                    logEntry.append(String.valueOf(valueArray[valueArray.length - 1]));
+                }
+                logEntry.append(" ] ");
+            } else {
+                logEntry.append(String.valueOf(entry.getValue()));
+            }
         }
 
         return logEntry.toString();
     }
 
     protected boolean acceptableName(String name) {
-        if (isIgnoredDMI(name)) {
-            LOG.trace("DMI is enabled, ignoring DMI method: {}", name);
-            return false;
-        }
         boolean accepted = isWithinLengthLimit(name) && !isExcluded(name) && isAccepted(name);
         if (devMode && accepted) { // notify only when in devMode
             LOG.debug("Parameter [{}] was accepted and will be appended to action!", name);
@@ -303,56 +295,38 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return accepted;
     }
 
-    private boolean isIgnoredDMI(String name) {
-        if (dmiEnabled) {
-            return DMI_IGNORED_PATTERN.matcher(name).matches();
-        } else {
-            return false;
-        }
-    }
-
-    protected boolean isWithinLengthLimit(String name) {
+	protected boolean isWithinLengthLimit( String name ) {
         boolean matchLength = name.length() <= paramNameMaxLength;
         if (!matchLength) {
-            if (devMode) { // warn only when in devMode
-                LOG.warn("Parameter [{}] is too long, allowed length is [{}]. Use Interceptor Parameter Overriding " +
-                                "to override the limit, see more at\n" +
-                                "https://struts.apache.org/core-developers/interceptors.html#interceptor-parameter-overriding",
-                        name, paramNameMaxLength);
-            } else {
-                LOG.warn("Parameter [{}] is too long, allowed length is [{}]", name, paramNameMaxLength);
-            }
+            notifyDeveloper("Parameter [{}] is too long, allowed length is [{}]", name, String.valueOf(paramNameMaxLength));
         }
         return matchLength;
-    }
+	}
 
     protected boolean isAccepted(String paramName) {
         AcceptedPatternsChecker.IsAccepted result = acceptedPatterns.isAccepted(paramName);
         if (result.isAccepted()) {
             return true;
-        } else if (devMode) { // warn only when in devMode
-            LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
-                            "https://struts.apache.org/security/#accepted--excluded-patterns",
-                    paramName, result.getAcceptedPattern());
-        } else {
-            LOG.debug("Parameter [{}] didn't match accepted pattern [{}]!", paramName, result.getAcceptedPattern());
         }
+        notifyDeveloper("Parameter [{}] didn't match accepted pattern [{}]!", paramName, result.getAcceptedPattern());
         return false;
     }
 
     protected boolean isExcluded(String paramName) {
         ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
         if (result.isExcluded()) {
-            if (devMode) { // warn only when in devMode
-                LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
-                                "https://struts.apache.org/security/#accepted--excluded-patterns",
-                        paramName, result.getExcludedPattern());
-            } else {
-                LOG.debug("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
-            }
+            notifyDeveloper("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
             return true;
         }
         return false;
+    }
+
+    private void notifyDeveloper(String message, String... parameters) {
+        if (devMode) {
+            LOG.warn(message, parameters);
+        } else {
+            LOG.debug(message, parameters);
+        }
     }
 
     /**

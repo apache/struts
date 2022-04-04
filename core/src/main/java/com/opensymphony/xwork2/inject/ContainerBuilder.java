@@ -7,7 +7,7 @@
  * You may obtain a copy of the License at
  * </p>
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>
  * Unless required by applicable law or agreed to in writing, software
@@ -21,12 +21,7 @@
 package com.opensymphony.xwork2.inject;
 
 import java.lang.reflect.Member;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -47,7 +42,6 @@ public final class ContainerBuilder {
 
     final Map<Key<?>, InternalFactory<?>> factories = new HashMap<>();
     final List<InternalFactory<?>> singletonFactories = new ArrayList<>();
-    final List<InternalFactory<?>> earlyInitializableFactories = new ArrayList<>();
     final List<Class<?>> staticInjections = new ArrayList<>();
     boolean created;
     boolean allowDuplicates = false;
@@ -57,11 +51,6 @@ public final class ContainerBuilder {
                 public Container create(InternalContext context) {
                     return context.getContainer();
                 }
-
-                @Override
-                public Class<? extends Container> type() {
-                    return Container.class;
-                }
             };
 
     private static final InternalFactory<Logger> LOGGER_FACTORY =
@@ -70,11 +59,6 @@ public final class ContainerBuilder {
                     Member member = context.getExternalContext().getMember();
                     return member == null ? Logger.getAnonymousLogger()
                             : Logger.getLogger(member.getDeclaringClass().getName());
-                }
-
-                @Override
-                public Class<? extends Logger> type() {
-                    return Logger.class;
                 }
             };
 
@@ -99,33 +83,19 @@ public final class ContainerBuilder {
         checkKey(key);
         final InternalFactory<? extends T> scopedFactory = scope.scopeFactory(key.getType(), key.getName(), factory);
         factories.put(key, scopedFactory);
-
-        InternalFactory<T> callableFactory = createCallableFactory(key, scopedFactory);
-        if (EarlyInitializable.class.isAssignableFrom(factory.type())) {
-            earlyInitializableFactories.add(callableFactory);
-        } else if (scope == Scope.SINGLETON) {
-            singletonFactories.add(callableFactory);
-        }
-
-        return this;
-    }
-
-    private <T> InternalFactory<T> createCallableFactory(final Key<T> key, final InternalFactory<? extends T> scopedFactory) {
-        return new InternalFactory<T>() {
-            public T create(InternalContext context) {
-                try {
-                    context.setExternalContext(ExternalContext.newInstance(null, key, context.getContainerImpl()));
-                    return scopedFactory.create(context);
-                } finally {
-                    context.setExternalContext(null);
+        if (scope == Scope.SINGLETON) {
+            singletonFactories.add(new InternalFactory<T>() {
+                public T create(InternalContext context) {
+                    try {
+                        context.setExternalContext(ExternalContext.newInstance(null, key, context.getContainerImpl()));
+                        return scopedFactory.create(context);
+                    } finally {
+                        context.setExternalContext(null);
+                    }
                 }
-            }
-
-            @Override
-            public Class<? extends T> type() {
-                return scopedFactory.type();
-            }
-        };
+            });
+        }
+        return this;
     }
 
     /**
@@ -160,11 +130,6 @@ public final class ContainerBuilder {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            }
-
-            @Override
-            public Class<? extends T> type() {
-                return factory.type();
             }
 
             @Override
@@ -251,11 +216,6 @@ public final class ContainerBuilder {
                             context.getContainerImpl().getConstructor(implementation);
                 }
                 return (T) constructor.construct(context, type);
-            }
-
-            @Override
-            public Class<? extends T> type() {
-                return implementation;
             }
 
             @Override
@@ -543,11 +503,6 @@ public final class ContainerBuilder {
             }
 
             @Override
-            public Class<? extends T> type() {
-                return (Class<? extends T>) value.getClass();
-            }
-
-            @Override
             public String toString() {
                 return new LinkedHashMap<String, Object>() {
                     {
@@ -619,16 +574,6 @@ public final class ContainerBuilder {
                 }
             });
         }
-
-        container.callInContext(new ContainerImpl.ContextualCallable<Void>() {
-            public Void call(InternalContext context) {
-                for (InternalFactory<?> factory : earlyInitializableFactories) {
-                    factory.create(context);
-                }
-                return null;
-            }
-        });
-
         container.injectStatics(staticInjections);
         return container;
     }

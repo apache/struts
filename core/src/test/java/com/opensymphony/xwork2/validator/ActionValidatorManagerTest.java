@@ -1,21 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -44,47 +26,47 @@ public class ActionValidatorManagerTest extends XWorkTestCase {
         /* MockAction.class */
         // reference number
         ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
-        final RequiredStringValidator referenceNumberRequiredStringValidator = container.inject(RequiredStringValidator.class);
+        final RequiredStringValidator referenceNumberRequiredStringValidator = new RequiredStringValidator();
         referenceNumberRequiredStringValidator.setFieldName("referenceNumber");
         referenceNumberRequiredStringValidator.setDefaultMessage("Reference number is required");
         referenceNumberRequiredStringValidator.setValueStack(stack);
 
         // order
-        final RequiredFieldValidator orderRequiredValidator = container.inject(RequiredFieldValidator.class);
+        final RequiredFieldValidator orderRequiredValidator = new RequiredFieldValidator();
         orderRequiredValidator.setFieldName("order");
         orderRequiredValidator.setDefaultMessage("Order is required");
         orderRequiredValidator.setValueStack(stack);
 
         // customer
-        final RequiredFieldValidator customerRequiredValidator = container.inject(RequiredFieldValidator.class);
+        final RequiredFieldValidator customerRequiredValidator = new RequiredFieldValidator();
         customerRequiredValidator.setFieldName("customer");
         customerRequiredValidator.setDefaultMessage("Customer is required");
         customerRequiredValidator.setValueStack(stack);
-        final VisitorFieldValidator customerVisitorValidator = container.inject(VisitorFieldValidator.class);
+        final VisitorFieldValidator customerVisitorValidator = new VisitorFieldValidator();
         customerVisitorValidator.setAppendPrefix(true);
         customerVisitorValidator.setFieldName("customer");
         customerVisitorValidator.setValueStack(stack);
 
         /* Customer.class */
         // customer -> name
-        final RequiredStringValidator customerNameRequiredStringValidator = container.inject(RequiredStringValidator.class);
+        final RequiredStringValidator customerNameRequiredStringValidator = new RequiredStringValidator();
         customerNameRequiredStringValidator.setFieldName("name");
         customerNameRequiredStringValidator.setDefaultMessage("Name is required");
         customerNameRequiredStringValidator.setValueStack(stack);
 
         // customer -> age
-        final RequiredFieldValidator customerAgeRequiredValidator = container.inject(RequiredFieldValidator.class);
+        final RequiredFieldValidator customerAgeRequiredValidator = new RequiredFieldValidator();
         customerAgeRequiredValidator.setFieldName("age");
         customerAgeRequiredValidator.setDefaultMessage("Age is required");
         customerAgeRequiredValidator.setValueStack(stack);
 
         // customer -> Address
-        final RequiredFieldValidator customerAddressRequiredFieldValidator = container.inject(RequiredFieldValidator.class);
+        final RequiredFieldValidator customerAddressRequiredFieldValidator = new RequiredFieldValidator();
         customerAddressRequiredFieldValidator.setFieldName("address");
         customerAddressRequiredFieldValidator.setDefaultMessage("Address is required");
         customerAddressRequiredFieldValidator.setValueStack(stack);
 
-        final VisitorFieldValidator customerAddressVisitorFieldValidator = container.inject(VisitorFieldValidator.class);
+        final VisitorFieldValidator customerAddressVisitorFieldValidator = new VisitorFieldValidator();
         customerAddressVisitorFieldValidator.setFieldName("address");
         customerAddressVisitorFieldValidator.setAppendPrefix(true);
         //customerAddressVisitorFieldValidator.setDefaultMessage("");
@@ -94,26 +76,26 @@ public class ActionValidatorManagerTest extends XWorkTestCase {
 
         /* Address.class */
         // customer -> Address -> street
-        final RequiredStringValidator customerAddressStreetRequiredFieldValidator = container.inject(RequiredStringValidator.class);
+        final RequiredStringValidator customerAddressStreetRequiredFieldValidator = new RequiredStringValidator();
         customerAddressStreetRequiredFieldValidator.setFieldName("street");
         customerAddressStreetRequiredFieldValidator.setDefaultMessage("Street is required");
         customerAddressStreetRequiredFieldValidator.setShortCircuit(true);
         customerAddressStreetRequiredFieldValidator.setValueStack(stack);
 
-        final RequiredStringValidator customerAddressStreetRequiredFieldValidator2 = container.inject(RequiredStringValidator.class);
+        final RequiredStringValidator customerAddressStreetRequiredFieldValidator2 = new RequiredStringValidator();
         customerAddressStreetRequiredFieldValidator2.setFieldName("street");
         customerAddressStreetRequiredFieldValidator2.setDefaultMessage("Street is required 2");
         customerAddressStreetRequiredFieldValidator2.setShortCircuit(true);
         customerAddressStreetRequiredFieldValidator2.setValueStack(stack);
 
         // customer -> Address -> pobox
-        final RequiredStringValidator customerAddressPoboxRequiredFieldValidator = container.inject(RequiredStringValidator.class);
+        final RequiredStringValidator customerAddressPoboxRequiredFieldValidator = new RequiredStringValidator();
         customerAddressPoboxRequiredFieldValidator.setFieldName("pobox");
         customerAddressPoboxRequiredFieldValidator.setDefaultMessage("PO Box is required");
         customerAddressPoboxRequiredFieldValidator.setShortCircuit(false);
         customerAddressPoboxRequiredFieldValidator.setValueStack(stack);
 
-        final RequiredStringValidator customerAddressPoboxRequiredFieldValidator2 = container.inject(RequiredStringValidator.class);
+        final RequiredStringValidator customerAddressPoboxRequiredFieldValidator2 = new RequiredStringValidator();
         customerAddressPoboxRequiredFieldValidator2.setFieldName("pobox");
         customerAddressPoboxRequiredFieldValidator2.setDefaultMessage("PO Box is required 2");
         customerAddressPoboxRequiredFieldValidator2.setShortCircuit(false);
@@ -164,12 +146,10 @@ public class ActionValidatorManagerTest extends XWorkTestCase {
                 return Collections.emptyList();
             }
         };
-        container.inject(validatorManager);
-
         customerVisitorValidator.setActionValidatorManager(validatorManager);
         customerAddressVisitorFieldValidator.setActionValidatorManager(validatorManager);
 
-        MockAction action = container.inject(MockAction.class);
+        MockAction action = new MockAction();
         stack.push(action);
         validatorManager.validate(action, "ctx");
 
@@ -190,7 +170,7 @@ public class ActionValidatorManagerTest extends XWorkTestCase {
         assertEquals((action.getFieldErrors().get("customer.address.pobox")).size(), 2);
     }
 
-    public static class MockAction extends ActionSupport {
+    private class MockAction extends ActionSupport {
 
         private String referenceNumber;
         private Integer order;
@@ -208,7 +188,7 @@ public class ActionValidatorManagerTest extends XWorkTestCase {
     }
 
 
-    public static class Customer {
+    private class Customer {
         private String name;
         private Integer age;
         private Address address = new Address();
@@ -223,7 +203,7 @@ public class ActionValidatorManagerTest extends XWorkTestCase {
         public void setAddress(Address address) { this.address = address; }
     }
 
-    public static class Address {
+    private class Address {
         private String street;
         private String pobox;
 

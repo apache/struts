@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.result;
 
 import com.mockobjects.dynamic.C;
@@ -25,6 +28,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.result.HttpHeaderResult;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -35,19 +39,18 @@ import java.util.Map;
  */
 public class HttpHeaderResultTest extends StrutsInternalTestCase {
 
-    private Mock invocationMock;
-    private ActionInvocation invocation;
-    private HttpHeaderResult result;
-    private HttpServletResponse response;
-    private Mock responseMock;
-    private ReflectionProvider reflectionProvider;
+    ActionInvocation invocation;
+    HttpHeaderResult result;
+    HttpServletResponse response;
+    Mock responseMock;
+    ReflectionProvider reflectionProvider;
 
     public void testHeaderValuesAreNotParsedWhenParseIsFalse() throws Exception {
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<String, String>();
         params.put("headers.foo", "${bar}");
         params.put("headers.baz", "baz");
 
-        Map<String, String> values = new HashMap<>();
+        Map<String, String> values = new HashMap<String, String>();
         values.put("bar", "abc");
         ActionContext.getContext().getValueStack().push(values);
 
@@ -61,11 +64,11 @@ public class HttpHeaderResultTest extends StrutsInternalTestCase {
     }
 
     public void testHeaderValuesAreParsedAndSet() throws Exception {
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<String, String>();
         params.put("headers.foo", "${bar}");
         params.put("headers.baz", "baz");
 
-        Map<String, String> values = new HashMap<>();
+        Map<String, String> values = new HashMap<String, String>();
         values.put("bar", "abc");
         ActionContext.getContext().getValueStack().push(values);
 
@@ -113,31 +116,19 @@ public class HttpHeaderResultTest extends StrutsInternalTestCase {
         responseMock.verify();
     }
 
-    public void testPassingNullInvocation() throws Exception {
-        try {
-            result.execute(null);
-            fail("Exception should be thrown!");
-        } catch (IllegalArgumentException e) {
-            assertEquals("Invocation cannot be null!", e.getMessage());
-        }
-    }
-
     protected void setUp() throws Exception {
         super.setUp();
         result = new HttpHeaderResult();
         responseMock = new Mock(HttpServletResponse.class);
         response = (HttpServletResponse) responseMock.proxy();
-        invocationMock = new Mock(ActionInvocation.class);
-        invocationMock.expectAndReturn("getInvocationContext", ActionContext.getContext());
-        invocationMock.expectAndReturn("getStack", ActionContext.getContext().getValueStack());
-        invocation = (ActionInvocation) invocationMock.proxy();
+        invocation = (ActionInvocation) new Mock(ActionInvocation.class).proxy();
         reflectionProvider = container.getInstance(ReflectionProvider.class);
         ServletActionContext.setResponse(response);
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        ActionContext.clear();
+        ActionContext.setContext(null);
     }
 
 }

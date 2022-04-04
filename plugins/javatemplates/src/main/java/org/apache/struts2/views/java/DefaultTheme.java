@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,6 +20,7 @@
  */
 package org.apache.struts2.views.java;
 
+import com.opensymphony.xwork2.config.impl.LocatableFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 

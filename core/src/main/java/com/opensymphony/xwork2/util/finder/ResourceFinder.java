@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2003,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.util.finder;
 
@@ -47,7 +44,7 @@ public class ResourceFinder {
     }
 
     public ResourceFinder(String path) {
-        this(path, new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()), (URL[]) null);
+        this(path, new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()), null);
     }
 
     public ResourceFinder(String path, URL... urls) {
@@ -55,32 +52,17 @@ public class ResourceFinder {
     }
 
     public ResourceFinder(String path, ClassLoaderInterface classLoaderInterface) {
-        this(path, classLoaderInterface, (URL[]) null);
+        this(path, classLoaderInterface, null);
     }
 
-    /**
-     * Create a ResourceFinder instance for looking up resources (via ClassLoader or via specific URLs
-     * specifying resource locations).
-     * 
-     * This class was functional in Struts 2.3.x, but broken for Struts 2.5.x (before 2.5.24), when dealing with
-     * JAR resources in certain circumstances.  The current logic permits the base path to be "" (empty string),
-     * which is required to also match JAR entries rooted at "" and not just file entries rooted at "/".
-     * 
-     * @param path  Base path from which to look for resources (typically "xyz/abc/klm" form for file or
-     *              jar contents).
-     * @param classLoaderInterface  ClassLoader to perform the resource lookup.  If null, a default Thread
-     *              ClassLoader will be used.
-     * @param urls  URLs (typically file: or jar:) within which to search for resources, instead of the
-     *              ClassLoader.  If null, fallback to a ClassLoader instead.
-     */
     public ResourceFinder(String path, ClassLoaderInterface classLoaderInterface, URL... urls) {
         path = StringUtils.trimToEmpty(path);
-        if (!path.isEmpty() && !StringUtils.endsWith(path, "/")) {
-            path += "/";  // Only append terminator to nonempty paths, otherwise JAR entry lookups break.
+        if (!StringUtils.endsWith(path, "/")) {
+            path += "/";
         }
         this.path = path;
 
-        this.classLoaderInterface = (classLoaderInterface == null ? new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()) : classLoaderInterface);
+        this.classLoaderInterface = classLoaderInterface == null ? new ClassLoaderInterfaceDelegate(Thread.currentThread().getContextClassLoader()) : classLoaderInterface ;
 
         for (int i = 0; urls != null && i < urls.length; i++) {
             URL url = urls[i];
@@ -90,16 +72,12 @@ public class ResourceFinder {
             try {
                 urls[i] = new URL("jar", "", -1, url.toString() + "!/");
             } catch (MalformedURLException e) {
-                // Leave original entry intact if jar URL conversion fails.
             }
         }
         this.urls = (urls == null || urls.length == 0)? null : urls;
     }
 
     private static boolean isDirectory(URL url) {
-        if (url == null) {
-            throw new IllegalArgumentException("Cannot test if a null URL is a directory");
-        }
         String file = url.getFile();
         return (file.length() > 0 && file.charAt(file.length() - 1) == '/');
     }
@@ -146,10 +124,6 @@ public class ResourceFinder {
 
         Enumeration<URL> resources = getResources(fullUri);
         List<URL> list = new ArrayList<>();
-        if (resources == null) {
-            LOG.trace("Null resources URL enumeration for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL enumeration produced for uri: " + uri);
-        }
         while (resources.hasMoreElements()) {
             URL url = resources.nextElement();
             list.add(url);
@@ -196,10 +170,6 @@ public class ResourceFinder {
         List<String> strings = new ArrayList<>();
 
         Enumeration<URL> resources = getResources(fulluri);
-        if (resources == null) {
-            LOG.trace("Null resources URL enumeration for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL enumeration produced for uri: " + uri);
-        }
         while (resources.hasMoreElements()) {
             URL url = resources.nextElement();
             String string = readContents(url);
@@ -224,10 +194,6 @@ public class ResourceFinder {
         List<String> strings = new ArrayList<>();
 
         Enumeration<URL> resources = getResources(fulluri);
-        if (resources == null) {
-            LOG.trace("Null resources URL enumeration for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL enumeration produced for uri: " + uri);
-        }
         while (resources.hasMoreElements()) {
             URL url = resources.nextElement();
             try {
@@ -277,10 +243,6 @@ public class ResourceFinder {
     public Map<String, String> mapAllStrings(String uri) throws IOException {
         Map<String, String> strings = new HashMap<>();
         Map<String, URL> resourcesMap = getResourcesMap(uri);
-        if (resourcesMap == null) {
-            LOG.trace("Null resources URL map for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL map produced for uri: " + uri);
-        }
         for (Map.Entry<String, URL> entry : resourcesMap.entrySet()) {
             String name = entry.getKey();
             URL url = entry.getValue();
@@ -327,13 +289,9 @@ public class ResourceFinder {
      */
     public Map<String, String> mapAvailableStrings(String uri) throws IOException {
         resourcesNotLoaded.clear();
+        Map<String, String> strings = new HashMap<>();
         Map<String, URL> resourcesMap = getResourcesMap(uri);
-        Map<String, String> strings = new HashMap<>(resourcesMap != null ? resourcesMap.size() : 0);
-        if (resourcesMap == null) {
-            LOG.trace("Null resources URL map for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL map produced for uri: " + uri);
-        }
-        resourcesMap.entrySet().forEach(entry -> {
+        for (Map.Entry<String, URL> entry  : resourcesMap.entrySet()) {
             String name = entry.getKey();
             URL url = entry.getValue();
             try {
@@ -342,7 +300,7 @@ public class ResourceFinder {
             } catch (IOException notAvailable) {
                 resourcesNotLoaded.add(url.toExternalForm());
             }
-        });
+        }
         return strings;
     }
 
@@ -382,12 +340,8 @@ public class ResourceFinder {
      * @throws ClassNotFoundException when class is not found
      */
     public List<Class> findAllClasses(String uri) throws IOException, ClassNotFoundException {
+        List<Class> classes = new ArrayList<>();
         List<String> strings = findAllStrings(uri);
-        List<Class> classes = new ArrayList<>(strings != null ? strings.size() : 0);
-        if (strings == null) {
-            LOG.trace("Null strings list for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null strings list produced for uri: " + uri);
-        }
         for (String className : strings) {
             Class clazz = classLoaderInterface.loadClass(className);
             classes.add(clazz);
@@ -412,20 +366,16 @@ public class ResourceFinder {
      */
     public List<Class> findAvailableClasses(String uri) throws IOException {
         resourcesNotLoaded.clear();
+        List<Class> classes = new ArrayList<>();
         List<String> strings = findAvailableStrings(uri);
-        List<Class> classes = new ArrayList<>(strings != null ? strings.size() : 0);
-        if (strings == null) {
-            LOG.trace("Null strings list for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null strings list produced for uri: " + uri);
-        }
-        strings.forEach(className -> {
+        for (String className : strings) {
             try {
                 Class clazz = classLoaderInterface.loadClass(className);
                 classes.add(clazz);
             } catch (Exception notAvailable) {
                 resourcesNotLoaded.add(className);
             }
-        });
+        }
         return classes;
     }
 
@@ -461,12 +411,8 @@ public class ResourceFinder {
      * @throws ClassNotFoundException when class is not found
      */
     public Map<String, Class> mapAllClasses(String uri) throws IOException, ClassNotFoundException {
+        Map<String, Class> classes = new HashMap<>();
         Map<String, String> map = mapAllStrings(uri);
-        Map<String, Class> classes = new HashMap<>(map != null ? map.size() : 0);
-        if (map == null) {
-            LOG.trace("Null strings map for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null strings map produced for uri: " + uri);
-        }
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String string = entry.getKey();
             String className = entry.getValue();
@@ -509,13 +455,9 @@ public class ResourceFinder {
      */
     public Map<String, Class> mapAvailableClasses(String uri) throws IOException {
         resourcesNotLoaded.clear();
+        Map<String, Class> classes = new HashMap<>();
         Map<String, String> map = mapAvailableStrings(uri);
-        Map<String, Class> classes = new HashMap<>(map != null ? map.size() : 0);
-        if (map == null) {
-            LOG.trace("Null strings map for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null strings map produced for uri: " + uri);
-        }
-        map.entrySet().forEach(entry -> {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             String string = entry.getKey();
             String className = entry.getValue();
             try {
@@ -524,7 +466,7 @@ public class ResourceFinder {
             } catch (Exception notAvailable) {
                 resourcesNotLoaded.add(className);
             }
-        });
+        }
         return classes;
     }
 
@@ -609,12 +551,8 @@ public class ResourceFinder {
      * @throws ClassCastException     if the class found is not assignable to the specified superclass or interface
      */
     public List<Class> findAllImplementations(Class interfase) throws IOException, ClassNotFoundException {
+        List<Class> implementations = new ArrayList<>();
         List<String> strings = findAllStrings(interfase.getName());
-        List<Class> implementations = new ArrayList<>(strings != null ? strings.size() : 0);
-        if (strings == null) {
-            LOG.trace("Null strings list for [{}], should not be possible!", interfase.getName());
-            throw new IllegalStateException("Null strings list produced for interface: " + interfase.getName());
-        }
         for (String className : strings) {
             Class impl = classLoaderInterface.loadClass(className);
             if (!interfase.isAssignableFrom(impl)) {
@@ -659,13 +597,9 @@ public class ResourceFinder {
      */
     public List<Class> findAvailableImplementations(Class interfase) throws IOException {
         resourcesNotLoaded.clear();
+        List<Class> implementations = new ArrayList<>();
         List<String> strings = findAvailableStrings(interfase.getName());
-        List<Class> implementations = new ArrayList<>(strings != null ? strings.size() : 0);
-        if (strings == null) {
-            LOG.trace("Null strings list for [{}], should not be possible!", interfase.getName());
-            throw new IllegalStateException("Null strings list produced for interface: " + interfase.getName());
-        }
-        strings.forEach(className -> {
+        for (String className : strings) {
             try {
                 Class impl = classLoaderInterface.loadClass(className);
                 if (interfase.isAssignableFrom(impl)) {
@@ -676,7 +610,7 @@ public class ResourceFinder {
             } catch (Exception notAvailable) {
                 resourcesNotLoaded.add(className);
             }
-        });
+        }
         return implementations;
     }
 
@@ -716,12 +650,8 @@ public class ResourceFinder {
      * @throws ClassCastException     if the class found is not assignable to the specified superclass or interface
      */
     public Map<String, Class> mapAllImplementations(Class interfase) throws IOException, ClassNotFoundException {
+        Map<String, Class> implementations = new HashMap<>();
         Map<String, String> map = mapAllStrings(interfase.getName());
-        Map<String, Class> implementations = new HashMap<>(map != null ? map.size() : 0);
-        if (map == null) {
-            LOG.trace("Null strings map for [{}], should not be possible!", interfase.getName());
-            throw new IllegalStateException("Null strings map produced for interface: " + interfase.getName());
-        }
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String string = entry.getKey();
             String className = entry.getValue();
@@ -769,13 +699,9 @@ public class ResourceFinder {
      */
     public Map<String, Class> mapAvailableImplementations(Class interfase) throws IOException {
         resourcesNotLoaded.clear();
+        Map<String, Class> implementations = new HashMap<>();
         Map<String, String> map = mapAvailableStrings(interfase.getName());
-        Map<String, Class> implementations = new HashMap<>(map != null ? map.size() : 0);
-        if (map == null) {
-            LOG.trace("Null strings map for [{}], should not be possible!", interfase.getName());
-            throw new IllegalStateException("Null strings map produced for interface: " + interfase.getName());
-        }
-        map.entrySet().forEach(entry -> {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             String string = entry.getKey();
             String className = entry.getValue();
             try {
@@ -788,7 +714,7 @@ public class ResourceFinder {
             } catch (Exception notAvailable) {
                 resourcesNotLoaded.add(className);
             }
-        });
+        }
         return implementations;
     }
 
@@ -825,7 +751,7 @@ public class ResourceFinder {
 
         URL resource = getResource(fulluri);
         if (resource == null) {
-            throw new IOException("Could not find a resource in: " + fulluri);
+            throw new IOException("Could not find command in : " + fulluri);
         }
 
         return loadProperties(resource);
@@ -865,10 +791,6 @@ public class ResourceFinder {
         List<Properties> properties = new ArrayList<>();
 
         Enumeration<URL> resources = getResources(fulluri);
-        if (resources == null) {
-            LOG.trace("Null resources URL enumeration for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL enumeration produced for uri: " + uri);
-        }
         while (resources.hasMoreElements()) {
             URL url = resources.nextElement();
             Properties props = loadProperties(url);
@@ -913,10 +835,6 @@ public class ResourceFinder {
         List<Properties> properties = new ArrayList<>();
 
         Enumeration<URL> resources = getResources(fulluri);
-        if (resources == null) {
-            LOG.trace("Null resources URL enumeration for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL enumeration produced for uri: " + uri);
-        }
         while (resources.hasMoreElements()) {
             URL url = resources.nextElement();
             try {
@@ -961,12 +879,8 @@ public class ResourceFinder {
      * @throws IOException if the URL cannot be read or is not in properties file format
      */
     public Map<String, Properties> mapAllProperties(String uri) throws IOException {
+        Map<String, Properties> propertiesMap = new HashMap<>();
         Map<String, URL> map = getResourcesMap(uri);
-        Map<String, Properties> propertiesMap = new HashMap<>(map != null ? map.size() : 0);
-        if (map == null) {
-            LOG.trace("Null resources URL map for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL map produced for uri: " + uri);
-        }
         for (Map.Entry<String, URL> entry : map.entrySet()) {
             String string = entry.getKey();
             URL url = entry.getValue();
@@ -1010,13 +924,9 @@ public class ResourceFinder {
      */
     public Map<String, Properties> mapAvailableProperties(String uri) throws IOException {
         resourcesNotLoaded.clear();
+        Map<String, Properties> propertiesMap = new HashMap<>();
         Map<String, URL> map = getResourcesMap(uri);
-        Map<String, Properties> propertiesMap = new HashMap<>(map != null ? map.size() : 0);
-        if (map == null) {
-            LOG.trace("Null resources URL map for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL map produced for uri: " + uri);
-        }
-        map.entrySet().forEach(entry -> {
+        for (Map.Entry<String, URL> entry : map.entrySet()) {
             String string = entry.getKey();
             URL url = entry.getValue();
             try {
@@ -1025,7 +935,7 @@ public class ResourceFinder {
             } catch (Exception notAvailable) {
                 resourcesNotLoaded.add(url.toExternalForm());
             }
-        });
+        }
         return propertiesMap;
     }
 
@@ -1042,14 +952,10 @@ public class ResourceFinder {
         if (!basePath.endsWith("/")) {
             basePath += "/";
         }
-        Enumeration<URL> urlsForURI = getResources(basePath);
-        if (urlsForURI == null) {
-            LOG.trace("Null resources URL enumeration for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL enumeration produced for uri: " + uri);
-        }
+        Enumeration<URL> urls = getResources(basePath);
 
-        while (urlsForURI.hasMoreElements()) {
-            URL location = urlsForURI.nextElement();
+        while (urls.hasMoreElements()) {
+            URL location = urls.nextElement();
 
             try {
                 if ("jar".equals(location.getProtocol())) {
@@ -1078,14 +984,10 @@ public class ResourceFinder {
         if (!basePath.endsWith("/")) {
             basePath += "/";
         }
-        Enumeration<URL> urlsForURI = getResources(basePath);
-        if (urlsForURI == null) {
-            LOG.trace("Null resources URL enumeration for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL enumeration produced for uri: " + uri);
-        }
+        Enumeration<URL> urls = getResources(basePath);
 
-        while (urlsForURI.hasMoreElements()) {
-            URL location = urlsForURI.nextElement();
+        while (urls.hasMoreElements()) {
+            URL location = urls.nextElement();
 
             try {
                 if ("jar".equals(location.getProtocol())) {
@@ -1110,29 +1012,14 @@ public class ResourceFinder {
     public Map<URL, Set<String>> findPackagesMap(String uri) throws IOException {
         String basePath = path + uri;
 
-        LOG.trace("    basePath(initial): " + basePath);
-
         if (!basePath.endsWith("/")) {
             basePath += "/";
         }
-
-        LOG.trace("    basePath(final): " + basePath);
-
-        Enumeration<URL> urlsForURI = getResources(basePath);
+        Enumeration<URL> urls = getResources(basePath);
         Map<URL, Set<String>> result = new HashMap<>();
-        if (urlsForURI == null) {
-            LOG.trace("Null resources URL enumeration for [{}], should not be possible!", uri);
-            throw new IllegalStateException("Null resources URL enumeration produced for uri: " + uri);
-        }
 
-        if (! urlsForURI.hasMoreElements()) {
-            LOG.debug("    urls enumeration for basePath is empty ?");
-        }
-
-        while (urlsForURI.hasMoreElements()) {
-            URL location = urlsForURI.nextElement();
-
-            LOG.debug("       url (location): " + location);
+        while (urls.hasMoreElements()) {
+            URL location = urls.nextElement();
 
             try {
                 if ("jar".equals(location.getProtocol())) {
@@ -1154,9 +1041,9 @@ public class ResourceFinder {
 
     private Set<String> convertPathsToPackages(Set<String> resources) {
         Set<String> packageNames = new HashSet<>(resources.size());
-        resources.forEach(resource -> {
+        for(String resource : resources) {
             packageNames.add(StringUtils.removeEnd(StringUtils.replace(resource, "/", "."), "."));
-        });
+        }
 
         return packageNames;
     }
@@ -1224,20 +1111,12 @@ public class ResourceFinder {
         jarfile = conn.getJarFile();
 
         Enumeration<JarEntry> entries = jarfile.entries();
-
-        if (entries == null || ! entries.hasMoreElements()) {
-            LOG.debug("           JAR entries null or empty");
-        }
-        LOG.debug("           Looking for entries matching basePath: " + basePath);
-
         while (entries != null && entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
             String name = entry.getName();
 
             if (entry.isDirectory() && StringUtils.startsWith(name, basePath)) {
                 resources.add(name);
-            } else if (entry.isDirectory()) {
-               LOG.trace("           entry: " + name + " , isDirectory: " + entry.isDirectory() + " but does not start with basepath");
             }
         }
     }
@@ -1266,7 +1145,7 @@ public class ResourceFinder {
     }
 
     private URL getResource(String fullUri) {
-        if (urls == null) {
+        if (urls == null){
             return classLoaderInterface.getResource(fullUri);
         }
         return findResource(fullUri, urls);
@@ -1274,25 +1153,16 @@ public class ResourceFinder {
 
     private Enumeration<URL> getResources(String fulluri) throws IOException {
         if (urls == null) {
-            LOG.debug("    urls (member) null, using classLoaderInterface to get resources");
-
             return classLoaderInterface.getResources(fulluri);
         }
-
-        LOG.debug("    urls (member) non-null, using findResource to get resources");
-
-        ArrayList<URL> resources = new ArrayList<>(urls != null ? urls.length : 0);
+        Vector<URL> resources = new Vector<>();
         for (URL url : urls) {
             URL resource = findResource(fulluri, url);
-
-            if (resource != null) {
-                LOG.trace("    resource lookup non-null");
+            if (resource != null){
                 resources.add(resource);
-            } else {
-                LOG.trace("    resource lookup is null");
             }
         }
-        return Collections.enumeration(resources);
+        return resources.elements();
     }
 
     private URL findResource(String resourceName, URL... search) {

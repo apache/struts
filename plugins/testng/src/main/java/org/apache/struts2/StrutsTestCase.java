@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2;
 
 import java.util.Map;
@@ -46,15 +49,6 @@ public class StrutsTestCase extends TestNGXWorkTestCase {
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();
         return du;
-    }
-
-    /**
-     * A helper method which allows instantiate an action if this action extends
-     * {@link com.opensymphony.xwork2.ActionSupport} or any other action class
-     * that requires framework's dependencies injection.
-     */
-    protected <T> T createAction(Class<T> clazz) {
-        return container.inject(clazz);
     }
 
     @AfterTest

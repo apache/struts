@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,13 +18,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.sitemesh;
 
+import com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.sitemesh.DecoratorSelector;
 import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.SiteMeshContext;
 import com.opensymphony.sitemesh.compatability.Content2HTMLPage;
+import com.opensymphony.sitemesh.compatability.OldDecorator2NewDecorator;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.sitemesh.webapp.decorator.NoDecorator;
 

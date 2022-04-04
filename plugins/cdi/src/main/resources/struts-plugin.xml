@@ -30,4 +30,6 @@
     <!--  Make the CDI object factory the automatic default -->
     <constant name="struts.objectFactory" value="cdi" />
 
+    <constant name="struts.class.reloading.reloadConfig" value="false" />
+
 </struts>

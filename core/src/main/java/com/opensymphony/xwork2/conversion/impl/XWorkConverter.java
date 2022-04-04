@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.conversion.impl;
 
@@ -28,7 +25,6 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
@@ -170,9 +166,16 @@ public class XWorkConverter extends DefaultTypeConverter {
         this.fileManager = fileManagerFactory.getFileManager();
     }
 
-    @Inject(value = StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, required = false)
+    @Inject(value = XWorkConstants.RELOAD_XML_CONFIGURATION, required = false)
     public void setReloadingConfigs(String reloadingConfigs) {
         this.reloadingConfigs = Boolean.parseBoolean(reloadingConfigs);
+    }
+
+    @Inject
+    public void setConversionPropertiesProcessor(ConversionPropertiesProcessor propertiesProcessor) {
+        // note: this file is deprecated
+        propertiesProcessor.process("xwork-default-conversion.properties");
+        propertiesProcessor.process("xwork-conversion.properties");
     }
 
     @Inject
@@ -190,9 +193,8 @@ public class XWorkConverter extends DefaultTypeConverter {
         this.converterHolder = converterHolder;
     }
 
-    public static String getConversionErrorMessage(String propertyName, Class toClass, ValueStack stack) {
-        LocalizedTextProvider localizedTextProvider = ActionContext.getContext().getContainer().getInstance(LocalizedTextProvider.class);
-        String defaultMessage = localizedTextProvider.findDefaultText("xwork.default.invalid.fieldvalue",
+    public static String getConversionErrorMessage(String propertyName, ValueStack stack) {
+        String defaultMessage = LocalizedTextUtil.findDefaultText("xwork.default.invalid.fieldvalue",
                 ActionContext.getContext().getLocale(),
                 new Object[]{
                         propertyName
@@ -202,14 +204,8 @@ public class XWorkConverter extends DefaultTypeConverter {
 
         propertyName = removeAllIndexesInPropertyName(propertyName);
 
-        String prefixedPropertyName = CONVERSION_ERROR_PROPERTY_PREFIX + propertyName;
-        String getTextExpression = "getText('" + prefixedPropertyName + "')";
+        String getTextExpression = "getText('" + CONVERSION_ERROR_PROPERTY_PREFIX + propertyName + "','" + defaultMessage + "')";
         String message = (String) stack.findValue(getTextExpression);
-
-        if (message == null || prefixedPropertyName.equals(message)) {
-            getTextExpression = "getText('" + CONVERSION_ERROR_PROPERTY_PREFIX + toClass.getName() + "','" + defaultMessage + "')";
-            message = (String) stack.findValue(getTextExpression);
-        }
 
         if (message == null) {
             message = defaultMessage;
@@ -315,7 +311,7 @@ public class XWorkConverter extends DefaultTypeConverter {
                 return tc.convertValue(context, target, member, property, value, toClass);
             } catch (Exception e) {
                 LOG.debug("Unable to convert value using type converter [{}]", tc.getClass().getName(), e);
-                handleConversionException(context, property, value, target, toClass);
+                handleConversionException(context, property, value, target);
 
                 return TypeConverter.NO_CONVERSION_POSSIBLE;
             }
@@ -327,7 +323,7 @@ public class XWorkConverter extends DefaultTypeConverter {
                 return defaultTypeConverter.convertValue(context, target, member, property, value, toClass);
             } catch (Exception e) {
                 LOG.debug("Unable to convert value using type converter [{}]", defaultTypeConverter.getClass().getName(), e);
-                handleConversionException(context, property, value, target, toClass);
+                handleConversionException(context, property, value, target);
 
                 return TypeConverter.NO_CONVERSION_POSSIBLE;
             }
@@ -337,7 +333,7 @@ public class XWorkConverter extends DefaultTypeConverter {
                 return super.convertValue(value, toClass);
             } catch (Exception e) {
                 LOG.debug("Unable to convert value using type converter [{}]", super.getClass().getName(), e);
-                handleConversionException(context, property, value, target, toClass);
+                handleConversionException(context, property, value, target);
 
                 return TypeConverter.NO_CONVERSION_POSSIBLE;
             }
@@ -419,8 +415,8 @@ public class XWorkConverter extends DefaultTypeConverter {
                     Object converter = mapping.get(property);
                     if (converter == null && LOG.isDebugEnabled()) {
                         LOG.debug("Converter is null for property [{}]. Mapping size [{}]:", property, mapping.size());
-                        for (Map.Entry<String, Object> entry : mapping.entrySet()) {
-                            LOG.debug("{}:{}", entry.getKey(), entry.getValue());
+                        for (String next : mapping.keySet()) {
+                            LOG.debug("{}:{}", next, mapping.get(next));
                         }
                     }
                     return converter;
@@ -433,7 +429,7 @@ public class XWorkConverter extends DefaultTypeConverter {
         return null;
     }
 
-    protected void handleConversionException(Map<String, Object> context, String property, Object value, Object object, Class toClass) {
+    protected void handleConversionException(Map<String, Object> context, String property, Object value, Object object) {
         if (context != null && (Boolean.TRUE.equals(context.get(REPORT_CONVERSION_ERRORS)))) {
             String realProperty = property;
             String fullName = (String) context.get(CONVERSION_PROPERTY_FULLNAME);
@@ -442,15 +438,14 @@ public class XWorkConverter extends DefaultTypeConverter {
                 realProperty = fullName;
             }
 
-            ActionContext actionContext = ActionContext.of(context);
-            Map<String, ConversionData> conversionErrors = actionContext.getConversionErrors();
+            Map<String, Object> conversionErrors = (Map<String, Object>) context.get(ActionContext.CONVERSION_ERRORS);
 
             if (conversionErrors == null) {
                 conversionErrors = new HashMap<>();
-                actionContext.withConversionErrors(conversionErrors);
+                context.put(ActionContext.CONVERSION_ERRORS, conversionErrors);
             }
 
-            conversionErrors.put(realProperty, new ConversionData(value, toClass));
+            conversionErrors.put(realProperty, value);
         }
     }
 
@@ -492,9 +487,9 @@ public class XWorkConverter extends DefaultTypeConverter {
                     }
                     if (LOG.isDebugEnabled()) {
                         if (StringUtils.isEmpty(tc.key())) {
-                            LOG.debug("WARNING! key of @TypeConversion [{}/{}] applied to [{}] is empty!", tc.converter(), tc.converterClass(), clazz.getName());
+                            LOG.debug("WARNING! key of @TypeConversion [{}] applied to [{}] is empty!", tc.converter(), clazz.getName());
                         } else {
-                            LOG.debug("TypeConversion [{}/{}] with key: [{}]", tc.converter(), tc.converterClass(), tc.key());
+                            LOG.debug("TypeConversion [{}] with key: [{}]", tc.converter(), tc.key());
                         }
                     }
                     annotationProcessor.process(mapping, tc, tc.key());
@@ -508,31 +503,14 @@ public class XWorkConverter extends DefaultTypeConverter {
             for (Annotation annotation : annotations) {
                 if (annotation instanceof TypeConversion) {
                     TypeConversion tc = (TypeConversion) annotation;
+                    if (mapping.containsKey(tc.key())) {
+                        break;
+                    }
                     String key = tc.key();
-                    // Default to the property name with prefix
+                    // Default to the property name
                     if (StringUtils.isEmpty(key)) {
                         key = AnnotationUtils.resolvePropertyName(method);
-                        switch (tc.rule()) {
-                            case COLLECTION:
-                                key = DefaultObjectTypeDeterminer.DEPRECATED_ELEMENT_PREFIX + key;
-                                break;
-                            case CREATE_IF_NULL:
-                                key = DefaultObjectTypeDeterminer.CREATE_IF_NULL_PREFIX + key;
-                                break;
-                            case ELEMENT:
-                                key = DefaultObjectTypeDeterminer.ELEMENT_PREFIX + key;
-                                break;
-                            case KEY:
-                                key = DefaultObjectTypeDeterminer.KEY_PREFIX + key;
-                                break;
-                            case KEY_PROPERTY:
-                                key = DefaultObjectTypeDeterminer.KEY_PROPERTY_PREFIX + key;
-                                break;
-                        }
                         LOG.debug("Retrieved key [{}] from method name [{}]", key, method.getName());
-                    }
-                    if (mapping.containsKey(key)) {
-                        break;
                     }
                     annotationProcessor.process(mapping, tc, key);
                 }

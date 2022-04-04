@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -23,13 +26,10 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -41,13 +41,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 import java.util.Map;
 
-public class TagUtils {
 
-    private static final Logger LOG = LogManager.getLogger(TagUtils.class);
+/**
+ */
+public class TagUtils {
 
     public static ValueStack getStack(PageContext pageContext) {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-        ValueStack stack = ServletActionContext.getValueStack(req);
+        ValueStack stack = (ValueStack) req.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
 
         if (stack == null) {
 
@@ -59,12 +60,9 @@ public class TagUtils {
                         "has passed through its servlet filter, which initializes the Struts dispatcher needed for this tag.");
             }
             stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-
-            HttpParameters params = HttpParameters.create(req.getParameterMap()).build();
-
             Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
-                    params,
-                    new SessionMap<>(req),
+                    req.getParameterMap(),
+                    new SessionMap(req),
                     new ApplicationMap(pageContext.getServletContext()),
                     req,
                     res);
@@ -73,10 +71,9 @@ public class TagUtils {
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
             // also tie this stack/context to the ThreadLocal
-            ActionContext.of(stack.getContext()).bind();
+            ActionContext.setContext(new ActionContext(stack.getContext()));
         } else {
             // let's make sure that the current page context is in the action context
-            // TODO: refactor this to stop using put()
             Map<String, Object> context = stack.getContext();
             context.put(ServletActionContext.PAGE_CONTEXT, pageContext);
 
@@ -88,13 +85,10 @@ public class TagUtils {
     }
 
     public static String buildNamespace(ActionMapper mapper, ValueStack stack, HttpServletRequest request) {
-        ActionContext context = ActionContext.of(stack.getContext());
+        ActionContext context = new ActionContext(stack.getContext());
         ActionInvocation invocation = context.getActionInvocation();
 
         if (invocation == null) {
-            TagUtils.LOG.warn("ActionInvocation is null, tag has been executed out of the Action and this can lead " +
-                "to a security vulnerability, please read http://struts.apache.org/security/#never-expose-jsp-files-directly !");
-
             ActionMapping mapping = mapper.getMapping(request,
                     Dispatcher.getInstance().getConfigurationManager());
 
@@ -106,7 +100,7 @@ public class TagUtils {
                 // last part (/foo/bar/baz.xyz -> /foo/bar)
 
                 String path = RequestUtils.getServletPath(request);
-                return path.substring(0, path.lastIndexOf('/'));
+                return path.substring(0, path.lastIndexOf("/"));
             }
         } else {
             return invocation.getProxy().getNamespace();

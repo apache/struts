@@ -1,18 +1,23 @@
-/*
+/**
  * Copyright (C) 2006 Google Inc.
  *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
+ * </p>
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * </p>
  */
+
 package com.opensymphony.xwork2.inject;
 
 import com.opensymphony.xwork2.inject.util.ReferenceCache;
@@ -37,7 +42,7 @@ class ContainerImpl implements Container {
 
     ContainerImpl(Map<Key<?>, InternalFactory<?>> factories) {
         this.factories = factories;
-        final Map<Class<?>, Set<String>> map = new HashMap<>();
+        Map<Class<?>, Set<String>> map = new HashMap<>();
         for (Key<?> key : factories.keySet()) {
             Set<String> names = map.get(key.getType());
             if (names == null) {
@@ -151,25 +156,8 @@ class ContainerImpl implements Container {
                 throws MissingDependencyException;
     }
 
-    /**
-     * Determines if a given {@link Member} is static or not.
-     * 
-     * @param member checked for the static modifier.
-     * @return true if member is static, false otherwise.
-     */
-    private static boolean isStatic(Member member) {
+    private boolean isStatic(Member member) {
         return Modifier.isStatic(member.getModifiers());
-    }
-
-    /**
-     * Determines if a given {@link Member} is considered to be public for reflection usage or not.
-     * 
-     * @param member checked to see if it is public for reflection usage.
-     * @return true if member is public for reflection usage, false otherwise.
-     */
-    private static boolean isPublicForReflection(Member member) {
-        return Modifier.isPublic(member.getModifiers()) &&
-               Modifier.isPublic(member.getDeclaringClass().getModifiers());
     }
 
     static class FieldInjector implements Injector {
@@ -181,7 +169,7 @@ class ContainerImpl implements Container {
         public FieldInjector(ContainerImpl container, Field field, String name)
                 throws MissingDependencyException {
             this.field = field;
-            if (!isPublicForReflection(field) && !field.isAccessible()) {
+            if (!field.isAccessible()) {
                 SecurityManager sm = System.getSecurityManager();
                 try {
                     if (sm != null) {
@@ -194,7 +182,7 @@ class ContainerImpl implements Container {
                 }
             }
 
-            final Key<?> key = Key.newInstance(field.getType(), name);
+            Key<?> key = Key.newInstance(field.getType(), name);
             factory = container.getFactory(key);
             if (factory == null) {
                 throw new MissingDependencyException("No mapping found for dependency " + key + " in " + field + ".");
@@ -203,9 +191,8 @@ class ContainerImpl implements Container {
             this.externalContext = ExternalContext.newInstance(field, key, container);
         }
 
-        @Override
         public void inject(InternalContext context, Object o) {
-            final ExternalContext<?> previous = context.getExternalContext();
+            ExternalContext<?> previous = context.getExternalContext();
             context.setExternalContext(externalContext);
             try {
                 field.set(o, factory.create(context));
@@ -227,9 +214,9 @@ class ContainerImpl implements Container {
      */
     <M extends AccessibleObject & Member> ParameterInjector<?>[]
     getParametersInjectors(M member, Annotation[][] annotations, Class[] parameterTypes, String defaultName) throws MissingDependencyException {
-        final List<ParameterInjector<?>> parameterInjectors = new ArrayList<>();
+        List<ParameterInjector<?>> parameterInjectors = new ArrayList<>();
 
-        final Iterator<Annotation[]> annotationsIterator = Arrays.asList(annotations).iterator();
+        Iterator<Annotation[]> annotationsIterator = Arrays.asList(annotations).iterator();
         for (Class<?> parameterType : parameterTypes) {
             Inject annotation = findInject(annotationsIterator.next());
             String name = annotation == null ? defaultName : annotation.value();
@@ -241,12 +228,12 @@ class ContainerImpl implements Container {
     }
 
     <T> ParameterInjector<T> createParameterInjector(Key<T> key, Member member) throws MissingDependencyException {
-        final InternalFactory<? extends T> factory = getFactory(key);
+        InternalFactory<? extends T> factory = getFactory(key);
         if (factory == null) {
             throw new MissingDependencyException("No mapping found for dependency " + key + " in " + member + ".");
         }
 
-        final ExternalContext<T> externalContext = ExternalContext.newInstance(member, key, this);
+        ExternalContext<T> externalContext = ExternalContext.newInstance(member, key, this);
         return new ParameterInjector<T>(externalContext, factory);
     }
 
@@ -274,8 +261,8 @@ class ContainerImpl implements Container {
 
         public MethodInjector(ContainerImpl container, Method method, String name) throws MissingDependencyException {
             this.method = method;
-            if (!isPublicForReflection(method) && !method.isAccessible()) {
-                final SecurityManager sm = System.getSecurityManager();
+            if (!method.isAccessible()) {
+                SecurityManager sm = System.getSecurityManager();
                 try {
                     if (sm != null) {
                         sm.checkPermission(new ReflectPermission("suppressAccessChecks"));
@@ -287,7 +274,7 @@ class ContainerImpl implements Container {
                 }
             }
 
-            final Class<?>[] parameterTypes = method.getParameterTypes();
+            Class<?>[] parameterTypes = method.getParameterTypes();
             if (parameterTypes.length == 0) {
                 throw new DependencyException(method + " has no parameters to inject.");
             }
@@ -295,7 +282,6 @@ class ContainerImpl implements Container {
                     method, method.getParameterAnnotations(), parameterTypes, name);
         }
 
-        @Override
         public void inject(InternalContext context, Object o) {
             try {
                 method.invoke(o, getParameters(method, context, parameterInjectors));
@@ -325,8 +311,8 @@ class ContainerImpl implements Container {
             this.implementation = implementation;
 
             constructor = findConstructorIn(implementation);
-            if (!isPublicForReflection(constructor) && !constructor.isAccessible()) {
-                final SecurityManager sm = System.getSecurityManager();
+            if (!constructor.isAccessible()) {
+                SecurityManager sm = System.getSecurityManager();
                 try {
                     if (sm != null) {
                         sm.checkPermission(new ReflectPermission("suppressAccessChecks"));
@@ -373,7 +359,7 @@ class ContainerImpl implements Container {
         @SuppressWarnings("unchecked")
         private Constructor<T> findConstructorIn(Class<T> implementation) {
             Constructor<T> found = null;
-            final Constructor<T>[] declaredConstructors = (Constructor<T>[]) implementation.getDeclaredConstructors();
+            Constructor<T>[] declaredConstructors = (Constructor<T>[]) implementation.getDeclaredConstructors();
             for (Constructor<T> constructor : declaredConstructors) {
                 if (constructor.getAnnotation(Inject.class) != null) {
                     if (found != null) {
@@ -400,7 +386,7 @@ class ContainerImpl implements Container {
          * Construct an instance. Returns {@code Object} instead of {@code T} because it may return a proxy.
          */
         Object construct(InternalContext context, Class<? super T> expectedType) {
-            final ConstructionContext<T> constructionContext = context.getConstructionContext(this);
+            ConstructionContext<T> constructionContext = context.getConstructionContext(this);
 
             // We have a circular reference between constructors. Return a proxy.
             if (constructionContext.isConstructing()) {
@@ -420,7 +406,7 @@ class ContainerImpl implements Container {
                 // First time through...
                 constructionContext.startConstruction();
                 try {
-                    final Object[] parameters = getParameters(constructor, context, parameterInjectors);
+                    Object[] parameters = getParameters(constructor, context, parameterInjectors);
                     t = constructor.newInstance(parameters);
                     constructionContext.setProxyDelegates(t);
                 } finally {
@@ -456,7 +442,7 @@ class ContainerImpl implements Container {
         }
 
         T inject(Member member, InternalContext context) {
-            final ExternalContext<?> previous = context.getExternalContext();
+            ExternalContext<?> previous = context.getExternalContext();
             context.setExternalContext(externalContext);
             try {
                 return factory.create(context);
@@ -471,7 +457,7 @@ class ContainerImpl implements Container {
             return null;
         }
 
-        final Object[] parameters = new Object[parameterInjectors.length];
+        Object[] parameters = new Object[parameterInjectors.length];
         for (int i = 0; i < parameters.length; i++) {
             parameters[i] = parameterInjectors[i].inject(member, context);
         }
@@ -479,7 +465,7 @@ class ContainerImpl implements Container {
     }
 
     void inject(Object o, InternalContext context) {
-        final List<Injector> injectors = this.injectors.get(o.getClass());
+        List<Injector> injectors = this.injectors.get(o.getClass());
         for (Injector injector : injectors) {
             injector.inject(context, o);
         }
@@ -487,7 +473,7 @@ class ContainerImpl implements Container {
 
     <T> T inject(Class<T> implementation, InternalContext context) {
         try {
-            final ConstructorInjector<T> constructor = getConstructor(implementation);
+            ConstructorInjector<T> constructor = getConstructor(implementation);
             return implementation.cast(constructor.construct(context, implementation));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -496,11 +482,11 @@ class ContainerImpl implements Container {
 
     @SuppressWarnings("unchecked")
     <T> T getInstance(Class<T> type, String name, InternalContext context) {
-        final ExternalContext<?> previous = context.getExternalContext();
-        final Key<T> key = Key.newInstance(type, name);
+        ExternalContext<?> previous = context.getExternalContext();
+        Key<T> key = Key.newInstance(type, name);
         context.setExternalContext(ExternalContext.newInstance(null, key, this));
         try {
-            final InternalFactory o = getFactory(key);
+            InternalFactory o = getFactory(key);
             if (o != null) {
                 return getFactory(key).create(context);
             } else {
@@ -515,7 +501,6 @@ class ContainerImpl implements Container {
         return getInstance(type, DEFAULT_NAME, context);
     }
 
-    @Override
     public void inject(final Object o) {
         callInContext(new ContextualCallable<Void>() {
             public Void call(InternalContext context) {
@@ -525,7 +510,6 @@ class ContainerImpl implements Container {
         });
     }
 
-    @Override
     public <T> T inject(final Class<T> implementation) {
         return callInContext(new ContextualCallable<T>() {
             public T call(InternalContext context) {
@@ -534,7 +518,6 @@ class ContainerImpl implements Container {
         });
     }
 
-    @Override
     public <T> T getInstance(final Class<T> type, final String name) {
         return callInContext(new ContextualCallable<T>() {
             public T call(InternalContext context) {
@@ -543,7 +526,6 @@ class ContainerImpl implements Container {
         });
     }
 
-    @Override
     public <T> T getInstance(final Class<T> type) {
         return callInContext(new ContextualCallable<T>() {
             public T call(InternalContext context) {
@@ -552,7 +534,6 @@ class ContainerImpl implements Container {
         });
     }
 
-    @Override
     public Set<String> getInstanceNames(final Class<?> type) {
         Set<String> names = factoryNamesByType.get(type);
         if (names == null) {
@@ -572,7 +553,7 @@ class ContainerImpl implements Container {
      * Looks up thread local context. Creates (and removes) a new context if necessary.
      */
     <T> T callInContext(ContextualCallable<T> callable) {
-        final Object[] reference = localContext.get();
+        Object[] reference = localContext.get();
         if (reference[0] == null) {
             reference[0] = new InternalContext(this);
             try {
@@ -603,12 +584,10 @@ class ContainerImpl implements Container {
 
     final ThreadLocal<Object> localScopeStrategy = new ThreadLocal<>();
 
-    @Override
     public void setScopeStrategy(Scope.Strategy scopeStrategy) {
         this.localScopeStrategy.set(scopeStrategy);
     }
 
-    @Override
     public void removeScopeStrategy() {
         this.localScopeStrategy.remove();
     }

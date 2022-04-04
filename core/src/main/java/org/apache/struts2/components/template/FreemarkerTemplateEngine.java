@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components.template;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -64,14 +67,14 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     public void setFreemarkerManager(FreemarkerManager mgr) {
         this.freemarkerManager = mgr;
     }
-
+    
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
     	// get the various items required from the stack
         ValueStack stack = templateContext.getStack();
-        ActionContext context = stack.getActionContext();
-        ServletContext servletContext = context.getServletContext();
-        HttpServletRequest req = context.getServletRequest();
-        HttpServletResponse res = context.getServletResponse();
+        Map context = stack.getContext();
+        ServletContext servletContext = (ServletContext) context.get(ServletActionContext.SERVLET_CONTEXT);
+        HttpServletRequest req = (HttpServletRequest) context.get(ServletActionContext.HTTP_REQUEST);
+        HttpServletResponse res = (HttpServletResponse) context.get(ServletActionContext.HTTP_RESPONSE);
 
         // prepare freemarker
         Configuration config = freemarkerManager.getConfiguration(servletContext);
@@ -121,10 +124,6 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         ActionInvocation ai = ActionContext.getContext().getActionInvocation();
 
         Object action = (ai == null) ? null : ai.getAction();
-        if (action == null) {
-            LOG.warn("Rendering tag {} out of Action scope, accessing directly JSPs is not recommended! " +
-                    "Please read https://struts.apache.org/security/#never-expose-jsp-files-directly", templateName);
-        }
         SimpleHash model = freemarkerManager.buildTemplateModel(stack, action, servletContext, req, res, config.getObjectWrapper());
 
         model.put("tag", templateContext.getTag());
@@ -148,12 +147,10 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
             }
         };
 
-        LOG.debug("Push tag on top of the stack");
-        stack.push(templateContext.getTag());
         try {
+            stack.push(templateContext.getTag());
             template.process(model, writer);
         } finally {
-            LOG.debug("Removes tag from top of the stack");
             stack.pop();
         }
     }

@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -68,17 +70,20 @@ public class JSONInterceptor extends AbstractInterceptor {
     private boolean noCache = false;
     private boolean excludeNullProperties;
     private String callbackParameter;
-    private String jsonContentType = "application/json";
-    private String jsonRpcContentType = "application/json-rpc";
+    private String accept;
 
     @SuppressWarnings("unchecked")
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
-
-        String requestContentType = readContentType(request);
-        String requestContentTypeEncoding = readContentTypeEncoding(request);
-
+        
+        //parameter wasn't set by the interceptor
+        if (accept == null) {
+            accept = request.getHeader("accept");
+        }
+        
+        String[] accepts = accept.split(",");
+        
         Object rootObject = null;
         final ValueStack stack = invocation.getStack();
         if (this.root != null) {
@@ -89,124 +94,101 @@ public class JSONInterceptor extends AbstractInterceptor {
             }
         }
 
-        if (jsonContentType.equalsIgnoreCase(requestContentType)) {
-            // load JSON object
-            Object obj = JSONUtil.deserialize(request.getReader());
-
-            // JSON array (this.root cannot be null in this case)
-            if(obj instanceof List && this.root != null) {
-                String mapKey = this.root;
-                rootObject = null;
-
-                if(this.root.indexOf('.') != -1) {
-                    mapKey = this.root.substring(this.root.lastIndexOf('.') + 1);
-
-                    rootObject = stack.findValue(this.root.substring(0, this.root.lastIndexOf('.')));
-                    if (rootObject == null) {
-                        throw new RuntimeException("JSON array: Invalid root expression: '" + this.root + "'.");
-                    }
-                }
-
-                // create a map with a list inside
-                Map m = new HashMap();
-                m.put(mapKey, new ArrayList((List) obj));
-                obj = m;
-            }
-
-            if (obj instanceof Map) {
-                Map json = (Map) obj;
-
-                // clean up the values
-                if (dataCleaner != null)
-                    dataCleaner.clean("", json);
-
-                if (rootObject == null) // model overrides action
-                    rootObject = invocation.getStack().peek();
-
-                // populate fields
-                populator.populateObject(rootObject, json);
-            } else {
-                LOG.error("Unable to deserialize JSON object from request");
-                throw new JSONException("Unable to deserialize JSON object from request");
-            }
-        } else if (jsonRpcContentType.equalsIgnoreCase(requestContentType)) {
-            Object result;
-            if (this.enableSMD) {
+        for (String accept : accepts) {
+            if ((accept != null) && accept.equalsIgnoreCase("application/json")) {
                 // load JSON object
                 Object obj = JSONUtil.deserialize(request.getReader());
 
-                if (obj instanceof Map) {
-                    Map smd = (Map) obj;
+                // JSON array (this.root cannot be null in this case)
+                if(obj instanceof List && this.root != null) {
+                    String mapKey = this.root;
+                    rootObject = null;
 
-                    if (rootObject == null) { // model makes no sense when using RPC
-                        rootObject = invocation.getAction();
+                    if(this.root.indexOf('.') != -1) {
+                        mapKey = this.root.substring(this.root.lastIndexOf('.') + 1);
+
+                        rootObject = stack.findValue(this.root.substring(0, this.root.lastIndexOf('.')));
+                        if (rootObject == null) {
+                            throw new RuntimeException("JSON array: Invalid root expression: '" + this.root + "'.");
+                        }
                     }
 
-                    // invoke method
-                    try {
-                        result = this.invoke(rootObject, smd);
-                    } catch (Exception e) {
-                        RPCResponse rpcResponse = new RPCResponse();
-                        rpcResponse.setId(smd.get("id").toString());
-                        rpcResponse.setError(new RPCError(e, RPCErrorCode.EXCEPTION, getDebug()));
+                    // create a map with a list inside
+                    Map m = new HashMap();
+                    m.put(mapKey, new ArrayList((List) obj));
+                    obj = m;
+                }
 
+                if (obj instanceof Map) {
+                    Map json = (Map) obj;
+
+                    // clean up the values
+                    if (dataCleaner != null)
+                        dataCleaner.clean("", json);
+
+                    if (rootObject == null) // model overrides action
+                        rootObject = invocation.getStack().peek();
+
+                    // populate fields
+                    populator.populateObject(rootObject, json);
+                } else {
+                    LOG.error("Unable to deserialize JSON object from request");
+                    throw new JSONException("Unable to deserialize JSON object from request");
+                }
+            } else if ((accept != null) && accept.equalsIgnoreCase("application/json-rpc")) {
+                Object result;
+                if (this.enableSMD) {
+                    // load JSON object
+                    Object obj = JSONUtil.deserialize(request.getReader());
+
+                    if (obj instanceof Map) {
+                        Map smd = (Map) obj;
+
+                        if (rootObject == null) { // model makes no sense when using RPC
+                            rootObject = invocation.getAction();
+                        }
+
+                        // invoke method
+                        try {
+                            result = this.invoke(rootObject, smd);
+                        } catch (Exception e) {
+                            RPCResponse rpcResponse = new RPCResponse();
+                            rpcResponse.setId(smd.get("id").toString());
+                            rpcResponse.setError(new RPCError(e, RPCErrorCode.EXCEPTION, getDebug()));
+
+                            result = rpcResponse;
+                        }
+                    } else {
+                        String message = "SMD request was not in the right format. See http://json-rpc.org";
+
+                        RPCResponse rpcResponse = new RPCResponse();
+                        rpcResponse.setError(new RPCError(message, RPCErrorCode.INVALID_PROCEDURE_CALL));
                         result = rpcResponse;
                     }
                 } else {
-                    String message = "SMD request was not in the right format. See http://json-rpc.org";
+                    String message = "Request with content type of 'application/json-rpc' was received but SMD is "
+                            + "not enabled for this interceptor. Set 'enableSMD' to true to enable it";
 
                     RPCResponse rpcResponse = new RPCResponse();
-                    rpcResponse.setError(new RPCError(message, RPCErrorCode.INVALID_PROCEDURE_CALL));
+                    rpcResponse.setError(new RPCError(message, RPCErrorCode.SMD_DISABLED));
                     result = rpcResponse;
                 }
-            } else {
-                String message = "Request with content type of 'application/json-rpc' was received but SMD is "
-                        + "not enabled for this interceptor. Set 'enableSMD' to true to enable it";
 
-                RPCResponse rpcResponse = new RPCResponse();
-                rpcResponse.setError(new RPCError(message, RPCErrorCode.SMD_DISABLED));
-                result = rpcResponse;
+                String json = JSONUtil.serialize(result, excludeProperties, getIncludeProperties(),
+                        ignoreHierarchy, excludeNullProperties);
+                json = addCallbackIfApplicable(request, json);
+                boolean writeGzip = enableGZIP && JSONUtil.isGzipInRequest(request);
+                JSONUtil.writeJSONToResponse(new SerializationParams(response, this.defaultEncoding,
+                        this.wrapWithComments, json, true, writeGzip, noCache, -1, -1, prefix, "application/json"));
+
+                return Action.NONE;
+            } else {            
+                LOG.debug("Accept header parameter must be 'application/json' or 'application/json-rpc'. Ignoring request with accept ", accept);
+                break;
             }
-
-            JSONUtil jsonUtil = invocation.getInvocationContext().getContainer().getInstance(JSONUtil.class);
-
-            String json = jsonUtil.serialize(result, excludeProperties, getIncludeProperties(),
-                    ignoreHierarchy, excludeNullProperties);
-            json = addCallbackIfApplicable(request, json);
-            boolean writeGzip = enableGZIP && JSONUtil.isGzipInRequest(request);
-            JSONUtil.writeJSONToResponse(new SerializationParams(response, requestContentTypeEncoding,
-                    this.wrapWithComments, json, true, writeGzip, noCache, -1, -1, prefix, "application/json"));
-
-            return Action.NONE;
-        } else {
-            LOG.debug("Accept header parameter must be '{}' or '{}'. Ignoring request with Content Type '{}'", jsonContentType, jsonRpcContentType, requestContentType);
         }
 
         return invocation.invoke();
-    }
-
-    protected String readContentType(HttpServletRequest request) {
-        String contentType = request.getHeader("Content-Type");
-        LOG.debug("Content Type from request: {}", contentType);
-
-        if (contentType != null && contentType.contains(";")) {
-            contentType = contentType.substring(0, contentType.indexOf(";")).trim();
-        }
-        return contentType;
-    }
-
-    protected String readContentTypeEncoding(HttpServletRequest request) {
-        String contentTypeEncoding = request.getHeader("Content-Type");
-        LOG.debug("Content Type encoding from request: {}", contentTypeEncoding);
-
-        if (contentTypeEncoding != null && contentTypeEncoding.contains(";charset=")) {
-            contentTypeEncoding = contentTypeEncoding.substring(contentTypeEncoding.indexOf(";charset=") + ";charset=".length()).trim();
-        } else {
-            contentTypeEncoding = defaultEncoding;
-        }
-
-        LOG.debug("Content Type encoding to be used in de-serialisation: {}", contentTypeEncoding);
-        return contentTypeEncoding;
     }
 
     @SuppressWarnings("unchecked")
@@ -557,11 +539,7 @@ public class JSONInterceptor extends AbstractInterceptor {
         this.prefix = prefix;
     }
 
-    public void setJsonContentType(String jsonContentType) {
-        this.jsonContentType = jsonContentType;
-    }
-
-    public void setJsonRpcContentType(String jsonRpcContentType) {
-        this.jsonRpcContentType = jsonRpcContentType;
+    public void setAccept(String accept) {
+        this.accept = accept;
     }
 }

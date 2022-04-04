@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -42,6 +44,7 @@
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="debugging"/>
+                <interceptor-ref name="profiling"/>
                 <interceptor-ref name="scopedModelDriven"/>
                 <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="fileUpload"/>

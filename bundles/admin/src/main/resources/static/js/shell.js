@@ -29,8 +29,8 @@
       result_div.appendChild(document.createElement('br'));
 
       for (var line_index in result_array) {
-          var result_wrap = document.createElement('pre');
-          var line = document.createTextNode(result_array[line_index]);
+          var result_wrap = document.createElement('pre')
+          line = document.createTextNode(result_array[line_index]);
           result_wrap.appendChild(line);
           result_div.appendChild(result_wrap);
           result_div.appendChild(document.createElement('br'));

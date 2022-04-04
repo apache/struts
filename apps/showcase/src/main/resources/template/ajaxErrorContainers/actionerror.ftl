@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,21 +25,21 @@
 -->
 <ul<#rt/>
 <#if parameters.id??>
- id="${parameters.id}"<#rt/>
+ id="${parameters.id?html}"<#rt/>
 </#if>            
 <#if parameters.cssClass??>
- class="${parameters.cssClass}"<#rt/>
+ class="${parameters.cssClass?html}"<#rt/>
 <#else>
  class="errorMessage"<#rt/>
 </#if>
 <#if parameters.cssStyle??>
- style="${parameters.cssStyle}"<#rt/>
+ style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 >
 <#if (actionErrors?? && actionErrors?size > 0)>
 	<#list actionErrors as error>
 		<#if error??>
-            <li><span><#if parameters.escape>${error!}<#else>${error!}</#if></span><#rt/></li><#rt/>
+            <li><span><#if parameters.escape>${error!?html}<#else>${error!}</#if></span><#rt/></li><#rt/>
         </#if>
 	</#list>
 </#if>

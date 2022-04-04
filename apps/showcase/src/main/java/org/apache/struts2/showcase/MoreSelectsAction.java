@@ -36,7 +36,6 @@ public class MoreSelectsAction extends ActionSupport {
 	private List _prioritisedFavouriteCars;
 	private List _prioritisedFavouriteCountries;
 	private List favouriteNumbers;
-        private List favouriteCities;
 
 
 	// Cartoon Characters
@@ -123,14 +122,6 @@ public class MoreSelectsAction extends ActionSupport {
 		list.add("boston");
 		list.add("rome");
 		return list;
-	}
-
-	public List getFavouriteCities() {
-		return favouriteCities;
-	}
-
-	public void setFavouriteCities(List favouriteCities) {
-		this.favouriteCities = favouriteCities;
 	}
 
 	// actions

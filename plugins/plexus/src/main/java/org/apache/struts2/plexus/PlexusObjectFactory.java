@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.plexus;
 
 import com.opensymphony.xwork2.Action;
@@ -76,9 +79,6 @@ public class PlexusObjectFactory extends ObjectFactory {
 
     private PlexusContainer base;
     private ReflectionProvider reflectionProvider;
-
-    public PlexusObjectFactory() {
-    }
 
     @Inject
     public void setReflectionProvider(ReflectionProvider reflectionProvider) {

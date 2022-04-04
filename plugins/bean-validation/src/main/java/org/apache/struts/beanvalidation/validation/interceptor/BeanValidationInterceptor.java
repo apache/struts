@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,25 +23,22 @@ package org.apache.struts.beanvalidation.validation.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts.beanvalidation.constraints.ValidationGroup;
 import org.apache.struts.beanvalidation.validation.constant.ValidatorConstants;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import javax.validation.groups.Default;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -56,20 +55,13 @@ import java.util.Set;
 public class BeanValidationInterceptor extends MethodFilterInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(BeanValidationInterceptor.class);
-
     protected BeanValidationManager beanValidationManager;
-    protected TextProviderFactory textProviderFactory;
     protected boolean convertToUtf8 = false;
     protected String convertFromEncoding = "ISO-8859-1";
 
     @Inject()
     public void setBeanValidationManager(BeanValidationManager beanValidationManager) {
         this.beanValidationManager = beanValidationManager;
-    }
-
-    @Inject
-    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
-        this.textProviderFactory = textProviderFactory;
     }
 
     @Inject(value = ValidatorConstants.CONVERT_MESSAGE_TO_UTF8, required = false)
@@ -95,45 +87,42 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
         ActionProxy actionProxy = invocation.getProxy();
         String methodName = actionProxy.getMethod();
 
-        LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Validating [{}/{}] with method [{}]", invocation.getProxy().getNamespace(), invocation.getProxy().getActionName(), methodName);
+        }
 
-        if (null == MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), SkipValidation.class,
-                true, true)) {
-            Class<?>[] validationGroup = getValidationGroups(action, methodName);
+        Collection<Method> annotatedMethods = AnnotationUtils.getAnnotatedMethods(action.getClass(), SkipValidation.class);
+
+        if (!annotatedMethods.contains(getActionMethod(action.getClass(), methodName))) {
             // performing bean validation on action
-            performBeanValidation(action, validator, validationGroup);
+            performBeanValidation(action, validator);
         }
 
         return invocation.invoke();
     }
 
-    protected Class<?>[] getValidationGroups(Object action, String methodName) throws NoSuchMethodException {
-        ValidationGroup validationGroup = MethodUtils.getAnnotation(getActionMethod(action.getClass(), methodName), ValidationGroup.class, true, true);
-        return validationGroup == null ? new Class[]{Default.class} : validationGroup.value();
-    }
+    protected void performBeanValidation(Object action, Validator validator) {
 
-    protected void performBeanValidation(Object action, Validator validator, Class<?>[] groups) {
-
-        LOG.trace("Initiating bean validation.. with groups [{}]", Arrays.toString(groups));
+        LOG.trace("Initiating bean validation..");
 
         Set<ConstraintViolation<Object>> constraintViolations;
 
         if (action instanceof ModelDriven) {
             LOG.trace("Performing validation on model..");
             Object model = (Object)((ModelDriven<?>) action).getModel();
-            constraintViolations = validator.validate(model, groups);
+            constraintViolations = validator.validate(model);
         } else {
             LOG.trace("Performing validation on action..");
-            constraintViolations = validator.validate(action, groups);
+            constraintViolations = validator.validate(action);
         }
 
         addBeanValidationErrors(constraintViolations, action);
     }
 
     @SuppressWarnings("nls")
-    protected void addBeanValidationErrors(Set<ConstraintViolation<Object>> constraintViolations, Object action) {
+    private void addBeanValidationErrors(Set<ConstraintViolation<Object>> constraintViolations, Object action) {
         if (constraintViolations != null) {
-            ValidatorContext validatorContext = new DelegatingValidatorContext(action, textProviderFactory);
+            ValidatorContext validatorContext = new DelegatingValidatorContext(action);
             for (ConstraintViolation<Object> constraintViolation : constraintViolations) {
                 String key = constraintViolation.getMessage();
                 String message = key;
@@ -155,7 +144,9 @@ public class BeanValidationInterceptor extends MethodFilterInterceptor {
                     if (action instanceof ModelDriven && fieldName.startsWith(ValidatorConstants.MODELDRIVEN_PREFIX)) {
                         fieldName = fieldName.replace("model.", ValidatorConstants.EMPTY_SPACE);
                     }
-                    LOG.debug("Adding field error [{}] with message [{}]", fieldName, validationError.getMessage());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Adding field error [{}] with message [{}]", fieldName, validationError.getMessage());
+                    }
                     validatorContext.addFieldError(fieldName, validationError.getMessage());
                 }
             }

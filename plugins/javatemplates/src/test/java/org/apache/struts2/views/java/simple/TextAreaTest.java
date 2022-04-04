@@ -44,7 +44,7 @@ public class TextAreaTest extends AbstractCommonAttributesTest {
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
-        String expected = s("<textarea name='name' cols='2' rows='1' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1' title='title'>val1</textarea>");
+        String expected = s("<textarea name='name' cols='2' rows='1' tabindex='1' id='id1' class='class1' style='style1' title='title'>val1</textarea>");
         assertEquals(expected, output);
     }
 
@@ -63,7 +63,7 @@ public class TextAreaTest extends AbstractCommonAttributesTest {
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
-        String expected = s("<textarea name='' cols='' rows='' disabled='disabled' tabindex='1' id='id1' class='class1' style='style1' title='title'>val1</textarea>");
+        String expected = s("<textarea name='' cols='' rows='' tabindex='1' id='id1' class='class1' style='style1' title='title'>val1</textarea>");
         assertEquals(expected, output);
     }
 

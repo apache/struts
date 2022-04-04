@@ -1,3 +1,0 @@
-<form id="myid-bar" name="myid-bar" action="myAction" method="post">
-  <table class="wwFormTable"></table>
-</form>

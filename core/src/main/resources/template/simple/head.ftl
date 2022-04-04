@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,4 +20,4 @@
  * under the License.
  */
 -->
-<script src="${base}${parameters.staticContentPath}/utils.js" type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
+<script src="${base}/struts/utils.js" type="text/javascript"></script>

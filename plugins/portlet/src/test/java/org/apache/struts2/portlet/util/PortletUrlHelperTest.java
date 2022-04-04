@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletUrlHelperTest.java 564967 2007-08-11 20:20:33Z nilsga $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -44,7 +46,6 @@ import static org.apache.struts2.portlet.PortletConstants.REQUEST;
 import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
 
 /**
- *
  */
 public class PortletUrlHelperTest extends TestCase {
 
@@ -60,143 +61,146 @@ public class PortletUrlHelperTest extends TestCase {
         renderResponse = EasyMock.createMock(RenderResponse.class);
         renderRequest = EasyMock.createMock(RenderRequest.class);
         url = new MockUrl();
-
+        
         EasyMock.expect(renderRequest.getPortletMode()).andReturn(PortletMode.VIEW).anyTimes();
         EasyMock.expect(renderRequest.getWindowState()).andReturn(WindowState.NORMAL).anyTimes();
 
-        Map<String, String> modeNamespaceMap = new HashMap<>();
+        Map<String, String> modeNamespaceMap = new HashMap<String, String>();
         modeNamespaceMap.put("view", "/view");
         modeNamespaceMap.put("edit", "/edit");
         modeNamespaceMap.put("help", "/help");
 
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.put(REQUEST, renderRequest);
-        actionContext.put(RESPONSE, renderResponse);
-        actionContext.put(PHASE, PortletPhase.RENDER_PHASE);
-        actionContext.put(MODE_NAMESPACE_MAP, modeNamespaceMap);
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put(REQUEST, renderRequest);
+        context.put(RESPONSE, renderResponse);
+        context.put(PHASE, PortletPhase.RENDER_PHASE);
+        context.put(MODE_NAMESPACE_MAP, modeNamespaceMap);
+
+        ActionContext.setContext(new ActionContext(context));
+
     }
 
-    public void testCreateRenderUrlWithNoModeOrState() {
-        EasyMock.expect(renderResponse.createRenderURL()).andReturn(url);
+    public void testCreateRenderUrlWithNoModeOrState() throws Exception {
+    	EasyMock.expect(renderResponse.createRenderURL()).andReturn(url);
 
         EasyMock.replay(renderRequest);
         EasyMock.replay(renderResponse);
 
         (new PortletUrlHelper()).buildUrl("testAction", null, null,
-            new HashMap<>(), null, null, null);
+                new HashMap<String, Object>(), null, null, null);
         assertEquals(PortletMode.VIEW, url.getPortletMode());
         assertEquals(WindowState.NORMAL, url.getWindowState());
         assertEquals("testAction", url.getParameterMap().get(ACTION_PARAM)[0]);
         assertEquals("view", url.getParameterMap().get(MODE_PARAM)[0]);
     }
 
-    public void testCreateRenderUrlWithDifferentPortletMode() {
-        EasyMock.expect(renderResponse.createRenderURL()).andReturn(url);
+    public void testCreateRenderUrlWithDifferentPortletMode() throws Exception {
+    	EasyMock.expect(renderResponse.createRenderURL()).andReturn(url);
 
         EasyMock.replay(renderRequest);
         EasyMock.replay(renderResponse);
 
         (new PortletUrlHelper()).buildUrl("testAction", null, null,
-            new HashMap<>(), null, "edit", null);
-
+                new HashMap<String, Object>(), null, "edit", null);
+        
         assertEquals(PortletMode.EDIT, url.getPortletMode());
         assertEquals(WindowState.NORMAL, url.getWindowState());
         assertEquals("testAction", url.getParameterMap().get(ACTION_PARAM)[0]);
         assertEquals("edit", url.getParameterMap().get(MODE_PARAM)[0]);
     }
 
-    public void testCreateRenderUrlWithDifferentWindowState() {
-        EasyMock.expect(renderResponse.createRenderURL()).andReturn(url);
-
+    public void testCreateRenderUrlWithDifferentWindowState() throws Exception {
+    	EasyMock.expect(renderResponse.createRenderURL()).andReturn(url);
+        
         EasyMock.replay(renderRequest);
         EasyMock.replay(renderResponse);
-
+        
         (new PortletUrlHelper()).buildUrl("testAction", null, null,
-            new HashMap<>(), null, null, "maximized");
-
+                new HashMap<String, Object>(), null, null, "maximized");
+        
         assertEquals(PortletMode.VIEW, url.getPortletMode());
         assertEquals(WindowState.MAXIMIZED, url.getWindowState());
         assertEquals("testAction", url.getParameterMap().get(ACTION_PARAM)[0]);
         assertEquals("view", url.getParameterMap().get(MODE_PARAM)[0]);
     }
 
-    public void testCreateActionUrl() {
-        EasyMock.expect(renderResponse.createActionURL()).andReturn(url);
-
+    public void testCreateActionUrl() throws Exception {
+    	EasyMock.expect(renderResponse.createActionURL()).andReturn(url);
+        
         EasyMock.replay(renderResponse);
         EasyMock.replay(renderRequest);
-
+        
         (new PortletUrlHelper()).buildUrl("testAction", null, null,
-            new HashMap<>(), "action", null, null);
-
+                new HashMap<String, Object>(), "action", null, null);
+        
         assertEquals(PortletMode.VIEW, url.getPortletMode());
         assertEquals(WindowState.NORMAL, url.getWindowState());
         assertEquals("testAction", url.getParameterMap().get(ACTION_PARAM)[0]);
         assertEquals("view", url.getParameterMap().get(MODE_PARAM)[0]);
     }
-
+    
     @Override
     public void tearDown() {
-        EasyMock.verify(renderResponse);
-        EasyMock.verify(renderRequest);
+    	EasyMock.verify(renderResponse);
+    	EasyMock.verify(renderRequest);
     }
+    
+    private class MockUrl implements PortletURL {
 
-    private static class MockUrl implements PortletURL {
+    	private PortletMode portletMode;
+		private WindowState windowState;
+		private Map<String, String[]> parameters;
+    	
+		public PortletMode getPortletMode() {
+			return portletMode;
+		}
 
-        private PortletMode portletMode;
-        private WindowState windowState;
-        private Map<String, String[]> parameters;
+		public WindowState getWindowState() {
+			return windowState;
+		}
 
-        public PortletMode getPortletMode() {
-            return portletMode;
-        }
+		public void removePublicRenderParameter(String name) {
+		}
 
-        public WindowState getWindowState() {
-            return windowState;
-        }
+		public void setPortletMode(PortletMode portletMode) throws PortletModeException {
+			this.portletMode = portletMode;
+		}
 
-        public void removePublicRenderParameter(String name) {
-        }
+		public void setWindowState(WindowState windowState) throws WindowStateException {
+			this.windowState = windowState;
+		}
 
-        public void setPortletMode(PortletMode portletMode) throws PortletModeException {
-            this.portletMode = portletMode;
-        }
+		public void addProperty(String arg0, String arg1) {
+		}
 
-        public void setWindowState(WindowState windowState) throws WindowStateException {
-            this.windowState = windowState;
-        }
+		public Map<String, String[]> getParameterMap() {
+			return parameters;
+		}
 
-        public void addProperty(String arg0, String arg1) {
-        }
+		public void setParameter(String name, String value) {
+			parameters.put(name, new String[]{value});
+		}
 
-        public Map<String, String[]> getParameterMap() {
-            return parameters;
-        }
+		public void setParameter(String name, String[] values) {
+			parameters.put(name, values);
+		}
 
-        public void setParameter(String name, String value) {
-            parameters.put(name, new String[]{value});
-        }
+		public void setParameters(Map<String, String[]> parameters) {
+			this.parameters = parameters;
+		}
 
-        public void setParameter(String name, String[] values) {
-            parameters.put(name, values);
-        }
+		public void setProperty(String arg0, String arg1) {
+		}
 
-        public void setParameters(Map<String, String[]> parameters) {
-            this.parameters = parameters;
-        }
+		public void setSecure(boolean arg0) throws PortletSecurityException {
+		}
 
-        public void setProperty(String arg0, String arg1) {
-        }
+		public void write(Writer arg0) throws IOException {
+		}
 
-        public void setSecure(boolean arg0) throws PortletSecurityException {
-        }
-
-        public void write(Writer arg0) throws IOException {
-        }
-
-        public void write(Writer arg0, boolean arg1) throws IOException {
-        }
-
+		public void write(Writer arg0, boolean arg1) throws IOException {
+		}
+    	
     }
 
 }

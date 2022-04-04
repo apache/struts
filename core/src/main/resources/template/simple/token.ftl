@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,5 +20,5 @@
  * under the License.
  */
 -->
-<input type="hidden" name="${parameters.tokenNameField!""}" value="${parameters.name!""}" />
-<input type="hidden" name="${parameters.name!""}" value="${parameters.token!""}" />
+<input type="hidden" name="${parameters.tokenNameField!""}" value="${parameters.name!""?html}" />
+<input type="hidden" name="${parameters.name!""}" value="${parameters.token!""?html}" />

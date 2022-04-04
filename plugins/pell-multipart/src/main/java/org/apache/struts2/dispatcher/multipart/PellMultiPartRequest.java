@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,29 +18,51 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.dispatcher.multipart;
 
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import http.utils.multipartrequest.ServletMultipartRequest;
+import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
+
 
 /**
  * Multipart form data request adapter for Jason Pell's multipart utils package.
  *
  */
-public class PellMultiPartRequest extends AbstractMultiPartRequest {
+public class PellMultiPartRequest implements MultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(PellMultiPartRequest.class);
-
     private ServletMultipartRequest multi;
 
+    private String defaultEncoding;
+    private boolean maxSizeProvided;
+    private int maxSize;
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public void setDefaultEncoding(String enc) {
+        this.defaultEncoding = enc;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
+    public void setMaxSize(String maxSize) {
+    	this.maxSizeProvided = true;
+        this.maxSize = Integer.parseInt(maxSize);
+    }
+    
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
      * multipart classes (see class description).
@@ -52,8 +76,7 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
         synchronized (this) {
             setEncoding();
             if (maxSizeProvided){
-                int intMaxSize = (maxSize >= Integer.MAX_VALUE ? Integer.MAX_VALUE : Long.valueOf(maxSize).intValue());
-            	multi = new ServletMultipartRequest(servletRequest, saveDir, intMaxSize);
+            	multi = new ServletMultipartRequest(servletRequest, saveDir, maxSize);
             }else{
             	multi = new ServletMultipartRequest(servletRequest, saveDir);
             }
@@ -68,8 +91,8 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
         return new String[]{multi.getContentType(fieldName)};
     }
 
-    public UploadedFile[] getFile(String fieldName) {
-        return new UploadedFile[]{ new StrutsUploadedFile(multi.getFile(fieldName)) };
+    public File[] getFile(String fieldName) {
+        return new File[]{multi.getFile(fieldName)};
     }
 
     public String[] getFileNames(String fieldName) {
@@ -106,6 +129,10 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
         }
 
         return values.toArray(new String[values.size()]);
+    }
+
+    public List<String> getErrors() {
+        return Collections.emptyList();
     }
 
     /**
@@ -146,9 +173,13 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
         Enumeration fileParameterNames = multi.getFileParameterNames();
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
             String inputValue = (String) fileParameterNames.nextElement();
-            UploadedFile[] files = getFile(inputValue);
-            for (UploadedFile currentFile : files) {
-                LOG.debug("Removing file {} {}", inputValue, currentFile);
+            File[] files = getFile(inputValue);
+            for (File currentFile : files) {
+                if (LOG.isInfoEnabled()) {
+                    String msg = LocalizedTextUtil.findText(this.getClass(), "struts.messages.removing.file", Locale.ENGLISH,
+                            "no.message.found", new Object[]{inputValue, currentFile});
+                    LOG.info(msg);
+                }
                 if ((currentFile != null) && currentFile.isFile()) {
                     if (!currentFile.delete()) {
                         LOG.warn("Resource Leaking: Could not remove uploaded file [{}]", currentFile.getAbsolutePath());

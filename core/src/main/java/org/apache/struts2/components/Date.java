@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,31 +18,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.components.date.DateFormatter;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * <p>
+ *
  * Format Date object in different ways.
  * <p>
  * The date tag will allow you to format a Date in a quick and easy way.
@@ -56,12 +56,6 @@ import java.util.List;
  *
  * <p>
  * <b>Note</b>: If the requested Date object isn't found on the stack, a blank will be returned.
- * </p>
- *
- * <p>
- * <b>Note</b>: Since Struts 2.6 a new Java 8 API has been used to format the Date, it's based on
- * <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a>
- * which uses a bit different patterns.
  * </p>
  *
  * <p>
@@ -136,8 +130,8 @@ import java.util.List;
  *      <td>if one is not found DateFormat.MEDIUM format will be used</td>
  *   </tr>
  * </table>
- * <p>
- * <p>
+ *
+ *
  * <!-- END SNIPPET: javadoc -->
  *
  * <p><b>Examples</b></p>
@@ -151,12 +145,12 @@ import java.util.List;
  * </pre>
  *
  * <code>Date</code>
+ *
  */
-@StrutsTag(name = "date", tldBodyContent = "empty", tldTagClass = "org.apache.struts2.views.jsp.DateTag", description = "Render a formatted date.")
+@StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
 public class Date extends ContextBean {
 
     private static final Logger LOG = LogManager.getLogger(Date.class);
-
     /**
      * Property name to fall back when no format is specified
      */
@@ -208,18 +202,17 @@ public class Date extends ContextBean {
 
     private String timezone;
 
-    private DateFormatter dateFormatter;
-
     public Date(ValueStack stack) {
         super(stack);
     }
 
-    /**
-     * An instance of {@link DateFormatter}
-     */
-    @Inject
-    public void setDateFormatter(DateFormatter dateFormatter) {
-        this.dateFormatter = dateFormatter;
+    private TextProvider findProviderInStack() {
+        for (Object o : getStack().getRoot()) {
+            if (o instanceof TextProvider) {
+                return (TextProvider) o;
+            }
+        }
+        return null;
     }
 
     /**
@@ -230,11 +223,11 @@ public class Date extends ContextBean {
      * @param date the date
      * @return the date nicely
      */
-    public String formatTime(TextProvider tp, ZonedDateTime date) {
-        ZonedDateTime now = ZonedDateTime.now();
+    public String formatTime(TextProvider tp, java.util.Date date) {
+        java.util.Date now = new java.util.Date();
         StringBuilder sb = new StringBuilder();
-        List<Object> args = new ArrayList<>();
-        long secs = Math.abs(now.toEpochSecond() - date.toEpochSecond());
+        List args = new ArrayList();
+        long secs = Math.abs((now.getTime() - date.getTime()) / 1000);
         long mins = secs / 60;
         long sec = secs % 60;
         int min = (int) mins % 60;
@@ -277,7 +270,7 @@ public class Date extends ContextBean {
 
         args.clear();
         args.add(sb.toString());
-        if (date.isBefore(now)) {
+        if (date.before(now)) {
             // looks like this date is passed
             return tp.getText(DATETAG_PROPERTY_PAST, DATETAG_DEFAULT_PAST, args);
         } else {
@@ -285,57 +278,70 @@ public class Date extends ContextBean {
         }
     }
 
-    @Override
     public boolean end(Writer writer, String body) {
-        TextProvider textProvider = findProviderInStack();
-
-        ZonedDateTime date = null;
-        final ZoneId tz = getTimeZone();
+        String msg;
+        java.util.Date date = null;
         // find the name on the valueStack
-        Object dateObject = findValue(name);
-        if (dateObject instanceof java.util.Date) {
-            date = ((java.util.Date) dateObject).toInstant().atZone(tz);
-        } else if (dateObject instanceof Calendar) {
-            date = ((Calendar) dateObject).toInstant().atZone(tz);
-        } else if (dateObject instanceof Long) {
-            date = Instant.ofEpochMilli((long) dateObject).atZone(tz);
-        } else if (dateObject instanceof LocalDateTime) {
-            date = ((LocalDateTime) dateObject).atZone(tz);
-        } else if (dateObject instanceof LocalDate) {
-            date = ((LocalDate) dateObject).atStartOfDay(tz);
-        } else if (dateObject instanceof Instant) {
-            date = ((Instant) dateObject).atZone(tz);
-        } else {
-            if (devMode) {
-                String developerNotification = "";
-                if (textProvider != null) {
-                    developerNotification = textProvider.getText(
-                        "devmode.notification",
-                        "Developer Notification:\n{0}",
-                        new String[]{
-                            "Expression [" + name + "] passed to <s:date/> tag which was evaluated to [" + dateObject + "]("
-                                + (dateObject != null ? dateObject.getClass() : "null") + ") isn't supported!"
-                        }
-                    );
-                }
-                LOG.warn(developerNotification);
+        try {
+            //support Calendar also
+            Object dateObject = findValue(name);
+            if (dateObject instanceof java.util.Date) {
+                date = (java.util.Date) dateObject;
+            } else if(dateObject instanceof Calendar){
+                date = ((Calendar) dateObject).getTime();
             } else {
-                LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't supported!",
-                    name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
+                if (devMode) {
+                    LOG.error("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar!",
+                            name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
+                } else {
+                    LOG.debug("Expression [{}] passed to <s:date/> tag which was evaluated to [{}]({}) isn't instance of java.util.Date nor java.util.Calendar!",
+                            name, dateObject, (dateObject != null ? dateObject.getClass() : "null"));
+                }
             }
+        } catch (Exception e) {
+            LOG.error("Could not convert object with key '{}' to a java.util.Date instance", name);
         }
 
         //try to find the format on the stack
         if (format != null) {
             format = findString(format);
         }
-        String msg;
         if (date != null) {
-            if (textProvider != null) {
+            TextProvider tp = findProviderInStack();
+            if (tp != null) {
                 if (nice) {
-                    msg = formatTime(textProvider, date);
+                    msg = formatTime(tp, date);
                 } else {
-                    msg = formatDate(textProvider, date);
+                    TimeZone tz = getTimeZone();
+                    if (format == null) {
+                        String globalFormat = null;
+
+                        // if the format is not specified, fall back using the
+                        // defined property DATETAG_PROPERTY
+                        globalFormat = tp.getText(DATETAG_PROPERTY);
+
+                        // if tp.getText can not find the property then the
+                        // returned string is the same as input =
+                        // DATETAG_PROPERTY
+                        if (globalFormat != null
+                                && !DATETAG_PROPERTY.equals(globalFormat)) {
+                            SimpleDateFormat sdf = new SimpleDateFormat(globalFormat,
+                                    ActionContext.getContext().getLocale());
+                            sdf.setTimeZone(tz);
+                            msg = sdf.format(date);
+                        } else {
+                            DateFormat df = DateFormat.getDateTimeInstance(
+                                    DateFormat.MEDIUM, DateFormat.MEDIUM,
+                                    ActionContext.getContext().getLocale());
+                            df.setTimeZone(tz);
+                            msg = df.format(date);
+                        }
+                    } else {
+                        SimpleDateFormat sdf = new SimpleDateFormat(format, ActionContext
+                                .getContext().getLocale());
+                        sdf.setTimeZone(tz);
+                        msg = sdf.format(date);
+                    }
                 }
                 if (msg != null) {
                     try {
@@ -353,53 +359,30 @@ public class Date extends ContextBean {
         return super.end(writer, "");
     }
 
-    private String formatDate(TextProvider textProvider, ZonedDateTime date) {
-        String useFormat = format;
-        if (useFormat == null) {
-            // if the format is not specified, fall back using the defined property DATETAG_PROPERTY
-            useFormat = textProvider.getText(DATETAG_PROPERTY);
-            if (DATETAG_PROPERTY.equals(useFormat)) {
-                // if tp.getText can not find the property then the
-                // returned string is the same as input = DATETAG_PROPERTY
-                useFormat = null;
-            }
-        }
-        return dateFormatter.format(date, useFormat);
-    }
-
-    private ZoneId getTimeZone() {
-        ZoneId tz = ZoneId.systemDefault();
+    private TimeZone getTimeZone() {
+        TimeZone tz = TimeZone.getDefault();
         if (timezone != null) {
-            timezone = stripExpression(timezone);
+            timezone = stripExpressionIfAltSyntax(timezone);
             String actualTimezone = (String) getStack().findValue(timezone, String.class);
             if (actualTimezone != null) {
                 timezone = actualTimezone;
             }
-            tz = ZoneId.of(timezone);
+            tz = TimeZone.getTimeZone(timezone);
         }
         return tz;
     }
 
-    private TextProvider findProviderInStack() {
-        for (Object o : getStack().getRoot()) {
-            if (o instanceof TextProvider) {
-                return (TextProvider) o;
-            }
-        }
-        return null;
-    }
-
-    @StrutsTagAttribute(description = "Date or DateTime format pattern")
+    @StrutsTagAttribute(description="Date or DateTime format pattern", rtexprvalue=false)
     public void setFormat(String format) {
         this.format = format;
     }
 
-    @StrutsTagAttribute(description = "Whether to print out the date nicely", type = "Boolean", defaultValue = "false")
+    @StrutsTagAttribute(description="Whether to print out the date nicely", type="Boolean", defaultValue="false")
     public void setNice(boolean nice) {
         this.nice = nice;
     }
 
-    @StrutsTagAttribute(description = "The specific timezone in which to format the date")
+    @StrutsTagAttribute(description = "The specific timezone in which to format the date", required = false)
     public void setTimezone(String timezone) {
         this.timezone = timezone;
     }
@@ -411,7 +394,7 @@ public class Date extends ContextBean {
         return name;
     }
 
-    @StrutsTagAttribute(description = "The date value to format", required = true)
+    @StrutsTagAttribute(description="The date value to format", required=true)
     public void setName(String name) {
         this.name = name;
     }

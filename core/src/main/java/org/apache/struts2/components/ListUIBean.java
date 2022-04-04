@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -28,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -62,7 +64,6 @@ public abstract class ListUIBean extends UIBean {
         super(stack, request, response);
     }
 
-    @Override
     public void evaluateExtraParams() {
         Object value = null;
 
@@ -72,28 +73,28 @@ public abstract class ListUIBean extends UIBean {
 
         if (list instanceof String) {
             value = findValue((String) list);
-            if (value == null) {
-                if (throwExceptionOnNullValueAttribute) {
-                    // will throw an exception if not found
-                    value = findValue((list == null) ? (String) list : list.toString(), "list",
-                            "The requested list key '" + list + "' could not be resolved as a collection/array/map/enumeration/iterator type. " +
-                                    "Example: people or people.{name}");
-                } else {
-                    // ww-1010, allows value with null value to be compatible with ww
-                    // 2.1.7 behaviour
-                    value = findValue((list == null) ? (String) list : list.toString());
-                }
-            }
-        } else {
+        } else if (list instanceof Collection) {
             value = list;
+        } else if (MakeIterator.isIterable(list)) {
+            value = MakeIterator.convert(list);
+        }
+        if (value == null) {
+            if (throwExceptionOnNullValueAttribute) {
+                // will throw an exception if not found
+                value = findValue((list == null) ? (String) list : list.toString(), "list",
+                        "The requested list key '" + list + "' could not be resolved as a collection/array/map/enumeration/iterator type. " +
+                                "Example: people or people.{name}");
+            } else {
+                // ww-1010, allows value with null value to be compatible with ww
+                // 2.1.7 behaviour
+                value = findValue((list == null) ? (String) list : list.toString());
+            }
         }
 
-        if (value == null || value instanceof Iterable) {
+        if (value instanceof Collection) {
             addParameter("list", value);
-        } else if (MakeIterator.isIterable(value)) {
-            addParameter("list", MakeIterator.convert(value));
         } else {
-            addParameter("list", Collections.singletonList(value));
+            addParameter("list", MakeIterator.convert(value));
         }
 
         if (value instanceof Collection) {
@@ -105,30 +106,26 @@ public abstract class ListUIBean extends UIBean {
         }
 
         if (listKey != null) {
-            listKey = stripExpression(listKey);
+            listKey = stripExpressionIfAltSyntax(listKey);
             addParameter("listKey", listKey);
         } else if (value instanceof Map) {
             addParameter("listKey", "key");
-        } else {
-            addParameter("listKey", "top");
         }
 
         if (listValueKey != null) {
-            listValueKey = stripExpression(listValueKey);
+            listValueKey = stripExpressionIfAltSyntax(listValueKey);
             addParameter("listValueKey", listValueKey);
         }
 
         if (listValue != null) {
-            listValue = stripExpression(listValue);
+            listValue = stripExpressionIfAltSyntax(listValue);
             addParameter("listValue", listValue);
         } else if (value instanceof Map) {
             addParameter("listValue", "value");
-        } else {
-            addParameter("listValue", "top");
         }
 
         if (listLabelKey != null) {
-            listLabelKey = stripExpression(listLabelKey);
+            listLabelKey = stripExpressionIfAltSyntax(listLabelKey);
             addParameter("listLabelKey", listLabelKey);
         }
 
@@ -149,7 +146,6 @@ public abstract class ListUIBean extends UIBean {
         return ContainUtil.contains(obj1, obj2);
     }
 
-    @Override
     protected Class getValueClassType() {
         return null; // don't convert nameValue to anything, we need the raw value
     }
@@ -194,6 +190,7 @@ public abstract class ListUIBean extends UIBean {
     public void setListTitle(String listTitle) {
         this.listTitle = listTitle;
     }
+
 
     public void setThrowExceptionOnNullValueAttribute(boolean throwExceptionOnNullValueAttribute) {
         this.throwExceptionOnNullValueAttribute = throwExceptionOnNullValueAttribute;

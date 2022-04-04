@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp.ui;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -37,12 +40,10 @@ public class TextFieldTag extends AbstractUITag {
     protected String size;
     protected String type;
 
-    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TextField(stack, req, res);
     }
 
-    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -68,25 +69,4 @@ public class TextFieldTag extends AbstractUITag {
     public void setType(String type) {
         this.type = type;
     }
-
-    @Override
-    /**
-     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
-     */
-    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
-        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
-    }
-
-    @Override
-    protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
-            return;  // If flag is false (default setting), do not perform any state clearing.
-        }
-        super.clearTagStateForTagPoolingServers();
-        this.maxlength = null;
-        this.readonly = null;
-        this.size = null;
-        this.type = null;
-    }
-
 }

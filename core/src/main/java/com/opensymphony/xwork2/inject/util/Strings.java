@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,6 @@ package com.opensymphony.xwork2.inject.util;
  * 
  * @author crazybob@google.com (Bob Lee)
  */
-@Deprecated
 public class Strings {
 
   /**
@@ -44,7 +43,6 @@ public class Strings {
    *     converted to uppercase
    * @throws NullPointerException if <tt>s</tt> is null
    */
-  @Deprecated
   public static String capitalize(String s) {
     if (s.length() == 0)
       return s;

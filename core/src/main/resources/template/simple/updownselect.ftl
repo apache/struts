@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,7 +21,7 @@
  */
 -->
 <#if !stack.findValue("#optiontransferselect_js_included")??><#t/>
-	<script type="text/javascript" src="<@s.url value="${parameters.staticContentPath}/optiontransferselect.js" encode='false' includeParams='none'/>" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
+	<script type="text/javascript" src="<@s.url value="/struts/optiontransferselect.js" encode='false' includeParams='none'/>"></script>
 	<#assign temporaryVariable = stack.setValue("#optiontransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table>

@@ -1,4 +1,6 @@
 /*
+ * $Id: DefaultActionSupport.java 651946 2008-04-27 13:41:38Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,6 +21,8 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.*;
@@ -30,6 +34,33 @@ import java.util.regex.Pattern;
 public class InitOperations {
 
     public InitOperations() {
+    }
+
+    /**
+     * Initializes the internal Struts logging
+     *
+     * @param filterConfig host configuration
+     * @deprecated since 2.5
+     */
+    @Deprecated
+    public void initLogging( HostConfig filterConfig ) {
+        String factoryName = filterConfig.getInitParameter("loggerFactory");
+        if (factoryName != null) {
+            try {
+                Class cls = ClassLoaderUtil.loadClass(factoryName, this.getClass());
+                LoggerFactory fac = (LoggerFactory) cls.newInstance();
+                LoggerFactory.setLoggerFactory(fac);
+            } catch ( InstantiationException e ) {
+                System.err.println("Unable to instantiate logger factory: " + factoryName + ", using default");
+                e.printStackTrace();
+            } catch ( IllegalAccessException e ) {
+                System.err.println("Unable to access logger factory: " + factoryName + ", using default");
+                e.printStackTrace();
+            } catch ( ClassNotFoundException e ) {
+                System.err.println("Unable to locate logger factory class: " + factoryName + ", using default");
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -78,10 +109,10 @@ public class InitOperations {
      *
      * @return The dispatcher on the thread.
      */
-    protected Dispatcher createDispatcher(HostConfig filterConfig) {
+    private Dispatcher createDispatcher( HostConfig filterConfig ) {
         Map<String, String> params = new HashMap<>();
-        for ( Iterator<String> parameterNames = filterConfig.getInitParameterNames(); parameterNames.hasNext(); ) {
-            String name = parameterNames.next();
+        for ( Iterator e = filterConfig.getInitParameterNames(); e.hasNext(); ) {
+            String name = (String) e.next();
             String value = filterConfig.getInitParameter(name);
             params.put(name, value);
         }
@@ -89,7 +120,7 @@ public class InitOperations {
     }
 
     public void cleanup() {
-        ActionContext.clear();
+        ActionContext.setContext(null);
     }
 
     /**

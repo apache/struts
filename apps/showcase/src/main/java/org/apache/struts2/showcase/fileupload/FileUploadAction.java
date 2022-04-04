@@ -84,12 +84,4 @@ public class FileUploadAction extends ActionSupport {
 	public void setCaption(String caption) {
 		this.caption = caption;
 	}
-
-        public long getUploadSize() {
-            if (upload != null) {
-                return upload.length();
-            } else {
-                return 0;
-            }
-        }
 }

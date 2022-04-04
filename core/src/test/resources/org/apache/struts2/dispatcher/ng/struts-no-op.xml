@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*
+ * $Id: struts.xml 590812 2007-10-31 20:32:54Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,6 +21,6 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-          "-//Apache Software Foundation//DTD Struts Configuration 2.6//EN"
-          "http://struts.apache.org/dtds/struts-2.6.dtd">
+          "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+          "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts /> 

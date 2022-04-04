@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,17 +18,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.struts2.StrutsInternalTestCase;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 /**
  * Unit test for ChecboxInterceptor. 
@@ -39,20 +40,15 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
     
     protected void setUp() throws Exception {
     	super.setUp();
-    	param = new HashMap<>();
+    	param = new HashMap<String, Object>();
     	
     	interceptor = new CheckboxInterceptor();
     	ai = new MockActionInvocation();
     	ai.setInvocationContext(ActionContext.getContext());
+    	ActionContext.getContext().setParameters(param);
     }
-
-	private void prepare(ActionInvocation ai) {
-		ai.getInvocationContext().setParameters(HttpParameters.create(param).build());
-	}
-
+	
 	public void testNoParam() throws Exception {
-		prepare(ai);
-
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
@@ -62,27 +58,21 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 
 	public void testPassthroughOne() throws Exception {
 		param.put("user", "batman");
-
-		prepare(ai);
-
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
 		
-		assertEquals(1, ai.getInvocationContext().getParameters().keySet().size());
+		assertEquals(1, param.size());
 	}
 
 	public void testPassthroughTwo() throws Exception {
 		param.put("user", "batman");
 		param.put("email", "batman@comic.org");
-
-		prepare(ai);
-
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
 		
-		assertEquals(2, ai.getInvocationContext().getParameters().keySet().size());
+		assertEquals(2, param.size());
 	}
 
 	public void testOneCheckboxTrue() throws Exception {
@@ -92,16 +82,13 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		param.put("__checkbox_superpower", "true");
 		assertTrue(param.containsKey("__checkbox_superpower"));
 
-		prepare(ai);
-
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
-
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(3, parameters.keySet().size()); // should be 3 as __checkbox_ should be removed
-		assertEquals("true", parameters.get("superpower").getValue());
+		
+		assertFalse(param.containsKey("__checkbox_superpower"));
+		assertEquals(3, param.size()); // should be 3 as __checkbox_ should be removed
+		assertEquals("true", param.get("superpower"));
 	}
 
 	public void testOneCheckboxNoValue() throws Exception {
@@ -110,16 +97,13 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		param.put("__checkbox_superpower", "false");
 		assertTrue(param.containsKey("__checkbox_superpower"));
 
-		prepare(ai);
-
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
-
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(3, parameters.keySet().size()); // should be 3 as __checkbox_ should be removed
-		assertEquals("false", parameters.get("superpower").getValue());
+		
+		assertFalse(param.containsKey("__checkbox_superpower"));
+		assertEquals(3, param.size()); // should be 3 as __checkbox_ should be removed
+		assertEquals("false", ((String[])param.get("superpower"))[0]);
 	}
 
 	public void testOneCheckboxNoValueDifferentDefault() throws Exception {
@@ -128,34 +112,28 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		param.put("__checkbox_superpower", "false");
 		assertTrue(param.containsKey("__checkbox_superpower"));
 
-		prepare(ai);
-
 		interceptor.setUncheckedValue("off");
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
-
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(3, parameters.keySet().size()); // should be 3 as __checkbox_ should be removed
-		assertEquals("off", parameters.get("superpower").getValue());
+		
+		assertFalse(param.containsKey("__checkbox_superpower"));
+		assertEquals(3, param.size()); // should be 3 as __checkbox_ should be removed
+		assertEquals("off", ((String[])param.get("superpower"))[0]);
 	}
 
     public void testTwoCheckboxNoValue() throws Exception {
 		param.put("user", "batman");
 		param.put("email", "batman@comic.org");
-		param.put("__checkbox_superpower", new String[]{"true", "true"});
-
-		prepare(ai);
+		param.put("__checkbox_superpower", new String[]{"true","true"});
 
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
 
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertEquals(2, parameters.keySet().size()); // should be 2 as __checkbox_ should be removed
-		assertFalse(parameters.get("superpower").isDefined());
+		assertFalse(param.containsKey("__checkbox_superpower"));
+		assertEquals(2, param.size()); // should be 2 as __checkbox_ should be removed
+		assertNull(param.get("superpower"));
     }
 
     public void testTwoCheckboxMixed() throws Exception {
@@ -167,18 +145,15 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		assertTrue(param.containsKey("__checkbox_superpower"));
 		assertTrue(param.containsKey("__checkbox_cool"));
 
-		prepare(ai);
-
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
-
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertFalse(parameters.contains("__checkbox_cool"));
-		assertEquals(4, parameters.keySet().size()); // should be 4 as __checkbox_ should be removed
-		assertEquals("yes", parameters.get("superpower").getValue());
-		assertEquals("false", parameters.get("cool").getValue()); // will use false as default and not 'no'
+		
+		assertFalse(param.containsKey("__checkbox_superpower"));
+		assertFalse(param.containsKey("__checkbox_cool"));
+		assertEquals(4, param.size()); // should be 4 as __checkbox_ should be removed
+		assertEquals("yes", param.get("superpower"));
+		assertEquals("false", ((String[])param.get("cool"))[0]); // will use false as default and not 'no'
 	}
 
 	public void testTwoCheckboxMixedWithDifferentDefault() throws Exception {
@@ -190,19 +165,16 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		assertTrue(param.containsKey("__checkbox_superpower"));
 		assertTrue(param.containsKey("__checkbox_cool"));
 
-		prepare(ai);
-
 		interceptor.setUncheckedValue("no");
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
-
-		HttpParameters parameters = ai.getInvocationContext().getParameters();
-		assertFalse(parameters.contains("__checkbox_superpower"));
-		assertFalse(parameters.contains("__checkbox_cool"));
-		assertEquals(4, parameters.keySet().size()); // should be 4 as __checkbox_ should be removed
-		assertEquals("yes", parameters.get("superpower").getValue());
-		assertEquals("no", parameters.get("cool").getValue());
+		
+		assertFalse(param.containsKey("__checkbox_superpower"));
+		assertFalse(param.containsKey("__checkbox_cool"));
+		assertEquals(4, param.size()); // should be 4 as __checkbox_ should be removed
+		assertEquals("yes", param.get("superpower"));
+		assertEquals("no", ((String[])param.get("cool"))[0]);
 	}
 	
 }

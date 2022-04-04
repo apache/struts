@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2007,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
@@ -23,10 +20,9 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -102,17 +98,22 @@ public class ParameterRemoverInterceptor extends AbstractInterceptor {
 		if (!(invocation.getAction() instanceof NoParameters)
 				&& (null != this.paramNames)) {
 			ActionContext ac = invocation.getInvocationContext();
-			HttpParameters parameters = ac.getParameters();
+			final Map<String, Object> parameters = ac.getParameters();
 
 			if (parameters != null) {
                 for (String removeName : paramNames) {
-					try {
-						Parameter parameter = parameters.get(removeName);
-						if (parameter.isDefined() && this.paramValues.contains(parameter.getValue())) {
-							parameters.remove(removeName);
+                    // see if the field is in the parameter map
+                    if (parameters.containsKey(removeName)) {
+
+                        try {
+							String[] values = (String[]) parameters.get(removeName);
+							String value = values[0];
+							if (null != value && this.paramValues.contains(value)) {
+                                parameters.remove(removeName);
+                            }
+                        } catch (Exception e) {
+							LOG.error("Failed to convert parameter to string", e);
 						}
-					} catch (Exception e) {
-						LOG.error("Failed to convert parameter to string", e);
 					}
                 }
 			}

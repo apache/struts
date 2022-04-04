@@ -27,24 +27,22 @@ import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.hibernate.validator.constraints.URL;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Date;
 
-// <!-- START SNIPPET: beanValidationExample -->
+/**
+ * <!-- START SNIPPET: beanValidatationExample -->
+ */
 @Namespace("/bean-validation")
 @ParentPackage("bean-validation")
 @Action(results = {
-    @Result(name = "input", location = "bean-validation.jsp"),
-    @Result(name = "success", location = "/WEB-INF/validation/successFieldValidatorsExample.jsp")
+        @Result(name = "input", location = "bean-validation.jsp"),
+        @Result(name = "success", location = "/WEB-INF/validation/successFieldValidatorsExample.jsp")
 })
 @FieldMatch(first = "fieldExpressionValidatorField", second = "requiredValidatorField", message = "requiredValidatorField and fieldExpressionValidatorField are not matching")
 @ScriptAssert(lang = "javascript", script = "_this.dateValidatorField != null && _this.dateValidatorField.before(new java.util.Date())", message = "Date need to before now")
@@ -84,10 +82,10 @@ public class BeanValidationExampleAction extends ActionSupport {
     private String fieldExpressionValidatorField = null;
 
     @Action(value = "bean-validation", results = {
-        @Result(name = "success", location = "bean-validation.jsp")
+            @Result(name = "success", location = "bean-validation.jsp")
     })
     @SkipValidation
-    public String beanValidation() {
+    public String beanValidation(){
         return SUCCESS;
     }
 
@@ -152,7 +150,7 @@ public class BeanValidationExampleAction extends ActionSupport {
     }
 
     public void setFieldExpressionValidatorField(
-        String fieldExpressionValidatorField) {
+            String fieldExpressionValidatorField) {
         this.fieldExpressionValidatorField = fieldExpressionValidatorField;
     }
 
@@ -165,4 +163,8 @@ public class BeanValidationExampleAction extends ActionSupport {
     }
 }
 
-// <!-- END SNIPPET: beanValidationExample -->
+/**
+ * <!-- END SNIPPET: beanValidatationExample -->
+ */
+
+

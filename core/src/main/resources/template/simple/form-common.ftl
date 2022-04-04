@@ -27,41 +27,41 @@
 </#if>
 <form<#rt/>
 <#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+ id="${parameters.id?html}"<#rt/>
 </#if>
 <#if parameters.name?has_content>
- name="${parameters.name}"<#rt/>
+ name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.onsubmit?has_content>
- onsubmit="<#outputformat 'JavaScript'>${parameters.onsubmit}</#outputformat>"<#rt/>
+ onsubmit="${parameters.onsubmit?html}"<#rt/>
 </#if>
 <#if parameters.onreset?has_content>
- onreset="<#outputformat 'JavaScript'>${parameters.onreset}</#outputformat>"<#rt/>
+ onreset="${parameters.onreset?html}"<#rt/>
 </#if>
 <#if parameters.action?has_content>
- action="${parameters.action}"<#rt/>
+ action="${parameters.action?html}"<#rt/>
 </#if>
 <#if parameters.target?has_content>
- target="${parameters.target}"<#rt/>
+ target="${parameters.target?html}"<#rt/>
 </#if>
 <#if parameters.method?has_content>
- method="${parameters.method}"<#rt/>
+ method="${parameters.method?html}"<#rt/>
 <#else>
  method="post"<#rt/>
 </#if>
 <#if parameters.enctype?has_content>
- enctype="${parameters.enctype}"<#rt/>
+ enctype="${parameters.enctype?html}"<#rt/>
 </#if>
 <#if parameters.cssClass?has_content>
- class="${parameters.cssClass}"<#rt/>
+ class="${parameters.cssClass?html}"<#rt/>
 </#if>
 <#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle}"<#rt/>
+ style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 <#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+ title="${parameters.title?html}"<#rt/>
 </#if>
 <#if parameters.acceptcharset?has_content>
- accept-charset="${parameters.acceptcharset}"<#rt/>
+ accept-charset="${parameters.acceptcharset?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />

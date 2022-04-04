@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +29,7 @@ import org.apache.struts2.components.Text;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
+
 /**
  * @see Text
  */
@@ -34,67 +38,25 @@ public class TextTag extends ContextBeanTag {
     private static final long serialVersionUID = -3075088084198264581L;
 
     protected String name;
-    private boolean escapeHtml = false;
-    private boolean escapeJavaScript = false;
-    private boolean escapeXml = false;
-    private boolean escapeCsv = false;
+    protected String searchValueStack;
 
-    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Text(stack);
     }
 
-    @Override
     protected void populateParams() {
         super.populateParams();
 
         Text text = (Text) component;
         text.setName(name);
-        text.setEscapeHtml(escapeHtml);
-        text.setEscapeJavaScript(escapeJavaScript);
-        text.setEscapeXml(escapeXml);
-        text.setEscapeCsv(escapeCsv);
+        text.setSearchValueStack(searchValueStack);
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setEscapeHtml(boolean escapeHtml) {
-        this.escapeHtml = escapeHtml;
+    public void setSearchValueStack(String searchStack) {
+        this.searchValueStack = searchStack;
     }
-
-    public void setEscapeJavaScript(boolean escapeJavaScript) {
-        this.escapeJavaScript = escapeJavaScript;
-    }
-    
-    public void setEscapeXml(boolean escapeXml) {
-        this.escapeXml = escapeXml;
-    }
-
-    public void setEscapeCsv(boolean escapeCsv) {
-        this.escapeCsv = escapeCsv;
-    }
-
-    @Override
-    /**
-     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
-     */
-    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
-        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
-    }
-
-    @Override
-    protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
-            return;  // If flag is false (default setting), do not perform any state clearing.
-        }
-        super.clearTagStateForTagPoolingServers();
-        this.name = null;
-        this.escapeHtml = false;
-        this.escapeJavaScript = false;
-        this.escapeXml = false;
-        this.escapeCsv = false;
-     }
-
 }

@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +20,7 @@
  */
 package org.apache.struts2.views.java;
 
-import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedHashMap;
@@ -28,7 +30,7 @@ import java.util.LinkedHashMap;
  */
 public class Attributes extends LinkedHashMap<String, String> {
 
-    private static final long serialVersionUID = 4103241472140545630L;
+    private static final long serialVersionUID = 4103241472140545630L; 
 
     public Attributes add(String key, String value) {
         return add(key, value, true);
@@ -74,15 +76,13 @@ public class Attributes extends LinkedHashMap<String, String> {
      * @return this
      */
     public Attributes addIfTrue(String attrName, Object paramValue) {
-        if (paramValue != null && isTrue(paramValue)) {
-            put(attrName, attrName);
+        if (paramValue != null) {
+            if ((paramValue instanceof Boolean && ((Boolean) paramValue).booleanValue()) ||
+                    (Boolean.valueOf(paramValue.toString()).booleanValue())) {
+                put(attrName, attrName);
+            }
         }
         return this;
-    }
-
-    private boolean isTrue(Object paramValue) {
-        return (paramValue instanceof Boolean && (Boolean) paramValue)
-            || (Boolean.parseBoolean(paramValue.toString()));
     }
 
     /**

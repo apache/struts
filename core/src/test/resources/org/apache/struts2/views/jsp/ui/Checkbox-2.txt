@@ -3,6 +3,7 @@
 	</td>
     <td class="tdCheckboxInput">
         <input type="checkbox" name="foo" value="baz" id="foo" title="mytitle"/>
+        <input type="hidden" id="__checkbox_foo" name="__checkbox_foo" value="baz"/>
         <label for="foo" class="checkboxLabel">mylabel</label>
     </td>
 </tr>

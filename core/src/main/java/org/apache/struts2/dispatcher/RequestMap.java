@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.dispatcher;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +27,7 @@ import java.util.AbstractMap;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of request attributes.

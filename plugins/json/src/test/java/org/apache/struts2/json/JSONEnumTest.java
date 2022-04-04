@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -44,7 +46,7 @@ public class JSONEnumTest extends TestCase {
         bean1.setEnumField(AnEnum.ValueA);
         bean1.setEnumBean(AnEnumBean.Two);
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new JSONWriter();
         jsonWriter.setEnumAsBean(false);
         String json = jsonWriter.write(bean1);
 
@@ -86,7 +88,7 @@ public class JSONEnumTest extends TestCase {
         bean1.setEnumField(AnEnum.ValueA);
         bean1.setEnumBean(AnEnumBean.Two);
 
-        JSONWriter jsonWriter = new DefaultJSONWriter();
+        JSONWriter jsonWriter = new JSONWriter();
         jsonWriter.setEnumAsBean(true);
         String json = jsonWriter.write(bean1);
 

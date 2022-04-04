@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,6 +20,9 @@
  */
 package org.apache.struts2.oval.interceptor;
 
+import net.sf.oval.constraint.NotNull;
+import net.sf.oval.constraint.NotEmpty;
+import net.sf.oval.constraint.Length;
 import net.sf.oval.constraint.Assert;
 import com.opensymphony.xwork2.ActionSupport;
 

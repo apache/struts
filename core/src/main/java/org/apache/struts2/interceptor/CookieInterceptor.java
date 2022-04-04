@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -348,8 +351,8 @@ public class CookieInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * Hook that set the <code>cookiesMap</code> into action that implements {@link CookiesAware}
-     * or {@link org.apache.struts2.action.CookiesAware}.
+     * Hook that set the <code>cookiesMap</code> into action that implements
+     * {@link CookiesAware}.
      *
      * @param action action object
      * @param cookiesMap map of cookies
@@ -358,10 +361,6 @@ public class CookieInterceptor extends AbstractInterceptor {
         if (action instanceof CookiesAware) {
             LOG.debug("Action [{}] implements CookiesAware, injecting cookies map [{}]", action, cookiesMap);
             ((CookiesAware)action).setCookiesMap(cookiesMap);
-        }
-        if (action instanceof org.apache.struts2.action.CookiesAware) {
-            LOG.debug("Action [{}] implements CookiesAware, injecting cookies map [{}]", action, cookiesMap);
-            ((org.apache.struts2.action.CookiesAware)action).withCookies(cookiesMap);
         }
     }
 }

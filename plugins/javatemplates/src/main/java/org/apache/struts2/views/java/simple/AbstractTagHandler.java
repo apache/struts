@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,6 +26,7 @@ import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.views.java.Attributes;
 import org.apache.struts2.views.java.TagHandler;
+import org.apache.struts2.views.util.ContextUtil;
 
 import java.io.IOException;
 
@@ -31,6 +34,7 @@ public abstract class AbstractTagHandler implements TagHandler {
 
     protected TagHandler nextTagHandler;
     protected TemplateRenderingContext context;
+    protected boolean altSyntax;
 
     public void characters(String text) throws IOException {
         characters(text, true);
@@ -62,6 +66,7 @@ public abstract class AbstractTagHandler implements TagHandler {
 
     public void setup(TemplateRenderingContext context) {
         this.context = context;
+        this.altSyntax = ContextUtil.isUseAltSyntax(context.getStack().getContext());
         processParams();
     }
 
@@ -69,11 +74,7 @@ public abstract class AbstractTagHandler implements TagHandler {
     }
 
     protected String findString(String expr) {
-        if (expr == null) {
-            return null;
-        }
-        ValueStack stack = context.getStack();
-        return TextParseUtil.translateVariables('%', expr, stack);
+        return (String) findValue(expr, String.class);
     }
 
     protected Object findValue(String expr) {
@@ -82,7 +83,16 @@ public abstract class AbstractTagHandler implements TagHandler {
         }
 
         ValueStack stack = context.getStack();
-        return stack.findValue(ComponentUtils.stripExpression(expr));
+        return stack.findValue(ComponentUtils.stripExpressionIfAltSyntax(stack, expr));
     }
 
+    private Object findValue(String expr, Class toType) {
+        ValueStack stack = context.getStack();
+
+        if (altSyntax && toType == String.class) {
+            return TextParseUtil.translateVariables('%', expr, stack);
+        } else {
+            return stack.findValue(ComponentUtils.stripExpressionIfAltSyntax(stack, expr), toType);
+        }
+    }
 }

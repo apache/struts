@@ -1,33 +1,31 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.mock;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.junit.Assert;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import junit.framework.Assert;
+
 
 /**
  * Mock for an {@link com.opensymphony.xwork2.interceptor.Interceptor}.
  *
  * @author Jason Carreira
  */
-public class MockInterceptor extends AbstractInterceptor {
+public class MockInterceptor implements Interceptor {
 
     private static final long serialVersionUID = 2692551676567227756L;
     
@@ -57,6 +55,12 @@ public class MockInterceptor extends AbstractInterceptor {
 
     public String getFoo() {
         return foo;
+    }
+
+    /**
+     * Called to let an interceptor clean up any resources it has allocated.
+     */
+    public void destroy() {
     }
 
     @Override
@@ -95,6 +99,13 @@ public class MockInterceptor extends AbstractInterceptor {
         result = (29 * result) + (executed ? 1 : 0);
 
         return result;
+    }
+
+    /**
+     * Called after an Interceptor is created, but before any requests are processed using the intercept() methodName. This
+     * gives the Interceptor a chance to initialize any needed resources.
+     */
+    public void init() {
     }
 
     /**

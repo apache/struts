@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2003,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.util.fs;
 
@@ -40,8 +37,7 @@ public class DefaultFileManager implements FileManager {
     private static final Pattern JAR_PATTERN = Pattern.compile("^(jar:|wsjar:|zip:|vfsfile:|code-source:)?(file:)?(.*?)(\\!/|\\.jar/)(.*)");
     private static final int JAR_FILE_PATH = 3;
 
-    protected static final Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
-    private static final List<URL> lazyMonitoredFilesCache = Collections.synchronizedList(new ArrayList<URL>());
+    protected static Map<String, Revision> files = Collections.synchronizedMap(new HashMap<String, Revision>());
 
     protected boolean reloadingConfigs = false;
 
@@ -49,16 +45,6 @@ public class DefaultFileManager implements FileManager {
     }
 
     public void setReloadingConfigs(boolean reloadingConfigs) {
-        if (reloadingConfigs && !this.reloadingConfigs) {
-            //starting monitoring cached not-monitored files (lazy monitoring on demand because of performance)
-            this.reloadingConfigs = true;
-            synchronized (lazyMonitoredFilesCache) {
-                for (URL fileUrl : lazyMonitoredFilesCache) {
-                    monitorFile(fileUrl);
-                }
-                lazyMonitoredFilesCache.clear();
-            }
-        }
         this.reloadingConfigs = reloadingConfigs;
     }
 
@@ -99,12 +85,6 @@ public class DefaultFileManager implements FileManager {
 
     public void monitorFile(URL fileUrl) {
         String fileName = fileUrl.toString();
-        if (!reloadingConfigs) {
-            //reserve file for monitoring on demand because of performance
-            files.remove(fileName);
-            lazyMonitoredFilesCache.add(fileUrl);
-            return;
-        }
         Revision revision;
         LOG.debug("Creating revision for URL: {}", fileName);
         if (isJarURL(fileUrl)) {

@@ -1,21 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package com.opensymphony.xwork2.util.reflection;
 
 import java.beans.IntrospectionException;
@@ -90,23 +72,7 @@ public interface ReflectionProvider {
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
      */
     void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions);
-
-    /**
-     * Copies the properties in the object "from" and sets them in the object "to"
-     * only setting properties defined in the given "editable" class (or interface)
-     * using specified type converter, or {@link com.opensymphony.xwork2.conversion.impl.XWorkConverter} if none
-     * is specified.
-     *
-     * @param from       the source object
-     * @param to         the target object
-     * @param context    the action context we're running under
-     * @param exclusions collection of method names to excluded from copying ( can be null)
-     * @param inclusions collection of method names to included copying  (can be null)
-     *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
-     * @param editable the class (or interface) to restrict property setting to
-     */
-    void copy(Object from, Object to, Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions, Class<?> editable);
-
+    
     /**
      * Looks for the real target with the specified property given a root Object which may be a
      * CompoundRoot.

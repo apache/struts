@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -57,7 +60,7 @@ import javax.servlet.http.HttpServletResponse;
         allowDynamicAttributes = true)
 public class Radio extends ListUIBean {
     final public static String TEMPLATE = "radiomap";
-
+    
     public Radio(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -65,19 +68,8 @@ public class Radio extends ListUIBean {
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
-
+    
     public void evaluateExtraParams() {
     	super.evaluateExtraParams();
     }
-
-    /**
-     * Radio tag requires lazy evaluation as list of tags is dynamically generated using <s:iterator/>
-     *
-     * @return boolean true by default
-     */
-    @Override
-    protected boolean lazyEvaluation() {
-        return true;
-    }
-
 }

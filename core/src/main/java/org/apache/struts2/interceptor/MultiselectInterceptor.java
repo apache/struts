@@ -1,4 +1,6 @@
 /*
+ * $Id: BackgroundProcess.java 651946 2008-04-27 13:41:38Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,16 +22,16 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.dispatcher.Parameter;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Just as the CheckboxInterceptor checks that if only the hidden field is present, so too does this interceptor. If
  * the "__multiselect_" request parameter is present and its visible counterpart is not, set a new request parameter to an
- * empty String.
+ * empty Sting.
  */
 public class MultiselectInterceptor extends AbstractInterceptor {
     private static final long serialVersionUID = 1L;
@@ -37,34 +39,38 @@ public class MultiselectInterceptor extends AbstractInterceptor {
     /**
      * Just as the CheckboxInterceptor checks that if only the hidden field is present, so too does this interceptor.
      * If the "__multiselect_" request parameter is present and its visible counterpart is not, set a new request parameter
-     * to an empty String.
+     * to an empty Sting.
      *
-     * @param ai ActionInvocation
+     * @param actionInvocation ActionInvocation
      * @return the result of the action
      * @throws Exception if error
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
-    public String intercept(ActionInvocation ai) throws Exception {
-        HttpParameters parameters = ai.getInvocationContext().getParameters();
-        Map<String, Parameter> newParams = new HashMap<>();
+    public String intercept(ActionInvocation actionInvocation) throws Exception {
+        Map<String, Object> parameters = actionInvocation.getInvocationContext().getParameters();
+        Map<String, Object> newParams = new HashMap<>();
+        Set<String> keys = parameters.keySet();
 
-        for (String name : parameters.keySet()) {
-            if (name.startsWith("__multiselect_")) {
-                String key = name.substring("__multiselect_".length());
+        for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
+            String key = iterator.next();
+
+            if (key.startsWith("__multiselect_")) {
+                String name = key.substring("__multiselect_".length());
+
+                iterator.remove();
 
                 // is this multi-select box submitted?
-                if (!parameters.contains(key)) {
-                    // if not, let's be sure to default the value to an empty string array
-                    newParams.put(key, new Parameter.Request(key, new String[0]));
-                }
+                if (!parameters.containsKey(name)) {
 
-                parameters = parameters.remove(name);
+                    // if not, let's be sure to default the value to an empty string array
+                    newParams.put(name, new String[0]);
+                }
             }
         }
 
-        ai.getInvocationContext().getParameters().appendAll(newParams);
+        parameters.putAll(newParams);
 
-        return ai.invoke();
+        return actionInvocation.invoke();
     }
 
 }

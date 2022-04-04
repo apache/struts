@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,7 +23,6 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -34,12 +35,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * <p>
@@ -48,8 +44,8 @@ import java.util.StringTokenizer;
  *
  * <p>
  * This class is used to serve common static content needed when using various parts of Struts, such as JavaScript
- * files, CSS files, etc. It works by looking for requests to {@link #uiStaticContentPath}/*  and then mapping the value
- * after to common packages in Struts and, optionally, in your class path. By default, the following packages are
+ * files, CSS files, etc. It works by looking for requests to /struts/* (or /static/*), and then mapping the value after "/struts/"
+ * to common packages in Struts and, optionally, in your class path. By default, the following packages are
  * automatically searched:
  * </p>
  *
@@ -60,7 +56,7 @@ import java.util.StringTokenizer;
  * </ul>
  *
  * <p>
- * This means that you can simply request {@link #uiStaticContentPath}/xhtml/styles.css and the XHTML UI theme's default stylesheet
+ * This means that you can simply request /struts/xhtml/styles.css and the XHTML UI theme's default stylesheet
  * will be returned. Likewise, many of the AJAX UI components require various JavaScript files, which are found in the
  * org.apache.struts2.static package. If you wish to add additional packages to be searched, you can add a comma
  * separated (space, tab and new line will do as well) list in the filter init parameter named "packages". <b>Be
@@ -73,7 +69,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     /**
      * Provide a logging instance.
      */
-    private final Logger LOG = LogManager.getLogger(DefaultStaticContentLoader.class);
+    private Logger LOG = LogManager.getLogger(DefaultStaticContentLoader.class);
 
     /**
      * Store set of path prefixes to use with static resources.
@@ -84,11 +80,6 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * Store state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
      */
     protected boolean serveStatic;
-
-    /**
-     * Store state of {@link StrutsConstants#STRUTS_UI_STATIC_CONTENT_PATH} setting.
-     */
-    protected String uiStaticContentPath;
 
     /**
      * Store state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE setting.
@@ -105,28 +96,24 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      */
     protected String encoding;
 
-    protected boolean devMode;
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
      *
-     * @param serveStaticContent New setting
+     * @param serveStaticContent
+     *            New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)
     public void setServeStaticContent(String serveStaticContent) {
         this.serveStatic = BooleanUtils.toBoolean(serveStaticContent);
     }
 
-    @Inject(StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH)
-    public void setStaticContentPath(String uiStaticContentPath) {
-        this.uiStaticContentPath = StaticContentLoader.Validator.validateStaticContentPath(uiStaticContentPath);
-    }
-
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE
      * setting.
      *
-     * @param serveStaticBrowserCache New setting
+     * @param serveStaticBrowserCache
+     *            New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE)
     public void setServeStaticBrowserCache(String serveStaticBrowserCache) {
@@ -135,17 +122,11 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
 
     /**
      * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
-     *
      * @param encoding New setting
      */
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setEncoding(String encoding) {
         this.encoding = encoding;
-    }
-
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
-    public void setDevMode(String devMode) {
-        this.devMode = Boolean.parseBoolean(devMode);
     }
 
     /*
@@ -163,22 +144,14 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     }
 
     protected String getAdditionalPackages() {
-        List<String> packages = new LinkedList<>();
-        packages.add("org.apache.struts2.static");
-        packages.add("template");
-        packages.add("static");
-
-        if (devMode) {
-            packages.add("org.apache.struts2.interceptor.debugging");
-        }
-
-        return StringUtils.join(packages.iterator(), ' ');
+        return "org.apache.struts2.static template org.apache.struts2.interceptor.debugging static";
     }
 
     /**
      * Create a string array from a comma-delimited list of packages.
      *
-     * @param packages A comma-delimited String listing packages
+     * @param packages
+     *            A comma-delimited String listing packages
      * @return A string array of packages
      */
     protected List<String> parse(String packages) {
@@ -207,7 +180,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      *      javax.servlet.http.HttpServletResponse)
      */
     public void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
-        throws IOException {
+            throws IOException {
         String name = cleanupPath(path);
         for (String pathPrefix : pathPrefixes) {
             URL resourceUrl = findResource(buildPath(name, pathPrefix));
@@ -231,15 +204,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
             }
         }
 
-        try {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        } catch (IOException e1) {
-            // we're already sending an error, not much else we can do if more stuff breaks
-            LOG.warn("Unable to send error response, code: {};", HttpServletResponse.SC_NOT_FOUND, e1);
-        } catch (IllegalStateException ise) {
-            // Log illegalstate instead of passing unrecoverable exception to calling thread
-            LOG.warn("Unable to send error response, code: {}; isCommitted: {};", HttpServletResponse.SC_NOT_FOUND, response.isCommitted(), ise);
-        }
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
     protected void process(InputStream is, String path, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -298,7 +263,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * Look for a static resource in the classpath.
      *
      * @param path The resource path
-     * @return The URL of the resource
+     * @return The inputstream of the resource
      * @throws IOException If there is a problem locating the resource
      */
     protected URL findResource(String path) throws IOException {
@@ -306,7 +271,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     }
 
     /**
-     * @param name          resource name
+     * @param name resource name
      * @param packagePrefix The package prefix to use to locate the resource
      * @return full path
      * @throws UnsupportedEncodingException If there is a encoding problem
@@ -321,6 +286,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
 
         return URLDecoder.decode(resourcePath, encoding);
     }
+
 
 
     /**
@@ -354,9 +320,12 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     /**
      * Copy bytes from the input stream to the output stream.
      *
-     * @param input  The input stream
-     * @param output The output stream
-     * @throws IOException If anything goes wrong
+     * @param input
+     *            The input stream
+     * @param output
+     *            The output stream
+     * @throws IOException
+     *             If anything goes wrong
      */
     protected void copy(InputStream input, OutputStream output) throws IOException {
         final byte[] buffer = new byte[4096];
@@ -368,18 +337,15 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     }
 
     public boolean canHandle(String resourcePath) {
-        return serveStatic && resourcePath.startsWith(uiStaticContentPath + "/");
+        return serveStatic && (resourcePath.startsWith("/struts/") || resourcePath.startsWith("/static/"));
     }
 
     /**
      * @param path requested path
-     * @return path without leading {@link #uiStaticContentPath}
+     * @return path without leading "/struts" or "/static"
      */
     protected String cleanupPath(String path) {
-        if (path.startsWith(uiStaticContentPath)) {
-            return path.substring(uiStaticContentPath.length());
-        } else {
-            return path;
-        }
+        //path will start with "/struts" or "/static", remove them
+        return path.substring(7);
     }
 }

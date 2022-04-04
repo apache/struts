@@ -1,21 +1,3 @@
-#*
-* Licensed to the Apache Software Foundation (ASF) under one
-* or more contributor license agreements.  See the NOTICE file
-* distributed with this work for additional information
-* regarding copyright ownership.  The ASF licenses this file
-* to you under the Apache License, Version 2.0 (the
-* "License"); you may not use this file except in compliance
-* with the License.  You may obtain a copy of the License at
-*
-*  http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*#
 <html>
 <head>
 	<title>Struts2 Showcase - UI Tags Example (Velocity) - Example Submited </title>
@@ -33,45 +15,41 @@
 				#slabel ("label=Name" "name=name")
 				#slabel ("label=Birthday" "name=birthday")
 				<tr>
-			        <td class="tdLabel"><label class="label">Wake up time:</label></td>
-			        <td class="tdInput">
+			        <td><label class="label">Wake up time:</label></td>
+			        <td>
 			           #sdate ("name=wakeup" "format=hh:mm aa")
 			        </td>
 			    </tr>
 				#slabel ("label=Biography" "name=bio")
 				#slabel ("label=Favourite Color" "name=favouriteColor")
 				#slabel ("label=Friends" "name=friends")
-                                #slabel ("label=Best Friend" "name=bestFriend")
 				#slabel ("label=Legal Age" "name=legalAge")
 				#slabel ("label=Region" "name=region")
 				#slabel ("label=State" "name=state")
 				#slabel ("label=Picture" "name=picture")
 				#slabel ("label=Favourite Language" "name=favouriteLanguage")
-				#slabel ("label=Favourite Vehicle Type" "name=favouriteVehicalType")
-				#slabel ("label=Favourite Vehicle Specific" "name=favouriteVehicalSpecific")
+				#slabel ("label=Favourite Vehical Type" "name=favouriteVehicalType")
+				#slabel ("label=Favourite Vehical Specific" "name=favouriteVehicalSpecific")
 				<tr>
-					<td class="tdLabel"><label class="label">Favourite Cartoon Characters (Left):</label></td>
-					<td class="tdInput"><label>
+					<td>Favourite Cartoon Characters (Left):</td>
+					<td>
 			            #set ( $startCount = 1)
 					    #foreach( $item in $leftSideCartoonCharacters)
 							$startCount.${item}&nbsp;
 							#set ( $startCount = $startCount + 1)
 			            #end
-                                          </label>
 					</td>
 				</tr>
 				<tr>
-					<td class="tdLabel"><label class="label">Favourite Cartoon Characters (Right):</label></td>
-					<td class="tdInput"><label>
+					<td>Favourite Cartoon Characters (Right):</td>
+					<td>
 			            #set ( $startCount = 1)
 					    #foreach( $item in $rightSideCartoonCharacters)
 							$startCount.${item}&nbsp;
 							#set ( $startCount = $startCount + 1)
 			            #end
-                                          </label>
 					</td>
 				</tr>
-                                #slabel ("label=Thoughts" "name=thoughts")
 			</table>
 		</div>
 	</div>

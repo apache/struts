@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.validator;
 
@@ -25,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+
 
 /**
  * A default implementation of the {@link ValidatorContext} interface.
@@ -59,10 +57,10 @@ public class DelegatingValidatorContext implements ValidatorContext {
      *
      * @param object the object to use for validation (usually an Action).
      */
-    public DelegatingValidatorContext(Object object, TextProviderFactory textProviderFactory) {
+    public DelegatingValidatorContext(Object object) {
         this.localeProvider = makeLocaleProvider(object);
         this.validationAware = makeValidationAware(object);
-        this.textProvider = makeTextProvider(object, textProviderFactory);
+        this.textProvider = makeTextProvider(object, localeProvider);
     }
 
     /**
@@ -70,13 +68,10 @@ public class DelegatingValidatorContext implements ValidatorContext {
      * the validation context are created based on the class.
      *
      * @param clazz the class to initialize the context with.
-     *
-     * @deprecated will be removed, do not use!
      */
-    @Deprecated
     public DelegatingValidatorContext(Class clazz) {
         localeProvider = new ActionContextLocaleProvider();
-        textProvider = new StrutsTextProviderFactory().createInstance(clazz);
+        textProvider = new TextProviderFactory().createInstance(clazz, localeProvider);
         validationAware = new LoggingValidationAware(clazz);
     }
 
@@ -110,16 +105,6 @@ public class DelegatingValidatorContext implements ValidatorContext {
 
     public Locale getLocale() {
         return localeProvider.getLocale();
-    }
-
-    @Override
-    public boolean isValidLocaleString(String localeStr) {
-        return localeProvider.isValidLocaleString(localeStr);
-    }
-
-    @Override
-    public boolean isValidLocale(Locale locale) {
-        return localeProvider.isValidLocale(locale);
     }
 
     public boolean hasKey(String key) {
@@ -198,11 +183,18 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return validationAware.hasFieldErrors();
     }
 
-    public TextProvider makeTextProvider(Object object, TextProviderFactory textProviderFactory) {
+    public static TextProvider makeTextProvider(Object object, LocaleProvider localeProvider) {
         // the object argument passed through here will most probably be an ActionSupport descendant which does
         // implements TextProvider.
         if (object != null && object instanceof DelegatingValidatorContext) {
             return ((DelegatingValidatorContext) object).getTextProvider();
+        } else if (object != null && localeProvider != null && localeProvider instanceof DelegatingValidatorContext) {
+            return new CompositeTextProvider(new TextProvider[]{
+                    new TextProviderFactory().createInstance(object.getClass(), localeProvider),
+                    ((DelegatingValidatorContext)localeProvider).getTextProvider()
+            });
+        } else if (localeProvider != null && localeProvider instanceof DelegatingValidatorContext) {
+            return ((DelegatingValidatorContext)localeProvider).getTextProvider();
         }
 
         if ((object != null) && (object instanceof TextProvider)) {
@@ -211,11 +203,20 @@ public class DelegatingValidatorContext implements ValidatorContext {
             }
             return new CompositeTextProvider(new TextProvider[]{
                     ((TextProvider) object),
-                    textProviderFactory.createInstance(object.getClass())
+                    new TextProviderSupport(object.getClass(), localeProvider)
+            });
+        } else if (localeProvider != null && localeProvider instanceof TextProvider) {
+            if (localeProvider instanceof CompositeTextProvider) {
+                return (CompositeTextProvider) localeProvider;
+            }
+            return new CompositeTextProvider(new TextProvider[]{
+                    ((TextProvider) localeProvider),
+                    new TextProviderSupport(localeProvider.getClass(), localeProvider)
             });
         } else {
-            return textProviderFactory.createInstance(
-                    object != null ? object.getClass() : DelegatingValidatorContext.class);
+            return new TextProviderFactory().createInstance(
+                    object != null ? object.getClass() : DelegatingValidatorContext.class,
+                    localeProvider);
         }
     }
 
@@ -255,30 +256,8 @@ public class DelegatingValidatorContext implements ValidatorContext {
      * An implementation of LocaleProvider which gets the locale from the action context.
      */
     private static class ActionContextLocaleProvider implements LocaleProvider {
-
-        private LocaleProvider localeProvider;
-
-        private LocaleProvider getLocaleProvider() {
-            if (localeProvider == null) {
-                LocaleProviderFactory localeProviderFactory = ActionContext.getContext().getInstance(LocaleProviderFactory.class);
-                localeProvider = localeProviderFactory.createLocaleProvider();
-            }
-            return localeProvider;
-        }
-
-        @Override
         public Locale getLocale() {
-            return getLocaleProvider().getLocale();
-        }
-
-        @Override
-        public boolean isValidLocaleString(String localeStr) {
-            return getLocaleProvider().isValidLocaleString(localeStr);
-        }
-
-        @Override
-        public boolean isValidLocale(Locale locale) {
-            return getLocaleProvider().isValidLocale(locale);
+            return ActionContext.getContext().getLocale();
         }
     }
 

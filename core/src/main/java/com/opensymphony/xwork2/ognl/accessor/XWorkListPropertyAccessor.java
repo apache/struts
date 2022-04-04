@@ -1,24 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.ognl.accessor;
 
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Inject;
@@ -27,8 +25,6 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.ListPropertyAccessor;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
 
 import java.util.Collection;
 import java.util.List;
@@ -49,13 +45,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
     private ObjectFactory objectFactory;
     private ObjectTypeDeterminer objectTypeDeterminer;
     private OgnlUtil ognlUtil;
-    private int autoGrowCollectionLimit = 255;
-
-    @Inject(value = StrutsConstants.STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT, required = false)
-    public void setAutoGrowCollectionLimit(String value) {
-        this.autoGrowCollectionLimit = Integer.parseInt(value);
-    }
-
+    
     @Inject("java.util.Collection")
     public void setXWorkCollectionPropertyAccessor(PropertyAccessor acc) {
         this._sAcc = (XWorkCollectionPropertyAccessor) acc;
@@ -115,7 +105,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
                 try {
                     list.add(index, result = objectFactory.buildBean(beanClass, context));
                 } catch (Exception exc) {
-                    throw new StrutsException(exc);
+                    throw new XWorkException(exc);
                 }
                 return result;
             } else if (list.get(index) == null) {
@@ -123,7 +113,7 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
                 try {
                     list.set(index, result = objectFactory.buildBean(beanClass, context));
                 } catch (Exception exc) {
-                    throw new StrutsException(exc);
+                    throw new XWorkException(exc);
                 }
                 return result;
             }
@@ -168,9 +158,6 @@ public class XWorkListPropertyAccessor extends ListPropertyAccessor {
             List list = (List) target;
             int listSize = list.size();
             int count = ((Number) name).intValue();
-            if(count > autoGrowCollectionLimit)
-            	throw new OgnlException("Error auto growing collection size to " + count + " which limited to "
-						+ autoGrowCollectionLimit);
             if (count >= listSize) {
                 for (int i = listSize; i <= count; i++) {
                     list.add(null);

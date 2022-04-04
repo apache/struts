@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,7 +26,7 @@ import org.apache.struts.beanvalidation.models.Person;
 
 import javax.validation.Valid;
 
-public class ModelDrivenAction extends ActionSupport implements ModelDriven<Person>, ModelDrivenActionInterface {
+public class ModelDrivenAction extends ActionSupport implements ModelDriven<Person> {
 
     @Valid
     private Person model = new Person();
@@ -33,8 +35,4 @@ public class ModelDrivenAction extends ActionSupport implements ModelDriven<Pers
         return model;
     }
 
-    @Override
-    public String skipMeByInterface() {
-        return SUCCESS;
-    }
 }

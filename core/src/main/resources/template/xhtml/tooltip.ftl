@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,17 +25,17 @@
       <#if parameters.tooltipIconPath??><#t/>
       	src='<@s.url value="${parameters.tooltipIconPath}" includeParams="none" encode="false" />'
       <#else><#t/>
-      	src='<@s.url value="${parameters.staticContentPath}/tooltip.gif" includeParams="none" encode="false" />'
+      	src='<@s.url value="/struts/tooltip.gif" includeParams="none" encode="false" />'
       </#if><#t/>
       <#if (parameters.jsTooltipEnabled!'false') == 'true'>
-          onmouseover="domTT_activate(this, event, 'content', '<#outputformat 'JavaScript'>${parameters.tooltip}</#outputformat>'<#t/>
+          onmouseover="domTT_activate(this, event, 'content', '${parameters.tooltip}'<#t/>
           <#if parameters.tooltipDelay??><#t/>
           	<#t/>,'delay', '${parameters.tooltipDelay}'<#t/>
           </#if><#t/>
           <#t/>,'styleClass', '${parameters.tooltipCssClass!"StrutsTTClassic"}'<#t/>
           <#t/>)" />
       <#else>
-      	title="${parameters.tooltip}"
-      	alt="${parameters.tooltip}" />
+      	title="${parameters.tooltip?html}"
+      	alt="${parameters.tooltip?html}" />
      </#if>
 </#if><#t/>

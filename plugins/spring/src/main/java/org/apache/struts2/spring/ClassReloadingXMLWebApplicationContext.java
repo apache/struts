@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -52,7 +54,7 @@ import java.util.regex.Pattern;
  * </p>
  * <ul>
  * <li>Set "struts.devMode" to "true" </li>
- * <li>Set "struts.objectFactory.spring.class.reloading.watchList" to a comma separated list of directories, or jar files (absolute paths)</li>
+ * <li>Set "struts.class.reloading.watchList" to a comma separated list of directories, or jar files (absolute paths)</li>
  * <li>Add this to web.xml:
  *  <pre>
  *  &lt;context-param&gt;

@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,10 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,14 +51,9 @@ import java.util.List;
  *
  * <p>
  * If the named message is not found in a property file, then the body of the
- * tag will be used as default message. If no value is found, the key of the
- * message will not be written out.
- * </p>
- * 
- * <p>
- * Note: If the <b>var</b> attribute is used with this tag, the tag's value will
- * <em>not</em> be written out.  Instead the result will be saved into the
- * action context (action scope).
+ * tag will be used as default message. If no body is used, then the stack will
+ * be searched, and if a value is returned, it will written to the output.
+ * If no value is found on the stack, the key of the message will be written out.
  * </p>
  * <!-- END SNIPPET: javadoc -->
  *
@@ -64,10 +61,6 @@ import java.util.List;
  *
  * <ul>
  *      <li>name* (String) - the i18n message key</li>
- *      <li>escapeHtml (Boolean) - Escape HTML. Defaults to false</li>
- *      <li>escapeJavaScript (Boolean) - Escape JavaScript. Defaults to false</li>
- *      <li>escapeXml (Boolean) - Escape XML. Defaults to false</li>
- *      <li>escapeCsv (Boolean) - Escape CSV. Defaults to false</li>
  * </ul>
  *
  * <!-- END SNIPPET: params -->
@@ -122,16 +115,12 @@ import java.util.List;
     tldTagClass="org.apache.struts2.views.jsp.TextTag",
     description="Render a I18n text message")
 public class Text extends ContextBean implements Param.UnnamedParametric {
-
     private static final Logger LOG = LogManager.getLogger(Text.class);
 
-    protected List<Object> values = Collections.emptyList();
+    protected List values = Collections.EMPTY_LIST;
     protected String actualName;
     protected String name;
-    private boolean escapeHtml = false;
-    private boolean escapeJavaScript = false;
-    private boolean escapeXml = false;
-    private boolean escapeCsv = false;
+    protected String searchStack;
 
     public Text(ValueStack stack) {
         super(stack);
@@ -142,27 +131,11 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         this.name = name;
     }
 
-    @StrutsTagAttribute(description="Whether to escape HTML", type="Boolean", defaultValue="false")
-    public void setEscapeHtml(boolean escape) {
-        this.escapeHtml = escape;
-    }
-    
-    @StrutsTagAttribute(description="Whether to escape Javascript", type="Boolean", defaultValue="false")
-    public void setEscapeJavaScript(boolean escapeJavaScript) {
-        this.escapeJavaScript = escapeJavaScript;
+    @StrutsTagAttribute(description="Search the stack if property is not found on resources", type = "Boolean", defaultValue = "true")
+    public void setSearchValueStack(String searchStack) {
+        this.searchStack = searchStack;
     }
 
-    @StrutsTagAttribute(description="Whether to escape XML", type="Boolean", defaultValue="false")
-    public void setEscapeXml(boolean escapeXml) {
-        this.escapeXml = escapeXml;
-    }
-
-    @StrutsTagAttribute(description="Whether to escape CSV (useful to escape a value for a column)", type="Boolean", defaultValue="false")
-    public void setEscapeCsv(boolean escapeCsv) {
-        this.escapeCsv = escapeCsv;
-    }
-
-    @Override
     public boolean usesBody() {
         // overriding this to true such that EVAL_BODY_BUFFERED is return and
         // bodyContent will be valid hence, text between start & end tag will
@@ -170,7 +143,6 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         return true;
     }
 
-    @Override
     public boolean end(Writer writer, String body) {
         actualName = findString(name, "name", "You must specify the i18n key. Example: welcome.header");
         String defaultMessage;
@@ -180,12 +152,13 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
             defaultMessage = actualName;
         }
 
-        String msg = TextProviderHelper.getText(actualName, defaultMessage, values, getStack());
+        Boolean doSearchStack = searchStack != null ? (Boolean) findValue(searchStack, Boolean.class) : true;
+        String msg = TextProviderHelper.getText(actualName, defaultMessage, values, getStack(), doSearchStack == null || doSearchStack);
 
         if (msg != null) {
             try {
                 if (getVar() == null) {
-                    writer.write(prepare(msg));
+                    writer.write(msg);
                 } else {
                     putInContext(msg);
                 }
@@ -197,35 +170,15 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         return super.end(writer, "");
     }
 
-    @Override
     public void addParameter(String key, Object value) {
         addParameter(value);
     }
 
-    @Override
     public void addParameter(Object value) {
         if (values.isEmpty()) {
-            values = new ArrayList<>(4);
+            values = new ArrayList(4);
         }
 
         values.add(value);
-    }
-
-    private String prepare(String value) {
-        String result = value;
-        if (escapeHtml) {
-            result = StringEscapeUtils.escapeHtml4(result);
-        }
-        if (escapeJavaScript) {
-            result = StringEscapeUtils.escapeEcmaScript(result);
-        }
-        if (escapeXml) {
-            result = StringEscapeUtils.escapeXml10(result);
-        }
-        if (escapeCsv) {
-            result = StringEscapeUtils.escapeCsv(result);
-        }
-
-        return result;
     }
 }

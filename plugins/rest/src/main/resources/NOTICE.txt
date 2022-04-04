@@ -6,5 +6,6 @@ The Apache Software Foundation (http://www.apache.org/).
 
 The binary distributions includes the following third party software:
 EZMorph (http://ezmorph.sourceforge.net/)
+JSON-lib (http://json-lib.sourceforge.net/).
 XPP3 (http://www.extreme.indiana.edu/xgws/xsoap/xpp/).
 XStream (http://xstream.codehaus.org/).

@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,21 +23,21 @@
 </form>
 
 <#if (parameters.customOnsubmitEnabled??)>
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
-<#--
-  Enable auto-select of optiontransferselect tag's entries upon containing form's
+<script type="text/javascript">
+<#-- 
+  Enable auto-select of optiontransferselect tag's entries upon containing form's 
   submission.
 -->
 <#if (parameters.optiontransferselectIds!?size > 0)>
-	var containingForm = document.getElementById("${parameters.id?js_string}");
+	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectObjIds = parameters.optiontransferselectIds.keySet() />
 	<#list selectObjIds as selectObjectId>
-		StrutsUtils.addEventListener(containingForm, "submit",
+		StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
-				var selectObj = document.getElementById("${selectObjectId?js_string}");
+				var selectObj = document.getElementById("${selectObjectId}");
 				<#if parameters.optiontransferselectIds.get(selectObjectId)??>
 					<#assign selectTagHeaderKey = parameters.optiontransferselectIds.get(selectObjectId)/>
-					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey?js_string}");
+					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
 				<#else>
 					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
@@ -43,15 +45,15 @@
 	</#list>
 </#if>
 <#if (parameters.inputtransferselectIds!?size > 0)>
-	var containingForm = document.getElementById("${parameters.id?js_string}");
+	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectObjIds = parameters.inputtransferselectIds.keySet() />
 	<#list selectObjIds as selectObjectId>
 		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
-				var selectObj = document.getElementById("${selectObjectId?js_string}");
+				var selectObj = document.getElementById("${selectObjectId}");
 				<#if parameters.inputtransferselectIds.get(selectObjectId)??>
 					<#assign selectTagHeaderKey = parameters.inputtransferselectIds.get(selectObjectId)/>
-					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey?js_string}");
+					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
 				<#else>
 					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
@@ -59,15 +61,15 @@
 	</#list>
 </#if>
 <#if (parameters.optiontransferselectDoubleIds!?size > 0)>
-	var containingForm = document.getElementById("${parameters.id?js_string}");
+	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectDoubleObjIds = parameters.optiontransferselectDoubleIds.keySet() />
 	<#list selectDoubleObjIds as selectObjId>
-		StrutsUtils.addEventListener(containingForm, "submit",
+		StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
-				var selectObj = document.getElementById("${selectObjId?js_string}");
+				var selectObj = document.getElementById("${selectObjId}");
 				<#if parameters.optiontransferselectDoubleIds.get(selectObjId)??>
 					<#assign selectTagHeaderKey = parameters.optiontransferselectDoubleIds.get(selectObjId)/>
-					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey?js_string}");
+					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
 				<#else>
 					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
@@ -81,15 +83,15 @@
 	submission
 -->
 <#if (parameters.updownselectIds!?size > 0)>
-	var containingForm = document.getElementById("${parameters.id?js_string}");
+	var containingForm = document.getElementById("${parameters.id}");
 	<#assign tmpIds = parameters.updownselectIds.keySet() />
 	<#list tmpIds as tmpId>
-		StrutsUtils.addEventListener(containingForm, "submit",
+		StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
-				var updownselectObj = document.getElementById("${tmpId?js_string}");
+				var updownselectObj = document.getElementById("${tmpId}");
 				<#if parameters.updownselectIds.get(tmpId)??>
 					<#assign tmpHeaderKey = parameters.updownselectIds.get(tmpId) />
-					selectAllOptionsExceptSome(updownselectObj, "key", "${tmpHeaderKey?js_string}");
+					selectAllOptionsExceptSome(updownselectObj, "key", "${tmpHeaderKey}");
 				<#else>
 					selectAllOptionsExceptSome(updownselectObj, "key", "");
 				</#if>

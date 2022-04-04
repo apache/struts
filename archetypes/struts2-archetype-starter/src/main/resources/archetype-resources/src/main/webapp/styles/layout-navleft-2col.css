@@ -1,0 +1,39 @@
+/* A CSS Framework by Mike Stenhouse of Content with Style */
+
+@import url("nav-vertical.css");
+
+/* NAV BAR ON THE LEFT AND TWO COLUMNS OF CONTENT */
+    div#content {
+        position: relative;
+        width: 780px;
+        
+        margin: 0 auto 20px auto;
+        padding: 0;
+        
+        text-align: left;
+    }
+    div#main {
+        float: right;
+        width: 340px;
+        display: inline;
+        
+        margin-right: 220px;
+        margin-left: -220px;
+    }
+    div#local {
+        display: none;
+    }
+    div#sub {
+        float: right;
+        width: 200px;
+        display: inline;
+        
+        margin-right: -340px;
+        margin-left: 200px;
+    }
+    div#nav {
+        float: left;
+        width: 200px;
+        display: inline;
+    }
+/* END CONTENT */

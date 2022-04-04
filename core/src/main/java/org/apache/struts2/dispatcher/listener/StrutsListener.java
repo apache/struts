@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -40,10 +42,12 @@ public class StrutsListener implements ServletContextListener {
         Dispatcher dispatcher = null;
         try {
             ListenerHostConfig config = new ListenerHostConfig(sce.getServletContext());
+            init.initLogging(config);
             dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 
             prepare = new PrepareOperations(dispatcher);
+            sce.getServletContext().setAttribute(StrutsStatics.SERVLET_DISPATCHER, dispatcher);
         } finally {
             if (dispatcher != null) {
                 dispatcher.cleanUpAfterInit();

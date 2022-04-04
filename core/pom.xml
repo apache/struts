@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,14 +26,14 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>2.5.2-SNAPSHOT</version>
     </parent>
     <artifactId>struts2-core</artifactId>
     <packaging>jar</packaging>
     <name>Struts 2 Core</name>
 
     <properties>
-        <tlib.version>2.6</tlib.version>
+        <tlib.version>2.3</tlib.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -39,8 +41,18 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <argLine>-Duser.language=en -Duser.region=US</argLine>
                     <properties>
                         <property>
                             <name>maven.testng.output.dir</name>
@@ -63,6 +75,7 @@
                         <exclude>**/TestBean2.java</exclude>
                         <exclude>**/TestInterceptor.java</exclude>
                         <exclude>**/AnnotatedTestBean.java</exclude>
+                        <exclude>**/ContainerImplTest.java</exclude>
                         <exclude>**/DefaultFileManagerTest.java</exclude>
                     </excludes>
                 </configuration>
@@ -70,7 +83,6 @@
             <plugin>
                 <groupId>com.cj.jshintmojo</groupId>
                 <artifactId>jshint-maven-plugin</artifactId>
-                <version>1.6.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -173,10 +185,37 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-source</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>default-tools.jar</id>
+            <activation>
+                <property>
+                    <name>java.vendor</name>
+                    <value>Sun Microsystems Inc.</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                    <version>1.5.0</version>
+                    <scope>system</scope>
+                    <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
+
     </profiles>
 
 
@@ -193,7 +232,7 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
+            <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -203,10 +242,24 @@
             <artifactId>ognl</artifactId>
         </dependency>
 
+        <!-- Velocity -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-tools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Logging -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
         </dependency>
 
         <!-- File upload -->
@@ -229,18 +282,58 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <scope>test</scope>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -257,8 +350,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -294,13 +387,13 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -331,6 +424,7 @@
             <artifactId>testng</artifactId>
             <scope>compile</scope>
             <optional>true</optional>
+            <classifier>jdk15</classifier>
         </dependency>
 
         <!-- SLF4J support -->
@@ -342,7 +436,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 
         <!-- The Servlet API mocks in Spring Framework 4.x only supports Servlet 3.0 and higher.
@@ -351,12 +445,6 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-validator</groupId>
-            <artifactId>commons-validator</artifactId>
             <scope>test</scope>
         </dependency>
 

@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,13 +18,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.LocalizedTextProvider;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.TestConfigurationProvider;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Stack;
+
+import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.struts2.views.jsp.AbstractTagTest;
-import org.apache.struts2.views.jsp.ActionTag;
 import org.apache.struts2.views.jsp.BeanTag;
 import org.apache.struts2.views.jsp.ElseIfTag;
 import org.apache.struts2.views.jsp.ElseTag;
@@ -39,19 +44,17 @@ import org.apache.struts2.views.jsp.iterator.MergeIteratorTag;
 import org.apache.struts2.views.jsp.ui.TextFieldTag;
 import org.apache.struts2.views.jsp.ui.UpDownSelectTag;
 
-import javax.servlet.jsp.tagext.TagSupport;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Stack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
  * Test case for method findAncestor(Class) in Component and some commons
  * test cases for Component in general.
+ *
  */
 public class ComponentTest extends AbstractTagTest {
 
-    public void testFindAncestorTest() {
+    public void testFindAncestorTest() throws Exception {
         Property property = new Property(stack);
         Form form = new Form(stack, request, response);
         ActionComponent actionComponent = new ActionComponent(stack, request, response);
@@ -60,8 +63,8 @@ public class ComponentTest extends AbstractTagTest {
         TextField textField = new TextField(stack, request, response);
 
 
-        Stack<Component> stack = property.getComponentStack();
-        Iterator<Component> i = stack.iterator();
+        Stack stack = property.getComponentStack();
+        Iterator i = stack.iterator();
 
 
         try {
@@ -106,7 +109,8 @@ public class ComponentTest extends AbstractTagTest {
             assertEquals(textField.findAncestor(Anchor.class), anchor);
             assertEquals(textField.findAncestor(ActionComponent.class), actionComponent);
             assertEquals(textField.findAncestor(Property.class), property);
-        } finally {
+        }
+        finally {
             property.getComponentStack().pop();
             property.getComponentStack().pop();
             property.getComponentStack().pop();
@@ -116,7 +120,16 @@ public class ComponentTest extends AbstractTagTest {
     }
 
     // Action Component
-    public void testActionComponentDisposeItselfFromComponentStack() {
+    /*
+    public void testActionComponentDisposeItselfFromComponentStack() throws Exception {
+        ConfigurationManager.clearConfigurationProviders();
+        ConfigurationManager.addConfigurationProvider(new TestConfigurationProvider());
+        ConfigurationManager.getConfiguration().reload();
+
+        ActionContext actionContext = new ActionContext(context);
+        actionContext.setValueStack(stack);
+        ActionContext.setContext(actionContext);
+
         request.setupGetServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/" + "foo.action");
         try {
             TextFieldTag t = new TextFieldTag();
@@ -134,14 +147,17 @@ public class ComponentTest extends AbstractTagTest {
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
 
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
     }
+    */
+
 
     // AppendInterator
-    public void testAppendIteratorDisposeItselfFromComponentStack() {
+    public void testAppendIteratorDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -156,7 +172,8 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
@@ -164,7 +181,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // Bean
-    public void testBeanComponentDisposeItselfFromComponentStack() {
+    public void testBeanComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -180,7 +197,8 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail();
         }
@@ -188,7 +206,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // ElseIf
-    public void testElseIfComponentDisposeItselfFromComponentStack() {
+    public void testElseIfComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -203,7 +221,8 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
@@ -211,7 +230,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // Else
-    public void testElseComponentDisposeItselfFromComponentStack() {
+    public void testElseComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -226,7 +245,8 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
@@ -234,7 +254,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // If
-    public void testIfComponentDisposeItselfFromComponentStack() {
+    public void testIfComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -250,7 +270,8 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
@@ -258,7 +279,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // Iterator
-    public void testIteratorComponentDisposeItselfFromComponentStack() {
+    public void testIteratorComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -272,14 +293,15 @@ public class ComponentTest extends AbstractTagTest {
             tag.doStartTag();
             assertEquals(tag.getComponent().getComponentStack().peek(), tag.getComponent());
             int endIt = tag.doAfterBody();
-            while (TagSupport.EVAL_BODY_AGAIN == endIt) {
+            while(TagSupport.EVAL_BODY_AGAIN == endIt) {
                 assertEquals(tag.getComponent().getComponentStack().peek(), tag.getComponent());
                 endIt = tag.doAfterBody();
             }
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
@@ -287,7 +309,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // MergeIterator
-    public void testMergeIteratorComponentDisposeItselfFromComponentStack() {
+    public void testMergeIteratorComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -302,7 +324,8 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
@@ -310,7 +333,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // Property
-    public void testPropertyComponentDisposeItselfFromComponentStack() {
+    public void testPropertyComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -325,7 +348,8 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
@@ -333,7 +357,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // Push
-    public void testPushComponentDisposeItselfFromComponentStack() {
+    public void testPushComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -349,7 +373,8 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
@@ -357,7 +382,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // Set
-    public void testSetComponentDisposeItselfFromComponentStack() {
+    public void testSetComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -374,7 +399,8 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
@@ -382,7 +408,7 @@ public class ComponentTest extends AbstractTagTest {
 
 
     // Text
-    public void testTextComponentDisposeItselfFromComponentStack() {
+    public void testTextComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -398,21 +424,22 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
     }
 
 
-    public void testI18nComponentDisposeItselfFromComponentStack() {
-        stack.getActionContext().withLocale(Locale.getDefault());
+    public void testI18nComponentDisposeItselfFromComponentStack() throws Exception {
+        stack.getContext().put(ActionContext.LOCALE, Locale.getDefault());
 
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
 
-        container.getInstance(LocalizedTextProvider.class).addDefaultResourceBundle("org.apache.struts2.components.temp");
+        LocalizedTextUtil.addDefaultResourceBundle("org.apache.struts2.components.temp");
 
         I18nTag tag = new I18nTag();
         tag.setName("org.apache.struts2.components.tempo");
@@ -425,14 +452,15 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
     }
 
     // URL
-    public void testURLComponentDisposeItselfFromComponentStack() {
+    public void testURLComponentDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -447,14 +475,16 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
         }
     }
 
+
     // updownselect
-    public void testUpDownSelectDisposeItselfFromComponentStack() {
+    public void testUpDownSelectDisposeItselfFromComponentStack() throws Exception {
         TextFieldTag t = new TextFieldTag();
         t.setPageContext(pageContext);
         t.setName("textFieldName");
@@ -472,92 +502,10 @@ public class ComponentTest extends AbstractTagTest {
             tag.doEndTag();
             assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
             t.doEndTag();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             fail(e.toString());
-        }
-    }
-
-    /**
-     * Test the expected default behaviour for component body state methods.
-     */
-    public void testComponentDefaultBodyStates() {
-        Component component = new Component(stack);
-        // Test expected default results for: usesBody(), escapeHtmlBody().
-        assertFalse("Component default usesBody not false ?", component.usesBody());
-        assertFalse("Component default htmlEscapeBody not false ?", component.escapeHtmlBody());
-    }
-
-    /**
-     * Test the behaviour for Anchor body state methods.
-     */
-    public void testAnchorBodyStates() {
-        Anchor anchor = new Anchor(stack, request, response);
-        // Test expected default results for: usesBody(), escapeHtmlBody().
-        assertTrue("Anchor default usesBody not true ?", anchor.usesBody());
-        assertFalse("Anchor default htmlEscapeBody not false ?", anchor.escapeHtmlBody());
-        anchor.setEscapeHtmlBody(false);
-        assertFalse("Anchor htmlEscapeBody not false after set false ?", anchor.escapeHtmlBody());
-        anchor.setEscapeHtmlBody(true);
-        assertTrue("Anchor htmlEscapeBody not true after set true ?", anchor.escapeHtmlBody());
-    }
-
-    /**
-     * Test the behaviour for Submit body state methods.
-     */
-    public void testSubmitBodyStates() {
-        Submit submit = new Submit(stack, request, response);
-        // Test expected default results for: usesBody(), escapeHtmlBody().
-        assertTrue("Submit default usesBody not true ?", submit.usesBody());
-        assertFalse("Submit default htmlEscapeBody not false ?", submit.escapeHtmlBody());
-        submit.setEscapeHtmlBody(false);
-        assertFalse("Submit htmlEscapeBody not false after set false ?", submit.escapeHtmlBody());
-        submit.setEscapeHtmlBody(true);
-        assertTrue("Submit htmlEscapeBody not true after set true ?", submit.escapeHtmlBody());
-    }
-
-    /**
-     * Attempt some code coverage tests for {@link Component} that can be achieved without
-     * too much difficulty.
-     */
-    public void testComponent_coverageTest() {
-        HashMap<String, Object> propertyMap = new HashMap<>();
-        Exception exception = new Exception("Generic exception");
-        Property property = new Property(stack);
-        ActionComponent actionComponent = new ActionComponent(stack, request, response);
-
-        try {
-            actionComponent.setName("componentName");
-            // Simulate component attribute with a hyphen in its name.
-            propertyMap.put("hyphen-keyname-for-coverage", "hyphen-keyname-for-coverage-value");
-            propertyMap.put("someKeyName", "someKeyValue");
-            actionComponent.copyParams(propertyMap);
-            actionComponent.addAllParameters(propertyMap);
-            try {
-                actionComponent.findString(null, "fieldName", "errorMessage");
-                fail("null expr parameter should cause a StrutsException");
-            } catch (StrutsException se) {
-                // expected
-            }
-            assertNull("completeExpression of a null expression returned non-null result ?", actionComponent.completeExpression(null));
-            try {
-                actionComponent.findValue(null, "fieldName", "errorMessage");
-                fail("null expr parameter should cause a StrutsException");
-            } catch (StrutsException se) {
-                // expected
-            }
-            try {
-                actionComponent.findValue("", "fieldName", "errorMessage");
-                fail("empty expr parameter should cause a StrutsException due to finding a null value");
-            } catch (StrutsException se) {
-                // expected
-            }
-            assertNotNull("the toString() method with Exception parameter returned null result ?", actionComponent.toString(exception));
-            assertFalse("Initial performClearTagStateForTagPoolingServers not false ?", actionComponent.getPerformClearTagStateForTagPoolingServers());
-            actionComponent.setPerformClearTagStateForTagPoolingServers(true);
-            assertTrue("performClearTagStateForTagPoolingServers false after setting to true ?", actionComponent.getPerformClearTagStateForTagPoolingServers());
-        } finally {
-            property.getComponentStack().pop();
         }
     }
 }

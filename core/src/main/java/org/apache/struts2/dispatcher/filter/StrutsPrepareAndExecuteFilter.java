@@ -1,4 +1,6 @@
 /*
+ * $Id: DefaultActionSupport.java 651946 2008-04-27 13:41:38Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -53,15 +55,16 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     protected List<Pattern> excludedPatterns = null;
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        InitOperations init = createInitOperations();
+        InitOperations init = new InitOperations();
         Dispatcher dispatcher = null;
         try {
             FilterHostConfig config = new FilterHostConfig(filterConfig);
+            init.initLogging(config);
             dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 
-            prepare = createPrepareOperations(dispatcher);
-            execute = createExecuteOperations(dispatcher);
+            prepare = new PrepareOperations(dispatcher);
+            execute = new ExecuteOperations(dispatcher);
             this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);
@@ -71,36 +74,6 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
             }
             init.cleanup();
         }
-    }
-
-    /**
-     * Creates a new instance of {@link InitOperations} to be used during
-     * initialising {@link Dispatcher}
-     *
-     * @return instance of {@link InitOperations}
-     */
-    protected InitOperations createInitOperations() {
-        return new InitOperations();
-    }
-
-    /**
-     * Creates a new instance of {@link PrepareOperations} to be used during
-     * initialising {@link Dispatcher}
-     *
-     * @return instance of {@link PrepareOperations}
-     */
-    protected PrepareOperations createPrepareOperations(Dispatcher dispatcher) {
-        return new PrepareOperations(dispatcher);
-    }
-
-    /**
-     * Creates a new instance of {@link ExecuteOperations} to be used during
-     * initialising {@link Dispatcher}
-     *
-     * @return instance of {@link ExecuteOperations}
-     */
-    protected ExecuteOperations createExecuteOperations(Dispatcher dispatcher) {
-        return new ExecuteOperations(dispatcher);
     }
 
     /**

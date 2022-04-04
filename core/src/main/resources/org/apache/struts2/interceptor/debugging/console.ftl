@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,7 +23,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
+    <script type="text/javascript">
     var baseUrl = "<@s.url value="/struts" includeParams="none"/>";
     window.open(baseUrl+"/webconsole.html", 'OGNL Console','width=500,height=450,status=no,toolbar=no,menubar=no');
     </script>    

@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor.validation;
 
 import com.mockobjects.dynamic.Mock;
@@ -45,7 +48,7 @@ public class AnnotationValidationInterceptorTest extends StrutsInternalTestCase 
         mockActionInvocation.matchAndReturn("getAction", test);
         mockActionInvocation.expect("invoke");
 
-        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInvocation.proxy());
+        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInvocation.proxy());
     }
 
     public void testShouldNotSkip() throws Exception {
@@ -71,18 +74,6 @@ public class AnnotationValidationInterceptorTest extends StrutsInternalTestCase 
 
     public void testShouldSkipBase2() throws Exception {
         mockActionProxy.expectAndReturn("getMethod", "skipMeBase2");
-        interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
-        mockActionProxy.verify();
-    }
-
-    public void testShouldSkipProtected() throws Exception {
-        mockActionProxy.expectAndReturn("getMethod", "skipMeProtected");
-        interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
-        mockActionProxy.verify();
-    }
-
-    public void testShouldSkipByInterface() throws Exception {
-        mockActionProxy.expectAndReturn("getMethod", "skipMeByInterface");
         interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
         mockActionProxy.verify();
     }
@@ -121,14 +112,9 @@ public class AnnotationValidationInterceptorTest extends StrutsInternalTestCase 
         public String skipMeBase() {
             return "skipme";
         }
-
-        @Override
-        public String skipMeProtected() {
-            return super.skipMeProtected();
-        }
     }
 
-    public static class TestActionBase implements TestActionInterface  {
+    public static class TestActionBase  {
 
         @SkipValidation
         public String skipMeBase() {
@@ -147,20 +133,6 @@ public class AnnotationValidationInterceptorTest extends StrutsInternalTestCase 
         public String skipMe2() {
             return "skipme2";
         }
-
-        @SkipValidation
-        protected String skipMeProtected() {
-            return "skipMeProtected";
-        }
-
-        @Override
-        public String skipMeByInterface() {
-            return "skipMeByInterface";
-        }
     }
 
-    public static interface TestActionInterface {
-        @SkipValidation
-        String skipMeByInterface();
-    }
 }

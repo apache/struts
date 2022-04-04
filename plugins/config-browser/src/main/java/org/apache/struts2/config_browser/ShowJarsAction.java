@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,11 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.config_browser;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,8 +34,6 @@ import java.util.Properties;
  * Shows all constants as loaded by Struts
  */
 public class ShowJarsAction extends ActionNamesAction {
-
-    private static final Logger LOG = LogManager.getLogger(ShowJarsAction.class);
 
     public List<Properties> getJarPoms() {
         try {
@@ -53,7 +52,8 @@ public class ShowJarsAction extends ActionNamesAction {
         try {
             return ClassLoaderUtil.getResources("struts-plugin.xml", ShowJarsAction.class, false);
         } catch (IOException e) {
-            LOG.error("Cannot load struts-plugin.xml", e);
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return null;
     }

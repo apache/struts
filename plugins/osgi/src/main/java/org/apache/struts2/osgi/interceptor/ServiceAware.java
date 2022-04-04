@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,15 +26,9 @@ import java.util.List;
  * Classes implementing this interface, will be injected a list of services
  * registered with the type of the parameterized type
  * @param <T> The type of the service
- * @deprecated please use {@link org.apache.struts2.osgi.action.ServiceAware} instead
  */
-@Deprecated
 public interface ServiceAware<T> {
 
-    /**
-     * @deprecated please use {@link org.apache.struts2.osgi.action.ServiceAware#withServices(List)} instead
-     */
-    @Deprecated
     void setServices(List<T> services);
 
 }

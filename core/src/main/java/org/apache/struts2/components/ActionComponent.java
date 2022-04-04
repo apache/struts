@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -32,7 +35,6 @@ import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
-import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.annotations.StrutsTag;
@@ -150,12 +152,10 @@ public class ActionComponent extends ContextBean {
     }
 
     @Inject
-    @Override
     public void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;
     }
 
-    @Override
     public boolean end(Writer writer, String body) {
         boolean end = super.end(writer, "", false);
         try {
@@ -177,17 +177,16 @@ public class ActionComponent extends ContextBean {
         return end;
     }
 
-    protected Map<String, Object> createExtraContext() {
-        HttpParameters newParams = createParametersForContext();
+    protected Map createExtraContext() {
+        Map newParams = createParametersForContext();
 
-        ActionContext ctx = stack.getActionContext();
-        PageContext pageContext = ctx.getPageContext();
-        Map<String, Object> session = ctx.getSession();
-        Map<String, Object> application = ctx.getApplication();
+        ActionContext ctx = new ActionContext(stack.getContext());
+        PageContext pageContext = (PageContext) ctx.get(ServletActionContext.PAGE_CONTEXT);
+        Map session = ctx.getSession();
+        Map application = ctx.getApplication();
 
         Dispatcher du = Dispatcher.getInstance();
-        Map<String, Object> extraContext = du.createContextMap(
-            new RequestMap(req),
+        Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
                 newParams,
                 session,
                 application,
@@ -195,12 +194,12 @@ public class ActionComponent extends ContextBean {
                 res);
 
         ValueStack newStack = valueStackFactory.createValueStack(stack);
+        extraContext.put(ActionContext.VALUE_STACK, newStack);
 
-        return ActionContext.of(extraContext)
-            .withValueStack(newStack)
-            // add page context, such that ServletDispatcherResult will do an include
-            .withPageContext(pageContext)
-            .getContextMap();
+        // add page context, such that ServletDispatcherResult will do an include
+        extraContext.put(ServletActionContext.PAGE_CONTEXT, pageContext);
+
+        return extraContext;
     }
 
     /**
@@ -209,19 +208,32 @@ public class ActionComponent extends ContextBean {
      * 
      * @return A map of String[] parameters
      */
-    protected HttpParameters createParametersForContext() {
-        HttpParameters parentParams = null;
+    protected Map<String,String[]> createParametersForContext() {
+        Map parentParams = null;
 
         if (!ignoreContextParams) {
-            parentParams = getStack().getActionContext().getParameters();
+            parentParams = new ActionContext(getStack().getContext()).getParameters();
         }
 
-        HttpParameters.Builder builder = HttpParameters.create().withParent(parentParams);
+        Map<String, String[]> newParams = (parentParams != null)
+                ? new HashMap<String, String[]>(parentParams)
+                : new HashMap<String, String[]>();
 
         if (parameters != null) {
-            builder = builder.withExtraParams(parameters);
+            Map<String, String[]> params = new HashMap<>();
+            for (Object o : parameters.entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
+                String key = (String) entry.getKey();
+                Object val = entry.getValue();
+                if (val.getClass().isArray() && String.class == val.getClass().getComponentType()) {
+                    params.put(key, (String[])val);
+                } else {
+                    params.put(key, new String[]{val.toString()});
+                }
+            }
+            newParams.putAll(params);
         }
-        return builder.build();
+        return newParams;
     }
 
     public ActionProxy getProxy() {
@@ -282,7 +294,7 @@ public class ActionComponent extends ContextBean {
             // set the old stack back on the request
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
             if (inv != null) {
-                ActionContext.getContext().withActionInvocation(inv);
+                ActionContext.getContext().setActionInvocation(inv);
             }
         }
 

@@ -1,28 +1,25 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2007,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import org.apache.struts2.conversion.TypeConversionException;
+import com.opensymphony.xwork2.XWorkConstants;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.TypeConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.Member;
 import java.util.Calendar;
@@ -130,7 +127,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
             }
 
             if (result == null && value != null && !"".equals(value)) {
-                throw new TypeConversionException("Cannot create type " + toType + " from value " + value);
+                throw new XWorkException("Cannot create type " + toType + " from value " + value);
             }
         }
 
@@ -170,7 +167,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
             try {
                 clazz = Class.forName((String) value);
             } catch (ClassNotFoundException e) {
-                throw new TypeConversionException(e.getLocalizedMessage(), e);
+                throw new XWorkException(e.getLocalizedMessage(), e);
             }
         }
         return clazz;
@@ -179,7 +176,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToCollection(Map<String, Object> context, Object o, Member member, String prop, Object value, Class toType) {
         TypeConverter converter = container.getInstance(CollectionConverter.class);
         if (converter == null) {
-            throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_COLLECTION);
+            throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.COLLECTION_CONVERTER);
         }
         return converter.convertValue(context, o, member, prop, value, toType);
     }
@@ -187,7 +184,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToArray(Map<String, Object> context, Object o, Member member, String prop, Object value, Class toType) {
         TypeConverter converter = container.getInstance(ArrayConverter.class);
         if (converter == null) {
-            throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_ARRAY);
+            throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.ARRAY_CONVERTER);
         }
         return converter.convertValue(context, o, member, prop, value, toType);
     }
@@ -195,7 +192,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToDate(Map<String, Object> context, Object value, Class toType) {
         TypeConverter converter = container.getInstance(DateConverter.class);
         if (converter == null) {
-            throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_DATE);
+            throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.DATE_CONVERTER);
         }
         return converter.convertValue(context, null, null, null, value, toType);
     }
@@ -203,7 +200,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToNumber(Map<String, Object> context, Object value, Class toType) {
         TypeConverter converter = container.getInstance(NumberConverter.class);
         if (converter == null) {
-            throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_NUMBER);
+            throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.NUMBER_CONVERTER);
         }
         return converter.convertValue(context, null, null, null, value, toType);
     }
@@ -211,7 +208,7 @@ public class XWorkBasicConverter extends DefaultTypeConverter {
     private Object doConvertToString(Map<String, Object> context, Object value) {
         TypeConverter converter = container.getInstance(StringConverter.class);
         if (converter == null) {
-            throw new TypeConversionException("TypeConverter with name [#0] must be registered first! Converter: "+ StrutsConstants.STRUTS_CONVERTER_STRING);
+            throw new XWorkException("TypeConverter with name [#0] must be registered first!", XWorkConstants.STRING_CONVERTER);
         }
         return converter.convertValue(context, null, null, null, value, null);
     }

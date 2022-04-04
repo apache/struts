@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,84 +18,83 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.ActionContext;
-import junit.framework.TestCase;
-import org.apache.struts2.dispatcher.HttpParameters;
+package org.apache.struts2.util;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import junit.framework.TestCase;
+
+import com.opensymphony.xwork2.ActionContext;
+
 
 /**
  * TokenHelperTest
+ *
  */
 public class TokenHelperTest extends TestCase {
 
-    private Map<String, Object> session;
+    private Map session;
 
-    public void testTokenSessionNameBuilding() {
-        String name = "foo";
-        String sessionName = TokenHelper.buildTokenSessionAttributeName(name);
-        assertEquals(TokenHelper.TOKEN_NAMESPACE + "." + name, sessionName);
-    }
+	public void testTokenSessionNameBuilding() throws Exception {
+		String name = "foo";
+		String sessionName = TokenHelper.buildTokenSessionAttributeName(name);
+		assertEquals(TokenHelper.TOKEN_NAMESPACE + "." + name, sessionName);
+	}
 
     public void testSetToken() {
         String token = TokenHelper.setToken();
-        final String defaultSessionTokenName = TokenHelper.buildTokenSessionAttributeName(TokenHelper.DEFAULT_TOKEN_NAME);
-        assertEquals(token, session.get(defaultSessionTokenName));
+		final String defaultSessionTokenName = TokenHelper.buildTokenSessionAttributeName(TokenHelper.DEFAULT_TOKEN_NAME);
+		assertEquals(token, session.get(defaultSessionTokenName));
     }
 
     public void testSetTokenWithName() {
         String tokenName = "myTestToken";
         String token = TokenHelper.setToken(tokenName);
-        final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
-        assertEquals(token, session.get(sessionTokenName));
+		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+		assertEquals(token, session.get(sessionTokenName));
     }
 
-    public void testSetSessionToken() {
-        String tokenName = "myOtherTestToken";
-        String token = "foobar";
-        TokenHelper.setSessionToken(tokenName, token);
-        final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
-        assertEquals(token, session.get(sessionTokenName));
-    }
+	public void testSetSessionToken() {
+		String tokenName = "myOtherTestToken";
+		String token = "foobar";
+		TokenHelper.setSessionToken(tokenName, token);
+		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+		assertEquals(token, session.get(sessionTokenName));
+	}
 
-    public void testValidToken() {
+	public void testValidToken() {
         String tokenName = "validTokenTest";
         String token = TokenHelper.setToken(tokenName);
-        final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
-        assertEquals(token, session.get(sessionTokenName));
-
-        Map<String, String[]> params = new HashMap<>();
-        params.put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
-        params.put(tokenName, new String[]{token});
-
-        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
-
+		final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
+		assertEquals(token, session.get(sessionTokenName));
+        ActionContext.getContext().getParameters().put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
+        ActionContext.getContext().getParameters().put(tokenName, new String[]{token});
         assertTrue(TokenHelper.validToken());
     }
 
     public void testGetTokenDoesNotNpe() {
         String token = TokenHelper.getToken(null);
-        assertNull(token);
+        assertTrue(token == null);
 
         String token2 = TokenHelper.getToken("");
-        assertNull(token2);
+        assertTrue(token2 == null);
     }
 
     protected void setUp() throws Exception {
-        session = new HashMap<>();
-        Map<String, Object> ctxMap = new TreeMap<>();
-        ActionContext ctx = ActionContext.of(ctxMap).bind();
-        ctx.setSession(session);
-        ctx.setParameters(HttpParameters.create().build());
+        session = new HashMap();
+        Map params = new TreeMap();
+        Map ctxMap = new TreeMap();
+        ctxMap.put(ActionContext.SESSION, session);
+        ctxMap.put(ActionContext.PARAMETERS, params);
+        ActionContext ctx = new ActionContext(ctxMap);
+        ActionContext.setContext(ctx);
     }
 
     protected void tearDown() {
-        ActionContext.clear();
+        ActionContext.setContext(null);
     }
 }
 

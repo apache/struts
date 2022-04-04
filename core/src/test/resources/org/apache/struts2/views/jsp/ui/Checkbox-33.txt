@@ -10,6 +10,7 @@
 	</td>
     <td class="tdCheckboxInput">
           <input type="checkbox" name="foo" value="baz" checked="checked" id="foo" style="color:red" title="mytitle" onclick="test();" ondblclick="test();"/>
+          <input type="hidden" id="__checkbox_foo" name="__checkbox_foo" value="baz"/>
           <label for="foo" class="checkboxErrorLabel">mylabel</label>
     </td>
 </tr>

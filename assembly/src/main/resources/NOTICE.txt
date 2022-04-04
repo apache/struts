@@ -11,6 +11,7 @@ ANTLR (http://www.antlr.org/).
 Classworlds (http://classworlds.codehaus.org/).
 EZMorph (http://ezmorph.sourceforge.net/)
 FreeMarker (http://freemarker.org/).
+JSON-lib (http://json-lib.sourceforge.net/).
 OGNL (http://www.opensymphony.com/ognl/).
 Plexus (http://plexus.codehaus.org/).
 SiteMesh (http://www.opensymphony.com/sitemesh/).

@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,44 +21,44 @@
  */
 -->
 <#if parameters.onclick??>
- onclick="<#outputformat 'JavaScript'>${parameters.onclick}</#outputformat>"<#rt/>
+ onclick="${parameters.onclick?html}"<#rt/>
 </#if>
 <#if parameters.ondblclick??>
- ondblclick="<#outputformat 'JavaScript'>${parameters.ondblclick}</#outputformat>"<#rt/>
+ ondblclick="${parameters.ondblclick?html}"<#rt/>
 </#if>
 <#if parameters.onmousedown??>
- onmousedown="<#outputformat 'JavaScript'>${parameters.onmousedown}</#outputformat>"<#rt/>
+ onmousedown="${parameters.onmousedown?html}"<#rt/>
 </#if>
 <#if parameters.onmouseup??>
- onmouseup="<#outputformat 'JavaScript'>${parameters.onmouseup}</#outputformat>"<#rt/>
+ onmouseup="${parameters.onmouseup?html}"<#rt/>
 </#if>
 <#if parameters.onmouseover??>
- onmouseover="<#outputformat 'JavaScript'>${parameters.onmouseover}</#outputformat>"<#rt/>
+ onmouseover="${parameters.onmouseover?html}"<#rt/>
 </#if>
 <#if parameters.onmousemove??>
- onmousemove="<#outputformat 'JavaScript'>${parameters.onmousemove}</#outputformat>"<#rt/>
+ onmousemove="${parameters.onmousemove?html}"<#rt/>
 </#if>
 <#if parameters.onmouseout??>
- onmouseout="<#outputformat 'JavaScript'>${parameters.onmouseout}</#outputformat>"<#rt/>
+ onmouseout="${parameters.onmouseout?html}"<#rt/>
 </#if>
 <#if parameters.onfocus??>
- onfocus="<#outputformat 'JavaScript'>${parameters.onfocus}</#outputformat>"<#rt/>
+ onfocus="${parameters.onfocus?html}"<#rt/>
 </#if>
 <#if parameters.onblur??>
- onblur="<#outputformat 'JavaScript'>${parameters.onblur}</#outputformat>"<#rt/>
+ onblur="${parameters.onblur?html}"<#rt/>
 </#if>
 <#if parameters.onkeypress??>
- onkeypress="<#outputformat 'JavaScript'>${parameters.onkeypress}</#outputformat>"<#rt/>
+ onkeypress="${parameters.onkeypress?html}"<#rt/>
 </#if>
 <#if parameters.onkeydown??>
- onkeydown="<#outputformat 'JavaScript'>${parameters.onkeydown}</#outputformat>"<#rt/>
+ onkeydown="${parameters.onkeydown?html}"<#rt/>
 </#if>
 <#if parameters.onkeyup??>
- onkeyup="<#outputformat 'JavaScript'>${parameters.onkeyup}</#outputformat>"<#rt/>
+ onkeyup="${parameters.onkeyup?html}"<#rt/>
 </#if>
 <#if parameters.onselect??>
- onselect="<#outputformat 'JavaScript'>${parameters.onselect}</#outputformat>"<#rt/>
+ onselect="${parameters.onselect?html}"<#rt/>
 </#if>
 <#if parameters.onchange??>
- onchange="<#outputformat 'JavaScript'>${parameters.onchange}</#outputformat>"<#rt/>
+ onchange="${parameters.onchange?html}"<#rt/>
 </#if>

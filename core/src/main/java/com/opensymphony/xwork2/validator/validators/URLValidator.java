@@ -1,30 +1,23 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.util.Collection;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -49,80 +42,22 @@ import java.util.regex.Pattern;
  */
 public class URLValidator extends FieldValidatorSupport {
 
-    private static final Logger LOG = LogManager.getLogger(URLValidator.class);
-
-    public static final String DEFAULT_URL_REGEX = "^(?:https?|ftp):\\/\\/" +
-            "(?:(?:[a-z0-9$_.+!*'(),;?&=\\-]|%[0-9a-f]{2})+" +
-            "(?::(?:[a-z0-9$_.+!*'(),;?&=\\-]|%[0-9a-f]{2})+)?" +
-            "@)?#?" +
-            "(?:(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)*" +
-            "[a-z][a-z0-9-]*[a-z0-9]" +
-            "|(?:(?:[1-9]?\\d|1\\d{2}|2[0-4]\\d|25[0-5])\\.){3}" +
-            "(?:[1-9]?\\d|1\\d{2}|2[0-4]\\d|25[0-5])" +
-            ")(?::\\d+)?" +
-            ")(?:(?:\\/(?:[a-z0-9$_.+!*'(),;:@&=\\-]|%[0-9a-f]{2})*)*" +
-            "(?:\\?(?:[a-z0-9$_.+!*'(),;:@&=\\-\\/:]|%[0-9a-f]{2})*)?)?" +
-            "(?:#(?:[a-z0-9$_.+!*'(),;:@&=\\-]|%[0-9a-f]{2})*)?" +
-            "$";
-
+    private String urlRegex;
     private String urlRegexExpression;
-    private Pattern urlPattern = Pattern.compile(DEFAULT_URL_REGEX, Pattern.CASE_INSENSITIVE);
 
     public void validate(Object object) throws ValidationException {
-        Object value = getFieldValue(fieldName, object);
+        String fieldName = getFieldName();
+        Object value = this.getFieldValue(fieldName, object);
 
-        String stringValue = Objects.toString(value, EMPTY_STRING).trim();
-        if (stringValue.length() == 0) {
-            LOG.debug("Value for field {} is empty, won't ba validated, please use a required validator", fieldName);
+        // if there is no value - don't do comparison
+        // if a value is required, a required validator should be added to the field
+        if (value == null || value.toString().length() == 0) {
             return;
         }
 
-        if (value.getClass().isArray()) {
-            Object[] values = (Object[]) value;
-            for (Object objValue : values) {
-                LOG.debug("Validating element of array: {}", objValue);
-                validateValue(object, objValue);
-            }
-        } else if (Collection.class.isAssignableFrom(value.getClass())) {
-            Collection values = (Collection) value;
-            for (Object objValue : values) {
-                LOG.debug("Validating element of collection: {}", objValue);
-                validateValue(object, objValue);
-            }
-        } else {
-            LOG.debug("Validating field: {}", value);
-            validateValue(object, value);
+        if (!(value.getClass().equals(String.class)) || !Pattern.compile(getUrlRegex()).matcher((String) value).matches()) {
+            addFieldError(fieldName, object);
         }
-    }
-
-    protected void validateValue(Object object, Object value) {
-        String stringValue = Objects.toString(value, EMPTY_STRING).trim();
-        if (stringValue.length() == 0) {
-            LOG.debug("Value for field {} is empty, won't ba validated, please use a required validator", fieldName);
-            return;
-        }
-
-        try {
-            setCurrentValue(value);
-            if (!(value.getClass().equals(String.class)) || !getUrlPattern().matcher(stringValue).matches()) {
-                addFieldError(fieldName, object);
-            }
-        } finally {
-            setCurrentValue(null);
-        }
-    }
-
-    protected Pattern getUrlPattern() {
-        if (StringUtils.isNotEmpty(urlRegexExpression)) {
-            String regex = (String) parse(urlRegexExpression, String.class);
-            if (regex == null) {
-                LOG.warn("Provided URL Regex expression [{}] was evaluated to null! Falling back to default!", urlRegexExpression);
-                urlPattern = Pattern.compile(DEFAULT_URL_REGEX, Pattern.CASE_INSENSITIVE);
-            } else {
-                urlPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-            }
-        }
-        return urlPattern;
     }
 
     /**
@@ -132,11 +67,30 @@ public class URLValidator extends FieldValidatorSupport {
      * @return regex to validate URLs
      */
     public String getUrlRegex() {
-        return getUrlPattern().pattern();
+        if (StringUtils.isNotEmpty(urlRegexExpression)) {
+            return (String) parse(urlRegexExpression, String.class);
+        } else if (StringUtils.isNotEmpty(urlRegex)) {
+            return urlRegex;
+        } else {
+            return "^(https?|ftp):\\/\\/" +
+                    "(([a-z0-9$_\\.\\+!\\*\\'\\(\\),;\\?&=-]|%[0-9a-f]{2})+" +
+                    "(:([a-z0-9$_\\.\\+!\\*\\'\\(\\),;\\?&=-]|%[0-9a-f]{2})+)?" +
+                    "@)?(#?" +
+                    ")((([a-z0-9]\\.|[a-z0-9][a-z0-9-]*[a-z0-9]\\.)*" +
+                    "[a-z][a-z0-9-]*[a-z0-9]" +
+                    "|((\\d|[1-9]\\d|1\\d{2}|2[0-4][0-9]|25[0-5])\\.){3}" +
+                    "(\\d|[1-9]\\d|1\\d{2}|2[0-4][0-9]|25[0-5])" +
+                    ")(:\\d+)?" +
+                    ")(((\\/{0,1}([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)*" +
+                    "(\\?([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)" +
+                    "?)?)?" +
+                    "(#([a-z0-9$_\\.\\+!\\*\\'\\(\\),;:@&=-]|%[0-9a-f]{2})*)?" +
+                    "$";
+        }
     }
 
     public void setUrlRegex(String urlRegex) {
-        urlPattern = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE);
+        this.urlRegex = urlRegex;
     }
 
     public void setUrlRegexExpression(String urlRegexExpression) {

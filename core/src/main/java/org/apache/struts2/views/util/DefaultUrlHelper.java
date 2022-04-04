@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,28 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.text.StringEscapeUtils;
+import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.URLDecoderUtil;
 
-import com.opensymphony.xwork2.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * Default implementation of UrlHelper
@@ -107,13 +104,19 @@ public class DefaultUrlHelper implements UrlHelper {
             if (scheme != null) {
                 // If switching schemes, use the configured port for the particular scheme.
                 if (!scheme.equals(reqScheme)) {
-                    appendPort(link, scheme, HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
+                    if ((HTTP_PROTOCOL.equals(scheme) && (httpPort != DEFAULT_HTTP_PORT)) || (HTTPS_PROTOCOL.equals(scheme) && httpsPort != DEFAULT_HTTPS_PORT)) {
+                        link.append(":");
+                        link.append(HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
+                    }
                 // Else use the port from the current request.
                 } else {
-                    appendPort(link, scheme, request.getServerPort());
+                    int reqPort = request.getServerPort();
+
+                    if ((scheme.equals(HTTP_PROTOCOL) && (reqPort != DEFAULT_HTTP_PORT)) || (scheme.equals(HTTPS_PROTOCOL) && reqPort != DEFAULT_HTTPS_PORT)) {
+                        link.append(":");
+                        link.append(reqPort);
+                    }
                 }
-            } else {
-                appendPort(link, reqScheme, request.getServerPort());
             }
         } else if ((scheme != null) && !scheme.equals(request.getScheme())) {
             changedScheme = true;
@@ -121,7 +124,11 @@ public class DefaultUrlHelper implements UrlHelper {
             link.append("://");
             link.append(request.getServerName());
 
-            appendPort(link, scheme, HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
+            if ((scheme.equals(HTTP_PROTOCOL) && (httpPort != DEFAULT_HTTP_PORT)) || (HTTPS_PROTOCOL.equals(scheme) && httpsPort != DEFAULT_HTTPS_PORT))
+            {
+                link.append(":");
+                link.append(HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
+            }
         }
 
         if (action != null) {
@@ -168,9 +175,9 @@ public class DefaultUrlHelper implements UrlHelper {
 
         //if the action was not explicitly set grab the params from the request
         if (escapeAmp) {
-            buildParametersString(params, link, AMP, true);
+            buildParametersString(params, link, AMP);
         } else {
-            buildParametersString(params, link, "&", true);
+            buildParametersString(params, link, "&");
         }
 
         String result = link.toString();
@@ -188,18 +195,7 @@ public class DefaultUrlHelper implements UrlHelper {
         return result;
     }
 
-    private void appendPort(StringBuilder link, String scheme, int port) {
-        if ((HTTP_PROTOCOL.equals(scheme) && port != DEFAULT_HTTP_PORT) || (HTTPS_PROTOCOL.equals(scheme) && port != DEFAULT_HTTPS_PORT)) {
-            link.append(":");
-            link.append(port);
-        }
-    }
-
     public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator) {
-        buildParametersString(params, link, paramSeparator, true);
-    }
-
-    public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator, boolean encode) {
         if ((params != null) && (params.size() > 0)) {
             if (!link.toString().contains("?")) {
                 link.append("?");
@@ -217,7 +213,7 @@ public class DefaultUrlHelper implements UrlHelper {
                 if (value instanceof Iterable) {
                     for (Iterator iterator = ((Iterable) value).iterator(); iterator.hasNext();) {
                         Object paramValue = iterator.next();
-                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY, encode));
+                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY));
 
                         if (iterator.hasNext()) {
                             link.append(paramSeparator);
@@ -227,14 +223,14 @@ public class DefaultUrlHelper implements UrlHelper {
                     Object[] array = (Object[]) value;
                     for (int i = 0; i < array.length; i++) {
                         Object paramValue = array[i];
-                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY, encode));
+                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY));
 
                         if (i < array.length - 1) {
                             link.append(paramSeparator);
                         }
                     }
                 } else {
-                    link.append(buildParameterSubstring(name, value != null ? value.toString() : StringUtils.EMPTY, encode));
+                    link.append(buildParameterSubstring(name, value != null ? value.toString() : StringUtils.EMPTY));
                 }
 
                 if (iter.hasNext()) {
@@ -248,11 +244,11 @@ public class DefaultUrlHelper implements UrlHelper {
         return HTTP_PROTOCOL.equals(scheme) || HTTPS_PROTOCOL.equals(scheme);
     }
 
-    private String buildParameterSubstring(String name, String value, boolean encode) {
+    private String buildParameterSubstring(String name, String value) {
         StringBuilder builder = new StringBuilder();
-        builder.append(encode ? encode(name) : name);
+        builder.append(encode(name));
         builder.append('=');
-        builder.append(encode ? encode(value) : value);
+        builder.append(encode(value));
         return builder.toString();
     }
 
@@ -266,7 +262,7 @@ public class DefaultUrlHelper implements UrlHelper {
 		try {
 			return URLEncoder.encode(input, encoding);
 		} catch (UnsupportedEncodingException e) {
-			LOG.warn("Could not encode URL parameter '{}', returning value un-encoded", input);
+    		LOG.warn("Could not encode URL parameter '{}', returning value un-encoded", input);
 			return input;
 		}
 	}
@@ -278,24 +274,13 @@ public class DefaultUrlHelper implements UrlHelper {
 	 * @return the encoded string
 	 */
 	public String decode( String input ) {
-        return URLDecoderUtil.decode(input, encoding, false);
+		try {
+            return URLDecoderUtil.decode(input, encoding);
+		} catch (Exception e) {
+    		LOG.warn("Could not decode URL parameter '{}', returning value un-decoded", input);
+			return input;
+		}
 	}
-
-    /**
-     * Decodes the URL using {@link URLDecoderUtil#decode(String, String, boolean)} with the encoding specified in the configuration.
-     *
-     * @param input the input to decode
-     * @param isQueryString whether input is a query string. If <code>true</code> other decoding rules apply.
-     * @return the encoded string
-     */
-    public String decode( String input, boolean isQueryString ) {
-        try {
-            return URLDecoderUtil.decode(input, encoding, isQueryString);
-        } catch (Exception e) {
-            LOG.warn("Could not decode URL parameter '{}', returning value un-decoded", input);
-        return input;
-        }
-    }
 
     public Map<String, Object> parseQueryString(String queryString, boolean forceValueArray) {
         Map<String, Object> queryParams = new LinkedHashMap<String, Object>();
@@ -313,8 +298,8 @@ public class DefaultUrlHelper implements UrlHelper {
                         paramValue = tmpParams[1];
                     }
                     if (paramName != null) {
-                        paramName = decode(paramName, true);
-                        String translatedParamValue = decode(paramValue, true);
+                        paramName = decode(paramName);
+                        String translatedParamValue = decode(paramValue);
 
                         if (queryParams.containsKey(paramName) || forceValueArray) {
                             // WW-1619 append new param value to existing value(s)

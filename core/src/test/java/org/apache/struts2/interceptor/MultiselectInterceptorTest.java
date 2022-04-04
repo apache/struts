@@ -1,4 +1,6 @@
 /*
+ * $Id: MessageStoreInterceptorTest.java 651946 2008-04-27 13:41:38Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+
 package org.apache.struts2.interceptor;
 
 
@@ -26,7 +30,6 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 /**
  * Unit test for MultiselectInterceptor.
@@ -39,12 +42,12 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        param = new HashMap<>();
+        param = new HashMap<String, Object>();
 
         interceptor = new MultiselectInterceptor();
         ai = new MockActionInvocation();
         ai.setInvocationContext(ActionContext.getContext());
-        ActionContext.getContext().setParameters(HttpParameters.create(param).build());
+        ActionContext.getContext().setParameters(param);
     }
 
     public void testNoParam() throws Exception {
@@ -81,16 +84,13 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
         param.put("__multiselect_superpower", "");
         assertTrue(param.containsKey("__multiselect_superpower"));
 
-        ai.getInvocationContext().setParameters(HttpParameters.create(param).build());
-
         interceptor.init();
         interceptor.intercept(ai);
         interceptor.destroy();
 
-        HttpParameters parameters = ai.getInvocationContext().getParameters();
-        assertFalse(parameters.contains("__multiselect_superpower"));
-        assertEquals(3, parameters.keySet().size()); // should be 3 as __multiselect_ should be removed
-        assertEquals("robin", parameters.get("superpower").getValue());
+        assertFalse(param.containsKey("__multiselect_superpower"));
+        assertEquals(3, param.size()); // should be 3 as __multiselect_ should be removed
+        assertEquals("robin", param.get("superpower"));
     }
 
     public void testMultiselectNoValue() throws Exception {
@@ -99,16 +99,13 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
         param.put("__multiselect_superpower", "");
         assertTrue(param.containsKey("__multiselect_superpower"));
 
-        ai.getInvocationContext().setParameters(HttpParameters.create(param).build());
-
         interceptor.init();
         interceptor.intercept(ai);
         interceptor.destroy();
 
-        HttpParameters parameters = ai.getInvocationContext().getParameters();
-        assertFalse(parameters.contains("__multiselect_superpower"));
-        assertEquals(3, parameters.keySet().size()); // should be 3 as __multiselect_ should be removed
-        assertFalse(parameters.get("superpower").isDefined());
+        assertFalse(param.containsKey("__multiselect_superpower"));
+        assertEquals(3, param.size()); // should be 3 as __multiselect_ should be removed
+        assertEquals(0, ((String[]) param.get("superpower")).length);
     }
 
     public void testTwoMultiselect() throws Exception {
@@ -120,18 +117,15 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
         assertTrue(param.containsKey("__multiselect_superpower"));
         assertTrue(param.containsKey("__multiselect_cool"));
 
-        ai.getInvocationContext().setParameters(HttpParameters.create(param).build());
-
         interceptor.init();
         interceptor.intercept(ai);
         interceptor.destroy();
 
-        HttpParameters parameters = ai.getInvocationContext().getParameters();
-        assertFalse(parameters.contains("__multiselect_superpower"));
-        assertFalse(parameters.contains("__multiselect_cool"));
-        assertEquals(4, parameters.keySet().size()); // should be 4 as __multiselect_ should be removed
-        assertEquals("yes", parameters.get("superpower").getValue());
-        assertFalse(parameters.get("cool").isDefined());
+        assertFalse(param.containsKey("__multiselect_superpower"));
+        assertFalse(param.containsKey("__multiselect_cool"));
+        assertEquals(4, param.size()); // should be 4 as __multiselect_ should be removed
+        assertEquals("yes", param.get("superpower"));
+        assertEquals(0, ((String[]) param.get("cool")).length);
     }
 
 }

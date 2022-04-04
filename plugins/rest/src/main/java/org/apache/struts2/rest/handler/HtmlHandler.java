@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,9 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.rest.handler;
 
-import com.opensymphony.xwork2.ActionInvocation;
+package org.apache.struts2.rest.handler;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -27,13 +28,13 @@ import java.io.Writer;
 /**
  * Handles HTML content, usually just a simple passthrough to the framework
  */
-public class HtmlHandler extends AbstractContentTypeHandler {
+public class HtmlHandler implements ContentTypeHandler {
 
-    public String fromObject(ActionInvocation invocation, Object obj, String resultCode, Writer out) throws IOException {
+    public String fromObject(Object obj, String resultCode, Writer out) throws IOException {
         return resultCode;
     }
 
-    public void toObject(ActionInvocation invocation, Reader in, Object target) {
+    public void toObject(Reader in, Object target) {
     }
 
     public String getExtension() {

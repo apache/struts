@@ -20,50 +20,21 @@
  */
 package it.org.apache.struts2.showcase;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
+import java.net.MalformedURLException;
 
-import org.junit.Assert;
-import org.junit.Test;
+public class FileDownloadTest extends ITBaseTest {
+    public void testImage() throws InterruptedException, MalformedURLException {
+        beginAt("/filedownload/download.action");
 
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.WebClient;
-
-public class FileDownloadTest {
-    @Test
-    public void testImage() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final Page page = webClient.getPage(ParameterUtils.getBaseUrl() + "/filedownload/download.action");
-
-            URL url = new URL(
-                    "https://gitbox.apache.org/repos/asf?p=struts.git;a=blob_plain;f=apps/showcase/src/main/webapp/images/struts.gif;hb=HEAD");
-
-            Assert.assertTrue(areFilesEqual(url.openStream(), page.getWebResponse().getContentAsStream()));
-        }
+        URL url = new URL("http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/src/main/webapp/images/struts.gif");
+        assertDownloadedFileEquals(url);
     }
 
-    public void testZip() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final Page page = webClient.getPage(ParameterUtils.getBaseUrl() + "/filedownload/download2.action");
+     public void testZip() throws InterruptedException, MalformedURLException {
+        beginAt("/filedownload/download2.action");
 
-            URL url = new URL(
-                    "https://gitbox.apache.org/repos/asf?p=struts.git;a=blob_plain;f=apps/showcase/src/main/webapp/images/struts-gif.zip;hb=HEAD");
-
-            Assert.assertTrue(areFilesEqual(url.openStream(), page.getWebResponse().getContentAsStream()));
-        }
-    }
-
-    private boolean areFilesEqual(InputStream i1, InputStream i2) throws IOException {
-        // read and compare bytes pair-wise
-        int b1, b2;
-        do {
-            b1 = i1.read();
-            b2 = i2.read();
-        } while (b1 == b2 && b1 != -1 && b2 != -1);
-        i1.close();
-        i2.close();
-        // true only if end of file is reached for both
-        return (b1 == -1) && (b2 == -1);
+        URL url = new URL("http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/src/main/webapp/images/struts-gif.zip");
+        assertDownloadedFileEquals(url);
     }
 }

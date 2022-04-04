@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2;
 
@@ -24,23 +21,21 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.interceptor.WithLazyParams;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
+
 
 /**
  * The Default ActionInvocation implementation
@@ -65,16 +60,13 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected Result explicitResult;
     protected String resultCode;
     protected boolean executed = false;
-    protected boolean pushAction;
+    protected boolean pushAction = true;
     protected ObjectFactory objectFactory;
     protected ActionEventListener actionEventListener;
     protected ValueStackFactory valueStackFactory;
     protected Container container;
     protected UnknownHandlerManager unknownHandlerManager;
     protected OgnlUtil ognlUtil;
-    protected AsyncManager asyncManager;
-    protected Callable asyncAction;
-    protected WithLazyParams.LazyParamInjector lazyParamInjector;
 
     public DefaultActionInvocation(final Map<String, Object> extraContext, final boolean pushAction) {
         this.extraContext = extraContext;
@@ -109,11 +101,6 @@ public class DefaultActionInvocation implements ActionInvocation {
     @Inject
     public void setOgnlUtil(OgnlUtil ognlUtil) {
         this.ognlUtil = ognlUtil;
-    }
-
-    @Inject(required=false)
-    public void setAsyncManager(AsyncManager asyncManager) {
-        this.asyncManager = asyncManager;
     }
 
     public Object getAction() {
@@ -225,7 +212,7 @@ public class DefaultActionInvocation implements ActionInvocation {
                 return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
             } catch (Exception e) {
                 LOG.error("There was an exception while instantiating the result of type {}", resultConfig.getClassName(), e);
-                throw new StrutsException(e, resultConfig);
+                throw new XWorkException(e, resultConfig);
             }
         } else if (resultCode != null && !Action.NONE.equals(resultCode) && unknownHandlerManager.hasUnknownHandlers()) {
             return unknownHandlerManager.handleUnknownResult(invocationContext, proxy.getActionName(), proxy.getConfig(), resultCode);
@@ -237,31 +224,27 @@ public class DefaultActionInvocation implements ActionInvocation {
      * @throws ConfigurationException If no result can be found with the returned code
      */
     public String invoke() throws Exception {
-        if (executed) {
-            throw new IllegalStateException("Action has already executed");
-        }
+        String profileKey = "invoke: ";
+        try {
+            UtilTimerStack.push(profileKey);
 
-        if (asyncManager == null || !asyncManager.hasAsyncActionResult()) {
+            if (executed) {
+                throw new IllegalStateException("Action has already executed");
+            }
+
             if (interceptors.hasNext()) {
-                final InterceptorMapping interceptorMapping = interceptors.next();
-                Interceptor interceptor = interceptorMapping.getInterceptor();
-                if (interceptor instanceof WithLazyParams) {
-                    interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
+                final InterceptorMapping interceptor = interceptors.next();
+                String interceptorMsg = "interceptor: " + interceptor.getName();
+                UtilTimerStack.push(interceptorMsg);
+                try {
+                    resultCode = interceptor.getInterceptor().intercept(DefaultActionInvocation.this);
+                } finally {
+                    UtilTimerStack.pop(interceptorMsg);
                 }
-                resultCode = interceptor.intercept(DefaultActionInvocation.this);
             } else {
                 resultCode = invokeActionOnly();
             }
-        } else {
-            Object asyncActionResult = asyncManager.getAsyncActionResult();
-            if (asyncActionResult instanceof Throwable) {
-                throw new Exception((Throwable) asyncActionResult);
-            }
-            asyncAction = null;
-            resultCode = saveResult(proxy.getConfig(), asyncActionResult);
-        }
 
-        if (asyncManager == null || asyncAction == null) {
             // this is needed because the result will be executed, then control will return to the Interceptor, which will
             // return above and flow through again
             if (!executed) {
@@ -271,7 +254,14 @@ public class DefaultActionInvocation implements ActionInvocation {
                     for (Object preResultListener : preResultListeners) {
                         PreResultListener listener = (PreResultListener) preResultListener;
 
-                        listener.beforeResult(this, resultCode);
+                        String _profileKey = "preResultListener: ";
+                        try {
+                            UtilTimerStack.push(_profileKey);
+                            listener.beforeResult(this, resultCode);
+                        }
+                        finally {
+                            UtilTimerStack.pop(_profileKey);
+                        }
                     }
                 }
 
@@ -282,11 +272,12 @@ public class DefaultActionInvocation implements ActionInvocation {
 
                 executed = true;
             }
-        } else {
-            asyncManager.invokeAsyncAction(asyncAction);
-        }
 
-        return resultCode;
+            return resultCode;
+        }
+        finally {
+            UtilTimerStack.pop(profileKey);
+        }
     }
 
     public String invokeActionOnly() throws Exception {
@@ -295,12 +286,14 @@ public class DefaultActionInvocation implements ActionInvocation {
 
     protected void createAction(Map<String, Object> contextMap) {
         // load action
+        String timerKey = "actionCreate: " + proxy.getActionName();
         try {
+            UtilTimerStack.push(timerKey);
             action = objectFactory.buildAction(proxy.getActionName(), proxy.getNamespace(), proxy.getConfig(), contextMap);
         } catch (InstantiationException e) {
-            throw new StrutsException("Unable to instantiate Action!", e, proxy.getConfig());
+            throw new XWorkException("Unable to instantiate Action!", e, proxy.getConfig());
         } catch (IllegalAccessException e) {
-            throw new StrutsException("Illegal access to constructor, is it public?", e, proxy.getConfig());
+            throw new XWorkException("Illegal access to constructor, is it public?", e, proxy.getConfig());
         } catch (Exception e) {
             String gripe;
 
@@ -315,7 +308,9 @@ public class DefaultActionInvocation implements ActionInvocation {
             }
 
             gripe += (((" -- " + e.getMessage()) != null) ? e.getMessage() : " [no message in exception]");
-            throw new StrutsException(gripe, e, proxy.getConfig());
+            throw new XWorkException(gripe, e, proxy.getConfig());
+        } finally {
+            UtilTimerStack.pop(timerKey);
         }
 
         if (actionEventListener != null) {
@@ -324,31 +319,36 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     protected Map<String, Object> createContextMap() {
-        ActionContext actionContext;
+        Map<String, Object> contextMap;
 
-        if (ActionContext.containsValueStack(extraContext)) {
+        if ((extraContext != null) && (extraContext.containsKey(ActionContext.VALUE_STACK))) {
             // In case the ValueStack was passed in
-            stack = ActionContext.of(extraContext).getValueStack();
+            stack = (ValueStack) extraContext.get(ActionContext.VALUE_STACK);
 
             if (stack == null) {
                 throw new IllegalStateException("There was a null Stack set into the extra params.");
             }
 
-            actionContext = stack.getActionContext();
+            contextMap = stack.getContext();
         } else {
             // create the value stack
             // this also adds the ValueStack to its context
             stack = valueStackFactory.createValueStack();
 
             // create the action context
-            actionContext = stack.getActionContext();
+            contextMap = stack.getContext();
         }
 
-        return actionContext
-            .withExtraContext(extraContext)
-            .withActionInvocation(this)
-            .withContainer(container)
-            .getContextMap();
+        // put extraContext in
+        if (extraContext != null) {
+            contextMap.putAll(extraContext);
+        }
+
+        //put this DefaultActionInvocation into the context map
+        contextMap.put(ActionContext.ACTION_INVOCATION, this);
+        contextMap.put(ActionContext.CONTAINER, container);
+
+        return contextMap;
     }
 
     /**
@@ -359,15 +359,21 @@ public class DefaultActionInvocation implements ActionInvocation {
     private void executeResult() throws Exception {
         result = createResult();
 
-        if (result != null) {
-            result.execute(this);
-        } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
-            throw new ConfigurationException("No result defined for action " + getAction().getClass().getName()
-                    + " and result " + getResultCode(), proxy.getConfig());
-        } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
+        String timerKey = "executeResult: " + getResultCode();
+        try {
+            UtilTimerStack.push(timerKey);
+            if (result != null) {
+                result.execute(this);
+            } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
+                throw new ConfigurationException("No result defined for action " + getAction().getClass().getName()
+                        + " and result " + getResultCode(), proxy.getConfig());
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
+                }
             }
+        } finally {
+            UtilTimerStack.pop(timerKey);
         }
     }
 
@@ -380,7 +386,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         ActionContext actionContext = ActionContext.getContext();
 
         if (actionContext != null) {
-            actionContext.withActionInvocation(this);
+            actionContext.setActionInvocation(this);
         }
 
         createAction(contextMap);
@@ -390,17 +396,10 @@ public class DefaultActionInvocation implements ActionInvocation {
             contextMap.put("action", action);
         }
 
-        invocationContext = ActionContext.of(contextMap)
-            .withActionName(proxy.getActionName());
+        invocationContext = new ActionContext(contextMap);
+        invocationContext.setName(proxy.getActionName());
 
         createInterceptors(proxy);
-
-        prepareLazyParamInjector(invocationContext.getValueStack());
-    }
-
-    protected void prepareLazyParamInjector(ValueStack valueStack) {
-        lazyParamInjector = new WithLazyParams.LazyParamInjector(valueStack);
-        container.inject(lazyParamInjector);
     }
 
     protected void createInterceptors(ActionProxy proxy) {
@@ -414,7 +413,10 @@ public class DefaultActionInvocation implements ActionInvocation {
 
         LOG.debug("Executing action method = {}", methodName);
 
+        String timerKey = "invokeAction: " + proxy.getActionName();
         try {
+            UtilTimerStack.push(timerKey);
+
             Object methodResult;
             try {
                 methodResult = ognlUtil.callMethod(methodName + "()", getStack().getContext(), action);
@@ -459,6 +461,8 @@ public class DefaultActionInvocation implements ActionInvocation {
             } else {
                 throw e;
             }
+        } finally {
+            UtilTimerStack.pop(timerKey);
         }
     }
 
@@ -475,12 +479,32 @@ public class DefaultActionInvocation implements ActionInvocation {
             // Wire the result automatically
             container.inject(explicitResult);
             return null;
-        } else if (methodResult instanceof Callable) {
-            asyncAction = (Callable) methodResult;
-            return null;
         } else {
             return (String) methodResult;
         }
+    }
+
+    /**
+     * Version ready to be serialize
+     *
+     * @return instance without reference to {@link Container}
+     */
+    public ActionInvocation serialize() {
+        DefaultActionInvocation that = this;
+        that.container = null;
+        return that;
+    }
+
+    /**
+     * Restoring Container
+     *
+     * @param actionContext current {@link ActionContext}
+     * @return instance which can be used to invoke action
+     */
+    public ActionInvocation deserialize(ActionContext actionContext) {
+        DefaultActionInvocation that = this;
+        that.container = actionContext.getContainer();
+        return that;
     }
 
 }

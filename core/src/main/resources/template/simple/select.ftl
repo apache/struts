@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,22 +22,22 @@
 -->
 <#setting number_format="#.#####">
 <select<#rt/>
- name="${(parameters.name!"")}"<#rt/>
+ name="${(parameters.name!"")?html}"<#rt/>
 <#if parameters.get("size")?has_content>
- size="${parameters.get("size")}"<#rt/>
+ size="${parameters.get("size")?html}"<#rt/>
 </#if>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
 <#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+ tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
 <#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+ id="${parameters.id?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
 <#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+ title="${parameters.title?html}"<#rt/>
 </#if>
 <#if parameters.multiple!false>
  multiple="multiple"<#rt/>
@@ -45,11 +47,11 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 >
 <#if parameters.headerKey?? && parameters.headerValue??>
-    <option value="${parameters.headerKey}"
+    <option value="${parameters.headerKey?html}"
     <#if tag.contains(parameters.nameValue, parameters.headerKey) == true>
     selected="selected"
     </#if>
-    >${parameters.headerValue}</option>
+    >${parameters.headerValue?html}</option>
 </#if>
 <#if parameters.emptyOption!false>
     <option value=""></option>
@@ -68,10 +70,10 @@
             <#assign itemKeyStr = stack.findString('top')>
         </#if>
         <#if parameters.listValueKey??>
-          <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale file for it's
+          <#-- checks the valueStack for the 'valueKey.' The valueKey is then looked-up in the locale file for it's 
              localized value.  This is then used as a label -->
-          <#assign valueKey = stack.findString(parameters.listValueKey)!'' />
-          <#if valueKey?has_content>
+          <#assign valueKey = stack.findString(parameters.listValueKey) />
+          <#if valueKey??>
               <#assign itemValue = struts.getText(valueKey) />
           <#else>
               <#assign itemValue = parameters.listValueKey />
@@ -106,20 +108,20 @@
               <#assign itemTitle = ''/>
             </#if>
         </#if>
-    <option value="${itemKeyStr}"<#rt/>
+    <option value="${itemKeyStr?html}"<#rt/>
         <#if tag.contains(parameters.nameValue, itemKey) == true>
  selected="selected"<#rt/>
         </#if>
         <#if itemCssClass?has_content>
- class="${itemCssClass}"<#rt/>
+ class="${itemCssClass?html}"<#rt/>
         </#if>
         <#if itemCssStyle?has_content>
- style="${itemCssStyle}"<#rt/>
+ style="${itemCssStyle?html}"<#rt/>
         </#if>
         <#if itemTitle?has_content>
- title="${itemTitle}"<#rt/>
+ title="${itemTitle?html}"<#rt/>
         </#if>
-    >${itemValue}</option><#lt/>
+    >${itemValue?html}</option><#lt/>
 </@s.iterator>
 
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/optgroup.ftl" />
@@ -128,18 +130,18 @@
 
 <#if parameters.multiple!false>
   <#if (parameters.id?? && parameters.name??)>
-    <input type="hidden" id="__multiselect_${parameters.id}" name="__multiselect_${parameters.name}" value=""<#rt/>
+    <input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.name?html}" value=""<#rt/>
   </#if>
   <#if (parameters.id?? && !parameters.name??)>
-    <input type="hidden" id="__multiselect_${parameters.id}" name="__multiselect_${parameters.id}" value=""<#rt/>
+    <input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.id?html}" value=""<#rt/>
   </#if>
   <#if ( !parameters.id?? && parameters.name??)>
-    <input type="hidden" id="__multiselect_${parameters.id}" name="__multiselect_${parameters.id}" value=""<#rt/>
+    <input type="hidden" id="__multiselect_${parameters.id?html}" name="__multiselect_${parameters.id?html}" value=""<#rt/>
   </#if>
    <#if ( !parameters.id?? && !parameters.name??)>
      <input type="hidden" id="" name="" value="" <#rt/>
   </#if>
-
+  
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>

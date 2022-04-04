@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,12 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.rest;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 
@@ -32,28 +35,33 @@ import java.io.InputStreamReader;
 /**
  * Uses the content handler to apply the request body to the action
  */
-public class ContentTypeInterceptor extends AbstractInterceptor {
+public class ContentTypeInterceptor implements Interceptor {
 
-    private final ContentTypeHandlerManager selector;
-
+    private static final long serialVersionUID = 1L;
+    ContentTypeHandlerManager selector;
+    
     @Inject
-    public ContentTypeInterceptor(ContentTypeHandlerManager selector) {
-        this.selector = selector;
+    public void setContentTypeHandlerSelector(ContentTypeHandlerManager sel) {
+        this.selector = sel;
     }
+    
+    public void destroy() {}
+
+    public void init() {}
 
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
         ContentTypeHandler handler = selector.getHandlerForRequest(request);
-
+        
         Object target = invocation.getAction();
         if (target instanceof ModelDriven) {
-            target = ((ModelDriven<?>)target).getModel();
+            target = ((ModelDriven)target).getModel();
         }
-
+        
         if (request.getContentLength() > 0) {
             InputStream is = request.getInputStream();
             InputStreamReader reader = new InputStreamReader(is);
-            handler.toObject(invocation, reader, target);
+            handler.toObject(reader, target);
         }
         return invocation.invoke();
     }

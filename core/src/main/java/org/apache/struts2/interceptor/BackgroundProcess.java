@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor;
 
 import java.io.Serializable;
@@ -31,11 +34,10 @@ public class BackgroundProcess implements Serializable {
 
     private static final long serialVersionUID = 3884464776311686443L;
 
-    //WW-4900 transient since 2.5.15
-    transient protected ActionInvocation invocation;
-    transient protected Exception exception;
-
+    protected Object action;
+    protected ActionInvocation invocation;
     protected String result;
+    protected Exception exception;
     protected boolean done;
 
     /**
@@ -47,6 +49,7 @@ public class BackgroundProcess implements Serializable {
      */
     public BackgroundProcess(String threadName, final ActionInvocation invocation, int threadPriority) {
         this.invocation = invocation;
+        this.action = invocation.getAction();
         try {
             final Thread t = new Thread(new Runnable() {
                 public void run() {
@@ -76,7 +79,7 @@ public class BackgroundProcess implements Serializable {
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
      */
     protected void beforeInvocation() throws Exception {
-        ActionContext.bind(invocation.getInvocationContext());
+        ActionContext.setContext(invocation.getInvocationContext());
     }
 
     /**
@@ -87,7 +90,7 @@ public class BackgroundProcess implements Serializable {
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
      */
     protected void afterInvocation() throws Exception {
-        ActionContext.clear();
+        ActionContext.setContext(null);
     }
 
     /**
@@ -96,7 +99,7 @@ public class BackgroundProcess implements Serializable {
      * @return  the action.
      */
     public Object getAction() {
-        return invocation.getAction();
+        return action;
     }
 
     /**

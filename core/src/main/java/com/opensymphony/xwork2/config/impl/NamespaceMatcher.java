@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.config.impl;
 
@@ -29,23 +26,9 @@ import java.util.Set;
  * @since 2.1
  */
 public class NamespaceMatcher extends AbstractMatcher<NamespaceMatch> {
-
-    public NamespaceMatcher(PatternMatcher<?> patternMatcher, Set<String> namespaces) {
-        this(patternMatcher, namespaces, true);
-    }
-
-    /**
-     * Matches namespace strings against a wildcard pattern matcher
-     *
-     * @param patternMatcher pattern matcher
-     * @param namespaces A set of namespaces to process
-     * @param appendNamedParameters To append named parameters or not
-     *
-     * @since 2.5.23
-     * See WW-5065
-     */
-    public NamespaceMatcher(PatternMatcher<?> patternMatcher, Set<String> namespaces, boolean appendNamedParameters) {
-        super(patternMatcher, appendNamedParameters);
+     public NamespaceMatcher(PatternMatcher<?> patternMatcher,
+            Set<String> namespaces) {
+        super(patternMatcher);
         for (String name : namespaces) {
             if (!patternMatcher.isLiteral(name)) {
                 addPattern(name, new NamespaceMatch(name, null), false);

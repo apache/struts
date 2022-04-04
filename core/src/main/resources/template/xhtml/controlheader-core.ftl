@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,29 +24,29 @@
 	Only show message if errors are available.
 	This will be done if ActionSupport is used.
 -->
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
 <#if (parameters.errorposition!"top") == 'top'>
 <#if hasFieldErrors>
-<#list fieldErrors.get(parameters.name) as error>
+<#list fieldErrors[parameters.name] as error>
 <tr errorFor="${parameters.id}">
     <td class="tdErrorMessage" colspan="2"><#rt/>
-        <span class="errorMessage">${error}</span><#t/>
+        <span class="errorMessage">${error?html}</span><#t/>
     </td><#lt/>
 </tr>
 </#list>
 </#if>
 </#if>
-<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
-<#assign labelPos = parameters.form.labelPosition/>
-<#elseif parameters.labelPosition??>
-<#assign labelPos = parameters.labelPosition/>
+<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
+<#assign labelpos = parameters.form.labelposition/>
+<#elseif parameters.labelposition??>
+<#assign labelpos = parameters.labelposition/>
 </#if>
 <#--
 	if the label position is top,
 	then give the label it's own row in the table
 -->
 <tr>
-<#if (labelPos!"") == 'top'>
+<#if (labelpos!"") == 'top'>
     <td class="tdLabelTop" colspan="2"><#rt/>
 <#else>
     <td class="tdLabel"><#rt/>
@@ -52,7 +54,7 @@
 <#if parameters.label??>
     <label <#t/>
 <#if parameters.id??>
-        for="${parameters.id}" <#t/>
+        for="${parameters.id?html}" <#t/>
 </#if>
 <#if hasFieldErrors>
         class="errorLabel"<#t/>
@@ -63,17 +65,17 @@
 <#if (parameters.required!false) && ((parameters.requiredPosition!"right") != 'right')>
         <span class="required">*</span><#t/>
 </#if>
-${parameters.label}<#t/>
+${parameters.label?html}<#t/>
 <#if (parameters.required!false) && ((parameters.requiredPosition!"right") == 'right')>
  <span class="required">*</span><#t/>
 </#if>
-${parameters.labelseparator!":"}<#t/>
+${parameters.labelseparator!":"?html}<#t/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/tooltip.ftl" />
 </label><#t/>
 </#if>
     </td><#lt/>
 <#-- add the extra row -->
-<#if (labelPos!"") == 'top'>
+<#if (labelpos!"") == 'top'>
 </tr>
 <tr>
 </#if>

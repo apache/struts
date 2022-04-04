@@ -1,4 +1,6 @@
 /*
+ * $Id: ServletDispatchedTestAssertInterceptor.java 651946 2008-04-27 13:41:38Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -39,7 +41,7 @@ public class StaticContentLoaderTest extends TestCase {
     private MockHttpServletResponse res;
 
     public void testCantHandleWithoutServingStatic() {
-        DefaultStaticContentLoader contentLoader = new DefaultStaticContentLoader();
+        StaticContentLoader contentLoader = new DefaultStaticContentLoader();
 
         assertFalse(contentLoader.canHandle("/static/test1.css"));
         assertFalse(contentLoader.canHandle("/struts/test1.css"));
@@ -49,16 +51,15 @@ public class StaticContentLoaderTest extends TestCase {
     public void testCanHandle() {
         DefaultStaticContentLoader contentLoader = new DefaultStaticContentLoader();
         contentLoader.setServeStaticContent("true");
-        contentLoader.setStaticContentPath("/static");
 
         assertTrue(contentLoader.canHandle("/static/test1.css"));
-        assertFalse(contentLoader.canHandle("/struts/test1.css"));
+        assertTrue(contentLoader.canHandle("/struts/test1.css"));
         assertFalse(contentLoader.canHandle("test1.css"));
     }
 
-    public void testValidResources() throws IOException {
-        contentLoader.findStaticResource("/static/resource.css", req, res);
-        assertTrue(res.getContentAsString().contains("color: red;"));
+    public void testValidRersources() throws IOException {
+        contentLoader.findStaticResource("/struts/resource.css", req, res);
+        assertEquals("heya!", res.getContentAsString());
     }
 
     public void testInvalidRersources1() throws IOException {
@@ -68,25 +69,25 @@ public class StaticContentLoaderTest extends TestCase {
     }
 
     public void testInvalidRersources2() throws IOException {
-        contentLoader.findStaticResource("/static/..", req, res);
+        contentLoader.findStaticResource("/struts/..", req, res);
         assertEquals(HttpServletResponse.SC_NOT_FOUND, res.getStatus());
         assertEquals(0, res.getContentLength());
     }
 
     public void testInvalidRersources3() throws IOException {
-        contentLoader.findStaticResource("/static/../othertest.properties", req, res);
+        contentLoader.findStaticResource("/struts/../othertest.properties", req, res);
         assertEquals(HttpServletResponse.SC_NOT_FOUND, res.getStatus());
         assertEquals(0, res.getContentLength());
     }
 
     public void testInvalidRersources4() throws IOException {
-        contentLoader.findStaticResource("/static/..%252f", req, res);
+        contentLoader.findStaticResource("/struts/..%252f", req, res);
         assertEquals(HttpServletResponse.SC_NOT_FOUND, res.getStatus());
         assertEquals(0, res.getContentLength());
     }
 
     public void testInvalidRersources5() throws IOException {
-        contentLoader.findStaticResource("/static/..%252fothertest.properties", req, res);
+        contentLoader.findStaticResource("/struts/..%252fothertest.properties", req, res);
         assertEquals(HttpServletResponse.SC_NOT_FOUND, res.getStatus());
         assertEquals(0, res.getContentLength());
     }
@@ -96,7 +97,6 @@ public class StaticContentLoaderTest extends TestCase {
         super.setUp();
 
         this.contentLoader = new DefaultStaticContentLoader();
-        this.contentLoader.setStaticContentPath("/static");
         MockServletContext servletContext = new MockServletContext();
         req = new MockHttpServletRequest(servletContext);
         res = new MockHttpServletResponse();

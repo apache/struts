@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -51,7 +53,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider, Di
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
-    @Inject(ConventionConstants.CONVENTION_CLASSES_RELOAD)
+    @Inject("struts.convention.classes.reload")
     public void setReload(String reload) {
         this.reload = BooleanUtils.toBoolean(reload);
     }

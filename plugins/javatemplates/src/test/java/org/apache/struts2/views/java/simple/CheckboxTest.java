@@ -20,7 +20,6 @@
  */
 package org.apache.struts2.views.java.simple;
 
-import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import org.apache.struts2.components.Checkbox;
 import org.apache.struts2.components.UIBean;
 
@@ -29,24 +28,6 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
 
     public void testRenderCheckbox() {
         tag.setName("name_");
-        tag.setDisabled("false");
-        tag.setTabindex("1");
-        tag.setId("id_");
-        tag.setCssClass("class");
-        tag.setCssStyle("style");
-        tag.setTitle("title");
-        tag.setFieldValue("xyz");
-
-        tag.evaluateParams();
-        map.putAll(tag.getParameters());
-        theme.renderTag(getTagName(), context);
-        String output = writer.getBuffer().toString();
-        String expected = s("<input type='checkbox' name='name_' value='xyz' tabindex='1' id='id_' class='class' style='style' title='title'></input>");
-        assertEquals(expected, output);
-    }
-
-    public void testRenderUncheckCheckbox() {
-        tag.setName("name_");
         tag.setDisabled("true");
         tag.setTabindex("1");
         tag.setId("id_");
@@ -54,25 +35,25 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
         tag.setCssStyle("style");
         tag.setTitle("title");
         tag.setFieldValue("xyz");
-        tag.setSubmitUnchecked("true");
 
         tag.evaluateParams();
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
-        String expected = s("<input type='checkbox' name='name_' value='xyz' disabled='disabled' tabindex='1' id='id_' class='class' style='style' title='title'></input><input type='hidden' id='__checkbox_id_' name='__checkbox_name_' value='__checkbox_xyz' disabled='disabled'></input>");
+        String expected = s("<input type='checkbox' name='name_' value='xyz' tabindex='1' id='id_' class='class' style='style' title='title'></input><input type='hidden' id='__checkbox_id_' name='__checkbox_name_' value='__checkbox_xyz'></input>");
         assertEquals(expected, output);
     }
 
     public void testRenderCheckboxWithNameValue() {
         tag.setName("name_");
         tag.setValue("%{someValue}");
+        tag.setDisabled("true");
 
         tag.evaluateParams();
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
-        String expected = s("<input type='checkbox' name='name_' value='true' checked='checked' id='name_'></input>");
+        String expected = s("<input type='checkbox' name='name_' value='true' checked='checked' id='name_'></input><input type='hidden' id='__checkbox_name_' name='__checkbox_name_' value='__checkbox_true'></input>");
         assertEquals(expected, output);
     }
 
@@ -87,7 +68,6 @@ public class CheckboxTest extends AbstractCommonAttributesTest {
     protected void setUp() throws Exception {
         super.setUp();
         tag = new Checkbox(stack, request, response);
-        tag.setNotExcludedAcceptedPatterns(new DefaultNotExcludedAcceptedPatternsChecker());
     }
 
     @Override

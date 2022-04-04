@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -23,13 +26,14 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.util.InvocationSessionStore;
 import org.apache.struts2.util.TokenHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
+
 
 /**
  * <!-- START SNIPPET: description -->
@@ -112,31 +116,17 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         }
     }
 
-    /**
-     * Handles processing of invalid tokens.  If a previously stored invocation is
-     * available, the method will attempt to return and render its result.  Otherwise
-     * it will return INVALID_TOKEN_CODE.
-     * 
-     * Note: Because a stored (previously completed) invocation's PageContext will be closed,
-     *   this method must replace the stored PageContext with the current invocation's one (or a null).
-     *   See {@link org.apache.struts2.util.InvocationSessionStore#loadInvocation(String key, String token)} for details.
-     * 
-     * @param invocation
-     * 
-     * @return
-     * @throws Exception 
-     */
     @Override
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
 
-        HttpServletRequest request = ac.getServletRequest();
-        HttpServletResponse response = ac.getServletResponse();
+        HttpServletRequest request = (HttpServletRequest) ac.get(ServletActionContext.HTTP_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) ac.get(ServletActionContext.HTTP_RESPONSE);
         String tokenName = TokenHelper.getTokenName();
         String token = TokenHelper.getToken(tokenName);
 
         if ((tokenName != null) && (token != null)) {
-            HttpParameters params = ac.getParameters();
+            Map params = ac.getParameters();
             params.remove(tokenName);
             params.remove(TokenHelper.TOKEN_NAME_FIELD);
 
@@ -144,7 +134,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
             ActionInvocation savedInvocation = InvocationSessionStore.loadInvocation(sessionTokenName, token);
 
             if (savedInvocation != null) {
-                // set the savedInvocation's valuestack to the request scope
+                // set the valuestack to the request scope
                 ValueStack stack = savedInvocation.getStack();
                 request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
@@ -167,16 +157,6 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         return INVALID_TOKEN_CODE;
     }
 
-    /**
-     * Handles processing of valid tokens.  Stores the current invocation for
-     * later use by {@see #handleValidToken(ActionInvocation)}.
-     * See {@link org.apache.struts2.util.InvocationSessionStore#storeInvocation(String key, String token, ActionInvocation invocation)} for details.
-     * 
-     * @param invocation
-     * 
-     * @return
-     * @throws Exception 
-     */
     @Override
     protected String handleValidToken(ActionInvocation invocation) throws Exception {
         // we know the token name and token must be there

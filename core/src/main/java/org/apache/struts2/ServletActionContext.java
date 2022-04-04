@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -26,18 +29,24 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
+import java.util.Map;
+
 
 /**
  * Web-specific context information for actions. This class subclasses <tt>ActionContext</tt> which
  * provides access to things like the action name, value stack, etc. This class adds access to
  * web objects like servlet parameters, request attributes and things like the HTTP session.
  */
-public class ServletActionContext implements StrutsStatics {
+public class ServletActionContext extends ActionContext implements StrutsStatics {
+
+    private static final long serialVersionUID = -666854718275106687L;
 
     public static final String STRUTS_VALUESTACK_KEY = "struts.valueStack";
+    public static final String ACTION_MAPPING = "struts.actionMapping";
 
     @SuppressWarnings("unused")
-    private ServletActionContext() {
+    private ServletActionContext(Map context) {
+        super(context);
     }
 
     /**
@@ -49,25 +58,12 @@ public class ServletActionContext implements StrutsStatics {
     public static ActionContext getActionContext(HttpServletRequest req) {
         ValueStack vs = getValueStack(req);
         if (vs != null) {
-            return ActionContext.of(vs.getContext()).bind();
+            return new ActionContext(vs.getContext());
         } else {
             return null;
         }
     }
 
-    /**
-     * Do not use this method, use {@link #getActionContext()}
-     * @return action context
-     * @deprecated Use {@link #getActionContext()} instead
-     */
-    @Deprecated
-    public static ActionContext getContext() {
-        return ActionContext.getContext();
-    }
-
-    public static ActionContext getActionContext() {
-        return ActionContext.getContext();
-    }
     /**
      * Gets the current value stack for this request
      *
@@ -84,7 +80,7 @@ public class ServletActionContext implements StrutsStatics {
      * @return The action mapping
      */
     public static ActionMapping getActionMapping() {
-        return ActionContext.getContext().getActionMapping();
+        return (ActionMapping) ActionContext.getContext().get(ACTION_MAPPING);
     }
 
     /**
@@ -93,7 +89,7 @@ public class ServletActionContext implements StrutsStatics {
      * @return the HTTP page context.
      */
     public static PageContext getPageContext() {
-        return ActionContext.getContext().getPageContext();
+        return (PageContext) ActionContext.getContext().get(PAGE_CONTEXT);
     }
 
     /**
@@ -102,7 +98,7 @@ public class ServletActionContext implements StrutsStatics {
      * @param request the HTTP servlet request object.
      */
     public static void setRequest(HttpServletRequest request) {
-        ActionContext.getContext().withServletRequest(request);
+        ActionContext.getContext().put(HTTP_REQUEST, request);
     }
 
     /**
@@ -111,7 +107,7 @@ public class ServletActionContext implements StrutsStatics {
      * @return the HTTP servlet request object.
      */
     public static HttpServletRequest getRequest() {
-        return ActionContext.getContext().getServletRequest();
+        return (HttpServletRequest) ActionContext.getContext().get(HTTP_REQUEST);
     }
 
     /**
@@ -120,7 +116,7 @@ public class ServletActionContext implements StrutsStatics {
      * @param response the HTTP servlet response object.
      */
     public static void setResponse(HttpServletResponse response) {
-        ActionContext.getContext().withServletResponse(response);
+        ActionContext.getContext().put(HTTP_RESPONSE, response);
     }
 
     /**
@@ -129,7 +125,7 @@ public class ServletActionContext implements StrutsStatics {
      * @return the HTTP servlet response object.
      */
     public static HttpServletResponse getResponse() {
-        return ActionContext.getContext().getServletResponse();
+        return (HttpServletResponse) ActionContext.getContext().get(HTTP_RESPONSE);
     }
 
     /**
@@ -138,7 +134,7 @@ public class ServletActionContext implements StrutsStatics {
      * @return the servlet context.
      */
     public static ServletContext getServletContext() {
-        return ActionContext.getContext().getServletContext();
+        return (ServletContext) ActionContext.getContext().get(SERVLET_CONTEXT);
     }
 
     /**
@@ -147,6 +143,6 @@ public class ServletActionContext implements StrutsStatics {
      * @param servletContext The servlet context to use
      */
     public static void setServletContext(ServletContext servletContext) {
-        ActionContext.getContext().withServletContext(servletContext);
+        ActionContext.getContext().put(SERVLET_CONTEXT, servletContext);
     }
 }

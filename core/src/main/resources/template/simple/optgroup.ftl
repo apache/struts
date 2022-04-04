@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,47 +23,27 @@
 <#if parameters.optGroupInternalListUiBeanList??>
 <#assign optGroupInternalListUiBeans=parameters.optGroupInternalListUiBeanList />
 <#list optGroupInternalListUiBeans as optGroupInternalListUiBean>
-<optgroup<#rt>
+<optgroup 
 	<#if optGroupInternalListUiBean.parameters.label?has_content>
- label="${optGroupInternalListUiBean.parameters.label}"<#rt>
+	label="${optGroupInternalListUiBean.parameters.label}"
 	</#if>
 	<#if optGroupInternalListUiBean.parameters.disabled!false>
- disabled="disabled"<#rt>
+	disabled="disabled"
 	</#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 >
+
 <#list optGroupInternalListUiBean.parameters.list as optGroupBean>
 <#assign trash=stack.push(optGroupBean) />
 	<#assign tmpKey=stack.findValue(optGroupInternalListUiBean.parameters.listKey) />
 	<#assign tmpValue=stack.findValue(optGroupInternalListUiBean.parameters.listValue) />
 	<#assign tmpKeyStr = tmpKey.toString() />
-	<#assign optGroupItemCssClass = ''/>
-	<#if optGroupInternalListUiBean.parameters.listCssClass??>
-		<#assign optGroupItemCssClass= stack.findString(optGroupInternalListUiBean.parameters.listCssClass)!''/>
-	</#if>
-	<#assign optGroupItemCssStyle = ''/>
-	<#if optGroupInternalListUiBean.parameters.listCssStyle??>
-		<#assign optGroupItemCssStyle= stack.findString(optGroupInternalListUiBean.parameters.listCssStyle)!''/>
-	</#if>
-	<#assign optGroupItemTitle = ''/>
-	<#if optGroupInternalListUiBean.parameters.listTitle??>
-		<#assign optGroupItemTitle= stack.findString(optGroupInternalListUiBean.parameters.listTitle)!''/>
-	</#if>
-	<option value="${tmpKeyStr}"<#rt>
+	<option value="${tmpKeyStr?html}"
 	<#if tag.contains(parameters.nameValue, tmpKey) == true>
-	selected="selected"<#rt>
+	selected="selected"
 	</#if>
-	<#if optGroupItemCssClass?has_content>
-	class="${optGroupItemCssClass}"<#rt/>
-	</#if>
-	<#if optGroupItemCssStyle?has_content>
-	style="${optGroupItemCssStyle}"<#rt/>
-	</#if>
-	<#if optGroupItemTitle?has_content>
-	title="${optGroupItemTitle}"<#rt/>
-	</#if>
-	>${tmpValue}<#t>
-	</option><#lt>
+	>${tmpValue?html}
+	</option>
 <#assign trash=stack.pop() />
 </#list>
 </optgroup>

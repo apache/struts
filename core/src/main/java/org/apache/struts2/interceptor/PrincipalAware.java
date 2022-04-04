@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor;
 
 /**
@@ -25,14 +28,7 @@ package org.apache.struts2.interceptor;
  * <p>This interface is only relevant if the Action is used in a servlet environment.
  * By using this interface you will not become tied to servlet environment.</p>
  *
- * @deprecated please use {@link org.apache.struts2.action.PrincipalAware} instead
  */
-@Deprecated
 public interface PrincipalAware {
-
-    /**
-     * @deprecated please use {@link org.apache.struts2.action.PrincipalAware#withPrincipalProxy(PrincipalProxy)} instead
-     */
-    @Deprecated
     void setPrincipalProxy(PrincipalProxy principalProxy);
 }

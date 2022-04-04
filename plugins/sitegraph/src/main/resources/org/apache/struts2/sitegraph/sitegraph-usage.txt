@@ -1,0 +1,7 @@
+<!-- START SNIPPET: sitegraph-usage -->
+Usage: -config CONFIG_DIR -views VIEWS_DIRS -output OUTPUT [-ns NAMESPACE]
+       CONFIG_DIR => a directory containing struts.xml
+       VIEWS_DIRS => comma seperated list of dirs containing JSPs, VMs, etc
+       OUPUT      => the directory where the output should go
+       NAMESPACE  => the namespace path restriction (/, /foo, etc)
+<!-- END SNIPPET: sitegraph-usage -->

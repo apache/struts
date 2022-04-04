@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -35,13 +37,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
-import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,19 +58,7 @@ public class JSONUtil {
     public static final boolean CACHE_BEAN_INFO_DEFAULT = true;
     
     private static final Logger LOG = LogManager.getLogger(JSONUtil.class);
-
-    private JSONWriter writer;
-
-    public void setWriter(JSONWriter writer) {
-        this.writer = writer;
-    }
-
-    @Inject
-    public void setContainer(Container container) {
-        setWriter(container.getInstance(JSONWriter.class, container.getInstance(String.class,
-                JSONConstants.JSON_WRITER)));
-    }
-
+          
     /**
      * Serializes an object into JSON.
      *
@@ -82,7 +69,8 @@ public class JSONUtil {
      * @return JSON string
      * @throws JSONException in case of error during serialize
      */
-    public String serialize(Object object, boolean cacheBeanInfo) throws JSONException {
+    public static String serialize(Object object, boolean cacheBeanInfo) throws JSONException {
+        JSONWriter writer = new JSONWriter();
         writer.setCacheBeanInfo(cacheBeanInfo);
         return writer.write(object);
     }
@@ -105,7 +93,7 @@ public class JSONUtil {
      * @return JSON string
      * @throws JSONException in case of error during serialize
      */
-    public String serialize(Object object, Collection<Pattern> excludeProperties,
+    public static String serialize(Object object, Collection<Pattern> excludeProperties,
             Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean excludeNullProperties)
             throws JSONException {
     	return serialize(object, excludeProperties, includeProperties, 
@@ -132,10 +120,11 @@ public class JSONUtil {
      * @return JSON string
      * @throws JSONException in case of error during serialize
      */
-    public String serialize(Object object, Collection<Pattern> excludeProperties,
+    public static String serialize(Object object, Collection<Pattern> excludeProperties,
             Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean excludeNullProperties,
             boolean cacheBeanInfo)
             throws JSONException {
+        JSONWriter writer = new JSONWriter();
         writer.setIgnoreHierarchy(ignoreHierarchy);
         writer.setCacheBeanInfo(cacheBeanInfo);
         return writer.write(object, excludeProperties, includeProperties, excludeNullProperties);
@@ -163,7 +152,7 @@ public class JSONUtil {
      * @return JSON string
      * @throws JSONException in case of error during serialize
      */
-    public String serialize(Object object, Collection<Pattern> excludeProperties,
+    public static String serialize(Object object, Collection<Pattern> excludeProperties,
                                    Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean enumAsBean,
                                    boolean excludeNullProperties, String defaultDateFormat) throws JSONException {
     	return serialize(object, excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, 
@@ -194,9 +183,10 @@ public class JSONUtil {
      * @return JSON string
      * @throws JSONException in case of error during serialize
      */
-    public String serialize(Object object, Collection<Pattern> excludeProperties,
+    public static String serialize(Object object, Collection<Pattern> excludeProperties,
                                    Collection<Pattern> includeProperties, boolean ignoreHierarchy, boolean enumAsBean,
                                    boolean excludeNullProperties, String defaultDateFormat, boolean cacheBeanInfo) throws JSONException {
+        JSONWriter writer = new JSONWriter();
         writer.setIgnoreHierarchy(ignoreHierarchy);
         writer.setEnumAsBean(enumAsBean);
         writer.setDateFormatter(defaultDateFormat);
@@ -214,7 +204,7 @@ public class JSONUtil {
      * @throws IOException  in case of IO errors
      * @throws JSONException in case of error during serialize
      */
-    public void serialize(Writer writer, Object object) throws IOException, JSONException {
+    public static void serialize(Writer writer, Object object) throws IOException, JSONException {
         serialize(writer, object, CACHE_BEAN_INFO_DEFAULT);
     }
     
@@ -230,7 +220,7 @@ public class JSONUtil {
      * @throws IOException  in case of IO errors
      * @throws JSONException in case of error during serialize
      */
-    public void serialize(Writer writer, Object object, boolean cacheBeanInfo) throws IOException, JSONException {
+    public static void serialize(Writer writer, Object object, boolean cacheBeanInfo) throws IOException, JSONException {
         writer.write(serialize(object, cacheBeanInfo));
     }
 
@@ -252,7 +242,7 @@ public class JSONUtil {
      * @throws IOException  in case of IO errors
      * @throws JSONException in case of error during serialize
      */
-    public void serialize(Writer writer, Object object, Collection<Pattern> excludeProperties,
+    public static void serialize(Writer writer, Object object, Collection<Pattern> excludeProperties,
             Collection<Pattern> includeProperties, boolean excludeNullProperties) throws IOException,
             JSONException {
     	serialize(writer, object, excludeProperties, includeProperties, excludeNullProperties, CACHE_BEAN_INFO_DEFAULT);
@@ -278,7 +268,7 @@ public class JSONUtil {
      * @throws IOException  in case of IO errors
      * @throws JSONException in case of error during serialize
      */
-    public void serialize(Writer writer, Object object, Collection<Pattern> excludeProperties,
+    public static void serialize(Writer writer, Object object, Collection<Pattern> excludeProperties,
             Collection<Pattern> includeProperties, boolean excludeNullProperties, boolean cacheBeanInfo) 
             throws IOException, JSONException {
         writer.write(serialize(object, excludeProperties, includeProperties, true, excludeNullProperties, cacheBeanInfo));
@@ -411,9 +401,7 @@ public class JSONUtil {
     public static Method[] listSMDMethods(Class clazz, boolean ignoreInterfaces) {
         final List<Method> methods = new LinkedList<>();
         if (ignoreInterfaces) {
-            Method[] classMethods = clazz.getMethods();
-            Arrays.sort(classMethods, (a, b) -> a.toString().compareTo(b.toString()));
-            for (Method method : classMethods) {
+            for (Method method : clazz.getMethods()) {
                 SMDMethod smdMethodAnnotation = method.getAnnotation(SMDMethod.class);
                 if (smdMethodAnnotation != null) {
                     methods.add(method);
@@ -424,9 +412,7 @@ public class JSONUtil {
             // order encountered
             JSONUtil.visitInterfaces(clazz, new JSONUtil.ClassVisitor() {
                 public boolean visit(Class aClass) {
-                    Method[] classMethods = aClass.getMethods();
-                    Arrays.sort(classMethods, (a, b) -> a.toString().compareTo(b.toString()));
-                    for (Method method : classMethods) {
+                    for (Method method : aClass.getMethods()) {
                         SMDMethod smdMethodAnnotation = method.getAnnotation(SMDMethod.class);
                         if ((smdMethodAnnotation != null) && !methods.contains(method)) {
                             methods.add(method);

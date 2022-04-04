@@ -1,21 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package com.opensymphony.xwork2.factory;
 
 import com.opensymphony.xwork2.ObjectFactory;
@@ -23,10 +5,7 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.interceptor.WithLazyParams;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +14,6 @@ import java.util.Map;
  * Default implementation
  */
 public class DefaultInterceptorFactory implements InterceptorFactory {
-
-    private static final Logger LOG = LogManager.getLogger(DefaultInterceptorFactory.class);
 
     private ObjectFactory objectFactory;
     private ReflectionProvider reflectionProvider;
@@ -63,12 +40,7 @@ public class DefaultInterceptorFactory implements InterceptorFactory {
         try {
             // interceptor instances are long-lived and used across user sessions, so don't try to pass in any extra context
             Object o = objectFactory.buildBean(interceptorClassName, null);
-            if (o instanceof WithLazyParams) {
-                LOG.debug("Interceptor {} is marked with interface {} and params will be set during action invocation",
-                        interceptorClassName, WithLazyParams.class.getName());
-            } else {
-                reflectionProvider.setProperties(params, o);
-            }
+            reflectionProvider.setProperties(params, o);
 
             if (o instanceof Interceptor) {
                 Interceptor interceptor = (Interceptor) o;

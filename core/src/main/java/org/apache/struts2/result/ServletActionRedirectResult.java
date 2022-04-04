@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.result;
 
 import com.opensymphony.xwork2.ActionInvocation;
@@ -120,7 +123,7 @@ import java.util.List;
  *
  * @see ActionMapper
  */
-public class ServletActionRedirectResult extends ServletRedirectResult implements ReflectionExceptionHandler, Redirectable {
+public class ServletActionRedirectResult extends ServletRedirectResult implements ReflectionExceptionHandler {
 
     private static final long serialVersionUID = -9042425229314584066L;
 
@@ -158,12 +161,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
      * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        if (invocation == null) {
-            throw new IllegalArgumentException("Invocation cannot be null!");
-        }
-
         actionName = conditionalParse(actionName, invocation);
-        parseLocation = false;
         if (namespace == null) {
             namespace = invocation.getProxy().getNamespace();
         } else {

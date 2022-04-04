@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2;
 
 import com.opensymphony.xwork2.Action;
@@ -33,9 +36,7 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
-import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
-import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import org.apache.struts2.result.ServletDispatcherResult;
@@ -44,7 +45,6 @@ import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
 import org.apache.struts2.views.jsp.ui.DoubleValidationAction;
 
 import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -77,7 +77,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
      */
     public void loadPackages() {
 
-        Map<String, String> successParams = new HashMap<>();
+        HashMap successParams = new HashMap();
         successParams.put("propertyName", "executionCount");
         successParams.put("expectedValue", "1");
 
@@ -152,7 +152,9 @@ public class TestConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
-     * @return whether the ConfigurationProvider should reload its configuration
+     * Tells whether the ConfigurationProvider should reload its configuration
+     *
+     * @return
      */
     public boolean needsReload() {
         return false;
@@ -167,9 +169,6 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         }
         if (!builder.contains(ExcludedPatternsChecker.class)) {
             builder.factory(ExcludedPatternsChecker.class, DefaultExcludedPatternsChecker.class);
-        }
-        if (!builder.contains(NotExcludedAcceptedPatternsChecker.class)) {
-            builder.factory(NotExcludedAcceptedPatternsChecker.class, DefaultNotExcludedAcceptedPatternsChecker.class);
         }
     }
 }

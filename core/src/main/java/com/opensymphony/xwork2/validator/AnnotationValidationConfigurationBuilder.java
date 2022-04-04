@@ -1,24 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.validator;
 
-import com.opensymphony.xwork2.util.AnnotationUtils;
 import com.opensymphony.xwork2.validator.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,6 +24,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * <code>AnnotationValidationConfigurationBuilder</code>
@@ -37,6 +35,9 @@ import java.util.*;
  * @version $Id$
  */
 public class AnnotationValidationConfigurationBuilder {
+
+    private static final Pattern SETTER_PATTERN = Pattern.compile("set([A-Z][A-Za-z0-9]*)$");
+    private static final Pattern GETTER_PATTERN = Pattern.compile("(get|is|has)([A-Z][A-Za-z0-9]*)$");
 
     private ValidatorFactory validatorFactory;
 
@@ -60,7 +61,7 @@ public class AnnotationValidationConfigurationBuilder {
 
         if (o instanceof Method) {
             Method method = (Method) o;
-            fieldName = AnnotationUtils.resolvePropertyName(method);
+            fieldName = resolvePropertyName(method);
             methodName = method.getName();
 
             annotations = method.getAnnotations();
@@ -72,6 +73,16 @@ public class AnnotationValidationConfigurationBuilder {
                 // Process collection of custom validations
                 if (a instanceof Validations) {
                     processValidationAnnotation(a, fieldName, methodName, result);
+                }
+
+                // Process single custom validator
+                if (a instanceof Validation) {
+                    Validation v = (Validation) a;
+                    if (v.validations() != null) {
+                        for (Validations val : v.validations()) {
+                            processValidationAnnotation(val, fieldName, methodName, result);
+                        }
+                    }
                 }
                 // Process single custom validator
                 else if (a instanceof ExpressionValidator) {
@@ -115,14 +126,6 @@ public class AnnotationValidationConfigurationBuilder {
                         result.add(temp);
                     }
                 }
-                // Process CrediCardValidator
-                else if (a instanceof CreditCardValidator) {
-                    CreditCardValidator v = (CreditCardValidator) a;
-                    ValidatorConfig temp = processCreditCardValidatorAnnotation(v, fieldName, methodName);
-                    if (temp != null) {
-                        result.add(temp);
-                    }
-                }
                 // Process FieldExpressionValidator
                 else if (a instanceof FieldExpressionValidator) {
                     FieldExpressionValidator v = (FieldExpressionValidator) a;
@@ -135,14 +138,6 @@ public class AnnotationValidationConfigurationBuilder {
                 else if (a instanceof IntRangeFieldValidator) {
                     IntRangeFieldValidator v = (IntRangeFieldValidator) a;
                     ValidatorConfig temp = processIntRangeFieldValidatorAnnotation(v, fieldName, methodName);
-                    if (temp != null) {
-                        result.add(temp);
-                    }
-                }
-                // Process LongRangeFieldValidator
-                else if (a instanceof LongRangeFieldValidator) {
-                    LongRangeFieldValidator v = (LongRangeFieldValidator) a;
-                    ValidatorConfig temp = processLongRangeFieldValidatorAnnotation(v, fieldName, methodName);
                     if (temp != null) {
                         result.add(temp);
                     }
@@ -272,15 +267,6 @@ public class AnnotationValidationConfigurationBuilder {
                 }
             }
         }
-        CreditCardValidator[] ccv = validations.creditCards();
-        if (ccv != null) {
-            for (CreditCardValidator v : ccv) {
-                ValidatorConfig temp = processCreditCardValidatorAnnotation(v, fieldName, methodName);
-                if (temp != null) {
-                    result.add(temp);
-                }
-            }
-        }
         FieldExpressionValidator[] fev = validations.fieldExpressions();
         if (fev != null) {
             for (FieldExpressionValidator v : fev) {
@@ -294,15 +280,6 @@ public class AnnotationValidationConfigurationBuilder {
         if (irfv != null) {
             for (IntRangeFieldValidator v : irfv) {
                 ValidatorConfig temp = processIntRangeFieldValidatorAnnotation(v, fieldName, methodName);
-                if (temp != null) {
-                    result.add(temp);
-                }
-            }
-        }
-        LongRangeFieldValidator[] lrfv = validations.longRangeFields();
-        if (irfv != null) {
-            for (LongRangeFieldValidator v : lrfv) {
-                ValidatorConfig temp = processLongRangeFieldValidatorAnnotation(v, fieldName, methodName);
                 if (temp != null) {
                     result.add(temp);
                 }
@@ -682,41 +659,6 @@ public class AnnotationValidationConfigurationBuilder {
                 .build();
     }
 
-    private ValidatorConfig processLongRangeFieldValidatorAnnotation(LongRangeFieldValidator v, String fieldName, String methodName) {
-        String validatorType = "long";
-
-        Map<String, Object> params = new HashMap<>();
-
-        if (fieldName != null) {
-            params.put("fieldName", fieldName);
-        } else if (StringUtils.isNotEmpty(v.fieldName())) {
-            params.put("fieldName", v.fieldName());
-        }
-
-        if (v.min() != null && v.min().length() > 0) {
-            params.put("min", v.min());
-        }
-        if (v.max() != null && v.max().length() > 0) {
-            params.put("max", v.max());
-        }
-        if (StringUtils.isNotEmpty(v.maxExpression())) {
-            params.put("maxExpression", v.maxExpression());
-        }
-        if (StringUtils.isNotEmpty(v.minExpression())) {
-            params.put("minExpression", v.minExpression());
-        }
-
-        validatorFactory.lookupRegisteredValidatorType(validatorType);
-        return new ValidatorConfig.Builder(validatorType)
-                .addParams(params)
-                .addParam("methodName", methodName)
-                .shortCircuit(v.shortCircuit())
-                .defaultMessage(v.message())
-                .messageKey(v.key())
-                .messageParams(v.messageParams())
-                .build();
-    }
-
     private ValidatorConfig processShortRangeFieldValidatorAnnotation(ShortRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "short";
 
@@ -848,28 +790,6 @@ public class AnnotationValidationConfigurationBuilder {
                 .build();
     }
 
-    private ValidatorConfig processCreditCardValidatorAnnotation(CreditCardValidator v, String fieldName, String methodName) {
-        String validatorType = "creditcard";
-
-        Map<String, Object> params = new HashMap<>();
-
-        if (fieldName != null) {
-            params.put("fieldName", fieldName);
-        } else if (StringUtils.isNotEmpty(v.fieldName())) {
-            params.put("fieldName", v.fieldName());
-        }
-
-        validatorFactory.lookupRegisteredValidatorType(validatorType);
-        return new ValidatorConfig.Builder(validatorType)
-                .addParams(params)
-                .addParam("methodName", methodName)
-                .shortCircuit(v.shortCircuit())
-                .defaultMessage(v.message())
-                .messageKey(v.key())
-                .messageParams(v.messageParams())
-                .build();
-    }
-
     private ValidatorConfig processDateRangeFieldValidatorAnnotation(DateRangeFieldValidator v, String fieldName, String methodName) {
         String validatorType = "date";
 
@@ -952,6 +872,30 @@ public class AnnotationValidationConfigurationBuilder {
 
         return result;
 
+    }
+
+    /**
+     * Returns the property name for a method.
+     * This method is independant from property fields.
+     *
+     * @param method The method to get the property name for.
+     * @return the property name for given method; null if non could be resolved.
+     */
+    public String resolvePropertyName(Method method) {
+
+        Matcher matcher = SETTER_PATTERN.matcher(method.getName());
+        if (matcher.matches() && method.getParameterTypes().length == 1) {
+            String raw = matcher.group(1);
+            return raw.substring(0, 1).toLowerCase() + raw.substring(1);
+        }
+
+        matcher = GETTER_PATTERN.matcher(method.getName());
+        if (matcher.matches() && method.getParameterTypes().length == 0) {
+            String raw = matcher.group(2);
+            return raw.substring(0, 1).toLowerCase() + raw.substring(1);
+        }
+
+        return null;
     }
 
 }

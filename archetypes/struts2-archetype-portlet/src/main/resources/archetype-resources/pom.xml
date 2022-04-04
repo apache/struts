@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+    <packaging>war</packaging>
+    <name>${artifactId}</name>
+
+    <properties>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <struts2.version>${project.version}</struts2.version>
+		<portlet.api.version>2.0</portlet.api.version>
+		<!-- plugins -->
+		<plugin.compiler.version>3.0</plugin.compiler.version>
+		<plugin.war.version>2.3</plugin.war.version>
+		<plugin.pluto.version>2.0.3</plugin.pluto.version>
+    </properties>
+
+    <dependencies>
+
+        <!--  Struts 2 -->
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
+            <version>${struts2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-portlet-plugin</artifactId>
+            <version>${struts2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <version>${portlet.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+      
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${plugin.compiler.version}</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+   <profiles>
+		<profile>
+			<id>pluto-embedded</id>
+			<build>
+				<plugins>
+					<!-- configure maven-war-plugin to use updated web.xml -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>${plugin.war.version}</version>
+						<configuration>
+							<webXml>${project.build.directory}/pluto-resources/web.xml</webXml>
+						</configuration>
+					</plugin>
+					<!-- bind 'pluto2:assemble' goal to 'generate-resources' lifecycle -->
+					<plugin>
+						<groupId>org.apache.portals.pluto</groupId>
+						<artifactId>maven-pluto-plugin</artifactId>
+						<version>${plugin.pluto.version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>assemble</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

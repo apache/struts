@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletServletRequest.java 590812 2007-10-31 20:32:54Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -29,7 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
-import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
@@ -160,12 +161,7 @@ public class PortletServletRequest implements HttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#getMethod()
 	 */
 	public String getMethod() {
-		if (portletRequest instanceof ClientDataRequest) {
-			return ((ClientDataRequest) portletRequest).getMethod();
-		}
-		else {
-			return null;
-		}
+		return null;
 	}
 
 	/*

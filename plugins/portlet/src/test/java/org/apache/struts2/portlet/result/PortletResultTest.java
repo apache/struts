@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletResultTest.java 564926 2007-08-11 14:31:18Z nilsga $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,8 +23,8 @@ package org.apache.struts2.portlet.result;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import junit.textui.TestRunner;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.portlet.PortletPhase;
 import org.jmock.Mock;
@@ -39,6 +41,8 @@ import javax.portlet.RenderResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.opensymphony.xwork2.ActionContext.PARAMETERS;
+import static com.opensymphony.xwork2.ActionContext.SESSION;
 import static org.apache.struts2.portlet.PortletConstants.ACTION_PARAM;
 import static org.apache.struts2.portlet.PortletConstants.MODE_PARAM;
 import static org.apache.struts2.portlet.PortletConstants.PHASE;
@@ -48,14 +52,15 @@ import static org.apache.struts2.portlet.PortletConstants.RESPONSE;
 
 /**
  * PortletResultTest. Insert description.
+ *
  */
 public class PortletResultTest extends MockObjectTestCase implements StrutsStatics {
 
     Mock mockInvocation = null;
     Mock mockCtx = null;
     Mock mockProxy = null;
-    ActionProxy proxy = null;
-    ActionInvocation invocation = null;
+	ActionProxy proxy = null;
+	ActionInvocation invocation = null;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -63,13 +68,15 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         mockCtx = mock(PortletContext.class);
         mockProxy = mock(ActionProxy.class);
 
-        Map<String, Object> sessionMap = new HashMap<>();
+        Map<String, String[]> paramMap = new HashMap<String, String[]>();
+        Map<String, Object> sessionMap = new HashMap<String, Object>();
 
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.setSession(sessionMap);
-        actionContext.setParameters(HttpParameters.create().build());
-        actionContext.put(STRUTS_PORTLET_CONTEXT, mockCtx.proxy());
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put(SESSION, sessionMap);
+        context.put(PARAMETERS, paramMap);
+        context.put(STRUTS_PORTLET_CONTEXT, mockCtx.proxy());
 
+        ActionContext.setContext(new ActionContext(context));
         mockProxy.stubs().method("getNamespace").will(returnValue("/test"));
         proxy = (ActionProxy) mockProxy.proxy();
         mockInvocation.stubs().method("getInvocationContext").will(returnValue(ActionContext.getContext()));
@@ -83,11 +90,11 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         Mock mockResponse = mock(RenderResponse.class);
         Mock mockRd = mock(PortletRequestDispatcher.class);
 
-        RenderRequest req = (RenderRequest) mockRequest.proxy();
-        RenderResponse res = (RenderResponse) mockResponse.proxy();
-        PortletRequestDispatcher rd = (PortletRequestDispatcher) mockRd.proxy();
-        PortletContext ctx = (PortletContext) mockCtx.proxy();
-        ActionInvocation inv = (ActionInvocation) mockInvocation.proxy();
+        RenderRequest req = (RenderRequest)mockRequest.proxy();
+        RenderResponse res = (RenderResponse)mockResponse.proxy();
+        PortletRequestDispatcher rd = (PortletRequestDispatcher)mockRd.proxy();
+        PortletContext ctx = (PortletContext)mockCtx.proxy();
+        ActionInvocation inv = (ActionInvocation)mockInvocation.proxy();
 
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);
@@ -106,9 +113,10 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         PortletResult result = new PortletResult();
         try {
             result.doExecute("/WEB-INF/pages/testPage.jsp", inv);
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
-            fail("Error occurred!");
+            fail("Error occured!");
         }
 
     }
@@ -124,7 +132,7 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         params = new Constraint[]{eq(PortletConstants.RENDER_DIRECT_NAMESPACE), eq("/test")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
-
+        
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
         mockCtx.expects(atLeastOnce()).method("getMajorVersion").will(returnValue(1));
         ActionContext ctx = ActionContext.getContext();
@@ -136,9 +144,10 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         PortletResult result = new PortletResult();
         try {
             result.doExecute("testView.action", invocation);
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
-            fail("Error occurred!");
+            fail("Error occured!");
         }
 
     }
@@ -156,22 +165,23 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
 
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
         mockCtx.expects(atLeastOnce()).method("getMajorVersion").will(returnValue(1));
-
+ 
         ActionContext ctx = ActionContext.getContext();
 
-        Map<String, Object> session = new HashMap<>();
-        ctx.setSession(session);
-
+        Map session = new HashMap();
+        
         ctx.put(REQUEST, mockRequest.proxy());
         ctx.put(RESPONSE, mockResponse.proxy());
         ctx.put(PHASE, PortletPhase.ACTION_PHASE);
+        ctx.put(ActionContext.SESSION, session);
 
         PortletResult result = new PortletResult();
         try {
-            result.doExecute("/WEB-INF/pages/testJsp.jsp", (ActionInvocation) mockInvocation.proxy());
-        } catch (Exception e) {
+            result.doExecute("/WEB-INF/pages/testJsp.jsp", (ActionInvocation)mockInvocation.proxy());
+        }
+        catch(Exception e) {
             e.printStackTrace();
-            fail("Error occurred!");
+            fail("Error occured!");
         }
         assertEquals("/WEB-INF/pages/testJsp.jsp", session.get(RENDER_DIRECT_LOCATION));
     }
@@ -190,7 +200,7 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         params = new Constraint[]{eq(PortletConstants.RENDER_DIRECT_NAMESPACE), eq("/test")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
-
+        
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
         mockCtx.expects(atLeastOnce()).method("getMajorVersion").will(returnValue(1));
 
@@ -202,10 +212,11 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
 
         PortletResult result = new PortletResult();
         try {
-            result.doExecute("testView.action?testParam1=testValue1&testParam2=testValue2", (ActionInvocation) mockInvocation.proxy());
-        } catch (Exception e) {
+            result.doExecute("testView.action?testParam1=testValue1&testParam2=testValue2", (ActionInvocation)mockInvocation.proxy());
+        }
+        catch(Exception e) {
             e.printStackTrace();
-            fail("Error occurred!");
+            fail("Error occured!");
         }
     }
 
@@ -214,10 +225,10 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         Mock mockResponse = mock(RenderResponse.class);
         Mock mockRd = mock(PortletRequestDispatcher.class);
 
-        RenderRequest req = (RenderRequest) mockRequest.proxy();
-        RenderResponse res = (RenderResponse) mockResponse.proxy();
-        PortletRequestDispatcher rd = (PortletRequestDispatcher) mockRd.proxy();
-        PortletContext ctx = (PortletContext) mockCtx.proxy();
+        RenderRequest req = (RenderRequest)mockRequest.proxy();
+        RenderResponse res = (RenderResponse)mockResponse.proxy();
+        PortletRequestDispatcher rd = (PortletRequestDispatcher)mockRd.proxy();
+        PortletContext ctx = (PortletContext)mockCtx.proxy();
 
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);
@@ -238,12 +249,16 @@ public class PortletResultTest extends MockObjectTestCase implements StrutsStati
         PortletResult result = new PortletResult();
         result.setTitle("testTitle");
         result.setContentType("testContentType");
-        result.doExecute("/WEB-INF/pages/testPage.jsp", (ActionInvocation) mockInvocation.proxy());
+        result.doExecute("/WEB-INF/pages/testPage.jsp", (ActionInvocation)mockInvocation.proxy());
     }
 
     public void tearDown() throws Exception {
         super.tearDown();
-        ActionContext.clear();
+        ActionContext.setContext(null);
+    }
+
+    public static void main(String[] args) {
+        TestRunner.run(PortletResultTest.class);
     }
 
 }

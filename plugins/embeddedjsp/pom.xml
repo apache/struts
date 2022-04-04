@@ -1,6 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
 /*
+ * $Id: pom.xml 786191 2009-06-18 18:09:00Z wesw $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,21 +26,17 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>2.5.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-embeddedjsp-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>DEPRECATED: Struts 2 Embedded JSP Plugin (since 2.6)</name>
+    <name>Struts 2 Embedded JSP Plugin</name>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-velocity-plugin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -48,11 +46,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -72,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-juli</artifactId>
+            <artifactId>juli</artifactId>
         </dependency>
         <dependency>
             <groupId>taglibs</groupId>
@@ -86,7 +79,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-jasper</artifactId>
+            <artifactId>jasper</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -105,15 +98,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
                 <configuration>
                     <additionalClasspathElements>
-                        <element>${project.build.testOutputDirectory}/jsps.jar</element>
+                        <element>target/test-classes/jsps.jar</element>
                     </additionalClasspathElements>
+                    <forkMode>never</forkMode>
                 </configuration>
             </plugin>
         </plugins>
     </build>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

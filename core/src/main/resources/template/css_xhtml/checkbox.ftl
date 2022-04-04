@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,44 +25,44 @@ NOTE: The 'header' stuff that follows is in this one file for checkbox due to th
 that for checkboxes we do not want the label field to show up as checkboxes handle their own
 lables
 -->
-<#assign hasFieldErrors = fieldErrors?? && fieldErrors.get(parameters.name)??/>
+<#assign hasFieldErrors = fieldErrors?? && fieldErrors[parameters.name]??/>
 <div <#rt/><#if parameters.id??>id="wwgrp_${parameters.id}"<#rt/></#if> class="wwgrp">
 
 <#if hasFieldErrors>
 <div <#rt/><#if parameters.id??>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">
-<#list fieldErrors.get(parameters.name) as error>
+<#list fieldErrors[parameters.name] as error>
     <div<#rt/>
     <#if parameters.id??>
      errorFor="${parameters.id}"<#rt/>
     </#if>
     class="errorMessage">
-             ${error}
+             ${error?html}
     </div><#t/>
 </#list>
 </div><#t/>
 </#if>
-<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
-<#assign labelPos = parameters.form.labelPosition/>
-<#elseif parameters.labelPosition??>
-<#assign labelPos = parameters.labelPosition/>
+<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
+<#assign labelpos = parameters.form.labelposition/>
+<#elseif parameters.labelposition??>
+<#assign labelpos = parameters.labelposition/>
 </#if>
-<#if (labelPos!"") == 'left'>
+<#if labelpos!"" == 'left'>
 <span <#rt/>
 <#if parameters.id??>id="wwlbl_${parameters.id}"<#rt/></#if> class="wwlbl">
 <label<#t/>
 <#if parameters.id??>
- for="${parameters.id}"<#rt/>
+ for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>
  class="checkboxErrorLabel"<#rt/>
 <#else>
  class="label"<#rt/>
 </#if>
->${parameters.label}</label><#rt/>
+>${parameters.label?html}</label><#rt/>
 </span>
 </#if>
 
-<#if (labelPos!"top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
@@ -72,14 +74,14 @@ lables
 </#if>
 
 <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
-<#if (labelPos!"") != 'left'>
-<#if (labelPos!"top") == 'top'>
+<#if (labelpos!"") != 'left'>
+<#if (labelpos!"top") == 'top'>
 </div> <#rt/>
 <#else>
 </span>  <#rt/>
 </#if>
 <#if parameters.label??>
-<#if (labelPos!"top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
@@ -87,18 +89,18 @@ lables
 <#if parameters.id??>id="wwlbl_${parameters.id}"<#rt/></#if> class="wwlbl">
 <label<#t/>
 <#if parameters.id??>
- for="${parameters.id}"<#rt/>
+ for="${parameters.id?html}"<#rt/>
 </#if>
 <#if hasFieldErrors>
  class="checkboxErrorLabel"<#rt/>
 <#else>
  class="checkboxLabel"<#rt/>
 </#if>
->${parameters.label}</label><#rt/>
+>${parameters.label?html}</label><#rt/>
 </#if>
 </#if>
 <#if parameters.label??>
-<#if (labelPos!"top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 </div> <#rt/>
 <#else>
 </span> <#rt/>

@@ -1,4 +1,6 @@
 /*
+ * $Id: Jsr168DispatcherTest.java 602665 2007-12-09 12:11:25Z mrdon $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -30,8 +32,8 @@ import org.easymock.EasyMock;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
-import org.apache.struts2.mock.web.portlet.MockPortletConfig;
-import org.apache.struts2.mock.web.portlet.MockPortletContext;
+import org.springframework.mock.web.portlet.MockPortletConfig;
+import org.springframework.mock.web.portlet.MockPortletContext;
 
 import javax.portlet.*;
 import java.util.*;
@@ -142,7 +144,6 @@ public class Jsr286DispatcherTest extends MockObjectTestCase {
 		Map<String, String> initParams = new HashMap<String, String>();
 		initParams.put("viewNamespace", "/view");
 		initParams.put("editNamespace", "/edit");
-		initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
 
 		initPortletConfig(initParams, new HashMap<String, Object>());
 		initRequest(requestParams, new HashMap<String, Object>(), sessionMap,

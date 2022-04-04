@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp;
 
 import static org.easymock.EasyMock.*;
@@ -51,7 +54,7 @@ public class IncludeTagTest extends AbstractTagTest {
 
     public void testIncludeNoParam() throws Exception {
         
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
+        // use always matcher as we can not determine the excact objects used in mock.include(request, response) call
         mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
         expectLastCall().times(1);
         
@@ -65,46 +68,11 @@ public class IncludeTagTest extends AbstractTagTest {
         assertEquals("", writer.toString());
         
         verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testIncludeNoParam_clearTagStateSet() throws Exception {
-
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
-        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
-        expectLastCall().times(1);
-
-        replay(mockRequestDispatcher);
-
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setValue("person/list.jsp");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        assertEquals("/person/list.jsp", request.getRequestDispatherString());
-        assertEquals("", writer.toString());
-
-        verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeWithParameters() throws Exception {
        
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
+        // use always matcher as we can not determine the excact objects used in mock.include(request, response) call
         mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
         expectLastCall().times(1);
         
@@ -121,49 +89,11 @@ public class IncludeTagTest extends AbstractTagTest {
         assertEquals("", writer.toString());
         
         verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testIncludeWithParameters_clearTagStateSet() throws Exception {
-
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
-        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
-        expectLastCall().times(1);
-
-        replay(mockRequestDispatcher);
-
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setValue("person/create.jsp");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        // adding param must be done after doStartTag()
-        Include include = (Include) tag.getComponent();
-        include.addParameter("user", "Santa Claus");
-        tag.doEndTag();
-
-        assertEquals("/person/create.jsp?user=Santa+Claus", request.getRequestDispatherString());
-        assertEquals("", writer.toString());
-
-        verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeRelative2Dots() throws Exception {
         // TODO: we should test for .. in unit test - is this test correct?
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
+        // use always matcher as we can not determine the exact objects used in mock.include(request, response) call
         mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
         expectLastCall().times(1);
         
@@ -178,189 +108,9 @@ public class IncludeTagTest extends AbstractTagTest {
         assertEquals("/car/view.jsp", request.getRequestDispatherString());
         assertEquals("", writer.toString());
         
-        verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+        verify(mockRequestDispatcher);        
     }
 
-    public void testIncludeRelative2Dots_clearTagStateSet() throws Exception {
-        // TODO: we should test for .. in unit test - is this test correct?
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
-        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
-        expectLastCall().times(1);
-
-        replay(mockRequestDispatcher);
-
-        request.setupGetServletPath("app/manager");
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setValue("../car/view.jsp");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-
-        assertEquals("/car/view.jsp", request.getRequestDispatherString());
-        assertEquals("", writer.toString());
-
-        verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testIncludeSetUseResponseEncodingTrue() throws Exception {
-        // TODO: If possible in future mock-test an actual content-includes with various encodings
-        //   while setting the response encoding to match.  Doesn't appear to be possible
-        //   right now in unit-test form.
-        // Seems that the best we can do is verify the setUseResponseEncoding() doesn't fail...
-
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
-        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
-        expectLastCall().times(1);
-
-        replay(mockRequestDispatcher);
-
-        tag.setValue("person/create.jsp");
-        response.setCharacterEncoding("UTF-8");
-        tag.doStartTag();
-        // Manipulate after doStartTag to ensure the tag component has undergone injection
-        Include include = (Include) tag.getComponent();
-        include.setUseResponseEncoding("true");
-        tag.doEndTag();
-
-        assertEquals("UTF-8", response.getCharacterEncoding());
-        assertEquals("/person/create.jsp", request.getRequestDispatherString());
-        assertEquals("", writer.toString());  // Nothing gets written for mock-include
-
-        verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testIncludeSetUseResponseEncodingTrue_clearTagStateSet()  throws Exception {
-        // TODO: If possible in future mock-test an actual content-includes with various encodings
-        //   while setting the response encoding to match.  Doesn't appear to be possible
-        //   right now in unit-test form.
-        // Seems that the best we can do is verify the setUseResponseEncoding() doesn't fail...
-
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
-        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
-        expectLastCall().times(1);
-
-        replay(mockRequestDispatcher);
-
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setValue("person/create.jsp");
-        response.setCharacterEncoding("UTF-8");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        // Manipulate after doStartTag to ensure the tag component has undergone injection
-        Include include = (Include) tag.getComponent();
-        include.setUseResponseEncoding("true");
-        tag.doEndTag();
-
-        assertEquals("UTF-8", response.getCharacterEncoding());
-        assertEquals("/person/create.jsp", request.getRequestDispatherString());
-        assertEquals("", writer.toString());  // Nothing gets written for mock-include
-
-        verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testIncludeSetUseResponseEncodingFalse() throws Exception {
-        // TODO: If possible in future mock-test an actual content-includes with various encodings
-        //   while setting the response encoding to match.  Doesn't appear to be possible
-        //   right now in unit-test form.
-        // Seems that the best we can do is verify the setUseResponseEncoding() doesn't fail...
-
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
-        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
-        expectLastCall().times(1);
-
-        replay(mockRequestDispatcher);
-
-        tag.setValue("person/create.jsp");
-        response.setCharacterEncoding("UTF-8");
-        tag.doStartTag();
-        // Manipulate after doStartTag to ensure the tag component has undergone injection
-        Include include = (Include) tag.getComponent();
-        include.setUseResponseEncoding("false");
-        tag.doEndTag();
-
-        assertEquals("UTF-8", response.getCharacterEncoding());
-        assertEquals("/person/create.jsp", request.getRequestDispatherString());
-        assertEquals("", writer.toString());  // Nothing gets written for mock-include
-
-        verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testIncludeSetUseResponseEncodingFalse_clearTagStateSet()  throws Exception {
-        // TODO: If possible in future mock-test an actual content-includes with various encodings
-        //   while setting the response encoding to match.  Doesn't appear to be possible
-        //   right now in unit-test form.
-        // Seems that the best we can do is verify the setUseResponseEncoding() doesn't fail...
-
-        // Use always matcher as we can not determine the exact objects used in mock.include(request, response) call
-        mockRequestDispatcher.include(anyObject(ServletRequest.class), anyObject(ServletResponse.class));
-        expectLastCall().times(1);
-
-        replay(mockRequestDispatcher);
-
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setValue("person/create.jsp");
-        response.setCharacterEncoding("UTF-8");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        // Manipulate after doStartTag to ensure the tag component has undergone injection
-        Include include = (Include) tag.getComponent();
-        include.setUseResponseEncoding("false");
-        tag.doEndTag();
-
-        assertEquals("UTF-8", response.getCharacterEncoding());
-        assertEquals("/person/create.jsp", request.getRequestDispatherString());
-        assertEquals("", writer.toString());  // Nothing gets written for mock-include
-
-        verify(mockRequestDispatcher);
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        IncludeTag freshTag = new IncludeTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    @Override
     protected void setUp() throws Exception {
         super.setUp();
         request.setupGetRequestDispatcher(new MockRequestDispatcher());
@@ -373,7 +123,6 @@ public class IncludeTagTest extends AbstractTagTest {
         tag.setPageContext(pageContext);
     }
 
-    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         tag = null;

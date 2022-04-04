@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2003,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.config;
 
@@ -31,8 +28,6 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.mock.MockInterceptor;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +61,7 @@ public class ConfigurationTest extends XWorkTestCase {
         params.put("blah", "this is blah");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("/does/not/exist", "Foo", null, extraContext);
@@ -87,20 +82,20 @@ public class ConfigurationTest extends XWorkTestCase {
         // check inheritance from Default
         assertNotNull(configuration.getActionConfig("includeTest", "Foo"));
     }
-
+    
     public void testWildcardName() {
         RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
 
         ActionConfig config = configuration.getActionConfig("", "WildCard/Simple/input");
-
+        
         assertNotNull(config);
-        assertTrue("Wrong class name, " + config.getClassName(),
-            "com.opensymphony.xwork2.SimpleAction".equals(config.getClassName()));
+        assertTrue("Wrong class name, "+config.getClassName(), 
+                "com.opensymphony.xwork2.SimpleAction".equals(config.getClassName()));
         assertTrue("Wrong method name", "input".equals(config.getMethodName()));
-
+        
         Map<String, String> p = config.getParams();
-        assertTrue("Wrong parameter, " + p.get("foo"), "Simple".equals(p.get("foo")));
-        assertTrue("Wrong parameter, " + p.get("bar"), "input".equals(p.get("bar")));
+        assertTrue("Wrong parameter, "+p.get("foo"), "Simple".equals(p.get("foo")));
+        assertTrue("Wrong parameter, "+p.get("bar"), "input".equals(p.get("bar")));
     }
 
     public void testWildcardNamespace() {
@@ -109,12 +104,12 @@ public class ConfigurationTest extends XWorkTestCase {
         ActionConfig config = configuration.getActionConfig("/animals/dog", "commandTest");
 
         assertNotNull(config);
-        assertTrue("Wrong class name, " + config.getClassName(),
-            "com.opensymphony.xwork2.SimpleAction".equals(config.getClassName()));
+        assertTrue("Wrong class name, "+config.getClassName(),
+                "com.opensymphony.xwork2.SimpleAction".equals(config.getClassName()));
 
         Map<String, String> p = config.getParams();
-        assertTrue("Wrong parameter, " + p.get("0"), "/animals/dog".equals(p.get("0")));
-        assertTrue("Wrong parameter, " + p.get("1"), "dog".equals(p.get("1")));
+        assertTrue("Wrong parameter, "+p.get("0"), "/animals/dog".equals(p.get("0")));
+        assertTrue("Wrong parameter, "+p.get("1"), "dog".equals(p.get("1")));
     }
 
     public void testGlobalResults() {
@@ -205,11 +200,11 @@ public class ConfigurationTest extends XWorkTestCase {
         // check that it has configuration from MockConfigurationProvider
         assertNotNull(configuration.getActionConfig("", MockConfigurationProvider.FOO_ACTION_NAME));
     }
-
+    
     public void testMultipleContainerProviders() throws Exception {
         // to start from scratch
         configurationManager.destroyConfiguration();
-        // to build basic configuration
+         // to build basic configuration
         configurationManager.getConfiguration();
 
         Mock mockContainerProvider = new Mock(ContainerProvider.class);
@@ -221,7 +216,7 @@ public class ConfigurationTest extends XWorkTestCase {
         mockContainerProvider.expectAndReturn("needsReload", true);
         // the order of providers must be changed as just first is checked if reload is needed
         configurationManager.addContainerProvider((ContainerProvider) mockContainerProvider.proxy());
-        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         configurationManager.addContainerProvider(provider);
 
@@ -232,7 +227,7 @@ public class ConfigurationTest extends XWorkTestCase {
             e.printStackTrace();
             fail();
         }
-
+        
         RuntimeConfiguration configuration = config.getRuntimeConfiguration();
 
         // check that it has configuration from xml
@@ -240,25 +235,24 @@ public class ConfigurationTest extends XWorkTestCase {
 
         mockContainerProvider.verify();
     }
-
+    
     public void testInitForPackageProviders() {
-
+        
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder,
-                                 LocatableProperties props) throws ConfigurationException {
+                    LocatableProperties props) throws ConfigurationException {
                 builder.factory(PackageProvider.class, "foo", MyPackageProvider.class);
             }
         });
-
+        
         assertEquals(configuration, MyPackageProvider.getConfiguration());
     }
-
+    
     public void testInitOnceForConfigurationProviders() {
-
+        
         loadConfigurationProviders(new StubConfigurationProvider() {
             boolean called = false;
-
             @Override
             public void init(Configuration config) {
                 if (called) {
@@ -266,7 +260,7 @@ public class ConfigurationTest extends XWorkTestCase {
                 }
                 called = true;
             }
-
+            
             @Override
             public void loadPackages() {
                 if (!called) {
@@ -285,7 +279,7 @@ public class ConfigurationTest extends XWorkTestCase {
             assertNotNull(proxy);
             proxy = actionProxyFactory.createActionProxy("multipleInheritance", "testMultipleInheritance", null, null);
             assertNotNull(proxy);
-            assertEquals(4, proxy.getConfig().getInterceptors().size());
+            assertEquals(5, proxy.getConfig().getInterceptors().size());
             assertEquals(2, proxy.getConfig().getResults().size());
         } catch (Exception e) {
             e.printStackTrace();
@@ -296,42 +290,36 @@ public class ConfigurationTest extends XWorkTestCase {
     public void testPackageExtension() {
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("/foo/bar", "Bar", null, null);
-            assertEquals(4, proxy.getConfig().getInterceptors().size());
+            assertEquals(5, proxy.getConfig().getInterceptors().size());
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
     }
-
+    
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
         // ensure we're using the default configuration, not simple config
-        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
     }
 
     public static class MyPackageProvider implements PackageProvider {
         static Configuration config;
-
-        public void loadPackages() throws ConfigurationException {
-        }
-
-        public boolean needsReload() {
-            return config != null;
-        }
-
+        public void loadPackages() throws ConfigurationException {}
+        public boolean needsReload() { return config != null; }
+        
         public static Configuration getConfiguration() {
             return config;
         }
-
         public void init(Configuration configuration)
-            throws ConfigurationException {
+                throws ConfigurationException {
             config = configuration;
         }
-
+        
     }
 }

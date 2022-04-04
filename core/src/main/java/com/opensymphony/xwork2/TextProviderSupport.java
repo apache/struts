@@ -1,27 +1,26 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.*;
+
 
 /**
  * Default TextProvider implementation.
@@ -31,10 +30,15 @@ import java.util.*;
  */
 public class TextProviderSupport implements ResourceBundleTextProvider {
 
-    protected Class clazz;
-    protected LocaleProvider localeProvider;
-    protected ResourceBundle bundle;
-    protected LocalizedTextProvider localizedTextProvider;
+    private Class clazz;
+    private LocaleProvider localeProvider;
+    private ResourceBundle bundle;
+
+    /**
+     * Default constructor
+     */
+    public TextProviderSupport() {
+    }
 
     /**
      * Constructor.
@@ -42,10 +46,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param clazz    a clazz to use for reading the resource bundle.
      * @param provider a locale provider.
      */
-    public TextProviderSupport(Class clazz, LocaleProvider provider, LocalizedTextProvider localizedTextProvider) {
+    public TextProviderSupport(Class clazz, LocaleProvider provider) {
         this.clazz = clazz;
         this.localeProvider = provider;
-        this.localizedTextProvider = localizedTextProvider;
     }
 
     /**
@@ -54,16 +57,14 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @param bundle   the resource bundle.
      * @param provider a locale provider.
      */
-    public TextProviderSupport(ResourceBundle bundle, LocaleProvider provider, LocalizedTextProvider localizedTextProvider) {
+    public TextProviderSupport(ResourceBundle bundle, LocaleProvider provider) {
         this.bundle = bundle;
         this.localeProvider = provider;
-        this.localizedTextProvider = localizedTextProvider;
     }
 
     /**
      * @param bundle the resource bundle.
      */
-    @Override
     public void setBundle(ResourceBundle bundle) {
         this.bundle = bundle;
     }
@@ -71,28 +72,19 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     /**
      * @param clazz a clazz to use for reading the resource bundle.
      */
-    @Override
     public void setClazz(Class clazz) {
         this.clazz = clazz;
     }
 
+
     /**
      * @param localeProvider a locale provider.
      */
-    @Override
+    @Inject
     public void setLocaleProvider(LocaleProvider localeProvider) {
         this.localeProvider = localeProvider;
     }
 
-    @Inject
-    public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
-        this.localeProvider = localeProviderFactory.createLocaleProvider();
-    }
-
-    @Inject
-    public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
-        this.localizedTextProvider = localizedTextProvider;
-    }
 
     /**
      * Checks if a key is available in the resource bundles associated with this action.
@@ -105,9 +97,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     public boolean hasKey(String key) {
     	String message;
     	if (clazz != null) {
-            message = localizedTextProvider.findText(clazz, key, getLocale(), null, new Object[0] );
+            message =  LocalizedTextUtil.findText(clazz, key, getLocale(), null, new Object[0] );
         } else {
-            message = localizedTextProvider.findText(bundle, key, getLocale(), null, new Object[0]);
+            message = LocalizedTextUtil.findText(bundle, key, getLocale(), null, new Object[0]);
         }
     	return message != null;
     }
@@ -209,9 +201,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
     public String getText(String key, String defaultValue, List<?> args) {
         Object[] argsArray = ((args != null && !args.equals(Collections.emptyList())) ? args.toArray() : null);
         if (clazz != null) {
-            return localizedTextProvider.findText(clazz, key, getLocale(), defaultValue, argsArray);
+            return LocalizedTextUtil.findText(clazz, key, getLocale(), defaultValue, argsArray);
         } else {
-            return localizedTextProvider.findText(bundle, key, getLocale(), defaultValue, argsArray);
+            return LocalizedTextUtil.findText(bundle, key, getLocale(), defaultValue, argsArray);
         }
     }
 
@@ -230,9 +222,9 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      */
     public String getText(String key, String defaultValue, String[] args) {
         if (clazz != null) {
-            return localizedTextProvider.findText(clazz, key, getLocale(), defaultValue, args);
+            return LocalizedTextUtil.findText(clazz, key, getLocale(), defaultValue, args);
         } else {
-            return localizedTextProvider.findText(bundle, key, getLocale(), defaultValue, args);
+            return LocalizedTextUtil.findText(bundle, key, getLocale(), defaultValue, args);
         }
     }
 
@@ -254,15 +246,15 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
         if (stack == null){
         	locale = getLocale();
         }else{
-        	locale = stack.getActionContext().getLocale();
+        	locale = (Locale) stack.getContext().get(ActionContext.LOCALE);
         }
         if (locale == null) {
             locale = getLocale();
         }
         if (clazz != null) {
-            return localizedTextProvider.findText(clazz, key, locale, defaultValue, argsArray, stack);
+            return LocalizedTextUtil.findText(clazz, key, locale, defaultValue, argsArray, stack);
         } else {
-            return localizedTextProvider.findText(bundle, key, locale, defaultValue, argsArray, stack);
+            return LocalizedTextUtil.findText(bundle, key, locale, defaultValue, argsArray, stack);
         }
     }
 
@@ -284,15 +276,15 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
         if (stack == null){
         	locale = getLocale();
         }else{
-        	locale = stack.getActionContext().getLocale();
+        	locale = (Locale) stack.getContext().get(ActionContext.LOCALE);
         }
         if (locale == null) {
             locale = getLocale();
         }
         if (clazz != null) {
-            return localizedTextProvider.findText(clazz, key, locale, defaultValue, args, stack);
+            return LocalizedTextUtil.findText(clazz, key, locale, defaultValue, args, stack);
         } else {
-            return localizedTextProvider.findText(bundle, key, locale, defaultValue, args, stack);
+            return LocalizedTextUtil.findText(bundle, key, locale, defaultValue, args, stack);
         }
 
     }
@@ -312,7 +304,7 @@ public class TextProviderSupport implements ResourceBundleTextProvider {
      * @return a resource bundle
      */
     public ResourceBundle getTexts(String aBundleName) {
-        return localizedTextProvider.findResourceBundle(aBundleName, getLocale());
+        return LocalizedTextUtil.findResourceBundle(aBundleName, getLocale());
     }
 
     /**

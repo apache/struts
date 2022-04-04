@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -72,6 +73,13 @@
       <outputDirectory></outputDirectory>
       <includes>
         <include>SITEMESH-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../plugins/struts1/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>ANTLR-LICENSE.txt</include>
       </includes>
     </fileSet>
   </fileSets>

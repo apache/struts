@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor.debugging;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -29,7 +32,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
@@ -43,12 +45,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -70,8 +67,8 @@ import java.util.Map;
  * the 'xml' mode is inserted at the top of the page.</li>
  * <li> <code>command</code> - Tests an OGNL expression and returns the
  * string result. Only used by the OGNL console.</li>
- * <li><code>browser</code> Shows field values of an object specified in the
- * <code>object</code> parameter (action by default). When the <code>object</code>
+ * <li><code>browser</code> Shows field values of an object specified in the 
+ * <code>object</code> parameter (#context by default). When the <code>object</code>
  * parameters is set, the '#' character needs to be escaped to '%23'. Like
  * debug=browser&amp;object=%23parameters</li>
  * </ul>
@@ -98,9 +95,9 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     private final static Logger LOG = LogManager.getLogger(DebuggingInterceptor.class);
 
     private String[] ignorePrefixes = new String[]{"org.apache.struts.",
-        "com.opensymphony.xwork2.", "xwork."};
+            "com.opensymphony.xwork2.", "xwork."};
     private String[] _ignoreKeys = new String[]{"application", "session",
-        "parameters", "request"};
+            "parameters", "request"};
     private HashSet<String> ignoreKeys = new HashSet<>(Arrays.asList(_ignoreKeys));
 
     private final static String XML_MODE = "xml";
@@ -116,10 +113,10 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     private final static String DECORATE_PARAM = "decorate";
 
     private boolean enableXmlWithConsole = false;
-
+    
     private boolean devMode;
     private FreemarkerManager freemarkerManager;
-
+    
     private boolean consoleEnabled = false;
     private ReflectionProvider reflectionProvider;
 
@@ -127,12 +124,12 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     public void setDevMode(String mode) {
         this.devMode = "true".equals(mode);
     }
-
+    
     @Inject
     public void setFreemarkerManager(FreemarkerManager mgr) {
         this.freemarkerManager = mgr;
     }
-
+    
     @Inject
     public void setReflectionProvider(ReflectionProvider reflectionProvider) {
         this.reflectionProvider = reflectionProvider;
@@ -154,45 +151,45 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             ctx.getParameters().remove(DEBUG_PARAM);
             if (XML_MODE.equals(type)) {
                 inv.addPreResultListener(
-                    new PreResultListener() {
-                        public void beforeResult(ActionInvocation inv, String result) {
-                            printContext();
-                        }
-                    });
+                        new PreResultListener() {
+                            public void beforeResult(ActionInvocation inv, String result) {
+                                printContext();
+                            }
+                        });
             } else if (CONSOLE_MODE.equals(type)) {
                 consoleEnabled = true;
                 inv.addPreResultListener(
-                    new PreResultListener() {
-                        public void beforeResult(ActionInvocation inv, String actionResult) {
-                            String xml = "";
-                            if (enableXmlWithConsole) {
-                                StringWriter writer = new StringWriter();
-                                printContext(new PrettyPrintWriter(writer));
-                                xml = writer.toString();
-                                xml = xml.replaceAll("&", "&amp;");
-                                xml = xml.replaceAll(">", "&gt;");
-                                xml = xml.replaceAll("<", "&lt;");
-                            }
-                            ActionContext.getContext().put("debugXML", xml);
+                        new PreResultListener() {
+                            public void beforeResult(ActionInvocation inv, String actionResult) {
+                                String xml = "";
+                                if (enableXmlWithConsole) {
+                                    StringWriter writer = new StringWriter();
+                                    printContext(new PrettyPrintWriter(writer));
+                                    xml = writer.toString();
+                                    xml = xml.replaceAll("&", "&amp;");
+                                    xml = xml.replaceAll(">", "&gt;");
+                                    xml = xml.replaceAll("<", "&lt;");
+                                }
+                                ActionContext.getContext().put("debugXML", xml);
 
-                            FreemarkerResult result = new FreemarkerResult();
-                            result.setFreemarkerManager(freemarkerManager);
-                            result.setContentType("text/html");
-                            result.setLocation("/org/apache/struts2/interceptor/debugging/console.ftl");
-                            result.setParse(false);
-                            try {
-                                result.execute(inv);
-                            } catch (Exception ex) {
-                                LOG.error("Unable to create debugging console", ex);
-                            }
+                                FreemarkerResult result = new FreemarkerResult();
+                                result.setFreemarkerManager(freemarkerManager);
+                                result.setContentType("text/html");
+                                result.setLocation("/org/apache/struts2/interceptor/debugging/console.ftl");
+                                result.setParse(false);
+                                try {
+                                    result.execute(inv);
+                                } catch (Exception ex) {
+                                    LOG.error("Unable to create debugging console", ex);
+                                }
 
-                        }
-                    });
+                            }
+                        });
             } else if (COMMAND_MODE.equals(type)) {
                 ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
                 if (stack == null) {
                     //allows it to be embedded on another page
-                    stack = ctx.getValueStack();
+                    stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
                     ctx.getSession().put(SESSION_KEY, stack);
                 }
                 String cmd = getParameter(EXPRESSION_PARAM);
@@ -202,7 +199,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                 res.setContentType("text/plain");
 
                 try (PrintWriter writer =
-                         ServletActionContext.getResponse().getWriter()) {
+                            ServletActionContext.getResponse().getWriter()) {
                     writer.print(stack.findValue(cmd));
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -214,26 +211,25 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                     new PreResultListener() {
                         public void beforeResult(ActionInvocation inv, String actionResult) {
                             String rootObjectExpression = getParameter(OBJECT_PARAM);
-                            if (rootObjectExpression == null) {
-                                rootObjectExpression = "action";
-                            }
+                            if (rootObjectExpression == null)
+                                rootObjectExpression = "#context";
                             String decorate = getParameter(DECORATE_PARAM);
-                            ValueStack stack = ctx.getValueStack();
+                            ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
                             Object rootObject = stack.findValue(rootObjectExpression);
-
+                            
                             try (StringWriter writer = new StringWriter()) {
                                 ObjectToHTMLWriter htmlWriter = new ObjectToHTMLWriter(writer);
                                 htmlWriter.write(reflectionProvider, rootObject, rootObjectExpression);
                                 String html = writer.toString();
                                 writer.close();
-
+                                
                                 stack.set("debugHtml", html);
-
+                                
                                 //on the first request, response can be decorated
                                 //but we need plain text on the other ones
                                 if ("false".equals(decorate))
                                     ServletActionContext.getRequest().setAttribute("decorator", "none");
-
+                                
                                 FreemarkerResult result = new FreemarkerResult();
                                 result.setFreemarkerManager(freemarkerManager);
                                 result.setContentType("text/html");
@@ -246,7 +242,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
                         }
                     });
             }
-        }
+        } 
         if (cont) {
             try {
                 if (actionOnly) {
@@ -258,7 +254,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             } finally {
                 if (devMode && consoleEnabled) {
                     final ActionContext ctx = ActionContext.getContext();
-                    ctx.getSession().put(SESSION_KEY, ctx.getValueStack());
+                    ctx.getSession().put(SESSION_KEY, ctx.get(ActionContext.VALUE_STACK));
                 }
             }
         } else {
@@ -273,8 +269,11 @@ public class DebuggingInterceptor extends AbstractInterceptor {
      * @return The parameter value
      */
     private String getParameter(String key) {
-        Parameter parameter = ActionContext.getContext().getParameters().get(key);
-        return parameter.getValue();
+        String[] arr = (String[]) ActionContext.getContext().getParameters().get(key);
+        if (arr != null && arr.length > 0) {
+            return arr[0];
+        }
+        return null;
     }
 
     /**
@@ -286,7 +285,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
 
         try {
             PrettyPrintWriter writer = new PrettyPrintWriter(
-                ServletActionContext.getResponse().getWriter());
+                    ServletActionContext.getResponse().getWriter());
             printContext(writer);
             writer.close();
         } catch (IOException ex) {
@@ -304,12 +303,14 @@ public class DebuggingInterceptor extends AbstractInterceptor {
         writer.startNode(DEBUG_PARAM);
         serializeIt(ctx.getParameters(), "parameters", writer, new ArrayList<>());
         writer.startNode("context");
-        Map<String, Object> ctxMap = ctx.getContextMap();
-        for (String key : ctxMap.keySet()) {
+        String key;
+        Map ctxMap = ctx.getContextMap();
+        for (Object o : ctxMap.keySet()) {
+            key = o.toString();
             boolean print = !ignoreKeys.contains(key);
 
-            for (String ignorePrefix : ignorePrefixes) {
-                if (key.startsWith(ignorePrefix)) {
+            for (String ignorePrefixe : ignorePrefixes) {
+                if (key.startsWith(ignorePrefixe)) {
                     print = false;
                     break;
                 }
@@ -319,11 +320,11 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             }
         }
         writer.endNode();
-        Map<String, Object> requestMap = (Map<String, Object>) ctx.get("request");
+        Map requestMap = (Map) ctx.get("request");
         serializeIt(requestMap, "request", writer, filterValueStack(requestMap));
         serializeIt(ctx.getSession(), "session", writer, new ArrayList<>());
 
-        ValueStack stack = ctx.getValueStack();
+        ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
         serializeIt(stack.getRoot(), "valueStack", writer, new ArrayList<>());
         writer.endNode();
     }
@@ -425,10 +426,10 @@ public class DebuggingInterceptor extends AbstractInterceptor {
     private List<Object> filterValueStack(Map requestMap) {
         List<Object> filter = new ArrayList<>();
         Object valueStack = requestMap.get("struts.valueStack");
-        if (valueStack != null) {
-            filter.add(valueStack);
-        }
-        return filter;
+    	if(valueStack != null) {
+    		filter.add(valueStack);
+    	}
+    	return filter;
     }
 }
 

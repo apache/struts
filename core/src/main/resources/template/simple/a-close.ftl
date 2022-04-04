@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,24 +22,24 @@
 -->
 <a<#rt/>
 <#if parameters.id??>
- id="${parameters.id}"<#rt/>
+ id="${parameters.id?html}"<#rt/>
 </#if>
 <#if parameters.href??>
- href="${parameters.href?no_esc}"<#rt/>
+ href="${parameters.href}"<#rt/>
 </#if>
 <#if parameters.tabindex??>
- tabindex="${parameters.tabindex}"<#rt/>
+ tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
 <#if parameters.cssClass??>
- class="${parameters.cssClass}"<#rt/>
+ class="${parameters.cssClass?html}"<#rt/>
 </#if>
 <#if parameters.cssStyle??>
- style="${parameters.cssStyle}"<#rt/>
+ style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 <#if parameters.title??>
- title="${parameters.title}"<#rt/>
+ title="${parameters.title?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
->${tag.escapeHtmlBody()?then(parameters.body, parameters.body?no_esc)}</a>
+>${parameters.body}</a>

@@ -20,35 +20,16 @@
  */
 package it.org.apache.struts2.showcase;
 
-import org.junit.Assert;
-import org.junit.Test;
+public class ExecAndWaitTest extends ITBaseTest {
+    public void testNodelay() throws InterruptedException {
+        beginAt("/wait/example1.jsp");
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
-import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
+        setTextField("time", "7000");
+        submit();
+        assertTextPresent("We are processing your request. Please wait.");
 
-public class ExecAndWaitTest {
-    @Test
-    public void testNodelay() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/wait/example1.action");
-
-            final HtmlForm form = page.getForms().get(0);
-
-            final HtmlTextInput textField = form.getInputByName("time");
-            textField.type("7000");
-
-            final HtmlSubmitInput button = form.getInputByValue("submit");
-            final HtmlPage page2 = button.click();
-
-            Assert.assertTrue(page2.asText().contains("We are processing your request. Please wait."));
-
-            // hit it again
-            final HtmlPage page3 = webClient
-                    .getPage(ParameterUtils.getBaseUrl() + "/wait/longProcess1.action?time=1000");
-            Assert.assertTrue(page3.asText().contains("We are processing your request. Please wait."));
-        }
+        //hit it again
+        beginAt("/wait/longProcess1.action?time=1000");
+        assertTextPresent("We are processing your request. Please wait.");
     }
 }

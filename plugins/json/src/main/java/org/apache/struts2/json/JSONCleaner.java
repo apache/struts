@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -101,7 +103,8 @@ public abstract class JSONCleaner {
         boolean allow = !isDefaultBlock();
 
         if (includesExcludesMap != null) {
-            for (Filter f : includesExcludesMap.values()) {
+            for (String currRule : includesExcludesMap.keySet()) {
+                Filter f = includesExcludesMap.get(currRule);
                 if (f.pattern.matcher(ognl).matches()) {
                     allow = f.allow;
                 }

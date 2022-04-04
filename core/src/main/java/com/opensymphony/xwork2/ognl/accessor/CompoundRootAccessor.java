@@ -1,23 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.ognl.accessor;
 
+import com.opensymphony.xwork2.XWorkConstants;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
@@ -26,8 +25,6 @@ import ognl.*;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -63,10 +60,10 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
     private final static Logger LOG = LogManager.getLogger(CompoundRootAccessor.class);
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
     private static Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
-    private boolean devMode;
+    private boolean devMode = false;
 
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
-    protected void setDevMode(String mode) {
+    @Inject(XWorkConstants.DEV_MODE)
+    public void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
@@ -111,7 +108,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
             final String msg = format("No object in the CompoundRoot has a publicly accessible property named '%s' " +
                     "(no setter could be found).", name);
             if (reportError) {
-                throw new StrutsException(msg);
+                throw new XWorkException(msg);
             } else {
                 LOG.warn(msg);
             }
@@ -146,7 +143,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
                 } catch (OgnlException e) {
                     if (e.getReason() != null) {
                         final String msg = "Caught an Ognl exception while getting property " + name;
-                        throw new StrutsException(msg, e);
+                        throw new XWorkException(msg, e);
                     }
                 } catch (IntrospectionException e) {
                     // this is OK if this happens, we'll just keep trying the next
@@ -217,14 +214,13 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
             return null;
         }
 
-        Throwable reason = null;
-        Class[] argTypes = getArgTypes(objects);
         for (Object o : root) {
             if (o == null) {
                 continue;
             }
 
             Class clazz = o.getClass();
+            Class[] argTypes = getArgTypes(objects);
 
             MethodCall mc = null;
 
@@ -234,25 +230,22 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
             if ((argTypes == null) || !invalidMethods.containsKey(mc)) {
                 try {
-                    return OgnlRuntime.callMethod((OgnlContext) context, o, name, objects);
+                    Object value = OgnlRuntime.callMethod((OgnlContext) context, o, name, objects);
+
+                    if (value != null) {
+                        return value;
+                    }
                 } catch (OgnlException e) {
-                    reason = e.getReason();
+                    // try the next one
+                    Throwable reason = e.getReason();
 
-                    if (reason != null && !(reason instanceof NoSuchMethodException)) {
-                        // method has found but thrown an exception
-                        break;
-                    }
-
-                    if ((mc != null) && (reason != null)) {
+                    if (!context.containsKey(OgnlValueStack.THROW_EXCEPTION_ON_FAILURE) && (mc != null) && (reason != null) && (reason.getClass() == NoSuchMethodException.class)) {
                         invalidMethods.put(mc, Boolean.TRUE);
+                    } else if (reason != null) {
+                        throw new MethodFailedException(o, name, e.getReason());
                     }
-                    // continue and try the next one
                 }
             }
-        }
-
-        if (context.containsKey(OgnlValueStack.THROW_EXCEPTION_ON_FAILURE)) {
-            throw new MethodFailedException(target, name, reason);
         }
 
         return null;

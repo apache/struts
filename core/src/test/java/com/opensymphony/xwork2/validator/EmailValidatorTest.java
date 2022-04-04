@@ -1,26 +1,22 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.validators.EmailValidator;
@@ -32,8 +28,6 @@ import com.opensymphony.xwork2.validator.validators.EmailValidator;
  * @version $Date$ $Id$
  */
 public class EmailValidatorTest extends XWorkTestCase {
-
-    private TextProviderFactory tpf;
 
     public void testEmailValidity() throws Exception {
         assertTrue(verifyEmailValidity("TmJee@Yahoo.com"));
@@ -53,7 +47,6 @@ public class EmailValidatorTest extends XWorkTestCase {
         assertTrue(verifyEmailValidity("Ferda+Mravenec@yaHoo.CoM"));
         assertTrue(verifyEmailValidity("user@domainname.tech"));
         assertTrue(verifyEmailValidity("Ferda+Mravenec@yaHoo.cat"));
-        assertTrue(verifyEmailValidity("user@domainname.swiss"));
 
         assertFalse(verifyEmailValidity("tm_jee#marry@yahoo.co.uk"));
         assertFalse(verifyEmailValidity("tm_jee@ yahoo.co.uk"));
@@ -76,7 +69,7 @@ public class EmailValidatorTest extends XWorkTestCase {
         };
 
         EmailValidator validator = new EmailValidator();
-        validator.setValidatorContext(new DelegatingValidatorContext(action, tpf));
+        validator.setValidatorContext(new DelegatingValidatorContext(action));
         validator.setFieldName("myEmail");
         validator.setDefaultMessage("invalid email");
         validator.setValueStack(ActionContext.getContext().getValueStack());
@@ -101,7 +94,7 @@ public class EmailValidatorTest extends XWorkTestCase {
         valueStack.push(action);
         validator.setValueStack(valueStack);
 
-        validator.setValidatorContext(new DelegatingValidatorContext(action, tpf));
+        validator.setValidatorContext(new DelegatingValidatorContext(action));
         validator.setFieldName("myEmail");
         validator.setDefaultMessage("invalid email");
         validator.setRegexExpression("${emailExpression}");
@@ -161,10 +154,4 @@ public class EmailValidatorTest extends XWorkTestCase {
         return validator;
     }
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-
-        tpf = container.getInstance(TextProviderFactory.class);
-    }
 }

@@ -7,7 +7,7 @@
  * You may obtain a copy of the License at
  * </p>
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * <p>
  * Unless required by applicable law or agreed to in writing, software

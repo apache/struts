@@ -1,40 +1,33 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.ClearableValueStack;
-import com.opensymphony.xwork2.util.Evaluated;
-import com.opensymphony.xwork2.LocalizedTextProvider;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.StrutsConstants;
 
 import java.util.Map;
 
@@ -99,35 +92,16 @@ public class AliasInterceptor extends AbstractInterceptor {
     protected String aliasesKey = DEFAULT_ALIAS_KEY;
 
     protected ValueStackFactory valueStackFactory;
-    protected LocalizedTextProvider localizedTextProvider;
-    protected boolean devMode = false;
+    static boolean devMode = false;
 
-    private ExcludedPatternsChecker excludedPatterns;
-    private AcceptedPatternsChecker acceptedPatterns;
-
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
-    public void setDevMode(String mode) {
-        this.devMode = Boolean.parseBoolean(mode);
+    @Inject(XWorkConstants.DEV_MODE)
+    public static void setDevMode(String mode) {
+        devMode = "true".equals(mode);
     }   
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
-    }
-
-    @Inject
-    public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
-        this.localizedTextProvider = localizedTextProvider;
-    }
-
-    @Inject
-    public void setExcludedPatterns(ExcludedPatternsChecker excludedPatterns) {
-        this.excludedPatterns = excludedPatterns;
-    }
-
-    @Inject
-    public void setAcceptedPatterns(AcceptedPatternsChecker acceptedPatterns) {
-        this.acceptedPatterns = acceptedPatterns;
     }
 
     /**
@@ -160,7 +134,7 @@ public class AliasInterceptor extends AbstractInterceptor {
             ValueStack stack = ac.getValueStack();
             Object obj = stack.findValue(aliasExpression);
 
-            if (obj instanceof Map) {
+            if (obj != null && obj instanceof Map) {
                 //get secure stack
                 ValueStack newStack = valueStackFactory.createValueStack(stack);
                 boolean clearableStack = newStack instanceof ClearableValueStack;
@@ -174,7 +148,7 @@ public class AliasInterceptor extends AbstractInterceptor {
                     ReflectionContextState.setReportingConversionErrors(context, true);
 
                     //keep locale from original context
-                    newStack.getActionContext().withLocale(stack.getActionContext().getLocale());
+                    context.put(ActionContext.LOCALE, stack.getContext().get(ActionContext.LOCALE));
                 }
 
                 // override
@@ -182,31 +156,22 @@ public class AliasInterceptor extends AbstractInterceptor {
                 for (Object o : aliases.entrySet()) {
                     Map.Entry entry = (Map.Entry) o;
                     String name = entry.getKey().toString();
-                    if (isNotAcceptableExpression(name)) {
-                        continue;
-                    }
                     String alias = (String) entry.getValue();
-                    if (isNotAcceptableExpression(alias)) {
-                        continue;
-                    }
-                    Evaluated value = new Evaluated(stack.findValue(name));
-                    if (!value.isDefined()) {
+                    Object value = stack.findValue(name);
+                    if (null == value) {
                         // workaround
-                        HttpParameters contextParameters = ActionContext.getContext().getParameters();
+                        Map<String, Object> contextParameters = ActionContext.getContext().getParameters();
 
                         if (null != contextParameters) {
-                            Parameter param = contextParameters.get(name);
-                            if (param.isDefined()) {
-                                value = new Evaluated(param.getValue());
-                            }
+                            value = contextParameters.get(name);
                         }
                     }
-                    if (value.isDefined()) {
+                    if (null != value) {
                         try {
-                            newStack.setValue(alias, value.get());
+                            newStack.setValue(alias, value);
                         } catch (RuntimeException e) {
                             if (devMode) {
-                                String developerNotification = localizedTextProvider.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
+                                String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                                         "Unexpected Exception caught setting '" + entry.getKey() + "' on '" + action.getClass() + ": " + e.getMessage()
                                 });
                                 LOG.error(developerNotification);
@@ -218,9 +183,8 @@ public class AliasInterceptor extends AbstractInterceptor {
                     }
                 }
 
-                if (clearableStack) {
-                    stack.getActionContext().withConversionErrors(newStack.getActionContext().getConversionErrors());
-                }
+                if (clearableStack && (stack.getContext() != null) && (newStack.getContext() != null))
+                    stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
             } else {
                 LOG.debug("invalid alias expression: {}", aliasesKey);
             }
@@ -228,65 +192,5 @@ public class AliasInterceptor extends AbstractInterceptor {
         
         return invocation.invoke();
     }
-
-    protected boolean isAccepted(String paramName) {
-        AcceptedPatternsChecker.IsAccepted result = acceptedPatterns.isAccepted(paramName);
-        if (result.isAccepted()) {
-            return true;
-        }
-
-        LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
-                        "https://struts.apache.org/security/#accepted--excluded-patterns",
-                paramName, result.getAcceptedPattern());
-
-        return false;
-    }
-
-    protected boolean isExcluded(String paramName) {
-        ExcludedPatternsChecker.IsExcluded result = excludedPatterns.isExcluded(paramName);
-        if (!result.isExcluded()) {
-            return false;
-        }
-
-        LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
-                        "https://struts.apache.org/security/#accepted--excluded-patterns",
-                paramName, result.getExcludedPattern());
-
-        return true;
-    }
-
-    /**
-     * Checks if expression contains vulnerable code
-     *
-     * @param expression of interceptor
-     * @return true|false
-     */
-    protected boolean isNotAcceptableExpression(String expression) {
-        return isExcluded(expression) || !isAccepted(expression);
-    }
-
-    /**
-     * Sets a comma-delimited list of regular expressions to match
-     * parameters that are allowed in the parameter map (aka whitelist).
-     * <p>
-     * Don't change the default unless you know what you are doing in terms
-     * of security implications.
-     * </p>
-     *
-     * @param commaDelim A comma-delimited list of regular expressions
-     */
-    public void setAcceptParamNames(String commaDelim) {
-        acceptedPatterns.setAcceptedPatterns(commaDelim);
-    }
-
-    /**
-     * Sets a comma-delimited list of regular expressions to match
-     * parameters that should be removed from the parameter map.
-     *
-     * @param commaDelim A comma-delimited list of regular expressions
-     */
-    public void setExcludeParams(String commaDelim) {
-        excludedPatterns.setExcludedPatterns(commaDelim);
-    }
-
+    
 }

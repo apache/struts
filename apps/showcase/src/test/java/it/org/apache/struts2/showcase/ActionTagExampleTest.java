@@ -20,20 +20,10 @@
  */
 package it.org.apache.struts2.showcase;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
-public class ActionTagExampleTest {
-    @Test
-    public void test() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/tags/ui/actionTagExample!input.action");
-
-            final String pageAsText = page.asText();
-            Assert.assertTrue(pageAsText.contains("This text is from the called class"));
-        }
+public class ActionTagExampleTest extends ITBaseTest {
+    public void test() {
+        beginAt("/tags/ui/actionTagExample!input.action");
+        assertTextPresent("This text is from the called class");
     }
+
 }

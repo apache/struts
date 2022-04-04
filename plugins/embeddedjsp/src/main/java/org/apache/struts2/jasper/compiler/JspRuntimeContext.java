@@ -1,21 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package org.apache.struts2.jasper.compiler;
 
 import org.apache.juli.logging.Log;
@@ -33,14 +32,12 @@ import javax.servlet.jsp.JspFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilePermission;
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Policy;
 import java.security.cert.Certificate;
-import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -123,9 +120,11 @@ public final class JspRuntimeContext {
         this.options = options;
 
         // Get the parent class loader
-        parentClassLoader = Thread.currentThread().getContextClassLoader();
+        parentClassLoader =
+                (URLClassLoader) Thread.currentThread().getContextClassLoader();
         if (parentClassLoader == null) {
-            parentClassLoader = this.getClass().getClassLoader();
+            parentClassLoader =
+                    (URLClassLoader) this.getClass().getClassLoader();
         }
 
         if (log.isDebugEnabled()) {
@@ -138,11 +137,7 @@ public final class JspRuntimeContext {
             }
         }
 
-        try {
-            initClassPath();
-        } catch (IOException e) {
-            context.log("ClassPath Init for context failed", e);
-        }
+        initClassPath();
 
         if (context instanceof JspCServletContext) {
             return;
@@ -169,7 +164,7 @@ public final class JspRuntimeContext {
      */
     private ServletContext context;
     private Options options;
-    private ClassLoader parentClassLoader;
+    private URLClassLoader parentClassLoader;
     private PermissionCollection permissionCollection;
     private CodeSource codeSource;
     private String classpath;
@@ -237,7 +232,7 @@ public final class JspRuntimeContext {
      *
      * @return URLClassLoader parent
      */
-    public ClassLoader getParentClassLoader() {
+    public URLClassLoader getParentClassLoader() {
         return parentClassLoader;
     }
 
@@ -337,14 +332,9 @@ public final class JspRuntimeContext {
     /**
      * Method used to initialize classpath for compiles.
      */
-    private void initClassPath() throws IOException {
+    private void initClassPath() {
 
-        URL[] urls;
-        if (parentClassLoader instanceof URLClassLoader) {
-            urls = ((URLClassLoader) parentClassLoader).getURLs();
-        } else {    //jdk9 or later
-            urls = Collections.list(parentClassLoader.getResources("")).toArray(new URL[0]);
-        }
+        URL[] urls = parentClassLoader.getURLs();
         StringBuffer cpath = new StringBuffer();
         String sep = System.getProperty("path.separator");
 
@@ -427,37 +417,34 @@ public final class JspRuntimeContext {
                 permissionCollection.add(new RuntimePermission(
                         "accessClassInPackage.org.apache.struts2.jasper.runtime"));
 
-                URL[] urls;
                 if (parentClassLoader instanceof URLClassLoader) {
-                    urls = ((URLClassLoader) parentClassLoader).getURLs();
-                } else {    //jdk9 or later
-                    urls = Collections.list(parentClassLoader.getResources("")).toArray(new URL[0]);
-                }
-                String jarUrl = null;
-                String jndiUrl = null;
-                for (URL url1 : urls) {
-                    if (jndiUrl == null
-                            && url1.toString().startsWith("jndi:")) {
-                        jndiUrl = url1.toString() + "-";
+                    URL[] urls = parentClassLoader.getURLs();
+                    String jarUrl = null;
+                    String jndiUrl = null;
+                    for (int i = 0; i < urls.length; i++) {
+                        if (jndiUrl == null
+                                && urls[i].toString().startsWith("jndi:")) {
+                            jndiUrl = urls[i].toString() + "-";
+                        }
+                        if (jarUrl == null
+                                && urls[i].toString().startsWith("jar:jndi:")
+                                ) {
+                            jarUrl = urls[i].toString();
+                            jarUrl = jarUrl.substring(0, jarUrl.length() - 2);
+                            jarUrl = jarUrl.substring(0,
+                                    jarUrl.lastIndexOf('/')) + "/-";
+                        }
                     }
-                    if (jarUrl == null
-                            && url1.toString().startsWith("jar:jndi:")
-                            ) {
-                        jarUrl = url1.toString();
-                        jarUrl = jarUrl.substring(0, jarUrl.length() - 2);
-                        jarUrl = jarUrl.substring(0,
-                                jarUrl.lastIndexOf('/')) + "/-";
+                    if (jarUrl != null) {
+                        permissionCollection.add(
+                                new FilePermission(jarUrl, "read"));
+                        permissionCollection.add(
+                                new FilePermission(jarUrl.substring(4), "read"));
                     }
+                    if (jndiUrl != null)
+                        permissionCollection.add(
+                                new FilePermission(jndiUrl, "read"));
                 }
-                if (jarUrl != null) {
-                    permissionCollection.add(
-                            new FilePermission(jarUrl, "read"));
-                    permissionCollection.add(
-                            new FilePermission(jarUrl.substring(4), "read"));
-                }
-                if (jndiUrl != null)
-                    permissionCollection.add(
-                            new FilePermission(jndiUrl, "read"));
             } catch (Exception e) {
                 context.log("Security Init for context failed", e);
             }

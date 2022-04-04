@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -39,12 +42,10 @@ public class ActionTag extends ContextBeanTag {
     protected boolean flush = true;
     protected boolean rethrowException;
 
-    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ActionComponent(stack, req, res);
     }
 
-    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -88,28 +89,6 @@ public class ActionTag extends ContextBeanTag {
 
     public void setRethrowException(boolean rethrowException) {
         this.rethrowException = rethrowException;
-    }
-
-    @Override
-    /**
-     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
-     */
-    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
-        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
-    }
-
-    @Override
-    protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
-            return;  // If flag is false (default setting), do not perform any state clearing.
-        }
-        super.clearTagStateForTagPoolingServers();
-        this.name = null;
-        this.namespace = null;
-        this.executeResult = false;
-        this.ignoreContextParams = false;
-        this.flush = true;
-        this.rethrowException = false;
     }
 
 }

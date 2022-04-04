@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,8 +25,6 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.finder.UrlSet;
-import com.opensymphony.xwork2.util.fs.DefaultFileManager;
-import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.io.FileUtils;
@@ -174,6 +174,8 @@ public class JSPLoader {
         List<String> optionList = new ArrayList<String>();
         Set<String> classPath = new HashSet<String>();
 
+        FileManager fileManager = ServletActionContext.getContext().getInstance(FileManagerFactory.class).getFileManager();
+
         //find available jars
         ClassLoaderInterface classLoaderInterface = getClassLoaderInterface();
         UrlSet urlSet = new UrlSet(classLoaderInterface);
@@ -181,19 +183,11 @@ public class JSPLoader {
         //find jars
         List<URL> urls = urlSet.getUrls();
 
-        if (urls != null && urls.size() > 0) {
-            final FileManagerFactory fileManagerFactoryGetInstance = ServletActionContext.getActionContext().getInstance(FileManagerFactory.class);
-            final FileManagerFactory contextFileManagerFactory = (fileManagerFactoryGetInstance != null ? fileManagerFactoryGetInstance : (FileManagerFactory) ServletActionContext.getActionContext().get(StrutsConstants.STRUTS_FILE_MANAGER_FACTORY));
-            final FileManagerFactory fileManagerFactory = (contextFileManagerFactory != null ? contextFileManagerFactory : new DefaultFileManagerFactory());
-            final FileManager fileManagerGetInstance = fileManagerFactory.getFileManager();
-            final FileManager contextFileManager = (fileManagerGetInstance != null ? fileManagerGetInstance : (FileManager) ServletActionContext.getActionContext().get(StrutsConstants.STRUTS_FILE_MANAGER));
-            final FileManager fileManager = (contextFileManager != null ? contextFileManager : new DefaultFileManager());
-            for (URL url : urls) {
-                URL normalizedUrl = fileManager.normalizeToFileProtocol(url);
-                File file = FileUtils.toFile(ObjectUtils.defaultIfNull(normalizedUrl, url));
-                if (file.exists())
-                    classPath.add(file.getAbsolutePath());
-            }
+        for (URL url : urls) {
+            URL normalizedUrl = fileManager.normalizeToFileProtocol(url);
+            File file = FileUtils.toFile(ObjectUtils.defaultIfNull(normalizedUrl, url));
+            if (file.exists())
+                classPath.add(file.getAbsolutePath());
         }
 
         //these should be in the list already, but I am feeling paranoid
@@ -205,8 +199,8 @@ public class JSPLoader {
         classPath.add(getJarUrl(JspPage.class));
 
         try {
-            Class instanceManager = Class.forName("org.apache.tomcat.InstanceManager");
-            classPath.add(getJarUrl(instanceManager));
+            Class annotationsProcessor = Class.forName("org.apache.AnnotationProcessor");
+            classPath.add(getJarUrl(annotationsProcessor));
         } catch (ClassNotFoundException e) {
             //ok ignore
         }

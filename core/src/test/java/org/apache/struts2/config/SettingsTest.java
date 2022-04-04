@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,9 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork2.LocalizedTextProvider;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsInternalTestCase;
 
@@ -49,11 +52,9 @@ public class SettingsTest extends StrutsInternalTestCase {
     public void testDefaultResourceBundlesLoaded() {
         Settings settings = new DefaultSettings();
 
-        LocalizedTextProvider localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
-
         assertEquals("testmessages,testmessages2", settings.get(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
-        assertEquals("This is a test message", localizedTextProvider.findDefaultText("default.testmessage", Locale.getDefault()));
-        assertEquals("This is another test message", localizedTextProvider.findDefaultText("default.testmessage2", Locale.getDefault()));
+        assertEquals("This is a test message", LocalizedTextUtil.findDefaultText("default.testmessage", Locale.getDefault()));
+        assertEquals("This is another test message", LocalizedTextUtil.findDefaultText("default.testmessage2", Locale.getDefault()));
     }
 
     public void testSetSettings() {

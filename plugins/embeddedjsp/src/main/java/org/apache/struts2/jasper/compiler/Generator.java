@@ -1,21 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package org.apache.struts2.jasper.compiler;
 
 import java.beans.BeanInfo;
@@ -76,8 +75,8 @@ class Generator {
 
     private static final String VAR_EXPRESSIONFACTORY = 
         System.getProperty("org.apache.struts2.jasper.compiler.Generator.VAR_EXPRESSIONFACTORY", "_el_expressionfactory");
-    private static final String VAR_INSTANCEMANAGER = 
-        System.getProperty("org.apache.struts2.jasper.compiler.Generator.VAR_INSTANCEMANAGER", "_jsp_instancemanager");
+    private static final String VAR_ANNOTATIONPROCESSOR = 
+        System.getProperty("org.apache.struts2.jasper.compiler.Generator.VAR_ANNOTATIONPROCESSOR", "_jsp_annotationprocessor");
 
     private ServletWriter out;
 
@@ -421,14 +420,15 @@ class Generator {
             out.print("getServletConfig()");
         }
         out.println(".getServletContext()).getExpressionFactory();");
-        out.printin(VAR_INSTANCEMANAGER);
-        out.print(" = (org.apache.tomcat.InstanceManager) ");
+
+        out.printin(VAR_ANNOTATIONPROCESSOR);
+        out.print(" = (org.apache.AnnotationProcessor) ");
         if (ctxt.isTagFile()) {
             out.print("config");
         } else {
             out.print("getServletConfig()");
         }
-        out.println(".getServletContext().getAttribute(org.apache.tomcat.InstanceManager.class.getName());");
+        out.println(".getServletContext().getAttribute(org.apache.AnnotationProcessor.class.getName());");
 
         out.popIndent();
         out.printil("}");
@@ -532,8 +532,8 @@ class Generator {
         out.printin("private javax.el.ExpressionFactory ");
         out.print(VAR_EXPRESSIONFACTORY);
         out.println(";");
-        out.printin("private org.apache.tomcat.InstanceManager ");
-        out.print(VAR_INSTANCEMANAGER);
+        out.printin("private org.apache.AnnotationProcessor ");
+        out.print(VAR_ANNOTATIONPROCESSOR);
         out.println(";");
         out.println();
     }
@@ -708,6 +708,16 @@ class Generator {
             out.print(doctypeSystem);
             out.println("\\\">\\n\");");
         }
+    }
+
+    /*
+     * Generates the constructor. (shared by servlet and tag handler preamble
+     * generation)
+     */
+    private void generateConstructor(String className) {
+        out.printil("public " + className + "() {");
+        out.printil("}");
+        out.println();
     }
 
     /**
@@ -2209,8 +2219,8 @@ class Generator {
                 out.print("new ");
                 out.print(tagHandlerClassName);
                 out.println("();");
-                out.printin("org.apache.struts2.jasper.runtime.InstanceHelper.postConstruct(");
-                out.print(VAR_INSTANCEMANAGER);
+                out.printin("org.apache.struts2.jasper.runtime.AnnotationHelper.postConstruct(");
+                out.print(VAR_ANNOTATIONPROCESSOR);
                 out.print(", ");
                 out.print(tagHandlerVar);
                 out.println(");");
@@ -2359,8 +2369,8 @@ class Generator {
                 } else {
                     out.printin(tagHandlerVar);
                     out.println(".release();");
-                    out.printin("org.apache.struts2.jasper.runtime.InstanceHelper.preDestroy(");
-                    out.print(VAR_INSTANCEMANAGER);
+                    out.printin("org.apache.struts2.jasper.runtime.AnnotationHelper.preDestroy(");
+                    out.print(VAR_ANNOTATIONPROCESSOR);
                     out.print(", ");
                     out.print(tagHandlerVar);
                     out.println(");");
@@ -2406,8 +2416,8 @@ class Generator {
             } else {
                 out.printin(tagHandlerVar);
                 out.println(".release();");
-                out.printin("org.apache.struts2.jasper.runtime.InstanceHelper.preDestroy(");
-                out.print(VAR_INSTANCEMANAGER);
+                out.printin("org.apache.struts2.jasper.runtime.AnnotationHelper.preDestroy(");
+                out.print(VAR_ANNOTATIONPROCESSOR);
                 out.print(", ");
                 out.print(tagHandlerVar);
                 out.println(");");
@@ -2451,8 +2461,8 @@ class Generator {
             out.println("();");
 
             // Resource injection
-            out.printin("org.apache.struts2.jasper.runtime.InstanceHelper.postConstruct(");
-            out.print(VAR_INSTANCEMANAGER);
+            out.printin("org.apache.struts2.jasper.runtime.AnnotationHelper.postConstruct(");
+            out.print(VAR_ANNOTATIONPROCESSOR);
             out.print(", ");
             out.print(tagHandlerVar);
             out.println(");");
@@ -2509,8 +2519,8 @@ class Generator {
             syncScriptingVars(n, VariableInfo.AT_END);
 
             // Resource injection
-            out.printin("org.apache.struts2.jasper.runtime.InstanceHelper.preDestroy(");
-            out.print(VAR_INSTANCEMANAGER);
+            out.printin("org.apache.struts2.jasper.runtime.AnnotationHelper.preDestroy(");
+            out.print(VAR_ANNOTATIONPROCESSOR);
             out.print(", ");
             out.print(tagHandlerVar);
             out.println(");");

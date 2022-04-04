@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.sitemesh;
 
 import com.opensymphony.module.sitemesh.RequestConstants;
@@ -95,12 +98,12 @@ public abstract class OldDecorator2NewStrutsDecorator extends BaseWebAppDecorato
             // ok, one isn't associated with the request, so let's create one using the current Dispatcher
             ValueStack vs = Dispatcher.getInstance().getContainer().getInstance(ValueStackFactory.class).createValueStack();
             vs.getContext().putAll(Dispatcher.getInstance().createContextMap(request, response, null));
-            ctx = ActionContext.of(vs.getContext());
+            ctx = new ActionContext(vs.getContext());
             if (ctx.getActionInvocation() == null) {
                 // put in a dummy ActionSupport so basic functionality still works
                 ActionSupport action = new ActionSupport();
                 vs.push(action);
-                ctx.withActionInvocation(new DummyActionInvocation(action));
+                ctx.setActionInvocation(new DummyActionInvocation(action));
             }
         }
 
@@ -139,6 +142,8 @@ public abstract class OldDecorator2NewStrutsDecorator extends BaseWebAppDecorato
 
 
     static class DummyActionInvocation implements ActionInvocation {
+
+        private static final long serialVersionUID = -4808072199157363028L;
 
         ActionSupport action;
 
@@ -192,6 +197,14 @@ public abstract class OldDecorator2NewStrutsDecorator extends BaseWebAppDecorato
         }
 
         public void init(ActionProxy proxy) {
+        }
+
+        public ActionInvocation serialize() {
+            return null;
+        }
+
+        public ActionInvocation deserialize(ActionContext actionContext) {
+            return null;
         }
 
     }

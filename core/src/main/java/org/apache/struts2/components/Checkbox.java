@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +60,6 @@ public class Checkbox extends UIBean {
     final public static String TEMPLATE = "checkbox";
 
     protected String fieldValue;
-    protected String submitUnchecked;
 
     public Checkbox(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -73,13 +75,6 @@ public class Checkbox extends UIBean {
         } else {
             addParameter("fieldValue", "true");
         }
-
-        if (submitUnchecked != null) {
-            Object parsedValue = findValue(submitUnchecked, Boolean.class);
-            addParameter("submitUnchecked", parsedValue == null ? Boolean.valueOf(submitUnchecked) : parsedValue);
-        } else {
-            addParameter("submitUnchecked", false);
-        }
     }
 
     protected Class getValueClassType() {
@@ -89,28 +84,6 @@ public class Checkbox extends UIBean {
     @StrutsTagAttribute(description="The actual HTML value attribute of the checkbox.", defaultValue="true")
     public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;
-    }
-
-    @StrutsTagAttribute(description="If set to true, unchecked elements will be submitted with the form.", type="Boolean", defaultValue="false")
-    public void setSubmitUnchecked(String submitUnchecked) {
-        this.submitUnchecked = submitUnchecked;
-    }
-
-    /**
-     * Deprecated since 2.5.27
-     * @deprecated use {@link #setLabelPosition(String)} instead
-     */
-    @Deprecated
-    @Override
-    @StrutsTagAttribute(description="(Deprecated) Define label position of form element (top/left), also 'right' is supported when using 'xhtml' theme")
-    public void setLabelposition(String labelPosition) {
-        super.setLabelPosition(labelPosition);
-    }
-
-    @Override
-    @StrutsTagAttribute(description="Define label position of form element (top/left), also 'right' is supported when using 'xhtml' theme")
-    public void setLabelPosition(String labelPosition) {
-        super.setLabelPosition(labelPosition);
     }
 
 }

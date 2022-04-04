@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp;
 
 import javax.servlet.jsp.JspException;
@@ -43,42 +46,5 @@ public class PushTagTest extends AbstractUITagTest {
             e.printStackTrace();
             fail();
         }
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        PushTag freshTag = new PushTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testSimple_clearTagStateSet() {
-        PushTag tag = new PushTag();
-
-        stack.setValue("foo", "bar");
-
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setPageContext(pageContext);
-        tag.setValue("foo");
-
-        try {
-            assertEquals(2, stack.size());
-            tag.doStartTag();
-            setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-            assertEquals(3, stack.size());
-            tag.doEndTag();
-            assertEquals(2, stack.size());
-        } catch (JspException e) {
-            e.printStackTrace();
-            fail();
-        }
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        PushTag freshTag = new PushTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 }

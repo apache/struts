@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,18 +18,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.result;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.result.StrutsResultSupport;
+import org.easymock.EasyMock;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.StrutsInternalTestCase;
-import org.easymock.EasyMock;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Test case for StrutsResultSupport.
@@ -57,27 +61,6 @@ public class StrutsResultSupportTest extends StrutsInternalTestCase {
 
         assertNotNull(result.getInternalLocation());
         assertEquals("/pages/myJsp.jsp?location=ThisIsMyLocation", result.getInternalLocation());
-        EasyMock.verify(mockActionInvocation);
-    }
-
-    public void testParseButNotParseLocation() throws Exception {
-        ValueStack stack = ActionContext.getContext().getValueStack();
-
-        ActionInvocation mockActionInvocation = EasyMock.createNiceMock(ActionInvocation.class);
-        mockActionInvocation.getStack();
-        EasyMock.expectLastCall().andReturn(stack).anyTimes();
-        EasyMock.replay(mockActionInvocation);
-
-        InternalStrutsResultSupport result = new InternalStrutsResultSupport();
-        result.setParse(true);
-        result.setEncode(false);
-        result.parseLocation = false;
-        result.setLocation("${1-1}");
-
-        result.execute(mockActionInvocation);
-
-        assertNotNull(result.getInternalLocation());
-        assertEquals("${1-1}", result.getInternalLocation());
         EasyMock.verify(mockActionInvocation);
     }
 
@@ -130,7 +113,7 @@ public class StrutsResultSupportTest extends StrutsInternalTestCase {
         EasyMock.verify(mockActionInvocation);
     }
 
-    public void testConditionalParseCollection() {
+    public void testConditionalParseCollection() throws Exception {
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new ActionSupport() {
             public List<String> getList() {
@@ -162,11 +145,11 @@ public class StrutsResultSupportTest extends StrutsInternalTestCase {
     public static class InternalStrutsResultSupport extends StrutsResultSupport {
         private String _internalLocation = null;
 
-        protected void doExecute(String finalLocation, ActionInvocation invocation) {
+        protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
             _internalLocation = finalLocation;
         }
 
-        String getInternalLocation() {
+        public String getInternalLocation() {
             return _internalLocation;
         }
     }

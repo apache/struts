@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.xslt;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +30,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 import java.io.InputStream;
+
 
 /**
  * ServletURIResolver is a URIResolver that can retrieve resources from the servlet context using the scheme "response".

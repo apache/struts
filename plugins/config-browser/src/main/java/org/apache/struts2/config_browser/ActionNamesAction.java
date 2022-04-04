@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,12 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.config_browser;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.Set;

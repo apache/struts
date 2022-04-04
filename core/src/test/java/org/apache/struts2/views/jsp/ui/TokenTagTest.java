@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp.ui;
 
 import javax.servlet.jsp.JspException;
@@ -33,8 +36,7 @@ public class TokenTagTest extends AbstractUITagTest {
     public void testDefaultName() {
         String tokenName = TokenHelper.DEFAULT_TOKEN_NAME;
         TokenTag tag = new TokenTag();
-        doTokenTest(tokenName, tag, false);
-        doTokenTest_clearTagStateSet(tokenName, tag);
+        doTokenTest(tokenName, tag);
     }
 
     public void testMultipleTagsWithSameName() {
@@ -42,16 +44,13 @@ public class TokenTagTest extends AbstractUITagTest {
         TokenTag tag = new TokenTag();
         tag.setName(tokenName);
 
-        String token = doTokenTest(tokenName, tag, true);
+        String token = doTokenTest(tokenName, tag);
 
         TokenTag anotherTag = new TokenTag();
         anotherTag.setName(tokenName);
 
-        String anotherToken = doTokenTest(tokenName, anotherTag, true);
+        String anotherToken = doTokenTest(tokenName, anotherTag);
         assertEquals(token, anotherToken);
-
-        doTokenTest_clearTagStateSet(tokenName, tag);
-        doTokenTest_clearTagStateSet(tokenName, anotherTag);
     }
 
     /**
@@ -61,7 +60,7 @@ public class TokenTagTest extends AbstractUITagTest {
         String tokenName = "foo";
         TokenTag tag = new TokenTag();
         tag.setName(tokenName);
-        doTokenTest(tokenName, tag, true);
+        doTokenTest(tokenName, tag);
 
         String s = writer.toString();
         assertTrue(s.indexOf("name=\"" + TokenHelper.TOKEN_NAME_FIELD) > -1);
@@ -69,18 +68,16 @@ public class TokenTagTest extends AbstractUITagTest {
         assertTrue(s.indexOf("name=\"" + tokenName + "\"") > -1);
 
         //System.out.println(s);
-        doTokenTest_clearTagStateSet(tokenName, tag);
     }
 
     public void testSuppliedName() {
         String tokenName = "my.very.long.token.name";
         TokenTag tag = new TokenTag();
         tag.setName(tokenName);
-        doTokenTest(tokenName, tag, true);
-        doTokenTest_clearTagStateSet(tokenName, tag);
+        doTokenTest(tokenName, tag);
     }
 
-    private String doTokenTest(String tokenName, TokenTag tag, boolean tagNameWasSet) {
+    private String doTokenTest(String tokenName, TokenTag tag) {
         tag.setPageContext(pageContext);
 
         String token = null;
@@ -93,20 +90,6 @@ public class TokenTagTest extends AbstractUITagTest {
 			assertNotNull(token);
 			final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
 			assertEquals(token, pageContext.getSession().getAttribute(sessionTokenName));
-
-            // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-            TokenTag freshTag = new TokenTag();
-            freshTag.setPageContext(pageContext);
-            if (tagNameWasSet) {
-                assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                        strutsBodyTagsAreReflectionEqual(tag, freshTag));
-            } else {
-                // TokenTag has no non=default state set here, so it compares as equal with the default tag clear state as well.
-                assertTrue("Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  " +
-                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                        strutsBodyTagsAreReflectionEqual(tag, freshTag));
-            }
         } catch (JspException e) {
             e.printStackTrace();
             fail();
@@ -114,36 +97,4 @@ public class TokenTagTest extends AbstractUITagTest {
 
         return token;
     }
-
-    private String doTokenTest_clearTagStateSet(String tokenName, TokenTag tag) {
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setPageContext(pageContext);
-
-        String token = null;
-
-        try {
-            tag.doStartTag();
-            setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-            tag.doEndTag();
-
-            token = (String) context.get(tokenName);
-			assertNotNull(token);
-			final String sessionTokenName = TokenHelper.buildTokenSessionAttributeName(tokenName);
-			assertEquals(token, pageContext.getSession().getAttribute(sessionTokenName));
-
-            // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-            TokenTag freshTag = new TokenTag();
-            freshTag.setPerformClearTagStateForTagPoolingServers(true);
-            freshTag.setPageContext(pageContext);
-            assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                    "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                    strutsBodyTagsAreReflectionEqual(tag, freshTag));
-        } catch (JspException e) {
-            e.printStackTrace();
-            fail();
-        }
-
-        return token;
-    }
-
 }

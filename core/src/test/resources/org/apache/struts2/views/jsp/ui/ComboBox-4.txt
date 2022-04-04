@@ -1,13 +1,13 @@
  <tr>
-     <td class="tdLabel"><label for="cb[&#39;&quot;.&quot;&#39;]=bc(){};//" class="label">mylabel:</label></td>
+     <td class="tdLabel"><label for="cb.bc" class="label">mylabel:</label></td>
      <td class="tdInput">
  <script type="text/javascript">
-    function autoPopulate_cb__________bc_______(targetElement) {
+    function autoPopulate_cb_bc(targetElement) {
         targetElement.form.elements['foo'].value=targetElement.options[targetElement.selectedIndex].value;
     }
  </script>
- <input type="text" name="foo" value="hello" id="cb[&#39;&quot;.&quot;&#39;]=bc(){};//"/><br/>
- <select onChange="autoPopulate_cb__________bc_______(this);">
+ <input type="text" name="foo" value="hello" id="cb.bc"/><br/>
+ <select onChange="autoPopulate_cb_bc(this);">
      <option value="foo">foo</option>
  </select>
      </td>

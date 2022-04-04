@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp.ui;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +29,7 @@ import org.apache.struts2.components.Hidden;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
+
 /**
  * @see Hidden
  */
@@ -33,16 +37,7 @@ public class HiddenTag extends AbstractUITag {
 
     private static final long serialVersionUID = -1124367972048371675L;
 
-    @Override
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Hidden(stack, req, res);
-    }
-
-    @Override
-    /**
-     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
-     */
-    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
-        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
     }
 }

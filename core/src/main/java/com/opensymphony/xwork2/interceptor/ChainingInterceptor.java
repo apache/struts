@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2007,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
@@ -23,14 +20,11 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.Unchainable;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ProxyUtil;
 import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
-import org.apache.struts2.StrutsConstants;
 
 import java.util.*;
 
@@ -60,9 +54,9 @@ import java.util.*;
  * </p>
  *
  * <ul>
- * <li>struts.chaining.copyErrors - set to true to copy Action Errors</li>
- * <li>struts.chaining.copyFieldErrors - set to true to copy Field Errors</li>
- * <li>struts.chaining.copyMessages - set to true to copy Action Messages</li>
+ * <li>struts.xwork.chaining.copyErrors - set to true to copy Action Errors</li>
+ * <li>struts.xwork.chaining.copyFieldErrors - set to true to copy Field Errors</li>
+ * <li>struts.xwork.chaining.copyMessages - set to true to copy Action Messages</li>
  * </ul>
  *
  * <p>
@@ -136,17 +130,17 @@ public class ChainingInterceptor extends AbstractInterceptor {
         this.reflectionProvider = prov;
     }
 
-    @Inject(value = StrutsConstants.STRUTS_CHAINING_COPY_ERRORS, required = false)
+    @Inject(value = "struts.xwork.chaining.copyErrors", required = false)
     public void setCopyErrors(String copyErrors) {
         this.copyErrors = "true".equalsIgnoreCase(copyErrors);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_CHAINING_COPY_FIELD_ERRORS, required = false)
+    @Inject(value = "struts.xwork.chaining.copyFieldErrors", required = false)
     public void setCopyFieldErrors(String copyFieldErrors) {
         this.copyFieldErrors = "true".equalsIgnoreCase(copyFieldErrors);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_CHAINING_COPY_MESSAGES, required = false)
+    @Inject(value = "struts.xwork.chaining.copyMessages", required = false)
     public void setCopyMessages(String copyMessages) {
         this.copyMessages = "true".equalsIgnoreCase(copyMessages);
     }
@@ -166,12 +160,7 @@ public class ChainingInterceptor extends AbstractInterceptor {
         Map<String, Object> ctxMap = invocation.getInvocationContext().getContextMap();
         for (Object object : list) {
             if (shouldCopy(object)) {
-                Object action = invocation.getAction();
-                Class<?> editable = null;
-                if(ProxyUtil.isProxy(action)) {
-                    editable = ProxyUtil.ultimateTargetClass(action);
-                }
-                reflectionProvider.copy(object, action, ctxMap, prepareExcludes(), includes, editable);
+                reflectionProvider.copy(object, invocation.getAction(), ctxMap, prepareExcludes(), includes);
             }
         }
     }
@@ -224,18 +213,9 @@ public class ChainingInterceptor extends AbstractInterceptor {
     /**
      * Sets the list of parameter names to exclude from copying (all others will be included).
      *
-     * @param excludes the excludes list as comma separated String
-     */
-    public void setExcludes(String excludes) {
-        this.excludes = TextParseUtil.commaDelimitedStringToSet(excludes);
-    }
-
-    /**
-     * Sets the list of parameter names to exclude from copying (all others will be included).
-     *
      * @param excludes the excludes list
      */
-    public void setExcludesCollection(Collection<String> excludes) {
+    public void setExcludes(Collection<String> excludes) {
         this.excludes = excludes;
     }
 
@@ -251,19 +231,9 @@ public class ChainingInterceptor extends AbstractInterceptor {
     /**
      * Sets the list of parameter names to include when copying (all others will be excluded).
      *
-     * @param includes the includes list as comma separated String
-     */
-    public void setIncludes(String includes) {
-        this.includes = TextParseUtil.commaDelimitedStringToSet(includes);
-    }
-
-
-    /**
-     * Sets the list of parameter names to include when copying (all others will be excluded).
-     *
      * @param includes the includes list
      */
-    public void setIncludesCollection(Collection<String> includes) {
+    public void setIncludes(Collection<String> includes) {
         this.includes = includes;
     }
 

@@ -24,17 +24,18 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="webconsole.css"/>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script src="webconsole.js"></script>
   <title>OGNL Console</title>
 </head>
 <body>
 <div id="shell">
-  <div class="wc-results" id="wc-result">
-    Welcome to the OGNL console!
-    <br/>
-    :-&gt;
-  </div>
   <form onsubmit="return false" id="wc-form">
+    <div class="wc-results" id="wc-result">
+      Welcome to the OGNL console!
+      <br/>
+      :-&gt;
+    </div>
     <input type="hidden" name="debug" value="command"/>
     <input name="expression" onkeyup="keyEvent(event)" class="wc-command" id="wc-command" type="text"/>
   </form>

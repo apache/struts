@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+    Defines the datasource that will be injected into your Actions
+-->
+
+<beans default-autowire="byName">
+
+    <!-- Change for your database -->
+    <bean id="dataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+        destroy-method="close">
+        <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
+        <property name="url" value="jdbc:hsqldb:mem:example"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
+
+</beans>

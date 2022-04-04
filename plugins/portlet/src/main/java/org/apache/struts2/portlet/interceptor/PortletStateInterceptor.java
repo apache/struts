@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletStateInterceptor.java 601698 2007-12-06 10:59:38Z nilsga $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

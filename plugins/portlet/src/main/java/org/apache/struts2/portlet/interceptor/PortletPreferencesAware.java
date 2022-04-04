@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletPreferencesAware.java 557544 2007-07-19 10:03:06Z nilsga $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -25,18 +27,13 @@ import javax.portlet.PortletPreferences;
  * All Actions that want to have access to the portlet preferences should
  * implement this interface.  If running in a servlet environment, an
  * appropriate testing implementation will be provided.
- *
- * @deprecated please use {@link org.apache.struts2.portlet.action.PortletPreferencesAware} instead
  */
-@Deprecated
 public interface PortletPreferencesAware {
 
     /**
      * Sets the HTTP request object in implementing classes.
      *
      * @param prefs the portlet preferences.
-     * @deprecated please use {@link org.apache.struts2.portlet.action.PortletPreferencesAware#withPortletPreferences(PortletPreferences)} instead
      */
-    @Deprecated
-    void setPortletPreferences(PortletPreferences prefs);
+    public void setPortletPreferences(PortletPreferences prefs);
 }

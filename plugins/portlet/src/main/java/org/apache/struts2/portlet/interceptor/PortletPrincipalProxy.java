@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletPrincipalProxy.java 559107 2007-07-24 17:03:11Z jholmes $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

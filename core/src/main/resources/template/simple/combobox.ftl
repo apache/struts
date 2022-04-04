@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,10 +20,10 @@
  * under the License.
  */
 -->
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
-	function autoPopulate_${parameters.escapedId}(targetElement) {
+<script type="text/javascript">
+	function autoPopulate_${parameters.escapedId?html}(targetElement) {
 		<#if parameters.headerKey?? && parameters.headerValue??>
-		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey?js_string}') {
+		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey?html}') {
 			return;
 		}
 		</#if>
@@ -30,20 +32,20 @@
 		    return;
 		}
 		</#if>
-		targetElement.form.elements['${parameters.name?js_string}'].value=targetElement.options[targetElement.selectedIndex].value;
+		targetElement.form.elements['${parameters.name?html}'].value=targetElement.options[targetElement.selectedIndex].value;
 	}
 </script>
 <#include "/${parameters.templateDir}/simple/text.ftl" />
 <br />
 <#if parameters.list??>
-<select onChange="autoPopulate_${parameters.escapedId}(this);"<#rt/>
+<select onChange="autoPopulate_${parameters.escapedId?html}(this);"<#rt/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
     <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
     </#if>
 >
 	<#if (parameters.headerKey?? && parameters.headerValue??)>
-		<option value="${parameters.headerKey}">${parameters.headerValue}</option>
+		<option value="${parameters.headerKey?html}">${parameters.headerValue?html}</option>
 	</#if>
 	<#if parameters.emptyOption!false>
 	    <option value=""></option>
@@ -80,21 +82,21 @@
           <#assign itemTitle = ''/>
         </#if>
     </#if>
-    <option value="${tmpListKey}"<#rt/>
+    <option value="${tmpListKey?html}"<#rt/>
         <#if (parameters.nameValue == tmpListKey)>
  selected="selected"<#rt/>
         </#if>
         <#if itemCssClass??>
- class="${itemCssClass}"<#rt/>
+ class="${itemCssClass?html}"<#rt/>
         </#if>
         <#if itemCssStyle??>
- style="${itemCssStyle}"<#rt/>
+ style="${itemCssStyle?html}"<#rt/>
         </#if>
         <#if itemTitle??>
- title="${itemTitle}"<#rt/>
+ title="${itemTitle?html}"<#rt/>
         </#if>
     ><#t/>
-            ${tmpListValue}<#t/>
+            ${tmpListValue?html}<#t/>
     </option><#lt/>
     </@s.iterator>
 </select>

@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,12 +18,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts2.StrutsInternalTestCase;
+import org.jmock.Mock;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
@@ -32,10 +38,12 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 public class ClearSessionInterceptorTest extends StrutsInternalTestCase {
 
     public void testCreateSession() throws Exception {
+        Mock httpServletRequestMock = new Mock(HttpServletRequest.class);
+
         ClearSessionInterceptor interceptor = new ClearSessionInterceptor();
         MockActionInvocation invocation = new MockActionInvocation();
-        ActionContext context = ActionContext.of(new HashMap<>()).bind();
-        Map<String, Object> session = new HashMap<>();
+        ActionContext context = new ActionContext(new HashMap());
+        Map session = new HashMap();
         session.put("Test1", "Test1");
         session.put("Test2", "Test2");
         session.put("Test3", "Test3");

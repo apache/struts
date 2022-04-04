@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,17 +24,13 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.xwork2.ActionContext;
 import freemarker.core.InvalidReferenceException;
-import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
+import freemarker.template.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsException;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 import org.apache.struts2.dispatcher.listener.StrutsListener;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.ScopesHashModel;
@@ -70,7 +68,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
 
     public void init() throws ServletException {
         try {
-            Dispatcher dispatcher = Dispatcher.getInstance(getServletContext());
+            Dispatcher dispatcher = (Dispatcher) getServletContext().getAttribute(StrutsStatics.SERVLET_DISPATCHER);
             if (dispatcher == null) {
                 throw new IllegalStateException("Unable to find the Dispatcher in the Servlet Context. Is '" + StrutsListener.class.getName() + "' missing in web.xml?");
             }
@@ -150,13 +148,10 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
         setBrowserCachingPolicy(response);
 
         ServletContext servletContext = getServletContext();
-        ScopesHashModel model = (ScopesHashModel) request.getAttribute(FreemarkerManager.ATTR_TEMPLATE_MODEL);
+        ScopesHashModel model = (ScopesHashModel) request.getAttribute(freemarkerManager.ATTR_TEMPLATE_MODEL);
         try {
             if (model == null) {
                 ActionContext ctx = ServletActionContext.getActionContext(request);
-                if (ctx == null) {
-                    throw new StrutsException("ActionContext is null! Freemarker accessed out of action?");
-                }
                 model = freemarkerManager.buildTemplateModel(ctx.getValueStack(), ctx.getActionInvocation().getAction(), servletContext, request, response, wrapper);
             }
 
@@ -172,15 +167,15 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
             }
         } catch (InvalidReferenceException x) {
             // this exception is thrown if there is an error processing a reference.  We want to report these!
-            HttpServletRequest req = ActionContext.getContext().getServletRequest();
+            HttpServletRequest req = ((StrutsRequestWrapper) ActionContext.getContext().get("com.opensymphony.xwork2.dispatcher.HttpServletRequest"));
             String resultCode = ActionContext.getContext().getActionInvocation().getResultCode();
-            if (req == null) {
+            if (req == null){
                 req = request;
             }
 
             StringBuilder msgBuf = new StringBuilder("Error applying freemarker template to\n       request: ");
             msgBuf.append(req.getRequestURL());
-            if (req.getQueryString() != null) {
+            if (req.getQueryString() != null){
                 msgBuf.append("?").append(req.getQueryString());
             }
             msgBuf.append(" with resultCode: ").append(resultCode).append(".\n\n").append(x.getMessage());
@@ -193,14 +188,14 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
             // constructor-passed throwable won't show up automatically in
             // stack traces.
             try {
-                e.getClass().getMethod("initCause", new Class[]{Throwable.class}).invoke(e, x);
+                e.getClass().getMethod("initCause", new Class[]{Throwable.class}).invoke(e, new Object[]{x});
             } catch (Exception ex) {
                 // Can't set init cause, we're probably running on a pre-1.4
                 // JDK, oh well...
             }
             throw e;
         } catch (TemplateException te) {
-            if (config.getTemplateExceptionHandler().getClass().getName().contains("Debug")) {
+            if (config.getTemplateExceptionHandler().getClass().getName().indexOf("Debug") != -1) {
                 this.log("Error executing FreeMarker template", te);
             } else {
                 ServletException e = new ServletException("Error executing FreeMarker template", te);
@@ -209,7 +204,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
                 // constructor-passed throwable won't show up automatically in
                 // stack traces.
                 try {
-                    e.getClass().getMethod("initCause", new Class[]{Throwable.class}).invoke(e, te);
+                    e.getClass().getMethod("initCause", new Class[]{Throwable.class}).invoke(e, new Object[]{te});
                 } catch (Exception ex) {
                     // Can't set init cause, we're probably running on a pre-1.4
                     // JDK, oh well...
@@ -327,7 +322,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
             // HTTP/1.0
             res.setHeader("Pragma", "no-cache");
             // Last resort for those that ignore all of the above
-            res.setHeader("Expires", FreemarkerManager.EXPIRATION_DATE);
+            res.setHeader("Expires", freemarkerManager.EXPIRATION_DATE);
         }
     }
 }

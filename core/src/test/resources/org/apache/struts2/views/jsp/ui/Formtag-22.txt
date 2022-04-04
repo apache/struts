@@ -1,8 +1,9 @@
-<script type="text/javascript" src="/static/xhtml/validation.js"></script>
+<script type="text/javascript" src="/struts/xhtml/validation.js"></script>
+<script type="text/javascript "src="/struts/utils.js"></script>
 <form id="doubleValidationAction" name="myForm" onsubmit="submitMe(); return validateForm_doubleValidationAction();" action="/doubleValidationAction.action" method="post" enctype="myEncType" title="mytitle" accept-charset="UTF-8" onreset="clearErrorMessages(this);clearErrorLabels(this);">
 <table class="wwFormTable"> <tr>
     <td class="tdLabel"></td>
-    <td class="tdInput">	<script type="text/javascript" src="/static/optiontransferselect.js"></script>
+    <td class="tdInput">	<script type="text/javascript" src="/struts/optiontransferselect.js"></script>
 <table>
 <tr><td>
 <select name="myUpDownSelectTag" size="5" id="doubleValidationAction_myUpDownSelectTag" multiple="multiple">
@@ -34,9 +35,9 @@
     function validateForm_doubleValidationAction() {
         var getFieldValue = function(field) {
             var type = field.type ? field.type : field[0].type;
-            if(type === 'select-one' || type === 'select-multiple') {
-                return (field.selectedIndex === -1 ? "" : field.options[field.selectedIndex].value);
-            } else if(type === 'checkbox' || type === 'radio') {
+            if(type == 'select-one' || type == 'select-multiple') {
+                return (field.selectedIndex == -1 ? "" : field.options[field.selectedIndex].value);
+            } else if(type == 'checkbox' || type == 'radio') {
                 if(!field.length) {
                     field = [field];
                 }
@@ -60,7 +61,7 @@
             field = form.elements['myUpDownSelectTag'];
             var error = "bar must be between 6000.1 and 10000.1.";
             var fieldValue=getFieldValue(field);
-            if(continueValidation && fieldValue !== null) {
+            if(continueValidation && fieldValue != null) {
                 var value = parseFloat(fieldValue);
                 if(value < 6000.1 || value>10000.1 || false || false){
                     addError(field, error);

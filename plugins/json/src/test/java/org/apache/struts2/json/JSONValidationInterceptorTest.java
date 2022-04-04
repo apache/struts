@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.json;
 
 import com.opensymphony.xwork2.Action;
@@ -32,7 +35,6 @@ import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor;
 import org.apache.struts2.interceptor.validation.SkipValidation;
-import org.apache.struts2.util.TestUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -40,7 +42,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.fest.assertions.Assertions.assertThat;
 
 public class JSONValidationInterceptorTest extends StrutsTestCase {
 
@@ -61,6 +63,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         request.setParameterMap(parameters);
         
         validationInterceptor.intercept(invocation);
+        interceptor.setValidationFailedStatus(HttpServletResponse.SC_BAD_REQUEST);
         interceptor.intercept(invocation);
 
         String json = stringWriter.toString();
@@ -128,54 +131,6 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         assertEquals("UTF-8", response.getCharacterEncoding());
     }
 
-    public void testValidationSucceedsWithDifferentParamName() throws Exception {
-        JSONValidationInterceptor interceptor = new JSONValidationInterceptor();
-        interceptor.setValidateJsonParam("enableJSONValidation");
-
-        action.setText("abcd@ggg.com");
-        action.setPassword("apassword");
-        action.setValue(10);
-
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("enableJSONValidation", "true");
-        request.setParameterMap(parameters);
-
-        validationInterceptor.intercept(invocation);
-        interceptor.intercept(invocation);
-
-        String json = stringWriter.toString();
-
-        String normalizedActual = TestUtils.normalize(json, true);
-        assertEquals("", normalizedActual);
-    }
-
-    public void testValidationSucceedsValidateOnlyWithDifferentParamName() throws Exception {
-        JSONValidationInterceptor interceptor = new JSONValidationInterceptor();
-        interceptor.setValidateOnlyParam("validateOnly");
-        interceptor.setValidateJsonParam("enableJSONValidation");
-
-        action.setText("abcd@ggg.com");
-        action.setPassword("apassword");
-        action.setValue(10);
-
-        //just validate
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("validateOnly", "true");
-        parameters.put("enableJSONValidation", "true");
-        request.setParameterMap(parameters);
-
-        validationInterceptor.intercept(invocation);
-        interceptor.intercept(invocation);
-
-        String json = stringWriter.toString();
-
-        String normalizedActual = TestUtils.normalize(json, true);
-        assertEquals("{}", normalizedActual);
-        assertFalse(action.isExecuted());
-        assertEquals("application/json", response.getContentType());
-        assertEquals("UTF-8", response.getCharacterEncoding());
-    }
-
     protected void setUp() throws Exception {
         super.setUp();
         ActionConfig config = new ActionConfig.Builder("", "name", "").build();
@@ -198,7 +153,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
 
         context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
         invocation = new MockActionInvocation();
-        ActionContext.getContext().withActionInvocation(invocation);
+        ActionContext.getContext().setActionInvocation(invocation);
         invocation.setAction(action);
         invocation.setInvocationContext(context);
         MockActionProxy proxy = new MockActionProxy();

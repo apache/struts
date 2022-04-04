@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.cdi;
 
 import com.opensymphony.xwork2.ObjectFactory;
@@ -45,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CdiObjectFactory extends ObjectFactory {
 
-	private static final Logger LOG = LogManager.getLogger(CdiObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(CdiObjectFactory.class);
 
     /**
      * The key under which the BeanManager can be found according to CDI API docs
@@ -60,11 +61,10 @@ public class CdiObjectFactory extends ObjectFactory {
 	 */
 	public static final String CDI_JNDIKEY_BEANMANAGER_COMP_ENV = "java:comp/env/BeanManager";
 
-	public static final String STRUTS_OBJECT_FACTORY_CDI_JNDI_KEY = "struts.objectFactory.cdi.jndiKey";
 
 	private String jndiKey;
 
-	@Inject(value = STRUTS_OBJECT_FACTORY_CDI_JNDI_KEY, required = false)
+	@Inject(value = "struts.objectFactory.cdi.jndiKey", required = false)
 	public void setJndiKey( String jndiKey ) {
 		this.jndiKey = jndiKey;
 	}
@@ -74,6 +74,7 @@ public class CdiObjectFactory extends ObjectFactory {
     Map<Class<?>, InjectionTarget<?>> injectionTargetCache = new ConcurrentHashMap<Class<?>, InjectionTarget<?>>();
 
     public CdiObjectFactory() {
+        super();
         LOG.info("Initializing Struts2 CDI integration...");
         this.beanManager = findBeanManager();
         if (beanManager != null) {

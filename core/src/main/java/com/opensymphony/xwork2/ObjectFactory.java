@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2;
 
@@ -31,10 +28,10 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.validator.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 
 import java.io.Serializable;
 import java.util.Map;
+
 
 /**
  * ObjectFactory is responsible for building the core framework objects. Users may register their 
@@ -52,8 +49,8 @@ public class ObjectFactory implements Serializable {
     private static final Logger LOG = LogManager.getLogger(ObjectFactory.class);
 
     private transient ClassLoader ccl;
-
     private Container container;
+
     private ActionFactory actionFactory;
     private ResultFactory resultFactory;
     private InterceptorFactory interceptorFactory;
@@ -61,17 +58,14 @@ public class ObjectFactory implements Serializable {
     private ConverterFactory converterFactory;
     private UnknownHandlerFactory unknownHandlerFactory;
 
-    public ObjectFactory() {
+    @Inject(value="objectFactory.classloader", required=false)
+    public void setClassLoader(ClassLoader cl) {
+        this.ccl = cl;
     }
-
+    
     @Inject
     public void setContainer(Container container) {
         this.container = container;
-    }
-
-    @Inject(value=StrutsConstants.STRUTS_OBJECT_FACTORY_CLASSLOADER, required=false)
-    public void setClassLoader(ClassLoader cl) {
-        this.ccl = cl;
     }
 
     @Inject
@@ -152,7 +146,7 @@ public class ObjectFactory implements Serializable {
      * @throws Exception in case of any error
      */
     public Object buildBean(Class clazz, Map<String, Object> extraContext) throws Exception {
-        return container.inject(clazz);
+        return clazz.newInstance();
     }
 
     /**
@@ -161,7 +155,6 @@ public class ObjectFactory implements Serializable {
      */
     protected Object injectInternalBeans(Object obj) {
         if (obj != null && container != null) {
-            LOG.debug("Injecting internal beans into [{}]", obj.getClass().getSimpleName());
             container.inject(obj);
         }
         return obj;
@@ -190,7 +183,11 @@ public class ObjectFactory implements Serializable {
      */
     public Object buildBean(String className, Map<String, Object> extraContext, boolean injectInternal) throws Exception {
         Class clazz = getClassInstance(className);
-        return buildBean(clazz, extraContext);
+        Object obj = buildBean(clazz, extraContext);
+        if (injectInternal) {
+            injectInternalBeans(obj);
+        }
+        return obj;
     }
 
     /**

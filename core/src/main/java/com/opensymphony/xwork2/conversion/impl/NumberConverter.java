@@ -1,61 +1,32 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package com.opensymphony.xwork2.conversion.impl;
 
-import org.apache.struts2.conversion.TypeConversionException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.opensymphony.xwork2.XWorkException;
 
 import java.lang.reflect.Member;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
-import java.util.Locale;
 import java.util.Map;
 
 public class NumberConverter extends DefaultTypeConverter {
 
-    private static final Logger LOG = LogManager.getLogger(NumberConverter.class);
-
     public Object convertValue(Map<String, Object> context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (value instanceof String) {
-            String stringValue = String.valueOf(value);
-
             if (toType == BigDecimal.class) {
-                return convertToBigDecimal(context, stringValue);
+                return new BigDecimal((String) value);
             } else if (toType == BigInteger.class) {
-                return new BigInteger(stringValue);
-            } else if (toType == Double.class || toType == double.class) {
-                return convertToDouble(context, stringValue);
-            } else if (toType == Float.class || toType == float.class) {
-                return convertToFloat(context, stringValue);
+                return new BigInteger((String) value);
             } else if (toType.isPrimitive()) {
                 Object convertedValue = super.convertValue(context, value, toType);
-
+                String stringValue = (String) value;
                 if (!isInRange((Number) convertedValue, stringValue, toType))
-                    throw new TypeConversionException("Overflow or underflow casting: \"" + stringValue + "\" into class " + convertedValue.getClass().getName());
+                    throw new XWorkException("Overflow or underflow casting: \"" + stringValue + "\" into class " + convertedValue.getClass().getName());
 
                 return convertedValue;
             } else {
-                if (!toType.isPrimitive() && stringValue.isEmpty()) {
+                String stringValue = (String) value;
+                if (!toType.isPrimitive() && (stringValue == null || stringValue.length() == 0)) {
                     return null;
                 }
                 NumberFormat numFormat = NumberFormat.getInstance(getLocale(context));
@@ -67,11 +38,11 @@ public class NumberConverter extends DefaultTypeConverter {
                 Number number = numFormat.parse(stringValue, parsePos);
 
                 if (parsePos.getIndex() != stringValue.length()) {
-                    throw new TypeConversionException("Unparseable number: \"" + stringValue + "\" at position "
-                        + parsePos.getIndex());
+                    throw new XWorkException("Unparseable number: \"" + stringValue + "\" at position "
+                            + parsePos.getIndex());
                 } else {
                     if (!isInRange(number, stringValue, toType))
-                        throw new TypeConversionException("Overflow or underflow casting: \"" + stringValue + "\" into class " + number.getClass().getName());
+                        throw new XWorkException("Overflow or underflow casting: \"" + stringValue + "\" into class " + number.getClass().getName());
 
                     value = super.convertValue(context, number, toType);
                 }
@@ -86,97 +57,6 @@ public class NumberConverter extends DefaultTypeConverter {
 
         // pass it through DefaultTypeConverter
         return super.convertValue(context, value, toType);
-    }
-
-    protected Object convertToBigDecimal(Map<String, Object> context, String stringValue) {
-        Locale locale = getLocale(context);
-
-        NumberFormat format = getNumberFormat(locale);
-        if (format instanceof DecimalFormat) {
-            ((DecimalFormat) format).setParseBigDecimal(true);
-            char separator = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
-            stringValue = normalize(stringValue, separator);
-        }
-
-        LOG.debug("Trying to convert a value {} with locale {} to BigDecimal", stringValue, locale);
-        ParsePosition parsePosition = new ParsePosition(0);
-        Number number = format.parse(stringValue, parsePosition);
-
-        if (parsePosition.getIndex() != stringValue.length()) {
-            throw new TypeConversionException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
-        }
-
-        return number;
-    }
-
-    protected Object convertToDouble(Map<String, Object> context, String stringValue) {
-        Locale locale = getLocale(context);
-
-        NumberFormat format = getNumberFormat(locale);
-        if (format instanceof DecimalFormat) {
-            char separator = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
-            stringValue = normalize(stringValue, separator);
-        }
-
-        LOG.debug("Trying to convert a value {} with locale {} to Double", stringValue, locale);
-        ParsePosition parsePosition = new ParsePosition(0);
-        Number number = format.parse(stringValue, parsePosition);
-
-        if (parsePosition.getIndex() != stringValue.length()) {
-            throw new TypeConversionException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
-        }
-
-        if (!isInRange(number, stringValue, Double.class)) {
-            throw new TypeConversionException("Overflow or underflow converting: \"" + stringValue + "\" into class " + number.getClass().getName());
-        }
-
-        if (number != null) {
-            return number.doubleValue();
-        }
-
-        return null;
-    }
-
-    protected Object convertToFloat(Map<String, Object> context, String stringValue) {
-        Locale locale = getLocale(context);
-
-        NumberFormat format = getNumberFormat(locale);
-        if (format instanceof DecimalFormat) {
-            char separator = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
-            stringValue = normalize(stringValue, separator);
-        }
-
-        LOG.debug("Trying to convert a value {} with locale {} to Float", stringValue, locale);
-        ParsePosition parsePosition = new ParsePosition(0);
-        Number number = format.parse(stringValue, parsePosition);
-
-        if (parsePosition.getIndex() != stringValue.length()) {
-            throw new TypeConversionException("Unparseable number: \"" + stringValue + "\" at position " + parsePosition.getIndex());
-        }
-
-        if (!isInRange(number, stringValue, Float.class)) {
-            throw new TypeConversionException("Overflow or underflow converting: \"" + stringValue + "\" into class " + number.getClass().getName());
-        }
-
-        if (number != null) {
-            return number.floatValue();
-        }
-
-        return null;
-    }
-
-    protected NumberFormat getNumberFormat(Locale locale) {
-        NumberFormat format = NumberFormat.getNumberInstance(locale);
-        format.setGroupingUsed(true);
-        return format;
-    }
-
-    protected String normalize(String strValue, char separator) {
-        // this is a hack as \160 isn't the same as " " (an empty space)
-        if (separator == 160) {
-            strValue = strValue.replaceAll(" ", String.valueOf(separator));
-        }
-        return strValue;
     }
 
     protected boolean isInRange(Number value, String stringValue, Class toType) {
@@ -223,7 +103,7 @@ public class NumberConverter extends DefaultTypeConverter {
             return true;
         }
 
-        return ((Comparable) bigValue).compareTo(lowerBound) >= 0 && ((Comparable) bigValue).compareTo(upperBound) <= 0;
+        return ((Comparable)bigValue).compareTo(lowerBound) >= 0 && ((Comparable)bigValue).compareTo(upperBound) <= 0;
     }
 
     private boolean isIntegerType(Class type) {

@@ -1,30 +1,23 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -93,9 +86,7 @@ import java.util.Collection;
  * @author Rene Gielen
  */
 public class DoubleRangeFieldValidator extends FieldValidatorSupport {
-
-    private static final Logger LOG = LogManager.getLogger(DoubleRangeFieldValidator.class);
-
+    
     private Double maxInclusive = null;
     private Double minInclusive = null;
     private Double minExclusive = null;
@@ -108,8 +99,14 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
 
     public void validate(Object object) throws ValidationException {
         String fieldName = getFieldName();
-        Object obj = this.getFieldValue(fieldName, object);
-        if (obj == null) {
+        Double value;
+        try {
+            Object obj = this.getFieldValue(fieldName, object);
+            if (obj == null) {
+                return;
+            }
+            value = Double.valueOf(obj.toString());
+        } catch (NumberFormatException e) {
             return;
         }
 
@@ -118,37 +115,11 @@ public class DoubleRangeFieldValidator extends FieldValidatorSupport {
         Double maxExclusiveToUse = getMaxExclusive();
         Double minExclusiveToUse = getMinExclusive();
 
-        if (obj.getClass().isArray()) {
-            Object[] values = (Object[]) obj;
-            validateCollection(maxInclusiveToUse, minInclusiveToUse, maxExclusiveToUse, minExclusiveToUse, Arrays.asList(values));
-        } else if (Collection.class.isAssignableFrom(obj.getClass())) {
-            Collection values = (Collection) obj;
-            validateCollection(maxInclusiveToUse, minInclusiveToUse, maxExclusiveToUse, minExclusiveToUse, values);
-        } else {
-            validateValue(obj, maxInclusiveToUse, minInclusiveToUse, maxExclusiveToUse, minExclusiveToUse);
-        }
-    }
-
-    protected void validateCollection(Double maxInclusiveToUse, Double minInclusiveToUse, Double maxExclusiveToUse, Double minExclusiveToUse, Collection values) {
-        for (Object objValue : values) {
-            validateValue(objValue, maxInclusiveToUse, minInclusiveToUse, maxExclusiveToUse, minExclusiveToUse);
-        }
-    }
-
-    protected void validateValue(Object obj, Double maxInclusiveToUse, Double minInclusiveToUse, Double maxExclusiveToUse, Double minExclusiveToUse) {
-        try {
-            setCurrentValue(obj);
-            Double value = Double.valueOf(obj.toString());
-            if ((maxInclusiveToUse != null && value.compareTo(maxInclusiveToUse) > 0) ||
-                    (minInclusiveToUse != null && value.compareTo(minInclusiveToUse) < 0) ||
-                    (maxExclusiveToUse != null && value.compareTo(maxExclusiveToUse) >= 0) ||
-                    (minExclusiveToUse != null && value.compareTo(minExclusiveToUse) <= 0)) {
-                addFieldError(getFieldName(), value);
-            }
-        } catch (NumberFormatException e) {
-            LOG.debug("Cannot validate value {} - not a Double", e);
-        } finally {
-            setCurrentValue(null);
+        if ((maxInclusiveToUse != null && value.compareTo(maxInclusiveToUse) > 0) ||
+                (minInclusiveToUse != null && value.compareTo(minInclusiveToUse) < 0) ||
+                (maxExclusiveToUse != null && value.compareTo(maxExclusiveToUse) >= 0) ||
+                (minExclusiveToUse != null && value.compareTo(minExclusiveToUse) <= 0)) {
+            addFieldError(fieldName, object);
         }
     }
 

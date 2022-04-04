@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.struts2.components.UIBean;
+import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.views.jsp.ComponentTagSupport;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.DynamicAttributes;
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * Abstract base class for all UI tags.
@@ -38,7 +44,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String disabled;
     protected String label;
     protected String labelSeparator;
-    protected String labelPosition;
+    protected String labelposition;
     protected String requiredPosition;
     protected String errorPosition;
     protected String name;
@@ -76,9 +82,8 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String tooltipIconPath;
 
     // dynamic attributes.
-    protected Map<String, String> dynamicAttributes = new HashMap<>();
+    protected Map<String, Object> dynamicAttributes = new HashMap<>();
 
-    @Override
     protected void populateParams() {
         super.populateParams();
 
@@ -91,7 +96,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setDisabled(disabled);
         uiBean.setLabel(label);
         uiBean.setLabelSeparator(labelSeparator);
-        uiBean.setLabelPosition(labelPosition);
+        uiBean.setLabelposition(labelposition);
         uiBean.setRequiredPosition(requiredPosition);
         uiBean.setErrorPosition(errorPosition);
         uiBean.setName(name);
@@ -128,7 +133,6 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setDynamicAttributes(dynamicAttributes);
     }
 
-    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -137,10 +141,6 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.cssClass = cssClass;
     }
 
-    /**
-     * @deprecated Use {@link #setCssClass(String)} instead
-     */
-    @Deprecated
     public void setClass(String cssClass) {
         this.cssClass = cssClass;
     }
@@ -173,17 +173,8 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.label = label;
     }
 
-    /**
-     * Deprecated since 2.5.27
-     * @deprecated use {@link #setLabelPosition(String)} instead
-     */
-    @Deprecated
     public void setLabelposition(String labelPosition) {
-        this.labelPosition = labelPosition;
-    }
-
-    public void setLabelPosition(String labelPosition) {
-        this.labelPosition = labelPosition;
+        this.labelposition = labelPosition;
     }
 
     public void setRequiredPosition(String requiredPosition) {
@@ -314,67 +305,12 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.labelSeparator = labelSeparator;
     }
 
-    @Override
     public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
-        dynamicAttributes.put(localName, String.valueOf(value));
-    }
-
-    @Override
-    /**
-     * Must declare the setter at the descendant Tag class level in order for the tag handler to locate the method.
-     */
-    public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
-        super.setPerformClearTagStateForTagPoolingServers(performClearTagStateForTagPoolingServers);
-    }
-
-    @Override
-    protected void clearTagStateForTagPoolingServers() {
-       if (getPerformClearTagStateForTagPoolingServers() == false) {
-            return;  // If flag is false (default setting), do not perform any state clearing.
+        if (ComponentUtils.altSyntax(getStack()) && ComponentUtils.isExpression(value.toString())) {
+            dynamicAttributes.put(localName, String.valueOf(ObjectUtils.defaultIfNull(findValue(value.toString()), value)));
+        } else {
+            dynamicAttributes.put(localName, value);
         }
-        super.clearTagStateForTagPoolingServers();
-        this.cssClass = null;
-        this.cssErrorClass = null;
-        this.cssStyle = null;
-        this.cssErrorStyle = null;
-        this.title = null;
-        this.disabled = null;
-        this.label = null;
-        this.labelSeparator = null;
-        this.labelPosition = null;
-        this.requiredPosition = null;
-        this.errorPosition = null;
-        this.name = null;
-        this.requiredLabel = null;
-        this.tabindex = null;
-        this.value = null;
-        this.template = null;
-        this.theme = null;
-        this.templateDir = null;
-        this.onclick = null;
-        this.ondblclick = null;
-        this.onmousedown = null;
-        this.onmouseup = null;
-        this.onmouseover = null;
-        this.onmousemove = null;
-        this.onmouseout = null;
-        this.onfocus = null;
-        this.onblur = null;
-        this.onkeypress = null;
-        this.onkeydown = null;
-        this.onkeyup = null;
-        this.onselect = null;
-        this.onchange = null;
-        this.accesskey = null;
-        this.id = null;
-        this.key = null;
-        this.tooltip = null;
-        this.tooltipConfig = null;
-        this.javascriptTooltip = null;
-        this.tooltipDelay = null;
-        this.tooltipCssClass = null;
-        this.tooltipIconPath = null;
-        this.dynamicAttributes.clear();
     }
 
 }

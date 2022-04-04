@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,25 +21,26 @@
  */
 -->
 <input type="file"<#rt/>
- name="${(parameters.name!"")}"<#rt/>
+ name="${(parameters.name!"")?html}"<#rt/>
 <#if parameters.get("size")?has_content>
- size="${parameters.get("size")}"<#rt/>
+ size="${parameters.get("size")?html}"<#rt/>
 </#if>
+ value=""<#rt/>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
 <#if parameters.accept?has_content>
- accept="${parameters.accept}"<#rt/>
+ accept="${parameters.accept?html}"<#rt/>
 </#if>
 <#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+ tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
 <#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+ id="${parameters.id?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/css.ftl" />
 <#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+ title="${parameters.title?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />

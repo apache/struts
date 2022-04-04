@@ -20,8 +20,6 @@
  */
 package org.apache.struts2.showcase.chat;
 
-import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.util.StrutsTypeConverter;
@@ -35,13 +33,6 @@ public class DateConverter extends StrutsTypeConverter {
 
 	private static final Logger LOG = LogManager.getLogger(DateConverter.class);
 
-	private XWorkConverter fallbackConverter;
-
-	@Inject
-	public void setXWorkConverter(XWorkConverter fallbackConverter) {
-		this.fallbackConverter = fallbackConverter;
-	}
-
 	public Object convertFromString(Map context, String[] values, Class toClass) {
 
 		if (values.length > 0 && values[0] != null && values[0].trim().length() > 0) {
@@ -49,8 +40,7 @@ public class DateConverter extends StrutsTypeConverter {
 			try {
 				return sdf.parse(values[0]);
 			} catch (ParseException e) {
-				LOG.warn("error converting value [" + values[0] + "] to Date. Trying fallback converter.");
-				return this.fallbackConverter.convertValue(context, values[0], toClass);
+				LOG.error("error converting value [" + values[0] + "] to Date ", e);
 			}
 		}
 		return null;

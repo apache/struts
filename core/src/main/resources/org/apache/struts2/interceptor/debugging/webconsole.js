@@ -48,21 +48,9 @@ function keyEvent(event, url) {
                 commandsHistory[commandsHistory.length] = theShellCommand;
                 historyPointer = commandsHistory.length;
                 var theUrl = url ? url : window.opener.location.pathname;
-
-                var request = new XMLHttpRequest();
-                request.open('POST', theUrl, true);
-                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-
-                request.onreadystatechange = function() {
-                  if (this.readyState === 4) {
-                    if (this.status >= 200 && this.status < 400) {
-                      // Success!
-                    	printResult(this.responseText);
-                    }
-                  }
-                };
-
-                request.send("debug=command&expression="+encodeURIComponent(document.getElementById('wc-command').value));
+                jQuery.post(theUrl, jQuery("#wc-form").serialize(), function (data) {
+                    printResult(data);
+                });
             }
             break;
         case 38: // this is the arrow up

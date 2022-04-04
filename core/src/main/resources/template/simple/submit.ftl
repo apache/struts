@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,10 +23,10 @@
 <#if parameters.type?? && parameters.type=="button">
 <button type="submit"<#rt/>
 <#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+ id="${parameters.id?html}"<#rt/>
 </#if>
 <#if parameters.name?has_content>
- name="${parameters.name}"<#rt/>
+ name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.nameValue??>
  value="<@s.property value="parameters.nameValue"/>"<#rt/>
@@ -33,16 +35,16 @@
  disabled="disabled"<#rt/>
 </#if>
 <#if parameters.cssClass?has_content>
- class="${parameters.cssClass}"<#rt/>
+ class="${parameters.cssClass?html}"<#rt/>
 </#if>
 <#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle}"<#rt/>
+ style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 <#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+ title="${parameters.title?html}"<#rt/>
 </#if>
 <#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+ tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl"/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
@@ -52,10 +54,10 @@
 <#if parameters.type?? && parameters.type=="image">
 <input type="image"<#rt/>
 <#if parameters.label?has_content>
- alt="${parameters.label}"<#rt/>
+ alt="${parameters.label?html}"<#rt/>
 </#if>
 <#if parameters.src?has_content>
- src="${parameters.src}"<#rt/>
+ src="${parameters.src?html}"<#rt/>
 </#if>
 <#else>
 <input type="submit"<#rt/>
@@ -64,25 +66,25 @@
 </#if>
 </#if>
 <#if parameters.id?has_content>
- id="${parameters.id}"<#rt/>
+ id="${parameters.id?html}"<#rt/>
 </#if>
 <#if parameters.name?has_content>
- name="${parameters.name}"<#rt/>
+ name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
 <#if parameters.cssClass?has_content>
- class="${parameters.cssClass}"<#rt/>
+ class="${parameters.cssClass?html}"<#rt/>
 </#if>
 <#if parameters.cssStyle?has_content>
- style="${parameters.cssStyle}"<#rt/>
+ style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 <#if parameters.title?has_content>
- title="${parameters.title}"<#rt/>
+ title="${parameters.title?html}"<#rt/>
 </#if>
 <#if parameters.tabindex?has_content>
- tabindex="${parameters.tabindex}"<#rt/>
+ tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />

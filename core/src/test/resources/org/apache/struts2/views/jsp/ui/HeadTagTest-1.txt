@@ -1,2 +1,2 @@
-<link rel="stylesheet" href="/static/xhtml/styles.css" type="text/css" nonce="r4nd0m"/>
-<script src="/static/utils.js" type="text/javascript" nonce="r4nd0m"></script>
+<link rel="stylesheet" href="/struts/xhtml/styles.css" type="text/css"/>
+<script src="/struts/utils.js" type="text/javascript"></script>

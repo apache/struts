@@ -1,21 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package org.apache.struts2.jasper.compiler;
 
 import java.io.File;
@@ -179,6 +178,14 @@ public class SmapUtil {
         return path.substring(path.lastIndexOf('/') + 1);
     }
 
+    /**
+     * Returns a file path corresponding to a potential SMAP input
+     * for the given compilation input (JSP file).
+     */
+    private static String inputSmapPath(String path) {
+        return path.substring(0, path.lastIndexOf('.') + 1) + "smap";
+    }
+
     //*********************************************************************
     // Installation logic (from Robert Field, JSR-045 spec lead)
     private static class SDEInstaller {
@@ -256,9 +263,9 @@ public class SmapUtil {
             addSDE();
 
             // write result
-            try(FileOutputStream outStream = new FileOutputStream(outClassFile)) {
-                outStream.write(gen, 0, genPos);
-            }
+            FileOutputStream outStream = new FileOutputStream(outClassFile);
+            outStream.write(gen, 0, genPos);
+            outStream.close();
         }
 
         SDEInstaller(File inClassFile, File attrFile, File outClassFile)
@@ -267,14 +274,14 @@ public class SmapUtil {
         }
 
         static byte[] readWhole(File input) throws IOException {
-            try (FileInputStream inStream = new FileInputStream(input)) {
-                int len = (int) input.length();
-                byte[] bytes = new byte[len];
-                if (inStream.read(bytes, 0, len) != len) {
-                    throw new IOException("expected size: " + len);
-                }
-                return bytes;
+            FileInputStream inStream = new FileInputStream(input);
+            int len = (int)input.length();
+            byte[] bytes = new byte[len];
+            if (inStream.read(bytes, 0, len) != len) {
+                throw new IOException("expected size: " + len);
             }
+            inStream.close();
+            return bytes;
         }
 
         void addSDE() throws UnsupportedEncodingException, IOException {

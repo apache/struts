@@ -1,4 +1,6 @@
 /*
+ * $Id: User.java 651946 2008-04-27 13:41:38Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -30,31 +32,6 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-1.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testNormalStyle_clearTagStateSet() throws Exception {
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setCssStyle("style");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        verify(ValidationStylesTest.class.getResource("validationstyles-1.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testErrorStyle() throws Exception {
@@ -63,31 +40,6 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-2.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testErrorStyle_clearTagStateSet() throws Exception {
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setCssErrorStyle("errstyle");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        verify(ValidationStylesTest.class.getResource("validationstyles-2.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testErrorClass() throws Exception {
@@ -96,31 +48,6 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-3.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testErrorClass_clearTagStateSet() throws Exception {
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setCssErrorClass("errclass");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        verify(ValidationStylesTest.class.getResource("validationstyles-3.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testStyleAndErrorStyle() throws Exception {
@@ -130,32 +57,6 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-2.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testStyleAndErrorStyle_clearTagStateSet() throws Exception {
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setCssStyle("style");
-        tag.setCssErrorStyle("errstyle");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        verify(ValidationStylesTest.class.getResource("validationstyles-2.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
      public void testStyleAndErrorClass() throws Exception {
@@ -165,32 +66,6 @@ public class ValidationStylesTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ValidationStylesTest.class.getResource("validationstyles-3.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-     public void testStyleAndErrorClass_clearTagStateSet() throws Exception {
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setCssStyle("style");
-        tag.setCssErrorClass("errclass");
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        verify(ValidationStylesTest.class.getResource("validationstyles-3.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        TextFieldTag freshTag = new TextFieldTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     @Override

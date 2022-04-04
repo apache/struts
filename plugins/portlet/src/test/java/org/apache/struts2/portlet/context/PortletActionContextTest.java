@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletActionContextTest.java 557544 2007-07-19 10:03:06Z nilsga $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -67,7 +69,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
 
     PortletConfig portletConfig;
 
-    Map<String, Object> context = new HashMap<>();
+    Map<String, Object> context = new HashMap<String, Object>();
 
     public void setUp() throws Exception {
         super.setUp();
@@ -84,7 +86,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
         portletConfig = (PortletConfig)mockPortletConfig.proxy();
 
 
-        ActionContext.of(context).bind();
+        ActionContext.setContext(new ActionContext(context));
     }
 
     public void testGetPhase() {
@@ -200,7 +202,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
     }
 
     public void tearDown() throws Exception {
-        ActionContext.clear();
+        ActionContext.setContext(null);
         super.tearDown();
     }
 

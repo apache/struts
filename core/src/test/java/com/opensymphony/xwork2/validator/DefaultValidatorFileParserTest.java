@@ -1,29 +1,26 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2003,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.validator;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.validator.validators.*;
 import junit.framework.TestCase;
-import org.apache.struts2.StrutsException;
 
 import java.io.InputStream;
 import java.util.List;
@@ -101,7 +98,7 @@ public class DefaultValidatorFileParserTest extends TestCase {
         assertEquals("required", cfg.getType());
         assertEquals("foo", cfg.getParams().get("fieldName"));
         assertEquals("You must enter a value for foo.", cfg.getDefaultMessage());
-        assertEquals(25, cfg.getLocation().getLineNumber());
+        assertEquals(4, cfg.getLocation().getLineNumber());
 
         cfg = (ValidatorConfig) configs.get(3);
         assertEquals("required", cfg.getType());
@@ -123,8 +120,8 @@ public class DefaultValidatorFileParserTest extends TestCase {
         boolean pass = false;
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileName3);
-        } catch (StrutsException ex) {
-            assertTrue("Wrong line number", 24 == ex.getLocation().getLineNumber());
+        } catch (XWorkException ex) {
+            assertTrue("Wrong line number", 3 == ex.getLocation().getLineNumber());
             pass = true;
         }
         assertTrue("Validation file should have thrown exception", pass);
@@ -136,8 +133,8 @@ public class DefaultValidatorFileParserTest extends TestCase {
         boolean pass = false;
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileName4);
-        } catch (StrutsException ex) {
-            assertTrue("Wrong line number: " + ex.getLocation(), 34 == ex.getLocation().getLineNumber());
+        } catch (XWorkException ex) {
+            assertTrue("Wrong line number: " + ex.getLocation(), 13 == ex.getLocation().getLineNumber());
             pass = true;
         }
         assertTrue("Validation file should have thrown exception", pass);
@@ -149,8 +146,8 @@ public class DefaultValidatorFileParserTest extends TestCase {
         boolean pass = false;
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileNameFail);
-        } catch (StrutsException ex) {
-            assertTrue("Wrong line number: " + ex.getLocation(), 28 == ex.getLocation().getLineNumber());
+        } catch (XWorkException ex) {
+            assertTrue("Wrong line number: " + ex.getLocation(), 8 == ex.getLocation().getLineNumber());
             pass = true;
         }
         assertTrue("Validation file should have thrown exception", pass);
@@ -162,8 +159,8 @@ public class DefaultValidatorFileParserTest extends TestCase {
         boolean pass = false;
         try {
             parser.parseActionValidatorConfigs((ValidatorFactory) mockValidatorFactory.proxy(), is, testFileName5);
-        } catch (StrutsException ex) {
-            assertTrue("Wrong line number", 24 == ex.getLocation().getLineNumber());
+        } catch (XWorkException ex) {
+            assertTrue("Wrong line number", 3 == ex.getLocation().getLineNumber());
             pass = true;
         }
         assertTrue("Validation file should have thrown exception", pass);

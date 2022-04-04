@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,24 +18,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.TestConfigurationProvider;
+import org.apache.struts2.util.TokenHelper;
+import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
+import org.apache.struts2.views.jsp.StrutsMockHttpSession;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.TestConfigurationProvider;
-import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.util.TokenHelper;
-import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
-import org.apache.struts2.views.jsp.StrutsMockHttpSession;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 /**
@@ -43,9 +47,9 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
 
     ActionContext oldContext;
     HttpSession httpSession;
-    Map<String, Object> extraContext;
-    Map<String, Object> params;
-    Map<String, Object> session;
+    Map extraContext;
+    Map params;
+    Map session;
     StrutsMockHttpServletRequest request;
 
 
@@ -64,14 +68,14 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testTokenInterceptorSuccess() throws Exception {
-        setToken(request);
         ActionProxy proxy = buildProxy(getActionName());
+        setToken(request);
         assertEquals(Action.SUCCESS, proxy.execute());
     }
 
     public void testCAllExecute2Times() throws Exception {
-        setToken(request);
         ActionProxy proxy = buildProxy(getActionName());
+        setToken(request);
         assertEquals(Action.SUCCESS, proxy.execute());
 
         ActionProxy proxy2 = buildProxy(getActionName());
@@ -93,26 +97,21 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
 
     protected void setToken(String token) {
         request.getParameterMap().put(TokenHelper.TOKEN_NAME_FIELD, new String[]{
-            TokenHelper.DEFAULT_TOKEN_NAME
+                TokenHelper.DEFAULT_TOKEN_NAME
         });
         request.getParameterMap().put(TokenHelper.DEFAULT_TOKEN_NAME, new String[]{
-            token
+                token
         });
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
     }
 
     protected void setUp() throws Exception {
-        super.setUp();
-
         loadConfigurationProviders(new TestConfigurationProvider());
 
-        session = new TreeMap<>();
-        params = new TreeMap<>();
-        extraContext = new TreeMap<>();
-        extraContext = ActionContext.of(extraContext)
-            .withSession(session)
-            .withParameters(HttpParameters.create().build())
-            .getContextMap();
+        session = new TreeMap();
+        params = new TreeMap();
+        extraContext = new TreeMap();
+        extraContext.put(ActionContext.SESSION, session);
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         request = new StrutsMockHttpServletRequest();
         httpSession = new StrutsMockHttpSession();
@@ -122,10 +121,11 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
 
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().putAll(extraContext);
-        oldContext = ActionContext.of(stack.getContext()).bind();
+        oldContext = new ActionContext(stack.getContext());
+        ActionContext.setContext(oldContext);
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return actionProxyFactory.createActionProxy("", actionName, null, extraContext);
+        return actionProxyFactory.createActionProxy("", actionName, null, extraContext, true, true);
     }
 }

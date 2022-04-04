@@ -1,28 +1,25 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.interceptor.annotations;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import org.apache.commons.lang3.reflect.MethodUtils;
-import org.apache.struts2.StrutsException;
+import com.opensymphony.xwork2.util.AnnotationUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -115,19 +112,17 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
     public String intercept(ActionInvocation invocation) throws Exception {
         final Object action = invocation.getAction();
         invocation.addPreResultListener(this);
-        List<Method> methods = new ArrayList<>(MethodUtils.getMethodsListWithAnnotation(action.getClass(), Before.class,
-                true, true));
+        List<Method> methods = new ArrayList<>(AnnotationUtils.getAnnotatedMethods(action.getClass(), Before.class));
         if (methods.size() > 0) {
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
                 public int compare(Method method1, Method method2) {
-                    return comparePriorities(MethodUtils.getAnnotation(method1, Before.class, true,
-                            true).priority(), MethodUtils.getAnnotation(method2, Before.class, true,
-                            true).priority());
+                    return comparePriorities(method1.getAnnotation(Before.class).priority(),
+                                method2.getAnnotation(Before.class).priority());
                 }
             });
             for (Method m : methods) {
-                final String resultCode = (String) MethodUtils.invokeMethod(action, true, m.getName());
+                final String resultCode = (String) m.invoke(action, (Object[]) null);
                 if (resultCode != null) {
                     // shortcircuit execution
                     return resultCode;
@@ -138,20 +133,18 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
         String invocationResult = invocation.invoke();
 
         // invoke any @After methods
-        methods = new ArrayList<Method>(MethodUtils.getMethodsListWithAnnotation(action.getClass(), After.class,
-                true, true));
+        methods = new ArrayList<Method>(AnnotationUtils.getAnnotatedMethods(action.getClass(), After.class));
 
         if (methods.size() > 0) {
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
                 public int compare(Method method1, Method method2) {
-                    return comparePriorities(MethodUtils.getAnnotation(method1, After.class, true,
-                            true).priority(), MethodUtils.getAnnotation(method2, After.class, true,
-                            true).priority());
+                    return comparePriorities(method1.getAnnotation(After.class).priority(),
+                                method2.getAnnotation(After.class).priority());
                 }
             });
             for (Method m : methods) {
-                MethodUtils.invokeMethod(action, true, m.getName());
+                m.invoke(action, (Object[]) null);
             }
         }
 
@@ -175,23 +168,21 @@ public class AnnotationWorkflowInterceptor extends AbstractInterceptor implement
      */
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         Object action = invocation.getAction();
-        List<Method> methods = new ArrayList<Method>(MethodUtils.getMethodsListWithAnnotation(action.getClass(),
-                BeforeResult.class, true, true));
+        List<Method> methods = new ArrayList<Method>(AnnotationUtils.getAnnotatedMethods(action.getClass(), BeforeResult.class));
 
         if (methods.size() > 0) {
             // methods are only sorted by priority
             Collections.sort(methods, new Comparator<Method>() {
                 public int compare(Method method1, Method method2) {
-                    return comparePriorities(MethodUtils.getAnnotation(method1, BeforeResult.class, true,
-                            true).priority(), MethodUtils.getAnnotation(method2, BeforeResult.class,
-                            true, true).priority());
+                    return comparePriorities(method1.getAnnotation(BeforeResult.class).priority(),
+                                method2.getAnnotation(BeforeResult.class).priority());
                 }
             });
             for (Method m : methods) {
                 try {
-                    MethodUtils.invokeMethod(action, true, m.getName());
+                    m.invoke(action, (Object[]) null);
                 } catch (Exception e) {
-                    throw new StrutsException(e);
+                    throw new XWorkException(e);
                 }
             }
         }

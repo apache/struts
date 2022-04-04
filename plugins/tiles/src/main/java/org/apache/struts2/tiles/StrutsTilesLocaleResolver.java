@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.tiles;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.LocaleProviderFactory;
+import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,9 +46,9 @@ public class StrutsTilesLocaleResolver implements LocaleResolver {
             throw new ConfigurationException("There is no ActionContext for current request!");
         }
 
-        LocaleProviderFactory localeProviderFactory = ctx.getInstance(LocaleProviderFactory.class);
+        LocaleProvider provider = ctx.getInstance(LocaleProvider.class);
 
-        return localeProviderFactory.createLocaleProvider().getLocale();
+        return provider.getLocale();
     }
 
 }

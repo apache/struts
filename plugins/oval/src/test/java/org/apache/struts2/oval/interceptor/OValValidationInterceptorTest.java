@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,13 +21,12 @@
 package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import net.sf.oval.configuration.Configurer;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,18 +38,18 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
         assertNotNull(fieldErrors);
         assertEquals(2, fieldErrors.size());
-        assertValue(fieldErrors, "firstName", Collections.singletonList("firstName cannot be null"));
-        assertValue(fieldErrors, "lastName", Collections.singletonList("lastName cannot be null"));
+        assertValue(fieldErrors, "firstName", Arrays.asList("firstName cannot be null"));
+        assertValue(fieldErrors, "lastName", Arrays.asList("lastName cannot be null"));
     }
 
-    public void testSimpleFieldsJPAAnnotations() throws Exception {
+     public void testSimpleFieldsJPAAnnotations() throws Exception {
         ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "simpleFieldsJPA", null, null);
         baseActionProxy.execute();
 
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertValue(fieldErrors, "firstName", Collections.singletonList("firstName cannot be null"));
+        assertValue(fieldErrors, "firstName", Arrays.asList("firstName cannot be null"));
     }
 
     public void testValidationInMethods() throws Exception {
@@ -58,10 +59,10 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
         assertNotNull(fieldErrors);
         assertEquals(4, fieldErrors.size());
-        assertValue(fieldErrors, "name", Collections.singletonList("name cannot be null"));
-        assertValue(fieldErrors, "SisyphusHasTheAnswer", Collections.singletonList("SisyphusHasTheAnswer cannot be null"));
-        assertValue(fieldErrors, "thereAnyMeaningInLife", Collections.singletonList("thereAnyMeaningInLife cannot be null"));
-        assertValue(fieldErrors, "theMeaningOfLife", Collections.singletonList("theMeaningOfLife cannot be null"));
+        assertValue(fieldErrors, "name", Arrays.asList("name cannot be null"));
+        assertValue(fieldErrors, "SisyphusHasTheAnswer", Arrays.asList("SisyphusHasTheAnswer() cannot be null"));
+        assertValue(fieldErrors, "thereAnyMeaningInLife", Arrays.asList("thereAnyMeaningInLife cannot be null"));
+        assertValue(fieldErrors, "theManingOfLife", Arrays.asList("theManingOfLife cannot be null"));
     }
 
     public void testSimpleFieldsInheritedXML() throws Exception {
@@ -71,9 +72,9 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
         assertNotNull(fieldErrors);
         assertEquals(3, fieldErrors.size());
-        assertValue(fieldErrors, "firstName", Collections.singletonList("firstName cannot be null"));
-        assertValue(fieldErrors, "lastName", Collections.singletonList("lastName cannot be null"));
-        assertValue(fieldErrors, "middleName", Collections.singletonList("middleName cannot be null"));
+        assertValue(fieldErrors, "firstName", Arrays.asList("firstName cannot be null"));
+        assertValue(fieldErrors, "lastName", Arrays.asList("lastName cannot be null"));
+        assertValue(fieldErrors, "middleName", Arrays.asList("middleName cannot be null"));
     }
 
     public void testSlashesInNameWithWildcardsHitsCache() throws Exception {
@@ -107,7 +108,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertValue(fieldErrors, "name", Collections.singletonList("name cannot be null"));
+        assertValue(fieldErrors, "name", Arrays.asList("name cannot be null"));
     }
 
     public void testSimpleFieldNegative() throws Exception {
@@ -132,8 +133,8 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
 
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertValue(fieldErrors, "name", Collections.singletonList("name is not between 0 and 3 characters long"));
-        assertValue(fieldErrors, "name", Collections.singletonList("name is not between 0 and 3 characters long"));
+        assertValue(fieldErrors, "name", Arrays.asList("name is not between 0 and 3 characters long"));
+        assertValue(fieldErrors, "name", Arrays.asList("name is not between 0 and 3 characters long"));
     }
 
     public void testSimpleFieldMultipleValidators() throws Exception {
@@ -202,7 +203,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
 
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertValue(fieldErrors, "name", Collections.singletonList("name cannot be null"));
+        assertValue(fieldErrors, "name", Arrays.asList("name cannot be null"));
     }
 
     public void testSimpleFieldI18n2() throws Exception {
@@ -215,7 +216,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
 
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertValue(fieldErrors, "name", Collections.singletonList("name value is too long, allowed length is 3"));
+        assertValue(fieldErrors, "name", Arrays.asList("name value is too long, allowed length is 3"));
     }
 
     public void testSimpleFieldI18nDefaultKey() throws Exception {
@@ -227,7 +228,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
 
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertValue(fieldErrors, "name", Collections.singletonList("notnull.field"));
+        assertValue(fieldErrors, "name", Arrays.asList("notnull.field"));
     }
 
 
@@ -239,7 +240,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertValue(fieldErrors, "name", Collections.singletonList("name cannot be null"));
+        assertValue(fieldErrors, "name", Arrays.asList("name cannot be null"));
         assertTrue(action.isValidateCalled());
         assertTrue(action.isValidateExecuteCalled());
     }
@@ -252,7 +253,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertValue(fieldErrors, "name", Collections.singletonList("name cannot be null"));
+        assertValue(fieldErrors, "name", Arrays.asList("name cannot be null"));
         assertFalse(action.isValidateCalled());
         assertTrue(action.isValidateExecuteCalled());
     }
@@ -265,7 +266,7 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
         assertNotNull(fieldErrors);
         assertEquals(1, fieldErrors.size());
-        assertValue(fieldErrors, "name", Collections.singletonList("name cannot be null"));
+        assertValue(fieldErrors, "name", Arrays.asList("name cannot be null"));
         assertFalse(action.isValidateCalled());
         assertFalse(action.isValidateExecuteCalled());
     }
@@ -281,27 +282,29 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
 
         Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
         assertNotNull(fieldErrors);
-        assertEquals(3, fieldErrors.size());
-        assertValue(fieldErrors, "person.name", Collections.singletonList("person.name cannot be null"));
-        assertValue(fieldErrors, "person.email", Collections.singletonList("person.email cannot be null"));
-        assertValue(fieldErrors, "person.address.street", Collections.singletonList("person.address.street cannot be shorter than 7 characters"));
+        assertEquals(5, fieldErrors.size()); // 5: as there will be field errors for 'model' and 'address' themselves
+        assertValue(fieldErrors, "name", Arrays.asList("name cannot be null"));
+        assertValue(fieldErrors, "email", Arrays.asList("email cannot be null"));
+        assertValue(fieldErrors, "address.street", Arrays.asList("street cannot be smaller than 7 characters"));
+
     }
 
     public void testMemberObject() throws Exception {
-        ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "memberObject", null, null);
-        MemberObject action = (MemberObject) baseActionProxy.getAction();
-        action.getPerson().setName(null);
-        action.getPerson().setEmail(null);
-        action.getPerson().getAddress().setStreet("short");
-        baseActionProxy.execute();
+    	ActionProxy baseActionProxy = actionProxyFactory.createActionProxy("oval", "memberObject", null, null);
+    	MemberObject action = (MemberObject) baseActionProxy.getAction();
+    	action.getPerson().setName(null);
+    	action.getPerson().setEmail(null);
+    	action.getPerson().getAddress().setStreet("short");
+    	baseActionProxy.execute();
 
-        Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
-        assertNotNull(fieldErrors);
-        assertEquals(3, fieldErrors.size());
-        assertValue(fieldErrors, "person.name", Collections.singletonList("person.name cannot be null"));
-        assertValue(fieldErrors, "person.email", Collections.singletonList("person.email cannot be null"));
-        assertValue(fieldErrors, "person.address.street", Collections.singletonList("person.address.street cannot be shorter than 7 characters"));
+    	Map<String, List<String>> fieldErrors = ((ValidationAware) baseActionProxy.getAction()).getFieldErrors();
+    	assertNotNull(fieldErrors);
+    	assertEquals(5, fieldErrors.size()); // 5: as there will be field errors for 'person' and 'person.address' themselves
+    	assertValue(fieldErrors, "person.name", Arrays.asList("name cannot be null"));
+    	assertValue(fieldErrors, "person.email", Arrays.asList("email cannot be null"));
+    	assertValue(fieldErrors, "person.address.street", Arrays.asList("street cannot be smaller than 7 characters"));
     }
+
 
     private void assertValue(Map<String, List<String>> map, String key, List<String> expectedValues) {
         assertNotNull(map);
@@ -316,7 +319,6 @@ public class OValValidationInterceptorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        loadConfigurationProviders(new StrutsXmlConfigurationProvider("oval-test.xml"));
+        loadConfigurationProviders(new XmlConfigurationProvider("oval-test.xml"));
     }
-
 }

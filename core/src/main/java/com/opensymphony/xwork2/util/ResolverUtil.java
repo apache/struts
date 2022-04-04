@@ -1,20 +1,16 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/* Copyright 2005-2006 Tim Fennell
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.util;
 
@@ -430,15 +426,19 @@ public class ResolverUtil<T> {
      * @param jarfile the jar file to be examined for classes
      */
     private void loadImplementationsInJar(Test test, String parent, File jarfile) {
-        try(JarInputStream jarStream = new JarInputStream(new FileInputStream(jarfile))) {
+
+        try {
             JarEntry entry;
-            while ((entry = jarStream.getNextJarEntry() ) != null) {
+            JarInputStream jarStream = new JarInputStream(new FileInputStream(jarfile));
+
+            while ( (entry = jarStream.getNextJarEntry() ) != null) {
                 String name = entry.getName();
                 if (!entry.isDirectory() && name.startsWith(parent) && isTestApplicable(test, name)) {
                     addIfMatching(test, name);
                 }
             }
-        } catch (IOException ioe) {
+        }
+        catch (IOException ioe) {
             LOG.error("Could not search jar file '" + jarfile + "' for classes matching criteria: " +
                       test + " due to an IOException", ioe);
         }

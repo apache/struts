@@ -1,42 +1,36 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.XWorkConstants;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClearableValueStack;
-import com.opensymphony.xwork2.LocalizedTextProvider;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.TreeMap;
+
 
 /**
  * <!-- START SNIPPET: description -->
@@ -95,22 +89,16 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
     private static final Logger LOG = LogManager.getLogger(StaticParametersInterceptor.class);
 
     private ValueStackFactory valueStackFactory;
-    private LocalizedTextProvider localizedTextProvider;
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
     }
 
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    @Inject(XWorkConstants.DEV_MODE)
     public void setDevMode(String mode) {
         devMode = BooleanUtils.toBoolean(mode);
-    }
-
-    @Inject
-    public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
-        this.localizedTextProvider = localizedTextProvider;
-    }
+    }    
 
     public void setParse(String value) {
         this.parse = BooleanUtils.toBoolean(value);
@@ -164,7 +152,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
                     ReflectionContextState.setReportingConversionErrors(context, true);
 
                     //keep locale from original context
-                    newStack.getActionContext().withLocale(stack.getActionContext().getLocale());
+                    context.put(ActionContext.LOCALE, stack.getContext().get(ActionContext.LOCALE));
                 }
 
                 for (Map.Entry<String, String> entry : parameters.entrySet()) {
@@ -176,8 +164,7 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
                         newStack.setValue(entry.getKey(), val);
                     } catch (RuntimeException e) {
                         if (devMode) {
-
-                            String developerNotification = localizedTextProvider.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
+                            String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, "devmode.notification", ActionContext.getContext().getLocale(), "Developer Notification:\n{0}", new Object[]{
                                     "Unexpected Exception caught setting '" + entry.getKey() + "' on '" + action.getClass() + ": " + e.getMessage()
                             });
                             LOG.error(developerNotification);
@@ -188,9 +175,8 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
                     }
                 }
 
-                 if (clearableStack) {
-                     stack.getActionContext().withConversionErrors(newStack.getActionContext().getConversionErrors());
-                 }
+                 if (clearableStack && (stack.getContext() != null) && (newStack.getContext() != null))
+                    stack.getContext().put(ActionContext.CONVERSION_ERRORS, newStack.getContext().get(ActionContext.CONVERSION_ERRORS));
 
                 if (merge)
                     addParametersToContext(ac, parameters);
@@ -226,16 +212,28 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
      * @param newParams The parameter map to apply
      */
     protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
-        HttpParameters previousParams = ac.getParameters();
+        Map<String, Object> previousParams = ac.getParameters();
 
-        HttpParameters.Builder combinedParams;
-        if (overwrite) {
-            combinedParams = HttpParameters.create().withParent( previousParams);
-            combinedParams = combinedParams.withExtraParams(newParams);
+        Map<String, Object> combinedParams;
+        if ( overwrite ) {
+            if (previousParams != null) {
+                combinedParams = new TreeMap<>(previousParams);
+            } else {
+                combinedParams = new TreeMap<>();
+            }
+            if ( newParams != null) {
+                combinedParams.putAll(newParams);
+            }
         } else {
-            combinedParams = HttpParameters.create(newParams);
-            combinedParams = combinedParams.withExtraParams(previousParams);
+            if (newParams != null) {
+                combinedParams = new TreeMap<>(newParams);
+            } else {
+                combinedParams = new TreeMap<>();
+            }
+            if ( previousParams != null) {
+                combinedParams.putAll(previousParams);
+            }
         }
-        ac.setParameters(combinedParams.build());
+        ac.setParameters(combinedParams);
     }
 }

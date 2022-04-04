@@ -1,20 +1,19 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * $Id$
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright 1999-2004 The Apache Software Foundation.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.config.impl;
 
@@ -24,7 +23,6 @@ import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.util.WildcardHelper;
-import org.apache.struts2.util.RegexPatternMatcher;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -141,79 +139,6 @@ public class ActionConfigMatcherTest extends XWorkTestCase {
         assertTrue("Class hasn't been replaced", "package-class".equals(m.getPackageName()));
         assertTrue("Method hasn't been replaced", "".equals(m.getParams().get("first")));
         
-    }
-
-    /**
-     * Test to make sure the {@link AbstractMatcher#replaceParameters(Map, Map)} method isn't adding values to the
-     * return value.
-     */
-    public void testReplaceParametersWithNoAppendingParams() {
-        Map<String, ActionConfig> map = new HashMap<>();
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put("first", "{1}");
-
-        ActionConfig config = new ActionConfig.Builder("package", "foo/{one}/{two}/{three}", "foo.bar.Action")
-                .addParams(params)
-                .addExceptionMapping(new ExceptionMappingConfig.Builder("foo{1}", "java.lang.{2}Exception", "success{1}")
-                        .addParams(new HashMap<>(params))
-                        .build())
-                .addResultConfig(new ResultConfig.Builder("success{1}", "foo.{2}").addParams(params).build())
-                .setStrictMethodInvocation(false)
-                .build();
-        map.put("foo/{one}/{two}/{three}", config);
-        ActionConfigMatcher replaceMatcher = new ActionConfigMatcher(new RegexPatternMatcher(), map, false, false);
-        ActionConfig matched = replaceMatcher.match("foo/paramOne/paramTwo/paramThree");
-        assertNotNull("ActionConfig should be matched", matched);
-
-        // Verify all The ActionConfig, ExceptionConfig, and ResultConfig have the correct number of params
-        assertEquals("The ActionConfig should have the correct number of params", 1, matched.getParams().size());
-        assertEquals("The ExceptionMappingConfigs should have the correct number of params", 1, matched.getExceptionMappings().get(0).getParams().size());
-        assertEquals("The ResultConfigs should have the correct number of params", 1, matched.getResults().get("successparamOne").getParams().size());
-
-        // Verify the params are still getting their values replaced correctly
-        assertEquals("The ActionConfig params have replaced values", "paramOne", matched.getParams().get("first"));
-        assertEquals("The ActionConfig params have replaced values", "paramOne", matched.getExceptionMappings().get(0).getParams().get("first"));
-        assertEquals("The ActionConfig params have replaced values", "paramOne", matched.getResults().get("successparamOne").getParams().get("first"));
-    }
-
-    /**
-     * Test to make sure the {@link AbstractMatcher#replaceParameters(Map, Map)} method is adding values to the
-     * return value.
-     */
-    public void testReplaceParametersWithAppendingParams() {
-        Map<String, ActionConfig> map = new HashMap<>();
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put("first", "{1}");
-
-        ActionConfig config = new ActionConfig.Builder("package", "foo/{one}/{two}/{three}", "foo.bar.Action")
-                .addParams(params)
-                .addExceptionMapping(new ExceptionMappingConfig.Builder("foo{1}", "java.lang.{2}Exception", "success{1}")
-                        .addParams(new HashMap<>(params))
-                        .build())
-                .addResultConfig(new ResultConfig.Builder("success{1}", "foo.{2}").addParams(params).build())
-                .setStrictMethodInvocation(false)
-                .build();
-        map.put("foo/{one}/{two}/{three}", config);
-        ActionConfigMatcher replaceMatcher = new ActionConfigMatcher(new RegexPatternMatcher(), map, false, true);
-        ActionConfig matched = replaceMatcher.match("foo/paramOne/paramTwo/paramThree");
-        assertNotNull("ActionConfig should be matched", matched);
-
-        assertEquals(4, matched.getParams().size());
-        assertEquals(4, matched.getExceptionMappings().get(0).getParams().size());
-        assertEquals(4, matched.getResults().get("successparamOne").getParams().size());
-
-        // Verify the params are still getting their values replaced correctly
-        assertEquals("paramOne", matched.getParams().get("first"));
-        assertEquals("paramOne", matched.getParams().get("one"));
-        assertEquals("paramTwo", matched.getParams().get("two"));
-        assertEquals("paramThree", matched.getParams().get("three"));
-        assertEquals("paramOne", matched.getExceptionMappings().get(0).getParams().get("first"));
-        assertEquals("paramOne", matched.getExceptionMappings().get(0).getParams().get("one"));
-        assertEquals("paramTwo", matched.getExceptionMappings().get(0).getParams().get("two"));
-        assertEquals("paramThree", matched.getExceptionMappings().get(0).getParams().get("three"));
-        assertEquals("paramOne", matched.getResults().get("successparamOne").getParams().get("first"));
     }
 
     private Map<String,ActionConfig> buildActionConfigMap() {

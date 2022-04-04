@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.conversion.impl;
 
@@ -24,6 +21,7 @@ import com.opensymphony.xwork2.test.ModelDrivenAnnotationAction2;
 import com.opensymphony.xwork2.util.Bar;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import ognl.OgnlException;
 import ognl.OgnlRuntime;
 
 import java.math.BigDecimal;
@@ -32,8 +30,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static org.junit.Assert.assertArrayEquals;
 
 
 /**
@@ -76,11 +72,11 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
 
     public void testArrayToNumberConversion() {
         String[] value = new String[]{"12345"};
-        assertEquals(12345, converter.convertValue(context, null, null, null, value, Integer.class));
-        assertEquals(12345L, converter.convertValue(context, null, null, null, value, Long.class));
+        assertEquals(new Integer(12345), converter.convertValue(context, null, null, null, value, Integer.class));
+        assertEquals(new Long(12345), converter.convertValue(context, null, null, null, value, Long.class));
         value[0] = "123.45";
-        assertEquals(123.45f, converter.convertValue(context, null, null, null, value, Float.class));
-        assertEquals(123.45, converter.convertValue(context, null, null, null, value, Double.class));
+        assertEquals(new Float(123.45), converter.convertValue(context, null, null, null, value, Float.class));
+        assertEquals(new Double(123.45), converter.convertValue(context, null, null, null, value, Double.class));
         value[0] = "1234567890123456789012345678901234567890";
         assertEquals(new BigInteger(value[0]), converter.convertValue(context, null, null, null, value, BigInteger.class));
         value[0] = "1234567890123456789.012345678901234567890";
@@ -91,7 +87,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
         assertEquals(sqlDate, converter.convertValue(context, null, null, null, sqlDate, Date.class));
 
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("mm/dd/yyyy hh:mm:ss");
         Date date = format.parse("01/10/2001 00:00:00");
         String dateStr = (String) converter.convertValue(context, null, null, null, date, String.class);
         Date date2 = (Date) converter.convertValue(context, null, null, null, dateStr, Date.class);
@@ -113,10 +109,10 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action.getBean(), null, "birth", value, Date.class));
         stack.pop();
 
-        Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
+        Map conversionErrors = (Map) stack.getContext().get(ActionContext.CONVERSION_ERRORS);
         assertNotNull(conversionErrors);
-        assertEquals(1, conversionErrors.size());
-        assertEquals(value, conversionErrors.get("bean.birth").getValue());
+        assertTrue(conversionErrors.size() == 1);
+        assertEquals(value, conversionErrors.get("bean.birth"));
     }
 
     public void testFieldErrorMessageAddedWhenConversionFails() {
@@ -133,11 +129,11 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         assertEquals("Conversion should have failed.", OgnlRuntime.NoConversionPossible, converter.convertValue(ognlStackContext, action, null, "date", value, Date.class));
         stack.pop();
 
-        Map<String, ConversionData> conversionErrors = ActionContext.of(ognlStackContext).getConversionErrors();
+        Map conversionErrors = (Map) ognlStackContext.get(ActionContext.CONVERSION_ERRORS);
         assertNotNull(conversionErrors);
         assertEquals(1, conversionErrors.size());
         assertNotNull(conversionErrors.get("date"));
-        assertEquals(value, conversionErrors.get("date").getValue());
+        assertEquals(value, conversionErrors.get("date"));
     }
 
     public void testFieldErrorMessageAddedWhenConversionFailsOnModelDriven() {
@@ -154,31 +150,29 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         stack.pop();
         stack.pop();
 
-        Map<String, ConversionData> conversionErrors = ActionContext.of(ognlStackContext).getConversionErrors();
+        Map conversionErrors = (Map) ognlStackContext.get(ActionContext.CONVERSION_ERRORS);
         assertNotNull(conversionErrors);
         assertEquals(1, conversionErrors.size());
         assertNotNull(conversionErrors.get("birth"));
-        assertEquals(value, conversionErrors.get("birth").getValue());
+        assertEquals(value, conversionErrors.get("birth"));
     }
 
     public void testFindConversionErrorMessage() {
         ModelDrivenAnnotationAction action = new ModelDrivenAnnotationAction();
-        container.inject(action);
-
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(action);
         stack.push(action.getModel());
 
-        String message = XWorkConverter.getConversionErrorMessage("birth", Integer.class, stack);
+        String message = XWorkConverter.getConversionErrorMessage("birth", stack);
         assertNotNull(message);
         assertEquals("Invalid date for birth.", message);
 
-        message = XWorkConverter.getConversionErrorMessage("foo", Integer.class, stack);
+        message = XWorkConverter.getConversionErrorMessage("foo", stack);
         assertNotNull(message);
         assertEquals("Invalid field value for field \"foo\".", message);
     }
 
-    public void testFindConversionMappingForInterfaceAndSuperclass() {
+    public void testFindConversionMappingForInterface() {
         ModelDrivenAnnotationAction2 action = new ModelDrivenAnnotationAction2();
         ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(action);
@@ -194,22 +188,14 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
 
         Bar b = (Bar) o;
         assertEquals(value, b.getTitle() + ":" + b.getSomethingElse());
-
-        String value2 = "qwer:456";
-        Object o2 = converter.convertValue(ognlStackContext, action.getModel(), null, "supperBarObj", value2, Bar.class);
-        assertNotNull(o2);
-        assertTrue("class is: " + o.getClass(), o2 instanceof Bar);
-
-        Bar b2 = (Bar) o2;
-        assertEquals(value2, b2.getTitle() + ":" + b2.getSomethingElse());
     }
 
-    public void testLocalizedDateConversion() {
+    public void testLocalizedDateConversion() throws Exception {
         Date date = new Date(System.currentTimeMillis());
         Locale locale = Locale.GERMANY;
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
         String dateString = df.format(date);
-        context = ActionContext.of(context).withLocale(locale).getContextMap();
+        context.put(ActionContext.LOCALE, locale);
         assertEquals(dateString, converter.convertValue(context, null, null, null, date, String.class));
     }
 
@@ -224,7 +210,7 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
     }
 
     public void testStringArrayToList() {
-        List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<String>();
         list.add("foo");
         list.add("bar");
         list.add("baz");
@@ -238,63 +224,63 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
                 "123", "456"
         }, Long[].class);
         assertNotNull(longs);
-        assertArrayEquals(new Long[]{123L, 456L}, longs);
+        assertTrue(Arrays.equals(new Long[]{123L, 456L}, longs));
 
         Integer[] ints = (Integer[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, Integer[].class);
         assertNotNull(ints);
-        assertArrayEquals(new Integer[]{123, 456}, ints);
+        assertTrue(Arrays.equals(new Integer[]{123, 456}, ints));
 
         Double[] doubles = (Double[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, Double[].class);
         assertNotNull(doubles);
-        assertArrayEquals(new Double[]{123D, 456D}, doubles);
+        assertTrue(Arrays.equals(new Double[]{123D, 456D}, doubles));
 
         Float[] floats = (Float[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, Float[].class);
         assertNotNull(floats);
-        assertArrayEquals(new Float[]{123F, 456F}, floats);
+        assertTrue(Arrays.equals(new Float[]{123F, 456F}, floats));
 
         Boolean[] booleans = (Boolean[]) converter.convertValue(context, null, null, null, new String[]{
                 "true", "false"
         }, Boolean[].class);
         assertNotNull(booleans);
-        assertArrayEquals(new Boolean[]{Boolean.TRUE, Boolean.FALSE}, booleans);
+        assertTrue(Arrays.equals(new Boolean[]{Boolean.TRUE, Boolean.FALSE}, booleans));
     }
 
-    public void testStringArrayToPrimitives() {
+    public void testStringArrayToPrimitives() throws OgnlException {
         long[] longs = (long[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, long[].class);
         assertNotNull(longs);
-        assertArrayEquals(new long[]{123, 456}, longs);
+        assertTrue(Arrays.equals(new long[]{123, 456}, longs));
 
         int[] ints = (int[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, int[].class);
         assertNotNull(ints);
-        assertArrayEquals(new int[]{123, 456}, ints);
+        assertTrue(Arrays.equals(new int[]{123, 456}, ints));
 
         double[] doubles = (double[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, double[].class);
         assertNotNull(doubles);
-        assertArrayEquals(new double[]{123, 456}, doubles, 0.0);
+        assertTrue(Arrays.equals(new double[]{123, 456}, doubles));
 
         float[] floats = (float[]) converter.convertValue(context, null, null, null, new String[]{
                 "123", "456"
         }, float[].class);
         assertNotNull(floats);
-        assertArrayEquals(new float[]{123, 456}, floats, 0.0f);
+        assertTrue(Arrays.equals(new float[]{123, 456}, floats));
 
         boolean[] booleans = (boolean[]) converter.convertValue(context, null, null, null, new String[]{
                 "true", "false"
         }, boolean[].class);
         assertNotNull(booleans);
-        assertArrayEquals(new boolean[]{true, false}, booleans);
+        assertTrue(Arrays.equals(new boolean[]{true, false}, booleans));
     }
 
     public void testStringArrayToSet() {
@@ -338,22 +324,22 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
     }
 
     public void testStringToPrimitiveWrappers() {
-        assertEquals(123L, converter.convertValue(context, null, null, null, "123", Long.class));
-        assertEquals(123, converter.convertValue(context, null, null, null, "123", Integer.class));
-        assertEquals(123.5, converter.convertValue(context, null, null, null, "123.5", Double.class));
-        assertEquals(123.5f, converter.convertValue(context, null, null, null, "123.5", float.class));
+        assertEquals(new Long(123), converter.convertValue(context, null, null, null, "123", Long.class));
+        assertEquals(new Integer(123), converter.convertValue(context, null, null, null, "123", Integer.class));
+        assertEquals(new Double(123.5), converter.convertValue(context, null, null, null, "123.5", Double.class));
+        assertEquals(new Float(123.5), converter.convertValue(context, null, null, null, "123.5", float.class));
         assertEquals(false, converter.convertValue(context, null, null, null, "false", Boolean.class));
         assertEquals(true, converter.convertValue(context, null, null, null, "true", Boolean.class));
     }
 
     public void testStringToPrimitives() {
-        assertEquals(123L, converter.convertValue(context, null, null, null, "123", long.class));
-        assertEquals(123, converter.convertValue(context, null, null, null, "123", int.class));
-        assertEquals(123.5, converter.convertValue(context, null, null, null, "123.5", double.class));
-        assertEquals(123.5f, converter.convertValue(context, null, null, null, "123.5", float.class));
+        assertEquals(new Long(123), converter.convertValue(context, null, null, null, "123", long.class));
+        assertEquals(new Integer(123), converter.convertValue(context, null, null, null, "123", int.class));
+        assertEquals(new Double(123.5), converter.convertValue(context, null, null, null, "123.5", double.class));
+        assertEquals(new Float(123.5), converter.convertValue(context, null, null, null, "123.5", float.class));
         assertEquals(false, converter.convertValue(context, null, null, null, "false", boolean.class));
         assertEquals(true, converter.convertValue(context, null, null, null, "true", boolean.class));
-        assertEquals(new BigDecimal("123.5"), converter.convertValue(context, null, null, null, "123.5", BigDecimal.class));
+        assertEquals(new BigDecimal(123.5), converter.convertValue(context, null, null, null, "123.5", BigDecimal.class));
         assertEquals(new BigInteger("123"), converter.convertValue(context, null, null, null, "123", BigInteger.class));
     }
 
@@ -373,8 +359,8 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         stack.setValue("doubles", value);
         assertEquals(2, gb.getDoubles().size());
         assertEquals(Double.class, gb.getDoubles().get(0).getClass());
-        assertEquals(123.12, gb.getDoubles().get(0));
-        assertEquals(123.45, gb.getDoubles().get(1));
+        assertEquals(new Double(123.12), gb.getDoubles().get(0));
+        assertEquals(new Double(123.45), gb.getDoubles().get(1));
     }
 
     public void testGenericPropertiesFromField() {
@@ -422,8 +408,8 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
 
         assertEquals(1, gb.getGetterList().size());
         assertEquals("42.42", stack.findValue("getterList.get(0).toString()"));
-        assertEquals(42.42, stack.findValue("getterList.get(0)"));
-        assertEquals(42.42, gb.getGetterList().get(0));
+        assertEquals(new Double(42.42), stack.findValue("getterList.get(0)"));
+        assertEquals(new Double(42.42), gb.getGetterList().get(0));
 
     }
 
@@ -471,13 +457,13 @@ public class AnnotationXWorkConverterTest extends XWorkTestCase {
         super.setUp();
         converter = container.getInstance(XWorkConverter.class);
 
-        ac = ActionContext.getContext().withLocale(Locale.US);
+        ac = ActionContext.getContext();
+        ac.setLocale(Locale.US);
         context = ac.getContextMap();
     }
 
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
-        ActionContext.clear();
+        ActionContext.setContext(null);
     }
 }

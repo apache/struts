@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
@@ -106,7 +103,8 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         interceptor.setCopyErrors("true");
         interceptor.setCopyMessages("true");
 
-        String excludes = "count";
+        Collection<String> excludes = new ArrayList<>();
+        excludes.add("count");
         interceptor.setExcludes(excludes);
 
         interceptor.intercept(invocation);
@@ -114,7 +112,7 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         assertEquals(bean.getBirth(), action.getBirth());
         assertEquals(bean.getName(), action.getName());
         assertEquals(0, action.getCount());
-        assertEquals(interceptor.getExcludes().iterator().next(), "count");
+        assertEquals(excludes, interceptor.getExcludes());
     }
 
     public void testTwoExcludesPropertiesChained() throws Exception {
@@ -127,15 +125,15 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         stack.push(bean);
         stack.push(action);
 
-        String excludes = "name,count";
+        Collection<String> excludes = new ArrayList<>();
+        excludes.add("name");
+        excludes.add("count");
         interceptor.setExcludes(excludes);
         interceptor.intercept(invocation);
         assertEquals(bean.getBirth(), action.getBirth());
         assertEquals(null, action.getName());
         assertEquals(0, action.getCount());
-        assertTrue(interceptor.getExcludes().contains("count"));
-        assertTrue(interceptor.getExcludes().contains("name"));
-        assertTrue(interceptor.getExcludes().size() == 2);
+        assertEquals(excludes, interceptor.getExcludes());
     }
 
     public void testNullCompoundRootElementAllowsProcessToContinue() throws Exception {
@@ -154,7 +152,7 @@ public class ChainingInterceptorTest extends XWorkTestCase {
         mockInvocation = new Mock(ActionInvocation.class);
         mockInvocation.expectAndReturn("getStack", stack);
         mockInvocation.expectAndReturn("invoke", Action.SUCCESS);
-        mockInvocation.expectAndReturn("getInvocationContext", ActionContext.of(new HashMap<>()).bind());
+        mockInvocation.expectAndReturn("getInvocationContext", new ActionContext(new HashMap<String, Object>()));
         mockInvocation.expectAndReturn("getResult", new ActionChainResult());
         invocation = (ActionInvocation) mockInvocation.proxy();
         interceptor = new ChainingInterceptor();

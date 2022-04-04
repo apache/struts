@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.jsp.ui;
 
 import java.util.ArrayList;
@@ -87,97 +90,13 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.setCssStyle("s1");
         tag.setDoubleCssClass("c2");
         tag.setDoubleCssStyle("s2");
-
-        stack.getActionContext().getSession().put("nonce", "r4nd0m");
-
+        
         tag.doStartTag();
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("DoubleSelect-1.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        DoubleSelectTag freshTag = new DoubleSelectTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
-
-    public void testDouble_clearTagStateSet() throws Exception {
-        TestAction testAction = (TestAction) action;
-
-        Region antwerp = new Region("Antwerp", "AN");
-        Region gent = new Region("Gent", "GN");
-        Region brugge = new Region("Brugge", "BRG");
-        ArrayList belgiumRegions = new ArrayList();
-        belgiumRegions.add(antwerp);
-        belgiumRegions.add(gent);
-        belgiumRegions.add(brugge);
-        Country belgium = new Country("Belgium", "BE", belgiumRegions);
-
-        Region paris = new Region("Paris", "PA");
-        Region bordeaux = new Region("Bordeaux", "BOR");
-        ArrayList franceRegions = new ArrayList();
-        franceRegions.add(paris);
-        franceRegions.add(bordeaux);
-        Country france = new Country("France", "FR", franceRegions);
-
-        Collection collection = new ArrayList(2);
-        collection.add("AN");
-        testAction.setCollection(collection);
-
-        List countries = new ArrayList();
-        countries.add(belgium);
-        countries.add(france);
-
-        testAction.setList2(countries);
-
-        DoubleSelectTag tag = new DoubleSelectTag();
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setPageContext(pageContext);
-        tag.setLabel("mylabel");
-        tag.setName("foo");
-        tag.setDoubleName("region");
-
-        tag.setList("list2");
-        tag.setDoubleList("regions");
-
-        tag.setListKey("iso");
-        tag.setDoubleListKey("key");
-        tag.setListValue("name");
-        tag.setDoubleListValue("name");
-
-        tag.setFormName("inputForm");
-
-        tag.setOnmousedown("window.status='onmousedown';");
-        tag.setOnmousemove("window.status='onmousemove';");
-        tag.setOnmouseout("window.status='onmouseout';");
-        tag.setOnmouseover("window.status='onmouseover';");
-        tag.setOnmouseup("window.status='onmouseup';");
-
-        //css style and class
-        tag.setCssClass("c1");
-        tag.setCssStyle("s1");
-        tag.setDoubleCssClass("c2");
-        tag.setDoubleCssStyle("s2");
-
-        stack.getActionContext().getSession().put("nonce", "r4nd0m");
-
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        verify(SelectTag.class.getResource("DoubleSelect-1.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        DoubleSelectTag freshTag = new DoubleSelectTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
+    
     public void testOnchange() throws Exception {
         TestAction testAction = (TestAction) action;
 
@@ -235,93 +154,13 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.setCssStyle("s1");
         tag.setDoubleCssClass("c2");
         tag.setDoubleCssStyle("s2");
-
+        
         tag.doStartTag();
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("DoubleSelect-4.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        DoubleSelectTag freshTag = new DoubleSelectTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
-    public void testOnchange_clearTagStateSet() throws Exception {
-        TestAction testAction = (TestAction) action;
-
-        Region antwerp = new Region("Antwerp", "AN");
-        Region gent = new Region("Gent", "GN");
-        Region brugge = new Region("Brugge", "BRG");
-        ArrayList belgiumRegions = new ArrayList();
-        belgiumRegions.add(antwerp);
-        belgiumRegions.add(gent);
-        belgiumRegions.add(brugge);
-        Country belgium = new Country("Belgium", "BE", belgiumRegions);
-
-        Region paris = new Region("Paris", "PA");
-        Region bordeaux = new Region("Bordeaux", "BOR");
-        ArrayList franceRegions = new ArrayList();
-        franceRegions.add(paris);
-        franceRegions.add(bordeaux);
-        Country france = new Country("France", "FR", franceRegions);
-
-        Collection collection = new ArrayList(2);
-        collection.add("AN");
-        testAction.setCollection(collection);
-
-        List countries = new ArrayList();
-        countries.add(belgium);
-        countries.add(france);
-
-        testAction.setList2(countries);
-
-        DoubleSelectTag tag = new DoubleSelectTag();
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setPageContext(pageContext);
-        tag.setLabel("mylabel");
-        tag.setName("foo");
-        tag.setDoubleName("region");
-
-        tag.setList("list2");
-        tag.setDoubleList("regions");
-
-        tag.setListKey("iso");
-        tag.setDoubleListKey("key");
-        tag.setListValue("name");
-        tag.setDoubleListValue("name");
-
-        tag.setFormName("inputForm");
-
-        tag.setOnmousedown("window.status='onmousedown';");
-        tag.setOnmousemove("window.status='onmousemove';");
-        tag.setOnmouseout("window.status='onmouseout';");
-        tag.setOnmouseover("window.status='onmouseover';");
-        tag.setOnmouseup("window.status='onmouseup';");
-        tag.setOnchange("window.status='onchange';");
-
-        //css style and class
-        tag.setCssClass("c1");
-        tag.setCssStyle("s1");
-        tag.setDoubleCssClass("c2");
-        tag.setDoubleCssStyle("s2");
-
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        verify(SelectTag.class.getResource("DoubleSelect-4.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        DoubleSelectTag freshTag = new DoubleSelectTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
 
     public void testDoubleWithDefaultSelectedValues() throws Exception {
 
@@ -383,85 +222,9 @@ public class DoubleSelectTest extends AbstractUITagTest {
 
         verify(SelectTag.class.getResource("DoubleSelect-2.txt"));
 
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        DoubleSelectTag freshTag = new DoubleSelectTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+
     }
-
-    public void testDoubleWithDefaultSelectedValues_clearTagStateSet() throws Exception {
-
-        TestAction testAction = (TestAction) action;
-
-        Region antwerp = new Region("Antwerp", "AN");
-        Region gent = new Region("Gent", "GN");
-        Region brugge = new Region("Brugge", "BRG");
-        ArrayList belgiumRegions = new ArrayList();
-        belgiumRegions.add(antwerp);
-        belgiumRegions.add(gent);
-        belgiumRegions.add(brugge);
-        Country belgium = new Country("Belgium", "BE", belgiumRegions);
-
-        Region paris = new Region("Paris", "PA");
-        Region bordeaux = new Region("Bordeaux", "BOR");
-        ArrayList franceRegions = new ArrayList();
-        franceRegions.add(paris);
-        franceRegions.add(bordeaux);
-        Country france = new Country("France", "FR", franceRegions);
-
-        Collection collection = new ArrayList(2);
-        collection.add("AN");
-        testAction.setCollection(collection);
-
-        List countries = new ArrayList();
-        countries.add(belgium);
-        countries.add(france);
-
-        testAction.setList2(countries);
-
-        DoubleSelectTag tag = new DoubleSelectTag();
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setPageContext(pageContext);
-        tag.setLabel("mylabel");
-        tag.setName("foo");
-        tag.setDoubleName("region");
-
-        tag.setValue("'FR'");
-        tag.setDoubleValue("'BOR'");
-
-        tag.setList("list2");
-        tag.setDoubleList("regions");
-
-        tag.setListKey("iso");
-        tag.setDoubleListKey("key");
-        tag.setListValue("name");
-        tag.setDoubleListValue("name");
-
-        tag.setFormName("inputForm");
-
-        tag.setOnmousedown("window.status='onmousedown';");
-        tag.setOnmousemove("window.status='onmousemove';");
-        tag.setOnmouseout("window.status='onmouseout';");
-        tag.setOnmouseover("window.status='onmouseover';");
-        tag.setOnmouseup("window.status='onmouseup';");
-
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        verify(SelectTag.class.getResource("DoubleSelect-2.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        DoubleSelectTag freshTag = new DoubleSelectTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
+    
     public void testDoubleWithDotName() throws Exception {
         TestAction testAction = (TestAction) action;
 
@@ -517,95 +280,12 @@ public class DoubleSelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("DoubleSelect-3.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        DoubleSelectTag freshTag = new DoubleSelectTag();
-        freshTag.setPageContext(pageContext);
-        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
-    }
-
-    public void testDoubleWithDotName_clearTagStateSet() throws Exception {
-        TestAction testAction = (TestAction) action;
-
-        Region antwerp = new Region("Antwerp", "AN");
-        Region gent = new Region("Gent", "GN");
-        Region brugge = new Region("Brugge", "BRG");
-        ArrayList belgiumRegions = new ArrayList();
-        belgiumRegions.add(antwerp);
-        belgiumRegions.add(gent);
-        belgiumRegions.add(brugge);
-        Country belgium = new Country("Belgium", "BE", belgiumRegions);
-
-        Region paris = new Region("Paris", "PA");
-        Region bordeaux = new Region("Bordeaux", "BOR");
-        ArrayList franceRegions = new ArrayList();
-        franceRegions.add(paris);
-        franceRegions.add(bordeaux);
-        Country france = new Country("France", "FR", franceRegions);
-
-        Collection collection = new ArrayList(2);
-        collection.add("AN");
-        testAction.setCollection(collection);
-
-        List countries = new ArrayList();
-        countries.add(belgium);
-        countries.add(france);
-
-        testAction.setList2(countries);
-
-        DoubleSelectTag tag = new DoubleSelectTag();
-        tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
-        tag.setPageContext(pageContext);
-        tag.setLabel("mylabel");
-        tag.setName("foo.bar");
-        tag.setDoubleName("region");
-
-        tag.setList("list2");
-        tag.setDoubleList("regions");
-
-        tag.setListKey("iso");
-        tag.setDoubleListKey("key");
-        tag.setListValue("name");
-        tag.setDoubleListValue("name");
-
-        tag.setFormName("inputForm");
-
-        tag.setOnmousedown("window.status='onmousedown';");
-        tag.setOnmousemove("window.status='onmousemove';");
-        tag.setOnmouseout("window.status='onmouseout';");
-        tag.setOnmouseover("window.status='onmouseover';");
-        tag.setOnmouseup("window.status='onmouseup';");
-
-        tag.doStartTag();
-        setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
-        tag.doEndTag();
-
-        verify(SelectTag.class.getResource("DoubleSelect-3.txt"));
-
-        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
-        DoubleSelectTag freshTag = new DoubleSelectTag();
-        freshTag.setPerformClearTagStateForTagPoolingServers(true);
-        freshTag.setPageContext(pageContext);
-        assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testGenericSimple() throws Exception {
         DoubleSelectTag tag = new DoubleSelectTag();
         prepareTagGeneric(tag);
         verifyGenericProperties(tag, "simple", new String[]{"value"});
-    }
-
-    public void testGenericSimpleWithDynamicAttributes() throws Exception {
-        DoubleSelectTag tag = new DoubleSelectTag();
-        tag.setDynamicAttribute(null, "select-name", "firstName");
-        tag.setDynamicAttribute(null, "second-select-name", "secondName");
-        prepareTagGeneric(tag);
-        verifyGenericProperties(tag, "simple", new String[]{"value"});
-        verify(SelectTag.class.getResource("DoubleSelect-5.txt"));
     }
 
     public void testGenericXhtml() throws Exception {

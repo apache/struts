@@ -1,36 +1,16 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class DateTextFieldInterceptor extends AbstractInterceptor {
+public class DateTextFieldInterceptor implements Interceptor {
 
     private static final Logger LOG = LogManager.getLogger(DateTextFieldInterceptor.class);
 
@@ -74,33 +54,41 @@ public class DateTextFieldInterceptor extends AbstractInterceptor {
             return values();
         }
     }
+    
+    public void destroy() {
+    }
+
+    public void init() {
+    }
 
     public String intercept(ActionInvocation ai) throws Exception {
-        HttpParameters parameters = ai.getInvocationContext().getParameters();
+        Map<String, Object> parameters = ai.getInvocationContext().getParameters();
+        Set<Entry<String, Object>> entries = parameters.entrySet();
         Map<String, Map<String, String>> dates = new HashMap<>();
         
         DateWord[] dateWords = DateWord.getAll();
 
         // Get all the values of date type
-        Set<String> names = parameters.keySet();
-        for (String name : names) {
+        for (Iterator<Entry<String, Object>> iterator = entries.iterator(); iterator.hasNext();) {
+            Entry<String, ?> entry = iterator.next();
+            String key = entry.getKey();
 
             for (DateWord dateWord : dateWords) {
             	String dateKey = "__" + dateWord.getDescription() + "_";
-            	if (name.startsWith(dateKey)) {
-                    String key = name.substring(dateKey.length());
+            	if (key.startsWith(dateKey)) {
+                    String name = key.substring(dateKey.length());
 
-                    Parameter param = parameters.get(name);
-
-                    if (param.isDefined()) {
-                        Map<String, String> map = dates.get(key);
-                        if (map == null) {
-                            map = new HashMap<>();
-                            dates.put(key, map);
-                        }
-                        map.put(dateWord.getDateType(), param.getValue());
-
-                        parameters = parameters.remove(name);
+                    if (entry.getValue() instanceof String[]) {
+                    	String[] values = (String[])entry.getValue();
+                    	if (values.length > 0 && !"".equals(values[0])) {
+                    		iterator.remove();
+                    		Map<String, String> map = dates.get(name);
+                    		if (map == null) {
+                                map = new HashMap<>();
+                                dates.put(name, map);
+                    		}
+                            map.put(dateWord.getDateType(), values[0]);
+                    	}
                     }
                     break;
                 }
@@ -108,7 +96,7 @@ public class DateTextFieldInterceptor extends AbstractInterceptor {
         }
 
         // Create all the date objects
-        Map<String, Parameter> newParams = new HashMap<>();
+        Map<String, Date> newParams = new HashMap<>();
         Set<Entry<String, Map<String, String>>> dateEntries = dates.entrySet();
         for (Entry<String, Map<String, String>> dateEntry : dateEntries) {
         	Set<Entry<String, String>> dateFormatEntries = dateEntry.getValue().entrySet();
@@ -122,13 +110,12 @@ public class DateTextFieldInterceptor extends AbstractInterceptor {
             	SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
             	formatter.setLenient(false);
                 Date value = formatter.parse(dateValue);
-                newParams.put(dateEntry.getKey(), new Parameter.Request(dateEntry.getKey(), value));
+                newParams.put(dateEntry.getKey(), value);
             } catch (ParseException e) {
                 LOG.warn("Cannot parse the parameter '{}' with format '{}' and with value '{}'", dateEntry.getKey(), dateFormat, dateValue);
             }
         }
-
-        ai.getInvocationContext().getParameters().appendAll(newParams);
+        parameters.putAll(newParams);
 
         return ai.invoke();
     }

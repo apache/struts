@@ -1,4 +1,6 @@
 /*
+ + * $Id$
+ + *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -35,11 +37,8 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.Result;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.util.TestUtils;
-import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -63,9 +62,7 @@ public class JSONResultTest extends StrutsTestCase {
         Map map = new HashMap();
         map.put("createtime", new Date());
         try {
-            JSONUtil jsonUtil = new JSONUtil();
-            jsonUtil.setWriter(new DefaultJSONWriter());
-            jsonUtil.serialize(map, JSONUtil.CACHE_BEAN_INFO_DEFAULT);
+            JSONUtil.serialize(map, JSONUtil.CACHE_BEAN_INFO_DEFAULT);
         } catch (JSONException e) {
             fail(e.getMessage());
         }
@@ -74,15 +71,12 @@ public class JSONResultTest extends StrutsTestCase {
     public void testJSONWriterEndlessLoopOnExludedProperties() throws JSONException {
         Pattern all = Pattern.compile(".*");
 
-        JSONWriter writer = new DefaultJSONWriter();
+        JSONWriter writer = new JSONWriter();
         writer.write(Arrays.asList("a", "b"), Arrays.asList(all), null, false);
     }
 
     public void testSMDDisabledSMD() throws Exception {
         JSONResult result = new JSONResult();
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         SMDActionTest1 action = new SMDActionTest1();
         stack.push(action);
 
@@ -99,9 +93,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testSMDDefault() throws Exception {
         JSONResult result = new JSONResult();
         result.setEnableSMD(true);
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         SMDActionTest1 action = new SMDActionTest1();
         stack.push(action);
 
@@ -119,9 +110,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testSMDDefaultAnnotations() throws Exception {
         JSONResult result = new JSONResult();
         result.setEnableSMD(true);
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         SMDActionTest2 action = new SMDActionTest2();
         stack.push(action);
 
@@ -139,9 +127,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testExcludeNullPropeties() throws Exception {
         JSONResult result = new JSONResult();
         result.setExcludeNullProperties(true);
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
         action.setFoo("fool");
@@ -156,44 +141,9 @@ public class JSONResultTest extends StrutsTestCase {
         assertEquals(normalizedExpected, normalizedActual);
     }
 
-    public void testNotTraverseOrIncludeProxyInfo() throws Exception {
-        JSONResult result = new JSONResult();
-        JSONUtil jsonUtil = new JSONUtil();
-        JSONWriter writer = new DefaultJSONWriter();
-        jsonUtil.setWriter(writer);
-        result.setJsonUtil(jsonUtil);
-        Object proxiedAction = new ProxyFactory(new TestAction2()).getProxy();
-        stack.push(proxiedAction);
-
-        this.invocation.setAction(proxiedAction);
-        try {
-            result.execute(this.invocation);
-        } catch (Exception ignored) {
-        }
-
-        String out = response.getContentAsString();
-
-        String normalizedActual = TestUtils.normalize(out, true);
-        String normalizedExpected = "{\"name\":\"name\"}";
-        assertNotSame(normalizedExpected, normalizedActual);
-        response.setCommitted(false);
-        response.reset();
-
-        writer.setExcludeProxyProperties(true);
-        result.execute(this.invocation);
-
-        out = response.getContentAsString();
-
-        normalizedActual = TestUtils.normalize(out, true);
-        assertEquals(normalizedExpected, normalizedActual);
-    }
-
     public void testWrapPrefix() throws Exception {
         JSONResult result = new JSONResult();
         result.setWrapPrefix("_prefix_");
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         TestAction2 action = new TestAction2();
         stack.push(action);
 
@@ -210,9 +160,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testSuffix() throws Exception {
         JSONResult result = new JSONResult();
         result.setWrapSuffix("_suffix_");
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         TestAction2 action = new TestAction2();
         stack.push(action);
 
@@ -229,9 +176,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testCustomDateFormat() throws Exception {
         JSONResult result = new JSONResult();
         result.setDefaultDateFormat("MM-dd-yyyy");
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 
         SingleDateBean dateBean = new SingleDateBean();
@@ -250,9 +194,6 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setWrapPrefix("_prefix_");
         result.setWrapSuffix("_suffix_");
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         TestAction2 action = new TestAction2();
         stack.push(action);
 
@@ -270,9 +211,6 @@ public class JSONResultTest extends StrutsTestCase {
         JSONResult result = new JSONResult();
         result.setExcludeNullProperties(true);
         result.setPrefix(true);
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
         action.setFoo("fool");
@@ -290,9 +228,6 @@ public class JSONResultTest extends StrutsTestCase {
     @SuppressWarnings("unchecked")
     public void test() throws Exception {
         JSONResult result = new JSONResult();
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
 
         TestAction action = new TestAction();
         stack.push(action);
@@ -376,9 +311,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testHierarchy() throws Exception {
         JSONResult result = new JSONResult();
         result.setIgnoreHierarchy(false);
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
 
         TestAction3 action = new TestAction3();
         stack.push(action);
@@ -395,9 +327,6 @@ public class JSONResultTest extends StrutsTestCase {
     @SuppressWarnings("unchecked")
     public void testCommentWrap() throws Exception {
         JSONResult result = new JSONResult();
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
 
         TestAction action = new TestAction();
         stack.push(action);
@@ -477,9 +406,6 @@ public class JSONResultTest extends StrutsTestCase {
     }
 
     private void executeTest2Action(JSONResult result) throws Exception {
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
 
@@ -522,9 +448,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testJSONP() throws Exception {
         JSONResult result = new JSONResult();
         result.setCallbackParameter("callback");
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         request.addParameter("callback", "exec");
 
         executeTest2Action(result);
@@ -539,9 +462,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testNoCache() throws Exception {
         JSONResult result = new JSONResult();
         result.setNoCache(true);
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
 
         executeTest2Action(result);
 
@@ -553,9 +473,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testContentType() throws Exception {
         JSONResult result = new JSONResult();
         result.setContentType("some_super_content");
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
 
         executeTest2Action(result);
 
@@ -565,9 +482,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testStatusCode() throws Exception {
         JSONResult result = new JSONResult();
         result.setStatusCode(HttpServletResponse.SC_CONTINUE);
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
 
         executeTest2Action(result);
 
@@ -580,9 +494,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void test2WithEnumBean() throws Exception {
         JSONResult result = new JSONResult();
         result.setEnumAsBean(true);
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
 
         executeTest2Action(result);
 
@@ -601,9 +512,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testIncludeProperties() throws Exception {
         JSONResult result = new JSONResult();
         result.setIncludeProperties("foo");
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
         action.setFoo("fooValue");
@@ -621,9 +529,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testIncludePropertiesWithList() throws Exception {
         JSONResult result = new JSONResult();
         result.setIncludeProperties("^list\\[\\d+\\]\\.booleanField");
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
 
@@ -648,9 +553,6 @@ public class JSONResultTest extends StrutsTestCase {
     public void testIncludePropertiesWithSetList() throws Exception {
         JSONResult result = new JSONResult();
         result.setIncludeProperties("^set\\[\\d+\\]\\.list\\[\\d+\\]\\.booleanField");
-        JSONUtil jsonUtil = new JSONUtil();
-        jsonUtil.setWriter(new DefaultJSONWriter());
-        result.setJsonUtil(jsonUtil);
         TestAction action = new TestAction();
         stack.push(action);
 
@@ -712,16 +614,6 @@ public class JSONResultTest extends StrutsTestCase {
 
         // thn
         assertEquals("UTF-8", encoding);
-    }
-
-    public void testPassingNullInvocation() throws Exception{
-        Result result = new JSONResult();
-        try {
-            result.execute(null);
-            fail("Exception should be thrown!");
-        } catch (IllegalArgumentException e) {
-            assertEquals("Invocation cannot be null!", e.getMessage());
-        }
     }
 
     @Override

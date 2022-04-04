@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletContextAware.java 590812 2007-10-31 20:32:54Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,15 +22,8 @@ package org.apache.struts2.portlet.interceptor;
 
 import javax.portlet.PortletContext;
 
-/**
- * @deprecated please use {@link org.apache.struts2.portlet.action.PortletContextAware} instead
- */
-@Deprecated
 public interface PortletContextAware {
 
-    /**
-     * @deprecated please use {@link org.apache.struts2.portlet.action.PortletContextAware#withPortletContext(PortletContext)} instead
-     */
-    void setPortletContext(PortletContext portletContext);
+	void setPortletContext(PortletContext portletContext);
 
 }

@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,24 +18,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.util;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsInternalTestCase;
 
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsInternalTestCase;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 
 /**
@@ -135,29 +136,6 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
         mockHttpServletRequest.expectAndReturn("getContextPath",
             "/contextPath");
-        mockHttpServletRequest.expectAndReturn("getServerPort", 80);
-
-        Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
-        mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl,
-            expectedUrl);
-
-        String result = urlHelper.buildUrl("/path1/path2/myAction.action",
-                (HttpServletRequest) mockHttpServletRequest.proxy(),
-                (HttpServletResponse) mockHttpServletResponse.proxy(), null,
-                null, true, true, true);
-        assertEquals(expectedUrl, result);
-        mockHttpServletRequest.verify();
-    }
-
-    public void testForceAddNullSchemeHostAndPort2() throws Exception {
-        String expectedUrl = "http://localhost:8080/contextPath/path1/path2/myAction.action";
-
-        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
-        mockHttpServletRequest.expectAndReturn("getScheme", "http");
-        mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
-        mockHttpServletRequest.expectAndReturn("getContextPath",
-            "/contextPath");
-        mockHttpServletRequest.expectAndReturn("getServerPort", 8080);
 
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl,
@@ -415,19 +393,11 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
 
         assertEquals(result, expectedResult);
     }
-
-    public void testDecodeSpacesInQueryString() throws Exception {
-        Map<String, Object> queryParameters = urlHelper.parseQueryString("name=value+with+space", false);
-
-        assertTrue(queryParameters.containsKey("name"));
-        assertEquals("value with space", queryParameters.get("name"));
-    }
-
-
+    
     public void setUp() throws Exception {
         super.setUp();
         stubContainer = new StubContainer(container);
-        ActionContext.getContext().withContainer(stubContainer);
+        ActionContext.getContext().put(ActionContext.CONTAINER, stubContainer);
         urlHelper = new DefaultUrlHelper();
     }
     

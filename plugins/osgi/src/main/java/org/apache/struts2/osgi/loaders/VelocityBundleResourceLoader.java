@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,13 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.osgi.loaders;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 
 import org.apache.struts2.osgi.DefaultBundleAccessor;
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -48,24 +47,6 @@ public class VelocityBundleResourceLoader extends ClasspathResourceLoader {
         } catch (Exception e) {
             throw new ResourceNotFoundException(e.getMessage());
         }
-    }
-
-    @Override
-    public synchronized Reader getResourceReader(String name, String encoding) throws ResourceNotFoundException {
-        Reader reader = null;
-        InputStream inputStream = getResourceStream(name);
-
-        if (inputStream == null) {
-            throw new ResourceNotFoundException("Resource resolved to null: " + name);
-        } else {
-            try {
-                reader = new BufferedReader(new InputStreamReader(inputStream, encoding));
-            } catch (UnsupportedEncodingException uee) {
-                throw new ResourceNotFoundException("Resource [" + name + "] cannot be processed with encoding: " + encoding, uee);
-            }
-        }
-
-        return reader;
     }
 
 }

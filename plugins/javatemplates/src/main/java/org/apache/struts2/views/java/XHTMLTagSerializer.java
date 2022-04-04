@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,11 +22,10 @@ package org.apache.struts2.views.java;
 
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 
 /**
  * Write tags as XHTML
@@ -54,11 +55,11 @@ public class XHTMLTagSerializer implements TagSerializer {
         writer.write("<");
         writer.write(name);
         if (attrs != null) {
-            for (Map.Entry<String, String> entry : attrs.entrySet()) {
+            for (String key : attrs.keySet()) {
                 writer.write(" ");
-                writer.write(entry.getKey());
+                writer.write(key);
                 writer.write("=\"");
-                writer.write(entry.getValue());
+                writer.write(attrs.get(key));
                 writer.write("\"");
             }
         }

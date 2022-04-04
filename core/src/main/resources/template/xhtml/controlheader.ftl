@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,7 +23,7 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader-core.ftl" />
     <td 
         <#if parameters.align?? >
-            class="align-${parameters.align}"
+            class="align-${parameters.align?html}" 
          <#else >
             class="tdInput"            
         </#if>

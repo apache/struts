@@ -1,34 +1,24 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.interceptor;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ModelDrivenAction;
-import com.opensymphony.xwork2.SimpleAction;
-import com.opensymphony.xwork2.TestBean;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
-import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.XWorkConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
@@ -39,21 +29,12 @@ import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import junit.framework.Assert;
 import ognl.OgnlContext;
 import ognl.PropertyAccessor;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.apache.struts2.dispatcher.HttpParameters;
-import org.junit.Assert;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -89,18 +70,18 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 put("test%test", "test%test");
             }
         };
-        pi.setParameters(a, stack, HttpParameters.create(parameters).build());
+        pi.setParameters(a, stack, parameters);
         assertEquals(expected, actual);
     }
 
     public void testInsecureParameters() throws Exception {
         // given
-        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put("name", "(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new " +
-                    "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
-                    "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
+                        "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
+                        "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
                 put("top['name'](0)", "true");
                 put("expression", "#f=#_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),#f.setAccessible(true),#f.set(#_memberAccess,true),#req=@org.apache.struts2.ServletActionContext@getRequest(),#resp=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#resp.println(#req.getRealPath('/')),#resp.close()");
             }
@@ -112,7 +93,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // when
         ValidateAction action = new ValidateAction();
-        pi.setParameters(action, vs, HttpParameters.create(params).build());
+        pi.setParameters(action, vs, params);
 
         // then
         assertEquals(3, action.getActionMessages().size());
@@ -132,7 +113,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution1 = "class.classLoader.jarPath";
         final String pollution2 = "model.class.classLoader.jarPath";
 
-        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
@@ -157,7 +138,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // when
         ValidateAction action = new ValidateAction();
-        pi.setParameters(action, vs, HttpParameters.create(params).build());
+        pi.setParameters(action, vs, params);
 
         // then
         assertEquals(0, action.getActionMessages().size());
@@ -171,7 +152,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution2 = "model.class.classLoader.jarPath";
         final String pollution3 = "class.classLoader.defaultAssertionStatus";
 
-        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-class-param-test.xml"));
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-class-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
@@ -197,7 +178,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // when
         ValidateAction action = new ValidateAction();
-        pi.setParameters(action, vs, HttpParameters.create(params).build());
+        pi.setParameters(action, vs, params);
 
         // then
         assertEquals(3, action.getActionMessages().size());
@@ -220,7 +201,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("@java.lang.System@exit(1).dummy", "dumb value");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.MODEL_DRIVEN_PARAM_TEST, null, extraContext);
         assertEquals(Action.SUCCESS, proxy.execute());
@@ -239,7 +220,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("count", "15");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.MODEL_DRIVEN_PARAM_TEST, null, extraContext);
         assertEquals(Action.SUCCESS, proxy.execute());
@@ -255,17 +236,17 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "This is blah");
         params.put("#session.foo", "Foo");
-        params.put("\u0023session['user']", "0wn3d");
-        params.put("\\u0023session['user']", "0wn3d");
+        params.put("\u0023session[\'user\']", "0wn3d");
+        params.put("\\u0023session[\'user\']", "0wn3d");
         params.put("\u0023session.user2", "0wn3d");
         params.put("\\u0023session.user2", "0wn3d");
-        params.put("('\u0023'%20%2b%20'session['user3']')(unused)", "0wn3d");
+        params.put("('\u0023'%20%2b%20'session[\'user3\']')(unused)", "0wn3d");
         params.put("('\\u0023' + 'session[\\'user4\\']')(unused)", "0wn3d");
-        params.put("('\u0023'%2b'session['user5']')(unused)", "0wn3d");
-        params.put("('\\u0023'%2b'session['user5']')(unused)", "0wn3d");
+        params.put("('\u0023'%2b'session[\'user5\']')(unused)", "0wn3d");
+        params.put("('\\u0023'%2b'session[\'user5\']')(unused)", "0wn3d");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         ValueStack stack = proxy.getInvocation().getStack();
@@ -290,7 +271,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         final String pollution5 = "class['classLoader']['jarPath']";
         final String pollution6 = "class[\"classLoader\"]['jarPath']";
 
-        loadConfigurationProviders(new StrutsDefaultConfigurationProvider(), new StrutsXmlConfigurationProvider("xwork-param-test.xml"));
+        loadConfigurationProviders(new XWorkConfigurationProvider(), new XmlConfigurationProvider("xwork-param-test.xml"));
         final Map<String, Object> params = new HashMap<String, Object>() {
             {
                 put(pollution1, "bad");
@@ -319,7 +300,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         // when
         ValidateAction action = new ValidateAction();
-        pi.setParameters(action, vs, HttpParameters.create(params).build());
+        pi.setParameters(action, vs, params);
 
         // then
         assertEquals(0, action.getActionMessages().size());
@@ -340,7 +321,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("(asdf)(('\\u0023rt.exit(1)')(\\u0023rt\\u003d@java.lang.Runtime@getRuntime()))", "1");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         ValueStack stack = proxy.getInvocation().getStack();
@@ -360,7 +341,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("blah", "This is blah");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -375,7 +356,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("theProtectedMap[' p0 p1 ']", "test4");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -388,7 +369,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("theProtectedMap['名字']", "test1");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -424,7 +405,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         parameters.put("huuhaa", "");
 
         Action action = new SimpleAction();
-        parametersInterceptor.setParameters(action, stack, HttpParameters.create(parameters).build());
+        parametersInterceptor.setParameters(action, stack, parameters);
         assertEquals(1, actual.size());
     }
 
@@ -444,7 +425,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         };
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
 
@@ -475,7 +456,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         };
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
 
@@ -498,7 +479,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("theProtectedMap.boo", "This is blah");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -514,7 +495,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("theProtectedMap.boo", "This is blah");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -533,12 +514,12 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     public void testEvalExpressionAsParameterName() throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new " +
-            "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
-            "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
+                "java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), " +
+                "@java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)");
         params.put("top['blah'](0)", "true");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -556,7 +537,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         params.put("existingMap.boo", "This is blah");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
         proxy.execute();
@@ -567,15 +548,15 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testNonexistentParametersGetLoggedInDevMode() throws Exception {
-        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-test-beans.xml");
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider,
-            new MockConfigurationProvider(Collections.singletonMap("struts.devMode", "true")));
+                new MockConfigurationProvider(Collections.singletonMap("devMode", "true")));
         Map<String, Object> params = new HashMap<>();
         params.put("not_a_property", "There is no action property named like this");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
         container.inject(config.getInterceptors().get(0).getInterceptor());
@@ -586,15 +567,15 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     }
 
     public void testNonexistentParametersAreIgnoredInProductionMode() throws Exception {
-        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-test-beans.xml");
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider,
-            new MockConfigurationProvider(Collections.singletonMap("struts.devMode", "false")));
+                new MockConfigurationProvider(Collections.singletonMap("devMode", "false")));
         Map<String, Object> params = new HashMap<>();
         params.put("not_a_property", "There is no action property named like this");
 
         HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        extraContext.put(ActionContext.PARAMETERS, params);
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME);
         container.inject(config.getInterceptors().get(0).getInterceptor());
@@ -626,7 +607,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         parameters.put("user.name", "Superman");
 
         Action action = new SimpleAction();
-        pi.setParameters(action, stack, HttpParameters.create(parameters).build());
+        pi.setParameters(action, stack, parameters);
 
         assertEquals("ordered should be false by default", false, pi.isOrdered());
         assertEquals(2, actual.size());
@@ -653,7 +634,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         parameters.put("user.name", "Superman");
 
         Action action = new SimpleAction();
-        pi.setParameters(action, stack, HttpParameters.create(parameters).build());
+        pi.setParameters(action, stack, parameters);
 
         assertEquals(true, pi.isOrdered());
         assertEquals(3, actual.size());
@@ -693,7 +674,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 put("fooKey", "fooValue");
             }
         };
-        pi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        pi.setParameters(new NoParametersAction(), stack, parameters);
         assertEquals(expected, actual);
     }
 
@@ -724,53 +705,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         };
 
         // when
-        interceptor.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        interceptor.setParameters(new NoParametersAction(), stack, parameters);
 
         // then
         assertEquals(expected, actual);
-    }
-
-    public void testDMIMethodsAreIgnored() throws Exception {
-        // given
-        ParametersInterceptor interceptor = createParametersInterceptor();
-        final Map<String, Object> actual = injectValueStackFactory(interceptor);
-        ValueStack stack = injectValueStack(actual);
-
-        final Map<String, Object> expected = new HashMap<String, Object>() {
-            {
-                put("ordinary.bean", "value");
-            }
-        };
-
-        Map<String, Object> parameters = new HashMap<String, Object>() {
-            {
-                put("ordinary.bean", "value");
-                put("action:", "myAction");
-                put("method:", "doExecute");
-            }
-        };
-
-        // when
-        interceptor.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
-
-        // then
-        assertEquals(expected, actual);
-    }
-
-    public void testBeanListSingleValue() throws Exception {
-        Map<String, Object> params = new HashMap<>();
-        params.put("beanList.name", new String[]{"Superman"});
-
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
-
-        ActionProxy proxy = actionProxyFactory.createActionProxy("",
-            MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext);
-        proxy.execute();
-        SimpleAction action = (SimpleAction) proxy.getAction();
-        assertNotNull(action);
-        assertNotNull(action.getBeanList());
-        assertFalse(action.getBeanList().isEmpty());
     }
 
     private ValueStack injectValueStack(Map<String, Object> actual) {
@@ -804,9 +742,9 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
     private ValueStack createStubValueStack(final Map<String, Object> actual) {
         ValueStack stack = new OgnlValueStack(
-            container.getInstance(XWorkConverter.class),
-            (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
-            container.getInstance(TextProvider.class, "system"), true, true) {
+                container.getInstance(XWorkConverter.class),
+                (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
+                container.getInstance(TextProvider.class, "system"), true) {
             @Override
             public void setValue(String expr, Object value) {
                 actual.put(expr, value);
@@ -846,7 +784,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-test-beans.xml");
+        XmlConfigurationProvider provider = new XmlConfigurationProvider("xwork-test-beans.xml");
         container.inject(provider);
         loadConfigurationProviders(provider, new MockConfigurationProvider());
 
@@ -858,7 +796,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
 class ValidateAction implements ValidationAware {
 
-    private final List<String> messages = new LinkedList<>();
+    private List<String> messages = new LinkedList<>();
     private String name;
 
     public void setActionErrors(Collection<String> errorMessages) {

@@ -1,24 +1,3 @@
-<!--
-/*
-* Licensed to the Apache Software Foundation (ASF) under one
-* or more contributor license agreements.  See the NOTICE file
-* distributed with this work for additional information
-* regarding copyright ownership.  The ASF licenses this file
-* to you under the Apache License, Version 2.0 (the
-* "License"); you may not use this file except in compliance
-* with the License.  You may obtain a copy of the License at
-*
-*  http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
--->
-<%@page import="org.apache.struts2.showcase.hangman.HangmanConstants" %>
 <%@taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
@@ -635,19 +614,6 @@
 				</s:else>
 		</div>
 	</div>
-</div>
-<br>
-<br>
-    <p>
-        A secondary test for this JSP visually verifies expression access to a public constant.
-        A direct access to the same public constant via scriptlet provides secondary verification.
-    </p>
-<br>
-<div>
-    Test public static (constant) access (expression).  Value: <s:property default="unavailable" value="@org.apache.struts2.showcase.hangman.HangmanConstants@HANGMAN_SESSION_KEY" />
-</div>
-<div>
-    Test public static (constant) access (scriptlet).  Value: <%=org.apache.struts2.showcase.hangman.HangmanConstants.HANGMAN_SESSION_KEY%>
 </div>
 </body>
 </html>

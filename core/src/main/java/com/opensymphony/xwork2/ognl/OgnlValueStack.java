@@ -1,25 +1,24 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkConstants;
+import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
@@ -33,8 +32,6 @@ import ognl.*;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -55,58 +52,57 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     public static final String THROW_EXCEPTION_ON_FAILURE = OgnlValueStack.class.getName() + ".throwExceptionOnFailure";
 
-    private static final Logger LOG = LogManager.getLogger(OgnlValueStack.class);
-
     private static final long serialVersionUID = 370737852934925530L;
 
     private static final String MAP_IDENTIFIER_KEY = "com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY";
+    private static final Logger LOG = LogManager.getLogger(OgnlValueStack.class);
 
-    protected CompoundRoot root;
-    protected transient Map<String, Object> context;
-    protected Class defaultType;
-    protected Map<Object, Object> overrides;
-    protected transient OgnlUtil ognlUtil;
-    protected transient SecurityMemberAccess securityMemberAccess;
-
+    CompoundRoot root;
+    transient Map<String, Object> context;
+    Class defaultType;
+    Map<Object, Object> overrides;
+    transient OgnlUtil ognlUtil;
+    transient SecurityMemberAccess securityMemberAccess;
     private transient XWorkConverter converter;
+
     private boolean devMode;
     private boolean logMissingProperties;
 
-    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
-        setRoot(xworkConverter, accessor, new CompoundRoot(), allowStaticMethodAccess, allowStaticFieldAccess);
+    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticAccess) {
+        setRoot(xworkConverter, accessor, new CompoundRoot(), allowStaticAccess);
         push(prov);
     }
 
-    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
-        setRoot(xworkConverter, accessor, new CompoundRoot(vs.getRoot()), allowStaticMethodAccess, allowStaticFieldAccess);
+    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticAccess) {
+        setRoot(xworkConverter, accessor, new CompoundRoot(vs.getRoot()), allowStaticAccess);
     }
 
     @Inject
-    protected void setOgnlUtil(OgnlUtil ognlUtil) {
+    public void setOgnlUtil(OgnlUtil ognlUtil) {
         this.ognlUtil = ognlUtil;
         securityMemberAccess.setExcludedClasses(ognlUtil.getExcludedClasses());
         securityMemberAccess.setExcludedPackageNamePatterns(ognlUtil.getExcludedPackageNamePatterns());
         securityMemberAccess.setExcludedPackageNames(ognlUtil.getExcludedPackageNames());
-        securityMemberAccess.setDisallowProxyMemberAccess(ognlUtil.isDisallowProxyMemberAccess());
     }
 
     protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot,
-                           boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
+                           boolean allowStaticMethodAccess) {
         this.root = compoundRoot;
-        this.securityMemberAccess = new SecurityMemberAccess(allowStaticMethodAccess, allowStaticFieldAccess);
-        this.context = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
+        this.securityMemberAccess = new SecurityMemberAccess(allowStaticMethodAccess);
+        this.context = Ognl.createDefaultContext(this.root, accessor, new OgnlTypeConverterWrapper(xworkConverter), securityMemberAccess);
         context.put(VALUE_STACK, this);
+        Ognl.setClassResolver(context, accessor);
         ((OgnlContext) context).setTraceEvaluations(false);
         ((OgnlContext) context).setKeepLastEvaluation(false);
     }
 
-    @Inject(StrutsConstants.STRUTS_DEVMODE)
-    protected void setDevMode(String mode) {
+    @Inject(XWorkConstants.DEV_MODE)
+    public void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, required = false)
-    protected void setLogMissingProperties(String logMissingProperties) {
+    @Inject(value = "logMissingProperties", required = false)
+    public void setLogMissingProperties(String logMissingProperties) {
         this.logMissingProperties = BooleanUtils.toBoolean(logMissingProperties);
     }
 
@@ -115,11 +111,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      */
     public Map<String, Object> getContext() {
         return context;
-    }
-
-    @Override
-    public ActionContext getActionContext() {
-        return ActionContext.of(context);
     }
 
     /**
@@ -162,6 +153,8 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
+
+    /**
      * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object)
      */
     public void setValue(String expr, Object value) {
@@ -186,7 +179,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     private void trySetValue(String expr, Object value, boolean throwExceptionOnFailure, Map<String, Object> context) throws OgnlException {
         context.put(XWorkConverter.CONVERSION_PROPERTY_FULLNAME, expr);
-        context.put(REPORT_ERRORS_ON_NO_PROP, throwExceptionOnFailure || logMissingProperties ? Boolean.TRUE : Boolean.FALSE);
+        context.put(REPORT_ERRORS_ON_NO_PROP, (throwExceptionOnFailure) ? Boolean.TRUE : Boolean.FALSE);
         ognlUtil.setValue(expr, context, root, value);
     }
 
@@ -196,21 +189,18 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         context.remove(REPORT_ERRORS_ON_NO_PROP);
     }
 
-    protected void handleRuntimeException(String expr, Object value, boolean throwExceptionOnFailure, RuntimeException re) {
+    private void handleRuntimeException(String expr, Object value, boolean throwExceptionOnFailure, RuntimeException re) {
         if (throwExceptionOnFailure) {
             String message = ErrorMessageBuilder.create()
                     .errorSettingExpressionWithValue(expr, value)
                     .build();
-            throw new StrutsException(message, re);
+            throw new XWorkException(message, re);
         } else {
             LOG.warn("Error setting value [{}] with expression [{}]", value, expr, re);
         }
     }
 
-    protected void handleOgnlException(String expr, Object value, boolean throwExceptionOnFailure, OgnlException e) {
-        if (e != null && e.getReason() instanceof SecurityException) {
-            LOG.error("Could not evaluate this expression due to security constraints: [{}]", expr, e);
-        }
+    private void handleOgnlException(String expr, Object value, boolean throwExceptionOnFailure, OgnlException e) {
     	boolean shouldLog = shouldLogMissingPropertyWarning(e);
     	String msg = null;
     	if (throwExceptionOnFailure || shouldLog) {
@@ -221,7 +211,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     	}
     	
         if (throwExceptionOnFailure) {
-            throw new StrutsException(msg, e);
+            throw new XWorkException(msg, e);
         }
     }
 
@@ -252,8 +242,8 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         }
     }
 
-    protected void setupExceptionOnFailure(boolean throwExceptionOnFailure) {
-        if (throwExceptionOnFailure || logMissingProperties) {
+    private void setupExceptionOnFailure(boolean throwExceptionOnFailure) {
+        if (throwExceptionOnFailure) {
             context.put(THROW_EXCEPTION_ON_FAILURE, true);
         }
     }
@@ -265,11 +255,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return tryFindValue(expr);
     }
 
-    protected Object handleOtherException(String expr, boolean throwExceptionOnFailure, Exception e) {
+    private Object handleOtherException(String expr, boolean throwExceptionOnFailure, Exception e) {
         logLookupFailure(expr, e);
 
         if (throwExceptionOnFailure)
-            throw new StrutsException(e);
+            throw new XWorkException(e);
 
         return findInContext(expr);
     }
@@ -332,28 +322,22 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return tryFindValue(expr, asType);
     }
 
-    protected Object handleOgnlException(String expr, boolean throwExceptionOnFailure, OgnlException e) {
-        Object ret = null;
-        if (e != null && e.getReason() instanceof SecurityException) {
-            LOG.error("Could not evaluate this expression due to security constraints: [{}]", expr, e);
-        } else {
-            ret = findInContext(expr);
-        }
+    private Object handleOgnlException(String expr, boolean throwExceptionOnFailure, OgnlException e) {
+        Object ret = findInContext(expr);
         if (ret == null) {
             if (shouldLogMissingPropertyWarning(e)) {
                 LOG.warn("Could not find property [{}]!", expr, e);
             }
             if (throwExceptionOnFailure) {
-                throw new StrutsException(e);
+                throw new XWorkException(e);
             }
         }
         return ret;
     }
 
-    protected boolean shouldLogMissingPropertyWarning(OgnlException e) {
-        return (e instanceof NoSuchPropertyException ||
-                (e instanceof MethodFailedException && e.getReason() instanceof NoSuchMethodException))
-        		&& logMissingProperties;
+    private boolean shouldLogMissingPropertyWarning(OgnlException e) {
+        return (e instanceof NoSuchPropertyException || e instanceof MethodFailedException)
+        		&& devMode && logMissingProperties;
     }
 
     private Object tryFindValue(String expr, Class asType) throws OgnlException {
@@ -375,7 +359,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return ognlUtil.getValue(expr, context, root, asType);
     }
 
-    protected Object findInContext(String name) {
+    private Object findInContext(String name) {
         return getContext().get(name);
     }
 
@@ -390,7 +374,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      * @param e    The thrown exception.
      */
     private void logLookupFailure(String expr, Exception e) {
-        if (devMode) {
+        if (devMode && LOG.isWarnEnabled()) {
             LOG.warn("Caught an exception while evaluating expression '{}' against value stack", expr, e);
             LOG.warn("NOTE: Previous warning message was issued due to devMode set to true.");
         } else {
@@ -462,11 +446,10 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         XWorkConverter xworkConverter = cont.getInstance(XWorkConverter.class);
         CompoundRootAccessor accessor = (CompoundRootAccessor) cont.getInstance(PropertyAccessor.class, CompoundRoot.class.getName());
         TextProvider prov = cont.getInstance(TextProvider.class, "system");
-        final boolean allowStaticMethod = BooleanUtils.toBoolean(cont.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS));
-        final boolean allowStaticField = BooleanUtils.toBoolean(cont.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS));
-        OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, allowStaticMethod, allowStaticField);
+        boolean allow = BooleanUtils.toBoolean(cont.getInstance(String.class, XWorkConstants.ALLOW_STATIC_METHOD_ACCESS));
+        OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, allow);
         aStack.setOgnlUtil(cont.getInstance(OgnlUtil.class));
-        aStack.setRoot(xworkConverter, accessor, this.root, allowStaticMethod, allowStaticField);
+        aStack.setRoot(xworkConverter, accessor, this.root, allow);
 
         return aStack;
     }
@@ -487,7 +470,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     @Inject
-    protected void setXWorkConverter(final XWorkConverter converter) {
+    public void setXWorkConverter(final XWorkConverter converter) {
         this.converter = converter;
     }
 }

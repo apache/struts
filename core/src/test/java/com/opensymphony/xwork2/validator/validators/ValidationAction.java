@@ -1,38 +1,16 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package com.opensymphony.xwork2.validator.validators;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 public class ValidationAction {
 
     private Integer intRange;
     private Integer intMinValue;
     private Integer intMaxValue;
-    private Integer[] ints;
 
     private Short shortRange;
     private Short shortMinValue;
     private Short shortMaxValue;
-    private List<Short> shorts;
 
     private Long longRange;
     private Long longMinValue;
@@ -41,11 +19,8 @@ public class ValidationAction {
     private Date dateRange;
     private Date dateMinValue;
     private Date dateMaxValue;
-
     private String dateFormat;
     private String stringValue;
-    private String[] strings;
-    private Collection<String> stringCollection;
 
     public Integer getIntRange() {
         return intRange;
@@ -157,37 +132,5 @@ public class ValidationAction {
 
     public String getStringValue() {
         return stringValue;
-    }
-
-    public Integer[] getInts() {
-        return ints;
-    }
-
-    public void setInts(Integer[] ints) {
-        this.ints = ints;
-    }
-
-    public List<Short> getShorts() {
-        return shorts;
-    }
-
-    public void setShorts(List<Short> shorts) {
-        this.shorts = shorts;
-    }
-
-    public String[] getStrings() {
-        return strings;
-    }
-
-    public void setStrings(String[] strings) {
-        this.strings = strings;
-    }
-
-    public Collection<String> getStringCollection() {
-        return stringCollection;
-    }
-
-    public void setStringCollection(Collection<String> stringCollection) {
-        this.stringCollection = stringCollection;
     }
 }

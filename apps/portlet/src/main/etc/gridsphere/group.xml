@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-group>
+	<group-name>StrutsPortlet</group-name>
+	<group-description>StrutsPortlet Example Application</group-description>
+	<group-visibility>PUBLIC</group-visibility>
+	<portlet-role-info>
+		<portlet-class>struts-portlet#StrutsPortlet</portlet-class>
+		<required-role>USER</required-role>
+	</portlet-role-info>
+</portlet-group>

@@ -1,27 +1,8 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package com.opensymphony.xwork2.validator;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.validator.annotations.ConditionalVisitorFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ConversionErrorFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.CreditCardValidator;
 import com.opensymphony.xwork2.validator.annotations.CustomValidator;
 import com.opensymphony.xwork2.validator.annotations.DateRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.DoubleRangeFieldValidator;
@@ -29,7 +10,6 @@ import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.LongRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
@@ -65,15 +45,11 @@ public class AnnotationValidationAction extends ActionSupport {
             messageParams = {"one", "two", "three"})
     @EmailValidator(message = "Foo isn't a valid e-mail!", fieldName = "foo", key = "email.key",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
-    @CreditCardValidator(message = "Foo isn't a valid credit card!", fieldName = "foo", key = "creditCard.key",
-            messageParams = {"one", "two", "three"}, shortCircuit = true)
     @ExpressionValidator(expression = "true", message = "Is not true!", key = "expression.key",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @FieldExpressionValidator(expression = "true", fieldName = "foo", key = "fieldexpression.key", message = "It is not true!",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @IntRangeFieldValidator(fieldName = "foo", key = "int.key", message = "Foo is out of range!", max = "10", min = "1",
-            messageParams = {"one", "two", "three"}, shortCircuit = true)
-    @LongRangeFieldValidator(fieldName = "foo", key = "int.key", message = "Foo is out of range!", max = "10", min = "1",
             messageParams = {"one", "two", "three"}, shortCircuit = true)
     @RequiredFieldValidator(fieldName = "foo", key = "required.key", message = "Foo is required!",
             messageParams = {"one", "two", "three"}, shortCircuit = true)

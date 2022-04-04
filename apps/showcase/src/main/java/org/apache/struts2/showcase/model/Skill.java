@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.showcase.model;
 
-import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.Serializable;
 

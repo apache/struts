@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,9 +24,9 @@
 <#include "/${parameters.templateDir}/simple/form-close.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-validate.ftl" />
 <#if parameters.focusElement??>
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
+<script type="text/javascript">
     StrutsUtils.addOnLoad(function() {
-        var element = document.getElementById("${parameters.focusElement?js_string}");
+        var element = document.getElementById("${parameters.focusElement?html}");
         if(element) {
             element.focus();
         }

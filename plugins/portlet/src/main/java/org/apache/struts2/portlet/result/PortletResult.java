@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletResult.java 582626 2007-10-07 13:26:12Z mrdon $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

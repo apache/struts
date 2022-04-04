@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletUrlHelper.java 582626 2007-10-07 13:26:12Z mrdon $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -278,9 +280,8 @@ public class PortletUrlHelper {
         Map<String, String[]> result = null;
         if (params != null) {
             result = new LinkedHashMap<String, String[]>(params.size());
-            for (Map.Entry<String, Object> entry : params.entrySet() ) {
-                String key = entry.getKey();
-                Object val = entry.getValue();
+            for ( String key : params.keySet() ) {
+                Object val = params.get(key);
                 if (val instanceof String[]) {
                     result.put(key, (String[]) val);
                 } else {

@@ -24,14 +24,17 @@ package org.apache.struts2.views.java.simple;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.TextParser;
+import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.ValueStack;
 import junit.framework.TestCase;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateRenderingContext;
+import static org.easymock.EasyMock.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,24 +43,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-
 public abstract class AbstractTest extends TestCase {
-
-    private final Map<String, String> scriptingAttrs = new HashMap<>();
-    private final Map<String, String> commonAttrs = new HashMap<>();
-    private final Map<String, String> dynamicAttrs = new HashMap<>();
+    private Map<String, String> scriptingAttrs = new HashMap<String, String>();
+    private Map<String, String> commonAttrs = new HashMap<String, String>();
+    private Map<String, Object> dynamicAttrs = new HashMap<String, Object>();
 
     protected SimpleTheme theme;
 
     protected StringWriter writer;
-    protected Map<String, Object> map;
+    protected Map map;
 
     protected Template template;
-    protected Map<String, Object> stackContext;
+    protected Map stackContext;
     protected ValueStack stack;
     protected TemplateRenderingContext context;
     protected HttpServletRequest request;
@@ -69,7 +66,7 @@ public abstract class AbstractTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        super.setUp();
+        super.setUp();    
         scriptingAttrs.put("onclick", "onclick_");
         scriptingAttrs.put("ondblclick", "ondblclick_");
         scriptingAttrs.put("onmousedown", "onmousedown_");
@@ -92,42 +89,44 @@ public abstract class AbstractTest extends TestCase {
 
         theme = new SimpleTheme();
         writer = new StringWriter();
-        map = new HashMap<>();
+        map = new HashMap();
 
         template = createMock(Template.class);
         stack = createNiceMock(ValueStack.class);
         setUpStack();
-        stackContext = new HashMap<>();
+        stackContext = new HashMap();
 
         context = new TemplateRenderingContext(template, writer, stack, map, null);
-        stackContext.put(Component.COMPONENT_STACK, new Stack<>());
-        ActionContext actionContext = ActionContext.of(stackContext).bind();
+        stackContext.put(Component.COMPONENT_STACK, new Stack());
 
         request = createNiceMock(HttpServletRequest.class);
         expect(request.getContextPath()).andReturn("/some/path").anyTimes();
         response = createNiceMock(HttpServletResponse.class);
 
-        expect(stack.getActionContext()).andReturn(actionContext).anyTimes();
         expect(stack.getContext()).andReturn(stackContext).anyTimes();
 
         Container container = createNiceMock(Container.class);
         XWorkConverter converter = new ConverterEx();
+        expect(container.getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX)).andReturn("true").anyTimes();
         expect(container.getInstance(XWorkConverter.class)).andReturn(converter).anyTimes();
         TextParser parser = new OgnlTextParser();
         expect(container.getInstance(TextParser.class)).andReturn(parser).anyTimes();
+        stackContext.put(ActionContext.CONTAINER, container);
+
 
         replay(request);
         replay(stack);
         replay(container);
 
-        actionContext.withContainer(container).withServletRequest(request);
+        ActionContext.setContext(new ActionContext(stackContext));
+        ServletActionContext.setRequest(request);
     }
 
     protected static String s(String input) {
         return input.replaceAll("'", "\"");
     }
 
-    protected void expectFind(String expr, Class<?> toClass, Object returnVal) {
+    protected void expectFind(String expr, Class toClass, Object returnVal) {
         expect(stack.findValue(expr, toClass)).andReturn(returnVal);
         expect(stack.findValue(expr, toClass, false)).andReturn(returnVal);
     }
@@ -163,32 +162,41 @@ public abstract class AbstractTest extends TestCase {
     }
 
     protected void applyDynamicAttrs(UIBean bean) {
-        bean.setDynamicAttributes(dynamicAttrs);
+    	bean.setDynamicAttributes(dynamicAttrs);
     }
 
     protected void assertScriptingAttrs(String str) {
         for (Map.Entry<String, String> entry : scriptingAttrs.entrySet()) {
             String substr = entry.getKey() + "=\"" + entry.getValue() + "\"";
-            assertTrue("String [" + substr + "] was not found in [" + str + "]", str.contains(substr));
+            assertTrue("String [" + substr + "] was not found in [" + str + "]", str.indexOf(substr) >= 0);
         }
     }
 
     protected void assertCommonAttrs(String str) {
         for (Map.Entry<String, String> entry : commonAttrs.entrySet()) {
             String substr = entry.getKey() + "=\"" + entry.getValue() + "\"";
-            assertTrue("String [" + substr + "] was not found in [" + str + "]", str.contains(substr));
+            assertTrue("String [" + substr + "] was not found in [" + str + "]", str.indexOf(substr) >= 0);
         }
     }
 
     protected void assertDynamicAttrs(String str) {
-        for (Map.Entry<String, String> entry : dynamicAttrs.entrySet()) {
+        for (Map.Entry<String, Object> entry : dynamicAttrs.entrySet()) {
             String substr = entry.getKey() + "=\"" + entry.getValue() + "\"";
-            assertTrue("String [" + substr + "] was not found in [" + str + "]", str.contains(substr));
+            assertTrue("String [" + substr + "] was not found in [" + str + "]", str.indexOf(substr) >= 0);
         }
     }
 
-    //XWorkConverter doesnt have a public constructor (the one with parameters will require mor config)
-    public static class ConverterEx extends XWorkConverter {
+    protected Object doFindValue(String expr, Class toType) {
+        Object val = stack.findValue(expr);
+
+        if (toType == String.class)
+            return val == null ? expr : val;
+        else
+            return val == null ? null : val;
+    }
+
+    //XWorkConverter doesnt have a public onstructor (the one with parameters will require mor config)
+    public class ConverterEx extends XWorkConverter {
         public ConverterEx() {
 
         }

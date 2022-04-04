@@ -1,4 +1,8 @@
-/*
+/**
+ * Adapts a SiteMesh 2 Velocity {@link com.opensymphony.module.sitemesh.Decorator}
+ * to a SiteMesh 3 {@link com.opensymphony.sitemesh.Decorator}.
+ *
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +19,9 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ * @since SiteMesh 2
  */
+
 package org.apache.struts2.sitemesh;
 
 import com.opensymphony.module.sitemesh.HTMLPage;
@@ -62,6 +68,7 @@ public class OldDecorator2NewStrutsVelocityDecorator extends OldDecorator2NewStr
      * @param ctx            The action context for this request, populated with the server state
      */
     protected void render(Content content, HttpServletRequest request, HttpServletResponse response, ServletContext servletContext, ActionContext ctx) throws ServletException, IOException {
+        String timerKey = "FreemarkerPageFilter_applyDecorator: ";
         if (velocityManager == null) {
             throw new ServletException("Missing freemarker dependency");
         }

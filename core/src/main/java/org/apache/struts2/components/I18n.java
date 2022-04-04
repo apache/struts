@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,22 +18,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
 import java.io.Writer;
 import java.util.ResourceBundle;
 
-import com.opensymphony.xwork2.LocaleProviderFactory;
-import com.opensymphony.xwork2.LocalizedTextProvider;
-import com.opensymphony.xwork2.TextProviderFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -87,35 +89,28 @@ public class I18n extends Component {
 
     protected boolean pushed;
     protected String name;
-
-    private LocalizedTextProvider localizedTextProvider;
+    protected Container container;
     private TextProvider textProvider;
     private TextProvider defaultTextProvider;
-    private LocaleProviderFactory localeProviderFactory;
-    private TextProviderFactory textProviderFactory;
+    private LocaleProvider localeProvider;
 
     public I18n(ValueStack stack) {
         super(stack);
     }
-
+    
     @Inject
-    public void setLocalizedTextProvider(LocalizedTextProvider localizedTextProvider) {
-        this.localizedTextProvider = localizedTextProvider;
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
-    @Inject("system")
+    @Inject
     public void setTextProvider(TextProvider textProvider) {
         this.defaultTextProvider = textProvider;
     }
 
     @Inject
-    public void setTextProviderFactory(TextProviderFactory textProviderFactory) {
-        this.textProviderFactory = textProviderFactory;
-    }
-
-    @Inject
-    public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
-        this.localeProviderFactory = localeProviderFactory;
+    public void setLocaleProvider(LocaleProvider localeProvider) {
+        this.localeProvider = localeProvider;
     }
 
     public boolean start(Writer writer) {
@@ -126,12 +121,13 @@ public class I18n extends Component {
             ResourceBundle bundle = defaultTextProvider.getTexts(name);
 
             if (bundle == null) {
-                LocaleProvider localeProvider = localeProviderFactory.createLocaleProvider();
-                bundle = localizedTextProvider.findResourceBundle(name, localeProvider.getLocale());
+                bundle = LocalizedTextUtil.findResourceBundle(name, localeProvider.getLocale());
             }
 
             if (bundle != null) {
-                textProvider = textProviderFactory.createInstance(bundle);
+                TextProviderFactory tpf = new TextProviderFactory();
+                container.inject(tpf);
+                textProvider = tpf.createInstance(bundle, localeProvider);
                 getStack().push(textProvider);
                 pushed = true;
             }

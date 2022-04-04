@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,6 +22,6 @@
 -->
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/form-common.ftl" />
 <#if parameters.onreset?has_content>
- onreset="${parameters.onreset}"<#rt/>
+ onreset="${parameters.onreset?html}"<#rt/>
 </#if>
 >

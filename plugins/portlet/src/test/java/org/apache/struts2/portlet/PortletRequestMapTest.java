@@ -1,4 +1,6 @@
 /*
+ * $Id: PortletRequestMapTest.java 580134 2007-09-27 19:44:01Z nilsga $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -25,7 +27,7 @@ import java.util.Set;
 import javax.portlet.PortletRequest;
 
 import org.jmock.MockObjectTestCase;
-import org.apache.struts2.mock.web.portlet.MockPortletRequest;
+import org.springframework.mock.web.portlet.MockPortletRequest;
 
 
 /**

@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,9 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.util;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -59,9 +64,9 @@ public class StrutsUtil {
         this.stack = stack;
         this.request = request;
         this.response = response;
-        this.ognl = stack.getActionContext().getContainer().getInstance(OgnlTool.class);
-        this.urlHelper = stack.getActionContext().getContainer().getInstance(UrlHelper.class);
-        this.objectFactory = stack.getActionContext().getContainer().getInstance(ObjectFactory.class);
+        this.ognl = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(OgnlTool.class);
+        this.urlHelper = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(UrlHelper.class);
+        this.objectFactory = ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(ObjectFactory.class);
     }
 
     public Object bean(Object aName) throws Exception {
@@ -100,7 +105,7 @@ public class StrutsUtil {
             return responseWrapper.getData();
         }
         catch (Exception e) {
-            LOG.debug("Cannot include {}", aName, e);
+            LOG.debug("Cannot include {}", aName.toString(), e);
             throw e;
         }
     }
@@ -123,7 +128,7 @@ public class StrutsUtil {
     }
 
     public String getText(String text) {
-        return (String) stack.findValue("getText('" + text.replace('\'', '"') + "')");
+        return (String) stack.findValue("getText('" + text + "')");
     }
 
     /*
@@ -134,7 +139,7 @@ public class StrutsUtil {
     }
 
     public String translateVariables(String expression) {
-        return TextParseUtil.translateVariables('%', expression, stack);
+        return TextParseUtil.translateVariables(expression, stack);
     }
 
     /**

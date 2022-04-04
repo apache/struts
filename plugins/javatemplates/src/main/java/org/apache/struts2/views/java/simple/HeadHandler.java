@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.java.simple;
 
 import org.apache.struts2.ServletActionContext;
@@ -38,7 +41,7 @@ public class HeadHandler extends AbstractTagHandler implements TagGenerator {
             sb.append(base);
         }
         
-        sb.append("/static/utils.js");
+        sb.append("/struts/utils.js");
         attrs.put("src", sb.toString());
 
         super.start("script", attrs);

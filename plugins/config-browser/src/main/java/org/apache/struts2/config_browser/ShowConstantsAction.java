@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.config_browser;
 
 import com.opensymphony.xwork2.inject.Container;
@@ -33,7 +36,6 @@ public class ShowConstantsAction extends ActionNamesAction {
 
     @Inject
     public void setContainer(Container container) {
-        super.setContainer(container);
         constants = new HashMap<String, String>();
         for (String key : container.getInstanceNames(String.class)) {
             constants.put(key, container.getInstance(String.class, key));

@@ -20,82 +20,48 @@
  */
 package it.org.apache.struts2.showcase;
 
-import org.junit.Assert;
-import org.junit.Test;
+public class ConversionTest extends ITBaseTest {
+    public void testList() {
+        beginAt("/conversion/enterPersonsInfo.action");
+        setTextField("persons[0].name", "name0");
+        setTextField("persons[0].age", "0");
+        setTextField("persons[1].name", "name1");
+        setTextField("persons[1].age", "1");
+        setTextField("persons[2].name", "name2");
+        setTextField("persons[2].age", "2");
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
+        submit();
 
-public class ConversionTest {
-    @Test
-    public void testList() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final HtmlPage page = webClient
-                    .getPage(ParameterUtils.getBaseUrl() + "/conversion/enterPersonsInfo.action");
-
-            final HtmlForm form = page.getForms().get(0);
-
-            form.getInputByName("persons[0].name").type("name0");
-            form.getInputByName("persons[0].age").type("0");
-            form.getInputByName("persons[1].name").type("name1");
-            form.getInputByName("persons[1].age").type("1");
-            form.getInputByName("persons[2].name").type("name2");
-            form.getInputByName("persons[2].age").type("2");
-
-            final HtmlSubmitInput button = form.getInputByValue("Submit");
-            final HtmlPage page2 = button.click();
-            final String page2Text = page2.asText();
-
-            Assert.assertTrue(page2Text.contains("SET 0 Name: name0"));
-            Assert.assertTrue(page2Text.contains("SET 0 Age: 0"));
-            Assert.assertTrue(page2Text.contains("SET 1 Name: name1"));
-            Assert.assertTrue(page2Text.contains("SET 1 Age: 1"));
-            Assert.assertTrue(page2Text.contains("SET 2 Name: name2"));
-            Assert.assertTrue(page2Text.contains("SET 2 Age: 2"));
-        }
+        assertTextPresent("SET 0 Name: name0");
+        assertTextPresent("SET 0 Age: 0");
+        assertTextPresent("SET 1 Name: name1");
+        assertTextPresent("SET 1 Age: 1");
+        assertTextPresent("SET 2 Name: name2");
+        assertTextPresent("SET 2 Age: 2");
     }
 
-    @Test
-    public void testSet() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final HtmlPage page = webClient
-                    .getPage(ParameterUtils.getBaseUrl() + "/conversion/enterAddressesInfo.action");
+    public void testSet() {
+        beginAt("/conversion/enterAddressesInfo.action");
+        setTextField("addresses('id0').address", "address0");
+        setTextField("addresses('id1').address", "address1");
+        setTextField("addresses('id2').address", "address2");
 
-            final HtmlForm form = page.getForms().get(0);
+        submit();
 
-            form.getInputByName("addresses('id0').address").type("address0");
-            form.getInputByName("addresses('id1').address").type("address1");
-            form.getInputByName("addresses('id2').address").type("address2");
-
-            final HtmlSubmitInput button = form.getInputByValue("Submit");
-            final HtmlPage page2 = button.click();
-            final String page2Text = page2.asText();
-
-            Assert.assertTrue(page2Text.contains("id0 -> address0"));
-            Assert.assertTrue(page2Text.contains("id1 -> address1"));
-            Assert.assertTrue(page2Text.contains("id2 -> address2"));
-        }
+        assertTextPresent("id0 -> address0");
+        assertTextPresent("id1 -> address1");
+        assertTextPresent("id2 -> address2");
     }
 
-    @Test
-    public void testEnum() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final HtmlPage page = webClient
-                    .getPage(ParameterUtils.getBaseUrl() + "/conversion/enterOperationEnumInfo.action");
+    public void testEnum() {
+        beginAt("/conversion/enterOperationEnumInfo.action");
+        checkCheckbox("selectedOperations", "ADD");
+        checkCheckbox("selectedOperations", "MINUS");
 
-            final HtmlForm form = page.getForms().get(0);
+        submit();
 
-            form.getInputByValue("ADD").setChecked(true);
-            form.getInputByValue("MINUS").setChecked(true);
-
-            final HtmlSubmitInput button = form.getInputByValue("Submit");
-            final HtmlPage page2 = button.click();
-            final String page2Text = page2.asText();
-
-            Assert.assertTrue(page2Text.contains("ADD"));
-            Assert.assertTrue(page2Text.contains("MINUS"));
-        }
+        assertTextPresent("ADD");
+        assertTextPresent("MINUS");        
     }
 }
+

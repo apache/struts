@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,12 +18,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.xslt;
 
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -36,7 +37,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -82,22 +82,6 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         String out = response.getContentAsString();
         assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
-    }
-
-    public void testSimpleTransform5() throws Exception {
-        result.setParse(false);
-        result.setStylesheetLocation("XSLTResultTest6.xsl");
-        result.execute(mai);
-
-        String out = response.getContentAsString();
-        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.contains("<title>WebWork in Action</title>"));
-        assertTrue(out.contains("<author>Patrick and Jason</author>"));
-        assertTrue(out.contains("<editions><edition value=\"I\">I</edition><edition value=\"IV\">IV</edition></editions>"));
-        assertTrue(out.contains("<book><title/><author/><editions/></book>"));
-        assertTrue(out.contains("<title>XWork not in Action</title>"));
-        assertTrue(out.contains("<author>Superman</author>"));
-        assertTrue(out.contains("<editions><edition value=\"1234\">1234</edition><edition value=\"345\">345</edition><edition value=\"6667\">6667</edition></editions>"));
     }
 
     public void testSimpleTransformParse() throws Exception {
@@ -208,17 +192,6 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         }
     }
 
-    public void testTransformWithBadCharacter() throws Exception {
-        result = new XSLTResult();
-        result.setStylesheetLocation("XSLTResultTest.bad.character.xsl");
-        try {
-            result.execute(mai);
-            fail("Should have thrown an exception");
-        } catch (Exception ex) {
-            assertEquals("Error transforming result", ex.getMessage());
-        }
-    }
-
     public void testStatusCode() throws Exception {
         result.setParse(false);
         result.setStylesheetLocation("XSLTResultTest.xsl");
@@ -241,16 +214,6 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         String actual = response.getCharacterEncoding();
 
         assertEquals(actual, "ISO-8859-1");
-    }
-
-    public void testPassingNullInvocation() throws Exception{
-        Result result = new XSLTResult();
-        try {
-            result.execute(null);
-            fail("Exception should be thrown!");
-        } catch (IllegalArgumentException e) {
-            assertEquals("Invocation cannot be null!", e.getMessage());
-        }
     }
 
     protected void setUp() throws Exception {
@@ -305,9 +268,9 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
         public List getBooks() {
             List list = new ArrayList();
-            list.add(new Book("WebWork in Action", "Patrick and Jason", Arrays.asList("I", "IV")));
+            list.add(new Book("WebWork in Action", "Patrick and Jason"));
             list.add(null);
-            list.add(new Book("XWork not in Action", "Superman", Arrays.asList("1234", "345", "6667")));
+            list.add(new Book("XWork not in Action", "Superman"));
             return list;
         }
 
@@ -317,12 +280,10 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
         private String title;
         private String author;
-        private List<String> editions;
 
-        public Book(String title, String author, List<String> editions) {
+        public Book(String title, String author) {
             this.title = title;
             this.author = author;
-            this.editions = editions;
         }
 
         public String getTitle() {
@@ -331,10 +292,6 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
         public String getAuthor() {
             return author;
-        }
-
-        public List<String> getEditions() {
-            return editions;
         }
     }
 }

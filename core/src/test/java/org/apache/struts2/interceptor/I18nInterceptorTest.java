@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,305 +23,66 @@ package org.apache.struts2.interceptor;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.DefaultLocaleProviderFactory;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionProxy;
-import junit.framework.TestCase;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.HttpParameters;
 import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpSession;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class I18nInterceptorTest extends TestCase {
+import static org.jmock.expectation.AssertMo.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+public class I18nInterceptorTest {
     private I18nInterceptor interceptor;
     private ActionInvocation mai;
     private ActionContext ac;
-    private Map<String, Object> session;
-    private MockHttpServletRequest request;
+    private Map<String, Object> params;
+    private Map session;
 
-    public void testEmptyParamAndSession() throws Exception {
-        interceptor.intercept(mai);
-    }
-
-    public void testNoSessionNoLocale() {
-        request.setSession(null);
-        try {
-            interceptor.intercept(mai);
-            assertTrue(true);
-        } catch (Exception ignore) {
-            fail("Shouldn't throw any exception!");
-        }
-
-        assertFalse("should have been removed",
-                mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined());
-        assertNull("should not be created", request.getSession(false));
-        assertNull("should not be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
-    }
-
-    public void testNoSessionButLocale() {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, "da_DK"); //prevents shouldStore to being false
-        request.setSession(null);
-        try {
-            interceptor.intercept(mai);
-            assertTrue(true);
-        } catch (Exception ignore) {
-            fail("Shouldn't throw any exception!");
-        }
-
-        assertFalse("should have been removed",
-                mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined());
-        assertNotNull("should be created", request.getSession(false));
-        assertNotNull("should be stored here", session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
-    }
-
-    public void testDefaultLocale() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, "_"); // bad locale that would get us default locale instead
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(Locale.getDefault(), session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
-    }
-
-    public void testDenmarkLocale() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, "da_DK");
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        Locale denmark = new Locale("da", "DK");
-        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
-    }
-
-    public void testDenmarkLocaleRequestOnly() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_REQUEST_ONLY_PARAMETER, "da_DK");
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        Locale denmark = new Locale("da", "DK");
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(denmark, mai.getInvocationContext().getLocale()); // should create a locale object
-    }
-
-    public void testLanguageOnlyLocale() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, "da");
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        Locale denmark = new Locale("da");
-        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
-    }
-
-    public void testEmptyLocale() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, "");
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(Locale.getDefault(), session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
-    }
-
-    public void testNotExistingLocale() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, "ble");
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(Locale.getDefault(), session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
-    }
-
-    public void testWithVariant() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, "ja_JP_JP");
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        Locale variant = new Locale("ja", "JP", "JP");
-        Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);
-        assertNotNull(locale); // should be stored here
-        assertEquals(variant, locale);
-        assertEquals("JP", locale.getVariant());
-    }
-
-    public void testWithVariantRequestOnly() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_REQUEST_ONLY_PARAMETER, "ja_JP_JP");
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
-
-        Locale variant = new Locale("ja", "JP", "JP");
-        Locale locale = mai.getInvocationContext().getLocale();
-        assertNotNull(locale); // should be stored here
-        assertEquals(variant, locale);
-        assertEquals("JP", locale.getVariant());
-    }
-
-    public void testRealLocaleObjectInParams() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, Locale.CANADA_FRENCH);
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(Locale.CANADA_FRENCH, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
-    }
-
-    public void testRealLocalesInParams() throws Exception {
-        Locale[] locales = new Locale[] { Locale.CANADA_FRENCH };
-        assertTrue(locales.getClass().isArray());
-        prepare(I18nInterceptor.DEFAULT_PARAMETER, locales);
-        interceptor.intercept(mai);
-
-        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
-
-        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
-        assertEquals(Locale.CANADA_FRENCH, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
-    }
-
-    public void testSetParameterAndAttributeNames() throws Exception {
-        // given
-        prepare("world", Locale.CHINA);
-
-        interceptor.setAttributeName("hello");
-        interceptor.setParameterName("world");
-
-        // when
-        interceptor.intercept(mai);
-
-        // then
-        assertFalse(mai.getInvocationContext().getParameters().contains("world")); // should have been removed
-
-        assertNotNull(session.get("hello")); // should be stored here
-        assertEquals(Locale.CHINA, session.get("hello"));
-    }
-
-    public void testActionContextLocaleIsPreservedWhenNotOverridden() throws Exception {
-        final Locale locale1 = Locale.TRADITIONAL_CHINESE;
-        mai.getInvocationContext().withLocale(locale1);
-        interceptor.intercept(mai);
-
-        Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);
-        assertNull(locale); // should not be stored here
-        locale = mai.getInvocationContext().getLocale();
-        assertEquals(locale1, locale);
-    }
-
-    public void testCookieCreation() throws Exception {
-        prepare(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "da_DK");
-
-        final Cookie cookie = new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "da_DK");
-
-        HttpServletResponse response = EasyMock.createMock(HttpServletResponse.class);
-        response.addCookie(CookieMatcher.eqCookie(cookie));
-        EasyMock.replay(response);
-
-        ac.put(StrutsStatics.HTTP_RESPONSE, response);
-        interceptor.setLocaleStorage(I18nInterceptor.Storage.COOKIE.name());
-        interceptor.intercept(mai);
-
-        EasyMock.verify(response);
-
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not create a locale object
-    }
-
-    public void testAcceptLanguageBasedLocale() throws Exception {
-        // given
-        request.setPreferredLocales(Arrays.asList(new Locale("da_DK"), new Locale("pl")));
-        interceptor.setLocaleStorage(null);
-        interceptor.setSupportedLocale("en,pl");
-
-        // when
-        interceptor.intercept(mai);
-
-        // then
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not create a locale object
-        assertEquals(new Locale("pl"), mai.getInvocationContext().getLocale());
-    }
-
-    public void testAcceptLanguageBasedLocaleWithFallbackToDefault() throws Exception {
-        // given
-        request.setPreferredLocales(Arrays.asList(new Locale("da_DK"), new Locale("es")));
-
-        interceptor.setLocaleStorage(null);
-        interceptor.setSupportedLocale("en,pl");
-
-        // when
-        interceptor.intercept(mai);
-
-        // then
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not be stored here
-        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should not create a locale object
-        assertEquals(Locale.US, mai.getInvocationContext().getLocale());
-    }
-
-    private void prepare(String key, Serializable value) {
-        Map<String, Serializable> params = new HashMap<>();
-        params.put(key, value);
-
-        mai.getInvocationContext().setParameters(HttpParameters.create(params).build());
-    }
-
+    @Before
     public void setUp() throws Exception {
         interceptor = new I18nInterceptor();
-        interceptor.setLocaleProviderFactory(new DefaultLocaleProviderFactory());
         interceptor.init();
-        session = new HashMap<>();
+        params = new HashMap<String, Object>();
+        session = new HashMap();
 
-        ac = ActionContext.of(new HashMap<>())
-            .bind()
-            .withSession(session)
-            .withParameters(HttpParameters.create().build());
+        Map<String, Object> ctx = new HashMap<String, Object>();
+        ctx.put(ActionContext.PARAMETERS, params);
+        ctx.put(ActionContext.SESSION, session);
+        ac = new ActionContext(ctx);
 
-        request = new MockHttpServletRequest();
-        request.setSession(new MockHttpSession());
-        ServletActionContext.setRequest(request);
-
-        Action action = () -> Action.SUCCESS;
-
-        MockActionProxy proxy = new MockActionProxy();
-        proxy.setAction(action);
-        proxy.setNamespace("i18n");
-        proxy.setActionName("anAction");
-
+        Action action = new Action() {
+            public String execute() throws Exception {
+                return SUCCESS;
+            }
+        };
         mai = new MockActionInvocation();
         ((MockActionInvocation) mai).setAction(action);
         ((MockActionInvocation) mai).setInvocationContext(ac);
-        ((MockActionInvocation) mai).setProxy(proxy);
     }
 
+    @After
     public void tearDown() throws Exception {
         interceptor.destroy();
         interceptor = null;
         ac = null;
+        params = null;
         session = null;
         mai = null;
     }
 
     static class CookieMatcher implements IArgumentMatcher {
-
-        private final Cookie expected;
+        private Cookie expected;
 
         CookieMatcher(Cookie cookie) {
             expected = cookie;
@@ -346,4 +109,156 @@ public class I18nInterceptorTest extends TestCase {
         }
     }
 
+    @Test
+    public void testCookieCreation() throws Exception {
+
+        params.put(I18nInterceptor.DEFAULT_COOKIE_PARAMETER, "da_DK");
+
+        final Cookie cookie = new Cookie(I18nInterceptor.DEFAULT_COOKIE_ATTRIBUTE, "da_DK");
+
+        HttpServletResponse response = EasyMock.createMock(HttpServletResponse.class);
+        response.addCookie(CookieMatcher.eqCookie(cookie));
+        EasyMock.replay(response);
+
+        ac.put(StrutsStatics.HTTP_RESPONSE, response);
+        interceptor.intercept(mai);
+
+        EasyMock.verify(response);
+
+        Locale denmark = new Locale("da", "DK");
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
+    @Test
+    public void testNoSession() throws Exception {
+        ac.setSession(null);
+        interceptor.intercept(mai);
+    }
+
+    @Test
+    public void testDefaultLocale() throws Exception {
+        params.put(I18nInterceptor.DEFAULT_PARAMETER, "_"); // bad locale that would get us default locale instead
+        interceptor.intercept(mai);
+
+        assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
+
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(Locale.getDefault(), session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
+    @Test
+    public void testDenmarkLocale() throws Exception {
+        params.put(I18nInterceptor.DEFAULT_PARAMETER, "da_DK");
+        interceptor.intercept(mai);
+
+        assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
+
+        Locale denmark = new Locale("da", "DK");
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
+    @Test
+    public void testDenmarkLocaleRequestOnly() throws Exception {
+        params.put(I18nInterceptor.DEFAULT_REQUESTONLY_PARAMETER, "da_DK");
+        interceptor.intercept(mai);
+
+        assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
+
+        Locale denmark = new Locale("da", "DK");
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(denmark, mai.getInvocationContext().getLocale()); // should create a locale object
+    }
+
+    @Test
+    public void testCountryOnlyLocale() throws Exception {
+        params.put(I18nInterceptor.DEFAULT_PARAMETER, "NL");
+        interceptor.intercept(mai);
+
+        assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
+
+        Locale denmark = new Locale("NL");
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
+    @Test
+    public void testLanguageOnlyLocale() throws Exception {
+        params.put(I18nInterceptor.DEFAULT_PARAMETER, "da_");
+        interceptor.intercept(mai);
+
+        assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
+
+        Locale denmark = new Locale("da");
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(denmark, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
+    @Test
+    public void testWithVariant() throws Exception {
+        params.put(I18nInterceptor.DEFAULT_PARAMETER, "ja_JP_JP");
+        interceptor.intercept(mai);
+
+        assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
+
+        Locale variant = new Locale("ja", "JP", "JP");
+        Locale locale = (Locale) session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE);
+        assertNotNull(locale); // should be stored here
+        assertEquals(variant, locale);
+        assertEquals("JP", locale.getVariant());
+    }
+
+    @Test
+    public void testWithVariantRequestOnly() throws Exception {
+        params.put(I18nInterceptor.DEFAULT_REQUESTONLY_PARAMETER, "ja_JP_JP");
+        interceptor.intercept(mai);
+
+        assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
+        assertNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+
+        Locale variant = new Locale("ja", "JP", "JP");
+        Locale locale = mai.getInvocationContext().getLocale();
+        assertNotNull(locale); // should be stored here
+        assertEquals(variant, locale);
+        assertEquals("JP", locale.getVariant());
+    }
+
+    @Test
+    public void testRealLocaleObjectInParams() throws Exception {
+        params.put(I18nInterceptor.DEFAULT_PARAMETER, Locale.CANADA_FRENCH);
+        interceptor.intercept(mai);
+
+        assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
+
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(Locale.CANADA_FRENCH, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
+    @Test
+    public void testRealLocalesInParams() throws Exception {
+        Locale[] locales = new Locale[]{Locale.CANADA_FRENCH};
+        assertTrue(locales.getClass().isArray());
+        params.put(I18nInterceptor.DEFAULT_PARAMETER, locales);
+        interceptor.intercept(mai);
+
+        assertNull(params.get(I18nInterceptor.DEFAULT_PARAMETER)); // should have been removed
+
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(Locale.CANADA_FRENCH, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE));
+    }
+
+    @Test
+    public void testSetParameterAndAttributeNames() throws Exception {
+        interceptor.setAttributeName("hello");
+        interceptor.setParameterName("world");
+
+        params.put("world", Locale.CHINA);
+        interceptor.intercept(mai);
+
+        assertNull(params.get("world")); // should have been removed
+
+        assertNotNull(session.get("hello")); // should be stored here
+        assertEquals(Locale.CHINA, session.get("hello"));
+    }
 }

@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.ObjectFactory;
@@ -221,7 +224,7 @@ public class Form extends ClosingUIBean {
     @Override
     protected void populateComponentHtmlId(Form form) {
         if (id != null) {
-            super.populateComponentHtmlId(null);
+            addParameter("id", escape(id));
         }
 
         // if no id given, it will be tried to generate it from the action attribute
@@ -273,15 +276,6 @@ public class Form extends ClosingUIBean {
 
         String formActionValue = findString(action);
         ActionMapping mapping = actionMapper.getMappingFromActionName(formActionValue);
-
-        if (mapping == null) {
-            mapping =  actionMapper.getMappingFromActionName((String) getParameters().get("actionName"));
-        }
-
-        if (mapping == null) {
-            return Collections.EMPTY_LIST;
-        }
-
         String actionName = mapping.getName();
 
         String methodName = null;
@@ -430,7 +424,7 @@ public class Form extends ClosingUIBean {
         if (visitorFieldName == null) {
             return null;
         }
-        String methodName = "get" + StringUtils.capitalize(visitorFieldName);
+        String methodName = "get" + org.apache.commons.lang.StringUtils.capitalize(visitorFieldName);
         try {
             Method method = actionClass.getMethod(methodName, new Class[0]);
             return method.getReturnType();

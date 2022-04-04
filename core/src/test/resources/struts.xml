@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,8 +21,8 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-          "-//Apache Software Foundation//DTD Struts Configuration 2.6//EN"
-          "http://struts.apache.org/dtds/struts-2.6.dtd">
+          "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+          "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
     <package name="default" extends="struts-default">
         <action name="hello" class="com.opensymphony.xwork2.ActionSupport">
@@ -80,23 +81,6 @@
             </result>
         </action>
 
-        <action name="test9" class="com.opensymphony.xwork2.ActionSupport">
-            <result type="freemarker">
-                <param name="location">org/apache/struts2/views/freemarker/select.ftl</param>
-            </result>
-        </action>
-
-        <action name="test10" class="com.opensymphony.xwork2.ActionSupport">
-            <result type="freemarker">
-                <param name="location">org/apache/struts2/views/freemarker/nonceTest.ftl</param>
-            </result>
-        </action>
-
-        <action name="test11" class="com.opensymphony.xwork2.ActionSupport">
-            <result type="freemarker">
-                <param name="location">org/apache/struts2/views/freemarker/iterator.ftl</param>
-            </result>
-        </action>
     </package>
 
     <package name="sitegraph" namespace="/tutorial/sitegraph" extends="struts-default">

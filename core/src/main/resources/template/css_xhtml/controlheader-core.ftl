@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,32 +24,32 @@
 	Only show message if errors are available.
 	This will be done if ActionSupport is used.
 -->
-<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors.get(parameters.name)??/>
+<#assign hasFieldErrors = parameters.name?? && fieldErrors?? && fieldErrors[parameters.name]??/>
 <div <#rt/><#if parameters.id??>id="wwgrp_${parameters.id}"<#rt/></#if> class="wwgrp">
-
+	
 <#if (parameters.errorposition!"top") == 'top'>
 <#if hasFieldErrors>
 <div <#rt/><#if parameters.id??>id="wwerr_${parameters.id}"<#rt/></#if> class="wwerr">
-<#list fieldErrors.get(parameters.name) as error>
+<#list fieldErrors[parameters.name] as error>
     <div<#rt/>
     <#if parameters.id??>
      errorFor="${parameters.id}"<#rt/>
     </#if>
     class="errorMessage">
-             ${error}
+             ${error?html}
     </div><#t/>
 </#list>
 </div><#t/>
 </#if>
 </#if>
 
-<#if !parameters.labelPosition?? && (parameters.form.labelPosition)??>
-<#assign labelPos = parameters.form.labelPosition/>
-<#elseif parameters.labelPosition??>
-<#assign labelPos = parameters.labelPosition/>
+<#if !parameters.labelposition?? && (parameters.form.labelposition)??>
+<#assign labelpos = parameters.form.labelposition/>
+<#elseif parameters.labelposition??>
+<#assign labelpos = parameters.labelposition/>
 </#if>
 <#if parameters.label??>
-<#if (labelPos!"top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 <div <#rt/>
 <#else>
 <span <#rt/>
@@ -55,7 +57,7 @@
 <#if parameters.id??>id="wwlbl_${parameters.id}"<#rt/></#if> class="wwlbl">
     <label <#t/>
 <#if parameters.id??>
-        for="${parameters.id}" <#t/>
+        for="${parameters.id?html}" <#t/>
 </#if>
 <#if hasFieldErrors>
         class="errorLabel"<#t/>
@@ -66,10 +68,10 @@
 <#if parameters.required!false>
         <span class="required">*</span><#t/>
 </#if>
-        ${parameters.label}${parameters.labelseparator!":"}
+        ${parameters.label?html}${parameters.labelseparator!":"?html}
 <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
 	</label><#t/>
-<#if (labelPos!"top") == 'top'>
+<#if (labelpos!"top") == 'top'>
 </div> <br /><#rt/>
 <#else>
 </span> <#rt/>

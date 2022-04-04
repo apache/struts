@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
@@ -41,7 +44,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
     public void testJavaxServletPackageAccess() throws Exception {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(false, true);
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
 
         Set<Pattern> excluded = new HashSet<Pattern>();
         excluded.add(Pattern.compile("^(?!javax\\.servlet\\..+)(javax\\..+)"));
@@ -59,7 +62,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
     public void testJavaxServletPackageExclusion() throws Exception {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(false, true);
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
 
         Set<Pattern> excluded = new HashSet<Pattern>();
         excluded.add(Pattern.compile("^javax\\..+"));

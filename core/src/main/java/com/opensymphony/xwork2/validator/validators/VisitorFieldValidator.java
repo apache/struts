@@ -1,38 +1,30 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.validator.validators;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.CompositeTextProvider;
-import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import com.opensymphony.xwork2.validator.DelegatingValidatorContext;
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.ValidatorContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -89,8 +81,6 @@ import java.util.List;
  */
 public class VisitorFieldValidator extends FieldValidatorSupport {
 
-    private static final Logger LOG = LogManager.getLogger(VisitorFieldValidator.class);
-
     private String context;
     private boolean appendPrefix = true;
     private ActionValidatorManager actionValidatorManager;
@@ -131,7 +121,7 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
         String fieldName = getFieldName();
         Object value = this.getFieldValue(fieldName, object);
         if (value == null) {
-            LOG.warn("The visited object is null, VisitorValidator will not be able to handle validation properly. Please make sure the visited object is not null for VisitorValidator to function properly");
+            log.warn("The visited object is null, VisitorValidator will not be able to handle validation properly. Please make sure the visited object is not null for VisitorValidator to function properly");
             return;
         }
         ValueStack stack = ActionContext.getContext().getValueStack();
@@ -176,37 +166,24 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
         ValidatorContext validatorContext;
 
         if (appendPrefix) {
-            ValidatorContext parent = getValidatorContext();
-            validatorContext = new AppendingValidatorContext(parent, createTextProvider(o, parent), fieldName, getMessage(o));
+            validatorContext = new AppendingValidatorContext(getValidatorContext(), o, fieldName, getMessage(o));
         } else {
             ValidatorContext parent = getValidatorContext();
-            CompositeTextProvider textProvider = createTextProvider(o, parent);
-            validatorContext = new DelegatingValidatorContext(parent, textProvider, parent);
+            validatorContext = new DelegatingValidatorContext(parent, DelegatingValidatorContext.makeTextProvider(o, parent), parent);
         }
 
         actionValidatorManager.validate(o, visitorContext, validatorContext);
         stack.pop();
     }
 
-    private CompositeTextProvider createTextProvider(Object o, ValidatorContext parent) {
-        List<TextProvider> textProviders = new LinkedList<>();
-        if (o instanceof TextProvider) {
-            textProviders.add((TextProvider) o);
-        } else {
-            textProviders.add(textProviderFactory.createInstance(o.getClass()));
-        }
-        textProviders.add(parent);
-
-        return new CompositeTextProvider(textProviders);
-    }
 
     public static class AppendingValidatorContext extends DelegatingValidatorContext {
         private String field;
         private String message;
         private ValidatorContext parent;
 
-        public AppendingValidatorContext(ValidatorContext parent, TextProvider textProvider, String field, String message) {
-            super(parent, textProvider, parent);
+        public AppendingValidatorContext(ValidatorContext parent, Object object, String field, String message) {
+            super(parent, makeTextProvider(object, parent), parent);
 
             this.field = field;
             this.message = message;

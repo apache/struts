@@ -1,30 +1,29 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.util;
 
-import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,8 +48,8 @@ public class AnnotationUtils {
      * Adds all fields with the specified Annotation of class clazz and its superclasses to allFields
      *
      * @param annotationClass the {@link Annotation}s to find
-     * @param clazz           The {@link Class} to inspect
-     * @param allFields       list of all fields
+     * @param clazz The {@link Class} to inspect
+     * @param allFields list of all fields
      */
     public static void addAllFields(Class<? extends Annotation> annotationClass, Class clazz, List<Field> allFields) {
 
@@ -62,7 +61,7 @@ public class AnnotationUtils {
 
         for (Field field : fields) {
             Annotation ann = field.getAnnotation(annotationClass);
-            if (ann != null) {
+            if (ann!=null) {
                 allFields.add(field);
             }
         }
@@ -73,8 +72,8 @@ public class AnnotationUtils {
      * Adds all methods with the specified Annotation of class clazz and its superclasses to allFields
      *
      * @param annotationClass the {@link Annotation}s to find
-     * @param clazz           The {@link Class} to inspect
-     * @param allMethods      list of all methods
+     * @param clazz The {@link Class} to inspect
+     * @param allMethods list of all methods
      */
     public static void addAllMethods(Class<? extends Annotation> annotationClass, Class clazz, List<Method> allMethods) {
 
@@ -86,7 +85,7 @@ public class AnnotationUtils {
 
         for (Method method : methods) {
             Annotation ann = method.getAnnotation(annotationClass);
-            if (ann != null) {
+            if (ann!=null) {
                 allMethods.add(method);
             }
         }
@@ -94,7 +93,8 @@ public class AnnotationUtils {
     }
 
     /**
-     * @param clazz         The {@link Class} to inspect
+     *
+     * @param clazz The {@link Class} to inspect
      * @param allInterfaces list of all interfaces
      */
     public static void addAllInterfaces(Class clazz, List<Class> allInterfaces) {
@@ -106,6 +106,50 @@ public class AnnotationUtils {
         allInterfaces.addAll(Arrays.asList(interfaces));
         addAllInterfaces(clazz.getSuperclass(), allInterfaces);
     }
+
+	/**
+	 * For the given <code>Class</code> get a collection of the the {@link AnnotatedElement}s 
+	 * that match the given <code>annotation</code>s or if no <code>annotation</code>s are 
+	 * specified then return all of the annotated elements of the given <code>Class</code>. 
+	 * Includes only the method level annotations.
+	 * 
+	 * @param clazz The {@link Class} to inspect
+	 * @param annotation the {@link Annotation}s to find
+	 * @return A {@link Collection}&lt;{@link AnnotatedElement}&gt; containing all of the
+	 *  method {@link AnnotatedElement}s matching the specified {@link Annotation}s
+	 */
+	public static Collection<Method> getAnnotatedMethods(Class clazz, Class<? extends Annotation>... annotation){
+        Collection<Method> toReturn = new HashSet<>();
+
+        for (Method m : clazz.getMethods()) {
+            if (ArrayUtils.isNotEmpty(annotation) && isAnnotatedBy(m, annotation)) {
+                toReturn.add(m);
+            } else if (ArrayUtils.isEmpty(annotation) && ArrayUtils.isNotEmpty(m.getAnnotations())) {
+                toReturn.add(m);
+            }
+		}
+		
+		return toReturn;
+	}
+
+	/**
+	 * Varargs version of <code>AnnotatedElement.isAnnotationPresent()</code>
+     * @param annotatedElement element to check
+     * @param annotation the {@link Annotation}s to find
+     * @return true is element is annotated by one of the annotation
+	 * @see AnnotatedElement
+	 */
+	public static boolean isAnnotatedBy(AnnotatedElement annotatedElement, Class<? extends Annotation>... annotation) {
+        if (ArrayUtils.isEmpty(annotation)) {
+            return false;
+        }
+
+		for( Class<? extends Annotation> c : annotation ){
+			if( annotatedElement.isAnnotationPresent(c) ) return true;
+		}
+
+		return false;
+	}
 
     /**
      * Returns the property name for a method.
@@ -132,13 +176,13 @@ public class AnnotationUtils {
     }
 
     /**
-     * Returns the annotation on the given class or the package of the class. This searches up the
+     * Returns the annotation on the given class or the package of the class. This searchs up the
      * class hierarchy and the package hierarchy for the closest match.
      *
-     * @param <T>             class type
-     * @param clazz           The class to search for the annotation.
-     * @param annotationClass The Class of the annotation.
-     * @return The annotation or null.
+     * @param   <T> class type
+     * @param   clazz The class to search for the annotation.
+     * @param   annotationClass The Class of the annotation.
+     * @return  The annotation or null.
      */
     public static <T extends Annotation> T findAnnotation(Class<?> clazz, Class<T> annotationClass) {
         T ann = clazz.getAnnotation(annotationClass);
@@ -156,37 +200,5 @@ public class AnnotationUtils {
         }
 
         return ann;
-    }
-
-    /**
-     * Returns a list of the annotation on the given class or the package of the class.
-     * This searches up the class hierarchy and the package hierarchy.
-     *
-     * @param <T>             class type
-     * @param clazz           The class to search for the annotation.
-     * @param annotationClass The Class of the annotation.
-     * @return List of the annotations or an empty list.
-     */
-    public static <T extends Annotation> List<T> findAnnotations(Class<?> clazz, Class<T> annotationClass) {
-        List<T> anns = new ArrayList<>();
-
-        List<Class<?>> classes = new ArrayList<>();
-        classes.add(clazz);
-
-        classes.addAll(ClassUtils.getAllSuperclasses(clazz));
-        classes.addAll(ClassUtils.getAllInterfaces(clazz));
-        for (Class<?> aClass : classes) {
-            T ann = aClass.getAnnotation(annotationClass);
-            if (ann != null) {
-                anns.add(ann);
-            }
-
-            ann = aClass.getPackage().getAnnotation(annotationClass);
-            if (ann != null) {
-                anns.add(ann);
-            }
-        }
-
-        return anns;
     }
 }

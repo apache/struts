@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,14 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.rest;
 
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.rest.handler.ContentTypeHandler;
 
@@ -41,8 +41,6 @@ import java.util.Set;
  */
 public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManager {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultContentTypeHandlerManager.class);
-
     /** ContentTypeHandlers keyed by the extension */
     Map<String, ContentTypeHandler> handlersByExtension = new HashMap<String, ContentTypeHandler>();
     /** ContentTypeHandlers keyed by the content-type */
@@ -50,7 +48,7 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
 
     private String defaultExtension;
 
-    @Inject(RestConstants.REST_DEFAULT_EXTENSION)
+    @Inject("struts.rest.defaultExtension")
     public void setDefaultExtension(String name) {
         this.defaultExtension = name;
     }
@@ -117,7 +115,7 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
 
     /**
      * Gets the handler for the response by looking at the extension of the request
-     * @param request The request
+     * @param req The request
      * @return The appropriate handler
      *
      * WW-4588: modified to get a handler for the response side and auto generate the response type
@@ -155,28 +153,20 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
         return handler;
     }
 
-    @Override
-    public String handleResult(ActionConfig actionConfig, Object methodResult, Object target) throws IOException {
-        LOG.warn("This method is deprecated!");
-        return readResultCode(methodResult);
-    }
-
     /**
      * Handles the result using handlers to generate content type-specific content
      * 
-     * @param invocation The action invocation for the current request
+     * @param actionConfig The action config for the current request
      * @param methodResult The object returned from the action method
      * @param target The object to return, usually the action object
      * @return The new result code to process
      * @throws IOException If unable to write to the response
      */
-    public String handleResult(ActionInvocation invocation, Object methodResult, Object target) throws IOException {
+    public String handleResult(ActionConfig actionConfig, Object methodResult, Object target) throws IOException {
         String resultCode = readResultCode(methodResult);
         Integer statusCode = readStatusCode(methodResult);
         HttpServletRequest req = ServletActionContext.getRequest();
         HttpServletResponse res = ServletActionContext.getResponse();
-        ActionConfig actionConfig = invocation.getProxy().getConfig();
-
         if(statusCode != null) {
             res.setStatus(statusCode);
         }
@@ -188,7 +178,7 @@ public class DefaultContentTypeHandlerManager implements ContentTypeHandlerManag
                 resultCode = extCode;
             } else {
                 StringWriter writer = new StringWriter();
-                resultCode = handler.fromObject(invocation, target, resultCode, writer);
+                resultCode = handler.fromObject(target, resultCode, writer);
                 String text = writer.toString();
                 if (text.length() > 0) {
                     byte[] data = text.getBytes("UTF-8");

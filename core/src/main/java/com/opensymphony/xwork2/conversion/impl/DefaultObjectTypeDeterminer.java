@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.conversion.impl;
 
@@ -75,10 +72,10 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
 
     /**
      * Determines the key class by looking for the value of @Key annotation for the given class.
-     * If no annotation is found, it determines the key class by looking for the value of Key_${property} in the properties
-     * file for the given class.
+     * If no annotation is found, the key class is determined by using the generic parametrics.
      *
-     * As fallback, the key class is determined by using the generic parametrics.
+     * As fallback, it determines the key class by looking for the value of Key_${property} in the properties
+     * file for the given class.
      *
      * @param parentClass the Class which contains as a property the Map or Collection we are finding the key for.
      * @param property    the property of the Map or Collection for the given parent class
@@ -89,20 +86,20 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
         if (annotation != null) {
             return annotation.value();
         }
-        Class clazz = (Class) xworkConverter.getConverter(parentClass, KEY_PREFIX + property);
+        Class clazz = getClass(parentClass, property, false);
         if (clazz != null) {
             return clazz;
         }
-        return getClass(parentClass, property, false);
+        return (Class) xworkConverter.getConverter(parentClass, KEY_PREFIX + property);
     }
 
     /**
      * Determines the element class by looking for the value of @Element annotation for the given
      * class.
-     * If no annotation is found, it determines the key class by looking for the value of Element_${property} in the properties
-     * file for the given class. Also looks for the deprecated Collection_${property}
+     * If no annotation is found, the element class is determined by using the generic parametrics.
      *
-     * As fallback, the element class is determined by using the generic parametrics.
+     * As fallback, it determines the key class by looking for the value of Element_${property} in the properties
+     * file for the given class. Also looks for the deprecated Collection_${property}
      *
      * @param parentClass the Class which contains as a property the Map or Collection we are finding the key for.
      * @param property    the property of the Map or Collection for the given parent class
@@ -113,17 +110,17 @@ public class DefaultObjectTypeDeterminer implements ObjectTypeDeterminer {
         if (annotation != null) {
             return annotation.value();
         }
-        Class clazz = (Class) xworkConverter.getConverter(parentClass, ELEMENT_PREFIX + property);
+        Class clazz = getClass(parentClass, property, true);
+        if (clazz != null) {
+            return clazz;
+        }
+        clazz = (Class) xworkConverter.getConverter(parentClass, ELEMENT_PREFIX + property);
         if (clazz == null) {
             clazz = (Class) xworkConverter.getConverter(parentClass, DEPRECATED_ELEMENT_PREFIX + property);
             if (clazz != null) {
                 LOG.info("The Collection_xxx pattern for collection type conversion is deprecated. Please use Element_xxx!");
             }
         }
-        if (clazz != null) {
-            return clazz;
-        }
-        clazz = getClass(parentClass, property, true);
         return clazz;
     }
 

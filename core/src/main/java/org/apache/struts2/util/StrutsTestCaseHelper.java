@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,10 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -36,6 +40,16 @@ import java.util.Map;
  */
 public class StrutsTestCaseHelper {
     
+    /**
+     * Sets up the configuration settings, XWork configuration, and
+     * message resources
+     *
+     * @throws Exception in case of any error
+     */
+    public static void setUp() throws Exception {
+        LocalizedTextUtil.clearDefaultResourceBundles();
+    }
+    
     public static Dispatcher initDispatcher(ServletContext ctx, Map<String,String> params) {
         if (params == null) {
             params = new HashMap<>();
@@ -47,14 +61,15 @@ public class StrutsTestCaseHelper {
         // Reset the value stack
         Container container = du.getContainer();
         ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
-        stack.getActionContext().withContainer(container).withValueStack(stack).bind();
-
+        stack.getContext().put(ActionContext.CONTAINER, container);
+        ActionContext.setContext(new ActionContext(stack.getContext()));
+        
         return du;
     }
 
     public static void tearDown() throws Exception {
         Dispatcher.setInstance(null);
-        ActionContext.clear();
+        ActionContext.setContext(null);
     }
 
     private static class DispatcherWrapper extends Dispatcher {

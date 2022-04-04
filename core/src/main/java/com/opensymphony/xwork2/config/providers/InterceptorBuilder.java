@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Copyright 2002-2006,2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.opensymphony.xwork2.config.providers;
 
@@ -28,7 +25,6 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.location.Location;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.ParameterizedMessage;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -46,6 +42,7 @@ import java.util.Map;
 public class InterceptorBuilder {
 
     private static final Logger LOG = LogManager.getLogger(InterceptorBuilder.class);
+
 
     /**
      * Builds a list of interceptors referenced by the refName in the supplied PackageConfig (InterceptorMapping object).
@@ -70,11 +67,13 @@ public class InterceptorBuilder {
                 InterceptorConfig config = (InterceptorConfig) referencedConfig;
                 Interceptor inter;
                 try {
+
                     inter = objectFactory.buildInterceptor(config, refParams);
-                    result.add(new InterceptorMapping(refName, inter, refParams));
+                    result.add(new InterceptorMapping(refName, inter));
                 } catch (ConfigurationException ex) {
-              	    LOG.warn(new ParameterizedMessage("Unable to load config class {} at {} probably due to a missing jar, which might be fine if you never plan to use the {} interceptor",
-                            config.getClassName(), ex.getLocation(), config.getName()), ex);
+              	    LOG.warn("Unable to load config class {} at {} probably due to a missing jar, which might be fine if you never plan to use the {} interceptor",
+                            config.getClassName(), ex.getLocation(), config.getName());
+                    LOG.error("Unable to load config class {}", config.getClassName(), ex);
                 }
 
             } else if (referencedConfig instanceof InterceptorStackConfig) {
@@ -130,8 +129,8 @@ public class InterceptorBuilder {
          *  interceptorStack1 -> [interceptor1.param1 -> someValue, interceptor1.param2 -> anotherValue]
          *
          */
-        for (Map.Entry<String, String> entry : refParams.entrySet()) {
-            String key = entry.getKey();
+        for (String key : refParams.keySet()) {
+            String value = refParams.get(key);
 
             try {
                 String name = key.substring(0, key.indexOf('.'));
@@ -144,7 +143,7 @@ public class InterceptorBuilder {
                     map = new LinkedHashMap<>();
                 }
 
-                map.put(key, entry.getValue());
+                map.put(key, value);
                 params.put(name, map);
 
             } catch (Exception e) {
@@ -154,9 +153,9 @@ public class InterceptorBuilder {
 
         result = new ArrayList<>(stackConfig.getInterceptors());
 
-        for (Map.Entry<String, Map<String, String>> entry : params.entrySet()) {
-            String key = entry.getKey();
-            Map<String, String> map = entry.getValue();
+        for (String key : params.keySet()) {
+
+            Map<String, String> map = params.get(key);
 
 
             Object interceptorCfgObj = interceptorLocator.getInterceptorConfig(key);
@@ -182,14 +181,12 @@ public class InterceptorBuilder {
                 Interceptor interceptor = objectFactory.buildInterceptor(cfg, map);
 
                 InterceptorMapping mapping = new InterceptorMapping(key, interceptor);
-                if (result.contains(mapping)) {
-                    for (int index = 0; index < result.size(); index++) {
-                        InterceptorMapping interceptorMapping = result.get(index);
-                        if (interceptorMapping.getName().equals(key)) {
-                            LOG.debug("Overriding interceptor config [{}] with new mapping {} using new params {}", key, interceptorMapping, map);
-                            result.set(index, mapping);
-                        }
-                    }
+                if (result != null && result.contains(mapping)) {
+                    // if an existing interceptor mapping exists,
+                    // we remove from the result Set, just to make sure
+                    // there's always one unique mapping.
+                    int index = result.indexOf(mapping);
+                    result.set(index, mapping);
                 } else {
                     result.add(mapping);
                 }

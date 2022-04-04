@@ -23,11 +23,10 @@ package org.apache.struts2.showcase.source;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.action.ServletContextAware;
+import org.apache.struts2.util.ServletContextAware;
 
 import javax.servlet.ServletContext;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -89,16 +88,9 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 			}
 		}
 
-                final String rootPath = ServletActionContext.getServletContext().getRealPath("/");
-                final String rootPathUnix = (rootPath != null ? rootPath.replace(File.separator, "/") : null);  // Make path Unix-like for comparison (e.g. on Windows)
-                final String rootPathFileURI = "file://" + rootPathUnix;
-                final String collapsedRootPathFileURI = rootPathFileURI.replace("//", "/");        // Config string may have been transformed
-                final String rootPathWarFileURI = "war:file://" + rootPathUnix;
-                final String collapsedRootPathWarFileURI = rootPathWarFileURI.replace("//", "/");  // Config string may have been transformed
+		String rootPath = ServletActionContext.getServletContext().getRealPath("/");
 
-		if (config != null && (rootPath == null || config.startsWith(rootPath) ||
-                    config.startsWith(rootPathFileURI) || config.startsWith(collapsedRootPathFileURI) ||
-                    config.startsWith(rootPathWarFileURI) || config.startsWith(collapsedRootPathWarFileURI))) {
+		if (config != null && (rootPath == null || config.startsWith(rootPath))) {
 			int pos = config.lastIndexOf(':');
 			configLine = Integer.parseInt(config.substring(pos + 1));
 			config = config.substring(0, pos).replace("//", "/");
@@ -200,7 +192,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 	}
 
 	/**
-	 * Reads in a stream, optionally only including the target line number
+	 * Reads in a strea, optionally only including the target line number
 	 * and its padding
 	 *
 	 * @param in               The input stream
@@ -235,7 +227,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
 		return snippet;
 	}
 
-	public void withServletContext(ServletContext arg0) {
+	public void setServletContext(ServletContext arg0) {
 		this.servletContext = arg0;
 	}
 

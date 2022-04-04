@@ -1,4 +1,6 @@
 /*
+ * $Id: DefaultActionSupport.java 651946 2008-04-27 13:41:38Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -68,7 +70,7 @@ public class PrepareOperations {
      */
     public ActionContext createActionContext(HttpServletRequest request, HttpServletResponse response) {
         ActionContext ctx;
-        int counter = 1;
+        Integer counter = 1;
         Integer oldCounter = (Integer) request.getAttribute(CLEANUP_RECURSION_COUNTER);
         if (oldCounter != null) {
             counter = oldCounter + 1;
@@ -77,16 +79,14 @@ public class PrepareOperations {
         ActionContext oldContext = ActionContext.getContext();
         if (oldContext != null) {
             // detected existing context, so we are probably in a forward
-            ctx = ActionContext.of(new HashMap<>(oldContext.getContextMap())).bind();
+            ctx = new ActionContext(new HashMap<>(oldContext.getContextMap()));
         } else {
-            ctx = ServletActionContext.getActionContext(request);   //checks if we are probably in an async
-            if (ctx == null) {
-                ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-                stack.getContext().putAll(dispatcher.createContextMap(request, response, null));
-                ctx = ActionContext.of(stack.getContext()).bind();
-            }
+            ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+            stack.getContext().putAll(dispatcher.createContextMap(request, response, null));
+            ctx = new ActionContext(stack.getContext());
         }
         request.setAttribute(CLEANUP_RECURSION_COUNTER, counter);
+        ActionContext.setContext(ctx);
         return ctx;
     }
 
@@ -109,7 +109,7 @@ public class PrepareOperations {
         try {
             dispatcher.cleanUpRequest(request);
         } finally {
-            ActionContext.clear();
+            ActionContext.setContext(null);
             Dispatcher.setInstance(null);
             devModeOverride.remove();
         }
@@ -188,9 +188,7 @@ public class PrepareOperations {
                     request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
                 }
             } catch (Exception ex) {
-                if (dispatcher.isHandleException() || dispatcher.isDevMode()) {
-                    dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
-                }
+                dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
             }
         }
 
@@ -207,7 +205,7 @@ public class PrepareOperations {
             try {
                 dispatcher.cleanup();
             } finally {
-                ActionContext.clear();
+                ActionContext.setContext(null);
             }
         }
     }
@@ -249,17 +247,6 @@ public class PrepareOperations {
     public static Boolean getDevModeOverride()
     {
         return devModeOverride.get();
-    }
-
-    /**
-     * Clear any override of the static devMode value being applied to the current thread.
-     *
-     * This can be useful for any situation where {@link #overrideDevMode(boolean)} might be called
-     * in a flow where {@link #cleanupRequest(javax.servlet.http.HttpServletRequest)} does not get called.
-     * May be very situational (such as some unit tests), but may have other utility as well.
-     */
-    public static void clearDevModeOverride() {
-        devModeOverride.remove();  // Remove current thread's value, enxure next read returns it to initialValue (typically null).
     }
 
 }

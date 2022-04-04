@@ -1,4 +1,7 @@
 /*
+ * $Id$
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +19,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.dispatcher.mapper;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
@@ -25,14 +29,13 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import com.opensymphony.xwork2.inject.Container;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,14 +61,14 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         PackageConfig pkg2 = new PackageConfig.Builder("my").namespace("/my").build();
         config.addPackageConfig("mvns", pkg);
         config.addPackageConfig("my", pkg2);
-        configManager = new ConfigurationManager(Container.DEFAULT_NAME) {
+        configManager = new ConfigurationManager() {
             public Configuration getConfiguration() {
                 return config;
             }
         };
     }
 
-    public void testGetMapping() {
+    public void testGetMapping() throws Exception {
         req.setupGetRequestURI("/my/namespace/actionName.action");
         req.setupGetServletPath("/my/namespace/actionName.action");
         req.setupGetAttribute(null);
@@ -79,7 +82,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(mapping.getMethod());
     }
 
-    public void testGetMappingWithMethod() {
+    public void testGetMappingWithMethod() throws Exception {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName!add.action");
         req.setupGetServletPath("/my/namespace/actionName!add.action");
@@ -95,7 +98,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("add", mapping.getMethod());
     }
 
-    public void testGetMappingWithSlashedName() {
+    public void testGetMappingWithSlashedName() throws Exception {
 
         req.setupGetRequestURI("/my/foo/actionName.action");
         req.setupGetServletPath("/my/foo/actionName.action");
@@ -111,7 +114,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(mapping.getMethod());
     }
 
-    public void testGetMappingWithSlashedNameAtRootButNoSlashPackage() {
+    public void testGetMappingWithSlashedNameAtRootButNoSlashPackage() throws Exception {
 
         req.setupGetRequestURI("/foo/actionName.action");
         req.setupGetServletPath("/foo/actionName.action");
@@ -127,7 +130,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(mapping.getMethod());
     }
 
-    public void testGetMappingWithSlashedNameAtRoot() {
+    public void testGetMappingWithSlashedNameAtRoot() throws Exception {
         config = new DefaultConfiguration();
         PackageConfig pkg = new PackageConfig.Builder("myns")
             .namespace("/my/namespace").build();
@@ -136,7 +139,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         config.addPackageConfig("mvns", pkg);
         config.addPackageConfig("my", pkg2);
         config.addPackageConfig("root", pkg3);
-        configManager = new ConfigurationManager(Container.DEFAULT_NAME) {
+        configManager = new ConfigurationManager() {
             public Configuration getConfiguration() {
                 return config;
             }
@@ -158,7 +161,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
 
 
-    public void testGetMappingWithNamespaceSlash() {
+    public void testGetMappingWithNamespaceSlash() throws Exception {
 
         req.setupGetRequestURI("/my-hh/abc.action");
         req.setupGetServletPath("/my-hh/abc.action");
@@ -181,7 +184,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("my-hh/abc", mapping.getName());
     }
 
-    public void testGetMappingWithUnknownNamespace() {
+    public void testGetMappingWithUnknownNamespace() throws Exception {
         req.setupGetRequestURI("/bo/foo/actionName.action");
         req.setupGetServletPath("/bo/foo/actionName.action");
         req.setupGetAttribute(null);
@@ -195,7 +198,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(mapping.getMethod());
     }
 
-    public void testGetMappingWithUnknownNamespaceButFullNamespaceSelect() {
+    public void testGetMappingWithUnknownNamespaceButFullNamespaceSelect() throws Exception {
         req.setupGetRequestURI("/bo/foo/actionName.action");
         req.setupGetServletPath("/bo/foo/actionName.action");
         req.setupGetAttribute(null);
@@ -210,7 +213,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(mapping.getMethod());
     }
 
-    public void testGetMappingWithActionName_methodAndName() {
+    public void testGetMappingWithActionName_methodAndName() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setAllowDynamicMethodCalls("true");
         ActionMapping mapping = mapper.getMappingFromActionName("actionName!add");
@@ -218,24 +221,24 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("add", mapping.getMethod());
     }
 
-    public void testGetMappingWithActionName_name() {
+    public void testGetMappingWithActionName_name() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMappingFromActionName("actionName");
         assertEquals("actionName", mapping.getName());
-        assertNull(mapping.getMethod());
+        assertEquals(null, mapping.getMethod());
     }
 
-    public void testGetMappingWithActionName_noDynamicMethod() {
+    public void testGetMappingWithActionName_noDynamicMethod() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setAllowDynamicMethodCalls("false");
         ActionMapping mapping = mapper.getMappingFromActionName("actionName!add");
         assertEquals("actionName!add", mapping.getName());
-        assertNull(mapping.getMethod());
+        assertEquals(null, mapping.getMethod());
     }
 
-    public void testGetMappingWithActionName_noDynamicMethodColonPrefix() {
+    public void testGetMappingWithActionName_noDynamicMethodColonPrefix() throws Exception {
 
-        Map<String, Object> parameterMap = new HashMap<>();
+        Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.METHOD_PREFIX + "someMethod", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -247,16 +250,16 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
 
         assertEquals("someServletPath", actionMapping.getName());
-        assertNull(actionMapping.getMethod());
+        assertEquals(null, actionMapping.getMethod());
     }
 
-    public void testGetMappingWithActionName_null() {
+    public void testGetMappingWithActionName_null() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping mapping = mapper.getMappingFromActionName(null);
         assertNull(mapping);
     }
 
-    public void testGetUri() {
+    public void testGetUri() throws Exception {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName.action");
         req.setupGetServletPath("/my/namespace/actionName.action");
@@ -268,7 +271,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/my/namespace/actionName.action", mapper.getUriFromActionMapping(mapping));
     }
 
-    public void testGetUriWithSemicolonPresent() {
+    public void testGetUriWithSemicolonPresent() throws Exception {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName.action;abc=123rty56");
         req.setupGetServletPath("/my/namespace/actionName.action;abc=123rty56");
@@ -280,7 +283,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/my/namespace/actionName.action", mapper.getUriFromActionMapping(mapping));
     }
 
-    public void testGetUriWithMethod() {
+    public void testGetUriWithMethod() throws Exception {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName!add.action");
         req.setupGetServletPath("/my/namespace/actionName!add.action");
@@ -293,8 +296,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/my/namespace/actionName!add.action", mapper.getUriFromActionMapping(mapping));
     }
 
-    public void testGetUriWithOriginalExtension() {
-        ActionMapping mapping = new ActionMapping("actionName", "/ns", null, new HashMap<String, Object>());
+    public void testGetUriWithOriginalExtension() throws Exception {
+        ActionMapping mapping = new ActionMapping("actionName", "/ns", null, new HashMap());
 
         ActionMapping orig = new ActionMapping();
         orig.setExtension("foo");
@@ -304,7 +307,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/ns/actionName.foo", mapper.getUriFromActionMapping(mapping));
     }
 
-    public void testGetMappingWithNoExtension() {
+    public void testGetMappingWithNoExtension() throws Exception {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName");
         req.setupGetServletPath("/my/namespace/actionName");
@@ -320,7 +323,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(mapping.getMethod());
     }
 
-    public void testGetMappingWithNoExtensionButUriHasExtension() {
+    public void testGetMappingWithNoExtensionButUriHasExtension() throws Exception {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName.html");
         req.setupGetServletPath("/my/namespace/actionName.html");
@@ -340,7 +343,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     // === test name & namespace ===
     // =============================
 
-    public void testParseNameAndNamespace1() {
+    public void testParseNameAndNamespace1() throws Exception {
         ActionMapping actionMapping = new ActionMapping();
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
@@ -350,7 +353,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals(actionMapping.getNamespace(), "");
     }
 
-    public void testParseNameAndNamespace2() {
+    public void testParseNameAndNamespace2() throws Exception {
         ActionMapping actionMapping = new ActionMapping();
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
@@ -360,7 +363,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals(actionMapping.getNamespace(), "/");
     }
 
-    public void testParseNameAndNamespace3() {
+    public void testParseNameAndNamespace3() throws Exception {
         ActionMapping actionMapping = new ActionMapping();
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
@@ -370,7 +373,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals(actionMapping.getNamespace(), "/my");
     }
 
-    public void testParseNameAndNamespace_NoSlashes() {
+    public void testParseNameAndNamespace_NoSlashes() throws Exception {
         ActionMapping actionMapping = new ActionMapping();
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
@@ -381,7 +384,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals(actionMapping.getNamespace(), "");
     }
 
-    public void testParseNameAndNamespace_AllowSlashes() {
+    public void testParseNameAndNamespace_AllowSlashes() throws Exception {
         ActionMapping actionMapping = new ActionMapping();
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
@@ -397,8 +400,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     // === test special prefix ===
     // ===========================
 
-    public void testActionPrefixWhenDisabled() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testActionPrefixWhenDisabled() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -411,8 +414,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("someServletPath", actionMapping.getName());
     }
 
-    public void testActionPrefixWhenEnabled() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testActionPrefixWhenEnabled() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -426,8 +429,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("myAction", actionMapping.getName());
     }
 
-    public void testActionPrefixWhenSlashesAndCrossNamespaceDisabled() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testActionPrefixWhenSlashesAndCrossNamespaceDisabled() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "my/Action", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -442,8 +445,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("my/Action", actionMapping.getName());
     }
 
-    public void testActionPrefixWhenSlashesButSlashesDisabledAndCrossNamespaceDisabled() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testActionPrefixWhenSlashesButSlashesDisabledAndCrossNamespaceDisabled() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "my/Action", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -458,8 +461,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("Action", actionMapping.getName());
     }
 
-    public void testActionPrefixWhenSlashesButSlashesDisabledAndCrossNamespace() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testActionPrefixWhenSlashesButSlashesDisabledAndCrossNamespace() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "my/Action", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -475,8 +478,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("my/Action", actionMapping.getName());
     }
 
-    public void testActionPrefixWhenCrossNamespace() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testActionPrefixWhenCrossNamespace() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "/my/Action", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -491,8 +494,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/my/Action", actionMapping.getName());
     }
 
-    public void testActionPrefix_fromImageButton() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testActionPrefix_fromImageButton() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction", "");
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction.x", "");
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction.y", "");
@@ -508,8 +511,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("myAction", actionMapping.getName());
     }
 
-    public void testActionPrefix_fromIEImageButton() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testActionPrefix_fromIEImageButton() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction.x", "");
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction.y", "");
 
@@ -524,8 +527,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("myAction", actionMapping.getName());
     }
 
-    public void testRedirectPrefix() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testRedirectPrefix() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put("redirect:" + "http://www.google.com", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -540,8 +543,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(result);
     }
 
-    public void testUnsafeRedirectPrefix() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testUnsafeRedirectPrefix() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put("redirect:" + "http://%{3*4}", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -556,8 +559,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(result);
     }
 
-    public void testRedirectActionPrefix() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testRedirectActionPrefix() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put("redirectAction:" + "myAction", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -573,8 +576,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(result);
     }
 
-    public void testUnsafeRedirectActionPrefix() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testUnsafeRedirectActionPrefix() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put("redirectAction:" + "%{3*4}", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -590,8 +593,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(result);
     }
 
-    public void testRedirectActionPrefixWithEmptyExtension() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testRedirectActionPrefixWithEmptyExtension() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put("redirectAction:" + "myAction", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -608,8 +611,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertNull(result);
     }
 
-    public void testCustomActionPrefix() {
-        Map<String, Object> parameterMap = new HashMap<>();
+    public void testCustomActionPrefix() throws Exception {
+        Map parameterMap = new HashMap();
         parameterMap.put("foo:myAction", "");
 
         final StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
@@ -627,39 +630,39 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals(actionMapping.getName(), "myAction");
     }
 
-    public void testDropExtension() {
+    public void testDropExtension() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         String name = mapper.dropExtension("foo.action", new ActionMapping());
-        assertEquals("Name not right: " + name, "foo", name);
+        assertTrue("Name not right: "+name, "foo".equals(name));
 
         name = mapper.dropExtension("foo.action.action", new ActionMapping());
-        assertEquals("Name not right: " + name, "foo.action", name);
+        assertTrue("Name not right: "+name, "foo.action".equals(name));
 
     }
 
-    public void testDropExtensionWhenBlank() {
+    public void testDropExtensionWhenBlank() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setExtensions("action,,");
         String name = mapper.dropExtension("foo.action", new ActionMapping());
-        assertEquals("Name not right: " + name, "foo", name);
+        assertTrue("Name not right: "+name, "foo".equals(name));
         name = mapper.dropExtension("foo", new ActionMapping());
-        assertEquals("Name not right: " + name, "foo", name);
+        assertTrue("Name not right: "+name, "foo".equals(name));
         assertNull(mapper.dropExtension("foo.bar", new ActionMapping()));
         assertNull(mapper.dropExtension("foo.", new ActionMapping()));
     }
 
-    public void testDropExtensionEmbeddedDot() {
+    public void testDropExtensionEmbeddedDot() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setExtensions("action,,");
 
         String name = mapper.dropExtension("/foo/bar-1.0/baz.action", new ActionMapping());
-        assertEquals("Name not right: " + name, "/foo/bar-1.0/baz", name);
+        assertTrue("Name not right: "+name, "/foo/bar-1.0/baz".equals(name));
 
         name = mapper.dropExtension("/foo/bar-1.0/baz", new ActionMapping());
-        assertEquals("Name not right: " + name, "/foo/bar-1.0/baz", name);
+        assertTrue("Name not right: "+name, "/foo/bar-1.0/baz".equals(name));
     }
 
-    public void testGetUriFromActionMapper1() {
+    public void testGetUriFromActionMapper1() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
@@ -670,7 +673,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myNamespace/myActionName!myMethod.action", uri);
     }
 
-    public void testGetUriFromActionMapper2() {
+    public void testGetUriFromActionMapper2() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
@@ -681,7 +684,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myActionName!myMethod.action", uri);
     }
 
-    public void testGetUriFromActionMapper3() {
+    public void testGetUriFromActionMapper3() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
@@ -693,7 +696,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     }
 
 
-    public void testGetUriFromActionMapper4() {
+    public void testGetUriFromActionMapper4() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setName("myActionName");
@@ -703,7 +706,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myActionName.action", uri);
     }
 
-    public void testGetUriFromActionMapper5() {
+    public void testGetUriFromActionMapper5() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setName("myActionName");
@@ -714,7 +717,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     }
 
     //
-    public void testGetUriFromActionMapper6() {
+    public void testGetUriFromActionMapper6() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
@@ -725,7 +728,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myNamespace/myActionName!myMethod.action?test=bla", uri);
     }
 
-    public void testGetUriFromActionMapper7() {
+    public void testGetUriFromActionMapper7() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
@@ -736,7 +739,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myActionName!myMethod.action?test=bla", uri);
     }
 
-    public void testGetUriFromActionMapper8() {
+    public void testGetUriFromActionMapper8() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
@@ -748,7 +751,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     }
 
 
-    public void testGetUriFromActionMapper9() {
+    public void testGetUriFromActionMapper9() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setName("myActionName?test=bla");
@@ -758,7 +761,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myActionName.action?test=bla", uri);
     }
 
-    public void testGetUriFromActionMapper10() {
+    public void testGetUriFromActionMapper10() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setName("myActionName?test=bla");
@@ -768,7 +771,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myActionName.action?test=bla", uri);
     }
 
-    public void testGetUriFromActionMapper11() {
+    public void testGetUriFromActionMapper11() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setName("myActionName.action");
@@ -778,7 +781,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myActionName.action", uri);
     }
 
-    public void testGetUriFromActionMapper12() {
+    public void testGetUriFromActionMapper12() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setName("myActionName.action");
@@ -788,7 +791,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myActionName.action", uri);
     }
 
-    public void testGetUriFromActionMapper_justActionAndMethod() {
+    public void testGetUriFromActionMapper_justActionAndMethod() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
@@ -799,7 +802,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("myActionName!myMethod", uri);
     }
 
-    public void testGetUriFromActionMapperWhenBlankExtension() {
+    public void testGetUriFromActionMapperWhenBlankExtension() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setExtensions(",,");
         ActionMapping actionMapping = new ActionMapping();
@@ -811,7 +814,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myNamespace/myActionName!myMethod", uri);
     }
 
-    public void testSetExtension() {
+    public void testSetExtension() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         mapper.setExtensions("");
         assertNull(mapper.extensions);
@@ -828,53 +831,51 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals(Arrays.asList("html", "", "xml"), mapper.extensions);
 
         mapper.setExtensions("xml");
-        assertEquals(Collections.singletonList("xml"), mapper.extensions);
+        assertEquals(Arrays.asList("xml"), mapper.extensions);
 
         mapper.setExtensions(",");
-        assertEquals(Collections.singletonList(""), mapper.extensions);
+        assertEquals(Arrays.asList(""), mapper.extensions);
 
 
     }
 
-    public void testAllowedNamespaceNames() {
-        DefaultActionMapper mapper = new DefaultActionMapper();
-
-        String namespace = "/";
-        assertEquals(namespace, mapper.cleanupNamespaceName(namespace));
-
-        namespace = "${namespace}";
-        assertEquals(mapper.defaultNamespaceName, mapper.cleanupNamespaceName(namespace));
-
-        namespace = "${${%{namespace}}}";
-        assertEquals(mapper.defaultNamespaceName, mapper.cleanupNamespaceName(namespace));
-
-        namespace = "${#foo='namespace',#foo}";
-        assertEquals(mapper.defaultNamespaceName, mapper.cleanupNamespaceName(namespace));
-
-        namespace = "/test-namespace/namespace/";
-        assertEquals("/test-namespace/namespace/", mapper.cleanupNamespaceName(namespace));
-
-        namespace = "/test_namespace/namespace-test/";
-        assertEquals("/test_namespace/namespace-test/", mapper.cleanupNamespaceName(namespace));
-
-        namespace = "/test_namespace/namespace.test/";
-        assertEquals("/test_namespace/namespace.test/", mapper.cleanupActionName(namespace));
-    }
-
-    public void testAllowedActionNames() {
+    public void testAllowedActionNames() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
 
         String actionName = "action";
         assertEquals(actionName, mapper.cleanupActionName(actionName));
 
+        Throwable expected = null;
+
         actionName = "${action}";
-        assertEquals(mapper.defaultActionName, mapper.cleanupActionName(actionName));
+        try {
+            mapper.cleanupActionName(actionName);
+            fail();
+        } catch (Throwable t) {
+            expected = t;
+        }
+        assertTrue(expected instanceof StrutsException);
+        assertEquals("Action [${action}] does not match allowed action names pattern [" + mapper.allowedActionNames.pattern() + "]!", expected.getMessage());
 
         actionName = "${${%{action}}}";
-        assertEquals(mapper.defaultActionName, mapper.cleanupActionName(actionName));
+        try {
+            mapper.cleanupActionName(actionName);
+            fail();
+        } catch (Throwable t) {
+            expected = t;
+        }
+        assertTrue(expected instanceof StrutsException);
+        assertEquals("Action [${${%{action}}}] does not match allowed action names pattern [" + mapper.allowedActionNames.pattern() + "]!", expected.getMessage());
 
         actionName = "${#foo='action',#foo}";
-        assertEquals(mapper.defaultActionName, mapper.cleanupActionName(actionName));
+        try {
+            mapper.cleanupActionName(actionName);
+            fail();
+        } catch (Throwable t) {
+            expected = t;
+        }
+        assertTrue(expected instanceof StrutsException);
+        assertEquals("Action [${#foo='action',#foo}] does not match allowed action names pattern [" + mapper.allowedActionNames.pattern() + "]!", expected.getMessage());
 
         actionName = "test-action";
         assertEquals("test-action", mapper.cleanupActionName(actionName));
@@ -884,21 +885,6 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         actionName = "test!bar.action";
         assertEquals("test!bar.action", mapper.cleanupActionName(actionName));
-    }
-
-    public void testAllowedMethodNames() {
-        DefaultActionMapper mapper = new DefaultActionMapper();
-
-        assertEquals("", mapper.cleanupMethodName(""));
-        assertEquals("test", mapper.cleanupMethodName("test"));
-        assertEquals("test_method", mapper.cleanupMethodName("test_method"));
-        assertEquals("_test", mapper.cleanupMethodName("_test"));
-        assertEquals("test1", mapper.cleanupMethodName("test1"));
-
-        assertEquals(mapper.defaultMethodName, mapper.cleanupMethodName("2test"));
-        assertEquals(mapper.defaultMethodName, mapper.cleanupMethodName("%{exp}"));
-        assertEquals(mapper.defaultMethodName, mapper.cleanupMethodName("${%{foo}}"));
-        assertEquals(mapper.defaultMethodName, mapper.cleanupMethodName("${#foo='method',#foo}"));
     }
 
 }

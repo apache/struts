@@ -1,4 +1,6 @@
 /*
+ * $Id: ClasspathConfigurationProvider.java 655902 2008-05-13 15:15:12Z bpontarelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,8 +17,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
-package org.apache.struts2.convention;
+ */package org.apache.struts2.convention;
 
 import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.Configuration;

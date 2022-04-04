@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.components;
 
 import java.io.Writer;
@@ -127,7 +130,7 @@ public class OptGroup extends Component {
     }
 
     @StrutsTagAttribute(description="Set the list attribute.")
-    public void setList(Object list) {
+    public void setList(String list) {
         internalUiBean.setList(list);
     }
 
@@ -139,20 +142,5 @@ public class OptGroup extends Component {
     @StrutsTagAttribute(description="Set the listValue attribute.")
     public void setListValue(String listValue) {
         internalUiBean.setListValue(listValue);
-    }
-
-    @StrutsTagAttribute(description = "Property of list objects to get css class from")
-    public void setListCssClass(String listCssClass) {
-        internalUiBean.setListCssClass(listCssClass);
-    }
-
-    @StrutsTagAttribute(description = "Property of list objects to get css style from")
-    public void setListCssStyle(String listCssStyle) {
-        internalUiBean.setListCssStyle(listCssStyle);
-    }
-
-    @StrutsTagAttribute(description = "Property of list objects to get title from")
-    public void setListTitle(String listTitle) {
-        internalUiBean.setListTitle(listTitle);
     }
 }

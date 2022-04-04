@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,11 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.views.java.simple;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.java.Attributes;
@@ -81,22 +84,22 @@ public class CheckboxListHandler extends AbstractTagHandler implements TagGenera
                     characters(itemValueStr);
                 super.end("label");
 
+                // Hidden input section
+                a = new Attributes();
+                a.add("type", "hidden")
+                        .add("id",
+                                "__multiselect_"
+                                        + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
+                        .add("name",
+                                "__multiselect_"
+                                        + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
+                        .add("value", "").addIfTrue("disabled", disabled);
+                start("input", a);
+                end("input");
+
                 stack.pop();
                 cnt++;
             }
-
-            // Hidden input section
-            Attributes a = new Attributes();
-            a.add("type", "hidden")
-                    .add("id",
-                            "__multiselect_"
-                                    + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(id)))
-                    .add("name",
-                            "__multiselect_"
-                                    + StringUtils.defaultString(StringEscapeUtils.escapeHtml4(name)))
-                    .add("value", "").addIfTrue("disabled", disabled);
-            start("input", a);
-            end("input");
         }
     }
 

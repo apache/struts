@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,14 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.DefaultActionProxyFactory;
-import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -38,15 +36,10 @@ import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts2.views.jsp.StrutsMockHttpSession;
 
 import javax.servlet.http.HttpSession;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,9 +50,9 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
 
     private StrutsMockHttpServletRequest request;
     private HttpSession httpSession;
-    private Map<String, Object> context;
-    private Map<String, Object> params;
-    private Map<String, Object> session;
+    private Map context;
+    private Map params;
+    private Map session;
     private ExecuteAndWaitInterceptor waitInterceptor;
     private ParametersInterceptor parametersInterceptor;
 
@@ -92,7 +85,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         String result2 = proxy2.execute();
         assertEquals("wait", result2);
 
-        Thread.sleep(500);
+        Thread.sleep(300);
 
         ActionProxy proxy3 = buildProxy("action1");
         String result3 = proxy3.execute();
@@ -168,75 +161,36 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
         assertTrue("Job done already after 500 so there should not be such long delay", diff <= 1000);
     }
 
-    public void testFromDeserializedSession() throws Exception {
-        waitInterceptor.setDelay(0);
-        waitInterceptor.setDelaySleepInterval(0);
-
-        ActionProxy proxy = buildProxy("action1");
-        String result = proxy.execute();
-        assertEquals("wait", result);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(session);//WW-4900 action1 and invocation are not serializable but we should not fail at this line
-        oos.close();
-        byte[] b = baos.toByteArray();
-        baos.close();
-
-        ByteArrayInputStream bais = new ByteArrayInputStream(b);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-        session = (Map<String, Object>) ois.readObject();
-        context = ActionContext.of(context).withSession(session).getContextMap();
-        ois.close();
-        bais.close();
-
-        Thread.sleep(1000);
-
-        ActionProxy proxy2 = buildProxy("action1");
-        String result2 = proxy2.execute();
-        assertEquals("wait", result2);//WW-4900 A new thread should be started when background thread missed
-
-        Thread.sleep(1000);
-
-        ActionProxy proxy3 = buildProxy("action1");
-        String result3 = proxy3.execute();
-        assertEquals("success", result3);
-    }
-
     protected ActionProxy buildProxy(String actionName) throws Exception {
         return actionProxyFactory.createActionProxy("", actionName, null, context);
     }
 
     protected void setUp() throws Exception {
-        super.setUp();
         loadConfigurationProviders(new WaitConfigurationProvider());
 
-        session = new HashMap<>();
-        params = new HashMap<>();
-        context = new HashMap<>();
+        session = new HashMap();
+        params = new HashMap();
+        context = new HashMap();
+        context.put(ActionContext.SESSION, session);
+        context.put(ActionContext.PARAMETERS, params);
 
         request = new StrutsMockHttpServletRequest();
         httpSession = new StrutsMockHttpSession();
         request.setSession(httpSession);
         request.setParameterMap(params);
-
-        context = ActionContext.of(context)
-            .withSession(session)
-            .withParameters(HttpParameters.create().build())
-            .withServletRequest(request)
-            .getContextMap();
-
+        context.put(ServletActionContext.HTTP_REQUEST, request);
         container.inject(parametersInterceptor);
     }
 
     protected void tearDown() throws Exception {
-        super.tearDown();
+        configurationManager.clearContainerProviders();
+        configurationManager.destroyConfiguration();
+        ActionContext.setContext(null);
     }
 
     private class WaitConfigurationProvider implements ConfigurationProvider {
 
         Configuration configuration;
-
         public void destroy() {
             waitInterceptor.destroy();
         }
@@ -261,8 +215,8 @@ public class ExecuteAndWaitInterceptorTest extends StrutsInternalTestCase {
                     .addResultConfig(new ResultConfig.Builder(ExecuteAndWaitInterceptor.WAIT, MockResult.class.getName()).build())
                     .addInterceptor(new InterceptorMapping("params", parametersInterceptor))
                     .addInterceptor(new InterceptorMapping("execAndWait", waitInterceptor))
-                    .build())
-                .build();
+                .build())
+            .build();
             configuration.addPackageConfig("", wait);
         }
 

@@ -1,5 +1,7 @@
 <#--
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,10 +21,10 @@
  */
 -->
 <#if parameters.validate!false == true>
-<script type="text/javascript" src="${base}${parameters.staticContentPath}/css_xhtml/validation.js"></script>
+<script type="text/javascript" src="${base}/struts/css_xhtml/validation.js"></script>
     <#if parameters.onsubmit??>
-        ${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.escapedId}();")}
+        ${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.id}();")}
     <#else>
-        ${tag.addParameter('onsubmit', "return validateForm_${parameters.escapedId}();")}
+        ${tag.addParameter('onsubmit', "return validateForm_${parameters.id}();")}
     </#if>
 </#if>

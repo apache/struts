@@ -1,4 +1,6 @@
 /*
+ * $Id: DefaultActionSupport.java 651946 2008-04-27 13:41:38Z apetrelli $
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -49,6 +51,7 @@ public class StrutsServlet extends HttpServlet {
         Dispatcher dispatcher = null;
         try {
             ServletHostConfig config = new ServletHostConfig(filterConfig);
+            init.initLogging(config);
             dispatcher = init.initDispatcher(config);
             init.initStaticContentLoader(config, dispatcher);
 

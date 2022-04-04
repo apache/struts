@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionInvocation;
@@ -23,12 +26,12 @@ import com.opensymphony.xwork2.Result;
 
 /**
  * Null result to get around annotation defaults that can't be null
- * FIXME: ???? is it usable? doesn't it make sense to have such result?
  */
 public class NullResult implements Result {
 
     public void execute(ActionInvocation invocation) throws Exception {
         throw new IllegalStateException("Shouldn't be called");
+
     }
 
 }

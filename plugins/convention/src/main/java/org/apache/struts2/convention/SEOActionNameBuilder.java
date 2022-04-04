@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,6 +23,7 @@ package org.apache.struts2.convention;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -30,31 +33,42 @@ import org.apache.logging.log4j.LogManager;
  * from the class name.
  * </p>
  */
-public class SEOActionNameBuilder extends AbstractActionNameBuilder {
-
+public class SEOActionNameBuilder implements ActionNameBuilder {
     private static final Logger LOG = LogManager.getLogger(SEOActionNameBuilder.class);
-
+    private String actionSuffix = "Action";
     private boolean lowerCase;
     private String separator;
 
     @Inject
-    public SEOActionNameBuilder(
-            @Inject(ConventionConstants.CONVENTION_ACTION_NAME_LOWERCASE) String lowerCase,
-            @Inject(ConventionConstants.CONVENTION_ACTION_NAME_SEPARATOR) String separator
-    ) {
+    public SEOActionNameBuilder(@Inject(value="struts.convention.action.name.lowercase") String lowerCase,
+            @Inject(value="struts.convention.action.name.separator") String separator) {
         this.lowerCase = Boolean.parseBoolean(lowerCase);
         this.separator = separator;
     }
 
+    /**
+     * @param   actionSuffix (Optional) Classes that end with these value will be mapped as actions
+     *          (defaults to "Action")
+     */
+    @Inject(value = "struts.convention.action.suffix", required = false)
+    public void setActionSuffix(String actionSuffix) {
+        if (StringUtils.isNotBlank(actionSuffix)) {
+            this.actionSuffix = actionSuffix;
+        }
+    }
+
     public String build(String className) {
         String actionName = className;
+        
+        if (actionName.equals(actionSuffix))
+            throw new IllegalStateException("The action name cannot be the same as the action suffix [" + actionSuffix + "]");
 
-        checkActionName(actionName);
+        // Truncate Action suffix if found
+        if (actionName.endsWith(actionSuffix)) {
+            actionName = actionName.substring(0, actionName.length() - actionSuffix.length());
+        }
 
-        LOG.trace("Truncate Action suffix if found");
-        actionName = truncateSuffixIfMatches(actionName);
-
-        LOG.trace("Convert to underscores");
+        // Convert to underscores
         char[] ca = actionName.toCharArray();
         StringBuilder build = new StringBuilder("" + ca[0]);
         boolean lower = true;
@@ -79,5 +93,4 @@ public class SEOActionNameBuilder extends AbstractActionNameBuilder {
 
         return actionName;
     }
-
 }

@@ -165,7 +165,7 @@ pipeline {
                     configName: 'Nightlies',
                     transfers: [
                         sshTransfer(
-                            remoteDirectory: '/x1/dist/struts',
+                            remoteDirectory: '/struts/snapshot',
                             removePrefix: 'assembly/target/assembly/out',
                             sourceFiles: 'assembly/target/assembly/out/struts-*.zip'
                         )

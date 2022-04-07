@@ -1,3 +1,4 @@
+# Documentation https://s.apache.org/asfyaml
 notifications:
   commits: commits@struts.apache.org
   # Send all issue emails (new, closed, comments) to issues@
@@ -8,3 +9,6 @@ notifications:
   pullrequests_comment: issues@struts.apache.org
   # Link opened PRs with JIRA
   jira_options: link label worklog
+
+github:
+  del_branch_on_merge: true

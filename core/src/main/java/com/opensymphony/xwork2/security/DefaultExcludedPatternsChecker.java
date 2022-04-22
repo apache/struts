@@ -37,7 +37,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     private static final Logger LOG = LogManager.getLogger(DefaultExcludedPatternsChecker.class);
 
     public static final String[] EXCLUDED_PATTERNS = {
-        "(^|\\%\\{)((#?)(top(\\.|\\['|\\[\")|\\[\\d\\]\\.)?)(dojo|struts|session|request|response|application|servlet(Request|Response|Context)|parameters|context|_memberAccess)(\\.|\\[).*",
+        "(^|\\%\\{)((#?)(top(\\.|\\['|\\[\")|\\[\\d\\]\\.)?)(dojo|struts|session|request|response|application|servlet(Request|Response|Context)|parameters|context|excludedClasses|excludedPackageNamePatterns|excludedPackageNames|_memberAccess)(\\.|\\[).*",
         ".*(^|\\.|\\[|\\'|\"|get)class(\\(\\.|\\[|\\'|\").*"
     };
 

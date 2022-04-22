@@ -58,7 +58,7 @@ public class PlainResultTest extends StrutsInternalTestCase {
         result.execute(invocation);
 
         assertEquals("{ 'value': 'test' }", response.getContentAsString());
-        assertEquals("application/json", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     public void testWriteContentTypeCsvWithCookie() throws Exception {

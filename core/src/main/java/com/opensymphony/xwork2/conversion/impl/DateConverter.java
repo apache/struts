@@ -152,8 +152,8 @@ public class DateConverter extends DefaultTypeConverter {
         if (tp != null) {
             String globalFormat = tp.getText(dateTagProperty);
             // if tp.getText can not find the property then the returned string
-            // is the same as input = DATETAG_PROPERTY (blank to suppress tp warnings)
-            if (globalFormat != null && !"".equals(globalFormat) && !dateTagProperty.equals(globalFormat)) {
+            // is the same as input = DATETAG_PROPERTY
+            if (globalFormat != null && !dateTagProperty.equals(globalFormat)) {
                 LOG.debug("Found \"{}\" as \"{}\"", dateTagProperty, globalFormat);
                 globalDateString = globalFormat;
             } else {
@@ -210,22 +210,11 @@ public class DateConverter extends DefaultTypeConverter {
      * @return a list of DateTimeFormatter to be used for date conversion
      */
     private DateTimeFormatter[] getLocalDateFormats(ActionContext context, Locale locale) {
-        DateTimeFormatter globalDateFormat = null;
-        String globalFormat = getGlobalDateString(context);
-        if (globalFormat != null) {
-            globalDateFormat = DateTimeFormatter.ofPattern(globalFormat, locale);
-        }
 
         // Basic support LocalDateTime.now()
         DateTimeFormatter df1 = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-        final DateTimeFormatter[] dateFormats;
-
-        if (globalDateFormat == null) {
-            dateFormats = new DateTimeFormatter[] { df1 };
-        } else {
-            dateFormats = new DateTimeFormatter[] { globalDateFormat, df1 };
-        }
+        final DateTimeFormatter[] dateFormats = new DateTimeFormatter[] { df1 };
 
         return dateFormats;
     }

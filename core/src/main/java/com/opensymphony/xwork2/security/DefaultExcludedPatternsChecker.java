@@ -38,7 +38,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     public static final String[] EXCLUDED_PATTERNS = {
         "(^|\\%\\{)((#?)(top(\\.|\\['|\\[\")|\\[\\d\\]\\.)?)(dojo|struts|session|request|response|application|servlet(Request|Response|Context)|parameters|context|_memberAccess)(\\.|\\[).*",
-        ".*(^|\\.|\\[|\\'|\"|get)class(\\(\\.|\\[|\\'|\").*"
+        ".*(^|\\.|\\[|\\'|\"|get)class(\\(\\.|\\[|\\'|\").*","(excludedClasses|excludedPackageNamePatterns|excludedPackageNames)"
     };
 
     private Set<Pattern> excludedPatterns;

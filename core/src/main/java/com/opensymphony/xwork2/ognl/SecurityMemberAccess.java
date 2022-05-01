@@ -168,7 +168,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return true;
         }
         for (Class<?> excludedClass : excludedClasses) {
-            if (clazz.isAssignableFrom(excludedClass)) {
+            if (excludedClass.isAssignableFrom(clazz)) {
                 return true;
             }
         }

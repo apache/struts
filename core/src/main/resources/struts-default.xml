@@ -45,6 +45,10 @@
                 java.lang.ClassLoader,
                 java.lang.Shutdown,
                 java.lang.ProcessBuilder,
+                java.lang.Cloneable,
+                java.lang.Runnable,
+                java.lang.Readable,
+                java.lang.AutoCloseable,
                 sun.misc.Unsafe,
                 com.opensymphony.xwork2.ActionContext" />
 

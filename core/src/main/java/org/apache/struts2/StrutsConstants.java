@@ -256,12 +256,16 @@ public final class StrutsConstants {
     /**
      * Specifies an OGNL expression cache factory implementation.  A default implementation is provided, but
      * could be replaced by a custom one if desired.
+     * 
+     * @since 2.6
      */
     public static final String STRUTS_OGNL_EXPRESSIONCACHE_FACTORY = "struts.ognl.expressionCacheFactory";
 
     /**
      * Specifies an OGNL BeanInfo cache factory implementation.  A default implementation is provided, but
      * could be replaced by a custom one if desired.
+     * 
+     * @since 2.6
      */
     public static final String STRUTS_OGNL_BEANINFOCACHE_FACTORY = "struts.ognl.beanInfoCacheFactory";
 

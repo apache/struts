@@ -216,6 +216,8 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                 .factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON)
                 .factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON)
 
+                .factory(OgnlCacheFactory.class, "ognlExpressionCacheFactory", DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
+                .factory(OgnlCacheFactory.class, "ognlBeanInfoCacheFactory", DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(CollectionConverter.class, Scope.SINGLETON)
                 .factory(ArrayConverter.class, Scope.SINGLETON)
@@ -232,9 +234,6 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
 
                 .factory(DateFormatter.class, "simpleDateFormatter", SimpleDateFormatAdapter.class, Scope.SINGLETON)
                 .factory(DateFormatter.class, "dateTimeFormatter", DateTimeFormatterAdapter.class, Scope.SINGLETON)
-
-                .factory(OgnlCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSIONCACHE_FACTORY, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
-                .factory(OgnlCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFOCACHE_FACTORY, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
         ;
 
         props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());

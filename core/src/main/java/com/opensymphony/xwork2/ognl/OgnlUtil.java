@@ -90,15 +90,19 @@ public class OgnlUtil {
 
     /**
      * Construct a new OgnlUtil instance for use with the framework, with optional
-     * cache factories for Ognl Expression and BeanInfo caches.
+     * cache factories for OGNL Expression and BeanInfo caches.
      * 
-     * @param ognlExpressionCacheFactory factory for Expression cache instance.  If null, use default
-     * @param ognlBeanInfoCacheFactory  for BeanInfo cache instance.  If null, use default
+     * NOTE: Although the extension points are defined for the optional cache factories, developer-defined overrides do
+     *       do not appear to function at this time (it always appears to instantiate the default factories).
+     *       Construction injectors do not allow the optional flag, so the definitions must be defined.
+     * 
+     * @param ognlExpressionCacheFactory factory for Expression cache instance.  If null, it uses a default
+     * @param ognlBeanInfoCacheFactory factory for BeanInfo cache instance.  If null, it uses a default
      */
     @Inject
     public OgnlUtil(
-            @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSIONCACHE_FACTORY, required = false) OgnlCacheFactory<String, Object> ognlExpressionCacheFactory,
-            @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFOCACHE_FACTORY, required = false) OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
+            @Inject(value = "ognlExpressionCacheFactory") OgnlCacheFactory<String, Object> ognlExpressionCacheFactory,
+            @Inject(value = "ognlBeanInfoCacheFactory") OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
     ) {
         excludedClasses = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
@@ -107,19 +111,12 @@ public class OgnlUtil {
         devModeExcludedClasses = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
-        this.ognlExpressionCacheFactory = ognlExpressionCacheFactory;
-        this.ognlBeanInfoCacheFactory = ognlBeanInfoCacheFactory;
 
-        if (ognlExpressionCacheFactory != null) {
-            this.expressionCache = ognlExpressionCacheFactory.buildOgnlCache();
-        } else {
-            this.expressionCache = new OgnlDefaultCache<>(25000, 16, 0.75f);
-        }
-        if (ognlBeanInfoCacheFactory != null) {
-            this.beanInfoCache = ognlBeanInfoCacheFactory.buildOgnlCache();
-        } else {
-            this.beanInfoCache = new OgnlDefaultCache<>(25000, 16, 0.75f);
-        }
+        this.ognlExpressionCacheFactory = (ognlExpressionCacheFactory != null ? ognlExpressionCacheFactory : new DefaultOgnlExpressionCacheFactory<>());
+        this.ognlBeanInfoCacheFactory = (ognlBeanInfoCacheFactory != null ? ognlBeanInfoCacheFactory : new DefaultOgnlBeanInfoCacheFactory<>());
+
+        this.expressionCache = this.ognlExpressionCacheFactory.buildOgnlCache();
+        this.beanInfoCache = this.ognlBeanInfoCacheFactory.buildOgnlCache();
     }
 
     @Inject

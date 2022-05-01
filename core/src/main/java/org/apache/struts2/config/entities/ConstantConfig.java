@@ -144,6 +144,8 @@ public class ConstantConfig {
     private Boolean disallowProxyMemberAccess;
     private Integer ognlAutoGrowthCollectionLimit;
     private String staticContentPath;
+    private BeanConfig expressionCacheFactory;
+    private BeanConfig beaninfoCacheFactory;
 
     protected String beanConfToString(BeanConfig beanConf) {
         return beanConf == null ? null : beanConf.getName();
@@ -274,6 +276,8 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Objects.toString(disallowProxyMemberAccess, null));
         map.put(StrutsConstants.STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT, Objects.toString(ognlAutoGrowthCollectionLimit, null));
         map.put(StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, Objects.toString(staticContentPath, StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH));
+        map.put(StrutsConstants.STRUTS_OGNL_EXPRESSIONCACHE_FACTORY, beanConfToString(expressionCacheFactory));
+        map.put(StrutsConstants.STRUTS_OGNL_BEANINFOCACHE_FACTORY, beanConfToString(beaninfoCacheFactory));
 
         return map;
     }
@@ -1340,5 +1344,29 @@ public class ConstantConfig {
 
     public void setStaticContentPath(String staticContentPath) {
         this.staticContentPath = StaticContentLoader.Validator.validateStaticContentPath(staticContentPath);
+    }
+
+    public BeanConfig getExpressionCacheFactory() {
+        return expressionCacheFactory;
+    }
+
+    public void setExpressionCacheFactory(BeanConfig expressionCacheFactory) {
+        this.expressionCacheFactory = expressionCacheFactory;
+    }
+
+    public void setExpressionCacheFactory(Class<?> clazz) {
+        this.expressionCacheFactory = new BeanConfig(clazz, clazz.getName());
+    }
+
+    public BeanConfig getBeaninfoCacheFactory() {
+        return beaninfoCacheFactory;
+    }
+
+    public void setBeaninfoCacheFactory(BeanConfig beaninfoCacheFactory) {
+        this.beaninfoCacheFactory = beaninfoCacheFactory;
+    }
+
+    public void setBeaninfoCacheFactory(Class<?> clazz) {
+        this.beaninfoCacheFactory = new BeanConfig(clazz, clazz.getName());
     }
 }

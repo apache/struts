@@ -40,6 +40,7 @@
               value="
                 java.lang.Object,
                 java.lang.Runtime,
+                java.lang.Cloneable,
                 java.lang.System,
                 java.lang.Class,
                 java.lang.ClassLoader,

@@ -48,9 +48,9 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
     /**
      * SecurityMemberAccess
-     *   - access decisions based on whether member is static (or not)
-     *   - block or allow access to properties (configurable-after-construction)
-     * 
+     * - access decisions based on whether member is static (or not)
+     * - block or allow access to properties (configurable-after-construction)
+     *
      * @param allowStaticMethodAccess
      */
     public SecurityMemberAccess(boolean allowStaticMethodAccess) {
@@ -153,7 +153,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         if (targetPackage == null || memberPackage == null) {
             LOG.warn("The use of the default (unnamed) package is discouraged!");
         }
-        
+
         String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
         String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
 
@@ -165,8 +165,8 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
 
         targetPackageName = targetPackageName + ".";
         memberPackageName = memberPackageName + ".";
-        
-        for (String packageName: excludedPackageNames) {
+
+        for (String packageName : excludedPackageNames) {
             if (targetPackageName.startsWith(packageName) || memberPackageName.startsWith(packageName)) {
                 return true;
             }
@@ -190,6 +190,10 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
                             excludedClass.isAssignableFrom(clazz)) {
                         return true;
                     }
+                }
+            } else {
+                if (clazz.isAssignableFrom(excludedClass)) {
+                    return true;
                 }
             }
         }

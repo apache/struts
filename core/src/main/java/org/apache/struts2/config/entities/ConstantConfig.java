@@ -276,8 +276,8 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Objects.toString(disallowProxyMemberAccess, null));
         map.put(StrutsConstants.STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT, Objects.toString(ognlAutoGrowthCollectionLimit, null));
         map.put(StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, Objects.toString(staticContentPath, StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH));
-        map.put(StrutsConstants.STRUTS_OGNL_EXPRESSIONCACHE_FACTORY, beanConfToString(expressionCacheFactory));
-        map.put(StrutsConstants.STRUTS_OGNL_BEANINFOCACHE_FACTORY, beanConfToString(beaninfoCacheFactory));
+        map.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, beanConfToString(expressionCacheFactory));
+        map.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, beanConfToString(beaninfoCacheFactory));
 
         return map;
     }

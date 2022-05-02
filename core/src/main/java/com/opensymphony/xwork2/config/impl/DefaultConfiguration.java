@@ -28,9 +28,10 @@ import com.opensymphony.xwork2.conversion.*;
 import com.opensymphony.xwork2.conversion.impl.*;
 import com.opensymphony.xwork2.factory.*;
 import com.opensymphony.xwork2.inject.*;
+import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
-import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
+import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
@@ -297,8 +298,8 @@ public class DefaultConfiguration implements Configuration {
 
         builder.factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON);
         builder.factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON);
-        builder.factory(OgnlCacheFactory.class, "ognlExpressionCacheFactory", DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON);
-        builder.factory(OgnlCacheFactory.class, "ognlBeanInfoCacheFactory", DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON);
+        builder.factory(ExpressionCacheFactory.class, "defaultOgnlExpressionCacheFactory", DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON);
+        builder.factory(BeanInfoCacheFactory.class, "defaultOgnlBeanInfoCacheFactory", DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON);
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
 
         builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);

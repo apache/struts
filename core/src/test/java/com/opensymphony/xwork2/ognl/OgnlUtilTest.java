@@ -1857,7 +1857,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     /**
-     * Unit test primarily for code coverage 
+     * Unit test primarily for code coverage
      */
     public void testOgnlDefaultCacheFactoryCoverage() {
         OgnlCache<String, Object> ognlCache;
@@ -1885,13 +1885,13 @@ public class OgnlUtilTest extends XWorkTestCase {
     /**
      * Generate a new OgnlUtil instance (not configured by the {@link ContainerBuilder}) that can be used for
      * basic tests, with its Expression and BeanInfo factories set to LRU mode.
-     * 
+     *
      * @return OgnlUtil instance with LRU enabled Expression and BeanInfo factories
      */
     private OgnlUtil generateOgnlUtilInstanceWithDefaultLRUCacheFactories() {
         final OgnlUtil result;
-        final DefaultOgnlCacheFactory expressionFactory = new DefaultOgnlExpressionCacheFactory<String, Object>();
-        final DefaultOgnlCacheFactory beanInfoFactory = new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>();
+        final DefaultOgnlExpressionCacheFactory<String, Object> expressionFactory = new DefaultOgnlExpressionCacheFactory<>();
+        final DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo> beanInfoFactory = new DefaultOgnlBeanInfoCacheFactory<>();
         expressionFactory.setUseLRUCache("true");
         expressionFactory.setCacheMaxSize("25");
         beanInfoFactory.setUseLRUCache("true");

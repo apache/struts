@@ -77,8 +77,12 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         if (Modifier.isStatic(member.getModifiers()) && allowStaticMethodAccess) {
             LOG.debug("Support for accessing static methods [target: {}, targetClass: {}, member: {}, property: {}] is deprecated!",
                     target, targetClass, member, propertyName);
-            if (!isClassExcluded(memberClass)) {
-                targetClass = memberClass;
+            try {
+                if (!isClassExcluded(memberClass)) {
+                    targetClass = memberClass;
+                }
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
 
@@ -88,14 +92,22 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return false;
         }
 
-        if (isClassExcluded(targetClass)) {
-            LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
-            return false;
+        try {
+            if (isClassExcluded(targetClass)) {
+                LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
+                return false;
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
-        if (isClassExcluded(memberClass)) {
-            LOG.warn("Declaring class of member type [{}] is excluded!", member);
-            return false;
+        try {
+            if (isClassExcluded(memberClass)) {
+                LOG.warn("Declaring class of member type [{}] is excluded!", member);
+                return false;
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
         if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
@@ -163,13 +175,22 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
         return false;
     }
 
-    protected boolean isClassExcluded(Class<?> clazz) {
+    protected boolean isClassExcluded(Class<?> clazz) throws ClassNotFoundException {
         if (clazz == Object.class || (clazz == Class.class && !allowStaticMethodAccess)) {
             return true;
         }
         for (Class<?> excludedClass : excludedClasses) {
-            if (clazz.isAssignableFrom(excludedClass)) {
-                return true;
+            if (excludedClass != Object.class) {
+                if (clazz.getName().startsWith(this.getClass().getPackage().getName())) {
+                    if (clazz.isAssignableFrom(excludedClass)) {
+                        return true;
+                    }
+                } else {
+                    if (clazz.isAssignableFrom(excludedClass) ||
+                            excludedClass.isAssignableFrom(clazz)) {
+                        return true;
+                    }
+                }
             }
         }
         return false;

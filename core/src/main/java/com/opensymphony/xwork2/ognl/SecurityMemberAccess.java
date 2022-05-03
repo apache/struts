@@ -45,6 +45,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
     private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
     private Set<String> excludedPackageNames = Collections.emptySet();
     private boolean disallowProxyMemberAccess;
+    protected String packageName;
 
     /**
      * SecurityMemberAccess
@@ -55,6 +56,7 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
      */
     public SecurityMemberAccess(boolean allowStaticMethodAccess) {
         super(false);
+        packageName = this.getClass().getPackage().getName();
         this.allowStaticMethodAccess = allowStaticMethodAccess;
     }
 
@@ -168,8 +170,20 @@ public class SecurityMemberAccess extends DefaultMemberAccess {
             return true;
         }
         for (Class<?> excludedClass : excludedClasses) {
-            if (clazz.isAssignableFrom(excludedClass)) {
-                return true;
+            if(excludedClass != Object.class) {
+                if(clazz.getName().startsWith(packageName)){
+                    if (clazz.isAssignableFrom(excludedClass)) {
+                        return true;
+                    }
+                }else {
+                    if (excludedClass.isAssignableFrom(clazz)) {
+                        return true;
+                    }
+                }
+            }else{
+                if (clazz.isAssignableFrom(excludedClass)) {
+                    return true;
+                }
             }
         }
         return false;

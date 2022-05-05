@@ -1215,7 +1215,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         Object accessedValue;
 
         try {
-            reloadTestContainerConfiguration(true);  // Test with allowStaticFieldAccess true
+            reloadTestContainerConfiguration(true, true);  // Test with allowStaticFieldAccess true
             context = ognlUtil.createDefaultContext(null);
         } catch (Exception ex) {
             fail("unable to reload test configuration? Exception: " + ex);
@@ -1270,7 +1270,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
 
         try {
-            reloadTestContainerConfiguration(false);  // Re-test with allowStaticFieldAccess false
+            reloadTestContainerConfiguration(true, false);  // Re-test with allowStaticFieldAccess false
             context = ognlUtil.createDefaultContext(null);
         } catch (Exception ex) {
             fail("unable to reload test configuration? Exception: " + ex);
@@ -1525,13 +1525,13 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
-    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStaticMethod) {
+    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStaticFieldAccess) {
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder,
                                  LocatableProperties props) throws ConfigurationException {
                 props.setProperty(StrutsConstants.STRUTS_DEVMODE, "" + devMode);
-                props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, "" + allowStaticMethod);
+                props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, "" + allowStaticFieldAccess);
             }
         });
         ognlUtil = container.getInstance(OgnlUtil.class);

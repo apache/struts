@@ -43,8 +43,6 @@ import java.util.Set;
  */
 public class OgnlValueStackFactory implements ValueStackFactory {
 
-    private static final Logger LOG = LogManager.getLogger(OgnlValueStackFactory.class);
-
     protected XWorkConverter xworkConverter;
     protected CompoundRootAccessor compoundRootAccessor;
     protected TextProvider textProvider;
@@ -61,8 +59,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     }
 
     public ValueStack createValueStack() {
-        ValueStack stack = new OgnlValueStack(xworkConverter, compoundRootAccessor, textProvider,
-            containerAllowsStaticMethodAccess(), containerAllowsStaticFieldAccess());
+        ValueStack stack = new OgnlValueStack(xworkConverter, compoundRootAccessor, textProvider, containerAllowsStaticFieldAccess());
         container.inject(stack);
         return stack.getActionContext()
             .withContainer(container)
@@ -71,8 +68,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     }
 
     public ValueStack createValueStack(ValueStack stack) {
-        ValueStack result = new OgnlValueStack(stack, xworkConverter, compoundRootAccessor,
-            containerAllowsStaticMethodAccess(), containerAllowsStaticFieldAccess());
+        ValueStack result = new OgnlValueStack(stack, xworkConverter, compoundRootAccessor, containerAllowsStaticFieldAccess());
         container.inject(result);
         return result.getActionContext()
             .withContainer(container)
@@ -84,32 +80,23 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     protected void setContainer(Container container) throws ClassNotFoundException {
         Set<String> names = container.getInstanceNames(PropertyAccessor.class);
         for (String name : names) {
-            Class cls = Class.forName(name);
-            if (cls != null) {
-                if (Map.class.isAssignableFrom(cls)) {
-                    PropertyAccessor acc = container.getInstance(PropertyAccessor.class, name);
-                }
-                OgnlRuntime.setPropertyAccessor(cls, container.getInstance(PropertyAccessor.class, name));
-                if (compoundRootAccessor == null && CompoundRoot.class.isAssignableFrom(cls)) {
-                    compoundRootAccessor = (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, name);
-                }
+            Class<?> cls = Class.forName(name);
+            OgnlRuntime.setPropertyAccessor(cls, container.getInstance(PropertyAccessor.class, name));
+            if (compoundRootAccessor == null && CompoundRoot.class.isAssignableFrom(cls)) {
+                compoundRootAccessor = (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, name);
             }
         }
 
         names = container.getInstanceNames(MethodAccessor.class);
         for (String name : names) {
-            Class cls = Class.forName(name);
-            if (cls != null) {
-                OgnlRuntime.setMethodAccessor(cls, container.getInstance(MethodAccessor.class, name));
-            }
+            Class<?> cls = Class.forName(name);
+            OgnlRuntime.setMethodAccessor(cls, container.getInstance(MethodAccessor.class, name));
         }
 
         names = container.getInstanceNames(NullHandler.class);
         for (String name : names) {
-            Class cls = Class.forName(name);
-            if (cls != null) {
-                OgnlRuntime.setNullHandler(cls, new OgnlNullHandlerWrapper(container.getInstance(NullHandler.class, name)));
-            }
+            Class<?> cls = Class.forName(name);
+            OgnlRuntime.setNullHandler(cls, new OgnlNullHandlerWrapper(container.getInstance(NullHandler.class, name)));
         }
         if (compoundRootAccessor == null) {
             throw new IllegalStateException("Couldn't find the compound root accessor");
@@ -118,18 +105,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     }
 
     /**
-     * Retrieve allowsStaticMethodAccess state from the container (allows for lazy fetching)
-     *
-     * @return
-     */
-    protected boolean containerAllowsStaticMethodAccess() {
-        return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS));
-    }
-
-    /**
      * Retrieve allowStaticFieldAccess state from the container (allows for lazy fetching)
-     *
-     * @return
      */
     protected boolean containerAllowsStaticFieldAccess() {
         return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS));

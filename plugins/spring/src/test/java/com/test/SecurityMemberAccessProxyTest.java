@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.ognl;
+package com.test;
 
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.lang.reflect.Member;

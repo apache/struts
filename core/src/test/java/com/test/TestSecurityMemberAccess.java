@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,13 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE struts PUBLIC
-        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-        "http://struts.apache.org/dtds/struts-2.5.dtd">
-<struts>
+package com.test;
 
-    <constant name="struts.excludedClasses" value="java.lang.Object,java.lang.Runtime,ognl.OgnlContext,ognl.MemberAccess,ognl.ClassResolver,ognl.TypeConverter,com.opensymphony.xwork2.ognl.SecurityMemberAccess" />
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 
-    <constant name="struts.ognl.allowStaticFieldAccess" value="false"/>
-</struts>
+class TestSecurityMemberAccess extends SecurityMemberAccess {
+
+    TestSecurityMemberAccess(boolean allowStaticFieldAccess) {
+        super(allowStaticFieldAccess);
+    }
+
+    @Override
+    public boolean isPackageExcluded(Package targetPackage, Package memberPackage) {
+        return super.isPackageExcluded(targetPackage, memberPackage);
+    }
+}

@@ -142,7 +142,7 @@ pipeline {
             dir("local-snapshots-dir/") {
               deleteDir()
             }
-            sh './mvnw -B source:jar javadoc:jar -DskipAssembbly'
+            sh './mvnw -B source:jar javadoc:jar -DskipAssembly'
           }
         }
         stage('Deploy Snapshot') {

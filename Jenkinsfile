@@ -142,7 +142,7 @@ pipeline {
             dir("local-snapshots-dir/") {
               deleteDir()
             }
-            sh './mvnw -B source:jar javadoc:jar -DskipAssembly'
+            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly'
           }
         }
         stage('Deploy Snapshot') {
@@ -151,7 +151,7 @@ pipeline {
           }
           steps {
             withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
-              sh './mvnw -s \${CUSTOM_SETTINGS} deploy'
+              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly'
             }
           }
         }

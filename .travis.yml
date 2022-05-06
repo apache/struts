@@ -14,13 +14,13 @@ global:
 matrix:
     include:
        - jdk: oraclejdk8
-         env: STRUTS_IT=true # do integration tests and coverage reports when jdk7,9 and 11 tests prospered
+         env: STRUTS_IT=true # do integration tests and coverage reports when jdk 9 and 11 tests prospered
 
 script:
    - if [ "$STRUTS_IT" == "true" ]; then
       ./mvnw clean package verify org.jacoco:jacoco-maven-plugin:report org.jacoco:jacoco-maven-plugin:report-integration org.eluder.coveralls:coveralls-maven-plugin:report -Ptravis-coveralls -DskipAssembly -B;
     else
-      ./mvnw test -DskipAssembly -B;
+      ./mvnw clean package test -DskipAssembly -B;
     fi;
 
 cache:

@@ -18,7 +18,8 @@ matrix:
 
 script:
    - if [ "$STRUTS_IT" == "true" ]; then
-      ./mvnw clean package verify org.jacoco:jacoco-maven-plugin:report org.jacoco:jacoco-maven-plugin:report-integration org.eluder.coveralls:coveralls-maven-plugin:report -Ptravis-coveralls -DskipAssembly -B;
+      ./mvnw clean install -DskipTests -DskipAssembly -B;
+      ./mvnw test org.jacoco:jacoco-maven-plugin:report org.jacoco:jacoco-maven-plugin:report-integration org.eluder.coveralls:coveralls-maven-plugin:report -Ptravis-coveralls -DskipAssembly -B;
     else
       ./mvnw clean package test -DskipAssembly -B;
     fi;

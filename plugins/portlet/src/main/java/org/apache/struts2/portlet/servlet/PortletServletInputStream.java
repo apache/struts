@@ -21,6 +21,7 @@ package org.apache.struts2.portlet.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 
 /**
@@ -31,11 +32,11 @@ import javax.servlet.ServletInputStream;
 public class PortletServletInputStream extends ServletInputStream {
 
 	private InputStream portletInputStream;
-	
+
 	public PortletServletInputStream(InputStream portletInputStream) {
 		this.portletInputStream = portletInputStream;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.io.InputStream#read()
 	 */
@@ -107,7 +108,7 @@ public class PortletServletInputStream extends ServletInputStream {
 	public long skip(long n) throws IOException {
 		return portletInputStream.skip(n);
 	}
-	
+
 	/**
 	 * Get the wrapped {@link InputStream} instance.
 	 * @return The wrapped {@link InputStream} instance.
@@ -116,4 +117,18 @@ public class PortletServletInputStream extends ServletInputStream {
 		return portletInputStream;
 	}
 
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
+
+	@Override
+	public boolean isReady() {
+		return true;
+	}
+
+	@Override
+	public void setReadListener(ReadListener readListener) {
+		// no-op
+	}
 }

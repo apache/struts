@@ -321,7 +321,7 @@ public class ServletUrlRenderer implements UrlRenderer {
      * @param parameters component parameters
      * @param contextParameters request parameters
      */
-    protected void mergeRequestParameters(String value, Map<String, Object> parameters, Map<String, Object> contextParameters) {
+    protected void mergeRequestParameters(String value, Map<String, Object> parameters, Map<String, ?> contextParameters) {
 
         Map<String, Object> mergedParams = new LinkedHashMap<>(contextParameters);
 
@@ -333,7 +333,7 @@ public class ServletUrlRenderer implements UrlRenderer {
             String queryString = value.substring(value.indexOf('?') + 1);
 
             mergedParams = urlHelper.parseQueryString(queryString, false);
-            for (Map.Entry<String, Object> entry : contextParameters.entrySet()) {
+            for (Map.Entry<String, ?> entry : contextParameters.entrySet()) {
                 if (!mergedParams.containsKey(entry.getKey())) {
                     mergedParams.put(entry.getKey(), entry.getValue());
                 }

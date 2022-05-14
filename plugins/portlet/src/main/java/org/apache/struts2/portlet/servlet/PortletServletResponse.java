@@ -20,6 +20,7 @@ package org.apache.struts2.portlet.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.portlet.PortletResponse;
@@ -31,11 +32,11 @@ import javax.servlet.http.HttpServletResponse;
 public class PortletServletResponse implements HttpServletResponse {
 
 	protected PortletResponse portletResponse;
-	
+
 	public PortletServletResponse(PortletResponse portletResponse) {
 		this.portletResponse = portletResponse;
 	}
-	
+
 	public void addCookie(Cookie cookie) {
 		throw new IllegalStateException("Not allowed in a portlet");
 	}
@@ -103,6 +104,26 @@ public class PortletServletResponse implements HttpServletResponse {
 	public void setStatus(int sc, String sm) {
 		throw new IllegalStateException("Not allowed in a portlet");
 	}
+
+    @Override
+    public int getStatus() {
+        return 0;
+    }
+
+    @Override
+    public String getHeader(String name) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getHeaders(String name) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getHeaderNames() {
+        return null;
+    }
 
     public void flushBuffer() throws IOException {
         if(portletResponse instanceof RenderResponse) {
@@ -209,6 +230,11 @@ public class PortletServletResponse implements HttpServletResponse {
 
     public void setContentLength(int len) {
         throw new IllegalStateException("Not allowed in a portlet");
+    }
+
+    @Override
+    public void setContentLengthLong(long len) {
+
     }
 
     public void setContentType(String type) {

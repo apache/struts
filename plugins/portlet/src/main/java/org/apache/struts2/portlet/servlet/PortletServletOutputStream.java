@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 
 /**
  * Wrapper object exposing a {@link OutputStream} from a portlet as a {@link ServletOutputStream} instance.
@@ -31,7 +32,7 @@ import javax.servlet.ServletOutputStream;
 public class PortletServletOutputStream extends ServletOutputStream {
 
 	private OutputStream portletOutputStream;
-	
+
 	public PortletServletOutputStream(OutputStream portletOutputStream) {
 		this.portletOutputStream = portletOutputStream;
 	}
@@ -75,12 +76,22 @@ public class PortletServletOutputStream extends ServletOutputStream {
 	public void write(byte[] b, int off, int len) throws IOException {
 		portletOutputStream.write(b, off, len);
 	}
-	
+
 	/**
 	 * Get the wrapped {@link OutputStream} instance.
 	 * @return The wrapped {@link OutputStream} instance.
 	 */
 	public OutputStream getOutputStream() {
 		return portletOutputStream;
+	}
+
+	@Override
+	public boolean isReady() {
+		return true;
+	}
+
+	@Override
+	public void setWriteListener(WriteListener writeListener) {
+		// no-op
 	}
 }

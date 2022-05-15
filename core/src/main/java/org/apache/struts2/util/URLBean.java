@@ -19,7 +19,6 @@
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ActionContext;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 
@@ -58,20 +57,10 @@ public class URLBean {
 
     public String getURL() {
         // all this trickier with maps is to reduce the number of objects created
-        Map<String, Object> fullParams = null;
-
-        if (params != null) {
-            fullParams = new HashMap<String, Object>();
-        }
+        Map<String, Object> fullParams = new HashMap<>();
 
         if (page == null) {
-            // No particular page requested, so go to "same page"
-            // Add query params to parameters
-            if (fullParams != null) {
-                fullParams.putAll(request.getParameterMap());
-            } else {
-                fullParams = request.getParameterMap();
-            }
+            fullParams.putAll(request.getParameterMap());
         }
 
         // added parameters override, just like in URLTag
@@ -84,7 +73,7 @@ public class URLBean {
 
     public URLBean addParameter(String name, Object value) {
         if (params == null) {
-            params = new HashMap<String, String>();
+            params = new HashMap<>();
         }
 
         if (value == null) {

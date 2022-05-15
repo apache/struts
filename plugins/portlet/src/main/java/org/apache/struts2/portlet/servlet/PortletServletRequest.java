@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -34,12 +35,20 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.PortletSession;
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
+import javax.servlet.http.Part;
 
 import static org.apache.struts2.portlet.PortletConstants.*;
 
@@ -71,7 +80,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getAuthType()
 	 */
 	public String getAuthType() {
@@ -80,7 +89,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getContextPath()
 	 */
 	public String getContextPath() {
@@ -89,7 +98,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -102,7 +111,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -113,7 +122,7 @@ public class PortletServletRequest implements HttpServletRequest {
 	/**
 	 * Gets a property from the {@link PortletRequest}. Note that a
 	 * {@link PortletRequest} is not guaranteed to map properties to headers.
-	 * 
+	 *
 	 * @see PortletRequest#getProperty(String)
 	 * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
 	 */
@@ -124,7 +133,7 @@ public class PortletServletRequest implements HttpServletRequest {
 	/**
 	 * Gets the property names from the {@link PortletRequest}. Note that a
 	 * {@link PortletRequest} is not guaranteed to map properties to headers.
-	 * 
+	 *
 	 * @see PortletRequest#getPropertyNames()
 	 * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
 	 */
@@ -136,7 +145,7 @@ public class PortletServletRequest implements HttpServletRequest {
 	 * Gets the values for the specified property from the
 	 * {@link PortletRequest}. Note that a {@link PortletRequest} is not
 	 * guaranteed to map properties to headers.
-	 * 
+	 *
 	 * @see PortletRequest#getProperties(String)
 	 * @see HttpServletRequest#getHeaders(String)
 	 */
@@ -146,7 +155,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -156,7 +165,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getMethod()
 	 */
 	public String getMethod() {
@@ -170,7 +179,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getPathInfo()
 	 */
 	public String getPathInfo() {
@@ -179,7 +188,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getPathTranslated()
 	 */
 	public String getPathTranslated() {
@@ -188,7 +197,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getQueryString()
 	 */
 	public String getQueryString() {
@@ -197,7 +206,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getRemoteUser()
 	 */
 	public String getRemoteUser() {
@@ -206,7 +215,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -216,7 +225,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -226,7 +235,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getRequestedSessionId()
 	 */
 	public String getRequestedSessionId() {
@@ -237,7 +246,7 @@ public class PortletServletRequest implements HttpServletRequest {
 	 * A {@link PortletRequest} has no servlet path. But for compatibility with
 	 * Struts 2 components and interceptors, the action parameter on the request
 	 * is mapped to the servlet path.
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getServletPath()
 	 */
 	public String getServletPath() {
@@ -250,16 +259,21 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Get the {@link PortletSession} as a {@link PortletHttpSession} instance.
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getSession()
 	 */
 	public HttpSession getSession() {
 		return new PortletHttpSession(portletRequest.getPortletSession());
 	}
 
+	@Override
+	public String changeSessionId() {
+		return null;
+	}
+
 	/**
 	 * Get the {@link PortletSession} as a {@link PortletHttpSession} instance.
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getSession(boolean)
 	 */
 	public HttpSession getSession(boolean create) {
@@ -268,7 +282,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#getUserPrincipal()
 	 */
 	public Principal getUserPrincipal() {
@@ -277,7 +291,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -287,7 +301,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -297,7 +311,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -305,9 +319,39 @@ public class PortletServletRequest implements HttpServletRequest {
 		throw new IllegalStateException("Not allowed in a portlet");
 	}
 
+	@Override
+	public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
+		return false;
+	}
+
+	@Override
+	public void login(String username, String password) throws ServletException {
+
+	}
+
+	@Override
+	public void logout() throws ServletException {
+
+	}
+
+	@Override
+	public Collection<Part> getParts() throws IOException, ServletException {
+		return null;
+	}
+
+	@Override
+	public Part getPart(String name) throws IOException, ServletException {
+		return null;
+	}
+
+	@Override
+	public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
+		return null;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdValid()
 	 */
 	public boolean isRequestedSessionIdValid() {
@@ -316,7 +360,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServletRequest#isUserInRole(java.lang.String)
 	 */
 	public boolean isUserInRole(String role) {
@@ -327,7 +371,7 @@ public class PortletServletRequest implements HttpServletRequest {
 	 * Gets an attribute value on the {@link PortletRequest}. If the attribute
 	 * name is <tt>javax.servlet.include.servlet_path</tt>, it returns the
 	 * same as {@link PortletServletRequest#getServletPath()}
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
 	 */
 	public Object getAttribute(String name) {
@@ -340,7 +384,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getAttributeNames()
 	 */
 	public Enumeration getAttributeNames() {
@@ -349,7 +393,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Can only be invoked in the event phase.
-	 * 
+	 *
 	 * @see ServletRequest#getCharacterEncoding()
 	 * @throws IllegalStateException
 	 *             If the portlet is not in the event phase.
@@ -364,7 +408,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Can only be invoked in the event phase.
-	 * 
+	 *
 	 * @see ServletRequest#getContentLength()
 	 * @throws IllegalStateException
 	 *             If the portlet is not in the event phase.
@@ -377,9 +421,14 @@ public class PortletServletRequest implements HttpServletRequest {
 		}
 	}
 
+	@Override
+	public long getContentLengthLong() {
+		return 0;
+	}
+
 	/**
 	 * Can only be invoked in the event phase.
-	 * 
+	 *
 	 * @see ServletRequest#getContentType()
 	 * @throws IllegalStateException
 	 *             If the portlet is not in the event phase.
@@ -396,7 +445,7 @@ public class PortletServletRequest implements HttpServletRequest {
 	 * Can only be invoked in the event phase. When invoked in the event phase,
 	 * it will wrap the portlet's {@link InputStream} as a
 	 * {@link PortletServletInputStream}.
-	 * 
+	 *
 	 * @see ServletRequest#getInputStream()
 	 * @throws IllegalStateException
 	 *             If the portlet is not in the event phase.
@@ -412,7 +461,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -425,7 +474,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -438,7 +487,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -449,9 +498,44 @@ public class PortletServletRequest implements HttpServletRequest {
 		throw new IllegalStateException("Not allowed in a portlet");
 	}
 
+	@Override
+	public ServletContext getServletContext() {
+		return null;
+	}
+
+	@Override
+	public AsyncContext startAsync() throws IllegalStateException {
+		return null;
+	}
+
+	@Override
+	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
+		return null;
+	}
+
+	@Override
+	public boolean isAsyncStarted() {
+		return false;
+	}
+
+	@Override
+	public boolean isAsyncSupported() {
+		return false;
+	}
+
+	@Override
+	public AsyncContext getAsyncContext() {
+		return null;
+	}
+
+	@Override
+	public DispatcherType getDispatcherType() {
+		return null;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getLocale()
 	 */
 	public Locale getLocale() {
@@ -460,7 +544,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getLocales()
 	 */
 	public Enumeration getLocales() {
@@ -469,7 +553,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
 	 */
 	public String getParameter(String name) {
@@ -485,7 +569,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getParameterMap()
 	 */
 	public Map getParameterMap() {
@@ -494,7 +578,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getParameterNames()
 	 */
 	public Enumeration getParameterNames() {
@@ -503,7 +587,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
 	 */
 	public String[] getParameterValues(String name) {
@@ -512,7 +596,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -525,7 +609,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Can only be invoked in the event phase.
-	 * 
+	 *
 	 * @see ServletRequest#getReader()
 	 * @throws IllegalStateException
 	 *             If the portlet is not in the event phase.
@@ -540,7 +624,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getRealPath(java.lang.String)
 	 */
 	public String getRealPath(String path) {
@@ -549,7 +633,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -562,7 +646,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -575,7 +659,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -589,7 +673,7 @@ public class PortletServletRequest implements HttpServletRequest {
 	/**
 	 * Get the {@link PortletRequestDispatcher} as a
 	 * {@link PortletServletRequestDispatcher} instance.
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getRequestDispatcher(java.lang.String)
 	 */
 	public RequestDispatcher getRequestDispatcher(String path) {
@@ -599,7 +683,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getScheme()
 	 */
 	public String getScheme() {
@@ -608,7 +692,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#getServerName()
 	 */
 	public String getServerName() {
@@ -617,7 +701,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Not allowed in a portlet.
-	 * 
+	 *
 	 * @throws IllegalStateException
 	 *             Not allowed in a portlet.
 	 */
@@ -630,7 +714,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#isSecure()
 	 */
 	public boolean isSecure() {
@@ -639,7 +723,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
 	 */
 	public void removeAttribute(String name) {
@@ -648,7 +732,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.ServletRequest#setAttribute(java.lang.String,
 	 *      java.lang.Object)
 	 */
@@ -658,7 +742,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Can only be invoked in the event phase.
-	 * 
+	 *
 	 * @see ServletRequest#setCharacterEncoding(String)
 	 * @throws IllegalStateException
 	 *             If the portlet is not in the event phase.
@@ -674,7 +758,7 @@ public class PortletServletRequest implements HttpServletRequest {
 
 	/**
 	 * Get the wrapped {@link PortletRequest} instance.
-	 * 
+	 *
 	 * @return The wrapped {@link PortletRequest} instance.
 	 */
 	public PortletRequest getPortletRequest() {

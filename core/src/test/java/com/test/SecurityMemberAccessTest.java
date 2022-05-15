@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.ognl;
+package com.test;
 
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import junit.framework.TestCase;
 
@@ -208,7 +209,7 @@ public class SecurityMemberAccessTest extends TestCase {
 
     public void testDefaultPackageExclusion() {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        TestSecurityMemberAccess sma = new TestSecurityMemberAccess(true);
 
         Set<Pattern> excluded = new HashSet<>();
         excluded.add(Pattern.compile("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*"));
@@ -223,7 +224,7 @@ public class SecurityMemberAccessTest extends TestCase {
 
     public void testDefaultPackageExclusion2() {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        TestSecurityMemberAccess sma = new TestSecurityMemberAccess(true);
 
         Set<Pattern> excluded = new HashSet<>();
         excluded.add(Pattern.compile("^$"));
@@ -384,7 +385,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("Access to static field isn't blocked!", actual);
     }
 
-    public void testBlockStaticMethodAccess() throws Exception {
+    public void testBlockStaticAccess() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
         sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
@@ -545,8 +546,7 @@ public class SecurityMemberAccessTest extends TestCase {
 
     public void testPackageNameExclusionAsCommaDelimited() {
         // given
-        SecurityMemberAccess sma = new SecurityMemberAccess(true);
-
+        TestSecurityMemberAccess sma = new TestSecurityMemberAccess(true);
 
         sma.setExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang."));
 

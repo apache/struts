@@ -46,9 +46,9 @@ import java.util.*;
  * @author tm_jee
  */
 public class SetPropertiesTest extends XWorkTestCase {
-    
+
     private OgnlUtil ognlUtil;
-    
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -57,7 +57,7 @@ public class SetPropertiesTest extends XWorkTestCase {
     }
     public void testOgnlUtilEmptyStringAsLong() {
         Bar bar = new Bar();
-        Map context = Ognl.createDefaultContext(bar, new SecurityMemberAccess(false, true));
+        Map context = Ognl.createDefaultContext(bar, new SecurityMemberAccess(true));
         context.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
         bar.setId(null);
 
@@ -110,7 +110,7 @@ public class SetPropertiesTest extends XWorkTestCase {
         assertEquals(Cat.class, foo.getCats().get(0).getClass());
         assertEquals(Cat.class, foo.getCats().get(1).getClass());
     }
-    
+
     public void testValueStackSetValueEmptyStringAsLong() {
         Bar bar = new Bar();
         ValueStack vs = ActionContext.getContext().getValueStack();
@@ -193,11 +193,11 @@ public class SetPropertiesTest extends XWorkTestCase {
 
     }
 
-    
+
     public void testAddingToMapsWithObjectsTrue() throws Exception {
         doTestAddingToMapsWithObjects(true);
     }
-    
+
     public void testAddingToMapsWithObjectsFalse() throws Exception {
         doTestAddingToMapsWithObjects(false);
 
@@ -227,8 +227,8 @@ public class SetPropertiesTest extends XWorkTestCase {
 
 
     }
-    
-    
+
+
     public void testAddingAndModifyingCollectionWithObjectsSet() {
         doTestAddingAndModifyingCollectionWithObjects(new HashSet());
     }

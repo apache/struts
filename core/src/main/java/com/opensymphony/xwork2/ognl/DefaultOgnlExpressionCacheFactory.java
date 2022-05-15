@@ -20,13 +20,14 @@ import org.apache.struts2.StrutsConstants;
 
 /**
  * Default OGNL Expression Cache factory implementation.
- * 
+ *
  * Currently used for Expression cache creation.
- * 
+ *
  * @param <Key> The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */
-public class DefaultOgnlExpressionCacheFactory<Key, Value> extends DefaultOgnlCacheFactory {
+public class DefaultOgnlExpressionCacheFactory<Key, Value> extends DefaultOgnlCacheFactory<Key, Value>
+    implements ExpressionCacheFactory<Key, Value> {
 
     @Override
     @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, required = false)

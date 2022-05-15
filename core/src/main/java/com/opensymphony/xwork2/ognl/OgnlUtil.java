@@ -55,8 +55,6 @@ public class OgnlUtil {
     // Flag used to reduce flooding logs with WARNs about using DevMode excluded packages
     private final AtomicBoolean warnReported = new AtomicBoolean(false);
 
-    private final OgnlCacheFactory<String, Object> ognlExpressionCacheFactory;
-    private final OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory;
     private final OgnlCache<String, Object> expressionCache;
     private final OgnlCache<Class<?>, BeanInfo> beanInfoCache;
     private TypeConverter defaultConverter;
@@ -80,8 +78,8 @@ public class OgnlUtil {
 
     /**
      * Construct a new OgnlUtil instance for use with the framework
-     * 
-     * @deprecated It is recommended to utilize the {@link OgnlUtil#OgnlUtil(com.opensymphony.xwork2.ognl.OgnlCacheFactory, com.opensymphony.xwork2.ognl.OgnlCacheFactory) method instead.
+     *
+     * @deprecated It is recommended to utilize the {@link OgnlUtil#OgnlUtil(com.opensymphony.xwork2.ognl.ExpressionCacheFactory, com.opensymphony.xwork2.ognl.BeanInfoCacheFactory) method instead.
      */
     @Deprecated
     public OgnlUtil() {
@@ -91,18 +89,17 @@ public class OgnlUtil {
     /**
      * Construct a new OgnlUtil instance for use with the framework, with optional
      * cache factories for OGNL Expression and BeanInfo caches.
-     * 
+     *
      * NOTE: Although the extension points are defined for the optional cache factories, developer-defined overrides do
      *       do not appear to function at this time (it always appears to instantiate the default factories).
      *       Construction injectors do not allow the optional flag, so the definitions must be defined.
-     * 
+     *
      * @param ognlExpressionCacheFactory factory for Expression cache instance.  If null, it uses a default
      * @param ognlBeanInfoCacheFactory factory for BeanInfo cache instance.  If null, it uses a default
      */
-    @Inject
     public OgnlUtil(
-            @Inject(value = "ognlExpressionCacheFactory") OgnlCacheFactory<String, Object> ognlExpressionCacheFactory,
-            @Inject(value = "ognlBeanInfoCacheFactory") OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
+            @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, required = false) ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
+            @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, required = false) BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
     ) {
         excludedClasses = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
@@ -112,11 +109,11 @@ public class OgnlUtil {
         devModeExcludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
 
-        this.ognlExpressionCacheFactory = (ognlExpressionCacheFactory != null ? ognlExpressionCacheFactory : new DefaultOgnlExpressionCacheFactory<>());
-        this.ognlBeanInfoCacheFactory = (ognlBeanInfoCacheFactory != null ? ognlBeanInfoCacheFactory : new DefaultOgnlBeanInfoCacheFactory<>());
+        OgnlCacheFactory<String, Object> ognlExpressionCacheFactory1 = (ognlExpressionCacheFactory != null ? ognlExpressionCacheFactory : new DefaultOgnlExpressionCacheFactory<>());
+        OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory1 = (ognlBeanInfoCacheFactory != null ? ognlBeanInfoCacheFactory : new DefaultOgnlBeanInfoCacheFactory<>());
 
-        this.expressionCache = this.ognlExpressionCacheFactory.buildOgnlCache();
-        this.beanInfoCache = this.ognlBeanInfoCacheFactory.buildOgnlCache();
+        this.expressionCache = ognlExpressionCacheFactory1.buildOgnlCache();
+        this.beanInfoCache = ognlBeanInfoCacheFactory1.buildOgnlCache();
     }
 
     @Inject

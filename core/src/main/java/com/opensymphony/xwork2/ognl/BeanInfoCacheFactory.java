@@ -16,15 +16,8 @@
 package com.opensymphony.xwork2.ognl;
 
 /**
- * Used by {@link com.opensymphony.xwork2.ognl.OgnlUtil} to create appropriate OGNL
- * caches based on configuration.
- *
- * @param <Key> The type for the cache key entries
- * @param <Value> The type for the cache value entries
+ * A proxy interface to be used with Struts DI mechanism
  */
-interface OgnlCacheFactory<Key, Value> {
-    OgnlCache<Key, Value> buildOgnlCache();
-    OgnlCache<Key, Value> buildOgnlCache(int evictionLimit, int initialCapacity, float loadFactor, boolean lruCache);
-    int getCacheMaxSize();
-    boolean getUseLRUCache();
+public interface BeanInfoCacheFactory<Key, Value> extends OgnlCacheFactory <Key, Value> {
+
 }

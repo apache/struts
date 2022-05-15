@@ -23,6 +23,8 @@ import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
+import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
@@ -49,7 +51,6 @@ import com.opensymphony.xwork2.factory.ResultFactory;
 import com.opensymphony.xwork2.factory.ValidatorFactory;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
-import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParser;
@@ -425,8 +426,8 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
 
         alias(DateFormatter.class, StrutsConstants.STRUTS_DATE_FORMATTER, builder, props, Scope.SINGLETON);
 
-        alias(OgnlCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSIONCACHE_FACTORY, builder, props, Scope.SINGLETON);
-        alias(OgnlCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFOCACHE_FACTORY, builder, props, Scope.SINGLETON);
+        alias(ExpressionCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, builder, props, Scope.SINGLETON);
+        alias(BeanInfoCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, builder, props, Scope.SINGLETON);
 
         switchDevMode(props);
     }

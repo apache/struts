@@ -20,13 +20,14 @@ import org.apache.struts2.StrutsConstants;
 
 /**
  * Default OGNL Cache factory implementation.
- * 
+ *
  * Currently used for BeanInfo cache creation.
- * 
+ *
  * @param <Key> The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */
-public class DefaultOgnlBeanInfoCacheFactory<Key, Value> extends DefaultOgnlCacheFactory {
+public class DefaultOgnlBeanInfoCacheFactory<Key, Value> extends DefaultOgnlCacheFactory<Key, Value>
+    implements BeanInfoCacheFactory<Key, Value> {
 
     @Override
     @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, required = false)

@@ -21,13 +21,13 @@ import org.apache.commons.lang3.BooleanUtils;
 
 /**
  * Default OGNL Cache factory implementation.
- * 
+ *
  * Currently used for Expression cache and BeanInfo cache creation.
- * 
+ *
  * @param <Key> The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */
-public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory {
+public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key, Value> {
 
     private final AtomicBoolean useLRUCache = new AtomicBoolean(false);
     private final AtomicInteger cacheMaxSize = new AtomicInteger(25000);

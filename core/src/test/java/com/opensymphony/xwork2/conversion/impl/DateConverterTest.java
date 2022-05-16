@@ -28,6 +28,7 @@ import org.apache.struts2.conversion.TypeConversionException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -43,6 +44,9 @@ public class DateConverterTest extends StrutsInternalTestCase {
     private final static String DATE_STR = "2020-03-20";
     private final static String DATE_CONVERTED = "Fri Mar 20 00:00:00";
     private final static String INVALID_DATE = "99/99/2010";
+    private final static String LOCALDATETIME_STR = "2020-03-20T00:00:00.000000";
+    private final static String LOCALDATETIME_CONVERTED = "2020-03-20T00:00";
+    private final static String INVALID_LOCALDATETIME = "2010-99-99T00:00";
     private final static String MESSAGE_PARSE_ERROR = "Could not parse date";
     private final static String MESSAGE_DEFAULT_CONSTRUCTOR_ERROR = "Couldn't create class null using default (long) constructor";
 
@@ -115,6 +119,43 @@ public class DateConverterTest extends StrutsInternalTestCase {
         } catch (Exception ex) {
             assertEquals(TypeConversionException.class, ex.getClass());
             assertEquals(MESSAGE_DEFAULT_CONSTRUCTOR_ERROR, ex.getMessage());
+        }
+    }
+
+    public void testLocalDateTimeType() {
+        DateConverter converter = new DateConverter();
+
+        Map<String, String> map = new HashMap<>();
+        map.put(org.apache.struts2.components.Date.DATETAG_PROPERTY, "yyyy-MM-dd");
+        ValueStack stack = new StubValueStack();
+        stack.push(new StubTextProvider(map));
+
+        ActionContext context = ActionContext.of(new HashMap<>())
+            .withLocale(new Locale("es_MX", "MX"))
+            .withValueStack(stack);
+
+        Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALDATETIME_STR, LocalDateTime.class);
+        assertTrue(value.toString().startsWith(LOCALDATETIME_CONVERTED));
+    }
+
+    public void testLocalDateTimeTypeConversionExceptionWhenParseError() {
+        DateConverter converter = new DateConverter();
+
+        Map<String, String> map = new HashMap<>();
+        map.put(org.apache.struts2.components.Date.DATETAG_PROPERTY, "yyyy-MM-dd");
+        ValueStack stack = new StubValueStack();
+        stack.push(new StubTextProvider(map));
+
+        ActionContext context = ActionContext.of(new HashMap<>())
+            .withLocale(new Locale("es_MX", "MX"))
+            .withValueStack(stack);
+
+        try {
+            converter.convertValue(context.getContextMap(), null, null, null, INVALID_LOCALDATETIME, LocalDateTime.class);
+            fail("TypeConversionException expected - Conversion error occurred");
+        } catch (Exception ex) {
+            assertEquals(TypeConversionException.class, ex.getClass());
+            assertEquals(MESSAGE_PARSE_ERROR, ex.getMessage());
         }
     }
 

@@ -88,30 +88,10 @@ public class DateConverter extends DefaultTypeConverter {
                     } catch (ParseException ignore) {
                     }
                 }
-
-                // final fallback for dates without time
-                if (df == null) {
-                    df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-                }
-                try {
-                    df.setLenient(false); // let's use strict parsing (XW-341)
-                    result = df.parse(sa);
-                    if (!(Date.class == toType)) {
-                        try {
-                            Constructor<?> constructor = toType.getConstructor(new Class[] { long.class });
-                            return constructor.newInstance(new Object[] { Long.valueOf(result.getTime()) });
-                        } catch (Exception e) {
-                            throw new TypeConversionException(
-                                    "Couldn't create class " + toType + " using default (long) constructor", e);
-                        }
-                    }
-                } catch (ParseException e) {
-                    throw new TypeConversionException("Could not parse date", e);
-                }
             } else if (java.time.LocalDateTime.class == toType) {
                 DateTimeFormatter dtf = null;
                 TemporalAccessor check;
-                DateTimeFormatter[] dfs = getLocalDateFormats(ActionContext.of(context), locale);
+                DateTimeFormatter[] dfs = getDateTimeFormats(ActionContext.of(context), locale);
 
                 for (DateTimeFormatter df1 : dfs) {
                     try {
@@ -123,12 +103,37 @@ public class DateConverter extends DefaultTypeConverter {
                     } catch (DateTimeParseException ignore) {
                     }
                 }
-
-                if (dtf != null) {
-                    return LocalDateTime.parse(sa, dtf);
+                if (dtf == null) {
+                    throw new TypeConversionException("Could not parse date");
+                } else {
+                    try {
+                        return LocalDateTime.parse(sa, dtf);
+                    } catch (DateTimeParseException e) {
+                        throw new TypeConversionException("Could not parse date", e);
+                    }
                 }
-
             }
+
+            // final fallback for dates without time
+            if (df == null) {
+                df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+            }
+            try {
+                df.setLenient(false); // let's use strict parsing (XW-341)
+                result = df.parse(sa);
+                if (!(Date.class == toType)) {
+                    try {
+                        Constructor<?> constructor = toType.getConstructor(new Class[] { long.class });
+                        return constructor.newInstance(new Object[] { Long.valueOf(result.getTime()) });
+                    } catch (Exception e) {
+                        throw new TypeConversionException(
+                                "Couldn't create class " + toType + " using default (long) constructor", e);
+                    }
+                }
+            } catch (ParseException e) {
+                throw new TypeConversionException("Could not parse date", e);
+            }
+
         } else if (Date.class.isAssignableFrom(value.getClass())) {
             result = (Date) value;
         }
@@ -202,16 +207,15 @@ public class DateConverter extends DefaultTypeConverter {
     }
 
     /**
-     * Retrieves the list of date formats to be used when converting dates
+     * Retrieves the list of date time formats to be used when converting dates
      * 
      * @param context the current ActionContext
      * @param locale  the current locale of the action
      * 
      * @return a list of DateTimeFormatter to be used for date conversion
      */
-    private DateTimeFormatter[] getLocalDateFormats(ActionContext context, Locale locale) {
+    private DateTimeFormatter[] getDateTimeFormats(ActionContext context, Locale locale) {
 
-        // Basic support LocalDateTime.now()
         DateTimeFormatter df1 = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
         final DateTimeFormatter[] dateFormats = new DateTimeFormatter[] { df1 };

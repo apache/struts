@@ -38,8 +38,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
@@ -57,8 +55,8 @@ public class OgnlUtil {
     // Flag used to reduce flooding logs with WARNs about using DevMode excluded packages
     private final AtomicBoolean warnReported = new AtomicBoolean(false);
 
-    private final ConcurrentMap<String, Object> expressions = new ConcurrentHashMap<>();
-    private final ConcurrentMap<Class<?>, BeanInfo> beanInfoCache = new ConcurrentHashMap<>();
+    private final OgnlCache<String, Object> expressionCache;
+    private final OgnlCache<Class<?>, BeanInfo> beanInfoCache;
     private TypeConverter defaultConverter;
 
     private boolean devMode;
@@ -77,7 +75,31 @@ public class OgnlUtil {
     private boolean allowStaticFieldAccess = true;
     private boolean disallowProxyMemberAccess;
 
+    /**
+     * Construct a new OgnlUtil instance for use with the framework
+     *
+     * @deprecated It is recommended to utilize the {@link OgnlUtil#OgnlUtil(com.opensymphony.xwork2.ognl.ExpressionCacheFactory, com.opensymphony.xwork2.ognl.BeanInfoCacheFactory) method instead.
+     */
+    @Deprecated
     public OgnlUtil() {
+        this(null, null);  // Instantiate default Expression and BeanInfo caches (null factories)
+    }
+
+    /**
+     * Construct a new OgnlUtil instance for use with the framework, with optional
+     * cache factories for OGNL Expression and BeanInfo caches.
+     *
+     * NOTE: Although the extension points are defined for the optional cache factories, developer-defined overrides do
+     *       do not appear to function at this time (it always appears to instantiate the default factories).
+     *       Construction injectors do not allow the optional flag, so the definitions must be defined.
+     *
+     * @param ognlExpressionCacheFactory factory for Expression cache instance.  If null, it uses a default
+     * @param ognlBeanInfoCacheFactory factory for BeanInfo cache instance.  If null, it uses a default
+     */
+    public OgnlUtil(
+            @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, required = false) ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
+            @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, required = false) BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
+    ) {
         excludedClasses = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
@@ -85,6 +107,12 @@ public class OgnlUtil {
         devModeExcludedClasses = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
+
+        OgnlCacheFactory<String, Object> ognlExpressionCacheFactory1 = (ognlExpressionCacheFactory != null ? ognlExpressionCacheFactory : new DefaultOgnlExpressionCacheFactory<>());
+        OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory1 = (ognlBeanInfoCacheFactory != null ? ognlBeanInfoCacheFactory : new DefaultOgnlBeanInfoCacheFactory<>());
+
+        this.expressionCache = ognlExpressionCacheFactory1.buildOgnlCache();
+        this.beanInfoCache = ognlBeanInfoCacheFactory1.buildOgnlCache();
     }
 
     @Inject
@@ -100,6 +128,16 @@ public class OgnlUtil {
     @Inject(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE)
     protected void setEnableExpressionCache(String cache) {
         enableExpressionCache = BooleanUtils.toBoolean(cache);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, required = false)
+    protected void setExpressionCacheMaxSize(String maxSize) {
+        expressionCache.setEvictionLimit(Integer.parseInt(maxSize));
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, required = false)
+    protected void setBeanInfoCacheMaxSize(String maxSize) {
+        beanInfoCache.setEvictionLimit(Integer.parseInt(maxSize));
     }
 
     @Inject(value = StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, required = false)
@@ -267,7 +305,7 @@ public class OgnlUtil {
      * @since 2.5.21
      */
     public void clearExpressionCache() {
-        expressions.clear();
+        expressionCache.clear();
     }
 
     /**
@@ -278,7 +316,7 @@ public class OgnlUtil {
      * @since 2.5.21
      */
     public int expressionCacheSize() {
-        return expressions.size();
+        return expressionCache.size();
     }
 
     /**
@@ -526,11 +564,11 @@ public class OgnlUtil {
     private <T> Object compileAndExecute(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
         Object tree;
         if (enableExpressionCache) {
-            tree = expressions.get(expression);
+            tree = expressionCache.get(expression);
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkEnableEvalExpression(tree, context);
-                expressions.putIfAbsent(expression, tree);
+                expressionCache.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);
@@ -543,11 +581,11 @@ public class OgnlUtil {
     private <T> Object compileAndExecuteMethod(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
         Object tree;
         if (enableExpressionCache) {
-            tree = expressions.get(expression);
+            tree = expressionCache.get(expression);
             if (tree == null) {
                 tree = Ognl.parseExpression(expression);
                 checkSimpleMethod(tree, context);
-                expressions.putIfAbsent(expression, tree);
+                expressionCache.putIfAbsent(expression, tree);
             }
         } else {
             tree = Ognl.parseExpression(expression);

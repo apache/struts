@@ -23,6 +23,8 @@ import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
+import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
@@ -366,6 +368,7 @@ import org.apache.struts2.views.util.UrlHelper;
  */
 public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
 
+    @Override
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
         alias(ActionFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY_ACTIONFACTORY, builder, props);
@@ -422,6 +425,9 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
                 , builder, props, Scope.SINGLETON);
 
         alias(DateFormatter.class, StrutsConstants.STRUTS_DATE_FORMATTER, builder, props, Scope.SINGLETON);
+
+        alias(ExpressionCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, builder, props, Scope.SINGLETON);
+        alias(BeanInfoCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, builder, props, Scope.SINGLETON);
 
         switchDevMode(props);
     }

@@ -26,6 +26,8 @@ import com.opensymphony.xwork2.StrutsTextProviderFactory;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
+import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
 import com.opensymphony.xwork2.ognl.accessor.HttpParametersPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.ParameterPropertyAccessor;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
@@ -94,6 +96,8 @@ import com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.LocalizedTextProvider;
+import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
 import com.opensymphony.xwork2.util.StrutsLocalizedTextProvider;
 import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.PatternMatcher;
@@ -130,19 +134,24 @@ import java.util.Set;
 
 public class StrutsDefaultConfigurationProvider implements ConfigurationProvider {
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public void init(Configuration configuration) throws ConfigurationException {
     }
 
+    @Override
     public void loadPackages() throws ConfigurationException {
     }
 
+    @Override
     public boolean needsReload() {
         return false;
     }
 
+    @Override
     public void register(ContainerBuilder builder, LocatableProperties props)
             throws ConfigurationException {
 
@@ -208,6 +217,8 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                 .factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON)
                 .factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON)
 
+                .factory(ExpressionCacheFactory.class, "defaultOgnlExpressionCacheFactory", DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
+                .factory(BeanInfoCacheFactory.class, "defaultOgnlBeanInfoCacheFactory", DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(CollectionConverter.class, Scope.SINGLETON)
                 .factory(ArrayConverter.class, Scope.SINGLETON)

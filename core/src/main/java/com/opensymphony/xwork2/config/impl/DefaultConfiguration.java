@@ -28,6 +28,10 @@ import com.opensymphony.xwork2.conversion.*;
 import com.opensymphony.xwork2.conversion.impl.*;
 import com.opensymphony.xwork2.factory.*;
 import com.opensymphony.xwork2.inject.*;
+import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
+import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
@@ -79,30 +83,37 @@ public class DefaultConfiguration implements Configuration {
     }
 
 
+    @Override
     public PackageConfig getPackageConfig(String name) {
         return packageContexts.get(name);
     }
 
+    @Override
     public List<UnknownHandlerConfig> getUnknownHandlerStack() {
         return unknownHandlerStack;
     }
 
+    @Override
     public void setUnknownHandlerStack(List<UnknownHandlerConfig> unknownHandlerStack) {
         this.unknownHandlerStack = unknownHandlerStack;
     }
 
+    @Override
     public Set<String> getPackageConfigNames() {
         return packageContexts.keySet();
     }
 
+    @Override
     public Map<String, PackageConfig> getPackageConfigs() {
         return packageContexts;
     }
 
+    @Override
     public Set<String> getLoadedFileNames() {
         return loadedFileNames;
     }
 
+    @Override
     public RuntimeConfiguration getRuntimeConfiguration() {
         return runtimeConfiguration;
     }
@@ -110,10 +121,12 @@ public class DefaultConfiguration implements Configuration {
     /**
      * @return the container
      */
+    @Override
     public Container getContainer() {
         return container;
     }
 
+    @Override
     public void addPackageConfig(String name, PackageConfig packageContext) {
         PackageConfig check = packageContexts.get(name);
         if (check != null) {
@@ -131,6 +144,7 @@ public class DefaultConfiguration implements Configuration {
         packageContexts.put(name, packageContext);
     }
 
+    @Override
     public PackageConfig removePackageConfig(String packageName) {
         return packageContexts.remove(packageName);
     }
@@ -138,11 +152,13 @@ public class DefaultConfiguration implements Configuration {
     /**
      * Allows the configuration to clean up any resources used
      */
+    @Override
     public void destroy() {
         packageContexts.clear();
         loadedFileNames.clear();
     }
 
+    @Override
     public void rebuildRuntimeConfiguration() {
         runtimeConfiguration = buildRuntimeConfiguration();
     }
@@ -151,10 +167,12 @@ public class DefaultConfiguration implements Configuration {
      * Calls the ConfigurationProviderFactory.getConfig() to tell it to reload the configuration and then calls
      * buildRuntimeConfiguration().
      *
+     * @param providers list of ContainerProvider
      * @return list of package providers
      *
      * @throws ConfigurationException in case of any configuration errors
      */
+    @Override
     public synchronized List<PackageProvider> reloadContainer(List<ContainerProvider> providers) throws ConfigurationException {
         packageContexts.clear();
         loadedFileNames.clear();
@@ -172,6 +190,7 @@ public class DefaultConfiguration implements Configuration {
         props.setConstants(builder);
 
         builder.factory(Configuration.class, new Factory<Configuration>() {
+            @Override
             public Configuration create(Context context) throws Exception {
                 return DefaultConfiguration.this;
             }
@@ -279,6 +298,8 @@ public class DefaultConfiguration implements Configuration {
 
         builder.factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON);
         builder.factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON);
+        builder.factory(ExpressionCacheFactory.class, "defaultOgnlExpressionCacheFactory", DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON);
+        builder.factory(BeanInfoCacheFactory.class, "defaultOgnlBeanInfoCacheFactory", DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON);
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
 
         builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
@@ -417,10 +438,10 @@ public class DefaultConfiguration implements Configuration {
 
     private static class RuntimeConfigurationImpl implements RuntimeConfiguration {
 
-        private Map<String, Map<String, ActionConfig>> namespaceActionConfigs;
-        private Map<String, ActionConfigMatcher> namespaceActionConfigMatchers;
-        private NamespaceMatcher namespaceMatcher;
-        private Map<String, String> namespaceConfigs;
+        private final Map<String, Map<String, ActionConfig>> namespaceActionConfigs;
+        private final Map<String, ActionConfigMatcher> namespaceActionConfigMatchers;
+        private final NamespaceMatcher namespaceMatcher;
+        private final Map<String, String> namespaceConfigs;
 
         public RuntimeConfigurationImpl(Map<String, Map<String, ActionConfig>> namespaceActionConfigs,
                                         Map<String, String> namespaceConfigs,
@@ -448,6 +469,7 @@ public class DefaultConfiguration implements Configuration {
          * @param namespace the namespace for the action or null for the empty namespace, ""
          * @return the configuration information for action requested
          */
+        @Override
         public ActionConfig getActionConfig(String namespace, String name) {
             ActionConfig config = findActionConfigInNamespace(namespace, name);
 
@@ -503,6 +525,7 @@ public class DefaultConfiguration implements Configuration {
          *
          * @return a Map of namespace - > Map of ActionConfig objects, with the key being the action name
          */
+        @Override
         public Map<String, Map<String, ActionConfig>>  getActionConfigs() {
             return namespaceActionConfigs;
         }

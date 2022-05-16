@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -33,6 +34,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -296,6 +298,19 @@ public class Include extends Component {
             buffer = new FastByteArrayOutputStream();
         }
 
+        @Override
+        public boolean isReady() {
+            return true;
+        }
+
+        @Override
+        public void setWriteListener(WriteListener writeListener) {
+            try {
+                writeListener.onWritePossible();
+            } catch (IOException e) {
+                throw new StrutsException(e);
+            }
+        }
 
         /**
          * Return all data that has been written to this OutputStream.

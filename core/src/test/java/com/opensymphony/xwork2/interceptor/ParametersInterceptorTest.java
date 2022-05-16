@@ -39,13 +39,17 @@ import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlContext;
 import ognl.PropertyAccessor;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.junit.Assert;
+import org.springframework.ejb.access.SimpleRemoteStatelessSessionProxyFactoryBean;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -335,8 +339,8 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         // given
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "This is blah");
-        params.put("('\\u0023_memberAccess[\\'allowStaticMethodAccess\\']')(meh)", "true");
-        params.put("('(aaa)(('\\u0023context[\\'xwork.MethodAccessor.denyMethodExecution\\']\\u003d\\u0023foo')(\\u0023foo\\u003dnew java.lang.Boolean(\"false\")))", "");
+        params.put("('\\u0023_memberAccess[\\'allowStaticFieldAccess\\']')(meh)", "true");
+        params.put("('(aaa)(('\\u0023context[\\'xwork.MethodAccessor.denyMethodExecution\\']\\u003d\\u0023foo')(\\u0023foo\\u003dnew java.lang.Boolean(\"true\")))", "");
         params.put("(asdf)(('\\u0023rt.exit(1)')(\\u0023rt\\u003d@java.lang.Runtime@getRuntime()))", "1");
 
         HashMap<String, Object> extraContext = new HashMap<>();
@@ -351,8 +355,9 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
         //then
         assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
-        boolean allowMethodAccess = ((SecurityMemberAccess) ((OgnlContext) stack.getContext()).getMemberAccess()).getAllowStaticMethodAccess();
-        assertFalse(allowMethodAccess);
+        Field field = ReflectionContextState.class.getField("DENY_METHOD_EXECUTION");
+        boolean allowStaticFieldAccess = ((OgnlContext) stack.getContext()).getMemberAccess().isAccessible(stack.getContext(), proxy.getAction(), field, "");
+        assertFalse(allowStaticFieldAccess);
     }
 
     public void testParameters() throws Exception {
@@ -806,7 +811,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         ValueStack stack = new OgnlValueStack(
             container.getInstance(XWorkConverter.class),
             (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
-            container.getInstance(TextProvider.class, "system"), true, true) {
+            container.getInstance(TextProvider.class, "system"), true) {
             @Override
             public void setValue(String expr, Object value) {
                 actual.put(expr, value);

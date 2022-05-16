@@ -42,7 +42,6 @@ public class SecurityMemberAccess implements MemberAccess {
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
     private final boolean allowStaticFieldAccess;
-    private final boolean allowStaticMethodAccess;
     private Set<Pattern> excludeProperties = Collections.emptySet();
     private Set<Pattern> acceptProperties = Collections.emptySet();
     private Set<Class<?>> excludedClasses = Collections.emptySet();
@@ -52,23 +51,13 @@ public class SecurityMemberAccess implements MemberAccess {
 
     /**
      * SecurityMemberAccess
-     *   - access decisions based on whether member is static (or not)
-     *   - block or allow access to properties (configurable-after-construction)
-     * 
-     * @param allowStaticMethodAccess
-     * @param allowStaticFieldAccess
+     * - access decisions based on whether member is static (or not)
+     * - block or allow access to properties (configurable-after-construction)
+     *
+     * @param allowStaticFieldAccess if set to true static fields (constants) will be accessible
      */
-    public SecurityMemberAccess(boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
-        this.allowStaticMethodAccess = allowStaticMethodAccess;
+    public SecurityMemberAccess(boolean allowStaticFieldAccess) {
         this.allowStaticFieldAccess = allowStaticFieldAccess;
-    }
-
-    public final boolean getAllowStaticMethodAccess() {
-        return allowStaticMethodAccess;
-    }
-
-    public final boolean getAllowStaticFieldAccess() {
-        return allowStaticFieldAccess;
     }
 
     @Override
@@ -90,13 +79,12 @@ public class SecurityMemberAccess implements MemberAccess {
     public void restore(Map context, Object target, Member member, String propertyName, Object state) {
         if (state != null) {
             final AccessibleObject accessible = (AccessibleObject) member;
-            final boolean stateboolean = ((Boolean) state).booleanValue();  // Using twice (avoid unboxing)
-            if (!stateboolean) {
-                accessible.setAccessible(stateboolean);
-            }
-            else {
-                throw new IllegalArgumentException("Improper restore state [" + stateboolean + "] for target [" + target +
-                                                   "], member [" + member + "], propertyName [" + propertyName + "]");
+            final boolean stateBoolean = ((Boolean) state).booleanValue();  // Using twice (avoid unboxing)
+            if (!stateBoolean) {
+                accessible.setAccessible(stateBoolean);
+            } else {
+                throw new IllegalArgumentException("Improper restore state [" + stateBoolean + "] for target [" + target +
+                    "], member [" + member + "], propertyName [" + propertyName + "]");
             }
         }
     }
@@ -117,6 +105,7 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
+        // it needs to be before calling #checkStaticMethodAccess()
         if (checkEnumAccess(target, member)) {
             LOG.trace("Allowing access to enum: target [{}], member [{}]", target, member);
             return true;
@@ -127,7 +116,7 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        final Class memberClass = member.getDeclaringClass();
+        final Class<?> memberClass = member.getDeclaringClass();
 
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", member);
@@ -135,11 +124,11 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         // target can be null in case of accessing static fields, since OGNL 3.2.8
-        final Class targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
+        final Class<?> targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
 
         if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
             LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!", targetClass.getPackage(), targetClass,
-                    target, memberClass.getPackage(), member);
+                target, memberClass.getPackage(), member);
             return false;
         }
 
@@ -158,33 +147,25 @@ public class SecurityMemberAccess implements MemberAccess {
 
     /**
      * Check access for static method (via modifiers).
-     * 
+     *
      * Note: For non-static members, the result is always true.
-     * 
+     *
      * @param member
      * @param memberModifiers
-     * 
+     *
      * @return
      */
     protected boolean checkStaticMethodAccess(Member member, int memberModifiers) {
-        if (Modifier.isStatic(memberModifiers) && !(member instanceof Field)) {
-            if (allowStaticMethodAccess) {
-                LOG.debug("Support for accessing static methods [member: {}] is deprecated!", member);
-            }
-            return allowStaticMethodAccess;
-        } else {
-            return true;
-        }
+        return !Modifier.isStatic(memberModifiers) || member instanceof Field;
     }
 
     /**
      * Check access for static field (via modifiers).
-     * 
+     * <p>
      * Note: For non-static members, the result is always true.
-     * 
+     *
      * @param member
      * @param memberModifiers
-     * 
      * @return
      */
     protected boolean checkStaticFieldAccess(Member member, int memberModifiers) {
@@ -195,13 +176,12 @@ public class SecurityMemberAccess implements MemberAccess {
         }
     }
 
-   /**
+    /**
      * Check access for public members (via modifiers)
-     * 
+     * <p>
      * Returns true if-and-only-if the member is public.
-     * 
+     *
      * @param memberModifiers
-     * 
      * @return
      */
     protected boolean checkPublicMemberAccess(int memberModifiers) {
@@ -210,10 +190,8 @@ public class SecurityMemberAccess implements MemberAccess {
 
     protected boolean checkEnumAccess(Object target, Member member) {
         if (target instanceof Class) {
-            final Class clazz = (Class) target;
-            if (Enum.class.isAssignableFrom(clazz) && member.getName().equals("values")) {
-                return true;
-            }
+            final Class<?> clazz = (Class<?>) target;
+            return Enum.class.isAssignableFrom(clazz) && member.getName().equals("values");
         }
         return false;
     }
@@ -222,7 +200,7 @@ public class SecurityMemberAccess implements MemberAccess {
         if (targetPackage == null || memberPackage == null) {
             LOG.warn("The use of the default (unnamed) package is discouraged!");
         }
-        
+
         String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
         String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
 
@@ -235,7 +213,7 @@ public class SecurityMemberAccess implements MemberAccess {
         targetPackageName = targetPackageName + ".";
         memberPackageName = memberPackageName + ".";
 
-        for (String packageName: excludedPackageNames) {
+        for (String packageName : excludedPackageNames) {
             if (targetPackageName.startsWith(packageName) || memberPackageName.startsWith(packageName)) {
                 return true;
             }
@@ -245,7 +223,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {
-        if (clazz == Object.class || (clazz == Class.class && !allowStaticMethodAccess)) {
+        if (clazz == Object.class || (clazz == Class.class && !allowStaticFieldAccess)) {
             return true;
         }
         for (Class<?> excludedClass : excludedClasses) {

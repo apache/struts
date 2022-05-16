@@ -105,12 +105,13 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputTimestamp>2022-02-24T06:11:22Z</project.build.outputTimestamp>
-        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.2</asm.version>
-        <jackson.version>2.10.5</jackson.version>
-        <jackson-databind.version>2.10.5.1</jackson-databind.version>
+        <jackson.version>2.13.2</jackson.version>
+        <jackson-databind.version>2.13.2.1</jackson-databind.version>
         <log4j2.version>2.17.2</log4j2.version>
         <ognl.version>3.3.2</ognl.version>
         <slf4j.version>1.7.32</slf4j.version>
@@ -235,7 +236,7 @@
                             </configuration>
                         </plugin>
                         <plugin>
-                            <groupId>org.mortbay.jetty</groupId>
+                            <groupId>org.eclipse.jetty</groupId>
                             <artifactId>jetty-maven-plugin</artifactId>
                             <configuration>
                                 <jvmArgs>${argLine}</jvmArgs>
@@ -247,7 +248,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.5</version>
+                        <version>0.8.8</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
@@ -264,9 +265,9 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.eluder.coveralls</groupId>
+                        <groupId>io.jsonwebtoken.coveralls</groupId>
                         <artifactId>coveralls-maven-plugin</artifactId>
-                        <version>4.3.0</version>
+                        <version>4.4.1</version>
                     </plugin>
                 </plugins>
             </build>
@@ -377,7 +378,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>6.5.1</version>
+                    <version>7.0.1</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
@@ -405,18 +406,15 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-wrapper-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -480,7 +478,11 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-wrapper-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
         </plugins>
 
         <defaultGoal>install</defaultGoal>
@@ -704,7 +706,7 @@
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.30</version>
+                <version>2.3.31</version>
             </dependency>
 
             <dependency>
@@ -795,7 +797,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.13</version>
+                <version>4.13.1</version>
             </dependency>
 
             <dependency>
@@ -807,8 +809,8 @@
 
             <dependency>
                 <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.1.0</version>
                 <scope>provided</scope>
             </dependency>
 

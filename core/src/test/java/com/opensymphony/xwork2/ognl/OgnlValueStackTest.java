@@ -85,16 +85,15 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     private OgnlValueStack createValueStack() {
-        return createValueStack(true, true);
+        return createValueStack(true);
     }
 
-    private OgnlValueStack createValueStack(boolean allowStaticMethodAccess, boolean allowStaticFieldAccess) {
+    private OgnlValueStack createValueStack(boolean allowStaticFieldAccess) {
         OgnlValueStack stack = new OgnlValueStack(
                 container.getInstance(XWorkConverter.class),
                 (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
-                container.getInstance(TextProvider.class, "system"), allowStaticMethodAccess, allowStaticFieldAccess);
+                container.getInstance(TextProvider.class, "system"), allowStaticFieldAccess);
         container.inject(stack);
-        ognlUtil.setAllowStaticMethodAccess(Boolean.toString(allowStaticMethodAccess));
         ognlUtil.setAllowStaticFieldAccess(Boolean.toString(allowStaticFieldAccess));
         return stack;
     }
@@ -111,14 +110,13 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * Intended for testing OgnlValueStack instance(s) that are minimally configured.
      * This should help ensure no underlying configuration/injection side-effects are responsible
      * for the behaviour of fundamental access control flags).
-     * 
-     * @param allowStaticMethod new allowStaticMethod configuration
+     *
      * @param allowStaticField new allowStaticField configuration
      * @return a new OgnlValueStackFactory with specified new configuration
      */
-    private OgnlValueStackFactory reloadValueStackFactory(Boolean allowStaticMethod, Boolean allowStaticField) {
+    private OgnlValueStackFactory reloadValueStackFactory(Boolean allowStaticField) {
         try {
-            reloadTestContainerConfiguration(allowStaticMethod, allowStaticField);
+            reloadTestContainerConfiguration(allowStaticField);
         }
         catch (Exception ex) {
             fail("Unable to reload container configuration and configure ognlValueStackFactory - exception: " + ex);
@@ -502,7 +500,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         Dog dog = new Dog();
         dog.setDeity("fido");
         vs.push(dog);
-        assertEquals("fido", vs.findValue("@com.opensymphony.xwork2.util.Dog@getDeity()", String.class));
+        assertNull(vs.findValue("@com.opensymphony.xwork2.util.Dog@getDeity()", String.class));
     }
 
     /**
@@ -517,7 +515,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testStaticMethodDisallow() {
-        OgnlValueStack vs = createValueStack(false, true);
+        OgnlValueStack vs = createValueStack(true);
 
         Dog dog = new Dog();
         dog.setDeity("fido");
@@ -1188,7 +1186,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         OgnlValueStack stack2 = new OgnlValueStack(stack,
                 container.getInstance(XWorkConverter.class),
-                (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()), true, true);
+                (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()), true);
         container.inject(stack2);
 
         assertEquals(stack.getRoot(), stack2.getRoot());
@@ -1271,7 +1269,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         // An OgnlValueStackFactory using a container config with default (from XWorkConfigurationProvider)
         // static access flag values present should prevent staticMethodAccess but allow staticFieldAccess.
-        assertFalse("OgnlValueStackFactory staticMethodAccess (default flags) not false?", ognlValueStackFactory.containerAllowsStaticMethodAccess());
         assertTrue("OgnlValueStackFactory staticFieldAccess (default flags) not true?", ognlValueStackFactory.containerAllowsStaticFieldAccess());
         // An OgnlValueStack created from the above OgnlValueStackFactory should allow public field access,
         // but prevent non-public field access.  It should also deny static method access.
@@ -1300,7 +1297,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when no static access flags are set (not present in configuration).
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryNoFlagsSet() {
-        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(null, null);
+        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(null);
         OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
@@ -1309,7 +1306,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
         // prevent staticMethodAccess AND prevent staticFieldAccess.
         // Note: Under normal circumstances, explicit static access configuration flags should be present,
         // but this specific check verifies what happens if those configuration flags are not present.
-        assertFalse("OgnlValueStackFactory staticMethodAccess (no flag present) not false?", ognlValueStackFactory.containerAllowsStaticMethodAccess());
         assertFalse("OgnlValueStackFactory staticFieldAccess (no flag present) not false?", ognlValueStackFactory.containerAllowsStaticFieldAccess());
         // An OgnlValueStack created from the above OgnlValueStackFactory should prevent public field access,
         // and prevent non-public field access.  It should also deny static method access.
@@ -1335,16 +1331,15 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     /**
      * Test a raw OgnlValueStackFactory and OgnlValueStack generated by it
-     * when both static access flags are set to false.
+     * when static access flag is set to false.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryNoStaticAccess() {
-        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(false, false);
+        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(false);
         OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
         // An OgnlValueStackFactory using a container config with both static access flags set false should
         // prevent staticMethodAccess AND prevent staticFieldAccess.
-        assertFalse("OgnlValueStackFactory staticMethodAccess (set false) not false?", ognlValueStackFactory.containerAllowsStaticMethodAccess());
         assertFalse("OgnlValueStackFactory staticFieldAccess (set false) not false?", ognlValueStackFactory.containerAllowsStaticFieldAccess());
         // An OgnlValueStack created from the above OgnlValueStackFactory should prevent public field access,
         // and prevent non-public field access.  It should also deny static method access.
@@ -1370,22 +1365,20 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     /**
      * Test a raw OgnlValueStackFactory and OgnlValueStack generated by it
-     * when both static access flags are set to true.
+     * when static access flag is set to true.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryAllStaticAccess() {
-        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(true, true);
+        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(true);
         OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
         // An OgnlValueStackFactory using a container config with both static access flags set true should
         // allow both staticMethodAccess AND staticFieldAccess.
-        assertTrue("OgnlValueStackFactory staticMethodAccess (set true) not true?", ognlValueStackFactory.containerAllowsStaticMethodAccess());
         assertTrue("OgnlValueStackFactory staticFieldAccess (set true) not true?", ognlValueStackFactory.containerAllowsStaticFieldAccess());
         // An OgnlValueStack created from the above OgnlValueStackFactory should allow public field access,
         // but prevent non-public field access.  It should also allow static method access.
         accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticInteger100Method()");
-        assertNotNull("unable to access static method (result null) ?", accessedValue);
-        assertEquals("accessed static method result not equal to expected?", accessedValue, staticInteger100Method());
+        assertNull("able to access static method (result non-null)!!!", accessedValue);
         accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PUBLIC_ATTRIBUTE");
         assertEquals("accessed static final public field value not equal to actual?", accessedValue, STATIC_FINAL_PUBLIC_ATTRIBUTE);
         accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PUBLIC_ATTRIBUTE");
@@ -1404,93 +1397,14 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertNull("accessed private field (result not null) ?", accessedValue);
     }
 
-    /**
-     * Test a raw OgnlValueStackFactory and OgnlValueStack generated by it
-     * when static method access flag is true, static field access flag is false.
-     */
-    public void testOgnlValueStackFromOgnlValueStackFactoryOnlyStaticMethodAccess() {
-        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(true, false);
-        OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
-        Object accessedValue;
-
-        // An OgnlValueStackFactory using a container config with static method access flag true, static field access false should
-        // allow staticMethodAccess but deny staticFieldAccess.
-        assertTrue("OgnlValueStackFactory staticMethodAccess (set true) not true?", ognlValueStackFactory.containerAllowsStaticMethodAccess());
-        assertFalse("OgnlValueStackFactory staticFieldAccess (set false) not false?", ognlValueStackFactory.containerAllowsStaticFieldAccess());
-        // An OgnlValueStack created from the above OgnlValueStackFactory should deny public field access,
-        // and also prevent non-public field access.  It should also allow static method access.
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticInteger100Method()");
-        assertNotNull("unable to access static method (result null) ?", accessedValue);
-        assertEquals("accessed static method result not equal to expected?", accessedValue, staticInteger100Method());
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PUBLIC_ATTRIBUTE");
-        assertNull("able to access static final public field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PUBLIC_ATTRIBUTE");
-        assertNull("able to access static public field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PACKAGE_ATTRIBUTE");
-        assertNull("accessed final package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PACKAGE_ATTRIBUTE");
-        assertNull("accessed package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PROTECTED_ATTRIBUTE");
-        assertNull("accessed final protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PROTECTED_ATTRIBUTE");
-        assertNull("accessed protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PRIVATE_ATTRIBUTE");
-        assertNull("accessed final private field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
-        assertNull("accessed private field (result not null) ?", accessedValue);
-    }
-
-    /**
-     * Test a raw OgnlValueStackFactory and OgnlValueStack generated by it
-     * when static method access flag is false, static field access flag is true.
-     */
-    public void testOgnlValueStackFromOgnlValueStackFactoryOnlyStaticFieldAccess() {
-        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(false, true);
-        OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
-        Object accessedValue;
-
-        // An OgnlValueStackFactory using a container config with static method access flag false, static field access true should
-        // deny staticMethodAccess but allow staticFieldAccess.
-        assertFalse("OgnlValueStackFactory staticMethodAccess (set false) not false?", ognlValueStackFactory.containerAllowsStaticMethodAccess());
-        assertTrue("OgnlValueStackFactory staticFieldAccess (set true) not true?", ognlValueStackFactory.containerAllowsStaticFieldAccess());
-        // An OgnlValueStack created from the above OgnlValueStackFactory should allow public field access,
-        // but prevent non-public field access.  It should also deny static method access.
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticInteger100Method()");
-        assertNull("able to access static method (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PUBLIC_ATTRIBUTE");
-        assertEquals("accessed static final public field value not equal to actual?", accessedValue, STATIC_FINAL_PUBLIC_ATTRIBUTE);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PUBLIC_ATTRIBUTE");
-        assertEquals("accessed static public field value not equal to actual?", accessedValue, STATIC_PUBLIC_ATTRIBUTE);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PACKAGE_ATTRIBUTE");
-        assertNull("accessed final package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PACKAGE_ATTRIBUTE");
-        assertNull("accessed package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PROTECTED_ATTRIBUTE");
-        assertNull("accessed final protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PROTECTED_ATTRIBUTE");
-        assertNull("accessed protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PRIVATE_ATTRIBUTE");
-        assertNull("accessed final private field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
-        assertNull("accessed private field (result not null) ?", accessedValue);
-    }
-
-    private void reloadTestContainerConfiguration(Boolean allowStaticMethod, Boolean allowStaticField) throws Exception {
+    private void reloadTestContainerConfiguration(Boolean allowStaticField) throws Exception {
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder,
                                  LocatableProperties props) throws ConfigurationException {
                 // null values simulate undefined (by removing).
                 // undefined values then should be evaluated to false
-                if (props.containsKey(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS)) {
-                    props.remove(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS);
-                }
-                if (props.containsKey(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS)) {
-                    props.remove(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS);
-                }
-                if (allowStaticMethod != null) {
-                    props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, "" + allowStaticMethod);
-                }
+                props.remove(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS);
                 if (allowStaticField != null) {
                     props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, "" + allowStaticField);
                 }

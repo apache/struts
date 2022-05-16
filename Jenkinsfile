@@ -39,12 +39,12 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh 'mvn -B clean install -DskipTests -DskipAssembly'
+            sh './mvnw -B clean install -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
           steps {
-            sh 'mvn -B test'
+            sh './mvnw -B test'
           }
           post {
             always {
@@ -74,12 +74,12 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh 'mvn -B clean install -DskipTests -DskipAssembly'
+            sh './mvnw -B clean install -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
           steps {
-            sh 'mvn -B test'
+            sh './mvnw -B test'
           }
           post {
             always {
@@ -94,7 +94,7 @@ pipeline {
           }
           steps {
             withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-              sh 'mvn sonar:sonar -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN}'
+              sh './mvnw sonar:sonar -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN}'
             }
           }
         }
@@ -119,12 +119,12 @@ pipeline {
       stages {
         stage('Build') {
           steps {
-            sh 'mvn -B clean install -DskipTests -DskipAssembly'
+            sh './mvnw -B clean install -DskipTests -DskipAssembly'
           }
         }
         stage('Test') {
           steps {
-            sh 'mvn -B test'
+            sh './mvnw -B test'
             // step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
           }
           post {
@@ -142,7 +142,7 @@ pipeline {
             dir("local-snapshots-dir/") {
               deleteDir()
             }
-            sh 'mvn -B source:jar javadoc:jar -DskipAssembbly'
+            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly'
           }
         }
         stage('Deploy Snapshot') {
@@ -151,7 +151,7 @@ pipeline {
           }
           steps {
             withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
-              sh 'mvn -s \${CUSTOM_SETTINGS} deploy'
+              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly'
             }
           }
         }
@@ -165,7 +165,7 @@ pipeline {
                     configName: 'Nightlies',
                     transfers: [
                         sshTransfer(
-                            remoteDirectory: '/x1/dist/struts',
+                            remoteDirectory: '/struts/snapshot',
                             removePrefix: 'assembly/target/assembly/out',
                             sourceFiles: 'assembly/target/assembly/out/struts-*.zip'
                         )

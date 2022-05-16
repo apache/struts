@@ -36,7 +36,7 @@ import java.util.Map;
  * @author tmjee
  */
 public class XWorkMethodAccessor extends ObjectMethodAccessor {
-	
+
 	private static final Logger LOG = LogManager.getLogger(XWorkMethodAccessor.class);
 
     @Override
@@ -58,9 +58,9 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
                   	    //so that property strings are not cleared
                   	    //i.e. OgnlUtil should be used initially, OgnlRuntime
                   	    //thereafter
-                  	    
+
                   	    Object propVal=OgnlRuntime.getProperty(ogContext, object, string);
-                  	    //use the Collection property accessor instead of the individual property accessor, because 
+                  	    //use the Collection property accessor instead of the individual property accessor, because
                   	    //in the case of Lists otherwise the index property could be used
                   	    PropertyAccessor accessor=OgnlRuntime.getPropertyAccessor(Collection.class);
                   	    ReflectionContextState.setGettingByKeyProperty(ogContext,true);
@@ -83,8 +83,8 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
                 return callMethodWithDebugInfo(context, object, string, objects);
             }
         }
-        Boolean exec = (Boolean) context.get(ReflectionContextState.DENY_METHOD_EXECUTION);
-        boolean e = ((exec == null) ? false : exec.booleanValue());
+        Boolean exec = ReflectionContextState.isDenyMethodExecution(context);
+        boolean e = (exec != null && exec);
 
         if (!e) {
             return callMethodWithDebugInfo(context, object, string, objects);
@@ -110,7 +110,7 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 
     @Override
     public Object callStaticMethod(Map context, Class aClass, String string, Object[] objects) throws MethodFailedException {
-        Boolean exec = (Boolean) context.get(ReflectionContextState.DENY_METHOD_EXECUTION);
+        Boolean exec = ReflectionContextState.isDenyMethodExecution(context);
         boolean e = ((exec == null) ? false : exec.booleanValue());
 
         if (!e) {

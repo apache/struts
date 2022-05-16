@@ -108,9 +108,9 @@
         <finalName>struts2-rest-showcase</finalName>
         <plugins>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
+                <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.1.16.v20140903</version>
+                <version>9.4.46.v20220331</version>
                 <configuration>
                     <stopKey>CTRL+C</stopKey>
                     <stopPort>8999</stopPort>

@@ -226,9 +226,6 @@ public final class StrutsConstants {
     /** The name of the parameter to determine whether static field access will be allowed in OGNL expressions or not */
     public static final String STRUTS_ALLOW_STATIC_FIELD_ACCESS = "struts.ognl.allowStaticFieldAccess";
 
-    /** The name of the parameter to determine whether static method access will be allowed in OGNL expressions or not */
-    public static final String STRUTS_ALLOW_STATIC_METHOD_ACCESS = "struts.ognl.allowStaticMethodAccess";
-
     /** The com.opensymphony.xwork2.validator.ActionValidatorManager implementation class */
     public static final String STRUTS_ACTIONVALIDATORMANAGER = "struts.actionValidatorManager";
 

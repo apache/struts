@@ -1900,13 +1900,13 @@ public class OgnlUtilTest extends XWorkTestCase {
         return result;
     }
 
-    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStaticMethod) {
+    private void reloadTestContainerConfiguration(boolean devMode, boolean allowStaticFieldAccess) {
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder,
                                  LocatableProperties props) throws ConfigurationException {
                 props.setProperty(StrutsConstants.STRUTS_DEVMODE, "" + devMode);
-                props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS, "" + allowStaticMethod);
+                props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, "" + allowStaticFieldAccess);
             }
         });
         ognlUtil = container.getInstance(OgnlUtil.class);

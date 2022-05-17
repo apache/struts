@@ -214,7 +214,7 @@ public class DateConverter extends DefaultTypeConverter {
      * 
      * @return a list of DateTimeFormatter to be used for date conversion
      */
-    private DateTimeFormatter[] getDateTimeFormats(ActionContext context, Locale locale) {
+    protected DateTimeFormatter[] getDateTimeFormats(ActionContext context, Locale locale) {
 
         DateTimeFormatter df1 = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 

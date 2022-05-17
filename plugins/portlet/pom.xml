@@ -130,11 +130,7 @@
             <artifactId>spring-test</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc-portlet</artifactId>
-            <optional>true</optional>
-        </dependency>
+
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -143,6 +139,7 @@
     </dependencies>
 
     <properties>
+        <spring.platformVersion>4.3.30.RELEASE</spring.platformVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

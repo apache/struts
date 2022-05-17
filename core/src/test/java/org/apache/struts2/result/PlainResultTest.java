@@ -58,7 +58,7 @@ public class PlainResultTest extends StrutsInternalTestCase {
         result.execute(invocation);
 
         assertEquals("{ 'value': 'test' }", response.getContentAsString());
-        assertEquals("application/json", response.getContentType());
+        assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
     public void testWriteContentTypeCsvWithCookie() throws Exception {
@@ -72,7 +72,7 @@ public class PlainResultTest extends StrutsInternalTestCase {
         result.execute(invocation);
 
         assertEquals("name;value\nline;1\nline;2", response.getContentAsString());
-        assertEquals("text/csv", response.getContentType());
+        assertEquals("text/csv;charset=UTF-8", response.getContentType());
     }
 
     public void testHeaders() throws Exception {

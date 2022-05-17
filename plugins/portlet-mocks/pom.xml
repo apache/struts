@@ -51,6 +51,7 @@
     </dependencies>
 
     <properties>
+        <spring.platformVersion>4.3.30.RELEASE</spring.platformVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

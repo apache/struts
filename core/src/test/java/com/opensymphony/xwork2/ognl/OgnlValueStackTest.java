@@ -18,7 +18,10 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.SimpleAction;
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
@@ -26,22 +29,17 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.test.TestBean2;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.Bar;
+import com.opensymphony.xwork2.util.BarJunior;
+import com.opensymphony.xwork2.util.Cat;
+import com.opensymphony.xwork2.util.CompoundRoot;
+import com.opensymphony.xwork2.util.Dog;
 import com.opensymphony.xwork2.util.Foo;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlException;
 import ognl.PropertyAccessor;
-
-import java.io.*;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import ognl.ParseException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
@@ -51,10 +49,18 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- * Unit test for OgnlValueStack.
- */
 public class OgnlValueStackTest extends XWorkTestCase {
 
     // Fields for static field access test
@@ -90,9 +96,9 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     private OgnlValueStack createValueStack(boolean allowStaticFieldAccess) {
         OgnlValueStack stack = new OgnlValueStack(
-                container.getInstance(XWorkConverter.class),
-                (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
-                container.getInstance(TextProvider.class, "system"), allowStaticFieldAccess);
+            container.getInstance(XWorkConverter.class),
+            (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
+            container.getInstance(TextProvider.class, "system"), allowStaticFieldAccess);
         container.inject(stack);
         ognlUtil.setAllowStaticFieldAccess(Boolean.toString(allowStaticFieldAccess));
         return stack;
@@ -117,8 +123,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
     private OgnlValueStackFactory reloadValueStackFactory(Boolean allowStaticField) {
         try {
             reloadTestContainerConfiguration(allowStaticField);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Unable to reload container configuration and configure ognlValueStackFactory - exception: " + ex);
         }
 
@@ -208,7 +213,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         vs.findValue("barJunior.title", true);
     }
 
-     public void testSuccessFailOnErrorOnInheritedPropertiesWithMethods() {
+    public void testSuccessFailOnErrorOnInheritedPropertiesWithMethods() {
         //this shuld not fail as the property is defined on a parent class
         OgnlValueStack vs = createValueStack();
 
@@ -252,6 +257,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     /**
      * monitors the resolution of WW-4999
+     *
      * @since 2.5.21
      */
     public void testLogMissingProperties() {
@@ -279,11 +285,11 @@ public class OgnlValueStackTest extends XWorkTestCase {
             if (logMissingProperties) {
                 assertEquals(3, testAppender.logEvents.size());
                 assertEquals("Error setting value [missingProp1Value] with expression [missingProp1]",
-                        testAppender.logEvents.get(0).getMessage().getFormattedMessage());
+                    testAppender.logEvents.get(0).getMessage().getFormattedMessage());
                 assertEquals("Could not find property [missingProp2]!",
-                        testAppender.logEvents.get(1).getMessage().getFormattedMessage());
+                    testAppender.logEvents.get(1).getMessage().getFormattedMessage());
                 assertEquals("Could not find property [missingProp3]!",
-                        testAppender.logEvents.get(2).getMessage().getFormattedMessage());
+                    testAppender.logEvents.get(2).getMessage().getFormattedMessage());
             } else {
                 assertEquals(0, testAppender.logEvents.size());
             }
@@ -295,6 +301,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     /**
      * tests the correctness of distinguishing between user exception and NoSuchMethodException
+     *
      * @since 2.5.21
      */
     public void testNotLogUserExceptionsAsMissingProperties() {
@@ -362,7 +369,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
                 }
             });
             Integer repeat = Integer.parseInt(
-                    container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
+                container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
 
             OgnlValueStack vs = createValueStack();
             try {
@@ -381,65 +388,40 @@ public class OgnlValueStackTest extends XWorkTestCase {
     public void testNotFailOnTooLongExpressionWithDefaultProperties() {
         loadConfigurationProviders(new DefaultPropertiesProvider());
 
-        Object defaultMaxLengthFromConfiguration = container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH);
-        if (defaultMaxLengthFromConfiguration != null) {
-            assertTrue("non-null defaultMaxLengthFromConfiguration not a String ?", defaultMaxLengthFromConfiguration instanceof String);
-            assertTrue("non-null defaultMaxLengthFromConfiguration not empty string by default ?", ((String) defaultMaxLengthFromConfiguration).length() == 0);
-        } else {
-            assertNull("defaultMaxLengthFromConfiguration not null ?", defaultMaxLengthFromConfiguration);
-        }
-        // Original test logic was to confirm failure of exceeding the default value.  Now the feature should be disabled by default,
-        // so this test's expectations are now changed.
-        Integer repeat = Integer.valueOf(256);  // Since maxlength is disabled by default, just choose an arbitrary value for test
+        String defaultMaxLengthFromConfiguration = container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH);
+        assertNotNull(defaultMaxLengthFromConfiguration);
+
+        int defaultValue = 256;
 
         OgnlValueStack vs = createValueStack();
         try {
-            vs.findValue(StringUtils.repeat('.', repeat + 1), true);
+            vs.findValue(StringUtils.repeat('.', defaultValue + 1), true);
             fail("findValue did not throw any exception (should either fail as invalid expression syntax or security exception) ?");
         } catch (Exception ex) {
-            // If STRUTS_OGNL_EXPRESSION_MAX_LENGTH feature is disabled (default), the parse should fail due to a reason of invalid expression syntax
-            // with ParseException.  Previously when it was enabled the reason for the failure would have been SecurityException.
             assertTrue(ex.getCause() instanceof OgnlException);
-            assertTrue(((OgnlException) ex.getCause()).getReason() instanceof ParseException);
+            assertTrue(((OgnlException) ex.getCause()).getReason() instanceof SecurityException);
+            assertTrue(((OgnlException) ex.getCause()).getReason().getMessage().startsWith("This expression exceeded maximum allowed length"));
         }
     }
 
     public void testNotFailOnTooLongValueWithDefaultProperties() {
-        try {
-            loadConfigurationProviders(new DefaultPropertiesProvider());
+        loadConfigurationProviders(new DefaultPropertiesProvider());
 
-            Object defaultMaxLengthFromConfiguration = container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH);
-            if (defaultMaxLengthFromConfiguration != null) {
-                assertTrue("non-null defaultMaxLengthFromConfiguration not a String ?", defaultMaxLengthFromConfiguration instanceof String);
-                assertTrue("non-null defaultMaxLengthFromConfiguration not empty string by default ?", ((String) defaultMaxLengthFromConfiguration).length() == 0);
-            } else {
-                assertNull("defaultMaxLengthFromConfiguration not null ?", defaultMaxLengthFromConfiguration);
-            }
-            // Original test logic is unchanged (testing that values can be larger than maximum expression length), but since the feature is disabled by
-            // default we will now have to enable it with an arbitrary value, test, and reset it to disabled.
-            Integer repeat = Integer.valueOf(256);  // Since maxlength is disabled by default, just choose an arbitrary value for test
+        Object defaultMaxLengthFromConfiguration = container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH);
+        assertNotNull(defaultMaxLengthFromConfiguration);
 
-            // Apply a non-default value for expressionMaxLength (as it should be disabled by default)
-            try {
-                ognlUtil.applyExpressionMaxLength(repeat.toString());
-            } catch (Exception ex) {
-                fail ("applyExpressionMaxLength did not accept maxlength string " + repeat.toString() + " ?");
-            }
+        int defaultValue = 256;
 
-            OgnlValueStack vs = createValueStack();
+        OgnlValueStack vs = createValueStack();
 
-            Dog dog = new Dog();
-            vs.push(dog);
+        Dog dog = new Dog();
+        vs.push(dog);
 
-            String value = StringUtils.repeat('.', repeat + 1);
+        String value = StringUtils.repeat('.', defaultValue);
 
-            vs.setValue("name", value);
+        vs.setValue("name", value);
 
-            assertEquals(value, dog.getName());
-        } finally {
-            // Reset expressionMaxLength value to default (disabled)
-            ognlUtil.applyExpressionMaxLength(null);
-        }
+        assertEquals(value, dog.getName());
     }
 
     public void testFailsOnMethodThatThrowsException() {
@@ -843,8 +825,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         try {
             stack.setValue("bar", "3x");
             fail("Attempt to set 'bar' int property to '3x' should result in RuntimeException");
-        }
-        catch (RuntimeException re) {
+        } catch (RuntimeException re) {
             assertTrue(true);
         }
 
@@ -1080,6 +1061,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     /**
      * Fails on 2.5.20 and earlier - tested on 2.5 (5/5/2016) and failed
+     *
      * @since 2.5.21
      */
     public void testNotThrowExceptionOnTopMissingProperty() {
@@ -1102,6 +1084,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     /**
      * Fails on 2.5.20 and earlier - tested on 2.5 (5/5/2016) and failed
+     *
      * @since 2.5.21
      */
     public void testNotSkipUserReturnedNullValues() {
@@ -1185,8 +1168,8 @@ public class OgnlValueStackTest extends XWorkTestCase {
         stack.push("Hello World");
 
         OgnlValueStack stack2 = new OgnlValueStack(stack,
-                container.getInstance(XWorkConverter.class),
-                (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()), true);
+            container.getInstance(XWorkConverter.class),
+            (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()), true);
         container.inject(stack2);
 
         assertEquals(stack.getRoot(), stack2.getRoot());
@@ -1258,7 +1241,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertNull(stack.findValue("address.country.name", String.class));
     }
 
-   /**
+    /**
      * Test a default OgnlValueStackFactory and OgnlValueStack generated by it
      * when a default configuration is used.
      */

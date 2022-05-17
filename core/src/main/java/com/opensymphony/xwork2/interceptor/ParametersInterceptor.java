@@ -201,7 +201,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             ReflectionContextState.setReportingConversionErrors(context, true);
 
             //keep locale from original context
-            newStack.getActionContext().withLocale(stack.getActionContext().getLocale());
+            newStack.getActionContext().withLocale(stack.getActionContext().getLocale()).withValueStack(stack);
         }
 
         boolean memberAccessStack = newStack instanceof MemberAccessValueStack;

@@ -23,7 +23,9 @@ import java.lang.reflect.Member;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
@@ -88,14 +90,15 @@ public class DateConverter extends DefaultTypeConverter {
                     } catch (ParseException ignore) {
                     }
                 }
-            } else if (java.time.LocalDateTime.class == toType) {
+            } else if (java.time.LocalDateTime.class == toType || java.time.LocalDate.class == toType
+                    || java.time.LocalTime.class == toType) {
                 DateTimeFormatter dtf = null;
-                TemporalAccessor check;
+                TemporalAccessor check = null;
                 DateTimeFormatter[] dfs = getDateTimeFormats(ActionContext.of(context), locale);
 
                 for (DateTimeFormatter df1 : dfs) {
                     try {
-                        check = df1.parse(sa);
+                        check = df1.parseBest(sa, LocalDateTime::from, LocalDate::from, LocalTime::from);
                         dtf = df1;
                         if (check != null) {
                             break;
@@ -103,15 +106,20 @@ public class DateConverter extends DefaultTypeConverter {
                     } catch (DateTimeParseException ignore) {
                     }
                 }
-                if (dtf == null) {
-                    throw new TypeConversionException("Could not parse date");
-                } else {
-                    try {
+                try {
+                    if (dtf != null && check instanceof LocalDateTime) {
                         return LocalDateTime.parse(sa, dtf);
-                    } catch (DateTimeParseException e) {
-                        throw new TypeConversionException("Could not parse date", e);
+                    } else if (dtf != null && check instanceof LocalDate) {
+                        return LocalDate.parse(sa, dtf);
+                    } else if (dtf != null && check instanceof LocalTime) {
+                        return LocalTime.parse(sa, dtf);
+                    } else {
+                        throw new TypeConversionException("Could not parse date");
                     }
+                } catch (DateTimeParseException e) {
+                    throw new TypeConversionException("Could not parse date", e);
                 }
+
             }
 
             // final fallback for dates without time
@@ -179,7 +187,6 @@ public class DateConverter extends DefaultTypeConverter {
     private DateFormat[] getDateFormats(ActionContext context, Locale locale) {
         DateFormat globalDateFormat = null;
         String globalFormat = getGlobalDateString(context);
-        //
         if (globalFormat != null) {
             globalDateFormat = new SimpleDateFormat(globalFormat, locale);
         }
@@ -216,9 +223,23 @@ public class DateConverter extends DefaultTypeConverter {
      */
     protected DateTimeFormatter[] getDateTimeFormats(ActionContext context, Locale locale) {
 
-        DateTimeFormatter df1 = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        DateTimeFormatter globalDateFormat = null;
+        String globalFormat = getGlobalDateString(context);
+        if (globalFormat != null) {
+            globalDateFormat = DateTimeFormatter.ofPattern(globalFormat, locale);
+        }
 
-        final DateTimeFormatter[] dateFormats = new DateTimeFormatter[] { df1 };
+        DateTimeFormatter df1 = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        DateTimeFormatter df2 = DateTimeFormatter.ISO_LOCAL_DATE;
+        DateTimeFormatter df3 = DateTimeFormatter.ISO_LOCAL_TIME;
+
+        final DateTimeFormatter[] dateFormats;
+
+        if (globalDateFormat == null) {
+            dateFormats = new DateTimeFormatter[] { df1, df2, df3 };
+        } else {
+            dateFormats = new DateTimeFormatter[] { globalDateFormat, df1, df2, df3 };
+        }
 
         return dateFormats;
     }

@@ -33,26 +33,23 @@ public class StaticContentTest {
                 webClient.getPage(ParameterUtils.getBaseUrl() + "/struts..");
                 Assert.fail("Previous request should have failed");
             } catch (FailingHttpStatusCodeException e) {
+                Assert.assertEquals("Not Found", e.getStatusMessage());
+                Assert.assertEquals(404, e.getStatusCode());
             }
         }
     }
 
+    @Test
     public void testInvalidRersources2() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             try {
                 webClient.getPage(ParameterUtils.getBaseUrl() + "/static/..%252f");
                 Assert.fail("Previous request should have failed");
             } catch (FailingHttpStatusCodeException e) {
+                Assert.assertEquals("Not Found", e.getStatusMessage());
+                Assert.assertEquals(404, e.getStatusCode());
             }
         }
     }
 
-    /*public void testInvalidRersources3() throws IOException {
-        try {
-            beginAt("/static/..%252f..%252f..%252fWEB-INF/classes/org/apache/struts2/showcase/action/EmployeeAction.class/");
-            fail("Previous request should have failed");
-        } catch (TestingEngineResponseException ex) {
-            // ok
-        }
-    }*/
 }

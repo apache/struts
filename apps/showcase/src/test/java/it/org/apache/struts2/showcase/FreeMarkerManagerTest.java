@@ -36,11 +36,11 @@ public class FreeMarkerManagerTest {
 
             final DomElement date = page.getElementById("todaysDate");
             Assert.assertNotNull(date);
-            Assert.assertTrue(date.asText().length() > 0);
+            Assert.assertTrue(date.asNormalizedText().length() > 0);
 
             final DomElement time = page.getElementById("timeNow");
             Assert.assertNotNull(time);
-            Assert.assertTrue(time.asText().length() > 0);
+            Assert.assertTrue(time.asNormalizedText().length() > 0);
         }
     }
 

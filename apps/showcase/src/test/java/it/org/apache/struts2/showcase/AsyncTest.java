@@ -46,7 +46,7 @@ public class AsyncTest {
 
             final DomElement msgs = page2.getElementById("msgs");
 
-            Assert.assertEquals("hello", msgs.asText());
+            Assert.assertEquals("hello", msgs.asNormalizedText());
         }
     }
 }

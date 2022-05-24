@@ -32,7 +32,7 @@ public class ActionTagExampleTest {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/tags/ui/actionTagExample!input.action");
 
-            final String pageAsText = page.asText();
+            final String pageAsText = page.asNormalizedText();
             Assert.assertTrue(pageAsText.contains("This text is from the called class"));
         }
     }

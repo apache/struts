@@ -45,66 +45,46 @@
     </bean>
 
     <bean id="chatLoginAction" class="org.apache.struts2.showcase.chat.ChatLoginAction" scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
     <bean id="chatLogoutAction" class="org.apache.struts2.showcase.chat.ChatLogoutAction" scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
     <bean id="usersAvailableAction" class="org.apache.struts2.showcase.chat.UsersAvailableAction" scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
     <bean id="roomsAvailableAction" class="org.apache.struts2.showcase.chat.RoomsAvailableAction" scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
     <bean id="crudRoomAction" class="org.apache.struts2.showcase.chat.CrudRoomAction" scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
     <bean id="enterRoomAction" class="org.apache.struts2.showcase.chat.EnterRoomAction" scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
     <bean id="messagesAvailableInRoomAction" class="org.apache.struts2.showcase.chat.MessagesAvailableInRoomAction"
           scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
     <bean id="sendMessageToRoomAction" class="org.apache.struts2.showcase.chat.SendMessageToRoomAction"
           scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
     <bean id="usersAvailableInRoomAction" class="org.apache.struts2.showcase.chat.UsersAvailableInRoomAction"
           scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
     <bean id="exitRoomAction" class="org.apache.struts2.showcase.chat.ExitRoomAction" scope="prototype">
-        <constructor-arg index="0">
-            <ref local="chatService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="chatService"/>
     </bean>
 
 
@@ -129,9 +109,7 @@
     </bean>
 
     <bean id="startHangmanAction" class="org.apache.struts2.showcase.hangman.StartHangmanAction" scope="prototype">
-        <constructor-arg index="0">
-            <ref local="hangmanService"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="hangmanService"/>
     </bean>
 
     <bean id="guessCharacterAction" class="org.apache.struts2.showcase.hangman.GuessCharacterAction" scope="prototype"/>

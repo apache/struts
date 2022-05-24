@@ -32,7 +32,7 @@ public class ActionChainingTest {
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/actionchaining/actionChain1!input");
 
-            final String pageAsText = page.asText();
+            final String pageAsText = page.asNormalizedText();
             Assert.assertTrue(pageAsText.contains("Action Chain 1 Property 1: Property Set In Action Chain 1"));
             Assert.assertTrue(pageAsText.contains("Action Chain 2 Property 1: Property Set in Action Chain 2"));
             Assert.assertTrue(pageAsText.contains("Action Chain 3 Property 1: Property set in Action Chain 3"));

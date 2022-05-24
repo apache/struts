@@ -65,11 +65,11 @@ public class UITagExampleTest {
             final HtmlSubmitInput button = form.getInputByValue("Submit");
             final HtmlPage page2 = button.click();
 
-            Assert.assertEquals("name", page2.getElementById("name").asText());
-            Assert.assertEquals("bio", page2.getElementById("bio").asText());
-            Assert.assertEquals("Red", page2.getElementById("favouriteColor").asText());
-            Assert.assertEquals("[Patrick, Jason]", page2.getElementById("friends").asText());
-            Assert.assertEquals("true", page2.getElementById("legalAge").asText());
+            Assert.assertEquals("name", page2.getElementById("name").asNormalizedText());
+            Assert.assertEquals("bio", page2.getElementById("bio").asNormalizedText());
+            Assert.assertEquals("Red", page2.getElementById("favouriteColor").asNormalizedText());
+            Assert.assertEquals("[Patrick, Jason]", page2.getElementById("friends").asNormalizedText());
+            Assert.assertEquals("true", page2.getElementById("legalAge").asNormalizedText());
         }
     }
 }

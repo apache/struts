@@ -44,7 +44,7 @@ public class CRUDTest {
 
             final HtmlSubmitInput button = form.getInputByValue("Save");
             final HtmlPage page2 = button.click();
-            final String page2Text = page2.asText();
+            final String page2Text = page2.asNormalizedText();
 
             Assert.assertTrue(page2Text.contains("somename1"));
             Assert.assertTrue(page2Text.contains("somedescription1"));

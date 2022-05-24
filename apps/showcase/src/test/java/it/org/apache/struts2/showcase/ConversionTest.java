@@ -46,7 +46,7 @@ public class ConversionTest {
 
             final HtmlSubmitInput button = form.getInputByValue("Submit");
             final HtmlPage page2 = button.click();
-            final String page2Text = page2.asText();
+            final String page2Text = page2.asNormalizedText();
 
             Assert.assertTrue(page2Text.contains("SET 0 Name: name0"));
             Assert.assertTrue(page2Text.contains("SET 0 Age: 0"));
@@ -71,7 +71,7 @@ public class ConversionTest {
 
             final HtmlSubmitInput button = form.getInputByValue("Submit");
             final HtmlPage page2 = button.click();
-            final String page2Text = page2.asText();
+            final String page2Text = page2.asNormalizedText();
 
             Assert.assertTrue(page2Text.contains("id0 -> address0"));
             Assert.assertTrue(page2Text.contains("id1 -> address1"));
@@ -92,7 +92,7 @@ public class ConversionTest {
 
             final HtmlSubmitInput button = form.getInputByValue("Submit");
             final HtmlPage page2 = button.click();
-            final String page2Text = page2.asText();
+            final String page2Text = page2.asNormalizedText();
 
             Assert.assertTrue(page2Text.contains("ADD"));
             Assert.assertTrue(page2Text.contains("MINUS"));

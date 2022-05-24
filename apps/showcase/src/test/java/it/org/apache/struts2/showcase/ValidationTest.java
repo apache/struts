@@ -47,7 +47,7 @@ public class ValidationTest {
 
             final HtmlSubmitInput button = form.getInputByValue("Submit");
             final HtmlPage page2 = button.click();
-            final String page2Text = page2.asText();
+            final String page2Text = page2.asNormalizedText();
 
             Assert.assertTrue(page2Text.contains("Invalid field value for field \"dateValidatorField\""));
             Assert.assertTrue(page2Text.contains("Invalid field value for field \"integerValidatorField\""));

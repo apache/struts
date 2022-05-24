@@ -144,7 +144,7 @@
        <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>2.39.0</version>
+            <version>2.61.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -162,7 +162,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M4</version>
+                <version>3.0.0-M6</version>
                 <configuration>
                     <includes>
                         <include>it.org.apache.struts2.showcase.*Test</include>
@@ -193,7 +193,7 @@
                     <systemProperties>
                         <systemProperty>
                             <name>log4j.configuration</name>
-                            <value>file:${basedir}/src/main/resources/log4j.properties</value>
+                            <value>file:${basedir}/src/main/resources/log4j2.xml</value>
                         </systemProperty>
                         <systemProperty>
                             <name>slf4j</name>
@@ -214,11 +214,8 @@
                         <goals>
                             <!-- stop any previous instance to free up the port -->
                             <goal>stop</goal>
-                            <goal>run-forked</goal>
+                            <goal>start</goal>
                         </goals>
-                        <configuration>
-                            <waitForChild>false</waitForChild>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>stop-jetty</id>

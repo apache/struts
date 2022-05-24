@@ -43,12 +43,12 @@ public class ExecAndWaitTest {
             final HtmlSubmitInput button = form.getInputByValue("submit");
             final HtmlPage page2 = button.click();
 
-            Assert.assertTrue(page2.asText().contains("We are processing your request. Please wait."));
+            Assert.assertTrue(page2.asNormalizedText().contains("We are processing your request. Please wait."));
 
             // hit it again
             final HtmlPage page3 = webClient
                     .getPage(ParameterUtils.getBaseUrl() + "/wait/longProcess1.action?time=1000");
-            Assert.assertTrue(page3.asText().contains("We are processing your request. Please wait."));
+            Assert.assertTrue(page3.asNormalizedText().contains("We are processing your request. Please wait."));
         }
     }
 }

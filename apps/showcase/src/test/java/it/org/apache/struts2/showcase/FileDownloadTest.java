@@ -43,6 +43,7 @@ public class FileDownloadTest {
         }
     }
 
+    @Test
     public void testZip() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             final Page page = webClient.getPage(ParameterUtils.getBaseUrl() + "/filedownload/download2.action");

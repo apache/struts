@@ -33,7 +33,7 @@ public class ComponentTagExampleTest {
             final HtmlPage page = webClient
                     .getPage(ParameterUtils.getBaseUrl() + "/tags/ui/componentTagExample.action");
 
-            final String pageAsText = page.asText();
+            final String pageAsText = page.asNormalizedText();
             Assert.assertTrue(pageAsText.contains("Freemarker Custom Template - parameter 'paramName' - paramValue1"));
             Assert.assertTrue(pageAsText.contains("Freemarker Custom Template - parameter 'paramName' - paramValue4"));
             Assert.assertTrue(pageAsText.contains("JSP Custom Template - parameter 'paramName' - paramValue2"));

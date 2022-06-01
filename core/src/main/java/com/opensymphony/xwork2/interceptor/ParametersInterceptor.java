@@ -186,7 +186,12 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         for (Map.Entry<String, Parameter> entry : params.entrySet()) {
             String parameterName = entry.getKey();
-            boolean isAcceptableParameter = excludedValuePatterns != null ? isAcceptableParameterNameValue(entry.getValue(), action) : isAcceptableParameter(parameterName, action);
+            boolean isAcceptableParameter;
+            if(hasParamValuesToExclude() || hasParamValuesToAccept()) {
+            	isAcceptableParameter = isAcceptableParameterNameValue(entry.getValue(), action);
+            } else {
+            	isAcceptableParameter = isAcceptableParameter(parameterName, action);
+            }
             if (isAcceptableParameter) {
                 acceptableParameters.put(parameterName, entry.getValue());
             }
@@ -304,7 +309,16 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         return logEntry.toString();
     }
-
+    
+    /**
+     * Validates the name passed is:
+     * * Within the max length of a parameter name
+     * * Is not excluded
+     * * Is accepted
+     * 
+     * @param name - Name to check
+     * @return true if accepted
+     */
     protected boolean acceptableName(String name) {
         boolean accepted = isWithinLengthLimit(name) && !isExcluded(name) && isAccepted(name);
         if (devMode && accepted) { // notify only when in devMode
@@ -313,9 +327,22 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return accepted;
     }
 
+    /**
+     * Validates:
+     * * Name is within the max length of a parameter name
+     * * Name is not excluded
+     * * Name is accepted
+     * * Value is null/blank
+     * * Value is not excluded
+     * * Value is accepted
+     * 
+     * @param name - Name to check
+     * @param value - value to check
+     * @return true if accepted
+     */
     protected boolean acceptableNameValue(String name, String value) {
     	boolean accepted = isWithinLengthLimit(name) && !isExcluded(name) && isAccepted(name) 
-    			&& (value == null || (!isParamValueExcluded(value) && isParamValueAccepted(value)));
+    			&& (value == null || value.isEmpty() || (!isParamValueExcluded(value) && isParamValueAccepted(value)));
         if (devMode && accepted) { // notify only when in devMode
             LOG.debug("Parameter [{}] was accepted with value [{}] and will be appended to action!", name, value);
         }
@@ -406,28 +433,44 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
     
     protected boolean isParamValueExcluded(String value) {
-    	for (Pattern excludedPattern : excludedValuePatterns) {
-    		if(value != null) {
-                if (excludedPattern.matcher(value).matches()) {
-                    LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
-                    return true;
-                }
-    		}
+    	if(excludedValuePatterns != null) { 
+	    	for (Pattern excludedPattern : excludedValuePatterns) {
+	    		if(value != null) {
+	                if (excludedPattern.matcher(value).matches()) {
+	                    LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
+	                    return true;
+	                }
+	    		}
+	    	}
     	}
     	return false;
     }
 
     protected boolean isParamValueAccepted(String value) {
-    	for (Pattern excludedPattern : acceptedValuePatterns) {
-    		if(value != null) {
-                if (excludedPattern.matcher(value).matches()) {
-                    LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
-                    return true;
-                }
-    		}
+    	if(acceptedValuePatterns != null) {
+	    	for (Pattern excludedPattern : acceptedValuePatterns) {
+	    		if(value != null) {
+	                if (excludedPattern.matcher(value).matches()) {
+	                    LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
+	                    return true;
+	                }
+	    		}
+	    	}
+    	} else {
+    		// acceptedValuePatterns not defined so anything is allowed
+    		return true;
     	}
     	return false;
     }
+    
+    private boolean hasParamValuesToExclude() {
+    	return excludedValuePatterns != null && excludedValuePatterns.size() > 0;
+    }
+    
+    private boolean hasParamValuesToAccept() {
+    	return acceptedValuePatterns != null && acceptedValuePatterns.size() > 0;
+    }
+    
     /**
      * Whether to order the parameters or not
      *

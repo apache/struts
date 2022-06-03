@@ -186,12 +186,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         for (Map.Entry<String, Parameter> entry : params.entrySet()) {
             String parameterName = entry.getKey();
-            boolean isAcceptableParameter;
-            if(hasParamValuesToExclude() || hasParamValuesToAccept()) {
-            	isAcceptableParameter = isAcceptableParameterNameValue(entry.getValue(), action);
-            } else {
-            	isAcceptableParameter = isAcceptableParameter(parameterName, action);
-            }
+            boolean isAcceptableParameter = isAcceptableParameter(parameterName, action);
+            isAcceptableParameter &= isAcceptableParameterValue(entry.getValue());
+
             if (isAcceptableParameter) {
                 acceptableParameters.put(parameterName, entry.getValue());
             }
@@ -272,15 +269,20 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
     
     /**
-     * Checks if name of parameter name/value can be accepted or thrown away
+     * Checks if parameter value can be accepted or thrown away
      *
      * @param param  the parameter
      * @param action current action
      * @return true if parameter is accepted
      */
-    protected boolean isAcceptableParameterNameValue(Parameter param, Object action) {
-        ParameterNameAware parameterNameAware = (action instanceof ParameterNameAware) ? (ParameterNameAware) action : null;
-        return acceptableNameValue(param.getName(), param.getValue()) && (parameterNameAware == null || parameterNameAware.acceptableParameterName(param.getName()));
+    protected boolean isAcceptableParameterValue(Parameter param) {
+    	if(hasParamValuesToExclude() || hasParamValuesToAccept()) {
+    		// We have something to check.
+    		return acceptableValue(param.getName(), param.getValue());
+    	} else {
+    		// No exclude/accept defined. Return true/allowed.
+    		return true;
+    	}
     }
 
     /**
@@ -329,22 +331,18 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     /**
      * Validates:
-     * * Name is within the max length of a parameter name
-     * * Name is not excluded
-     * * Name is accepted
      * * Value is null/blank
      * * Value is not excluded
      * * Value is accepted
      * 
-     * @param name - Name to check
+     * @param name - Param name (for logging)
      * @param value - value to check
      * @return true if accepted
      */
-    protected boolean acceptableNameValue(String name, String value) {
-    	boolean accepted = isWithinLengthLimit(name) && !isExcluded(name) && isAccepted(name) 
-    			&& (value == null || value.isEmpty() || (!isParamValueExcluded(value) && isParamValueAccepted(value)));
-        if (devMode && accepted) { // notify only when in devMode
-            LOG.debug("Parameter [{}] was accepted with value [{}] and will be appended to action!", name, value);
+    protected boolean acceptableValue(String name, String value) {
+    	boolean accepted = (value == null || value.isEmpty() || (!isParamValueExcluded(value) && isParamValueAccepted(value)));
+        if (!accepted) {
+            LOG.info("Parameter [{}] was not accepted with value [{}] and will be dropped!", name, value);
         }
         return accepted;
     }
@@ -397,10 +395,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     public void setAcceptedValuePatterns(String commaDelimitedPatterns) {
     	Set<String> patterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns);
         if (acceptedValuePatterns == null) {
-            // Limit unwanted log entries (for 1st call, acceptedPatterns null)
-            LOG.debug("Sets accepted value patterns to [{}], note this impacts the safety of your application!", patterns);
+            // Limit unwanted log entries (for 1st call, acceptedValuePatterns null)
+            LOG.debug("Sets accepted value patterns to [{}], note this may impact the safety of your application!", patterns);
         } else {
-            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
+            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and may impact the safety of your application!",
             		acceptedValuePatterns, patterns);
         }
         acceptedValuePatterns = new HashSet<>(patterns.size());
@@ -416,10 +414,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     public void setExcludeValuePatterns(String commaDelimitedPatterns) {
     	Set<String> patterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns);
         if (excludedValuePatterns == null) {
-            // Limit unwanted log entries (for 1st call, acceptedPatterns null)
+            // Limit unwanted log entries (for 1st call, excludedValuePatterns null)
             LOG.debug("Setting excluded value patterns to [{}]", patterns);
         } else {
-            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
+            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and and may impact safety of your application!",
             		excludedValuePatterns, patterns);
         }
         excludedValuePatterns = new HashSet<>(patterns.size());
@@ -433,11 +431,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
     
     protected boolean isParamValueExcluded(String value) {
-    	if(excludedValuePatterns != null) { 
+    	if(hasParamValuesToExclude()) { 
 	    	for (Pattern excludedPattern : excludedValuePatterns) {
 	    		if(value != null) {
 	                if (excludedPattern.matcher(value).matches()) {
-	                    LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
+	                    LOG.info("Parameter value [{}] matches excluded pattern [{}] and will be dropped.", value, excludedPattern);
 	                    return true;
 	                }
 	    		}
@@ -447,11 +445,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean isParamValueAccepted(String value) {
-    	if(acceptedValuePatterns != null) {
+    	if(hasParamValuesToAccept()) {
 	    	for (Pattern excludedPattern : acceptedValuePatterns) {
 	    		if(value != null) {
 	                if (excludedPattern.matcher(value).matches()) {
-	                    LOG.trace("[{}] matches excluded pattern [{}]", value, excludedPattern);
 	                    return true;
 	                }
 	    		}
@@ -460,6 +457,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     		// acceptedValuePatterns not defined so anything is allowed
     		return true;
     	}
+    	LOG.info("Parameter value [{}] did not match any acceptedValuePattern pattern and will be dropped.", value);
     	return false;
     }
     

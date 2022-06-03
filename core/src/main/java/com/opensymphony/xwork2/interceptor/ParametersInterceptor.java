@@ -417,7 +417,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             // Limit unwanted log entries (for 1st call, excludedValuePatterns null)
             LOG.debug("Setting excluded value patterns to [{}]", patterns);
         } else {
-            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and and may impact safety of your application!",
+            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and may impact safety of your application!",
             		excludedValuePatterns, patterns);
         }
         excludedValuePatterns = new HashSet<>(patterns.size());
@@ -430,36 +430,37 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
     }
     
-    protected boolean isParamValueExcluded(String value) {
-    	if(hasParamValuesToExclude()) { 
-	    	for (Pattern excludedPattern : excludedValuePatterns) {
-	    		if(value != null) {
-	                if (excludedPattern.matcher(value).matches()) {
-	                    LOG.info("Parameter value [{}] matches excluded pattern [{}] and will be dropped.", value, excludedPattern);
-	                    return true;
-	                }
-	    		}
-	    	}
-    	}
-    	return false;
-    }
+	protected boolean isParamValueExcluded(String value) {
+		if (hasParamValuesToExclude()) {
+			for (Pattern excludedPattern : excludedValuePatterns) {
+				if (value != null) {
+					if (excludedPattern.matcher(value).matches()) {
+						LOG.info("Parameter value [{}] matches excluded pattern [{}] and will be dropped.", value,
+								excludedPattern);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-    protected boolean isParamValueAccepted(String value) {
-    	if(hasParamValuesToAccept()) {
-	    	for (Pattern excludedPattern : acceptedValuePatterns) {
-	    		if(value != null) {
-	                if (excludedPattern.matcher(value).matches()) {
-	                    return true;
-	                }
-	    		}
-	    	}
-    	} else {
-    		// acceptedValuePatterns not defined so anything is allowed
-    		return true;
-    	}
-    	LOG.info("Parameter value [{}] did not match any acceptedValuePattern pattern and will be dropped.", value);
-    	return false;
-    }
+	protected boolean isParamValueAccepted(String value) {
+		if (hasParamValuesToAccept()) {
+			for (Pattern excludedPattern : acceptedValuePatterns) {
+				if (value != null) {
+					if (excludedPattern.matcher(value).matches()) {
+						return true;
+					}
+				}
+			}
+		} else {
+			// acceptedValuePatterns not defined so anything is allowed
+			return true;
+		}
+		LOG.info("Parameter value [{}] did not match any acceptedValuePattern pattern and will be dropped.", value);
+		return false;
+	}
     
     private boolean hasParamValuesToExclude() {
     	return excludedValuePatterns != null && excludedValuePatterns.size() > 0;

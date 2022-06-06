@@ -359,7 +359,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected boolean acceptableValue(String name, String value) {
     	boolean accepted = (value == null || value.isEmpty() || (!isParamValueExcluded(value) && isParamValueAccepted(value)));
         if (!accepted) {
-            LOG.info("Parameter [{}] was not accepted with value [{}] and will be dropped!", name, value);
+            LOG.warn("Parameter [{}] was not accepted with value [{}] and will be dropped!", name, value);
         }
         return accepted;
     }
@@ -452,7 +452,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 			for (Pattern excludedPattern : excludedValuePatterns) {
 				if (value != null) {
 					if (excludedPattern.matcher(value).matches()) {
-						LOG.info("Parameter value [{}] matches excluded pattern [{}] and will be dropped.", value,
+						LOG.warn("Parameter value [{}] matches excluded pattern [{}] and will be dropped.", value,
 								excludedPattern);
 						return true;
 					}
@@ -475,7 +475,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 			// acceptedValuePatterns not defined so anything is allowed
 			return true;
 		}
-		LOG.info("Parameter value [{}] did not match any acceptedValuePattern pattern and will be dropped.", value);
+		LOG.warn("Parameter value [{}] did not match any acceptedValuePattern pattern and will be dropped.", value);
 		return false;
 	}
     

@@ -95,6 +95,11 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 
     private Object callMethodWithDebugInfo(Map context, Object object, String methodName, Object[] objects) throws MethodFailedException {
         try {
+                for(Object o:objects){
+                      if( "excludedClasses".equals(o) || "excludedPackageNames".equals(o) ){
+			      throw new NoSuchMethodException( methodName + o );
+		      }
+                }
             return super.callMethod(context, object, methodName, objects);
 		}
 		catch(MethodFailedException e) {

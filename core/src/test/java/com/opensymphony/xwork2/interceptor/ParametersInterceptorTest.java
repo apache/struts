@@ -888,6 +888,50 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
         assertEquals(expected, actual);
     }
+    
+    public void testExcludedParametersValuesAreIgnoredWithParameterValueAware() throws Exception {
+        ParametersInterceptor pi = createParametersInterceptor();
+        // Contains (based on pattern)
+        pi.setExcludeValuePatterns(".*\\$\\{.*?\\}.*,.*%\\{.*?\\}.*");
+        
+        assertTrue("${2*2} was excluded by isParamValueExcluded", pi.isParamValueExcluded("${2*2}"));
+                
+        final Map<String, Object> actual = injectValueStackFactory(pi);
+        ValueStack stack = injectValueStack(actual);
+
+        final Map<String, Object> expected = new HashMap<String, Object>() {
+            {
+            	// acceptableParameterValue only allows fooValue even though fooKey2 and fooKey3 pass the excludeValuePatterns check
+                put("fooKey", "fooValue");
+            }
+        };
+        
+        Object a = new ParameterValueAware() {
+			@Override
+			public boolean acceptableParameterValue(String parameterValue) {
+				// Only fooValue will be allowed because the excludeValuePatterns will block ${2+2}
+				return parameterValue.equals("fooValue") || parameterValue.equals("${2+2}");
+			}
+		};
+
+        Map<String, Object> parameters = new HashMap<String, Object>() {
+            {
+                put("barKey$", "${2+2}");
+                put("barKey2$", "foo${2+2}");
+                put("barKey3$", "foo${2+2}foo");
+                put("barKey%", "%{2+2}");
+                put("barKey2%", "foo%{2+2}");
+                put("barKey3%", "foo%{2+2}foo");
+                put("allowedKey", "${foo}");
+                put("allowedKey2", "%{bar}");
+                put("fooKey", "fooValue");
+                put("fooKey2", "fooValue2");
+                put("fooKey3", "");
+            }
+        };
+        pi.setParameters(a, stack, HttpParameters.create(parameters).build());
+        assertEquals(expected, actual);
+    }
 
 
     private ValueStack injectValueStack(Map<String, Object> actual) {

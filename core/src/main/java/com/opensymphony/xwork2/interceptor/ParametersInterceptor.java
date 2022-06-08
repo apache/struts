@@ -191,7 +191,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         for (Map.Entry<String, Parameter> entry : params.entrySet()) {
             String parameterName = entry.getKey();
             boolean isAcceptableParameter = isAcceptableParameter(parameterName, action);
-            isAcceptableParameter &= isAcceptableParameterValue(entry.getValue());
+            isAcceptableParameter &= isAcceptableParameterValue(entry.getValue(), action);
 
             if (isAcceptableParameter) {
                 acceptableParameters.put(parameterName, entry.getValue());
@@ -280,14 +280,14 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param action current action
      * @return true if parameter is accepted
      */
-    protected boolean isAcceptableParameterValue(Parameter param) {
+    protected boolean isAcceptableParameterValue(Parameter param, Object action) {
+    	ParameterValueAware parameterValueAware = (action instanceof ParameterValueAware) ? (ParameterValueAware) action : null;
+    	boolean acceptableParmValue = (parameterValueAware == null || parameterValueAware.acceptableParameterValue(param.getValue()));
     	if(hasParamValuesToExclude() || hasParamValuesToAccept()) {
-    		// We have something to check.
-    		return acceptableValue(param.getName(), param.getValue());
-    	} else {
-    		// No exclude/accept defined. Return true/allowed.
-    		return true;
+    		// Additional validations to process
+    		acceptableParmValue &= acceptableValue(param.getName(), param.getValue());
     	}
+    	return acceptableParmValue;
     }
 
     /**

@@ -123,6 +123,11 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 	private Object callStaticMethodWithDebugInfo(Map context, Class aClass, String methodName,
 			Object[] objects) throws MethodFailedException {
 		try {
+			for(Object o:objects){
+			if( "excludedClasses".equals(o) || "excludedPackageNames".equals(o) ){
+			      throw new MethodFailedException( methodName + ": " + o );
+			}
+                }
 			return super.callStaticMethod(context, aClass, methodName, objects);
 		}
 		catch(MethodFailedException e) {

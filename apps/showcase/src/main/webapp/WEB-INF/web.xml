@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,19 +17,15 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ */
 -->
-<web-app id="starter" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
 
     <display-name>Struts Showcase Application</display-name>
-
-    <context-param>
-        <param-name>org.apache.tiles.definition.DefinitionsFactory.DEFINITIONS_CONFIG</param-name>
-        <param-value>
-            /WEB-INF/tiles.xml
-        </param-value>
-    </context-param>
 
     <filter>
         <filter-name>async</filter-name>
@@ -46,11 +43,10 @@
         <filter-class>org.apache.struts2.dispatcher.filter.StrutsExecuteFilter</filter-class>
     </filter>
 
-
-   <filter>
-       <filter-name>sitemesh</filter-name>
-       <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
-   </filter>
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+    </filter>
 
     <filter-mapping>
         <filter-name>async</filter-name>
@@ -81,18 +77,18 @@
             org.apache.struts2.tiles.StrutsTilesListener
         </listener-class>
     </listener>
-    
+
     <!-- Chat Example in Showcase -->
     <listener>
-    	<listener-class>
-    	  org.apache.struts2.showcase.chat.ChatSessionListener
-    	</listener-class>
+        <listener-class>
+            org.apache.struts2.showcase.chat.ChatSessionListener
+        </listener-class>
     </listener>
 
     <listener>
         <listener-class>org.apache.struts2.dispatcher.listener.StrutsListener</listener-class>
     </listener>
-	
+
     <!-- SNIPPET START: dwr -->
 
     <servlet>
@@ -103,13 +99,13 @@
             <param-value>true</param-value>
         </init-param>
     </servlet>
-	<servlet>
-    	<servlet-name>JspSupportServlet</servlet-name>
-    	<servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
-    	<load-on-startup>1</load-on-startup>
-  	</servlet>
+    <servlet>
+        <servlet-name>JspSupportServlet</servlet-name>
+        <servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
-      <!-- Sitemesh Freemarker and Velocity Decorator Servlets. Shares configuration with Struts.-->
+    <!-- Sitemesh Freemarker and Velocity Decorator Servlets. Shares configuration with Struts.-->
     <servlet>
         <servlet-name>sitemesh-freemarker</servlet-name>
         <servlet-class>org.apache.struts2.sitemesh.FreemarkerDecoratorServlet</servlet-class>

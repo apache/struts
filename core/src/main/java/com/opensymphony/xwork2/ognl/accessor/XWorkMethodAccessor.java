@@ -95,6 +95,16 @@ public class XWorkMethodAccessor extends ObjectMethodAccessor {
 
     private Object callMethodWithDebugInfo(Map context, Object object, String methodName, Object[] objects) throws MethodFailedException {
         try {
+            if (objects != null && objects.length > 0) {
+                for (Object o : objects) {
+                    String s = o == null ? "" : String.valueOf(o);
+                    if (s.length() > 14) {
+                        if (s.contains("excludedClasses") || s.contains("excludedPackageNames")) {
+                            throw new MethodFailedException(o, o + " is deny!");
+                        }
+                    }
+                }
+            }
             return super.callMethod(context, object, methodName, objects);
 		}
 		catch(MethodFailedException e) {

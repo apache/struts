@@ -24,7 +24,7 @@ import java.util.concurrent.Executor;
 /**
  * A {@link Callable} with a timeout value and an {@link Executor}.
  *
- * @since 2.6
+ * @since 6.0.0
  */
 public class AsyncAction implements Callable {
 

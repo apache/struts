@@ -20,8 +20,8 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-          "-//Apache Software Foundation//DTD Struts Configuration 2.6//EN"
-          "http://struts.apache.org/dtds/struts-2.6.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
+        "struts-6.0.dtd">
 <struts>
     <package name="default" extends="struts-default">
         <action name="hello" class="com.opensymphony.xwork2.ActionSupport">
@@ -56,25 +56,25 @@
             </result>
         </action>
 
-         <action name="test5" class="com.opensymphony.xwork2.ActionSupport">
+        <action name="test5" class="com.opensymphony.xwork2.ActionSupport">
             <result type="freemarker">
                 <param name="location">org/apache/struts2/views/freemarker/callActionFreeMarker2.ftl</param>
             </result>
         </action>
 
-         <action name="test6" class="com.opensymphony.xwork2.ActionSupport">
+        <action name="test6" class="com.opensymphony.xwork2.ActionSupport">
             <result type="freemarker">
                 <param name="location">org/apache/struts2/views/freemarker/dynaAttributes.ftl</param>
             </result>
         </action>
 
-         <action name="test7" class="com.opensymphony.xwork2.ActionSupport">
+        <action name="test7" class="com.opensymphony.xwork2.ActionSupport">
             <result type="freemarker">
                 <param name="location">org/apache/struts2/views/freemarker/manual-list.ftl</param>
             </result>
         </action>
 
-         <action name="test8" class="com.opensymphony.xwork2.ActionSupport">
+        <action name="test8" class="com.opensymphony.xwork2.ActionSupport">
             <result type="freemarker">
                 <param name="location">org/apache/struts2/views/freemarker/customTextField.ftl</param>
             </result>

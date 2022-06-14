@@ -59,7 +59,7 @@ import java.util.List;
  * </p>
  *
  * <p>
- * <b>Note</b>: Since Struts 2.6 a new Java 8 API has been used to format the Date, it's based on
+ * <b>Note</b>: Since Struts 6.0.0 a new Java 8 API has been used to format the Date, it's based on
  * <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html">DateTimeFormatter</a>
  * which uses a bit different patterns.
  * </p>

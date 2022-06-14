@@ -43,7 +43,7 @@ public final class StrutsConstants {
      * Note: This control flag may not be meaningful to all provider implementations, and should be false by default.
      * </p>
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_I18N_SEARCH_DEFAULTBUNDLES_FIRST = "struts.i18n.search.defaultbundles.first";
 
@@ -254,7 +254,7 @@ public final class StrutsConstants {
      * Specifies an OGNL expression cache factory implementation.  A default implementation is provided, but
      * could be replaced by a custom one if desired.
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_OGNL_EXPRESSION_CACHE_FACTORY = "struts.ognl.expressionCacheFactory";
 
@@ -262,7 +262,7 @@ public final class StrutsConstants {
      * Specifies an OGNL BeanInfo cache factory implementation.  A default implementation is provided, but
      * could be replaced by a custom one if desired.
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_OGNL_BEANINFO_CACHE_FACTORY = "struts.ognl.beanInfoCacheFactory";
 
@@ -275,7 +275,7 @@ public final class StrutsConstants {
      * For the optional LRU cache, once the maximum is reached, the least-recently-used (LRU) entry will be
      * removed when a new entry needs to be added (cache is fully-utilized).
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE = "struts.ognl.beanInfoCacheMaxSize";
 
@@ -287,32 +287,32 @@ public final class StrutsConstants {
      * Note:  When enabling LRU cache mode you must also set a maximum size (via {@link #STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE})
      * for it to be effective.  Otherwise, there is no condition to evict a LRU entry (cache has no limit).
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_OGNL_BEANINFO_CACHE_LRU_MODE = "struts.ognl.beanInfoCacheLRUMode";
 
     /**
      * Logs properties that are not found (very verbose)
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_OGNL_LOG_MISSING_PROPERTIES = "struts.ognl.logMissingProperties";
 
     /**
      * Logs properties that are not found (very verbose)
-     * @deprecated as of 2.6.  Use {@link #STRUTS_OGNL_LOG_MISSING_PROPERTIES} instead.
+     * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_LOG_MISSING_PROPERTIES} instead.
      */
     @Deprecated
     public static final String STRUTS_LOG_MISSING_PROPERTIES = STRUTS_OGNL_LOG_MISSING_PROPERTIES;
 
     /**
      * Enables caching of parsed OGNL expressions
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_OGNL_ENABLE_EXPRESSION_CACHE = "struts.ognl.enableExpressionCache";
 
     /**
      * Enables caching of parsed OGNL expressions
-     * @deprecated as of 2.6.  Use {@link #STRUTS_OGNL_ENABLE_EXPRESSION_CACHE} instead.
+     * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_ENABLE_EXPRESSION_CACHE} instead.
      */
     public static final String STRUTS_ENABLE_OGNL_EXPRESSION_CACHE = STRUTS_OGNL_ENABLE_EXPRESSION_CACHE;
 
@@ -325,7 +325,7 @@ public final class StrutsConstants {
      * For the optional LRU cache, once the maximum is reached, the least-recently-used (LRU) entry will be
      * removed when a new entry needs to be added (cache is fully-utilized).
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE = "struts.ognl.expressionCacheMaxSize";
 
@@ -337,19 +337,19 @@ public final class StrutsConstants {
      * Note:  When enabling LRU cache mode you must also set a maximum size (via {@link #STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE})
      * for it to be effective.  Otherwise, there is no condition to evict a LRU entry (cache has no limit).
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_OGNL_EXPRESSION_CACHE_LRU_MODE = "struts.ognl.expressionCacheLRUMode";
 
     /**
      * Enables evaluation of OGNL expressions
-     * @since 2.6
+     * @since 6.0.0
      */
     public static final String STRUTS_OGNL_ENABLE_EVAL_EXPRESSION = "struts.ognl.enableEvalExpression";
 
     /**
      * Enables evaluation of OGNL expressions
-     * @deprecated as of 2.6.  Use {@link #STRUTS_OGNL_ENABLE_EVAL_EXPRESSION} instead.
+     * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_ENABLE_EVAL_EXPRESSION} instead.
      */
     public static final String STRUTS_ENABLE_OGNL_EVAL_EXPRESSION = STRUTS_OGNL_ENABLE_EVAL_EXPRESSION;
 

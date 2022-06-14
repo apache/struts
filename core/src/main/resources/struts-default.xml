@@ -31,8 +31,8 @@
     and {@link com.opensymphony.xwork2.inject.Inject}
 -->
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.6//EN"
-    "http://struts.apache.org/dtds/struts-2.6.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
+        "struts-6.0.dtd">
 
 <struts>
 

@@ -23,7 +23,7 @@ import javax.servlet.ServletContext;
 /**
  * For components that have a dependence on the Servlet context.
  *
- * @since 2.6
+ * @since 6.0.0
  */
 public interface ServletContextAware {
 

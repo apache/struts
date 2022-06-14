@@ -81,7 +81,7 @@ public class SubmitTag extends AbstractClosingTag {
      *
      * @param escapeHtmlBody
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public void setEscapeHtmlBody(boolean escapeHtmlBody) {
         this.escapeHtmlBody = escapeHtmlBody;

@@ -29,7 +29,7 @@
 
     <artifactId>struts2-osgi-demo-bundle</artifactId>
     <packaging>bundle</packaging>
-    <name>DEPRECATED: Struts 2 OSGi Demo Bundle - since 2.6</name>
+    <name>DEPRECATED: Struts 2 OSGi Demo Bundle - since 6.0.0</name>
 
     <dependencies>
 

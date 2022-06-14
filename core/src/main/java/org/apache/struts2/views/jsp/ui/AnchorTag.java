@@ -154,7 +154,7 @@ public class AnchorTag extends AbstractClosingTag {
      *
      * @param escapeHtmlBody
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public void setEscapeHtmlBody(String escapeHtmlBody) {
         this.escapeHtmlBody = escapeHtmlBody;

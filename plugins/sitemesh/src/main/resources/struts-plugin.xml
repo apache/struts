@@ -22,8 +22,9 @@
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
 	"http://struts.apache.org/dtds/struts-2.5.dtd">
-    
+
 <struts>
     <bean class="org.apache.struts2.sitemesh.FreemarkerPageFilter" static="true" optional="true"/>
-    <bean class="org.apache.struts2.sitemesh.VelocityPageFilter" static="true" optional="true"/>
+    <!-- if you want to use Velocity with Sitemesh, please define this bean in your struts.xml -->
+    <!-- bean class="org.apache.struts2.sitemesh.VelocityPageFilter" static="true" optional="true"/ -->
 </struts>

@@ -47,6 +47,8 @@ public class TextareaTest extends AbstractUITagTest {
         tag.setId("the_id");
         tag.setOnkeyup("alert('hello');");
         tag.setReadonly("true");
+        tag.setMaxlength("100");
+        tag.setMinlength("10");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -81,6 +83,8 @@ public class TextareaTest extends AbstractUITagTest {
         tag.setId("the_id");
         tag.setOnkeyup("alert('hello');");
         tag.setReadonly("true");
+        tag.setMaxlength("100");
+        tag.setMinlength("10");
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).

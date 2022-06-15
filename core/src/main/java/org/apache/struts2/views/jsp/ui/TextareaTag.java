@@ -73,7 +73,7 @@ public class TextareaTag extends AbstractUITag {
     public void setWrap(String wrap) {
         this.wrap = wrap;
     }
-    
+
     public void setMaxlength(String maxlength) {
         this.maxlength = maxlength;
     }
@@ -100,6 +100,8 @@ public class TextareaTag extends AbstractUITag {
         this.readonly = null;
         this.rows = null;
         this.wrap = null;
+        this.maxlength = null;
+        this.minlength = null;
     }
 
 }

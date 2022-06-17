@@ -45,17 +45,17 @@
 <#if parameters.title?has_content>
  title="${parameters.title}"<#rt/>
 </#if>
+<#if parameters.maxlength?has_content>
+ maxlength="${parameters.maxlength}"<#rt/>
+</#if>
+<#if parameters.minlength?has_content>
+ minlength="${parameters.minlength}"<#rt/>
+</#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 ><#rt/>
 <#if parameters.nameValue??>
 <@s.property value="parameters.nameValue"/><#t/>
-</#if>
-<#if parameters.maxlength?has_content>
- maxlength="${parameters.maxlength}"<#rt/>
-</#if>
-<#if parameters.minlength?has_content>
- minlength="${parameters.minlength}"<#rt/>
 </#if>
 </textarea>

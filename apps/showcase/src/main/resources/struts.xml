@@ -78,6 +78,8 @@
 
     <include file="struts-async.xml" />
 
+    <include file="struts-dispatcher.xml" />
+
     <package name="default" extends="struts-default">
         <interceptors>
             <interceptor-stack name="crudStack">

@@ -244,6 +244,8 @@
                             <li><s:url var="url" namespace="/modelDriven" action="modelDriven"/><s:a
                                     href="%{url}">Model Driven</s:a></li>
                             <li><s:a value="/async/index.html">Async</s:a></li>
+                            <li><s:a value="/dispatcher/dispatch.action">Dispatcher result - dispatch</s:a></li>
+                            <li><s:a value="/dispatcher/forward.action">Dispatcher result - forward</s:a></li>
                         </ul>
                     </li>
                     <li class="dropdown">

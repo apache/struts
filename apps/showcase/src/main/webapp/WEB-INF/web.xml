@@ -60,16 +60,22 @@
     <filter-mapping>
         <filter-name>struts-prepare</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <filter-mapping>
         <filter-name>sitemesh</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <filter-mapping>
         <filter-name>struts-execute</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <listener>
@@ -81,7 +87,7 @@
             org.apache.struts2.tiles.StrutsTilesListener
         </listener-class>
     </listener>
-    
+
     <!-- Chat Example in Showcase -->
     <listener>
     	<listener-class>
@@ -92,7 +98,7 @@
     <listener>
         <listener-class>org.apache.struts2.dispatcher.listener.StrutsListener</listener-class>
     </listener>
-	
+
     <!-- SNIPPET START: dwr -->
 
     <servlet>

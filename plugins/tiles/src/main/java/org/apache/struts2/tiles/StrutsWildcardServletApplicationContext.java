@@ -102,7 +102,7 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
         File localFile = new File(localePath);
         if (localFile.exists()) {
             try {
-                return new URLApplicationResource(localePath, localFile.toURI().toURL());
+                return new StrutsApplicationResource(localFile.toURI().toURL());
             } catch (MalformedURLException e) {
                 LOG.warn("Cannot access [{}]", localePath, e);
                 return null;
@@ -121,8 +121,7 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
 
         for (Map.Entry<String, URL> entry : matches.entrySet()) {
             if (pattern.matcher(entry.getKey()).matches()) {
-                URL url = entry.getValue();
-                resources.add(new URLApplicationResource(url.toExternalForm(), url));
+                resources.add(new StrutsApplicationResource(entry.getValue()));
             }
         }
 

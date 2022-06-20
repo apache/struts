@@ -217,8 +217,8 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                 .factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON)
                 .factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON)
 
-                .factory(ExpressionCacheFactory.class, "defaultOgnlExpressionCacheFactory", DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
-                .factory(BeanInfoCacheFactory.class, "defaultOgnlBeanInfoCacheFactory", DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
+                .factory(ExpressionCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
+                .factory(BeanInfoCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
                 .factory(OgnlUtil.class, Scope.SINGLETON)
                 .factory(CollectionConverter.class, Scope.SINGLETON)
                 .factory(ArrayConverter.class, Scope.SINGLETON)

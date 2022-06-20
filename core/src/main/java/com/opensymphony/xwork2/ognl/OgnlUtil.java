@@ -96,6 +96,7 @@ public class OgnlUtil {
      * @param ognlExpressionCacheFactory factory for Expression cache instance.  If null, it uses a default
      * @param ognlBeanInfoCacheFactory factory for BeanInfo cache instance.  If null, it uses a default
      */
+    @Inject
     public OgnlUtil(
             @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, required = false) ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
             @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, required = false) BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory

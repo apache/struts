@@ -29,7 +29,7 @@
 
     <artifactId>struts2-gxp-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>DEPRECATED: Struts 2 GXP Plugin - since 2.6</name>
+    <name>DEPRECATED: Struts 2 GXP Plugin - since 6.0.0</name>
 
     <dependencies>
         <dependency>

@@ -512,7 +512,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
      *
      * @param expression of result
      * @return true|false
-     * @since 2.6
+     * @since 6.0.0
      */
     protected boolean isAcceptableExpression(String expression) {
         NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);

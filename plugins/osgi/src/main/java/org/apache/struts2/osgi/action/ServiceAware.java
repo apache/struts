@@ -25,7 +25,7 @@ import java.util.List;
  * registered with the type of the parameterized type
  *
  * @param <T> The type of the service
- * @since 2.6
+ * @since 6.0.0
  */
 public interface ServiceAware<T> {
 

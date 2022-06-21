@@ -21,7 +21,7 @@ package org.apache.struts2.portlet.action;
 import javax.portlet.PortletResponse;
 
 /**
- * @since 2.6
+ * @since 6.0.0
  */
 public interface PortletResponseAware {
 

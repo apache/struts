@@ -29,7 +29,7 @@ import java.util.Map;
  * Please note that the {@link CookieInterceptor} needs to be
  * activated to receive a cookies map.
  *
- * @since 2.6
+ * @since 6.0.0
  */
 public interface CookiesAware {
     /**

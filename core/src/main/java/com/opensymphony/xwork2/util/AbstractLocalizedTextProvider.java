@@ -235,7 +235,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      *
      * @param bundleName The bundle to remove from the bundle map
      *
-     * @deprecated A "no-op" since 2.6.  Use {@link #clearBundle(java.lang.String, java.util.Locale)} instead.
+     * @deprecated A "no-op" since 6.0.0.  Use {@link #clearBundle(java.lang.String, java.util.Locale)} instead.
      */
     public void clearBundle(final String bundleName) {
         LOG.debug("No-op.  Did NOT clear resource bundle [{}], result: false.", bundleName);
@@ -248,7 +248,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * @param bundleName The bundle (combined with locale) to remove from the bundle map
      * @param locale     Provides the locale to combine with the bundle to get the key
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     protected void clearBundle(final String bundleName, Locale locale) {
         final String key = createMissesKey(String.valueOf(getCurrentThreadContextClassLoader().hashCode()), bundleName, locale);
@@ -266,7 +266,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      *   {@link AbstractLocalizedTextProvider} has already been used for failed bundle
      *   lookups of a given key, or some transitory state made a bundle lookup fail.
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     protected void clearMissingBundlesCache() {
         missingBundles.clear();
@@ -313,7 +313,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      * The <code>clearCache()</code> methods have been available since Java 1.6, so
      * it is anticipated the logic will work on any subsequent JVM versions.
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     private void clearResourceBundleClassloaderCaches() {
         final ClassLoader ccl = getCurrentThreadContextClassLoader();
@@ -436,7 +436,7 @@ abstract class AbstractLocalizedTextProvider implements LocalizedTextProvider {
      *
      * @param searchDefaultBundlesFirst provide {@link String} "true" or "false" to set the flag state accordingly.
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     @Inject(value = StrutsConstants.STRUTS_I18N_SEARCH_DEFAULTBUNDLES_FIRST, required = false)
     public void setSearchDefaultBundlesFirst(String searchDefaultBundlesFirst) {

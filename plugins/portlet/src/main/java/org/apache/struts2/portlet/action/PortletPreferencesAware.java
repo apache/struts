@@ -26,7 +26,7 @@ import javax.portlet.PortletPreferences;
  * implement this interface.  If running in a servlet environment, an
  * appropriate testing implementation will be provided.
  *
- * @since 2.6
+ * @since 6.0.0
  */
 public interface PortletPreferencesAware {
 

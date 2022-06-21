@@ -29,7 +29,7 @@
 
     <artifactId>struts2-portlet-mocks-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>DEPRECATED: Struts 2 Portlet Mocks Plugin - since 2.6</name>
+    <name>DEPRECATED: Struts 2 Portlet Mocks Plugin - since 6.0.0</name>
 
     <dependencies>
         <dependency>

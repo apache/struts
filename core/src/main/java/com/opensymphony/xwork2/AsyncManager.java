@@ -24,7 +24,7 @@ import java.util.concurrent.Callable;
  * Adds support for invoke async actions. This allows us to support action methods that return {@link Callable}
  * as well as invoking them in separate not-container thread then executing the result in another container thread.
  *
- * @since 2.6
+ * @since 6.0.0
  */
 public interface AsyncManager {
     boolean hasAsyncActionResult();

@@ -28,7 +28,7 @@ import org.apache.struts2.dispatcher.HttpParameters;
  * One common use for this is to have the action propagate parameters to internally instantiated data
  * objects.
  *
- * @since 2.6
+ * @since 6.0.0
  */
 public interface ParametersAware {
 

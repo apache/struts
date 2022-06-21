@@ -264,7 +264,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
      * Unit test to confirm expected behaviour of "clearing methods" provided to
      * StrutsLocalizedTextProvider (from AbstractLocalizedTextProvider).
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public void testLocalizedTextProviderClearingMethods() {
         TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
@@ -331,7 +331,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
      * Unit test to confirm the basic behaviour of bundle reload methods provided to
      * StrutsLocalizedTextProvider (from AbstractLocalizedTextProvider).
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     public void testLocalizedTextProviderReloadMethods() {
         TestStrutsLocalizedTextProvider testStrutsLocalizedTextProvider = new TestStrutsLocalizedTextProvider();
@@ -582,7 +582,7 @@ public class StrutsLocalizedTextProviderTest extends XWorkTestCase {
     /**
      * Basic test class to allow specific testing of StrutsLocalizedTextProvider.
      *
-     * @since 2.6
+     * @since 6.0.0
      */
     class TestStrutsLocalizedTextProvider extends StrutsLocalizedTextProvider {
 

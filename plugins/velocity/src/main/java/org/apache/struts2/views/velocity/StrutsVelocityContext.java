@@ -36,7 +36,7 @@ public class StrutsVelocityContext extends VelocityContext {
      *
      * @param chainedContexts Existing Velocity contexts to chain to
      * @param stack Struts ValueStack
-     * @since 2.6
+     * @since 6.0.0
      */
     public StrutsVelocityContext(List<VelocityContext> chainedContexts, ValueStack stack) {
         this.chainedContexts = chainedContexts;

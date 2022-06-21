@@ -538,7 +538,7 @@ public class Component {
      * Override to set if body content should be HTML-escaped.
      *
      * @return always true (default) for this component.
-     * @since 2.6
+     * @since 6.0.0
      */
     public boolean escapeHtmlBody() {
         return escapeHtmlBody;
@@ -600,7 +600,7 @@ public class Component {
      *
      * @param expression of the component
      * @return true|false
-     * @since 2.6
+     * @since 6.0.0
      */
     protected boolean isAcceptableExpression(String expression) {
         NotExcludedAcceptedPatternsChecker.IsAllowed isAllowed = notExcludedAcceptedPatterns.isAllowed(expression);

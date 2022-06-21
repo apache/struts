@@ -81,6 +81,28 @@ public class DateTest extends StrutsInternalTestCase {
         assertEquals(expected, writer.toString());
     }
 
+    public void testJavaSqlDate() {
+        // given
+        Date date = new Date(stack);
+        date.setDateFormatter(new SimpleDateFormatAdapter());
+
+        java.sql.Date now = new java.sql.Date(System.currentTimeMillis());
+
+        String expected = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, ActionContext.getContext().getLocale()).format(now);
+        context.put("myDate", now);
+
+        Writer writer = new StringWriter();
+
+        // when
+        date.setName("myDate");
+        date.setNice(false);
+        date.start(writer);
+        date.end(writer, "");
+
+        // then
+        assertEquals(expected, writer.toString());
+    }
+
     @Override
     public void setUp() throws Exception {
         super.setUp();

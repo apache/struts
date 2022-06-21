@@ -293,7 +293,9 @@ public class Date extends ContextBean {
         final ZoneId tz = getTimeZone();
         // find the name on the valueStack
         Object dateObject = findValue(name);
-        if (dateObject instanceof java.util.Date) {
+        if (dateObject instanceof java.sql.Date) {
+            date = ((java.sql.Date) dateObject).toLocalDate().atStartOfDay(tz);
+        } else if (dateObject instanceof java.util.Date) {
             date = ((java.util.Date) dateObject).toInstant().atZone(tz);
         } else if (dateObject instanceof Calendar) {
             date = ((Calendar) dateObject).toInstant().atZone(tz);

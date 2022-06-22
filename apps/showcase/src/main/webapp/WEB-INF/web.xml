@@ -111,6 +111,13 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>strutsServlet</servlet-name>
+        <servlet-class>org.apache.struts2.dispatcher.servlet.StrutsServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+
     <!-- Sitemesh Freemarker and Velocity Decorator Servlets. Shares configuration with Struts.-->
     <servlet>
         <servlet-name>sitemesh-freemarker</servlet-name>
@@ -119,7 +126,7 @@
             <param-name>default_encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>3</load-on-startup>
     </servlet>
 
     <servlet>
@@ -129,14 +136,7 @@
             <param-name>default_encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <servlet-name>strutsServlet</servlet-name>
-        <servlet-class>org.apache.struts2.dispatcher.servlet.StrutsServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-        <async-supported>true</async-supported>
+        <load-on-startup>4</load-on-startup>
     </servlet>
 
     <servlet-mapping>

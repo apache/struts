@@ -36,6 +36,7 @@
     <filter>
         <filter-name>struts-prepare</filter-name>
         <filter-class>org.apache.struts2.dispatcher.filter.StrutsPrepareFilter</filter-class>
+        <async-supported>true</async-supported>
     </filter>
 
     <filter>

@@ -42,11 +42,13 @@
     <filter>
         <filter-name>struts-execute</filter-name>
         <filter-class>org.apache.struts2.dispatcher.filter.StrutsExecuteFilter</filter-class>
+        <async-supported>true</async-supported>
     </filter>
 
     <filter>
         <filter-name>sitemesh</filter-name>
         <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+        <async-supported>true</async-supported>
     </filter>
 
     <filter-mapping>

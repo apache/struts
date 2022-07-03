@@ -104,4 +104,60 @@ public class StrutsJavaConfigurationProviderTest {
         Assert.assertTrue(names.contains("struts"));
         Assert.assertTrue(names.contains("struts.test.bean"));
     }
+
+    @Test
+    /**
+     * This test is purely to provide code coverage for {@link AbstractBeanSelectionProvider}.
+     * It uses an arbitrary setup to ensure a code path not followed in the registration test
+     * is traversed.
+     */
+    public void testAbstractBeanProviderCoverage() throws Exception {
+        final ConstantConfig constantConfig = new ConstantConfig();
+        final String expectedUnknownHandler = "expectedUnknownHandler";
+
+        StrutsJavaConfiguration javaConfig = new StrutsJavaConfiguration() {
+            @Override
+            public List<String> unknownHandlerStack() {
+                return Collections.singletonList(expectedUnknownHandler);
+            }
+
+            @Override
+            public List<ConstantConfig> constants() {
+                return Collections.singletonList(constantConfig);
+            }
+
+            @Override
+            public List<BeanConfig> beans() {
+                return Arrays.asList(
+                    new BeanConfig(TestBean.class, "struts")
+                );
+            }
+
+            @Override
+            public Optional<BeanSelectionConfig> beanSelection() {
+                return Optional.of(new BeanSelectionConfig(TestBeanSelectionProvider.class, "testBeans"));
+            }
+        };
+
+        StrutsJavaConfigurationProvider provider = new StrutsJavaConfigurationProvider(javaConfig);
+        Configuration configuration = new MockConfiguration();
+        ContainerBuilder builder = new ContainerBuilder();
+        LocatableProperties props = new LocatableProperties();
+
+        provider.init(configuration);
+        provider.register(builder, props);
+
+        props.put(CodeCoverageTestClass1.ALIAS_KEY, CodeCoverageTestClass1.ALIAS_VALUE);
+        TestBeanSelectionProvider testBeanSelectionProvider = new TestBeanSelectionProvider();
+        testBeanSelectionProvider.aliasCallCoverage(CodeCoverageTestClass1.class, builder, props, CodeCoverageTestClass1.ALIAS_KEY, Scope.THREAD);
+    }
+
+    final class CodeCoverageTestClass1 extends Object {
+        public static final String ALIAS_KEY = "testAliasKey";
+        public static final String ALIAS_VALUE  = "testAliasValue";
+
+        public CodeCoverageTestClass1() {
+            super();
+        }
+    }
 }

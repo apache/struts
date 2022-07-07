@@ -1,0 +1,4 @@
+<input type="radio" name="status" id="statusINIT" checked="checked" value="INIT"/>
+<label for="statusINIT">INIT</label>
+<input type="radio" name="status" id="statusCOMPLETED" value="COMPLETED"/>
+<label for="statusCOMPLETED">COMPLETED</label>

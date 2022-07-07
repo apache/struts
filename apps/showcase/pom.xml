@@ -150,9 +150,9 @@
 
         <!-- BeanValidation Example -->
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.1.2.Final</version>
+            <version>${hibernate-validator.version}</version>
         </dependency>
 
     </dependencies>

@@ -21,6 +21,7 @@ package org.apache.struts2.dispatcher.mapper;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
@@ -29,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.PrefixTrie;
 
@@ -115,7 +115,7 @@ public class DefaultActionMapper implements ActionMapper {
     protected boolean allowDynamicMethodCalls = false;
     protected boolean allowSlashesInActionNames = false;
     protected boolean alwaysSelectFullNamespace = false;
-    protected PrefixTrie prefixTrie = null;
+    protected PrefixTrie prefixTrie;
 
     protected Pattern allowedNamespaceNames = Pattern.compile("[a-zA-Z0-9._/\\-]*");
     protected String defaultNamespaceName = "/";
@@ -139,39 +139,35 @@ public class DefaultActionMapper implements ActionMapper {
     public DefaultActionMapper() {
         prefixTrie = new PrefixTrie() {
             {
-                put(METHOD_PREFIX, new ParameterAction() {
-                    public void execute(String key, ActionMapping mapping) {
-                        if (allowDynamicMethodCalls) {
-                            mapping.setMethod(cleanupMethodName(key.substring(METHOD_PREFIX.length())));
-                        }
+                put(METHOD_PREFIX, (ParameterAction) (key, mapping) -> {
+                    if (allowDynamicMethodCalls) {
+                        mapping.setMethod(cleanupMethodName(key.substring(METHOD_PREFIX.length())));
                     }
                 });
 
-                put(ACTION_PREFIX, new ParameterAction() {
-                    public void execute(final String key, ActionMapping mapping) {
-                        if (allowActionPrefix) {
-                            String name = key.substring(ACTION_PREFIX.length());
-                            if (allowDynamicMethodCalls) {
-                                int bang = name.indexOf('!');
-                                if (bang != -1) {
-                                    String method = cleanupMethodName(name.substring(bang + 1));
-                                    mapping.setMethod(method);
-                                    name = name.substring(0, bang);
-                                }
+                put(ACTION_PREFIX, (ParameterAction) (key, mapping) -> {
+                    if (allowActionPrefix) {
+                        String name = key.substring(ACTION_PREFIX.length());
+                        if (allowDynamicMethodCalls) {
+                            int bang = name.indexOf('!');
+                            if (bang != -1) {
+                                String method = cleanupMethodName(name.substring(bang + 1));
+                                mapping.setMethod(method);
+                                name = name.substring(0, bang);
                             }
-                            String actionName = cleanupActionName(name);
-                            if (allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
-                                if (actionName.startsWith("/")) {
-                                    actionName = actionName.substring(1);
-                                }
-                            }
-                            if (!allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
-                                if (actionName.lastIndexOf('/') != -1) {
-                                    actionName = actionName.substring(actionName.lastIndexOf('/') + 1);
-                                }
-                            }
-                            mapping.setName(actionName);
                         }
+                        String actionName = cleanupActionName(name);
+                        if (allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
+                            if (actionName.startsWith("/")) {
+                                actionName = actionName.substring(1);
+                            }
+                        }
+                        if (!allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
+                            if (actionName.lastIndexOf('/') != -1) {
+                                actionName = actionName.substring(actionName.lastIndexOf('/') + 1);
+                            }
+                        }
+                        mapping.setName(actionName);
                     }
                 });
 
@@ -293,6 +289,7 @@ public class DefaultActionMapper implements ActionMapper {
         }
 
         parseNameAndNamespace(uri, mapping, configManager);
+        extractMethodName(mapping, configManager);
         handleSpecialParameters(request, mapping);
         return parseActionName(mapping);
     }
@@ -324,9 +321,8 @@ public class DefaultActionMapper implements ActionMapper {
     public void handleSpecialParameters(HttpServletRequest request, ActionMapping mapping) {
         // handle special parameter prefixes.
         Set<String> uniqueParameters = new HashSet<>();
-        Map parameterMap = request.getParameterMap();
-        for (Object o : parameterMap.keySet()) {
-            String key = (String) o;
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        for (String key : parameterMap.keySet()) {
 
             // Strip off the image button location info, if found
             if (key.endsWith(".x") || key.endsWith(".y")) {
@@ -353,33 +349,33 @@ public class DefaultActionMapper implements ActionMapper {
      * @param configManager configuration manager
      */
     protected void parseNameAndNamespace(String uri, ActionMapping mapping, ConfigurationManager configManager) {
-        String namespace, name;
+        String actionNamespace, actionName;
         int lastSlash = uri.lastIndexOf('/');
         if (lastSlash == -1) {
-            namespace = "";
-            name = uri;
+            actionNamespace = "";
+            actionName = uri;
         } else if (lastSlash == 0) {
             // ww-1046, assume it is the root namespace, it will fallback to
             // default
             // namespace anyway if not found in root namespace.
-            namespace = "/";
-            name = uri.substring(lastSlash + 1);
+            actionNamespace = "/";
+            actionName = uri.substring(lastSlash + 1);
         } else if (alwaysSelectFullNamespace) {
             // Simply select the namespace as everything before the last slash
-            namespace = uri.substring(0, lastSlash);
-            name = uri.substring(lastSlash + 1);
+            actionNamespace = uri.substring(0, lastSlash);
+            actionName = uri.substring(lastSlash + 1);
         } else {
             // Try to find the namespace in those defined, defaulting to ""
             Configuration config = configManager.getConfiguration();
             String prefix = uri.substring(0, lastSlash);
-            namespace = "";
+            actionNamespace = "";
             boolean rootAvailable = false;
             // Find the longest matching namespace, defaulting to the default
             for (PackageConfig cfg : config.getPackageConfigs().values()) {
                 String ns = cfg.getNamespace();
                 if (ns != null && prefix.startsWith(ns) && (prefix.length() == ns.length() || prefix.charAt(ns.length()) == '/')) {
-                    if (ns.length() > namespace.length()) {
-                        namespace = ns;
+                    if (ns.length() > actionNamespace.length()) {
+                        actionNamespace = ns;
                     }
                 }
                 if ("/".equals(ns)) {
@@ -387,23 +383,23 @@ public class DefaultActionMapper implements ActionMapper {
                 }
             }
 
-            name = uri.substring(namespace.length() + 1);
+            actionName = uri.substring(actionNamespace.length() + 1);
 
             // Still none found, use root namespace if found
-            if (rootAvailable && "".equals(namespace)) {
-                namespace = "/";
+            if (rootAvailable && "".equals(actionNamespace)) {
+                actionNamespace = "/";
             }
         }
 
         if (!allowSlashesInActionNames) {
-            int pos = name.lastIndexOf('/');
-            if (pos > -1 && pos < name.length() - 1) {
-                name = name.substring(pos + 1);
+            int pos = actionName.lastIndexOf('/');
+            if (pos > -1 && pos < actionName.length() - 1) {
+                actionName = actionName.substring(pos + 1);
             }
         }
 
-        mapping.setNamespace(cleanupNamespaceName(namespace));
-        mapping.setName(cleanupActionName(name));
+        mapping.setNamespace(cleanupNamespaceName(actionNamespace));
+        mapping.setName(cleanupActionName(actionName));
     }
 
     /**
@@ -452,6 +448,30 @@ public class DefaultActionMapper implements ActionMapper {
             LOG.warn("{} did not match allowed method names {} - default method {} will be used!", rawMethodName, allowedMethodNames, defaultMethodName);
             return defaultMethodName;
         }
+    }
+
+    /**
+     * Reads defined method name for a given action from configuration
+     *
+     * @param mapping current instance of {@link ActionMapping}
+     * @param configurationManager current instance of {@link ConfigurationManager}
+     */
+    protected void extractMethodName(ActionMapping mapping, ConfigurationManager configurationManager) {
+        String methodName = null;
+        for (PackageConfig cfg : configurationManager.getConfiguration().getPackageConfigs().values()) {
+            if (cfg.getNamespace().equals(mapping.getNamespace())) {
+                ActionConfig actionCfg = cfg.getActionConfigs().get(mapping.getName());
+                if (actionCfg != null) {
+                    methodName = actionCfg.getMethodName();
+                    LOG.trace("Using method: {} for action mapping: {}", methodName, mapping);
+                } else {
+                    LOG.debug("No action config for action mapping: {}", mapping);
+                }
+                break;
+            }
+        }
+
+        mapping.setMethod(methodName);
     }
 
     /**
@@ -551,7 +571,7 @@ public class DefaultActionMapper implements ActionMapper {
         String extension = lookupExtension(mapping.getExtension());
 
         if (extension != null) {
-            if (extension.length() == 0 || (extension.length() > 0 && uri.indexOf('.' + extension) == -1)) {
+            if (extension.length() == 0 || uri.indexOf('.' + extension) == -1) {
                 if (extension.length() > 0) {
                     uri.append(".").append(extension);
                 }

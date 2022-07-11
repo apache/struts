@@ -126,18 +126,18 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
                 LOG.trace("Checking if {} is a static resource", uri);
                 boolean handled = execute.executeStaticResourceRequest(request, response);
                 if (!handled) {
-                    LOG.trace("Assuming uri {} as a normal action", uri);
+                    LOG.trace("Uri {} is not a static resource, assuming action", uri);
                     prepare.setEncodingAndLocale(request, response);
                     prepare.createActionContext(request, response);
                     prepare.assignDispatcherToThread();
-                    request = prepare.wrapRequest(request);
-                    ActionMapping mapping = prepare.findActionMapping(request, response, true);
+                    HttpServletRequest wrappedRequest = prepare.wrapRequest(request);
+                    ActionMapping mapping = prepare.findActionMapping(wrappedRequest, response, true);
                     if (mapping == null) {
                         LOG.trace("Cannot find mapping for {}, passing to other filters", uri);
                         chain.doFilter(request, response);
                     } else {
                         LOG.trace("Found mapping {} for {}", mapping, uri);
-                        execute.executeAction(request, response, mapping);
+                        execute.executeAction(wrappedRequest, response, mapping);
                     }
                 }
             }

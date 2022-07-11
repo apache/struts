@@ -36,16 +36,19 @@
     <filter>
         <filter-name>struts-prepare</filter-name>
         <filter-class>org.apache.struts2.dispatcher.filter.StrutsPrepareFilter</filter-class>
+        <async-supported>true</async-supported>
     </filter>
 
     <filter>
         <filter-name>struts-execute</filter-name>
         <filter-class>org.apache.struts2.dispatcher.filter.StrutsExecuteFilter</filter-class>
+        <async-supported>true</async-supported>
     </filter>
 
     <filter>
         <filter-name>sitemesh</filter-name>
         <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+        <async-supported>true</async-supported>
     </filter>
 
     <filter-mapping>
@@ -56,16 +59,22 @@
     <filter-mapping>
         <filter-name>struts-prepare</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <filter-mapping>
         <filter-name>sitemesh</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <filter-mapping>
         <filter-name>struts-execute</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <listener>
@@ -105,6 +114,13 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>strutsServlet</servlet-name>
+        <servlet-class>org.apache.struts2.dispatcher.servlet.StrutsServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+
     <!-- Sitemesh Freemarker and Velocity Decorator Servlets. Shares configuration with Struts.-->
     <servlet>
         <servlet-name>sitemesh-freemarker</servlet-name>
@@ -113,7 +129,7 @@
             <param-name>default_encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>3</load-on-startup>
     </servlet>
 
     <servlet>
@@ -123,14 +139,7 @@
             <param-name>default_encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <servlet-name>strutsServlet</servlet-name>
-        <servlet-class>org.apache.struts2.dispatcher.servlet.StrutsServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-        <async-supported>true</async-supported>
+        <load-on-startup>4</load-on-startup>
     </servlet>
 
     <servlet-mapping>

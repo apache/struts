@@ -83,6 +83,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
@@ -612,20 +613,12 @@ public class Dispatcher {
         }
 
         try {
-            String namespace = mapping.getNamespace();
-            String name = mapping.getName();
-            String method = mapping.getMethod();
+            String actionNamespace = mapping.getNamespace();
+            String actionName = mapping.getName();
+            String actionMethod = mapping.getMethod();
 
-            ActionProxy proxy;
-
-            //check if we are probably in an async resuming
-            ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
-            if (invocation == null || invocation.isExecuted()) {
-                proxy = getContainer().getInstance(ActionProxyFactory.class).createActionProxy(namespace, name, method,
-                    extraContext, true, false);
-            } else {
-                proxy = invocation.getProxy();
-            }
+            LOG.trace("Processing action, namespace: {}, name: {}, method: {}", actionNamespace, actionName, actionMethod);
+            ActionProxy proxy = prepareActionProxy(extraContext, actionNamespace, actionName, actionMethod);
 
             request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
 
@@ -654,6 +647,36 @@ public class Dispatcher {
                 throw new ServletException(e);
             }
         }
+    }
+
+    private ActionProxy prepareActionProxy(Map<String, Object> extraContext, String actionNamespace, String actionName, String actionMethod) {
+        ActionProxy proxy;
+        //check if we are probably in an async resuming
+        ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
+        if (invocation == null || invocation.isExecuted()) {
+            LOG.trace("Creating a new action, namespace: {}, name: {}, method: {}", actionNamespace, actionName, actionMethod);
+            proxy = createActionProxy(actionNamespace, actionName, actionMethod, extraContext);
+        } else {
+            proxy = invocation.getProxy();
+            if (isSameAction(proxy, actionNamespace, actionName, actionMethod)) {
+                LOG.trace("Proxy: {} matches requested action, namespace: {}, name: {}, method: {} - reusing proxy", proxy, actionNamespace, actionName, actionMethod);
+            } else {
+                LOG.trace("Proxy: {} doesn't match action namespace: {}, name: {}, method: {} - creating new proxy", proxy, actionNamespace, actionName, actionMethod);
+                proxy = createActionProxy(actionNamespace, actionName, actionMethod, extraContext);
+            }
+        }
+        return proxy;
+    }
+
+    private ActionProxy createActionProxy(String namespace, String name, String method, Map<String, Object> extraContext) {
+        ActionProxyFactory actionProxyFactory = getContainer().getInstance(ActionProxyFactory.class);
+        return actionProxyFactory.createActionProxy(namespace, name, method, extraContext, true, false);
+    }
+
+    private boolean isSameAction(ActionProxy actionProxy, String namespace, String actionName, String method) {
+        return Objects.equals(namespace, actionProxy.getNamespace())
+            && Objects.equals(actionName, actionProxy.getActionName())
+            && Objects.equals(method, actionProxy.getMethod());
     }
 
     /**

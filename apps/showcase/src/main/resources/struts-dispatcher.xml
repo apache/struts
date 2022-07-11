@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,17 +19,22 @@
  * under the License.
  */
 -->
-<Configuration>
-    <Appenders>
-        <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%-5p] %C{2} (%F:%L) - %m%n"/>
-        </Console>
-    </Appenders>
-    <Loggers>
-        <Root level="info">
-            <AppenderRef ref="STDOUT"/>
-        </Root>
-        <Logger name="org.apache.struts2" level="info"/>
-        <Logger name="com.opensymphony.xwork2" level="info"/>
-    </Loggers>
-</Configuration>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <package name="dispatcher" extends="struts-default" namespace="/dispatcher">
+
+        <action name="dispatch">
+            <result type="dispatcher">
+                /WEB-INF/dispatcher/dispatch-result.jsp
+            </result>
+        </action>
+
+        <action name="forward">
+            <result type="dispatcher">/dispatcher/dispatch.action</result>
+        </action>
+
+    </package>
+</struts>

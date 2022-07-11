@@ -21,6 +21,7 @@ package org.apache.struts2.dispatcher;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.config.Configuration;
@@ -30,7 +31,6 @@ import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import org.apache.struts2.ServletActionContext;
@@ -54,24 +54,23 @@ import java.util.Map;
 
 /**
  * Test case for Dispatcher.
- *
  */
 public class DispatcherTest extends StrutsInternalTestCase {
 
-    public void testDefaultResurceBundlePropertyLoaded() throws Exception {
+    public void testDefaultResourceBundlePropertyLoaded() {
         LocalizedTextProvider localizedTextProvider = container.getInstance(LocalizedTextProvider.class);
 
         // some i18n messages from xwork-messages.properties
         assertEquals(localizedTextProvider.findDefaultText("xwork.error.action.execution", Locale.US),
-                "Error during Action invocation");
+            "Error during Action invocation");
 
         // some i18n messages from struts-messages.properties
         assertEquals(localizedTextProvider.findDefaultText("struts.messages.error.uploading", Locale.US,
-                        new Object[] { "some error messages" }),
-                "Error uploading: some error messages");
+                new Object[]{"some error messages"}),
+            "Error uploading: some error messages");
     }
 
-    public void testPrepareSetEncodingProperly() throws Exception {
+    public void testPrepareSetEncodingProperly() {
         HttpServletRequest req = new MockHttpServletRequest();
         HttpServletResponse res = new MockHttpServletResponse();
 
@@ -84,7 +83,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         assertEquals(res.getCharacterEncoding(), "utf-8");
     }
 
-    public void testEncodingForXMLHttpRequest() throws Exception {
+    public void testEncodingForXMLHttpRequest() {
         // given
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.addHeader("X-Requested-With", "XMLHttpRequest");
@@ -103,7 +102,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         assertEquals(res.getCharacterEncoding(), "UTF-8");
     }
 
-    public void testSetEncodingIfDiffer() throws Exception {
+    public void testSetEncodingIfDiffer() {
         // given
         Mock mock = new Mock(HttpServletRequest.class);
         mock.expectAndReturn("getCharacterEncoding", "utf-8");
@@ -127,7 +126,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mock.verify();
     }
 
-    public void testPrepareSetEncodingPropertyWithMultipartRequest() throws Exception {
+    public void testPrepareSetEncodingPropertyWithMultipartRequest() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
 
@@ -147,7 +146,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         req.setMethod("post");
         req.setContentType("multipart/form-data; boundary=asdcvb345asd");
-        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+        Dispatcher du = initDispatcher(Collections.emptyMap());
         du.prepare(req, res);
         HttpServletRequest wrapped = du.wrapRequest(req);
 
@@ -160,7 +159,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         req.setMethod("post");
         req.setContentType("multipart/form-data; boundary=01=23a.bC:D((e)d'z?p+o_r,e-");
-        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+        Dispatcher du = initDispatcher(Collections.emptyMap());
         du.prepare(req, res);
         HttpServletRequest wrapped = du.wrapRequest(req);
 
@@ -173,46 +172,46 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         req.setMethod("post");
         req.setContentType("multipart/form-data; boundary=01=2;3a.bC:D((e)d'z?p+o_r,e-");
-        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+        Dispatcher du = initDispatcher(Collections.emptyMap());
         du.prepare(req, res);
         HttpServletRequest wrapped = du.wrapRequest(req);
 
         assertFalse(wrapped instanceof MultiPartRequestWrapper);
     }
 
-    public void testDispatcherListener() throws Exception {
+    public void testDispatcherListener() {
 
-    	final DispatcherListenerState state = new DispatcherListenerState();
+        final DispatcherListenerState state = new DispatcherListenerState();
 
-    	Dispatcher.addDispatcherListener(new DispatcherListener() {
-			public void dispatcherDestroyed(Dispatcher du) {
-				state.isDestroyed = true;
-			}
-			public void dispatcherInitialized(Dispatcher du) {
-				state.isInitialized = true;
-			}
-    	});
+        Dispatcher.addDispatcherListener(new DispatcherListener() {
+            public void dispatcherDestroyed(Dispatcher du) {
+                state.isDestroyed = true;
+            }
+
+            public void dispatcherInitialized(Dispatcher du) {
+                state.isInitialized = true;
+            }
+        });
 
 
-    	assertFalse(state.isDestroyed);
-    	assertFalse(state.isInitialized);
+        assertFalse(state.isDestroyed);
+        assertFalse(state.isInitialized);
 
-        Dispatcher du = initDispatcher(new HashMap<String, String>() );
+        Dispatcher du = initDispatcher(new HashMap<>());
 
-    	assertTrue(state.isInitialized);
+        assertTrue(state.isInitialized);
 
-    	du.cleanup();
+        du.cleanup();
 
-    	assertTrue(state.isDestroyed);
+        assertTrue(state.isDestroyed);
     }
 
-
     public void testConfigurationManager() {
-    	Dispatcher du;
-    	final InternalConfigurationManager configurationManager = new InternalConfigurationManager(Container.DEFAULT_NAME);
-    	try {
-    		du = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), configurationManager);
-    		du.init();
+        Dispatcher du;
+        final InternalConfigurationManager configurationManager = new InternalConfigurationManager(Container.DEFAULT_NAME);
+        try {
+            du = new MockDispatcher(new MockServletContext(), new HashMap<>(), configurationManager);
+            du.init();
             Dispatcher.setInstance(du);
 
             assertFalse(configurationManager.destroyConfiguration);
@@ -221,18 +220,17 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
             assertTrue(configurationManager.destroyConfiguration);
 
-    	}
-    	finally {
-    		Dispatcher.setInstance(null);
-    	}
+        } finally {
+            Dispatcher.setInstance(null);
+        }
     }
 
     public void testInitLoadsDefaultConfig() {
-        Dispatcher du = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
+        Dispatcher du = new Dispatcher(new MockServletContext(), new HashMap<>());
         du.init();
         Configuration config = du.getConfigurationManager().getConfiguration();
         assertNotNull(config);
-        HashSet<String> expected = new HashSet<String>();
+        HashSet<String> expected = new HashSet<>();
         expected.add("struts-default.xml");
         expected.add("struts-plugin.xml");
         expected.add("struts.xml");
@@ -243,17 +241,17 @@ public class DispatcherTest extends StrutsInternalTestCase {
         assertTrue(packageConfig.getResultTypeConfigs().size() > 0);
     }
 
-    public void testObjectFactoryDestroy() throws Exception {
+    public void testObjectFactoryDestroy() {
 
         ConfigurationManager cm = new ConfigurationManager(Container.DEFAULT_NAME);
-        Dispatcher du = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), cm);
+        Dispatcher du = new MockDispatcher(new MockServletContext(), new HashMap<>(), cm);
         Mock mockConfiguration = new Mock(Configuration.class);
-        cm.setConfiguration((Configuration)mockConfiguration.proxy());
+        cm.setConfiguration((Configuration) mockConfiguration.proxy());
 
         Mock mockContainer = new Mock(Container.class);
         String reloadConfigs = container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)),
-                reloadConfigs);
+            reloadConfigs);
         final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
         destroyedObjectFactory.setContainer((Container) mockContainer.proxy());
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), destroyedObjectFactory);
@@ -271,7 +269,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mockContainer.verify();
     }
 
-    public void testInterceptorDestroy() throws Exception {
+    public void testInterceptorDestroy() {
         Mock mockInterceptor = new Mock(Interceptor.class);
         mockInterceptor.matchAndReturn("hashCode", 0);
         mockInterceptor.expect("destroy");
@@ -282,14 +280,14 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         PackageConfig packageConfig = new PackageConfig.Builder("test").addInterceptorStackConfig(isc).build();
 
-        Map<String, PackageConfig> packageConfigs = new HashMap<String, PackageConfig>();
+        Map<String, PackageConfig> packageConfigs = new HashMap<>();
         packageConfigs.put("test", packageConfig);
 
         Mock mockContainer = new Mock(Container.class);
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory());
         String reloadConfigs = container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD);
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)),
-                reloadConfigs);
+            reloadConfigs);
 
         Mock mockConfiguration = new Mock(Configuration.class);
         mockConfiguration.matchAndReturn("getPackageConfigs", packageConfigs);
@@ -299,7 +297,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
         configurationManager.setConfiguration((Configuration) mockConfiguration.proxy());
 
-        Dispatcher dispatcher = new MockDispatcher(new MockServletContext(), new HashMap<String, String>(), configurationManager);
+        Dispatcher dispatcher = new MockDispatcher(new MockServletContext(), new HashMap<>(), configurationManager);
         dispatcher.init();
         dispatcher.cleanup();
 
@@ -308,22 +306,22 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mockConfiguration.verify();
     }
 
-    public void testMultipartSupportEnabledByDefault() throws Exception {
+    public void testMultipartSupportEnabledByDefault() {
         HttpServletRequest req = new MockHttpServletRequest();
         HttpServletResponse res = new MockHttpServletResponse();
 
-        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+        Dispatcher du = initDispatcher(Collections.emptyMap());
         du.prepare(req, res);
 
         assertTrue(du.isMultipartSupportEnabled(req));
     }
 
-    public void testIsMultipartRequest() throws Exception {
+    public void testIsMultipartRequest() {
         MockHttpServletRequest req = new MockHttpServletRequest();
         HttpServletResponse res = new MockHttpServletResponse();
 
         req.setMethod("POST");
-        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+        Dispatcher du = initDispatcher(Collections.emptyMap());
         du.prepare(req, res);
 
         req.setContentType("multipart/form-data");
@@ -370,7 +368,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
     }
 
     public void testServiceActionResumePreviousProxy() throws Exception {
-        Dispatcher du = initDispatcher(Collections.<String, String>emptyMap());
+        Dispatcher du = initDispatcher(Collections.emptyMap());
 
         MockActionInvocation mai = new MockActionInvocation();
         ActionContext.getContext().withActionInvocation(mai);
@@ -393,14 +391,41 @@ public class DispatcherTest extends StrutsInternalTestCase {
         assertTrue("should execute previous proxy", actionProxy.isExecutedCalled());
     }
 
+    public void testServiceActionCreatesNewProxyIfDifferentMapping() throws Exception {
+        Dispatcher du = initDispatcher(Collections.emptyMap());
+        container.inject(du);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        ActionContext.getContext().withActionInvocation(mai);
+
+        MockActionProxy previousActionProxy = new MockActionProxy();
+        previousActionProxy.setActionName("first-action");
+        previousActionProxy.setNamespace("namespace1");
+        previousActionProxy.setInvocation(mai);
+        mai.setProxy(previousActionProxy);
+
+        mai.setStack(new StubValueStack());
+
+        HttpServletRequest request = new MockHttpServletRequest();
+        request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, mai.getStack());
+
+        HttpServletResponse response = new MockHttpServletResponse();
+
+        assertFalse(previousActionProxy.isExecutedCalled());
+
+        ActionMapping newActionMapping = new ActionMapping();
+        newActionMapping.setName("hello");
+        du.serviceAction(request, response, newActionMapping);
+
+        assertFalse(previousActionProxy.isExecutedCalled());
+    }
+
     /**
      * Verify proper default (true) handleExceptionState for Dispatcher and that
      * it properly reflects a manually configured change to false.
-     *
-     * @throws Exception
      */
-    public void testHandleException() throws Exception {
-        Dispatcher du = initDispatcher(new HashMap<String, String>());
+    public void testHandleException() {
+        Dispatcher du = initDispatcher(new HashMap<>());
         assertTrue("Default Dispatcher handleException state not true ?", du.isHandleException());
 
         Dispatcher du2 = initDispatcher(new HashMap<String, String>() {{
@@ -412,11 +437,9 @@ public class DispatcherTest extends StrutsInternalTestCase {
     /**
      * Verify proper default (false) devMode for Dispatcher and that
      * it properly reflects a manually configured change to true.
-     *
-     * @throws Exception
      */
-    public void testDevMode() throws Exception {
-        Dispatcher du = initDispatcher(new HashMap<String, String>());
+    public void testDevMode() {
+        Dispatcher du = initDispatcher(new HashMap<>());
         assertFalse("Default Dispatcher devMode state not false ?", du.isDevMode());
 
         Dispatcher du2 = initDispatcher(new HashMap<String, String>() {{
@@ -425,7 +448,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         assertTrue("Modified Dispatcher devMode state not true ?", du2.isDevMode());
     }
 
-    public void testGetLocale_With_DefaultLocale_FromConfiguration() throws Exception {
+    public void testGetLocale_With_DefaultLocale_FromConfiguration() {
         // Given
         Mock mock = new Mock(HttpServletRequest.class);
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -451,7 +474,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mock.verify();
     }
 
-    public void testGetLocale_With_DefaultLocale_fr_CA() throws Exception {
+    public void testGetLocale_With_DefaultLocale_fr_CA() {
         // Given
         Mock mock = new Mock(HttpServletRequest.class);
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -477,7 +500,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mock.verify();
     }
 
-    public void testGetLocale_With_BadDefaultLocale_RequestLocale_en_UK() throws Exception {
+    public void testGetLocale_With_BadDefaultLocale_RequestLocale_en_UK() {
         // Given
         Mock mock = new Mock(HttpServletRequest.class);
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -505,7 +528,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mock.verify();
     }
 
-    public void testGetLocale_With_BadDefaultLocale_And_RuntimeException() throws Exception {
+    public void testGetLocale_With_BadDefaultLocale_And_RuntimeException() {
         // Given
         Mock mock = new Mock(HttpServletRequest.class);
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -533,7 +556,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mock.verify();
     }
 
-    public void testGetLocale_With_NullDefaultLocale() throws Exception {
+    public void testGetLocale_With_NullDefaultLocale() {
         // Given
         Mock mock = new Mock(HttpServletRequest.class);
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -563,7 +586,7 @@ public class DispatcherTest extends StrutsInternalTestCase {
         mock.verify();
     }
 
-    public void testGetLocale_With_NullDefaultLocale_And_RuntimeException() throws Exception {
+    public void testGetLocale_With_NullDefaultLocale_And_RuntimeException() {
         // Given
         Mock mock = new Mock(HttpServletRequest.class);
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -595,19 +618,14 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
     /**
      * Create a test context Map from a Dispatcher instance.
-     * 
+     * <p>
      * The method directly calls getParameterMap() and getSession(true) on the HttpServletRequest.
-     * 
+     * <p>
      * The method indirectly calls getLocale(request) on the Dispatcher instance, allowing a test of that code path.
      * The derived Struts Dispatcher Locale can be retrieved from the Map afterwards.
-     * 
-     * @param dispatcher
-     * @param request
-     * @param response
-     * @return 
      */
     protected static Map<String, Object> createTestContextMap(Dispatcher dispatcher,
-            HttpServletRequest request, HttpServletResponse response) {
+                                                              HttpServletRequest request, HttpServletResponse response) {
         if (dispatcher == null) {
             throw new IllegalArgumentException("Cannot create a test ContextMap from a null Dispatcher");
         }
@@ -619,31 +637,31 @@ public class DispatcherTest extends StrutsInternalTestCase {
         }
 
         return dispatcher.createContextMap(new RequestMap(request),
-                HttpParameters.create(request.getParameterMap()).build(),
-                new SessionMap(request),
-                new ApplicationMap(request.getSession(true).getServletContext()),
-                request,
-                response);
+            HttpParameters.create(request.getParameterMap()).build(),
+            new SessionMap(request),
+            new ApplicationMap(request.getSession(true).getServletContext()),
+            request,
+            response);
     }
 
-    class InternalConfigurationManager extends ConfigurationManager {
-    	public boolean destroyConfiguration = false;
+    static class InternalConfigurationManager extends ConfigurationManager {
+        public boolean destroyConfiguration = false;
 
         public InternalConfigurationManager(String name) {
             super(name);
         }
 
         @Override
-    	public synchronized void destroyConfiguration() {
-    		super.destroyConfiguration();
-    		destroyConfiguration = true;
-    	}
+        public synchronized void destroyConfiguration() {
+            super.destroyConfiguration();
+            destroyConfiguration = true;
+        }
     }
 
 
-    class DispatcherListenerState {
-    	public boolean isInitialized = false;
-    	public boolean isDestroyed = false;
+    static class DispatcherListenerState {
+        public boolean isInitialized = false;
+        public boolean isDestroyed = false;
     }
 
     public static class InnerDestroyableObjectFactory extends ObjectFactory implements ObjectFactoryDestroyable {

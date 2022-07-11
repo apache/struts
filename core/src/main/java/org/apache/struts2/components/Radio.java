@@ -80,4 +80,8 @@ public class Radio extends ListUIBean {
         return true;
     }
 
+    protected Class<?> getValueClassType() {
+        return String.class;
+    }
+
 }

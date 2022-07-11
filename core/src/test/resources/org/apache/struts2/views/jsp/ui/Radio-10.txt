@@ -1,0 +1,4 @@
+<input type="radio" name="status" id="status1" value="1"/>
+<label for="status1">1</label>
+<input type="radio" name="status" id="status2" checked="checked" value="2"/>
+<label for="status2">2</label>

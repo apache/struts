@@ -27,11 +27,12 @@ import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 import org.apache.struts2.views.jsp.ui.User;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-
-/**
- */
 public class TestAction extends ActionSupport {
 
     private static final long serialVersionUID = -8891365561914451494L;
@@ -50,22 +51,22 @@ public class TestAction extends ActionSupport {
     private SomeEnum status = SomeEnum.COMPLETED;
     private Float floatNumber;
     private Long id;
+    private List<SomeEnum> enumList;
+    private List<Integer> intList;
 
-    private final Map<String, String> texts = new HashMap<String, String>();
+    private final Map<String, String> texts = new HashMap<>();
 
     /**
      * Define a text resource within this action that will be returned by the getText methods
-     * here before delegating to the default TextProvider
-     *
-     * call
-     * @param key
-     * @param value
+     * here before delegating to the default TextProvider call
      */
     public void setText(String key, String value) {
         this.texts.put(key, value);
     }
 
-    /** Returns the test value if defined otherwise delegates to the default TextProvider */
+    /**
+     * Returns the test value if defined otherwise delegates to the default TextProvider
+     */
     public String getText(String key) {
         if (this.texts.containsKey(key)) {
             return this.texts.get(key);
@@ -73,8 +74,10 @@ public class TestAction extends ActionSupport {
         return super.getText(key);
     }
 
-    /** This is the method invoked by the {@link org.apache.struts2.util.TextProviderHelper}.
-     * Returns the test value if defined otherwise delegates to the default TextProvider */
+    /**
+     * This is the method invoked by the {@link org.apache.struts2.util.TextProviderHelper}.
+     * Returns the test value if defined otherwise delegates to the default TextProvider
+     */
     public String getText(String key, String defaultValue, List<?> args, ValueStack stack) {
         if (this.texts.containsKey(key)) {
             return this.texts.get(key);
@@ -180,20 +183,21 @@ public class TestAction extends ActionSupport {
     }
 
     @Validations(
-            requiredFields = {
-            		@RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = "status", message = "You must enter a value for field.")
-            },
-            requiredStrings = {
-            		@RequiredStringValidator(type = ValidatorType.SIMPLE, fieldName = "result", message = "You must enter a value for field.")
-            }
+        requiredFields = {
+            @RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = "status", message = "You must enter a value for field.")
+        },
+        requiredStrings = {
+            @RequiredStringValidator(type = ValidatorType.SIMPLE, fieldName = "result", message = "You must enter a value for field.")
+        }
     )
     public String annotatedExecute1() throws Exception {
         return Action.SUCCESS;
     }
+
     @Validations(
-            requiredFields = {
-            		@RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = "status", message = "You must enter a value for field.")
-            }
+        requiredFields = {
+            @RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = "status", message = "You must enter a value for field.")
+        }
     )
     public String annotatedExecute2() throws Exception {
         return Action.SUCCESS;
@@ -207,16 +211,16 @@ public class TestAction extends ActionSupport {
         return INPUT;
     }
 
-	public SomeEnum getStatus() {
-		return status;
-	}
+    public SomeEnum getStatus() {
+        return status;
+    }
 
-	public void setStatus(SomeEnum status) {
-		this.status = status;
-	}
+    public void setStatus(SomeEnum status) {
+        this.status = status;
+    }
 
     public List<SomeEnum> getStatusList() {
-    	return Arrays.asList(SomeEnum.values());
+        return Arrays.asList(SomeEnum.values());
     }
 
     public Float getFloatNumber() {
@@ -235,4 +239,19 @@ public class TestAction extends ActionSupport {
         this.id = id;
     }
 
+    public List<SomeEnum> getEnumList() {
+        return enumList;
+    }
+
+    public void setEnumList(List<SomeEnum> enumList) {
+        this.enumList = enumList;
+    }
+
+    public List<Integer> getIntList() {
+        return intList;
+    }
+
+    public void setIntList(List<Integer> intList) {
+        this.intList = intList;
+    }
 }

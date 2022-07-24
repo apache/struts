@@ -34,10 +34,10 @@ import java.io.InputStreamReader;
  */
 public class ContentTypeInterceptor extends AbstractInterceptor {
 
-    private final ContentTypeHandlerManager selector;
+    private ContentTypeHandlerManager selector;
 
     @Inject
-    public ContentTypeInterceptor(ContentTypeHandlerManager selector) {
+    public void setContentTypeHandlerSelector(ContentTypeHandlerManager selector) {
         this.selector = selector;
     }
 

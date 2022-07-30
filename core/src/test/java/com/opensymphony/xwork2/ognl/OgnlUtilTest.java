@@ -1314,7 +1314,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testDefaultOgnlUtilExclusionsAlternateConstructor() {
-        OgnlUtil basicOgnlUtil = new OgnlUtil(null, null);
+        OgnlUtil basicOgnlUtil = new OgnlUtil();
 
         internalTestInitialEmptyOgnlUtilExclusions(basicOgnlUtil);
         internalTestOgnlUtilExclusionsImmutable(basicOgnlUtil);
@@ -1692,7 +1692,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetExcludedPackageNamesAlternateConstructor() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(null, null);
+        OgnlUtil util = new OgnlUtil();
         util.setExcludedPackageNames("java.lang,java.awt");
         assertEquals(util.getExcludedPackageNames().size(), 2);
         try {
@@ -1734,7 +1734,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetExcludedClassesAlternateConstructor() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(null, null);
+        OgnlUtil util = new OgnlUtil();
         util.setExcludedClasses("java.lang.Runtime,java.lang.ProcessBuilder,java.net.URL");
         assertEquals(util.getExcludedClasses().size(), 3);
         try {
@@ -1776,7 +1776,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetExcludedPackageNamePatternsAlternateConstructor() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(null, null);
+        OgnlUtil util = new OgnlUtil();
         util.setExcludedPackageNamePatterns("java.lang.");
         assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
         try {

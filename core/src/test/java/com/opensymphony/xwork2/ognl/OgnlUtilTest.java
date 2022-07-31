@@ -1313,11 +1313,20 @@ public class OgnlUtilTest extends XWorkTestCase {
         internalTestOgnlUtilExclusionsImmutable(basicOgnlUtil);
     }
 
-    public void testDefaultOgnlUtilExclusionsAlternateConstructor() {
-        OgnlUtil basicOgnlUtil = new OgnlUtil(null, null);
-
-        internalTestInitialEmptyOgnlUtilExclusions(basicOgnlUtil);
-        internalTestOgnlUtilExclusionsImmutable(basicOgnlUtil);
+    public void testDefaultOgnlUtilAlternateConstructorArguments() {
+        // Code coverage test for the OgnlUtil alternate constructor method, and verify expected behaviour.
+        try {
+            OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<String, Object>(), null);
+            fail("null beanInfoCacheFactory should result in exception");
+        } catch (IllegalArgumentException iaex) {
+            // expected result
+        }
+        try {
+            OgnlUtil basicOgnlUtil = new OgnlUtil(null, new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
+            fail("null expressionCacheFactory should result in exception");
+        } catch (IllegalArgumentException iaex) {
+            // expected result
+        }
     }
 
     public void testDefaultOgnlUtilExclusionsAlternateConstructorPopulated() {
@@ -1690,20 +1699,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
-    public void testGetExcludedPackageNamesAlternateConstructor() {
-        // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(null, null);
-        util.setExcludedPackageNames("java.lang,java.awt");
-        assertEquals(util.getExcludedPackageNames().size(), 2);
-        try {
-            util.getExcludedPackageNames().clear();
-        } catch (Exception ex) {
-            assertTrue(ex instanceof UnsupportedOperationException);
-        } finally {
-            assertEquals(util.getExcludedPackageNames().size(), 2);
-        }
-    }
-
     public void testGetExcludedPackageNamesAlternateConstructorPopulated() {
         // Getter should return an immutable collection
         OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<String, Object>(), new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
@@ -1732,20 +1727,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
-    public void testGetExcludedClassesAlternateConstructor() {
-        // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(null, null);
-        util.setExcludedClasses("java.lang.Runtime,java.lang.ProcessBuilder,java.net.URL");
-        assertEquals(util.getExcludedClasses().size(), 3);
-        try {
-            util.getExcludedClasses().clear();
-        } catch (Exception ex) {
-            assertTrue(ex instanceof UnsupportedOperationException);
-        } finally {
-            assertEquals(util.getExcludedClasses().size(), 3);
-        }
-    }
-
     public void testGetExcludedClassesAlternateConstructorPopulated() {
         // Getter should return an immutable collection
         OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<String, Object>(), new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
@@ -1763,20 +1744,6 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testGetExcludedPackageNamePatterns() {
         // Getter should return an immutable collection
         OgnlUtil util = new OgnlUtil();
-        util.setExcludedPackageNamePatterns("java.lang.");
-        assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
-        try {
-            util.getExcludedPackageNamePatterns().clear();
-        } catch (Exception ex) {
-            assertTrue(ex instanceof UnsupportedOperationException);
-        } finally {
-            assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
-        }
-    }
-
-    public void testGetExcludedPackageNamePatternsAlternateConstructor() {
-        // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(null, null);
         util.setExcludedPackageNamePatterns("java.lang.");
         assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
         try {

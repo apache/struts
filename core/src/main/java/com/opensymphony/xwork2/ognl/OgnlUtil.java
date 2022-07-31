@@ -82,7 +82,9 @@ public class OgnlUtil {
      */
     @Deprecated
     public OgnlUtil() {
-        this(null, null);  // Instantiate default Expression and BeanInfo caches (null factories)
+        // Instantiate default Expression and BeanInfo caches (factories must be non-null).
+        this(new DefaultOgnlExpressionCacheFactory<String, Object>(),
+             new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
     }
 
     /**
@@ -98,9 +100,15 @@ public class OgnlUtil {
      */
     @Inject
     public OgnlUtil(
-            @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, required = false) ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
-            @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, required = false) BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
+            @Inject ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
+            @Inject BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
     ) {
+        if (ognlExpressionCacheFactory == null) {
+            throw new IllegalArgumentException("ExpressionCacheFactory parameter cannot be null");
+        }
+        if (ognlBeanInfoCacheFactory == null) {
+            throw new IllegalArgumentException("BeanInfoCacheFactory parameter cannot be null");
+        }
         excludedClasses = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
@@ -109,11 +117,8 @@ public class OgnlUtil {
         devModeExcludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
 
-        OgnlCacheFactory<String, Object> ognlExpressionCacheFactory1 = (ognlExpressionCacheFactory != null ? ognlExpressionCacheFactory : new DefaultOgnlExpressionCacheFactory<>());
-        OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory1 = (ognlBeanInfoCacheFactory != null ? ognlBeanInfoCacheFactory : new DefaultOgnlBeanInfoCacheFactory<>());
-
-        this.expressionCache = ognlExpressionCacheFactory1.buildOgnlCache();
-        this.beanInfoCache = ognlBeanInfoCacheFactory1.buildOgnlCache();
+        this.expressionCache = ognlExpressionCacheFactory.buildOgnlCache();
+        this.beanInfoCache = ognlBeanInfoCacheFactory.buildOgnlCache();
     }
 
     @Inject

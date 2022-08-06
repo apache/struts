@@ -3,8 +3,8 @@ language: java
 sudo: false
 
 jdk:
-  - oraclejdk9
-  - oraclejdk11
+  - openjdk11
+  - openjdk17
 
 install: true
 
@@ -13,8 +13,8 @@ global:
   - secure: iI7IpfDtS+LUyS2yNuRCR3KelNyvBHuoMQ3gb1UNmR5SSL7jO/p3olQWrQROs28FJ+dpE3lHyIjoHrebKQGJHHAgTG2XWxn+G3fDsf+wSSFSLoDGj0o2SgGXooBbR2dccnNZHCyQaOyE2cIPWaOxrQZFE4No70LQB4mrP/gdkoc=
 matrix:
     include:
-       - jdk: oraclejdk8
-         env: STRUTS_IT=true # do integration tests and coverage reports when jdk 9 and 11 tests prospered
+       - jdk: openjdk8
+         env: STRUTS_IT=true # do integration tests and coverage reports when jdk 11 and 17 tests prospered
 
 script:
    - if [ "$STRUTS_IT" == "true" ]; then

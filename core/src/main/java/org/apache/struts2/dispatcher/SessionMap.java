@@ -135,7 +135,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
         }
 
         synchronized (session.getId().intern()) {
-            return session.getAttribute(key.toString());
+            return session.getAttribute(key);
         }
     }
 
@@ -155,7 +155,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
         synchronized (session.getId().intern()) {
             Object oldValue = get(key);
             entries = null;
-            session.setAttribute(key.toString(), value);
+            session.setAttribute(key, value);
             return oldValue;
         }
     }
@@ -175,7 +175,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             entries = null;
 
             Object value = get(key);
-            session.removeAttribute(key.toString());
+            session.removeAttribute(key);
 
             return value;
         }

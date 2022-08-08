@@ -103,10 +103,10 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             if (entries == null) {
                 entries = new HashSet<>();
 
-                Enumeration<?> enumeration = session.getAttributeNames();
+                Enumeration<String> enumeration = session.getAttributeNames();
 
                 while (enumeration.hasMoreElements()) {
-                    final String key = enumeration.nextElement().toString();
+                    final String key = enumeration.nextElement();
                     final Object value = session.getAttribute(key);
                     entries.add(new StringObjectEntry(key, value) {
                         @Override

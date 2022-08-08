@@ -48,6 +48,7 @@ public class RequestMap extends AbstractMap<String, Object> implements Serializa
     /**
      * Removes all attributes from the request as well as clears entries in this map.
      */
+    @Override
     public void clear() {
         entries = null;
         Enumeration<String> keys = request.getAttributeNames();
@@ -63,6 +64,7 @@ public class RequestMap extends AbstractMap<String, Object> implements Serializa
      *
      * @return a Set of attributes from the http request.
      */
+    @Override
     public Set<Entry<String, Object>> entrySet() {
         if (entries == null) {
             entries = new HashSet<>();
@@ -73,7 +75,8 @@ public class RequestMap extends AbstractMap<String, Object> implements Serializa
                 final String key = enumeration.nextElement();
                 final Object value = request.getAttribute(key);
                 entries.add(new StringObjectEntry(key, value) {
-                   public Object setValue(final Object obj) {
+                    @Override
+                    public Object setValue(final Object obj) {
                         request.setAttribute(key, obj);
 
                         return value;
@@ -102,6 +105,7 @@ public class RequestMap extends AbstractMap<String, Object> implements Serializa
      * @param value the value to set.
      * @return the object that was just set.
      */
+    @Override
     public Object put(final String key, final Object value) {
         Object oldValue = get(key);
         entries = null;

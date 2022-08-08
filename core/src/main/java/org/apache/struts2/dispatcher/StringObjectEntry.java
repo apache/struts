@@ -6,7 +6,7 @@ abstract class StringObjectEntry implements Entry<String, Object> {
     private String key;
     private Object value;
 
-    public StringObjectEntry(final String key, final Object value) {
+    StringObjectEntry(final String key, final Object value) {
         this.key = key;
         this.value = value;
     }

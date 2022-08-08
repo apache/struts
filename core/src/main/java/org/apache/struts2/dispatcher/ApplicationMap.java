@@ -53,6 +53,7 @@ public class ApplicationMap extends AbstractMap<String, Object> implements Seria
     /**
      * Removes all entries from the Map and removes all attributes from the servlet context.
      */
+    @Override
     public void clear() {
         entries = null;
 
@@ -68,6 +69,7 @@ public class ApplicationMap extends AbstractMap<String, Object> implements Seria
      *
      * @return a Set of all servlet context attributes as well as context init parameters.
      */
+    @Override
     public Set<Entry<String, Object>> entrySet() {
         if (entries == null) {
             entries = new HashSet<>();
@@ -79,6 +81,7 @@ public class ApplicationMap extends AbstractMap<String, Object> implements Seria
                 final String key = enumeration.nextElement();
                 final Object value = context.getAttribute(key);
                 entries.add(new StringObjectEntry(key, value) {
+                    @Override
                     public Object setValue(final Object obj) {
                         context.setAttribute(key, obj);
 
@@ -94,6 +97,7 @@ public class ApplicationMap extends AbstractMap<String, Object> implements Seria
                 final String key = enumeration.nextElement();
                 final Object value = context.getInitParameter(key);
                 entries.add(new StringObjectEntry(key, value) {
+                    @Override
                     public Object setValue(final Object obj) {
                         context.setAttribute(key, obj);
 
@@ -128,14 +132,15 @@ public class ApplicationMap extends AbstractMap<String, Object> implements Seria
      * @param value the value to set.
      * @return the attribute that was just set.
      */
-	public Object put(final String key, final Object value) {
-		Object oldValue = get(key);
-		entries = null;
+    @Override
+    public Object put(final String key, final Object value) {
+        Object oldValue = get(key);
+        entries = null;
 
-		context.setAttribute(key, value);
+        context.setAttribute(key, value);
 
-		return oldValue;
-	}
+        return oldValue;
+    }
 
     /**
      * Removes the specified servlet context attribute.

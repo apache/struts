@@ -74,6 +74,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      * Removes all attributes from the session as well as clears entries in this
      * map.
      */
+    @Override
     public void clear() {
         if (session == null) {
             return;
@@ -94,6 +95,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      *
      * @return a Set of attributes from the http session.
      */
+    @Override
     public Set<Entry<String, Object>> entrySet() {
         if (session == null) {
             return Collections.emptySet();
@@ -110,7 +112,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
                     final Object value = session.getAttribute(key);
                     entries.add(new StringObjectEntry(key, value) {
                         @Override
-                        public Object setValue(Object obj) {
+                        public Object setValue(final Object obj) {
                             session.setAttribute(key, obj);
 
                             return value;
@@ -146,6 +148,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
      * @param value the value to set.
      * @return the object that was just set.
      */
+    @Override
     public Object put(final String key, final Object value) {
         synchronized (this) {
             if (session == null) {

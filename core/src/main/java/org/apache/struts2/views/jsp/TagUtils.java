@@ -64,7 +64,7 @@ public class TagUtils {
 
             Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
                     params,
-                    new SessionMap<>(req),
+                    new SessionMap(req),
                     new ApplicationMap(pageContext.getServletContext()),
                     req,
                     res);

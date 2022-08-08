@@ -38,6 +38,7 @@ import org.objectweb.asm.Opcodes;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -45,7 +46,15 @@ import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -57,9 +66,9 @@ public class DefaultClassFinder implements ClassFinder {
 
     private final List<String> classesNotLoaded = new ArrayList<>();
 
-    private boolean extractBaseInterfaces;
-    private ClassLoaderInterface classLoaderInterface;
-    private FileManager fileManager;
+    private final ClassLoaderInterface classLoaderInterface;
+    private final boolean extractBaseInterfaces;
+    private final FileManager fileManager;
 
     public DefaultClassFinder(ClassLoaderInterface classLoaderInterface, Collection<URL> urls, boolean extractBaseInterfaces, Set<String> protocols, Test<String> classNameFilter) {
         this.classLoaderInterface = classLoaderInterface;
@@ -93,46 +102,6 @@ public class DefaultClassFinder implements ClassFinder {
                     readClassDef(className);
             } catch (Throwable e) {
                 LOG.error("Unable to read class [{}]", className, e);
-            }
-        }
-    }
-
-    public DefaultClassFinder(Class... classes){
-        this(Arrays.asList(classes));
-    }
-
-    public DefaultClassFinder(List<Class> classes){
-        this.classLoaderInterface = null;
-        List<Info> infos = new ArrayList<>();
-        List<Package> packages = new ArrayList<>();
-        for (Class clazz : classes) {
-
-            Package aPackage = clazz.getPackage();
-            if (aPackage != null && !packages.contains(aPackage)){
-                infos.add(new PackageInfo(aPackage));
-                packages.add(aPackage);
-            }
-
-            ClassInfo classInfo = new ClassInfo(clazz, this);
-            infos.add(classInfo);
-            classInfos.put(classInfo.getName(), classInfo);
-            for (Method method : clazz.getDeclaredMethods()) {
-                infos.add(new MethodInfo(classInfo, method));
-            }
-
-            for (Constructor constructor : clazz.getConstructors()) {
-                infos.add(new MethodInfo(classInfo, constructor));
-            }
-
-            for (Field field : clazz.getDeclaredFields()) {
-                infos.add(new FieldInfo(classInfo, field));
-            }
-        }
-
-        for (Info info : infos) {
-            for (AnnotationInfo annotation : info.getAnnotations()) {
-                List<Info> annotationInfos = getAnnotationInfos(annotation.getName());
-                annotationInfos.add(info);
             }
         }
     }
@@ -171,15 +140,15 @@ public class DefaultClassFinder implements ClassFinder {
         return packages;
     }
 
-    public List<Class> findAnnotatedClasses(Class<? extends Annotation> annotation) {
+    public List<Class<?>> findAnnotatedClasses(Class<? extends Annotation> annotation) {
         classesNotLoaded.clear();
-        List<Class> classes = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
         List<Info> infos = getAnnotationInfos(annotation.getName());
         for (Info info : infos) {
             if (info instanceof ClassInfo) {
                 ClassInfo classInfo = (ClassInfo) info;
                 try {
-                    Class clazz = classInfo.get();
+                    Class<?> clazz = classInfo.get();
                     // double check via proper reflection
                     if (clazz.isAnnotationPresent(annotation)) {
                         classes.add(clazz);
@@ -208,7 +177,7 @@ public class DefaultClassFinder implements ClassFinder {
                 seen.add(classInfo);
 
                 try {
-                    Class clazz = classInfo.get();
+                    Class<?> clazz = classInfo.get();
                     for (Method method : clazz.getDeclaredMethods()) {
                         if (method.isAnnotationPresent(annotation)) {
                             methods.add(method);
@@ -223,10 +192,10 @@ public class DefaultClassFinder implements ClassFinder {
         return methods;
     }
 
-    public List<Constructor> findAnnotatedConstructors(Class<? extends Annotation> annotation) {
+    public List<Constructor<?>> findAnnotatedConstructors(Class<? extends Annotation> annotation) {
         classesNotLoaded.clear();
         List<ClassInfo> seen = new ArrayList<>();
-        List<Constructor> constructors = new ArrayList<>();
+        List<Constructor<?>> constructors = new ArrayList<>();
         List<Info> infos = getAnnotationInfos(annotation.getName());
         for (Info info : infos) {
             if (info instanceof MethodInfo && "<init>".equals(info.getName())) {
@@ -238,8 +207,8 @@ public class DefaultClassFinder implements ClassFinder {
                 seen.add(classInfo);
 
                 try {
-                    Class clazz = classInfo.get();
-                    for (Constructor constructor : clazz.getConstructors()) {
+                    Class<?> clazz = classInfo.get();
+                    for (Constructor<?> constructor : clazz.getConstructors()) {
                         if (constructor.isAnnotationPresent(annotation)) {
                             constructors.add(constructor);
                         }
@@ -270,7 +239,7 @@ public class DefaultClassFinder implements ClassFinder {
                 seen.add(classInfo);
 
                 try {
-                    Class clazz = classInfo.get();
+                    Class<?> clazz = classInfo.get();
                     for (Field field : clazz.getDeclaredFields()) {
                         if (field.isAnnotationPresent(annotation)) {
                             fields.add(field);
@@ -285,14 +254,14 @@ public class DefaultClassFinder implements ClassFinder {
         return fields;
     }
 
-    public List<Class> findClassesInPackage(String packageName, boolean recursive) {
+    public List<Class<?>> findClassesInPackage(String packageName, boolean recursive) {
         classesNotLoaded.clear();
-        List<Class> classes = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
         for (ClassInfo classInfo : classInfos.values()) {
             try {
-                if (recursive && classInfo.getPackageName().startsWith(packageName)){
+                if (recursive && classInfo.getPackageName().startsWith(packageName)) {
                     classes.add(classInfo.get());
-                } else if (classInfo.getPackageName().equals(packageName)){
+                } else if (classInfo.getPackageName().equals(packageName)) {
                     classes.add(classInfo.get());
                 }
             } catch (Throwable e) {
@@ -303,9 +272,9 @@ public class DefaultClassFinder implements ClassFinder {
         return classes;
     }
 
-    public List<Class> findClasses(Test<ClassInfo> test) {
+    public List<Class<?>> findClasses(Test<ClassInfo> test) {
         classesNotLoaded.clear();
-        List<Class> classes = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
         for (ClassInfo classInfo : classInfos.values()) {
             try {
                 if (test.test(classInfo)) {
@@ -319,9 +288,9 @@ public class DefaultClassFinder implements ClassFinder {
         return classes;
     }
 
-    public List<Class> findClasses() {
+    public List<Class<?>> findClasses() {
         classesNotLoaded.clear();
-        List<Class> classes = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
         for (ClassInfo classInfo : classInfos.values()) {
             try {
                 classes.add(classInfo.get());
@@ -333,9 +302,9 @@ public class DefaultClassFinder implements ClassFinder {
         return classes;
     }
 
-    private List<String> file(URL location) {
+    private List<String> file(URL location) throws UnsupportedEncodingException {
         List<String> classNames = new ArrayList<>();
-        File dir = new File(URLDecoder.decode(location.getPath()));
+        File dir = new File(URLDecoder.decode(location.getPath(), "UTF-8"));
         if ("META-INF".equals(dir.getName())) {
             dir = dir.getParentFile(); // Scrape "META-INF" off
         }
@@ -347,15 +316,17 @@ public class DefaultClassFinder implements ClassFinder {
 
     private void scanDir(File dir, List<String> classNames, String packageName) {
         File[] files = dir.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                scanDir(file, classNames, packageName + file.getName() + ".");
-            } else if (file.getName().endsWith(".class")) {
-                String name = file.getName();
-                name = name.replaceFirst(".class$", "");
-                // Classes packaged in an exploded .war (e.g. in a VFS file system) should not
-                // have WEB-INF.classes in their package name.
-                classNames.add(StringUtils.removeStart(packageName, "WEB-INF.classes.") + name);
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    scanDir(file, classNames, packageName + file.getName() + ".");
+                } else if (file.getName().endsWith(".class")) {
+                    String name = file.getName();
+                    name = name.replaceFirst(".class$", "");
+                    // Classes packaged in an exploded .war (e.g. in a VFS file system) should not
+                    // have WEB-INF.classes in their package name.
+                    classNames.add(StringUtils.removeStart(packageName, "WEB-INF.classes.") + name);
+                }
             }
         }
     }
@@ -363,12 +334,9 @@ public class DefaultClassFinder implements ClassFinder {
     private List<String> jar(URL location) throws IOException {
         URL url = fileManager.normalizeToFileProtocol(location);
         if (url != null) {
-            InputStream in = url.openStream();
-            try {
+            try (InputStream in = url.openStream()) {
                 JarInputStream jarStream = new JarInputStream(in);
                 return jar(jarStream);
-            } finally {
-                in.close();
             }
         } else {
             LOG.debug("Unable to read [{}]", location.toExternalForm());
@@ -388,7 +356,7 @@ public class DefaultClassFinder implements ClassFinder {
             className = className.replaceFirst(".class$", "");
 
             //war files are treated as .jar files, so takeout WEB-INF/classes
-            className = StringUtils.removeStart(className, "WEB-INF/classes/"); 
+            className = StringUtils.removeStart(className, "WEB-INF/classes/");
 
             className = className.replace('/', '.');
             classNames.add(className);
@@ -397,40 +365,8 @@ public class DefaultClassFinder implements ClassFinder {
         return classNames;
     }
 
-    public class PackageInfo extends Annotatable implements Info {
-        private final String name;
-        private final ClassInfo info;
-        private final Package pkg;
-
-        public PackageInfo(Package pkg){
-            super(pkg);
-            this.pkg = pkg;
-            this.name = pkg.getName();
-            this.info = null;
-        }
-
-        public PackageInfo(String name, ClassFinder classFinder) {
-            info = new ClassInfo(name, null, classFinder);
-            this.name = name;
-            this.pkg = null;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Package get() throws ClassNotFoundException {
-            return (pkg != null)?pkg:info.get().getPackage();
-        }
-    }
-
     private List<Info> getAnnotationInfos(String name) {
-        List<Info> infos = annotated.get(name);
-        if (infos == null) {
-            infos = new ArrayList<>();
-            annotated.put(name, infos);
-        }
-        return infos;
+        return annotated.computeIfAbsent(name, k -> new ArrayList<>());
     }
 
     private void readClassDef(String className) {
@@ -454,17 +390,14 @@ public class DefaultClassFinder implements ClassFinder {
     }
 
     public class InfoBuildingVisitor extends ClassVisitor {
+
+        private final ClassFinder classFinder;
+
         private Info info;
-        private ClassFinder classFinder;
 
         public InfoBuildingVisitor(ClassFinder classFinder) {
-            super(Opcodes.ASM7);
+            super(Opcodes.ASM9);
             this.classFinder = classFinder;
-        }
-
-        public InfoBuildingVisitor(Info info, ClassFinder classFinder) {
-            this(classFinder);
-            this.info = info;
         }
 
         @Override
@@ -480,8 +413,9 @@ public class DefaultClassFinder implements ClassFinder {
                 info = classInfo;
                 classInfos.put(classInfo.getName(), classInfo);
 
-                if (extractBaseInterfaces)
+                if (extractBaseInterfaces) {
                     extractSuperInterfaces(classInfo);
+                }
             }
         }
 

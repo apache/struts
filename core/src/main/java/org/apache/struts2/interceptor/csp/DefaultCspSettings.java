@@ -18,16 +18,15 @@
  */
 package org.apache.struts2.interceptor.csp;
 
-import static java.lang.String.format;
-
 import com.opensymphony.xwork2.ActionContext;
 
-import java.util.function.Supplier;
 import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Map;
+import java.util.function.Supplier;
 
+import static java.lang.String.format;
 
 /**
  * Default implementation of {@link CspSettings}.
@@ -37,36 +36,30 @@ import java.util.Map;
  * @see CspInterceptor
  */
 public class DefaultCspSettings implements CspSettings {
-    private final SecureRandom sRand  = new SecureRandom();
-    // this lazy supplier computes a policy format the first time it's called and caches the result
-    // to reduce string operations when attaching policies to HTTP responses
-    private final Supplier<String> lazyPolicyBuilder = new Supplier<String>() {
-        boolean hasBeenCalled;
-        String policyFormat;
 
+    private final SecureRandom sRand = new SecureRandom();
+
+    // this supplier computes a policy format
+    private final Supplier<String> lazyPolicyBuilder = new Supplier<String>() {
         @Override
         public String get() {
-            if (!hasBeenCalled) {
-                StringBuilder policyFormatBuilder = new StringBuilder()
-                    .append(OBJECT_SRC)
-                    .append(format(" '%s'; ", NONE))
-                    .append(SCRIPT_SRC)
-                    .append(" 'nonce-%s' ")             // nonce placeholder
-                    .append(format("'%s' ", STRICT_DYNAMIC))
-                    .append(format("%s %s; ", HTTP, HTTPS))
-                    .append(BASE_URI)
-                    .append(format(" '%s'; ", NONE));
+            StringBuilder policyFormatBuilder = new StringBuilder()
+                .append(OBJECT_SRC)
+                .append(format(" '%s'; ", NONE))
+                .append(SCRIPT_SRC)
+                .append(" 'nonce-%s' ") // nonce placeholder
+                .append(format("'%s' ", STRICT_DYNAMIC))
+                .append(format("%s %s; ", HTTP, HTTPS))
+                .append(BASE_URI)
+                .append(format(" '%s'; ", NONE));
 
-                if (reportUri != null) {
-                    policyFormatBuilder
-                        .append(REPORT_URI)
-                        .append(format(" %s", reportUri));
-                }
-
-                policyFormat = policyFormatBuilder.toString();
+            if (reportUri != null) {
+                policyFormatBuilder
+                    .append(REPORT_URI)
+                    .append(format(" %s", reportUri));
             }
 
-            return format(policyFormat, getNonceString());
+            return format(policyFormatBuilder.toString(), getNonceString());
         }
     };
 

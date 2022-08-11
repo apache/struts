@@ -29,11 +29,11 @@ import java.util.List;
 /**
  * ClassFinder searches the classpath of the specified ClassLoaderInterface for
  * packages, classes, constructors, methods, or fields with specific annotations.
- *
+ * <p>
  * For security reasons ASM is used to find the annotations.  Classes are not
  * loaded unless they match the requirements of a called findAnnotated* method.
  * Once loaded, these classes are cached.
- *
+ * <p>
  * The getClassesNotLoaded() method can be used immediately after any find*
  * method to get a list of classes which matched the find requirements (i.e.
  * contained the annotation), but were unable to be loaded.
@@ -67,32 +67,32 @@ public interface ClassFinder {
 
     List<Package> findAnnotatedPackages(Class<? extends Annotation> annotation);
 
-    List<Class> findAnnotatedClasses(Class<? extends Annotation> annotation);
+    List<Class<?>> findAnnotatedClasses(Class<? extends Annotation> annotation);
 
     List<Method> findAnnotatedMethods(Class<? extends Annotation> annotation);
 
-    List<Constructor> findAnnotatedConstructors(Class<? extends Annotation> annotation);
+    List<Constructor<?>> findAnnotatedConstructors(Class<? extends Annotation> annotation);
 
     List<Field> findAnnotatedFields(Class<? extends Annotation> annotation);
 
-    List<Class> findClassesInPackage(String packageName, boolean recursive);
+    List<Class<?>> findClassesInPackage(String packageName, boolean recursive);
 
-    List<Class> findClasses(Test<ClassInfo> test);
+    List<Class<?>> findClasses(Test<ClassInfo> test);
 
-    List<Class> findClasses();
+    List<Class<?>> findClasses();
 
     ClassLoaderInterface getClassLoaderInterface();
 
-    public static interface Info {
+    interface Info {
         String getName();
 
         List<AnnotationInfo> getAnnotations();
     }
 
-    public class AnnotationInfo extends Annotatable implements Info {
+    class AnnotationInfo extends Annotatable implements Info {
         private final String name;
 
-        public AnnotationInfo(Annotation annotation){
+        public AnnotationInfo(Annotation annotation) {
             this(annotation.getClass().getName());
         }
 
@@ -116,7 +116,7 @@ public interface ClassFinder {
         }
     }
 
-    public class Annotatable {
+    class Annotatable {
         private final List<AnnotationInfo> annotations = new ArrayList<>();
 
         public Annotatable(AnnotatedElement element) {
@@ -134,12 +134,12 @@ public interface ClassFinder {
 
     }
 
-    public class PackageInfo extends Annotatable implements Info {
+    class PackageInfo extends Annotatable implements Info {
         private final String name;
         private final ClassInfo info;
         private final Package pkg;
 
-        public PackageInfo(Package pkg){
+        public PackageInfo(Package pkg) {
             super(pkg);
             this.pkg = pkg;
             this.name = pkg.getName();
@@ -157,11 +157,11 @@ public interface ClassFinder {
         }
 
         public Package get() throws ClassNotFoundException {
-            return (pkg != null)?pkg:info.get().getPackage();
+            return (pkg != null) ? pkg : info.get().getPackage();
         }
     }
 
-    public class ClassInfo extends Annotatable implements Info {
+    class ClassInfo extends Annotatable implements Info {
         private final String name;
         private final List<MethodInfo> methods = new ArrayList<>();
         private final List<MethodInfo> constructors = new ArrayList<>();
@@ -169,17 +169,18 @@ public interface ClassFinder {
         private final List<String> interfaces = new ArrayList<>();
         private final List<String> superInterfaces = new ArrayList<>();
         private final List<FieldInfo> fields = new ArrayList<>();
+        private final ClassFinder classFinder;
+
         private Class<?> clazz;
-        private ClassFinder classFinder;
         private ClassNotFoundException notFound;
 
-        public ClassInfo(Class clazz, ClassFinder classFinder) {
+        public ClassInfo(Class<?> clazz, ClassFinder classFinder) {
             super(clazz);
             this.clazz = clazz;
             this.classFinder = classFinder;
             this.name = clazz.getName();
-            Class superclass = clazz.getSuperclass();
-            this.superType = superclass != null ? superclass.getName(): null;
+            Class<?> superclass = clazz.getSuperclass();
+            this.superType = superclass != null ? superclass.getName() : null;
         }
 
         public ClassInfo(String name, String superType, ClassFinder classFinder) {
@@ -188,8 +189,8 @@ public interface ClassFinder {
             this.classFinder = classFinder;
         }
 
-        public String getPackageName(){
-            return name.indexOf('.') > 0 ? name.substring(0, name.lastIndexOf('.')) : "" ;
+        public String getPackageName() {
+            return name.indexOf('.') > 0 ? name.substring(0, name.lastIndexOf('.')) : "";
         }
 
         public List<MethodInfo> getConstructors() {
@@ -220,7 +221,7 @@ public interface ClassFinder {
             return superType;
         }
 
-        public Class get() throws ClassNotFoundException {
+        public Class<?> get() throws ClassNotFoundException {
             if (clazz != null) return clazz;
             if (notFound != null) throw notFound;
             try {
@@ -239,20 +240,20 @@ public interface ClassFinder {
         }
     }
 
-    public class MethodInfo extends Annotatable implements Info {
+    class MethodInfo extends Annotatable implements Info {
         private final ClassInfo declaringClass;
         private final String returnType;
         private final String name;
         private final List<List<AnnotationInfo>> parameterAnnotations = new ArrayList<>();
 
-        public MethodInfo(ClassInfo info, Constructor constructor){
+        public MethodInfo(ClassInfo info, Constructor<?> constructor) {
             super(constructor);
             this.declaringClass = info;
             this.name = "<init>";
             this.returnType = Void.TYPE.getName();
         }
 
-        public MethodInfo(ClassInfo info, Method method){
+        public MethodInfo(ClassInfo info, Method method) {
             super(method);
             this.declaringClass = info;
             this.name = method.getName();
@@ -297,12 +298,12 @@ public interface ClassFinder {
         }
     }
 
-    public class FieldInfo extends Annotatable implements Info {
+    class FieldInfo extends Annotatable implements Info {
         private final String name;
         private final String type;
         private final ClassInfo declaringClass;
 
-        public FieldInfo(ClassInfo info, Field field){
+        public FieldInfo(ClassInfo info, Field field) {
             super(field);
             this.declaringClass = info;
             this.name = field.getName();

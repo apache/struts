@@ -21,6 +21,7 @@ package org.apache.struts2.config;
 import com.opensymphony.xwork2.TestBean;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 public class TestBeanSelectionProvider extends AbstractBeanSelectionProvider {
@@ -28,6 +29,11 @@ public class TestBeanSelectionProvider extends AbstractBeanSelectionProvider {
     @Override
     public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
         alias(TestBean.class, "struts.test.bean", builder, props);
+    }
+
+    public void aliasCallCoverage(Class aliasClass, ContainerBuilder builder, LocatableProperties props, String aliasKey, Scope scope) throws ConfigurationException {
+        // Allow for coverage testing of AbstractBeanSelectionProvider.
+        alias(aliasClass, aliasKey, builder, props, scope);
     }
 
 }

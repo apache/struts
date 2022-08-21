@@ -231,8 +231,8 @@
     <bean type="org.apache.struts2.components.date.DateFormatter" name="simpleDateFormatter" class="org.apache.struts2.components.date.SimpleDateFormatAdapter" scope="singleton"/>
     <bean type="org.apache.struts2.components.date.DateFormatter" name="dateTimeFormatter" class="org.apache.struts2.components.date.DateTimeFormatterAdapter" scope="singleton"/>
 
-    <bean type="com.opensymphony.xwork2.ognl.OgnlCacheFactory" name="ognlExpressionCacheFactory" class="com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory" scope="singleton"/>
-    <bean type="com.opensymphony.xwork2.ognl.OgnlCacheFactory" name="ognlBeanInfoCacheFactory" class="com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory" scope="singleton"/>
+    <bean type="com.opensymphony.xwork2.ognl.ExpressionCacheFactory" name="struts" class="com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory" scope="singleton" />
+    <bean type="com.opensymphony.xwork2.ognl.BeanInfoCacheFactory" name="struts" class="com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory" scope="singleton" />
 
     <package name="struts-default" abstract="true">
         <result-types>

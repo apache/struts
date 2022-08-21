@@ -298,8 +298,8 @@ public class DefaultConfiguration implements Configuration {
 
         builder.factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON);
         builder.factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON);
-        builder.factory(ExpressionCacheFactory.class, "defaultOgnlExpressionCacheFactory", DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON);
-        builder.factory(BeanInfoCacheFactory.class, "defaultOgnlBeanInfoCacheFactory", DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON);
+        builder.factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON);
+        builder.factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON);
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
 
         builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);

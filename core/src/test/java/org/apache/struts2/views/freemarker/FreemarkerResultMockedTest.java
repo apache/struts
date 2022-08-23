@@ -259,6 +259,8 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         EasyMock.replay(servletContext);
 
         init();
+        // create session
+        request.getSession();
 
         request.setRequestURI("/tutorial/test10.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);

@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import java.net.URI;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -36,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  * @see DefaultCspSettings
  **/
 public final class CspInterceptor extends AbstractInterceptor implements PreResultListener {
+
     private final CspSettings settings = new DefaultCspSettings();
 
     @Override
@@ -45,8 +47,9 @@ public final class CspInterceptor extends AbstractInterceptor implements PreResu
     }
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {
+        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
-        settings.addCspHeaders(response);
+        settings.addCspHeaders(request, response);
     }
 
     public void setReportUri(String reportUri) {

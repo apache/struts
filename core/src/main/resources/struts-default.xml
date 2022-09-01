@@ -392,6 +392,7 @@
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="cspInterceptor">
+                    <param name="disabled">false</param>
                     <param name="enforcingMode">false</param>
                 </interceptor-ref>
                 <interceptor-ref name="prepare"/>
@@ -407,15 +408,18 @@
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
                 <interceptor-ref name="coepInterceptor">
-                    <param name="enforcingMode">false</param>
                     <param name="disabled">false</param>
+                    <param name="enforcingMode">false</param>
                     <param name="exemptedPaths"/>
                 </interceptor-ref>
                 <interceptor-ref name="coopInterceptor">
+                    <param name="disabled">false</param>
                     <param name="exemptedPaths"/>
                     <param name="mode">same-origin</param>
                 </interceptor-ref>
-                <interceptor-ref name="fetchMetadata"/>
+                <interceptor-ref name="fetchMetadata">
+                    <param name="disabled">false</param>
+                </interceptor-ref>
                 <interceptor-ref name="validation">
                     <param name="excludeMethods">input,back,cancel,browse</param>
                 </interceptor-ref>

@@ -53,11 +53,11 @@ public class DefaultCspSettings implements CspSettings {
 
     public void addCspHeaders(HttpServletRequest request, HttpServletResponse response) {
         if (isSessionActive(request)) {
-            LOG.debug("Session is active, applying CSP settings");
+            LOG.trace("Session is active, applying CSP settings");
             associateNonceWithSession(request);
             response.setHeader(cspHeader, cratePolicyFormat(request));
         } else {
-            LOG.debug("Session is not active, ignoring CSP settings");
+            LOG.trace("Session is not active, ignoring CSP settings");
         }
     }
 

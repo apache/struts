@@ -121,7 +121,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         checkHeader(reportUri, enforcingMode);
     }
 
-    public void testCannotParseUri() throws Exception {
+    public void testCannotParseUri() {
         String enforcingMode = "false";
         interceptor.setEnforcingMode(enforcingMode);
 
@@ -133,7 +133,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         }
     }
 
-    public void testCannotParseRelativeUri() throws Exception {
+    public void testCannotParseRelativeUri() {
         String enforcingMode = "false";
         interceptor.setEnforcingMode(enforcingMode);
 
@@ -145,8 +145,19 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         }
     }
 
+    public void testDisabled() throws Exception {
+        interceptor.setDisabled("true");
+
+        interceptor.intercept(mai);
+
+        String header = response.getHeader(CSP_ENFORCE_HEADER);
+        assertTrue("CSP is not disabled", Strings.isEmpty(header));
+        header = response.getHeader(CSP_REPORT_HEADER);
+        assertTrue("CSP is not disabled", Strings.isEmpty(header));
+    }
+
     public void checkHeader(String reportUri, String enforcingMode) {
-        String expectedCspHeader = "";
+        String expectedCspHeader;
         if (Strings.isEmpty(reportUri)) {
             expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; ",
                 OBJECT_SRC, NONE,
@@ -162,7 +173,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
             );
         }
 
-        String header = "";
+        String header;
         if (enforcingMode.equals("true")) {
             header = response.getHeader(CSP_ENFORCE_HEADER);
         } else {

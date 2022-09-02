@@ -18,6 +18,27 @@
  */
 package org.apache.struts2.interceptor;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import org.apache.logging.log4j.util.Strings;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Objects;
+
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_EMBED;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_OBJECT;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.DEST_SCRIPT;
@@ -31,25 +52,6 @@ import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SITE_SAME_O
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.SITE_SAME_SITE;
 import static org.apache.struts2.interceptor.ResourceIsolationPolicy.VARY_HEADER;
 import static org.junit.Assert.assertNotEquals;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import javax.servlet.http.HttpServletResponse;
 
 public class FetchMetadataInterceptorTest extends XWorkTestCase {
 
@@ -79,7 +81,7 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
     }
 
     public void testValidSite() throws Exception {
-        for (String header : Arrays.asList(SITE_SAME_ORIGIN, SITE_SAME_SITE, SITE_NONE)){
+        for (String header : Arrays.asList(SITE_SAME_ORIGIN, SITE_SAME_SITE, SITE_NONE)) {
             request.addHeader(SEC_FETCH_SITE_HEADER, header);
 
             assertNotEquals("Expected interceptor to accept this request", SC_FORBIDDEN, interceptor.intercept(mai));
@@ -147,12 +149,12 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         interceptor.intercept(mai);
 
         assertTrue("Expected vary header to be included", response.containsHeader(VARY_HEADER));
-        assertFalse("Expected original vary header content to be replaced", response.getHeader(VARY_HEADER).contains(ACCEPT_ENCODING_VALUE));
-        assertTrue("Expected added vary header content to be present", response.getHeader(VARY_HEADER).contains(VARY_HEADER_VALUE));
+        assertFalse("Expected original vary header content to be replaced", Objects.requireNonNull(response.getHeader(VARY_HEADER)).contains(ACCEPT_ENCODING_VALUE));
+        assertTrue("Expected added vary header content to be present", Objects.requireNonNull(response.getHeader(VARY_HEADER)).contains(VARY_HEADER_VALUE));
     }
 
     public void testSetExemptedPathsInjectionIndirectly() throws Exception {
-        // Perform a multi-step test to confirm (indirectly) that the method parameter injection of setExemptedPaths() for
+        // Perform a multistep test to confirm (indirectly) that the method parameter injection of setExemptedPaths() for
         // the FetchMetadataInterceptor is functioning as expected, when configured appropriately.
         // Ensure we're using the specific test configuration, not the default simple configuration.
         XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("struts-testing.xml");
@@ -259,4 +261,12 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         assertNotEquals("Expected interceptor to accept this request [" + "/" + fetchMetadataExemptedGlobalActionConfig.getName() + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
     }
 
+    public void testDisabled() throws Exception {
+        interceptor.setDisabled("true");
+
+        interceptor.intercept(mai);
+
+        String header = response.getHeader(VARY_HEADER);
+        assertTrue("Fetch Metadata is not disabled", Strings.isEmpty(header));
+    }
 }

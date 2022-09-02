@@ -52,21 +52,30 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        invocation.addPreResultListener(this);
+        if (disabled) {
+            LOG.trace("COEP interceptor has been disabled");
+        } else {
+            invocation.addPreResultListener(this);
+        }
         return invocation.invoke();
     }
 
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
+        if (disabled) {
+            return;
+        }
+
         HttpServletRequest req = invocation.getInvocationContext().getServletRequest();
-        HttpServletResponse res = invocation.getInvocationContext().getServletResponse();
         final String path = req.getContextPath();
 
         if (exemptedPaths.contains(path)) {
             // no need to add headers
-            LOG.debug("Skipping COEP header for exempted path {}", path);
-        } else if (!disabled) {
-            res.setHeader(header, REQUIRE_COEP_HEADER);
+            LOG.debug("Skipping COEP header for exempted path: {}", path);
+        } else {
+            LOG.trace("Applying COEP header: {} with value: {}", header, REQUIRE_COEP_HEADER);
+            HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
+            response.setHeader(header, REQUIRE_COEP_HEADER);
         }
     }
 

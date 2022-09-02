@@ -49,25 +49,34 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
     private static final String COOP_HEADER = "Cross-Origin-Opener-Policy";
 
     private final Set<String> exemptedPaths = new HashSet<>();
+    private boolean disabled = false;
     private String mode = SAME_ORIGIN;
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        invocation.addPreResultListener(this);
+        if (disabled) {
+            LOG.trace("COOP interceptor has been disabled");
+        } else {
+            invocation.addPreResultListener(this);
+        }
         return invocation.invoke();
     }
 
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
+        if (disabled) {
+            return;
+        }
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
         String path = request.getContextPath();
 
         if (isExempted(path)) {
             // no need to add headers
             LOG.debug("Skipping COOP header for exempted path {}", path);
         } else {
-            response.setHeader(COOP_HEADER, getMode());
+            LOG.trace("Applying COOP header: {} with value: {}", COOP_HEADER, mode);
+            HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
+            response.setHeader(COOP_HEADER, mode);
         }
     }
 
@@ -79,10 +88,6 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
         exemptedPaths.addAll(TextParseUtil.commaDelimitedStringToSet(paths));
     }
 
-    private String getMode() {
-        return mode;
-    }
-
     public void setMode(String mode) {
         if (!(mode.equals(SAME_ORIGIN) || mode.equals(SAME_ORIGIN_ALLOW_POPUPS) || mode.equals(UNSAFE_NONE))) {
             throw new IllegalArgumentException(String.format("Mode '%s' not recognized!", mode));
@@ -90,4 +95,7 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
         this.mode = mode;
     }
 
+    public void setDisabled(String value) {
+        this.disabled = Boolean.parseBoolean(value);
+    }
 }

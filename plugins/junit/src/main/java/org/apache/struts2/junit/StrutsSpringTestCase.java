@@ -16,27 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.junit;
 
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.test.context.support.GenericXmlContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
- * User: mcucchiara
- * Date: 04/08/11
- * Time: 16.50
+ * Base class for Spring JUnit actions
  */
-public abstract class StrutsSpringJUnit4TestCase<T> extends StrutsJUnit4TestCase<T> implements ApplicationContextAware {
-    protected ApplicationContext applicationContext;
+public abstract class StrutsSpringTestCase extends StrutsTestCase {
 
-    @Override
+    private static final String DEFAULT_CONTEXT_LOCATION = "classpath*:applicationContext.xml";
+    protected static ApplicationContext applicationContext;
+
     protected void setupBeforeInitDispatcher() throws Exception {
-        this.servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
+        // only load beans from spring once
+        if (applicationContext == null) {
+            GenericXmlContextLoader xmlContextLoader = new GenericXmlContextLoader();
+            applicationContext = xmlContextLoader.loadContext(getContextLocations());
+        }
+
+        servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
     }
 
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    protected String[] getContextLocations() {
+        return new String[]{DEFAULT_CONTEXT_LOCATION};
     }
+
 }

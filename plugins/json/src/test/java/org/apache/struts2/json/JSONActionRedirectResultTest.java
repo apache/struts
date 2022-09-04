@@ -18,19 +18,18 @@
  */
 package org.apache.struts2.json;
 
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
-import org.apache.struts2.views.util.DefaultUrlHelper;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
+import org.apache.struts2.junit.StrutsTestCase;
+import org.apache.struts2.views.util.DefaultUrlHelper;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 
 public class JSONActionRedirectResultTest extends StrutsTestCase {
 

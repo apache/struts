@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.junit;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxy;
@@ -30,11 +30,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.servlet.ServletException;
 import java.io.UnsupportedEncodingException;
 
-@RunWith(SpringJUnit4ClassRunner.class) 
-@ContextConfiguration(locations={"classpath*:applicationContext.xml"})
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath*:applicationContext.xml"})
 public class StrutsSpringJUnit4TestCaseTest extends StrutsSpringJUnit4TestCase<JUnitTestAction> {
 
-	@Test
+    @Test
     public void getActionMapping() {
         ActionMapping mapping = getActionMapping("/test/testAction.action");
         Assert.assertNotNull(mapping);
@@ -42,11 +42,11 @@ public class StrutsSpringJUnit4TestCaseTest extends StrutsSpringJUnit4TestCase<J
         Assert.assertEquals("testAction", mapping.getName());
     }
 
-	@Test
+    @Test
     public void getActionProxy() throws Exception {
         //set parameters before calling getActionProxy
         request.setParameter("name", "FD");
-        
+
         ActionProxy proxy = getActionProxy("/test/testAction.action");
         Assert.assertNotNull(proxy);
 
@@ -58,13 +58,13 @@ public class StrutsSpringJUnit4TestCaseTest extends StrutsSpringJUnit4TestCase<J
         Assert.assertEquals("FD", action.getName());
     }
 
-	@Test
+    @Test
     public void executeAction() throws ServletException, UnsupportedEncodingException {
         String output = executeAction("/test/testAction.action");
         Assert.assertEquals("Hello", output);
     }
 
-	@Test
+    @Test
     public void getValueFromStack() throws ServletException, UnsupportedEncodingException {
         request.setParameter("name", "FD");
         executeAction("/test/testAction.action");

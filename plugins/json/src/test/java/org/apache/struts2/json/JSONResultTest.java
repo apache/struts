@@ -18,6 +18,19 @@
  */
 package org.apache.struts2.json;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.junit.StrutsTestCase;
+import org.apache.struts2.junit.util.TestUtils;
+import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
+
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -32,21 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.Result;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.util.TestUtils;
-import org.springframework.aop.framework.ProxyFactory;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * JSONResultTest
@@ -298,13 +296,13 @@ public class JSONResultTest extends StrutsTestCase {
         stack.push(action);
 
         // test scape characters
-        action.setArray(new String[] { "a", "a", "\"", "\\", "/", "\b", "\f", "\n", "\r", "\t" });
+        action.setArray(new String[]{"a", "a", "\"", "\\", "/", "\b", "\f", "\n", "\r", "\t"});
 
         List list = new ArrayList();
 
         list.add("b");
         list.add(1);
-        list.add(new int[] { 10, 12 });
+        list.add(new int[]{10, 12});
         action.setCollection(list);
 
         // beans
@@ -343,7 +341,7 @@ public class JSONResultTest extends StrutsTestCase {
         Map map = new LinkedHashMap();
 
         map.put("a", 1);
-        map.put("c", new float[] { 1.0f, 2.0f });
+        map.put("c", new float[]{1.0f, 2.0f});
         action.setMap(map);
 
         action.setFoo("foo");
@@ -403,13 +401,13 @@ public class JSONResultTest extends StrutsTestCase {
         stack.push(action);
 
         // test scape characters
-        action.setArray(new String[] { "a", "a", "\"", "\\", "/", "\b", "\f", "\n", "\r", "\t" });
+        action.setArray(new String[]{"a", "a", "\"", "\\", "/", "\b", "\f", "\n", "\r", "\t"});
 
         List list = new ArrayList();
 
         list.add("b");
         list.add(1);
-        list.add(new int[] { 10, 12 });
+        list.add(new int[]{10, 12});
         action.setCollection(list);
 
         // beans
@@ -446,7 +444,7 @@ public class JSONResultTest extends StrutsTestCase {
         Map map = new LinkedHashMap();
 
         map.put("a", 1);
-        map.put("c", new float[] { 1.0f, 2.0f });
+        map.put("c", new float[]{1.0f, 2.0f});
         action.setMap(map);
 
         action.setFoo("foo");
@@ -714,7 +712,7 @@ public class JSONResultTest extends StrutsTestCase {
         assertEquals("UTF-8", encoding);
     }
 
-    public void testPassingNullInvocation() throws Exception{
+    public void testPassingNullInvocation() throws Exception {
         Result result = new JSONResult();
         try {
             result.execute(null);

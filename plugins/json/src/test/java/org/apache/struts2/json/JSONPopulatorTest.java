@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import org.apache.struts2.util.TestUtils;
+import org.apache.struts2.junit.util.TestUtils;
 
 public class JSONPopulatorTest extends TestCase {
 

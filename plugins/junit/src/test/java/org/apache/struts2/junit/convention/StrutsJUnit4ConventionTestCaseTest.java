@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.convention;
+package org.apache.struts2.junit.convention;
 
 import actions.ViewAction;
-import org.apache.struts2.StrutsJUnit4TestCase;
+import org.apache.struts2.junit.StrutsJUnit4TestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

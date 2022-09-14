@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.testng;
 
 import java.util.Map;
 
@@ -25,8 +25,6 @@ import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.springframework.mock.web.MockServletContext;
-
-import com.opensymphony.xwork2.TestNGXWorkTestCase;
 
 /**
  * Base test class for TestNG unit tests.  Provides common Struts variables
@@ -39,7 +37,7 @@ public class StrutsTestCase extends TestNGXWorkTestCase {
         super.setUp();
         initDispatcher(null);
     }
-    
+
     protected Dispatcher initDispatcher(Map<String,String> params) {
         Dispatcher du = StrutsTestCaseHelper.initDispatcher(new MockServletContext(), params);
         configurationManager = du.getConfigurationManager();

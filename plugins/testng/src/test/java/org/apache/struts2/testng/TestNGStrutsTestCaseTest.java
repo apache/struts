@@ -16,21 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2;
+package org.apache.struts2.testng;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
 import junit.framework.TestCase;
+
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.testng.StrutsTestCase;
 import org.testng.TestListenerAdapter;
 import org.testng.TestNG;
 import org.testng.annotations.Test;
 
-public class TestNGXWorkTestCaseTest extends TestCase {
+import com.opensymphony.xwork2.config.ConfigurationManager;
+
+public class TestNGStrutsTestCaseTest extends TestCase {
 
     public void testSimpleTest() throws Exception {
         TestListenerAdapter tla = new TestListenerAdapter();
         TestNG testng = new TestNG();
         testng.setTestClasses(new Class[] { RunTest.class });
-        testng.setOutputDirectory("target/surefire-reports");
         testng.addListener(tla);
         try {
             testng.run();
@@ -38,19 +41,24 @@ public class TestNGXWorkTestCaseTest extends TestCase {
             assertEquals(0, tla.getFailedTests().size());
             assertTrue(RunTest.ran);
             assertNotNull(RunTest.mgr);
+            assertNotNull(RunTest.du);
+            assertNull(Dispatcher.getInstance());
         } finally {
             RunTest.mgr = null;
         }
     }
-    
-    @Test
-    public static class RunTest extends TestNGXWorkTestCase {
+
+    public static class RunTest extends StrutsTestCase {
         public static boolean ran = false;
         public static ConfigurationManager mgr;
-        
+        public static Dispatcher du;
+
+        @Test
         public void testRun() {
             ran = true;
             mgr = this.configurationManager;
+            du = Dispatcher.getInstance();
         }
     }
 }
+

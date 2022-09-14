@@ -1112,9 +1112,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>7.1.0</version>
-                <scope>compile</scope>
-                <optional>true</optional>
+                <version>7.4.0</version>
             </dependency>
 
             <dependency>

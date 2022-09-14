@@ -339,8 +339,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <scope>compile</scope>
-            <optional>true</optional>
+            <scope>test</scope>
         </dependency>
 
         <!-- SLF4J support -->

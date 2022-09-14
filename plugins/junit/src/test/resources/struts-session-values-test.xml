@@ -21,15 +21,15 @@
   -->
 
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
-    "http://struts.apache.org/dtds/struts-2.1.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
 
 <struts>
     <package name="test" namespace="/sessiontest" extends="struts-default">
-        <action name="sessionSet" class="org.apache.struts2.session.SessionSetAction">
+        <action name="sessionSet" class="org.apache.struts2.junit.session.SessionSetAction">
             <result type="freemarker">/template-session.ftl</result>
         </action>
-        <action name="sessionGet" class="org.apache.struts2.session.SessionGetAction">
+        <action name="sessionGet" class="org.apache.struts2.junit.session.SessionGetAction">
             <result type="freemarker">/template-session.ftl</result>
         </action>
     </package>

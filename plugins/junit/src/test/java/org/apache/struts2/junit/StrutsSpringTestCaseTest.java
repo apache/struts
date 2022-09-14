@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,15 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE struts PUBLIC
-        "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
-        "http://struts.apache.org/dtds/struts-2.1.dtd">
+package org.apache.struts2.junit;
 
-<struts>
-    <package name="test" namespace="/test" extends="struts-default">
-        <action name="testAction-2" class="org.apache.struts2.junit.JUnitTestAction">
-            <result type="freemarker">/template-2.ftl</result>
-        </action>
-    </package>
-</struts>
+public class StrutsSpringTestCaseTest extends StrutsSpringTestCase {
+    public void testApplicationContext() {
+        assertNotNull(applicationContext);
+        JUnitTestAction action = (JUnitTestAction) applicationContext.getBean("testAction");
+        assertNotNull(action);
+    }
+}

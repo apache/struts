@@ -16,15 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.junit;
 
 
 import com.opensymphony.xwork2.ActionContext;
-import java.util.HashMap;
-import java.util.Map;
-import javax.portlet.PortletMode;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.mock.web.portlet.MockPortletContext;
 import org.apache.struts2.mock.web.portlet.MockPortletRequest;
 import org.apache.struts2.mock.web.portlet.MockPortletResponse;
@@ -32,6 +30,10 @@ import org.apache.struts2.mock.web.portlet.MockPortletSession;
 import org.apache.struts2.mock.web.portlet.MockStateAwareResponse;
 import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.portlet.PortletPhase;
+
+import javax.portlet.PortletMode;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
  * Changes:  This is a copy of org.apache.struts2.StrutsPortletTestCase from the Struts 2 portlet-plugin, moved

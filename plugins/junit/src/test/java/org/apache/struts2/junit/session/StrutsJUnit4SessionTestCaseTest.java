@@ -16,22 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.session;
+package org.apache.struts2.junit.session;
 
-import org.apache.struts2.JUnitTestAction;
-import org.apache.struts2.StrutsJUnit4TestCase;
+import org.apache.struts2.junit.JUnitTestAction;
+import org.apache.struts2.junit.StrutsJUnit4TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Calls SessionSet which sets a value into the session and afterwards calls SessionGet, which
  * should return this session value.
- *
+ * <p>
  * In prior versions only one executeAction() call could happen in a single test case, because
  * either the session values were deleted or the wrong result would be returned (always the result of
  * the first action execution).
  */
-public class StrutsJUnit4SessionTestCaseTest extends StrutsJUnit4TestCase<JUnitTestAction>{
+public class StrutsJUnit4SessionTestCaseTest extends StrutsJUnit4TestCase<JUnitTestAction> {
     @Test
     public void testPersistingSessionValues() throws Exception {
         String output = executeAction("/sessiontest/sessionSet.action");

@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,15 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<!DOCTYPE struts PUBLIC
-        "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
-        "http://struts.apache.org/dtds/struts-2.1.dtd">
+package org.apache.struts2.junit;
 
-<struts>
-    <package name="test" namespace="/test" extends="struts-default">
-        <action name="testAction-2" class="org.apache.struts2.junit.JUnitTestAction">
-            <result type="freemarker">/template-2.ftl</result>
-        </action>
-    </package>
-</struts>
+import com.opensymphony.xwork2.ActionSupport;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class JUnitTestAction extends ActionSupport {
+    private static final long serialVersionUID = 1629266238339053546L;
+
+    private String name;
+
+    @Autowired
+    private MySessionBean mySessionBean;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}

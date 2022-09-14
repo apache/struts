@@ -16,11 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.junit.session;
 
-public class MySessionBean {
+import com.opensymphony.xwork2.ActionSupport;
 
-    public void doSomething() {
-        // do Something
+/**
+ * An action which reads a value from the session.
+ * The value is previously set by SessionSetAction.
+ */
+public class SessionGetAction extends ActionSupport {
+    private static final long serialVersionUID = 8366502863472148631L;
+
+    public String execute() {
+        return ActionSupport.SUCCESS;
     }
 }

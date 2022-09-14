@@ -18,19 +18,18 @@
  */
 package org.apache.struts2.json;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.util.TestUtils;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.junit.StrutsTestCase;
+import org.apache.struts2.junit.util.TestUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 public class JSONInterceptorTest extends StrutsTestCase {
     private MockActionInvocationEx invocation;
@@ -294,7 +293,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertEquals("application/json;charset=UTF-8", response.getContentType());
     }
 
-    @SuppressWarnings( { "unchecked", "unchecked" })
+    @SuppressWarnings({"unchecked", "unchecked"})
     public void testReadEmpty() throws Exception {
         // request
         setRequestContent("json-6.txt");
@@ -309,7 +308,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         interceptor.intercept(this.invocation);
     }
 
-    @SuppressWarnings( { "unchecked", "unchecked" })
+    @SuppressWarnings({"unchecked", "unchecked"})
     public void test() throws Exception {
         // request
         setRequestContent("json-1.txt");
@@ -457,7 +456,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertEquals(bean2.getDoubleField(), 10.1);
         assertEquals(bean2.getByteField(), 3);
     }
-    
+
     public void testJSONArray() throws Exception {
         setRequestContent("json-12.txt");
         this.request.addHeader("Content-Type", "application/json");
@@ -509,7 +508,7 @@ public class JSONInterceptorTest extends StrutsTestCase {
         assertEquals(beans.get(0).getDoubleField(), 10.1);
         assertEquals(beans.get(0).getByteField(), 3);
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

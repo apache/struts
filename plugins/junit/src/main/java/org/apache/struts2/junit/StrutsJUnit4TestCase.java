@@ -16,13 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.junit;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
+import com.opensymphony.xwork2.interceptor.annotations.After;
+import com.opensymphony.xwork2.interceptor.annotations.Before;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -38,14 +42,16 @@ import org.springframework.mock.web.MockServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Base test case for JUnit testing Struts.
- */
-public abstract class StrutsTestCase extends XWorkTestCase {
+import static org.junit.Assert.assertNotNull;
+
+public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
+
     protected MockHttpServletResponse response;
     protected MockHttpServletRequest request;
     protected MockPageContext pageContext;
@@ -63,6 +69,24 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     }
 
     /**
+     * gets an object from the stack after an action is executed
+     *
+     * @return The executed action
+     */
+    @SuppressWarnings("unchecked")
+    protected T getAction() {
+        return (T) findValueAfterExecute("action");
+    }
+
+    protected boolean containsErrors() {
+        T action = this.getAction();
+        if (action instanceof ValidationAware) {
+            return ((ValidationAware) action).hasActionErrors();
+        }
+        throw new UnsupportedOperationException("Current action does not implement ValidationAware interface");
+    }
+
+    /**
      * Executes an action and returns it's output (not the result returned from
      * execute()), but the actual output that would be written to the response.
      * For this to work the configured result for the action needs to be
@@ -75,9 +99,10 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         assertNotNull(mapping);
         Dispatcher.getInstance().serviceAction(request, response, mapping);
 
-        if (response.getStatus() != HttpServletResponse.SC_OK) {
-            throw new ServletException("Error code [" + response.getStatus() + "], Error: [" + response.getErrorMessage() + "]");
-        }
+        if (response.getStatus() != HttpServletResponse.SC_OK)
+            throw new ServletException("Error code [" + response.getStatus() + "], Error: ["
+                + response.getErrorMessage() + "]");
+
         return response.getContentAsString();
     }
 
@@ -94,7 +119,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
 
         Configuration config = configurationManager.getConfiguration();
         ActionProxy proxy = config.getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
-                namespace, name, method, new HashMap<String, Object>(), true, false);
+            namespace, name, method, new HashMap<String, Object>(), true, false);
 
         initActionContext(proxy.getInvocation().getInvocationContext());
 
@@ -105,22 +130,14 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         ServletActionContext.setRequest(request);
         ServletActionContext.setResponse(response);
 
-        return proxy;
-    }
+        ServletActionContext.getContext().put(ServletActionContext.ACTION_MAPPING, mapping);
 
-    /**
-     * A helper method which allows instantiate an action if this action extends
-     * {@link com.opensymphony.xwork2.ActionSupport} or any other action class
-     * that requires framework's dependencies injection.
-     */
-    protected <T> T createAction(Class<T> clazz) {
-        return container.inject(clazz);
+        return proxy;
     }
 
     protected void initActionContext(ActionContext actionContext) {
         actionContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
         initSession(actionContext);
-        applyAdditionalParams(actionContext);
         // set the action context to the one used by the proxy
         ActionContext.bind(actionContext);
     }
@@ -130,15 +147,6 @@ public abstract class StrutsTestCase extends XWorkTestCase {
             actionContext.withSession(new HashMap<>());
             request.setSession(new MockHttpSession(servletContext));
         }
-    }
-
-    /**
-     * Can be overwritten in subclass to provide additional context's params and settings used during action invocation
-     *
-     * @param context current {@link ActionContext}
-     */
-    protected void applyAdditionalParams(ActionContext context) {
-        // empty be default
     }
 
     /**
@@ -164,24 +172,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         container.inject(object);
     }
 
-    /**
-     * Sets up the configuration settings, XWork configuration, and
-     * message resources
-     */
-    protected void setUp() throws Exception {
-        super.setUp();
-        initServletMockObjects();
-        setupBeforeInitDispatcher();
-        dispatcher = initDispatcher(dispatcherInitParams);
-        setupAfterInitDispatcher(dispatcher);
-    }
-
     protected void setupBeforeInitDispatcher() throws Exception {
-        // empty by default
-    }
-
-    protected void setupAfterInitDispatcher(Dispatcher dispatcher) {
-        // empty by default
     }
 
     protected void initServletMockObjects() {
@@ -191,17 +182,66 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         pageContext = new MockPageContext(servletContext, request, response);
     }
 
-    protected Dispatcher initDispatcher(Map<String, String> params) {
-        Dispatcher du = StrutsTestCaseHelper.initDispatcher(servletContext, params);
-        configurationManager = du.getConfigurationManager();
-        configuration = configurationManager.getConfiguration();
-        container = configuration.getContainer();
-        return du;
+    public void finishExecution() {
+        HttpSession session = this.request.getSession();
+        Enumeration attributeNames = session.getAttributeNames();
+
+        MockHttpServletRequest nextRequest = new MockHttpServletRequest();
+
+        while (attributeNames.hasMoreElements()) {
+            String key = (String) attributeNames.nextElement();
+            Object attribute = session.getAttribute(key);
+            nextRequest.getSession().setAttribute(key, attribute);
+        }
+
+        this.response = new MockHttpServletResponse();
+        this.request = nextRequest;
+        this.pageContext = new MockPageContext(servletContext, request, response);
     }
 
-    protected void tearDown() throws Exception {
+    /**
+     * Sets up the configuration settings, XWork configuration, and
+     * message resources
+     */
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        initServletMockObjects();
+        setupBeforeInitDispatcher();
+        initDispatcherParams();
+        initDispatcher(dispatcherInitParams);
+    }
+
+    protected void initDispatcherParams() {
+        if (StringUtils.isNotBlank(getConfigPath())) {
+            dispatcherInitParams = new HashMap<>();
+            dispatcherInitParams.put("config", "struts-default.xml," + getConfigPath());
+        }
+    }
+
+    protected Dispatcher initDispatcher(Map<String, String> params) {
+        dispatcher = StrutsTestCaseHelper.initDispatcher(servletContext, params);
+        configurationManager = dispatcher.getConfigurationManager();
+        configuration = configurationManager.getConfiguration();
+        container = configuration.getContainer();
+        container.inject(dispatcher);
+        return dispatcher;
+    }
+
+    /**
+     * Override this method to return a comma separated list of paths to a configuration
+     * file.
+     * <p>The default implementation simply returns <code>null</code>.
+     *
+     * @return a comma separated list of config locations
+     */
+    protected String getConfigPath() {
+        return null;
+    }
+
+    @After
+    public void tearDown() throws Exception {
         super.tearDown();
-        // maybe someone else already destroyed Dispatcher
         if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
             dispatcher.cleanup();
             dispatcher = null;

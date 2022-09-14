@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.json;
 
-import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.json.annotations.JSONFieldBridge;
 import org.apache.struts2.json.bridge.StringBridge;
-import org.apache.struts2.util.TestUtils;
+import org.apache.struts2.junit.StrutsTestCase;
+import org.apache.struts2.junit.util.TestUtils;
 import org.junit.Test;
 
 import java.net.URL;
@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class DefaultJSONWriterTest extends StrutsTestCase{
+public class DefaultJSONWriterTest extends StrutsTestCase {
     @Test
     public void testWrite() throws Exception {
-        Bean bean1=new Bean();
+        Bean bean1 = new Bean();
         bean1.setStringField("str");
         bean1.setBooleanField(true);
         bean1.setCharField('s');
@@ -54,7 +54,7 @@ public class DefaultJSONWriterTest extends StrutsTestCase{
 
     @Test
     public void testWriteExcludeNull() throws Exception {
-        BeanWithMap bean1=new BeanWithMap();
+        BeanWithMap bean1 = new BeanWithMap();
         bean1.setStringField("str");
         bean1.setBooleanField(true);
         bean1.setCharField('s');
@@ -78,7 +78,7 @@ public class DefaultJSONWriterTest extends StrutsTestCase{
         TestUtils.assertEquals(DefaultJSONWriter.class.getResource("jsonwriter-write-bean-03.txt"), json);
     }
 
-    private class BeanWithMap extends Bean{
+    private class BeanWithMap extends Bean {
         private Map map;
 
         public Map getMap() {
@@ -92,7 +92,7 @@ public class DefaultJSONWriterTest extends StrutsTestCase{
 
     @Test
     public void testWriteAnnotatedBean() throws Exception {
-        AnnotatedBean bean1=new AnnotatedBean();
+        AnnotatedBean bean1 = new AnnotatedBean();
         bean1.setStringField("str");
         bean1.setBooleanField(true);
         bean1.setCharField('s');
@@ -146,7 +146,7 @@ public class DefaultJSONWriterTest extends StrutsTestCase{
         }
     }
 
-    private class AnnotatedBean extends Bean{
+    private class AnnotatedBean extends Bean {
         private URL url;
 
         @JSONFieldBridge(impl = StringBridge.class)

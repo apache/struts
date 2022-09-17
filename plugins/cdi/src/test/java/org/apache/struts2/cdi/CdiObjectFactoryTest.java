@@ -18,33 +18,33 @@
  */
 package org.apache.struts2.cdi;
 
-import org.jboss.weld.environment.se.StartMain;
-import static org.junit.Assert.*;
-
+import org.jboss.weld.bootstrap.api.helpers.RegistrySingletonProvider;
+import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 import javax.enterprise.inject.spi.InjectionTarget;
 
-/**
- * CdiObjectFactoryTest.
- */
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 public class CdiObjectFactoryTest {
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setup() throws Exception {
+        Weld weld = new Weld().containerId(RegistrySingletonProvider.STATIC_INSTANCE);
+        WeldContainer container = weld.initialize();
+
         SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder();
         builder.activate();
-
-        StartMain sm = new StartMain(new String[0]);
-        WeldContainer weldContainer = sm.go();
-        builder.bind(CdiObjectFactory.CDI_JNDIKEY_BEANMANAGER_COMP, weldContainer.getBeanManager());
+        builder.bind(CdiObjectFactory.CDI_JNDIKEY_BEANMANAGER_COMP, container.getBeanManager());
     }
 
     @Test
-    public void testFindBeanManager() throws Exception {
+    public void testFindBeanManager() {
         assertNotNull(new CdiObjectFactory().findBeanManager());
     }
 
@@ -56,7 +56,8 @@ public class CdiObjectFactoryTest {
         assertNotNull(fooConsumer.fooService);
     }
 
-    @Test public void testGetInjectionTarget() throws Exception {
+    @Test
+    public void testGetInjectionTarget() {
         final CdiObjectFactory cdiObjectFactory = new CdiObjectFactory();
         final InjectionTarget<?> injectionTarget = cdiObjectFactory.getInjectionTarget(FooConsumer.class);
         assertNotNull(injectionTarget);

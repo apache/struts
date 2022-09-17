@@ -12,3 +12,5 @@ notifications:
 
 github:
   del_branch_on_merge: true
+  protected_branches:
+    master: { }

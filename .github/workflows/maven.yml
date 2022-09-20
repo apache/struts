@@ -21,6 +21,10 @@ on:
     branches:
       - master
 
+env:
+  MAVEN_OPTS: -Xmx2048m -Xms1024m
+  LANG: en_US.utf8
+
 jobs:
   build:
     runs-on: ubuntu-latest

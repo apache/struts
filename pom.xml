@@ -183,17 +183,6 @@
             </build>
         </profile>
         <profile>
-            <id>jdk9</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <properties>
-                <!-- coverall version 4.3.0 does not work with java 9, see https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
-                <!-- TODO delete coveralls.skip property after fix of https://github.com/cobertura/cobertura/issues/271 -->
-                <coveralls.skip>true</coveralls.skip>
-            </properties>
-        </profile>
-        <profile>
             <id>jdk17</id>
             <activation>
                 <jdk>[17,)</jdk>
@@ -218,33 +207,13 @@
             </build>
         </profile>
         <profile>
-            <id>travis-coveralls</id>
+            <id>coverage</id>
+            <properties>
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.organization>apache</sonar.organization>
+                <sonar.projectKey>apache_struts</sonar.projectKey>
+            </properties>
             <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <configuration>
-                                <argLine>${argLine}</argLine>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-failsafe-plugin</artifactId>
-                            <configuration>
-                                <argLine>${argLine}</argLine>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.eclipse.jetty</groupId>
-                            <artifactId>jetty-maven-plugin</artifactId>
-                            <configuration>
-                                <jvmArgs>${argLine}</jvmArgs>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
                 <plugins>
                     <plugin>
                         <groupId>org.jacoco</groupId>
@@ -258,17 +227,17 @@
                                 </goals>
                             </execution>
                             <execution>
-                                <id>prepare-agent-integration</id>
+                                <id>report</id>
                                 <goals>
-                                    <goal>prepare-agent-integration</goal>
+                                    <goal>report</goal>
                                 </goals>
+                                <configuration>
+                                    <formats>
+                                        <format>XML</format>
+                                    </formats>
+                                </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>io.jsonwebtoken.coveralls</groupId>
-                        <artifactId>coveralls-maven-plugin</artifactId>
-                        <version>4.4.1</version>
                     </plugin>
                 </plugins>
             </build>

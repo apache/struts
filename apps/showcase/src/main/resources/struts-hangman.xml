@@ -21,7 +21,7 @@
 -->
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-	"http://struts.apache.org/dtds/struts-2.5.dtd">
+	"https://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
 	<package name="hangman" extends="struts-default" namespace="/hangman">
@@ -41,9 +41,9 @@
 			<result type="freemarker">/WEB-INF/hangman/hangmanNonAjax.ftl</result>
 		</action>
 	</package>
-	
-	
-	
+
+
+
 	<package name="hangman-ajax" extends="struts-default" namespace="/hangman/ajax">
 		<action name="blank">
 			<result type="freemarker">/WEB-INF/hangman/blank.ftl</result>
@@ -61,4 +61,4 @@
 			<result type="freemarker">/WEB-INF/hangman/updateGuessLeft.ftl</result>
 		</action>
 	</package>
-</struts>	
+</struts>

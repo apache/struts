@@ -21,7 +21,7 @@
 -->
 <!DOCTYPE struts PUBLIC
         "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-        "http://struts.apache.org/dtds/struts-2.5.dtd">
+        "https://struts.apache.org/dtds/struts-2.5.dtd">
 <struts>
     <include file="xwork-test-default.xml"/>
     <package name="default" extends="xwork-test-default">
@@ -84,8 +84,8 @@
             <result name="*" type="mock" />
             <interceptor-ref name="defaultStack"/>
         </action>
-		
-		<action name="WildCard/*/*" class="com.opensymphony.xwork2.{1}Action" 
+
+		<action name="WildCard/*/*" class="com.opensymphony.xwork2.{1}Action"
 			method="{2}">
             <param name="foo">{1}</param>
             <param name="bar">{2}</param>
@@ -136,7 +136,7 @@
             </interceptor-ref>
             <result name="error" type="mock" />
         </action>
-	
+
         <action name="TestModelDrivenValidation" class="com.opensymphony.xwork2.ModelDrivenAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="validation"/>
@@ -275,7 +275,7 @@
                 </action>
 
         </package>
-       
+
         <package name="Example" extends="Abstract-crud" namespace="/example">
                  <default-class-ref class="com.opensymphony.xwork2.ModelDrivenAction" />
         </package>
@@ -289,8 +289,8 @@
 
         <package name="SubItem" extends="Abstract-crud" namespace="/example2/subItem">
                 <default-class-ref class="com.opensymphony.xwork2.ModelDrivenAction" />
-        </package> 
-        
+        </package>
+
         <package name="Example3" extends="Abstract-crud" namespace="/example3">
  			<!--  default-class-ref is expected to be inherited -->
         </package>

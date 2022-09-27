@@ -27,7 +27,7 @@
 
    <!DOCTYPE struts PUBLIC
     "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
-    "http://struts.apache.org/dtds/struts-6.0.dtd">
+    "https://struts.apache.org/dtds/struts-6.0.dtd">
 -->
 
 <!ELEMENT struts ((package|include|bean|constant)*,bean-selection?, unknown-handler-stack?)>

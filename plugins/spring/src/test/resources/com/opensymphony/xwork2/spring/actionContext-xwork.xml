@@ -21,7 +21,7 @@
 -->
 <!DOCTYPE struts PUBLIC
         "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-        "http://struts.apache.org/dtds/struts-2.5.dtd">
+        "https://struts.apache.org/dtds/struts-2.5.dtd">
 <struts>
 	<bean type="com.opensymphony.xwork2.ObjectFactory" class="com.opensymphony.xwork2.spring.SpringObjectFactory" />
 	<constant name="applicationContextPath" value="com/opensymphony/xwork2/spring/actionContext-spring.xml" />
@@ -48,7 +48,7 @@
         <action name="proxiedAction" class="proxied-action"/>
 
         <action name="autoProxiedAction" class="auto-proxied-action"/>
-        
+
         <action name="simpleActionSpringResult" class="simple-action">
 			<result name="error" type="springResult"/>
 		</action>

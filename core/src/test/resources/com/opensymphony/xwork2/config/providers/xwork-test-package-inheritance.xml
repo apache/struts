@@ -21,7 +21,7 @@
 -->
 <!DOCTYPE struts PUBLIC
         "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-        "http://struts.apache.org/dtds/struts-2.5.dtd">
+        "https://struts.apache.org/dtds/struts-2.5.dtd">
 <struts>
 	<include file="xwork-test-beans.xml" />
     <package name="default" namespace="/default">
@@ -35,7 +35,7 @@
     <package name="singleInheritance" namespace="/single" extends="default">
         <action name="single" class="com.opensymphony.xwork2.ActionSupport"/>
     </package>
-    
+
     <package name="testParentBelow" namespace="/parentBelow" extends="multipleInheritance">
     	<action name="testParentBelowAction" class="com.opensymphony.xwork2.ActionSupport"/>
     </package>

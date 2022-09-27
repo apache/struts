@@ -21,12 +21,12 @@
 -->
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-	"http://struts.apache.org/dtds/struts-2.5.dtd">
-	
+	"https://struts.apache.org/dtds/struts-2.5.dtd">
+
 <struts>
 	<package name="actionchaining" extends="struts-default" namespace="/actionchaining">
 		<action name="actionChain1" class="org.apache.struts2.showcase.actionchaining.ActionChain1">
-			<result type="chain">actionChain2</result>		
+			<result type="chain">actionChain2</result>
 		</action>
 		<action name="actionChain2" class="org.apache.struts2.showcase.actionchaining.ActionChain2">
 			<result type="chain">actionChain3</result>

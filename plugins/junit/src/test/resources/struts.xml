@@ -21,7 +21,7 @@
 -->
 <!DOCTYPE struts PUBLIC
         "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
-        "http://struts.apache.org/dtds/struts-2.1.dtd">
+        "https://struts.apache.org/dtds/struts-2.1.dtd">
 
 <struts>
     <constant name="struts.objectFactory" value="spring"/>

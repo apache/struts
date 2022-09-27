@@ -115,7 +115,7 @@ package com.opensymphony.xwork2.validator;
  * <pre>
  * <!-- START SNIPPET: exValidationRules1 -->
  * &lt;!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
-   		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd"&gt;
+   		"https://struts.apache.org/dtds/xwork-validator-1.0.3.dtd"&gt;
  * &lt;validators&gt;
  *   &lt;field name="bar"&gt;
  *       &lt;field-validator type="required"&gt;

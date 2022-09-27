@@ -19,7 +19,7 @@
  * under the License.
  */
 -->
-<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.dtd">
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0//EN" "https://struts.apache.org/dtds/xwork-validator-1.0.dtd">
 <validators>
     <field name="data">
         <field-validator type="requiredstring">

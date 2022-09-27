@@ -19,17 +19,17 @@
  * under the License.
  */
 -->
-<!DOCTYPE validators PUBLIC 
+<!DOCTYPE validators PUBLIC
   		"-//Apache Struts//XWork Validator 1.0//EN"
-  		"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
-  		
+  		"https://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
 <validators>
 	<field name="name">
 		<field-validator type="requiredstring">
 			<message>Name Required</message>
 		</field-validator>
 	</field>
-	<field name="age">	
+	<field name="age">
 		<field-validator type="int">
 			<param name="min">1</param>
 			<param name="max">100</param>
@@ -41,6 +41,6 @@
 			<message>Birthday Required</message>
 		</field-validator>
 	</field>
-</validators>  		
+</validators>
 
 

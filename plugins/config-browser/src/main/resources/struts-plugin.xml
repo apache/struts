@@ -21,12 +21,12 @@
 -->
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-	"http://struts.apache.org/dtds/struts-2.5.dtd">
-    
+	"https://struts.apache.org/dtds/struts-2.5.dtd">
+
 <struts>
 
     <bean class="org.apache.struts2.config_browser.ConfigurationHelper" />
-    
+
     <package name="config-browser" extends="struts-default" namespace="/config-browser">
 
         <interceptors>
@@ -56,15 +56,15 @@
         <action name="showConfig" class="org.apache.struts2.config_browser.ShowConfigAction">
             <result type="freemarker" name="success">/config-browser/showConfig.ftl</result>
         </action>
-        
+
         <action name="showConstants" class="org.apache.struts2.config_browser.ShowConstantsAction">
             <result type="freemarker" name="success">/config-browser/showConstants.ftl</result>
         </action>
-        
+
         <action name="showBeans" class="org.apache.struts2.config_browser.ShowBeansAction">
             <result type="freemarker" name="success">/config-browser/showBeans.ftl</result>
         </action>
-        
+
         <action name="showJars" class="org.apache.struts2.config_browser.ShowJarsAction">
             <result type="freemarker" name="success">/config-browser/showJars.ftl</result>
         </action>

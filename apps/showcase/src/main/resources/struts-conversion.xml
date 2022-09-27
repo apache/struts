@@ -21,15 +21,15 @@
 -->
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-	"http://struts.apache.org/dtds/struts-2.5.dtd">
-	
+	"https://struts.apache.org/dtds/struts-2.5.dtd">
+
 <struts>
 	<package name="conversion" namespace="/conversion" extends="struts-default">
-	
+
         <action name="index">
             <result>/WEB-INF/conversion/index.jsp</result>
         </action>
-        
+
 		<!-- Example populating a List inside an Action -->
 		<action name="enterPersonsInfo" method="input"
 				class="org.apache.struts2.showcase.conversion.PersonAction">
@@ -49,8 +49,8 @@
 		<action name="showPersonJavaCode">
 			<result type="plainText">/WEB-INF/conversion/Person.java.txt</result>
 		</action>
-		
-		
+
+
 		<!-- Example populating a Set inside an Action -->
 		<action name="enterAddressesInfo" class="org.apache.struts2.showcase.conversion.AddressAction" method="input">
 			<result>/WEB-INF/conversion/enterAddressInfo.jsp</result>
@@ -68,9 +68,9 @@
 		<action name="showAddressJavaCode">
 			<result type="plainText">/WEB-INF/conversion/Address.java.txt</result>
 		</action>
-		
-		
-		<!-- Example populating a List with Tiger 5 Enum  -->		
+
+
+		<!-- Example populating a List with Tiger 5 Enum  -->
 		<action name="enterOperationEnumInfo" class="org.apache.struts2.showcase.conversion.OperationsEnumAction" method="input">
 			<result>/WEB-INF/conversion/enterOperations.jsp</result>
 		</action>
@@ -93,6 +93,6 @@
 		<action name="showOperationsEnumActionConversionProperties">
 			<result type="plainText">/WEB-INF/conversion/OperationsEnumActionConversion.txt</result>
 		</action>
-		
+
 	</package>
-</struts>	
+</struts>

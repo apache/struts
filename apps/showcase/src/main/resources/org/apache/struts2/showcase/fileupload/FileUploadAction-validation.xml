@@ -21,7 +21,7 @@
 -->
 <!DOCTYPE validators PUBLIC
   		"-//Apache Struts//XWork Validator 1.0.2//EN"
-  		"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+  		"https://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
 
 <validators>
 	<field name="upload">
@@ -35,5 +35,4 @@
 			<message>Caption cannot be empty</message>
 		</field-validator>
 	</field>
-</validators>  		
-  		
+</validators>

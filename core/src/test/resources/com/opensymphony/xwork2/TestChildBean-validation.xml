@@ -19,7 +19,7 @@
  * under the License.
  */
 -->
-<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "https://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
 <validators>
     <field name="name">
         <field-validator type="requiredstring" short-circuit="true">
@@ -28,7 +28,7 @@
     <field-validator type="fieldexpression">
         <param name="expression">name == 'test'</param>
         <message>Name is invalid</message>
-    </field-validator> 
+    </field-validator>
     </field>
     <field name="birth">
         <field-validator type="date">

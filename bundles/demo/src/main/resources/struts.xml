@@ -21,11 +21,11 @@
 -->
 <!DOCTYPE struts PUBLIC
     "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-    "http://struts.apache.org/dtds/struts-2.5.dtd">
+    "https://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-    <!-- Set some Struts 2 constants relevant to the OSGi Plugin. 
-           Note:  The constant definitions specified here (within the demo bundle) may also need to be 
+    <!-- Set some Struts 2 constants relevant to the OSGi Plugin.
+           Note:  The constant definitions specified here (within the demo bundle) may also need to be
                   duplicated in the struts.xml configuration of the outer project that packages the demo
                   bundle JAR file within it.
     -->

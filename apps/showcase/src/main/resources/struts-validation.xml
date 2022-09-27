@@ -21,8 +21,8 @@
 -->
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-	"http://struts.apache.org/dtds/struts-2.5.dtd">
-	
+	"https://struts.apache.org/dtds/struts-2.5.dtd">
+
 <struts>
 
     <constant name="struts.beanValidation.providerClass" value="org.hibernate.validator.HibernateValidator"/>
@@ -74,7 +74,7 @@
 		<action name="ajaxFormSubmitSuccess" class="org.apache.struts2.showcase.validation.AjaxFormSubmitSuccessAction">
 			<result>/WEB-INF/validation/ajaxFormSubmitSuccess.jsp</result>
 		</action>
-		
+
 	</package>
 
 
@@ -83,46 +83,46 @@
 		<action name="list">
 			<result>index.jsp</result>
 		</action>
-		
-		
+
+
 		<!-- ======================== -->
 		<!-- === Field Validators === -->
 		<!-- ======================== -->
-		
+
 		<action name="showFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="input">
 			<result name="input" type="dispatcher">/WEB-INF/validation/fieldValidatorsExample.jsp</result>
 		</action>
-		
+
 		<action name="submitFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="submit">
 			<result name="input" type="dispatcher">/WEB-INF/validation/fieldValidatorsExample.jsp</result>
 			<result type="dispatcher">/WEB-INF/validation/successFieldValidatorsExample.jsp</result>
 		</action>
-		
-		
-		
+
+
+
 		<!-- ============================ -->
 		<!-- === Non Field Validators === -->
 		<!-- ============================ -->
-		
+
 		<action name="showNonFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.NonFieldValidatorsExampleAction" method="input">
 			<result name="input">/WEB-INF/validation/nonFieldValidatorsExample.jsp</result>
 		</action>
-		
+
 		<action name="submitNonFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.NonFieldValidatorsExampleAction" method="submit">
 			<result name="input">/WEB-INF/validation/nonFieldValidatorsExample.jsp</result>
 			<result>/WEB-INF/validation/successNonFieldValidatorsExample.jsp</result>
 		</action>
-		
-		
-		
+
+
+
 		<!-- ========================== -->
 		<!-- === Visitor Validators === -->
 		<!-- ========================== -->
-		
+
 		<action name="showVisitorValidatorsExamples" class="org.apache.struts2.showcase.validation.VisitorValidatorsExampleAction" method="input">
 			<result name="input">/WEB-INF/validation/visitorValidatorsExample.jsp</result>
 		</action>
-		
+
 		<action name="submitVisitorValidatorsExamples" class="org.apache.struts2.showcase.validation.VisitorValidatorsExampleAction" method="submit">
 			<result name="input">/WEB-INF/validation/visitorValidatorsExample.jsp</result>
 			<result>/WEB-INF/validation/successVisitorValidatorsExample.jsp</result>
@@ -146,7 +146,7 @@
 		<!-- =========================================== -->
 		<!-- === Store Error Messages Across Request === -->
 		<!-- =========================================== -->
-		
+
 		<action name="submitApplication" class="org.apache.struts2.showcase.validation.SubmitApplication" method="submitApplication">
 			<interceptor-ref name="store">
 				<param name="operationMode">STORE</param>
@@ -173,7 +173,7 @@
 		<action name="cancelApplication" class="org.apache.struts2.showcase.validation.SubmitApplication" method="cancelApplication">
 			<result>/WEB-INF/validation/storeErrorsAcrossRequestCancel.jsp</result>
 		</action>
-		
+
     </package>
 </struts>
-	
+

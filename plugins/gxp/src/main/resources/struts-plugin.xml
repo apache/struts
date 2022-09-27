@@ -21,10 +21,10 @@
 -->
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-	"http://struts.apache.org/dtds/struts-2.5.dtd">
+	"https://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-    <bean type="org.apache.struts2.views.gxp.inject.InjectedObjectContainer" class="org.apache.struts2.views.gxp.inject.InjectedObjectContainer" static="true" /> 
+    <bean type="org.apache.struts2.views.gxp.inject.InjectedObjectContainer" class="org.apache.struts2.views.gxp.inject.InjectedObjectContainer" static="true" />
     <package name="gxp-default" extends="struts-default">
         <result-types>
             <result-type name="gxp" class="org.apache.struts2.views.gxp.GxpResult"/>

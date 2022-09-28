@@ -227,18 +227,8 @@
                                 <id>prepare-agent</id>
                                 <goals>
                                     <goal>prepare-agent</goal>
+                                    <goal>prepare-agent-integration</goal>
                                 </goals>
-                            </execution>
-                            <execution>
-                                <id>report</id>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                                <configuration>
-                                    <formats>
-                                        <format>XML</format>
-                                    </formats>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

@@ -268,10 +268,10 @@ public class OgnlUtil {
         try {
             if (maxLength == null || maxLength.isEmpty()) {
                 Ognl.applyExpressionMaxLength(null);
-                LOG.info("OGNL Expression Max Length disabled.");
+                LOG.warn("OGNL Expression Max Length disabled.");
             } else {
                 Ognl.applyExpressionMaxLength(Integer.parseInt(maxLength));
-                LOG.info("OGNL Expression Max Length enabled with {}.", maxLength);
+                LOG.debug("OGNL Expression Max Length enabled with {}.", maxLength);
             }
         } catch (Exception ex) {
             LOG.error("Unable to set OGNL Expression Max Length {}.", maxLength);  // Help configuration debugging.

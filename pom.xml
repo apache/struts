@@ -130,6 +130,8 @@
         <sonar.organization>apache</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.exclusions>apps/**</sonar.exclusions>
+
+        <argLine>-Duser.language=en -Duser.country=US -Duser.region=US</argLine>
     </properties>
 
     <profiles>
@@ -199,6 +201,7 @@
                                     --add-opens java.base/java.lang=ALL-UNNAMED
                                     --add-opens java.base/java.util=ALL-UNNAMED
                                     -Dillegal-access=permit
+                                    @{argLine}
                                 </argLine>
                             </configuration>
                         </plugin>
@@ -264,7 +267,7 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <argLine>-Duser.language=en -Duser.region=US</argLine>
+                        <argLine>@{argLine}</argLine>
                         <includes>
                             <include>**/*Test.java</include>
                         </includes>

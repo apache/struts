@@ -237,6 +237,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <argLine>@{argLine}</argLine>
                     <excludes>
                         <exclude>it/**</exclude>
                         <exclude>**/*$*</exclude>

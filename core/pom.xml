@@ -41,6 +41,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <argLine>@{argLine}</argLine>
                     <properties>
                         <property>
                             <name>maven.testng.output.dir</name>
@@ -54,9 +55,6 @@
                         <element>${project.build.testOutputDirectory}/xwork - jar.jar</element>
                         <element>${project.build.testOutputDirectory}/xwork - zip.zip</element>
                     </additionalClasspathElements>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
                     <excludes>
                         <exclude>**/XWorkTestCase.java</exclude>
                         <exclude>**/TestBean.java</exclude>

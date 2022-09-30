@@ -125,9 +125,9 @@
         <fluido-skin.version>1.9</fluido-skin.version>
 
         <!-- Sonar -->
+        <sonar.organization>apache</sonar.organization>
         <sonar.projectKey>apache_struts</sonar.projectKey>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
-        <sonar.organization>apache</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.exclusions>apps/**</sonar.exclusions>
 
@@ -213,8 +213,6 @@
             <id>coverage</id>
             <properties>
                 <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-                <sonar.organization>apache</sonar.organization>
-                <sonar.projectKey>apache_struts</sonar.projectKey>
             </properties>
             <build>
                 <plugins>

@@ -79,7 +79,7 @@ pipeline {
         }
         stage('Test') {
           steps {
-            sh './mvnw -B test'
+            sh './mvnw -B verify -Pcoverage -DskipAssembly'
           }
           post {
             always {
@@ -88,18 +88,16 @@ pipeline {
             }
           }
         }
-/*
         stage('Code Quality') {
           when {
             branch 'master'
           }
           steps {
             withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-              sh './mvnw sonar:sonar -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN}'
+              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} sonar:sonar'
             }
           }
         }
-*/
       }
       post {
         always {

@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
@@ -33,8 +34,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -44,7 +45,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
-import com.opensymphony.xwork2.util.TextParseUtil;
 
 /**
  * This interceptor sets all parameters on the value stack.
@@ -68,7 +68,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private AcceptedPatternsChecker acceptedPatterns;
     private Set<Pattern> excludedValuePatterns = null;
     private Set<Pattern> acceptedValuePatterns = null;
-
 
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
@@ -246,8 +245,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (action instanceof TextProvider) {
             TextProvider tp = (TextProvider) action;
             developerNotification = tp.getText("devmode.notification",
-                    "Developer Notification:\n{0}",
-                    new String[]{developerNotification}
+                "Developer Notification:\n{0}",
+                new String[]{developerNotification}
             );
         }
 
@@ -272,7 +271,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         ParameterNameAware parameterNameAware = (action instanceof ParameterNameAware) ? (ParameterNameAware) action : null;
         return acceptableName(name) && (parameterNameAware == null || parameterNameAware.acceptableParameterName(name));
     }
-    
+
     /**
      * Checks if parameter value can be accepted or thrown away
      *
@@ -281,13 +280,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @return true if parameter is accepted
      */
     protected boolean isAcceptableParameterValue(Parameter param, Object action) {
-    	ParameterValueAware parameterValueAware = (action instanceof ParameterValueAware) ? (ParameterValueAware) action : null;
-    	boolean acceptableParmValue = (parameterValueAware == null || parameterValueAware.acceptableParameterValue(param.getValue()));
-    	if(hasParamValuesToExclude() || hasParamValuesToAccept()) {
-    		// Additional validations to process
-    		acceptableParmValue &= acceptableValue(param.getName(), param.getValue());
-    	}
-    	return acceptableParmValue;
+        ParameterValueAware parameterValueAware = (action instanceof ParameterValueAware) ? (ParameterValueAware) action : null;
+        boolean acceptableParamValue = (parameterValueAware == null || parameterValueAware.acceptableParameterValue(param.getValue()));
+        if (hasParamValuesToExclude() || hasParamValuesToAccept()) {
+            // Additional validations to process
+            acceptableParamValue &= acceptableValue(param.getName(), param.getValue());
+        }
+        return acceptableParamValue;
     }
 
     /**
@@ -316,13 +315,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         return logEntry.toString();
     }
-    
+
     /**
      * Validates the name passed is:
      * * Within the max length of a parameter name
      * * Is not excluded
      * * Is accepted
-     * 
+     *
      * @param name - Name to check
      * @return true if accepted
      */
@@ -351,27 +350,32 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * * Value is null/blank
      * * Value is not excluded
      * * Value is accepted
-     * 
-     * @param name - Param name (for logging)
+     *
+     * @param name  - Param name (for logging)
      * @param value - value to check
      * @return true if accepted
      */
     protected boolean acceptableValue(String name, String value) {
-    	boolean accepted = (value == null || value.isEmpty() || (!isParamValueExcluded(value) && isParamValueAccepted(value)));
+        boolean accepted = (value == null || value.isEmpty() || (!isParamValueExcluded(value) && isParamValueAccepted(value)));
         if (!accepted) {
-            LOG.warn("Parameter [{}] was not accepted with value [{}] and will be dropped!", name, value);
+            String message = "Value [{}] of parameter [{}] was not accepted and will be dropped!";
+            if (devMode) {
+                LOG.warn(message, value, name);
+            } else {
+                LOG.debug(message, value, name);
+            }
         }
         return accepted;
     }
-    
+
     protected boolean isWithinLengthLimit(String name) {
         boolean matchLength = name.length() <= paramNameMaxLength;
         if (!matchLength) {
             if (devMode) { // warn only when in devMode
                 LOG.warn("Parameter [{}] is too long, allowed length is [{}]. Use Interceptor Parameter Overriding " +
-                                "to override the limit, see more at\n" +
-                                "https://struts.apache.org/core-developers/interceptors.html#interceptor-parameter-overriding",
-                        name, paramNameMaxLength);
+                        "to override the limit, see more at\n" +
+                        "https://struts.apache.org/core-developers/interceptors.html#interceptor-parameter-overriding",
+                    name, paramNameMaxLength);
             } else {
                 LOG.warn("Parameter [{}] is too long, allowed length is [{}]", name, paramNameMaxLength);
             }
@@ -385,8 +389,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return true;
         } else if (devMode) { // warn only when in devMode
             LOG.warn("Parameter [{}] didn't match accepted pattern [{}]! See Accepted / Excluded patterns at\n" +
-                            "https://struts.apache.org/security/#accepted--excluded-patterns",
-                    paramName, result.getAcceptedPattern());
+                    "https://struts.apache.org/security/#accepted--excluded-patterns",
+                paramName, result.getAcceptedPattern());
         } else {
             LOG.debug("Parameter [{}] didn't match accepted pattern [{}]!", paramName, result.getAcceptedPattern());
         }
@@ -398,8 +402,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (result.isExcluded()) {
             if (devMode) { // warn only when in devMode
                 LOG.warn("Parameter [{}] matches excluded pattern [{}]! See Accepted / Excluded patterns at\n" +
-                                "https://struts.apache.org/security/#accepted--excluded-patterns",
-                        paramName, result.getExcludedPattern());
+                        "https://struts.apache.org/security/#accepted--excluded-patterns",
+                    paramName, result.getExcludedPattern());
             } else {
                 LOG.debug("Parameter [{}] matches excluded pattern [{}]!", paramName, result.getExcludedPattern());
             }
@@ -407,86 +411,55 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
         return false;
     }
-    
 
-    public void setAcceptedValuePatterns(String commaDelimitedPatterns) {
-    	Set<String> patterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns);
-        if (acceptedValuePatterns == null) {
-            // Limit unwanted log entries (for 1st call, acceptedValuePatterns null)
-            LOG.debug("Sets accepted value patterns to [{}], note this may impact the safety of your application!", patterns);
-        } else {
-            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and may impact the safety of your application!",
-            		acceptedValuePatterns, patterns);
+    protected boolean isParamValueExcluded(String value) {
+        if (!hasParamValuesToExclude()) {
+            LOG.debug("'excludedValuePatterns' not defined so anything is allowed");
+            return false;
         }
-        acceptedValuePatterns = new HashSet<>(patterns.size());
-        try {
-            for (String pattern : patterns) {
-            	acceptedValuePatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+        for (Pattern excludedValuePattern : excludedValuePatterns) {
+            if (excludedValuePattern.matcher(value).matches()) {
+                if (devMode) {
+                    LOG.warn("Parameter value [{}] matches excluded pattern [{}]! See Accepting/Excluding parameter values at\n" +
+                            "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
+                        value, excludedValuePatterns);
+                } else {
+                    LOG.debug("Parameter value [{}] matches excluded pattern [{}]", value, excludedValuePattern);
+                }
+                return true;
             }
-        } finally {
-        	acceptedValuePatterns = Collections.unmodifiableSet(acceptedValuePatterns);
         }
+        return false;
     }
-    
-    public void setExcludeValuePatterns(String commaDelimitedPatterns) {
-    	Set<String> patterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns);
-        if (excludedValuePatterns == null) {
-            // Limit unwanted log entries (for 1st call, excludedValuePatterns null)
-            LOG.debug("Setting excluded value patterns to [{}]", patterns);
-        } else {
-            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and may impact safety of your application!",
-            		excludedValuePatterns, patterns);
-        }
-        excludedValuePatterns = new HashSet<>(patterns.size());
-        try {
-            for (String pattern : patterns) {
-            	excludedValuePatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
-            }
-        } finally {
-        	excludedValuePatterns = Collections.unmodifiableSet(excludedValuePatterns);
-        }
-    }
-    
-	protected boolean isParamValueExcluded(String value) {
-		if (hasParamValuesToExclude()) {
-			for (Pattern excludedPattern : excludedValuePatterns) {
-				if (value != null) {
-					if (excludedPattern.matcher(value).matches()) {
-						LOG.warn("Parameter value [{}] matches excluded pattern [{}] and will be dropped.", value,
-								excludedPattern);
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
 
-	protected boolean isParamValueAccepted(String value) {
-		if (hasParamValuesToAccept()) {
-			for (Pattern excludedPattern : acceptedValuePatterns) {
-				if (value != null) {
-					if (excludedPattern.matcher(value).matches()) {
-						return true;
-					}
-				}
-			}
-		} else {
-			// acceptedValuePatterns not defined so anything is allowed
-			return true;
-		}
-		LOG.warn("Parameter value [{}] did not match any acceptedValuePattern pattern and will be dropped.", value);
-		return false;
-	}
-    
+    protected boolean isParamValueAccepted(String value) {
+        if (!hasParamValuesToAccept()) {
+            LOG.debug("'acceptedValuePatterns' not defined so anything is allowed");
+            return true;
+        }
+        for (Pattern acceptedValuePattern : acceptedValuePatterns) {
+            if (acceptedValuePattern.matcher(value).matches()) {
+                return true;
+            }
+        }
+        if (devMode) {
+            LOG.warn("Parameter value [{}] didn't match accepted pattern [{}]! See Accepting/Excluding parameter values at\n" +
+                    "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
+                value, acceptedValuePatterns);
+        } else {
+            LOG.debug("Parameter value [{}] was not accepted!", value);
+        }
+        return false;
+    }
+
     private boolean hasParamValuesToExclude() {
-    	return excludedValuePatterns != null && excludedValuePatterns.size() > 0;
+        return excludedValuePatterns != null && excludedValuePatterns.size() > 0;
     }
-    
+
     private boolean hasParamValuesToAccept() {
-    	return acceptedValuePatterns != null && acceptedValuePatterns.size() > 0;
+        return acceptedValuePatterns != null && acceptedValuePatterns.size() > 0;
     }
-    
+
     /**
      * Whether to order the parameters or not
      *
@@ -527,5 +500,55 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      */
     public void setExcludeParams(String commaDelim) {
         excludedPatterns.setExcludedPatterns(commaDelim);
+    }
+
+    /**
+     * Sets a comma-delimited list of regular expressions to match
+     * values of parameters that should be accepted and included in the parameter map.
+     *
+     * @param commaDelimitedPatterns A comma-delimited set of regular expressions
+     */
+    public void setAcceptedValuePatterns(String commaDelimitedPatterns) {
+        Set<String> patterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns);
+        if (acceptedValuePatterns == null) {
+            // Limit unwanted log entries (for 1st call, acceptedValuePatterns null)
+            LOG.debug("Sets accepted value patterns to [{}], note this may impact the safety of your application!", patterns);
+        } else {
+            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this may impact safety of your application!",
+                acceptedValuePatterns, patterns);
+        }
+        acceptedValuePatterns = new HashSet<>(patterns.size());
+        try {
+            for (String pattern : patterns) {
+                acceptedValuePatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+            }
+        } finally {
+            acceptedValuePatterns = Collections.unmodifiableSet(acceptedValuePatterns);
+        }
+    }
+
+    /**
+     * Sets a comma-delimited list of regular expressions to match
+     * values of parameters that should be removed from the parameter map.
+     *
+     * @param commaDelimitedPatterns A comma-delimited set of regular expressions
+     */
+    public void setExcludedValuePatterns(String commaDelimitedPatterns) {
+        Set<String> patterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPatterns);
+        if (excludedValuePatterns == null) {
+            // Limit unwanted log entries (for 1st call, excludedValuePatterns null)
+            LOG.debug("Setting excluded value patterns to [{}]", patterns);
+        } else {
+            LOG.warn("Replacing excluded value patterns [{}] with [{}], be aware that this may impact safety of your application!",
+                excludedValuePatterns, patterns);
+        }
+        excludedValuePatterns = new HashSet<>(patterns.size());
+        try {
+            for (String pattern : patterns) {
+                excludedValuePatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+            }
+        } finally {
+            excludedValuePatterns = Collections.unmodifiableSet(excludedValuePatterns);
+        }
     }
 }

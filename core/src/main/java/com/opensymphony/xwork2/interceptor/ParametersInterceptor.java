@@ -413,37 +413,34 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean isParamValueExcluded(String value) {
-        if (hasParamValuesToExclude()) {
-            for (Pattern excludedPattern : excludedValuePatterns) {
-                if (value != null) {
-                    if (excludedPattern.matcher(value).matches()) {
-                        if (devMode) {
-                            LOG.warn("Parameter value [{}] matches excluded pattern [{}]! See Accepting/Excluding parameter values at\n" +
-                                    "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
-                                value, excludedValuePatterns);
-                        } else {
-                            LOG.debug("Parameter value [{}] matches excluded pattern [{}]", value, excludedPattern);
-                        }
-                        return true;
-                    }
+        if (!hasParamValuesToExclude()) {
+            LOG.debug("'excludedValuePatterns' not defined so anything is allowed");
+            return false;
+        }
+        for (Pattern excludedValuePattern : excludedValuePatterns) {
+            if (excludedValuePattern.matcher(value).matches()) {
+                if (devMode) {
+                    LOG.warn("Parameter value [{}] matches excluded pattern [{}]! See Accepting/Excluding parameter values at\n" +
+                            "https://struts.apache.org/core-developers/parameters-interceptor#excluding-parameter-values",
+                        value, excludedValuePatterns);
+                } else {
+                    LOG.debug("Parameter value [{}] matches excluded pattern [{}]", value, excludedValuePattern);
                 }
+                return true;
             }
         }
         return false;
     }
 
     protected boolean isParamValueAccepted(String value) {
-        if (hasParamValuesToAccept()) {
-            for (Pattern excludedPattern : acceptedValuePatterns) {
-                if (value != null) {
-                    if (excludedPattern.matcher(value).matches()) {
-                        return true;
-                    }
-                }
-            }
-        } else {
-            // acceptedValuePatterns not defined so anything is allowed
+        if (!hasParamValuesToAccept()) {
+            LOG.debug("'acceptedValuePatterns' not defined so anything is allowed");
             return true;
+        }
+        for (Pattern acceptedValuePattern : acceptedValuePatterns) {
+            if (acceptedValuePattern.matcher(value).matches()) {
+                return true;
+            }
         }
         if (devMode) {
             LOG.warn("Parameter value [{}] didn't match accepted pattern [{}]! See Accepting/Excluding parameter values at\n" +

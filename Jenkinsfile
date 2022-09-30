@@ -88,6 +88,7 @@ pipeline {
             }
           }
         }
+/*
         stage('Code Quality') {
           when {
             branch 'master'
@@ -98,6 +99,7 @@ pipeline {
             }
           }
         }
+*/
       }
       post {
         always {

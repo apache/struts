@@ -23,8 +23,8 @@ import com.opensymphony.xwork2.ObjectFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ParameterizedMessage;
-import org.apache.tiles.preparer.ViewPreparer;
-import org.apache.tiles.preparer.factory.BasicPreparerFactory;
+import org.apache.tiles.api.preparer.ViewPreparer;
+import org.apache.tiles.core.prepare.factory.BasicPreparerFactory;
 
 /**
  * This is a basic ViewPreparer factory that uses {@link ObjectFactory} to create the ViewPreparer

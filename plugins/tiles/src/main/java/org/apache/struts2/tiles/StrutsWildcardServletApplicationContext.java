@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.util.finder.ResourceFinder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tiles.request.ApplicationResource;
-import org.apache.tiles.request.locale.URLApplicationResource;
 import org.apache.tiles.request.servlet.ServletApplicationContext;
 
 import javax.servlet.ServletContext;

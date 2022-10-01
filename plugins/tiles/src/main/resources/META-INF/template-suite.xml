@@ -1,0 +1,1188 @@
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<org.apache.tiles.autotag.model.TemplateSuite>
+  <name>tiles</name>
+  <documentation>This tag library provides Tiles tags.</documentation>
+  <templateClasses class="linked-hash-map">
+    <entry>
+      <string>org.apache.tiles.template.InsertDefinitionModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.InsertDefinitionModel</name>
+        <tagName>insertDefinition</tagName>
+        <tagClassPrefix>InsertDefinition</tagClassPrefix>
+        <documentation>&lt;p&gt;
+Insert a definition.
+&lt;/p&gt;
+&lt;p&gt;
+Insert a definition with the possibility to override and specify parameters
+(called attributes). A definition can be seen as a (partially or totally)
+filled template that can override or complete attribute values.
+&amp;lt;tiles:insertDefinition&amp;gt; allows to define these attributes
+and pass them to the inserted jsp page, called template. Attributes are
+defined using nested tag &amp;lt;tiles:putAttribute&amp;gt; or
+&amp;lt;tiles:putListAttribute&amp;gt;.
+&lt;/p&gt;
+&lt;p&gt;
+You must specify name tag attribute, for inserting a definition from definitions factory.
+&lt;/p&gt;
+&lt;p&gt;
+Example : 
+&lt;/p&gt;
+
+&lt;pre&gt;
+    &amp;lt;tiles:insertDefinition name=&amp;quot;.my.tiles.defininition flush=&amp;quot;true&amp;quot;&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;title&amp;quot; value=&amp;quot;My first page&amp;quot; /&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;header&amp;quot; value=&amp;quot;/common/header.jsp&amp;quot; /&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;footer&amp;quot; value=&amp;quot;/common/footer.jsp&amp;quot; /&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;menu&amp;quot; value=&amp;quot;/basic/menu.jsp&amp;quot; /&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;body&amp;quot; value=&amp;quot;/basic/helloBody.jsp&amp;quot; /&amp;gt;
+    &amp;lt;/tiles:insertDefinition&amp;gt;
+&lt;/pre&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the operation.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>definitionName</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>definitionName</name>
+                <exportedName>name</exportedName>
+                <documentation>The name of the definition to render.</documentation>
+                <type>java.lang.String</type>
+                <required>true</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>template</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>template</name>
+                <exportedName>template</exportedName>
+                <documentation>If specified, this template will be used instead of the one used by the definition.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>templateType</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>templateType</name>
+                <exportedName>templateType</exportedName>
+                <documentation>The type of the template attribute.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>templateExpression</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>templateExpression</name>
+                <exportedName>templateExpression</exportedName>
+                <documentation>The expression to evaluate to get the value of the template.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>role</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>role</name>
+                <exportedName>role</exportedName>
+                <documentation>A comma-separated list of roles. If present, the definition
+will be rendered only if the current user belongs to one of the roles.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>preparer</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>preparer</name>
+                <exportedName>preparer</exportedName>
+                <documentation>The preparer to use to invoke before the definition is
+rendered. If specified, it overrides the preparer specified in the definition itself.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>flush</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>flush</name>
+                <exportedName>flush</exportedName>
+                <documentation>If true, the response will be flushed after the insert.</documentation>
+                <type>boolean</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>modelBody</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>modelBody</name>
+                <exportedName>modelBody</exportedName>
+                <documentation>The body.</documentation>
+                <type>org.apache.tiles.autotag.core.runtime.ModelBody</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.ImportAttributeModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.ImportAttributeModel</name>
+        <tagName>importAttribute</tagName>
+        <tagClassPrefix>ImportAttribute</tagClassPrefix>
+        <documentation>&lt;p&gt;
+Import attribute(s) in specified context.
+&lt;/p&gt;
+&lt;p&gt;
+Import attribute(s) to requested scope. Attribute name and scope are
+optional. If not specified, all attributes are imported in page scope. Once
+imported, an attribute can be used as any other beans from jsp contexts.
+&lt;/p&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the model.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>name</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>name</name>
+                <exportedName>name</exportedName>
+                <documentation>The name of the attribute to import. If it is null, all the attributes will be imported.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>scope</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>scope</name>
+                <exportedName>scope</exportedName>
+                <documentation>The scope into which the attribute(s) will be imported. If
+null, the import will go in page scope.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>toName</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>toName</name>
+                <exportedName>toName</exportedName>
+                <documentation>The name of the attribute into which the attribute will be
+imported. To be used in conjunction to name. If null, the value of name will be used.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>ignore</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>ignore</name>
+                <exportedName>ignore</exportedName>
+                <documentation>If true, if the attribute is not present, the problem will be ignored.</documentation>
+                <type>boolean</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.SetCurrentContainerModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.SetCurrentContainerModel</name>
+        <tagName>setCurrentContainer</tagName>
+        <tagClassPrefix>SetCurrentContainer</tagClassPrefix>
+        <documentation>Selects a container to be used as the &quot;current&quot; container.</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the model.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>containerKey</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>containerKey</name>
+                <exportedName>containerKey</exportedName>
+                <documentation>The key of the container to be used as &quot;current&quot;. If null, the default one will be used.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.AddListAttributeModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.AddListAttributeModel</name>
+        <tagName>addListAttribute</tagName>
+        <tagClassPrefix>AddListAttribute</tagClassPrefix>
+        <documentation>&lt;p&gt;
+Declare a list that will be pass as an attribute. 
+&lt;/p&gt;
+&lt;p&gt;
+Declare a list that will be pass as an attribute . List elements are added
+using the tag &apos;addAttribute&apos; or &apos;addListAttribute&apos;. This tag can only be used
+inside &apos;insertTemplate&apos;, &apos;insertDefinition&apos; or &apos;definition&apos; tag.
+&lt;/p&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the model.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>role</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>role</name>
+                <exportedName>role</exportedName>
+                <documentation>The comma-separated list of roles that can use the list attribute.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>modelBody</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>modelBody</name>
+                <exportedName>modelBody</exportedName>
+                <documentation>The body.</documentation>
+                <type>org.apache.tiles.autotag.core.runtime.ModelBody</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.GetAsStringModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.GetAsStringModel</name>
+        <tagName>getAsString</tagName>
+        <tagClassPrefix>GetAsString</tagClassPrefix>
+        <documentation>&lt;p&gt;
+ Render the value of the specified template attribute to the current Writer
+&lt;/p&gt;
+
+&lt;p&gt;
+Retrieve the value of the specified template attribute property, and render
+it to the current Writer as a String. The usual toString() conversions is applied on found value.
+&lt;/p&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the operation.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>ignore</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>ignore</name>
+                <exportedName>ignore</exportedName>
+                <documentation>If true, if an exception happens during
+rendering, of if the attribute is null, the problem will be ignored.</documentation>
+                <type>boolean</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>preparer</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>preparer</name>
+                <exportedName>preparer</exportedName>
+                <documentation>The preparer to invoke before rendering the attribute.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>role</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>role</name>
+                <exportedName>role</exportedName>
+                <documentation>A comma-separated list of roles. If present, the attribute
+will be rendered only if the current user belongs to one of the roles.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>defaultValue</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>defaultValue</name>
+                <exportedName>defaultValue</exportedName>
+                <documentation>The default value of the attribute. To use only if
+the attribute was not computed.</documentation>
+                <type>java.lang.Object</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>defaultValueRole</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>defaultValueRole</name>
+                <exportedName>defaultValueRole</exportedName>
+                <documentation>The default comma-separated list of roles. To use
+only if the attribute was not computed.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>defaultValueType</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>defaultValueType</name>
+                <exportedName>defaultValueType</exportedName>
+                <documentation>The default type of the attribute. To use only if
+the attribute was not computed.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>name</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>name</name>
+                <exportedName>name</exportedName>
+                <documentation>The name of the attribute.</documentation>
+                <type>java.lang.String</type>
+                <required>true</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>value</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>value</name>
+                <exportedName>value</exportedName>
+                <documentation>The attribute to use immediately, if not null.</documentation>
+                <type>org.apache.tiles.api.Attribute</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>modelBody</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>modelBody</name>
+                <exportedName>modelBody</exportedName>
+                <documentation>The body.</documentation>
+                <type>org.apache.tiles.autotag.core.runtime.ModelBody</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.InsertAttributeModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.InsertAttributeModel</name>
+        <tagName>insertAttribute</tagName>
+        <tagClassPrefix>InsertAttribute</tagClassPrefix>
+        <documentation>&lt;p&gt;
+Inserts the value of an attribute into the page.
+&lt;/p&gt;
+&lt;p&gt;
+This tag can be flexibly used to insert the value of an attribute into a
+page. As in other usages in Tiles, every attribute can be determined to have
+a &quot;type&quot;, either set explicitly when it was defined, or &quot;computed&quot;. If the
+type is not explicit, then if the attribute value is a valid definition, it
+will be inserted as such. Otherwise, if it begins with a &quot;/&quot; character, it
+will be treated as a &quot;template&quot;. Finally, if it has not otherwise been
+assigned a type, it will be treated as a String and included without any special handling.
+&lt;/p&gt;
+
+&lt;p&gt;
+Example : 
+&lt;/p&gt;
+
+&lt;pre&gt;
+    &amp;lt;tiles:insertAttribute name=&amp;quot;body&amp;quot; /&amp;gt;
+&lt;/pre&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the operation.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>ignore</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>ignore</name>
+                <exportedName>ignore</exportedName>
+                <documentation>If true, if an exception happens during
+rendering, of if the attribute is null, the problem will be ignored.</documentation>
+                <type>boolean</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>preparer</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>preparer</name>
+                <exportedName>preparer</exportedName>
+                <documentation>The preparer to invoke before rendering the attribute.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>role</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>role</name>
+                <exportedName>role</exportedName>
+                <documentation>A comma-separated list of roles. If present, the attribute
+will be rendered only if the current user belongs to one of the roles.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>defaultValue</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>defaultValue</name>
+                <exportedName>defaultValue</exportedName>
+                <documentation>The default value of the attribute. To use only if
+the attribute was not computed.</documentation>
+                <type>java.lang.Object</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>defaultValueRole</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>defaultValueRole</name>
+                <exportedName>defaultValueRole</exportedName>
+                <documentation>The default comma-separated list of roles. To use
+only if the attribute was not computed.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>defaultValueType</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>defaultValueType</name>
+                <exportedName>defaultValueType</exportedName>
+                <documentation>The default type of the attribute. To use only if
+the attribute was not computed.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>name</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>name</name>
+                <exportedName>name</exportedName>
+                <documentation>The name of the attribute.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>value</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>value</name>
+                <exportedName>value</exportedName>
+                <documentation>The attribute to use immediately, if not null.</documentation>
+                <type>org.apache.tiles.api.Attribute</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>flush</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>flush</name>
+                <exportedName>flush</exportedName>
+                <documentation>If true, the response will be flushed after the insert.</documentation>
+                <type>boolean</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>modelBody</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>modelBody</name>
+                <exportedName>modelBody</exportedName>
+                <documentation>The body.</documentation>
+                <type>org.apache.tiles.autotag.core.runtime.ModelBody</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.PutAttributeModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.PutAttributeModel</name>
+        <tagName>putAttribute</tagName>
+        <tagClassPrefix>PutAttribute</tagClassPrefix>
+        <documentation>&lt;p&gt;
+Put an attribute in enclosing attribute container tag.
+&lt;/p&gt;
+&lt;p&gt;
+Enclosing attribute container tag can be :
+&lt;ul&gt;
+&lt;li&gt;&amp;lt;initContainer&amp;gt;&lt;/li&gt;
+&lt;li&gt;&amp;lt;definition&amp;gt;&lt;/li&gt;
+&lt;li&gt;&amp;lt;insertAttribute&amp;gt;&lt;/li&gt;
+&lt;li&gt;&amp;lt;insertDefinition&amp;gt;&lt;/li&gt;
+&lt;li&gt;&amp;lt;putListAttribute&amp;gt;&lt;/li&gt;
+&lt;/ul&gt;
+(or any other tag which implements the PutAttributeTagParent
+interface. Exception is thrown if no appropriate tag can be found.
+&lt;/p&gt;
+&lt;p&gt;
+Put tag can have following atributes :
+&lt;ul&gt;
+&lt;li&gt;name : Name of the attribute&lt;/li&gt;
+&lt;li&gt;value : value to put as attribute&lt;/li&gt;
+&lt;li&gt;type : value type. Possible type are : string (value is used as direct
+string), template (value is used as a page url to insert), definition (value
+is used as a definition name to insert), object (value is used as it is)&lt;/li&gt;
+&lt;li&gt;role : Role to check when &apos;insertAttribute&apos; will be called.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;p&gt;
+Value can also come from tag body. Tag body is taken into account only if
+value is not set by one of the tag attributes. In this case Attribute type is
+&quot;string&quot;, unless tag body define another type.
+&lt;/p&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the operation.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>name</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>name</name>
+                <exportedName>name</exportedName>
+                <documentation>The name of the attribute to put.</documentation>
+                <type>java.lang.String</type>
+                <required>true</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>value</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>value</name>
+                <exportedName>value</exportedName>
+                <documentation>The value of the attribute. Use this parameter, or expression, or body.</documentation>
+                <type>java.lang.Object</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>expression</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>expression</name>
+                <exportedName>expression</exportedName>
+                <documentation>The expression to calculate the value from. Use this
+parameter, or value, or body.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>role</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>role</name>
+                <exportedName>role</exportedName>
+                <documentation>A comma-separated list of roles. If present, the attribute
+will be rendered only if the current user belongs to one of the roles.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>type</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>type</name>
+                <exportedName>type</exportedName>
+                <documentation>The type (renderer) of the attribute.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>cascade</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>cascade</name>
+                <exportedName>cascade</exportedName>
+                <documentation>If true the attribute will be cascaded to all nested attributes.</documentation>
+                <type>boolean</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>modelBody</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>modelBody</name>
+                <exportedName>modelBody</exportedName>
+                <documentation>The body.</documentation>
+                <type>org.apache.tiles.autotag.core.runtime.ModelBody</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.DefinitionModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.DefinitionModel</name>
+        <tagName>definition</tagName>
+        <tagClassPrefix>Definition</tagClassPrefix>
+        <documentation>&lt;p&gt;
+Create a definition at runtime. 
+&lt;/p&gt;
+&lt;p&gt;
+Create a new definition at runtime. Newly created definition will be
+available across the entire request.
+&lt;/p&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the operation.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>name</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>name</name>
+                <exportedName>name</exportedName>
+                <documentation>The name of the definition to create. If not specified, an
+anonymous definition will be created.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>template</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>template</name>
+                <exportedName>template</exportedName>
+                <documentation>The template of this definition.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>role</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>role</name>
+                <exportedName>role</exportedName>
+                <documentation>A comma-separated list of roles. If present, the definition
+will be rendered only if the current user belongs to one of the roles.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>extendsParam</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>extendsParam</name>
+                <exportedName>extends</exportedName>
+                <documentation>The definition name that this definition extends.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>preparer</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>preparer</name>
+                <exportedName>preparer</exportedName>
+                <documentation>The preparer to use to invoke before the definition is rendered.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>modelBody</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>modelBody</name>
+                <exportedName>modelBody</exportedName>
+                <documentation>The body.</documentation>
+                <type>org.apache.tiles.autotag.core.runtime.ModelBody</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.AddAttributeModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.AddAttributeModel</name>
+        <tagName>addAttribute</tagName>
+        <tagClassPrefix>AddAttribute</tagClassPrefix>
+        <documentation>&lt;p&gt;
+Add an element to the surrounding list. Equivalent to &apos;putAttribute&apos;,
+but for list element.
+&lt;/p&gt;
+
+&lt;p&gt;
+Add an element to the surrounding list. This tag can only be used inside
+&apos;putListAttribute&apos; or &apos;addListAttribute&apos; tags. Value can come from a direct
+assignment (value=&quot;aValue&quot;)
+&lt;/p&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the operation.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>value</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>value</name>
+                <exportedName>value</exportedName>
+                <documentation>The value of the attribute. Use this parameter, or expression, or body.</documentation>
+                <type>java.lang.Object</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>expression</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>expression</name>
+                <exportedName>expression</exportedName>
+                <documentation>The expression to calculate the value from. Use this
+parameter, or value, or body.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>role</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>role</name>
+                <exportedName>role</exportedName>
+                <documentation>A comma-separated list of roles. If present, the attribute
+will be rendered only if the current user belongs to one of the roles.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>type</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>type</name>
+                <exportedName>type</exportedName>
+                <documentation>The type (renderer) of the attribute.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>modelBody</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>modelBody</name>
+                <exportedName>modelBody</exportedName>
+                <documentation>The body.</documentation>
+                <type>org.apache.tiles.autotag.core.runtime.ModelBody</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.PutListAttributeModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.PutListAttributeModel</name>
+        <tagName>putListAttribute</tagName>
+        <tagClassPrefix>PutListAttribute</tagClassPrefix>
+        <documentation>&lt;p&gt;
+Declare a list that will be pass as attribute to tile. 
+&lt;/p&gt;
+&lt;p&gt;
+Declare a list that will be pass as attribute to tile. List elements are
+added using the tags &apos;addAttribute&apos; or &apos;addListAttribute&apos;. This tag can only
+be used inside &apos;insertTemplate&apos;, &apos;insertDefinition&apos;, &apos;definition&apos; tags.
+&lt;/p&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the model.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>name</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>name</name>
+                <exportedName>name</exportedName>
+                <documentation>The name of the attribute to put.</documentation>
+                <type>java.lang.String</type>
+                <required>true</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>role</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>role</name>
+                <exportedName>role</exportedName>
+                <documentation>A comma-separated list of roles. If present, the attribute
+will be rendered only if the current user belongs to one of the roles.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>inherit</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>inherit</name>
+                <exportedName>inherit</exportedName>
+                <documentation>If true, the list attribute will use, as first elements, the
+list contained in the list attribute, put with the same name, of the containing definition.</documentation>
+                <type>boolean</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>cascade</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>cascade</name>
+                <exportedName>cascade</exportedName>
+                <documentation>If true the attribute will be cascaded to all nested attributes.</documentation>
+                <type>boolean</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>modelBody</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>modelBody</name>
+                <exportedName>modelBody</exportedName>
+                <documentation>The body.</documentation>
+                <type>org.apache.tiles.autotag.core.runtime.ModelBody</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+    <entry>
+      <string>org.apache.tiles.template.InsertTemplateModel</string>
+      <org.apache.tiles.autotag.model.TemplateClass>
+        <name>org.apache.tiles.template.InsertTemplateModel</name>
+        <tagName>insertTemplate</tagName>
+        <tagClassPrefix>InsertTemplate</tagClassPrefix>
+        <documentation>&lt;p&gt;
+Insert a template.
+&lt;/p&gt;
+&lt;p&gt;
+Insert a template with the possibility to pass parameters (called
+attributes). A template can be seen as a procedure that can take parameters
+or attributes. &amp;lt;tiles:insertTemplate&amp;gt; allows to define
+these attributes and pass them to the inserted jsp page, called template.
+Attributes are defined using nested tag
+&amp;lt;tiles:putAttribute&amp;gt; or
+&amp;lt;tiles:putListAttribute&amp;gt;.
+&lt;/p&gt;
+&lt;p&gt;
+You must specify template attribute, for inserting a template
+&lt;/p&gt;
+
+&lt;p&gt;
+Example :
+&lt;/p&gt;
+
+&lt;pre&gt;
+    &amp;lt;tiles:insertTemplate template=&amp;quot;/basic/myLayout.jsp&amp;quot; flush=&amp;quot;true&amp;quot;&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;title&amp;quot; value=&amp;quot;My first page&amp;quot; /&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;header&amp;quot; value=&amp;quot;/common/header.jsp&amp;quot; /&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;footer&amp;quot; value=&amp;quot;/common/footer.jsp&amp;quot; /&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;menu&amp;quot; value=&amp;quot;/basic/menu.jsp&amp;quot; /&amp;gt;
+        &amp;lt;tiles:putAttribute name=&amp;quot;body&amp;quot; value=&amp;quot;/basic/helloBody.jsp&amp;quot; /&amp;gt;
+    &amp;lt;/tiles:insertTemplate&amp;gt;
+&lt;/pre&gt;</documentation>
+        <executeMethod>
+          <name>execute</name>
+          <documentation>Executes the operation.</documentation>
+          <parameters class="linked-hash-map">
+            <entry>
+              <string>template</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>template</name>
+                <exportedName>template</exportedName>
+                <documentation>The template to render.</documentation>
+                <type>java.lang.String</type>
+                <required>true</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>templateType</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>templateType</name>
+                <exportedName>templateType</exportedName>
+                <documentation>The type of the template attribute.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>templateExpression</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>templateExpression</name>
+                <exportedName>templateExpression</exportedName>
+                <documentation>The expression to evaluate to get the value of the template.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>role</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>role</name>
+                <exportedName>role</exportedName>
+                <documentation>A comma-separated list of roles. If present, the template
+will be rendered only if the current user belongs to one of the roles.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>preparer</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>preparer</name>
+                <exportedName>preparer</exportedName>
+                <documentation>The preparer to use to invoke before the definition is
+rendered. If specified, it overrides the preparer specified in the
+definition itself.</documentation>
+                <type>java.lang.String</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>flush</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>flush</name>
+                <exportedName>flush</exportedName>
+                <documentation>If true, the response will be flushed after the insert.</documentation>
+                <type>boolean</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>request</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>request</name>
+                <exportedName>request</exportedName>
+                <documentation>The request.</documentation>
+                <type>org.apache.tiles.request.Request</type>
+                <required>false</required>
+                <request>true</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+            <entry>
+              <string>modelBody</string>
+              <org.apache.tiles.autotag.model.TemplateParameter>
+                <name>modelBody</name>
+                <exportedName>modelBody</exportedName>
+                <documentation>The body.</documentation>
+                <type>org.apache.tiles.autotag.core.runtime.ModelBody</type>
+                <required>false</required>
+                <request>false</request>
+              </org.apache.tiles.autotag.model.TemplateParameter>
+            </entry>
+          </parameters>
+        </executeMethod>
+      </org.apache.tiles.autotag.model.TemplateClass>
+    </entry>
+  </templateClasses>
+</org.apache.tiles.autotag.model.TemplateSuite>

@@ -29,58 +29,41 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.result.ServletDispatcherResult;
 import org.apache.struts2.tiles.StrutsTilesAnnotationProcessor;
 import org.apache.struts2.tiles.annotation.TilesDefinition;
-import org.apache.tiles.Definition;
-import org.apache.tiles.TilesContainer;
-import org.apache.tiles.TilesException;
+import org.apache.tiles.api.Definition;
+import org.apache.tiles.api.TilesContainer;
+import org.apache.tiles.api.TilesException;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.tiles.access.TilesAccess;
-import org.apache.tiles.mgmt.MutableTilesContainer;
+import org.apache.tiles.api.access.TilesAccess;
+import org.apache.tiles.api.mgmt.MutableTilesContainer;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletRequest;
 import org.apache.tiles.request.servlet.ServletUtil;
 
 /**
- * <!-- START SNIPPET: description -->
- * Renders a view using struts-tiles.
- * <!-- END SNIPPET: description -->
- *
- * <!-- START SNIPPET: webxml -->
- * In your web.xml file, you need to add a TilesListener.
- *
+ * Renders a view using struts-tiles. In your web.xml file, you need to add a TilesListener.
+ * <p>
  * &lt;listener&gt;
  *      &lt;listener-class&gt;org.apache.struts2.tiles.StrutsTilesListener&lt;/listener-class&gt;
  * &lt;/listener&gt;
- * <!-- END SNIPPET: webxml -->
- *
- * <!-- START SNIPPET: strutsxml -->
+ * <p>
  * In struts.xml, use type="tiles" on your &lt;result&gt;.
- *
+ * <p>
  * &lt;action name="editUser" class="userAction" method="edit"&gt;
  *      &lt;result name="success" type="tiles"&gt;userForm&lt;/result&gt;
  *      &lt;result name="input" type="tiles"&gt;userList&lt;/result&gt;
  * &lt;/action&gt;
- * <!-- END SNIPPET: strutsxml -->
- *
- *
- * <!-- START SNIPPET: packageconfig -->
- *
+ * <p>
  * Making this result type the default for the current package.
- *
+ * <p>
  * &lt;result-types&gt;
  *      &lt;result-type name="tiles"
  * class="org.apache.struts2.views.tiles.TilesResult" default="true" /&gt;
  * &lt;/result-types&gt;
- * <!-- END SNIPPET: packageconfig -->
- *
- *
- * <!-- START SNIPPET: tilesconfig -->
- * You have to configure tiles itself. Therefore you can add <code>tiles.xml</code> either 
+ * <p>
+ * You have to configure tiles itself. Therefore you can add <code>tiles.xml</code> either
  * to resources or WEB-INF. You may also use annotations like {@link TilesDefinition}.
- *
- * <!-- END SNIPPET: tilesconfig -->
- *
  */
 public class TilesResult extends ServletDispatcherResult {
 
@@ -114,8 +97,7 @@ public class TilesResult extends ServletDispatcherResult {
         if (StringUtils.isEmpty(location)) {
             LOG.trace("location not set -> action must have one @TilesDefinition");
             tilesDefinition = annotationProcessor.findAnnotation(action, null);
-            String tileName = StringUtils.isNotEmpty(tilesDefinition.name()) ? tilesDefinition.name() : actionName;
-            location = tileName;
+            location = StringUtils.isNotEmpty(tilesDefinition.name()) ? tilesDefinition.name() : actionName;
             LOG.debug("using new location name '{}' and @TilesDefinition '{}'", location, tilesDefinition);
         }
         setLocation(location);

@@ -25,7 +25,7 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.apache.tiles.evaluator.AbstractAttributeEvaluator;
+import org.apache.tiles.core.evaluator.AbstractAttributeEvaluator;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletUtil;
 

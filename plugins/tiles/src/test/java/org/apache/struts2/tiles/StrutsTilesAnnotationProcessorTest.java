@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.struts2.tiles.annotation.TilesDefinition;
-import org.apache.tiles.Attribute;
-import org.apache.tiles.Definition;
-import org.apache.tiles.Expression;
+import org.apache.tiles.api.Attribute;
+import org.apache.tiles.api.Definition;
+import org.apache.tiles.api.Expression;
 import org.junit.Test;
 
 import org.junit.Assert;

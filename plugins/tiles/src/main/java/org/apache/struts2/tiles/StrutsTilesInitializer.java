@@ -20,11 +20,11 @@ package org.apache.struts2.tiles;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tiles.definition.DefinitionsFactory;
-import org.apache.tiles.factory.AbstractTilesContainerFactory;
+import org.apache.tiles.core.definition.DefinitionsFactory;
+import org.apache.tiles.core.factory.AbstractTilesContainerFactory;
+import org.apache.tiles.core.startup.AbstractTilesInitializer;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.servlet.ServletApplicationContext;
-import org.apache.tiles.startup.AbstractTilesInitializer;
 
 import javax.servlet.ServletContext;
 

@@ -41,10 +41,6 @@
              <artifactId>struts2-portlet-plugin</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-request-portlet</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
@@ -55,9 +51,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-jsp</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <properties>

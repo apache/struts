@@ -23,8 +23,6 @@ import org.apache.tiles.api.Definition;
 /**
  * Creates a new definition pattern matcher for the given pattern and the given
  * base definition with pattern expressions.
- *
- * @version $Rev$ $Date$
  * @since 2.2.0
  */
 public interface DefinitionPatternMatcherFactory {

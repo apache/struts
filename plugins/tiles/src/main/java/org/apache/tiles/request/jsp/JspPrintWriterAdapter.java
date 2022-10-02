@@ -27,8 +27,6 @@ import java.io.PrintWriter;
 
 /**
  * Adapts a {@link JspWriter} to a {@link PrintWriter}, swallowing {@link IOException}.
- *
- * @version $Rev$ $Date$
  */
 public class JspPrintWriterAdapter extends PrintWriter {
 

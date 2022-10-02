@@ -35,8 +35,6 @@ import java.util.Locale;
  * {@link org.apache.tiles.core.definition.digester.DigesterDefinitionsReader}
  * class unless another implementation is specified.
  * </p>
- *
- * @version $Rev$ $Date$
  * @since 2.2.1
  */
 public class UnresolvingLocaleDefinitionsFactory implements DefinitionsFactory {

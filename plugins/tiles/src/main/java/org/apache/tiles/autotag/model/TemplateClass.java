@@ -24,8 +24,6 @@ import java.util.Map;
 
 /**
  * It represents a parsed template class.
- *
- * @version $Rev$ $Date$
  */
 public class TemplateClass {
 

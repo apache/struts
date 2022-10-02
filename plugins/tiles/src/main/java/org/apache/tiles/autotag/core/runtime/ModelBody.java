@@ -23,8 +23,6 @@ import java.io.Writer;
 
 /**
  * Abstracts a tag/directive body.
- *
- * @version $Rev$ $Date$
  */
 public interface ModelBody {
 

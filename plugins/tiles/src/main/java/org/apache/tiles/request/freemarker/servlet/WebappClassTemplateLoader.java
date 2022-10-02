@@ -31,8 +31,6 @@ import java.io.Reader;
  * Delegates loading templates using a {@link WebappTemplateLoader} and, if not
  * found, a {@link ClassTemplateLoader}. The resources are loaded from the
  * webapp root and from the classpath root.
- *
- * @version $Rev$ $Date$
  */
 public class WebappClassTemplateLoader implements TemplateLoader {
 

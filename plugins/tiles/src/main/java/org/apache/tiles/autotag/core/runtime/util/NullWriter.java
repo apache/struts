@@ -23,8 +23,6 @@ import java.io.Writer;
 
 /**
  * A writer that does not write anything.
- *
- * @version $Rev$ $Date$
  */
 public class NullWriter extends Writer {
 

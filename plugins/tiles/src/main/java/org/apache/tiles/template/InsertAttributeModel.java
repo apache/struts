@@ -53,8 +53,6 @@ import java.util.Deque;
  *           &lt;tiles:insertAttribute name=&quot;body&quot; /&gt;
  *         &lt;/code&gt;
  * </pre>
- *
- * @version $Rev$ $Date$
  * @since 2.2.0
  */
 public class InsertAttributeModel {

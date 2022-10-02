@@ -26,8 +26,6 @@ import org.apache.tiles.request.RequestWrapper;
 
 /**
  * Renders an attribute that contains a reference to a template.
- *
- * @version $Rev$ $Date$
  */
 public class DispatchRenderer implements Renderer {
 

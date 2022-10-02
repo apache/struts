@@ -38,8 +38,6 @@ import java.util.Set;
 
 /**
  * A {@link PostfixedApplicationResource} that can be accessed through a URL.
- *
- * @version $Rev$ $Date$
  */
 
 public class URLApplicationResource extends PostfixedApplicationResource {

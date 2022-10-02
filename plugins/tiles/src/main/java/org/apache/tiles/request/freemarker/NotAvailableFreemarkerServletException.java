@@ -22,8 +22,6 @@ import org.apache.tiles.request.NotAvailableFeatureException;
 
 /**
  * Thrown when the Freemarker servlet is not available.
- *
- * @version $Rev$ $Date$
  */
 public class NotAvailableFreemarkerServletException extends NotAvailableFeatureException {
 

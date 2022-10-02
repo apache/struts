@@ -22,8 +22,6 @@ import org.apache.tiles.request.RequestException;
 
 /**
  * Indicates that an object cannot be instantiated.
- *
- * @version $Rev$ $Date$
  */
 public class CannotInstantiateObjectException extends RequestException {
 

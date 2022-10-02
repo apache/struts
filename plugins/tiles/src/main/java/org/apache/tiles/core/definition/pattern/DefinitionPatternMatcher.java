@@ -23,8 +23,6 @@ import org.apache.tiles.api.Definition;
 /**
  * Matches a definition name to a definition, through pattern-matching. The
  * matched pattern should be a single one.
- *
- * @version $Rev$ $Date$
  * @since 2.2.0
  */
 public interface DefinitionPatternMatcher {

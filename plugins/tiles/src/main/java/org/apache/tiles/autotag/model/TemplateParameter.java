@@ -22,8 +22,6 @@ import org.apache.tiles.autotag.core.runtime.ModelBody;
 
 /**
  * It represents a parameter in a method in a parsed template class.
- *
- * @version $Rev$ $Date$
  */
 public class TemplateParameter {
 

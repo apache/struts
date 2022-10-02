@@ -23,8 +23,6 @@ import org.apache.tiles.api.TilesException;
 /**
  * Indicates that something went wrong during the use of
  * {@link DigesterDefinitionsReader}.
- *
- * @version $Rev$ $Date$
  * @since 2.1.0
  */
 public class DigesterDefinitionsReaderException extends TilesException {

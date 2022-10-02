@@ -27,8 +27,6 @@ import java.util.regex.Pattern;
 
 /**
  * Base class for the abstraction of the body.
- *
- * @version $Rev$ $Date$
  */
 public abstract class AbstractModelBody implements ModelBody {
 

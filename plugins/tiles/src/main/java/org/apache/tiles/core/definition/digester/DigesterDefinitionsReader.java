@@ -61,8 +61,6 @@ import java.util.Map;
  * method. This means that instances of this class are <strong>not</strong>
  * thread-safe and access by multiple threads must be synchronized.
  * </p>
- *
- * @version $Rev$ $Date$
  */
 public class DigesterDefinitionsReader implements DefinitionsReader {
 

@@ -20,8 +20,6 @@ package org.apache.tiles.request.freemarker.autotag;
 
 /**
  * Thrown when a Freemarker problem under Autotag runtime part happens.
- *
- * @version $Rev$ $Date$
  */
 public class FreemarkerAutotagException extends RuntimeException {
 

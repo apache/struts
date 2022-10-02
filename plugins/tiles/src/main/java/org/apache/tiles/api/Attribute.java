@@ -19,6 +19,7 @@
 
 package org.apache.tiles.api;
 
+import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.tiles.request.Request;
 
 import java.io.Serializable;
@@ -205,9 +206,7 @@ public class Attribute implements Serializable, Cloneable {
      */
     public void setRole(String role) {
         if (role != null && role.trim().length() > 0) {
-            String[] rolesStrings = role.split("\\s*,\\s*");
-            roles = new HashSet<>();
-            Collections.addAll(roles, rolesStrings);
+            roles = TextParseUtil.commaDelimitedStringToSet(role);
         } else {
             roles = null;
         }

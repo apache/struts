@@ -38,8 +38,6 @@ import org.apache.tiles.request.Request;
  * <li>&lt;insert&gt;</li>
  * <li>&lt;definition&gt;</li>
  * </ul>>
- *
- * @version $Rev$ $Date$
  */
 public interface ViewPreparer {
 

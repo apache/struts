@@ -20,8 +20,6 @@ package org.apache.tiles.request;
 
 /**
  * Thrown when something related to a request fails.
- *
- * @version $Rev$ $Date$
  */
 public class RequestException extends RuntimeException {
 

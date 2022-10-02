@@ -61,8 +61,6 @@ import java.io.IOException;
  *           &lt;/tiles:insertDefinition&gt;
  *         &lt;/code&gt;
  * </pre>
- *
- * @version $Rev$ $Date$
  * @since 2.2.0
  */
 public class InsertDefinitionModel {

@@ -31,8 +31,6 @@ import org.apache.tiles.request.Request;
  * sets. Implementations also know how to append locale-specific configuration
  * data to an existing Definitions set.
  * </p>
- *
- * @version $Rev$ $Date$
  */
 public interface DefinitionsFactory {
 

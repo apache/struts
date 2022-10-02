@@ -25,8 +25,6 @@ import java.lang.annotation.Target;
 
 /**
  * Specifies behaviour for a parameter of the "execute" method of a template class.
- *
- * @version $Rev$ $Date$
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.PARAMETER)

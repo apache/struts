@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<!-- Definitions for Tiles documentation   -->
+
+<tiles-definitions>
+
+  <!-- =======================================================  -->
+  <!-- Master definition  									-->
+  <!-- =======================================================  -->
+
+  <!-- Doc index page description  -->
+  <definition name="doc.mainLayout" template="/layout/classicLayout.jsp">
+    <put-attribute name="title"  value="Tiles Library Documentation" />
+    <put-attribute name="header" value="/common/header.jsp" />
+    <put-attribute name="menu"   value="doc.menu.main" />
+    <put-attribute name="footer" value="/common/footer.jsp" />
+    <put-attribute name="body"   value="doc.portal.body" />
+      <put-attribute name="bean"   value="This is an object" type="object" />
+  </definition>
+
+  <!-- =======================================================  -->
+  <!-- Main page body definitions  									-->
+  <!-- =======================================================  -->
+
+  <definition name="doc.portal.body" template="/layout/columnsLayout.jsp">
+    <put-attribute name="numCols" value="2" />
+    <put-list-attribute name="list0" >
+      <add-attribute value="/doc/portal/welcome.jsp" />
+      <add-attribute value="/doc/portal/features.jsp" />
+      <!--<add-attribute value="/doc/portal/todo.jsp" /> -->
+      <add-attribute value="/doc/portal/documentation.jsp" />
+    </put-list-attribute>
+    <put-list-attribute name="list1" >
+      <add-attribute value="/doc/portal/news.jsp" />
+      <add-attribute value="/doc/portal/download.jsp" />
+      <add-attribute value="/doc/portal/tilesCompsTemplates.jsp" />
+      <add-attribute value="/doc/portal/strutsIntegration.jsp" />
+      <add-attribute value="/doc/portal/comments.jsp" />
+      <add-attribute value="/doc/portal/revisions.jsp" />
+    </put-list-attribute>
+  </definition>
+
+  <!-- =======================================================  -->
+  <!-- Menus definitions  									-->
+  <!-- =======================================================  -->
+
+  <!-- Menu bar definition -->
+<definition name="doc.menu.main" template="/layout/vboxLayout.jsp" >
+  <put-list-attribute name="componentsList" >
+    <add-attribute value="doc.menu.links" />
+    <add-attribute value="doc.menu.taglib.references" />
+    <add-attribute value="doc.menu.printer.friendly" />
+    <add-attribute value="doc.menu.old.documents" />
+  </put-list-attribute>
+</definition>
+
+  <!-- Documentation menu definition v1.1-->
+<definition name="doc.menu.links" template="/layouts/menu.jsp" >
+  <put-attribute name="title" value="Documentation" />
+    <put-list-attribute name="items" >
+      <item value="Home"           link="/index.jsp"  />
+      <item value="Live Examples (new)" link="/examples/index.jsp"  />
+      <!--
+    <item> <value>Commented Examples</value>
+        <link>/examples/index.jsp</link>
+      <classtype>org.apache.tiles.beans.SimpleMenuItem</classtype>
+    </item>
+    -->
+      <item value="Quick overview" link="/doc/quickOverview.jsp"  />
+      <!--
+      <item value="Tutorial"       link="/doc/tutorial.jsp"  />
+      -->
+      <item value="Tutorial Live Examples" link="/tutorial/index.jsp" />
+      <item value="Download"       link="/doc/download.jsp" />
+      <item value="Installation"   link="/doc/installation.jsp" />
+      <item value="User Guide"	   link="/doc/userGuide.jsp" />
+      <item value="Javadoc"        link="/api/index.html" />
+      <item value="Struts Home"    link="http://www.apache.org"   icon="/images/struts-power.gif"
+      classtype="org.apache.tiles.beans.SimpleMenuItem" />
+    </put-list-attribute>
+</definition>
+
+  <!-- Printer friendly menu definition -->
+<definition name="doc.menu.printer.friendly" template="/layouts/menu.jsp" >
+  <put-attribute name="title" value="Printer Versions" />
+  <put-list-attribute name="items" >
+    <item value="Quick Overview"     link="/test/testAll.jsp" />
+    <item value="Tutorial"           link="/doc/tutorialBody.html" />
+    <item value="User Guide"         link="/doc/userGuideBody.html" />
+    <item value="Overview (old)"  	 link="/doc/overviewBody.html" />
+  </put-list-attribute>
+</definition>
+
+  <!-- Taglib menu definition -->
+<definition name="doc.menu.taglib.references" template="/layouts/menu.jsp" >
+  <put-attribute name="title" value="Tag Library Reference" />
+    <put-list-attribute name="items" >
+      <item value="Tiles Tags"     link="/doc/tilesTags.jsp" />
+      <!-- <item value="Extension Tags (old)"   link="/doc/extensionsTags.jsp" /> -->
+    </put-list-attribute>
+</definition>
+
+  <!-- Oldies menu definition -->
+<definition name="doc.menu.old.documents" template="/layouts/menu.jsp" >
+  <put-attribute name="title" value="Old Documents" />
+  <put-list-attribute name="items" >
+    <item value="Overview (old)"     link="/doc/overview.jsp" />
+  </put-list-attribute>
+</definition>
+
+<definition name="doc.role.test" template="/layout/classicLayout.jsp">
+  <put-attribute name="title" value="Test title" role="myrole" />
+</definition>
+
+<definition name="doc.listattribute.test" template="/layout/classicLayout.jsp">
+  <put-list-attribute name="items" />
+</definition>
+
+</tiles-definitions>

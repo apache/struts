@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -223,8 +221,7 @@ public class CachingLocaleUrlDefinitionDAO extends BaseLocaleUrlDefinitionDAO im
      * @return The loaded definitions.
      * @since 2.1.3
      */
-    protected Map<String, Definition> loadRawDefinitionsFromResources(
-        Locale customizationKey) {
+    protected Map<String, Definition> loadRawDefinitionsFromResources(Locale customizationKey) {
         Map<String, Definition> localeDefsMap;
 
         Locale parentLocale = LocaleUtil.getParentLocale(customizationKey);

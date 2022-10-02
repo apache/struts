@@ -21,9 +21,7 @@
 package org.apache.tiles.api;
 
 import java.util.Map;
-
-import static org.apache.tiles.api.CompareUtil.nullSafeEquals;
-import static org.apache.tiles.api.CompareUtil.nullSafeHashCode;
+import java.util.Objects;
 
 /**
  * A definition, i.e. a template with (completely or not) filled attributes.
@@ -65,14 +63,14 @@ public class Definition extends BasicAttributeContext {
 
     /**
      * Constructor.
-     * @param name The name of the definition.
-     * @param templateAttribute The template attribute of the definition.
-     * @param attributes The attribute map of the definition.
      *
+     * @param name              The name of the definition.
+     * @param templateAttribute The template attribute of the definition.
+     * @param attributes        The attribute map of the definition.
      * @since 2.1.2
      */
     public Definition(String name, Attribute templateAttribute,
-                               Map<String, Attribute> attributes) {
+                      Map<String, Attribute> attributes) {
         super(attributes);
         this.name = name;
         this.templateAttribute = templateAttribute;
@@ -115,20 +113,21 @@ public class Definition extends BasicAttributeContext {
     }
 
 
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         Definition def = (Definition) obj;
-        return nullSafeEquals(name, def.name)
-                && nullSafeEquals(inherit, def.inherit) && super.equals(def);
+        return Objects.equals(name, def.name) && Objects.equals(inherit, def.inherit) && super.equals(def);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return nullSafeHashCode(name) + nullSafeHashCode(inherit)
-                + super.hashCode();
+        return Objects.hashCode(name) + Objects.hashCode(inherit) + super.hashCode();
     }
 
     /**

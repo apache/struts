@@ -23,10 +23,8 @@ package org.apache.tiles.api;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-
-import static org.apache.tiles.api.CompareUtil.nullSafeEquals;
-import static org.apache.tiles.api.CompareUtil.nullSafeHashCode;
 
 /**
  * Basic implementation for <code>AttributeContext</code>.
@@ -51,12 +49,14 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
 
     /**
      * Template attributes.
+     *
      * @since 2.1.0
      */
     protected Map<String, Attribute> attributes = null;
 
     /**
      * Cascaded template attributes.
+     *
      * @since 2.1.0
      */
     protected Map<String, Attribute> cascadedAttributes = null;
@@ -118,27 +118,37 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         copyBasicAttributeContext(context);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Attribute getTemplateAttribute() {
         return templateAttribute;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setTemplateAttribute(Attribute templateAttribute) {
         this.templateAttribute = templateAttribute;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String getPreparer() {
         return preparer;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setPreparer(String url) {
         this.preparer = url;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void inheritCascadedAttributes(AttributeContext context) {
         if (context instanceof BasicAttributeContext) {
             copyCascadedAttributes((BasicAttributeContext) context);
@@ -148,13 +158,15 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
             if (parentAttributeNames != null) {
                 for (String name : parentAttributeNames) {
                     cascadedAttributes.put(name, new Attribute(context
-                            .getCascadedAttribute(name)));
+                        .getCascadedAttribute(name)));
                 }
             }
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void inherit(AttributeContext parent) {
         if (parent instanceof BasicAttributeContext) {
             inherit((BasicAttributeContext) parent);
@@ -175,8 +187,8 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
                     if (destAttribute == null) {
                         putAttribute(name, attribute, true);
                     } else if (attribute instanceof ListAttribute
-                            && destAttribute instanceof ListAttribute
-                            && ((ListAttribute) destAttribute).isInherit()) {
+                        && destAttribute instanceof ListAttribute
+                        && ((ListAttribute) destAttribute).isInherit()) {
                         ((ListAttribute) destAttribute).inherit((ListAttribute) attribute);
                     }
                 }
@@ -189,8 +201,8 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
                     if (destAttribute == null) {
                         putAttribute(name, attribute, false);
                     } else if (attribute instanceof ListAttribute
-                            && destAttribute instanceof ListAttribute
-                            && ((ListAttribute) destAttribute).isInherit()) {
+                        && destAttribute instanceof ListAttribute
+                        && ((ListAttribute) destAttribute).isInherit()) {
                         ((ListAttribute) destAttribute).inherit((ListAttribute) attribute);
                     }
                 }
@@ -214,7 +226,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
 
         // Sets attributes.
         cascadedAttributes = addMissingAttributes(parent.cascadedAttributes,
-                cascadedAttributes);
+            cascadedAttributes);
         attributes = addMissingAttributes(parent.attributes, attributes);
     }
 
@@ -240,7 +252,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         attributes.putAll(newAttributes);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Attribute getAttribute(String name) {
         Attribute retValue = null;
         if (attributes != null) {
@@ -254,7 +268,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         return retValue;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Attribute getLocalAttribute(String name) {
         if (attributes == null) {
             return null;
@@ -263,7 +279,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         return attributes.get(name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Attribute getCascadedAttribute(String name) {
         if (cascadedAttributes == null) {
             return null;
@@ -272,7 +290,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         return cascadedAttributes.get(name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<String> getLocalAttributeNames() {
         if (attributes != null && !attributes.isEmpty()) {
             return attributes.keySet();
@@ -280,7 +300,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<String> getCascadedAttributeNames() {
         if (cascadedAttributes != null && !cascadedAttributes.isEmpty()) {
             return cascadedAttributes.keySet();
@@ -288,7 +310,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void putAttribute(String name, Attribute value) {
         if (attributes == null) {
             attributes = new HashMap<>();
@@ -297,7 +321,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         attributes.put(name, value);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void putAttribute(String name, Attribute value, boolean cascade) {
         Map<String, Attribute> mapToUse;
         if (cascade) {
@@ -314,7 +340,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         mapToUse.put(name, value);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void clear() {
         templateAttribute = null;
         preparer = null;
@@ -322,22 +350,26 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         cascadedAttributes.clear();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         BasicAttributeContext bac = (BasicAttributeContext) obj;
-        return nullSafeEquals(templateAttribute, bac.templateAttribute)
-                && nullSafeEquals(preparer, bac.preparer)
-                && nullSafeEquals(attributes, bac.attributes)
-                && nullSafeEquals(cascadedAttributes, bac.cascadedAttributes);
+        return Objects.equals(templateAttribute, bac.templateAttribute)
+            && Objects.equals(preparer, bac.preparer)
+            && Objects.equals(attributes, bac.attributes)
+            && Objects.equals(cascadedAttributes, bac.cascadedAttributes);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return nullSafeHashCode(templateAttribute) + nullSafeHashCode(preparer)
-                + nullSafeHashCode(attributes)
-                + nullSafeHashCode(cascadedAttributes);
+        return Objects.hashCode(templateAttribute) + Objects.hashCode(preparer)
+            + Objects.hashCode(attributes)
+            + Objects.hashCode(cascadedAttributes);
     }
 
     /**
@@ -346,7 +378,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
      * @param parentTemplateAttribute The parent template attribute.
      */
     private void inheritParentTemplateAttribute(
-            Attribute parentTemplateAttribute) {
+        Attribute parentTemplateAttribute) {
         if (parentTemplateAttribute != null) {
             if (templateAttribute == null) {
                 templateAttribute = new Attribute(parentTemplateAttribute);
@@ -380,7 +412,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
      */
     private void copyCascadedAttributes(BasicAttributeContext context) {
         if (context.cascadedAttributes != null
-                && !context.cascadedAttributes.isEmpty()) {
+            && !context.cascadedAttributes.isEmpty()) {
             cascadedAttributes = deepCopyAttributeMap(context.cascadedAttributes);
         }
     }
@@ -388,7 +420,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
     /**
      * Adds missing attributes to the destination map.
      *
-     * @param source The source attribute map.
+     * @param source      The source attribute map.
      * @param destination The destination attribute map.
      * @return The destination attribute map if not null, a new one otherwise.
      */
@@ -403,10 +435,10 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
                 if (destAttribute == null) {
                     destination.put(key, entry.getValue());
                 } else if (destAttribute instanceof ListAttribute
-                        && entry.getValue() instanceof ListAttribute
-                        && ((ListAttribute) destAttribute).isInherit()) {
+                    && entry.getValue() instanceof ListAttribute
+                    && ((ListAttribute) destAttribute).isInherit()) {
                     ((ListAttribute) destAttribute)
-                            .inherit((ListAttribute) entry.getValue());
+                        .inherit((ListAttribute) entry.getValue());
                 }
             }
         }

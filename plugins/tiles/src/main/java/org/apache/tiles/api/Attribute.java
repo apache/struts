@@ -27,10 +27,8 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
-
-import static org.apache.tiles.api.CompareUtil.nullSafeEquals;
-import static org.apache.tiles.api.CompareUtil.nullSafeHashCode;
 
 /**
  * Common implementation of attribute definition.
@@ -44,6 +42,7 @@ public class Attribute implements Serializable, Cloneable {
 
     /**
      * The roles that can render this attribute.
+     *
      * @since 2.0.6
      */
     protected Set<String> roles = null;
@@ -69,7 +68,6 @@ public class Attribute implements Serializable, Cloneable {
 
     /**
      * Constructor.
-     *
      */
     public Attribute() {
     }
@@ -113,11 +111,11 @@ public class Attribute implements Serializable, Cloneable {
     /**
      * Constructor.
      *
-     * @param value Object to store. If specified, the <code>expression</code>
-     * parameter will be ignored.
-     * @param expression The expression to be evaluated. Ignored if the
-     * <code>value</code> is not null.
-     * @param role Associated role.
+     * @param value        Object to store. If specified, the <code>expression</code>
+     *                     parameter will be ignored.
+     * @param expression   The expression to be evaluated. Ignored if the
+     *                     <code>value</code> is not null.
+     * @param role         Associated role.
      * @param rendererName The renderer name.
      * @since 2.2.0
      */
@@ -145,31 +143,32 @@ public class Attribute implements Serializable, Cloneable {
     /**
      * Creates a template attribute, starting from the name of the template.
      *
-     * @param template The template that will be rendered.
+     * @param template           The template that will be rendered.
      * @param templateExpression The template expression that will be evaluated
-     * to a template.
-     * @param templateType The type, or renderer, of the template. If null, the
-     * default <code>template</code> will be used.
-     * @param role The comma-separated roles for which the template is
-     * authorized to be rendered.
+     *                           to a template.
+     * @param templateType       The type, or renderer, of the template. If null, the
+     *                           default <code>template</code> will be used.
+     * @param role               The comma-separated roles for which the template is
+     *                           authorized to be rendered.
      * @return The template attribute.
      * @since 2.2.2
      */
     public static Attribute createTemplateAttribute(String template,
-            String templateExpression, String templateType, String role) {
+                                                    String templateExpression, String templateType, String role) {
         Attribute templateAttribute = createTemplateAttribute(template);
         templateAttribute.setRole(role);
         if (templateType != null) {
             templateAttribute.setRenderer(templateType);
         }
         templateAttribute
-                .setExpressionObject(Expression
-                        .createExpressionFromDescribedExpression(templateExpression));
+            .setExpressionObject(Expression
+                .createExpressionFromDescribedExpression(templateExpression));
         return templateAttribute;
     }
 
     /**
      * Get role.
+     *
      * @return the name of the required role(s)
      */
     public String getRole() {
@@ -228,6 +227,7 @@ public class Attribute implements Serializable, Cloneable {
 
     /**
      * Get value.
+     *
      * @return the value
      */
     public Object getValue() {
@@ -265,7 +265,9 @@ public class Attribute implements Serializable, Cloneable {
         this.expressionObject = expressionObject;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         if (value != null) {
@@ -307,8 +309,8 @@ public class Attribute implements Serializable, Cloneable {
         }
         Expression targetExpressionObject = attribute.getExpressionObject();
         if (targetExpressionObject != null
-                && (expressionObject == null || expressionObject
-                        .getExpression() == null)) {
+            && (expressionObject == null || expressionObject
+            .getExpression() == null)) {
             expressionObject = new Expression(targetExpressionObject);
         }
         if (roles == null || roles.isEmpty()) {
@@ -319,14 +321,16 @@ public class Attribute implements Serializable, Cloneable {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         Attribute attribute = (Attribute) obj;
-        return nullSafeEquals(value, attribute.value)
-                && nullSafeEquals(renderer, attribute.renderer)
-                && nullSafeEquals(roles, attribute.roles)
-                && nullSafeEquals(expressionObject, attribute.expressionObject);
+        return Objects.equals(value, attribute.value)
+            && Objects.equals(renderer, attribute.renderer)
+            && Objects.equals(roles, attribute.roles)
+            && Objects.equals(expressionObject, attribute.expressionObject);
     }
 
     /**
@@ -344,21 +348,25 @@ public class Attribute implements Serializable, Cloneable {
         boolean retValue = false;
 
         for (Iterator<String> roleIt = roles.iterator(); roleIt.hasNext()
-                && !retValue;) {
+            && !retValue; ) {
             retValue = request.isUserInRole(roleIt.next());
         }
 
         return retValue;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return nullSafeHashCode(value) + nullSafeHashCode(renderer)
-                + nullSafeHashCode(roles) + nullSafeHashCode(expressionObject);
+        return Objects.hashCode(value) + Objects.hashCode(renderer)
+            + Objects.hashCode(roles) + Objects.hashCode(expressionObject);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Attribute clone() {
         return new Attribute(this);

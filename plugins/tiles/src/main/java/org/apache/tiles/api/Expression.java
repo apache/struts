@@ -21,8 +21,7 @@
 
 package org.apache.tiles.api;
 
-import static org.apache.tiles.api.CompareUtil.nullSafeEquals;
-import static org.apache.tiles.api.CompareUtil.nullSafeHashCode;
+import java.util.Objects;
 
 /**
  * It is an expression, along with the expression language (e.g. EL, MVEL, OGNL)
@@ -46,7 +45,7 @@ public class Expression {
      * Constructor.
      *
      * @param expression The expression itself.
-     * @param language The language of the expression.
+     * @param language   The language of the expression.
      * @since 2.2.0
      */
     public Expression(String expression, String language) {
@@ -80,8 +79,8 @@ public class Expression {
      * <code>LANGUAGE:EXPRESSION</code>.
      *
      * @param describedExpression The expression in the form
-     * <code>LANGUAGE:EXPRESSION</code>. The LANGUAGE part should be expressed
-     * only with letters and numbers.
+     *                            <code>LANGUAGE:EXPRESSION</code>. The LANGUAGE part should be expressed
+     *                            only with letters and numbers.
      * @return The created object, or <code>null</code> if the expression is null.
      * @since 2.2.0
      */
@@ -103,7 +102,7 @@ public class Expression {
      * Creates an Expression object from the expression and its language.
      *
      * @param expression The expression itself.
-     * @param language The language of the expression.
+     * @param language   The language of the expression.
      * @return The created object, or <code>null</code> if the expression is null.
      * @since 2.2.0
      */
@@ -135,21 +134,26 @@ public class Expression {
         return language;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         Expression exp = (Expression) obj;
-        return nullSafeEquals(expression, exp.expression)
-                && nullSafeEquals(language, exp.language);
+        return Objects.equals(expression, exp.expression) && Objects.equals(language, exp.language);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return nullSafeHashCode(expression) + nullSafeHashCode(language);
+        return Objects.hashCode(expression) + Objects.hashCode(language);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return (language == null ? "DEFAULT" : language) + ":" + expression;

@@ -98,22 +98,28 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         return Collections.unmodifiableSet(remoteProtocols);
     }
 
-    private static boolean isLocal(URL url) {
+    private boolean isLocal(URL url) {
         return !REMOTE_PROTOCOLS.contains(url.getProtocol());
     }
 
-    /** the URL where the contents can be found. */
+    /**
+     * the URL where the contents can be found.
+     */
     private final URL url;
-    /** if the URL matches a file, this is the file. */
+    /**
+     * if the URL matches a file, this is the file.
+     */
     private File file;
-    /** if the URL points to a local resource */
+    /**
+     * if the URL points to a local resource
+     */
     private final boolean local;
 
     /**
      * Creates a URLApplicationResource for the specified path that can be accessed through the specified URL.
      *
      * @param localePath the path including localization.
-     * @param url the URL where the contents can be found.
+     * @param url        the URL where the contents can be found.
      */
     public URLApplicationResource(String localePath, URL url) {
         super(localePath);
@@ -127,9 +133,9 @@ public class URLApplicationResource extends PostfixedApplicationResource {
     /**
      * Creates a URLApplicationResource for the specified path that can be accessed through the specified URL.
      *
-     * @param path the path excluding localization.
+     * @param path   the path excluding localization.
      * @param locale the Locale.
-     * @param url the URL where the contents can be found.
+     * @param url    the URL where the contents can be found.
      */
     public URLApplicationResource(String path, Locale locale, URL url) {
         super(path, locale);
@@ -156,7 +162,7 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         }
     }
 
-    private static File getFile(URL url) {
+    private File getFile(URL url) {
         try {
             return new File(new URI(url.toExternalForm()).getSchemeSpecificPart());
         } catch (URISyntaxException e) {
@@ -165,17 +171,25 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public InputStream getInputStream() throws IOException {
         if (file != null) {
-            return Files.newInputStream(file.toPath());
+            if (file.exists()) {
+                return Files.newInputStream(file.toPath());
+            } else {
+                throw new FileNotFoundException("File does not exist: " + file);
+            }
         } else {
             return openConnection().getInputStream();
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getLastModified() throws IOException {
         if (file != null) {
@@ -190,7 +204,9 @@ public class URLApplicationResource extends PostfixedApplicationResource {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "Resource " + getLocalePath() + " at " + url.toString();

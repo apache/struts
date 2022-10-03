@@ -322,7 +322,10 @@ public class ReadOnlyEnumerationMap<V> implements Map<String, V> {
 
             @Override
             public Entry<String, V> next() {
-                return extractNextEntry(namesEnumeration);
+                if (namesEnumeration.hasMoreElements()) {
+                    return extractNextEntry(namesEnumeration);
+                }
+                throw new NoSuchElementException();
             }
 
             @Override

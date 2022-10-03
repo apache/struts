@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,34 +18,33 @@
  */
 package org.apache.tiles.request.portlet.extractor;
 
-import org.apache.tiles.request.attribute.HasAddableKeys;
+import org.apache.tiles.request.portlet.extractor.StateAwareParameterExtractor;
+import org.junit.Test;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.StateAwareResponse;
 
+import static org.easymock.EasyMock.*;
+
 /**
- * Extracts parameters from a request and allows putting render parameters in a state aware response.
+ * Tests {@link StateAwareParameterExtractor}.
  */
-public class StateAwareParameterExtractor extends ParameterExtractor implements HasAddableKeys<String> {
+public class StateAwareParameterExtractorTest {
 
     /**
-     * The portlet response.
+     * Test method for {@link StateAwareParameterExtractor#setValue(String, String)}.
      */
-    private final StateAwareResponse response;
+    @Test
+    public void testSetValue() {
+        PortletRequest request = createMock(PortletRequest.class);
+        StateAwareResponse response = createMock(StateAwareResponse.class);
 
-    /**
-     * Constructor.
-     *
-     * @param request The portlet request.
-     * @param response The portlet response.
-     */
-    public StateAwareParameterExtractor(PortletRequest request, StateAwareResponse response) {
-        super(request);
-        this.response = response;
+        response.setRenderParameter("name", "value");
+
+        replay(request, response);
+        StateAwareParameterExtractor extractor = new StateAwareParameterExtractor(request, response);
+        extractor.setValue("name", "value");
+        verify(request, response);
     }
 
-    @Override
-    public void setValue(String key, String value) {
-        response.setRenderParameter(key, value);
-    }
 }

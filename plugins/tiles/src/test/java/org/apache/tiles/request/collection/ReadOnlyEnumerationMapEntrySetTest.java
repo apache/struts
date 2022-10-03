@@ -160,6 +160,7 @@ public class ReadOnlyEnumerationMapEntrySetTest {
 
         expect(extractor.getKeys()).andReturn(keys);
         expect(keys.hasMoreElements()).andReturn(true);
+        expect(keys.hasMoreElements()).andReturn(true);
         expect(keys.nextElement()).andReturn("two");
 
         expect(extractor.getValue("two")).andReturn(2);

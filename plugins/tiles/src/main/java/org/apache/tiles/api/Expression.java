@@ -137,6 +137,12 @@ public class Expression {
      */
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Expression)) {
+            return false;
+        }
         Expression exp = (Expression) obj;
         return Objects.equals(expression, exp.expression) && Objects.equals(language, exp.language);
     }

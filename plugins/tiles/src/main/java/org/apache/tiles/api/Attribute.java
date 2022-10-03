@@ -23,8 +23,6 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.tiles.request.Request;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
@@ -267,10 +265,7 @@ public class Attribute implements Serializable, Cloneable {
      */
     @Override
     public String toString() {
-        if (value != null) {
-            return value.toString();
-        }
-        return null;
+        return Objects.toString(value);
     }
 
     /**
@@ -323,6 +318,12 @@ public class Attribute implements Serializable, Cloneable {
      */
     @Override
     public boolean equals(Object obj) {
+        if (obj == null && value == null) {
+            return true;
+        }
+        if (!(obj instanceof Attribute)) {
+            return false;
+        }
         Attribute attribute = (Attribute) obj;
         return Objects.equals(value, attribute.value)
             && Objects.equals(renderer, attribute.renderer)

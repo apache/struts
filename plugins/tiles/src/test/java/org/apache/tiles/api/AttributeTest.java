@@ -33,6 +33,7 @@ import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -40,7 +41,6 @@ import static org.junit.Assert.assertTrue;
  * Tests {@link Attribute}.
  */
 public class AttributeTest {
-
 
     /**
      * Tests {@link Attribute#createTemplateAttribute(String)}.
@@ -193,7 +193,7 @@ public class AttributeTest {
         Attribute attribute = new Attribute("my.value", expression, "role1,role2", "myrenderer");
         assertEquals("my.value", attribute.toString());
         attribute.setValue(null);
-        assertNull(attribute.toString());
+        assertNotNull(attribute.toString());
     }
 
     @Test

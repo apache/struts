@@ -37,8 +37,6 @@ import static org.junit.Assert.assertNull;
 
 /**
  * Tests {@link AbstractModelBody}.
- *
- * @version $Rev$ $Date$
  */
 public class AbstractModelBodyTest {
 
@@ -132,11 +130,6 @@ public class AbstractModelBodyTest {
         }
     }
 
-    /**
-     * A mock model body.
-     *
-     * @version $Rev$ $Date$
-     */
     public static class MockModelBody extends AbstractModelBody {
 
         /**

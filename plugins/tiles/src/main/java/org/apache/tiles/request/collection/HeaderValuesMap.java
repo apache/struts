@@ -18,7 +18,7 @@
  */
 package org.apache.tiles.request.collection;
 
-import static org.apache.tiles.request.collection.CollectionUtil.*;
+import org.apache.tiles.request.attribute.EnumeratedValuesExtractor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,9 +28,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.tiles.request.attribute.EnumeratedValuesExtractor;
+import static org.apache.tiles.request.collection.CollectionUtil.enumerationSize;
+import static org.apache.tiles.request.collection.CollectionUtil.key;
 
 /**
  * Exposes an {@link EnumeratedValuesExtractor} object as a read-only map.
@@ -52,19 +54,25 @@ public class HeaderValuesMap implements Map<String, String[]> {
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void clear() {
         throw new UnsupportedOperationException();
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean containsKey(Object key) {
         return (request.getValue(key(key)) != null);
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean containsValue(Object value) {
         if (!(value instanceof String[])) {
             return (false);
@@ -81,18 +89,28 @@ public class HeaderValuesMap implements Map<String, String[]> {
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<Entry<String, String[]>> entrySet() {
         return new HeadersEntrySet();
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean equals(Object o) {
-        EnumeratedValuesExtractor otherRequest = ((HeaderValuesMap) o).request;
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof HeaderValuesMap)) {
+            return false;
+        }
+        EnumeratedValuesExtractor otherRequest = ((HeaderValuesMap) obj).request;
         boolean retValue = true;
-        for (Enumeration<String> attribs = request.getKeys(); attribs.hasMoreElements() && retValue;) {
+        for (Enumeration<String> attribs = request.getKeys(); attribs.hasMoreElements() && retValue; ) {
             String parameterName = attribs.nextElement();
             Set<String> valueSet = enumeration2set(otherRequest.getValues(parameterName));
             retValue = compareHeaders(parameterName, valueSet);
@@ -102,17 +120,21 @@ public class HeaderValuesMap implements Map<String, String[]> {
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String[] get(Object key) {
         return getHeaderValues(key(key));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int retValue = 0;
         for (Enumeration<String> attribs = request.getKeys(); attribs
-                .hasMoreElements();) {
+            .hasMoreElements(); ) {
             String parameterName = attribs.nextElement();
             Enumeration<String> values = request.getValues(parameterName);
             int valueHash = 0;
@@ -125,44 +147,57 @@ public class HeaderValuesMap implements Map<String, String[]> {
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isEmpty() {
         return !request.getKeys().hasMoreElements();
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Set<String> keySet() {
         return new KeySet(request);
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String[] put(String key, String[] value) {
         throw new UnsupportedOperationException();
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void putAll(Map<? extends String, ? extends String[]> map) {
         throw new UnsupportedOperationException();
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String[] remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
 
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int size() {
         return enumerationSize(request.getKeys());
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Collection<String[]> values() {
         return new HeaderValuesCollection();
     }
@@ -212,7 +247,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
      * Checks if values of a header attribute are the same as the one passed in
      * the set.
      *
-     * @param name The name of the header.
+     * @param name    The name of the header.
      * @param testSet The set of values it must contain.
      * @return <code>true</code> if all the values, and only them, are present
      * in the header values.
@@ -240,7 +275,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
 
         @Override
         public boolean addAll(
-                Collection<? extends Entry<String, String[]>> c) {
+            Collection<? extends Entry<String, String[]>> c) {
             throw new UnsupportedOperationException();
         }
 
@@ -346,8 +381,7 @@ public class HeaderValuesMap implements Map<String, String[]> {
          * @param names The enumeration to get the next name from..
          * @return The next map entry.
          */
-        private MapEntry<String, String[]> extractNextEntry(
-                Enumeration<String> names) {
+        private MapEntry<String, String[]> extractNextEntry(Enumeration<String> names) {
             String name = names.nextElement();
             return new MapEntryArrayValues<>(name, getHeaderValues(name), false);
         }
@@ -369,7 +403,10 @@ public class HeaderValuesMap implements Map<String, String[]> {
 
             @Override
             public Entry<String, String[]> next() {
-                return extractNextEntry(namesEnumeration);
+                if (namesEnumeration.hasMoreElements()) {
+                    return extractNextEntry(namesEnumeration);
+                }
+                throw new NoSuchElementException();
             }
 
             @Override
@@ -504,7 +541,10 @@ public class HeaderValuesMap implements Map<String, String[]> {
 
             @Override
             public String[] next() {
-                return enumeration2array(request.getValues(namesEnumeration.nextElement()));
+                if (namesEnumeration.hasMoreElements()) {
+                    return enumeration2array(request.getValues(namesEnumeration.nextElement()));
+                }
+                throw new NoSuchElementException();
             }
 
             @Override

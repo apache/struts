@@ -31,12 +31,12 @@ import java.util.regex.Pattern;
 public abstract class AbstractModelBody implements ModelBody {
 
     // precompiled the pattern to avoid compiling on every method call
-    private static final Pattern PATTERN = Pattern.compile("^\\s*|\\s*$");
+    private static final Pattern PATTERN = Pattern.compile("^\\s*$");
 
     /**
      * The default writer to use.
      */
-    private Writer defaultWriter;
+    private final Writer defaultWriter;
 
     /**
      * Constructor.
@@ -63,7 +63,7 @@ public abstract class AbstractModelBody implements ModelBody {
         String body = writer.toString();
         if (body != null) {
             body = PATTERN.matcher(body).replaceAll("");
-            if (body.length() <= 0) {
+            if (body.length() == 0) {
                 body = null;
             }
         }
@@ -72,11 +72,8 @@ public abstract class AbstractModelBody implements ModelBody {
 
     @Override
     public void evaluateWithoutWriting() throws IOException {
-        NullWriter writer = new NullWriter();
-        try {
+        try (NullWriter writer = new NullWriter()) {
             evaluate(writer);
-        } finally {
-            writer.close();
         }
     }
 

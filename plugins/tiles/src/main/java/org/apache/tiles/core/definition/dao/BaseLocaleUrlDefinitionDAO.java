@@ -89,8 +89,8 @@ public abstract class BaseLocaleUrlDefinitionDAO implements DefinitionDAO<Locale
     public void setSources(List<ApplicationResource> sources) {
         // filter out any sources that are already localized
         ArrayList<ApplicationResource> defaultSources = new ArrayList<>();
-        for(ApplicationResource source: sources) {
-            if(Locale.ROOT.equals(source.getLocale())) {
+        for (ApplicationResource source : sources) {
+            if (Locale.ROOT.equals(source.getLocale())) {
                 defaultSources.add(source);
             }
         }
@@ -101,7 +101,9 @@ public abstract class BaseLocaleUrlDefinitionDAO implements DefinitionDAO<Locale
         this.reader = reader;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean refreshRequired() {
         boolean status = false;
 
@@ -136,7 +138,7 @@ public abstract class BaseLocaleUrlDefinitionDAO implements DefinitionDAO<Locale
         InputStream stream = null;
         try {
             lastModifiedDates.put(resource.getLocalePath(), resource
-                    .getLastModified());
+                .getLastModified());
 
             // Definition must be collected, starting from the base
             // source up to the last localized file.
@@ -152,8 +154,7 @@ public abstract class BaseLocaleUrlDefinitionDAO implements DefinitionDAO<Locale
                 if (stream != null) {
                     stream.close();
                 }
-            } catch (IOException e) {
-                throw new DefinitionsFactoryException("I/O error closing " + resource, e);
+            } catch (IOException ignore) {
             }
         }
 

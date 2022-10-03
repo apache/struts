@@ -18,16 +18,18 @@
  */
 package org.apache.tiles.request.collection;
 
-import static org.apache.tiles.request.collection.CollectionUtil.*;
+import org.apache.tiles.request.attribute.HasKeys;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.tiles.request.attribute.HasKeys;
+import static org.apache.tiles.request.collection.CollectionUtil.enumerationSize;
+import static org.apache.tiles.request.collection.CollectionUtil.key;
 
 /**
  * Exposes keys of a {@link HasKeys} object as a set.
@@ -142,7 +144,7 @@ public class KeySet implements Set<String> {
         /**
          * The key names enumeration.
          */
-        private Enumeration<String> namesEnumeration = request.getKeys();
+        private final Enumeration<String> namesEnumeration = request.getKeys();
 
         @Override
         public boolean hasNext() {
@@ -151,7 +153,10 @@ public class KeySet implements Set<String> {
 
         @Override
         public String next() {
-            return namesEnumeration.nextElement();
+            if (namesEnumeration.hasMoreElements()) {
+                return namesEnumeration.nextElement();
+            }
+            throw new NoSuchElementException();
         }
 
         @Override

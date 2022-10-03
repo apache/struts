@@ -149,7 +149,9 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
      */
     public void inheritCascadedAttributes(AttributeContext context) {
         if (context instanceof BasicAttributeContext) {
-            copyCascadedAttributes((BasicAttributeContext) context);
+            if (((BasicAttributeContext) context).cascadedAttributes != null && !((BasicAttributeContext) context).cascadedAttributes.isEmpty()) {
+                cascadedAttributes = deepCopyAttributeMap(((BasicAttributeContext) context).cascadedAttributes);
+            }
         } else {
             this.cascadedAttributes = new HashMap<>();
             Set<String> parentAttributeNames = context.getCascadedAttributeNames();
@@ -353,6 +355,12 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof BasicAttributeContext)) {
+            return false;
+        }
         BasicAttributeContext bac = (BasicAttributeContext) obj;
         return Objects.equals(templateAttribute, bac.templateAttribute)
             && Objects.equals(preparer, bac.preparer)
@@ -400,17 +408,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         if (context.attributes != null && !context.attributes.isEmpty()) {
             attributes = deepCopyAttributeMap(context.attributes);
         }
-        copyCascadedAttributes(context);
-    }
-
-    /**
-     * Copies the cascaded attributes to the current context.
-     *
-     * @param context The context to copy from.
-     */
-    private void copyCascadedAttributes(BasicAttributeContext context) {
-        if (context.cascadedAttributes != null
-            && !context.cascadedAttributes.isEmpty()) {
+        if (context.cascadedAttributes != null && !context.cascadedAttributes.isEmpty()) {
             cascadedAttributes = deepCopyAttributeMap(context.cascadedAttributes);
         }
     }

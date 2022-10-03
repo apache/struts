@@ -116,6 +116,12 @@ public class Definition extends BasicAttributeContext {
      */
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Definition)) {
+            return false;
+        }
         Definition def = (Definition) obj;
         return Objects.equals(name, def.name) && Objects.equals(inherit, def.inherit) && super.equals(def);
     }

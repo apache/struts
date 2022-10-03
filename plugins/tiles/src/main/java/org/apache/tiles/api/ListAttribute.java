@@ -61,7 +61,7 @@ public class ListAttribute extends Attribute {
             List<Attribute> attributes = new ArrayList<>(attributesToCopy.size());
             for (Attribute attribute : attributesToCopy) {
                 if (attribute != null) {
-                    attributes.add(attribute.clone());
+                    attributes.add(attribute.copy());
                 } else {
                     attributes.add(null);
                 }
@@ -135,11 +135,10 @@ public class ListAttribute extends Attribute {
      * @param parent The parent list attribute.
      * @since 2.1.0
      */
-    @SuppressWarnings("unchecked")
     public void inherit(ListAttribute parent) {
         List<Attribute> tempList = new ArrayList<>();
-        tempList.addAll((List<Attribute>) parent.value);
-        tempList.addAll((List<Attribute>) value);
+        tempList.addAll(parent.getValue());
+        tempList.addAll(getValue());
         setValue(tempList);
     }
 
@@ -164,7 +163,7 @@ public class ListAttribute extends Attribute {
 
     /** {@inheritDoc} */
     @Override
-    public ListAttribute clone() {
+    public ListAttribute copy() {
         return new ListAttribute(this);
     }
 }

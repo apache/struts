@@ -41,6 +41,7 @@ import static org.junit.Assert.assertTrue;
  * Tests {@link ReadOnlyEnumerationMap#values()}.
  */
 public class ReadOnlyEnumerationMapValuesCollectionTest {
+
     /**
      * The extractor to use.
      */
@@ -188,6 +189,7 @@ public class ReadOnlyEnumerationMapValuesCollectionTest {
 
         expect(extractor.getKeys()).andReturn(keys);
         expect(keys.hasMoreElements()).andReturn(true);
+        expect(keys.hasMoreElements()).andReturn(true);
         expect(keys.nextElement()).andReturn("two");
 
         expect(extractor.getValue("two")).andReturn(2);
@@ -276,7 +278,7 @@ public class ReadOnlyEnumerationMapValuesCollectionTest {
         expect(extractor.getValue("one")).andReturn(1);
         expect(extractor.getValue("two")).andReturn(2);
 
-        Integer[] entryArray = new Integer[] {1, 2};
+        Integer[] entryArray = new Integer[]{1, 2};
 
         replay(extractor, keys);
         assertArrayEquals(entryArray, coll.toArray());
@@ -300,7 +302,7 @@ public class ReadOnlyEnumerationMapValuesCollectionTest {
         expect(extractor.getValue("one")).andReturn(1);
         expect(extractor.getValue("two")).andReturn(2);
 
-        Integer[] entryArray = new Integer[] {1, 2};
+        Integer[] entryArray = new Integer[]{1, 2};
 
         replay(extractor, keys);
         Integer[] realArray = new Integer[2];

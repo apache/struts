@@ -225,7 +225,7 @@ public class AttributeTest {
     public void testClone() {
         Expression expression = new Expression("my.expression", "MYLANG");
         Attribute attribute = new Attribute("my.value", expression, "role1,role2", "myrenderer");
-        attribute = attribute.clone();
+        attribute = attribute.copy();
         assertEquals("my.value", attribute.getValue());
         assertEquals("myrenderer", attribute.getRenderer());
         Set<String> roles = new HashSet<>();

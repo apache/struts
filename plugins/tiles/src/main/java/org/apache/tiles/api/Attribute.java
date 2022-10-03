@@ -22,7 +22,6 @@ package org.apache.tiles.api;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.tiles.request.Request;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
@@ -30,7 +29,7 @@ import java.util.Set;
 /**
  * Common implementation of attribute definition.
  */
-public class Attribute implements Serializable, Cloneable {
+public class Attribute {
 
     /**
      * The name of the template renderer.
@@ -42,20 +41,19 @@ public class Attribute implements Serializable, Cloneable {
      *
      * @since 2.0.6
      */
-    protected Set<String> roles = null;
+    private Set<String> roles = null;
 
     /**
      * The value of the attribute.
      */
-    protected Object value = null;
+    private Object value = null;
 
     /**
-     * The expression to evaluate. Ignored if {@link #value} is not
-     * <code>null</code>.
+     * The expression to evaluate. Ignored if {@link #value} is not <code>null</code>.
      *
      * @since 2.2.0
      */
-    protected Expression expressionObject = null;
+    private Expression expressionObject = null;
 
     /**
      * The renderer name of the attribute. Default names are <code>string</code>,
@@ -362,11 +360,7 @@ public class Attribute implements Serializable, Cloneable {
             + Objects.hashCode(roles) + Objects.hashCode(expressionObject);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Attribute clone() {
+    public Attribute copy() {
         return new Attribute(this);
     }
 }

@@ -180,6 +180,7 @@ public class HeaderValuesMapEntrySetTest {
 
         expect(extractor.getKeys()).andReturn(keys);
         expect(keys.hasMoreElements()).andReturn(true);
+        expect(keys.hasMoreElements()).andReturn(true);
         expect(keys.nextElement()).andReturn("two");
 
         expect(extractor.getValues("two")).andReturn(values2);
@@ -192,8 +193,7 @@ public class HeaderValuesMapEntrySetTest {
         replay(extractor, keys, values2);
         Iterator<Map.Entry<String, String[]>> entryIt = entrySet.iterator();
         assertTrue(entryIt.hasNext());
-        MapEntryArrayValues<String, String> entry = new MapEntryArrayValues<>(
-            "two", new String[]{"value2", "value3"}, false);
+        MapEntryArrayValues<String, String> entry = new MapEntryArrayValues<>("two", new String[]{"value2", "value3"}, false);
         assertEquals(entry, entryIt.next());
         verify(extractor, keys, values2);
     }

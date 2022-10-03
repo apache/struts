@@ -42,7 +42,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class HeaderValuesCollectionTest {
 
-
     /**
      * The extractor to use.
      */
@@ -245,9 +244,10 @@ public class HeaderValuesCollectionTest {
 
         expect(extractor.getKeys()).andReturn(keys);
         expect(keys.hasMoreElements()).andReturn(true);
+        expect(keys.hasMoreElements()).andReturn(true);
         expect(keys.nextElement()).andReturn("two");
-
         expect(extractor.getValues("two")).andReturn(values2);
+
         expect(values2.hasMoreElements()).andReturn(true);
         expect(values2.nextElement()).andReturn("value2");
         expect(values2.hasMoreElements()).andReturn(true);

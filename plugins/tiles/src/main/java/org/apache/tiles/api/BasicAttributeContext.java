@@ -232,7 +232,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
 
     /**
      * Add all attributes to this context.
-     * Copies all of the mappings from the specified attribute map to this context.
+     * Copies all the mappings from the specified attribute map to this context.
      * New attribute mappings will replace any mappings that this context had for any of the keys
      * currently in the specified attribute map.
      *
@@ -454,7 +454,7 @@ public class BasicAttributeContext implements AttributeContext, Serializable {
         for (Map.Entry<String, Attribute> entry : attributes.entrySet()) {
             Attribute toCopy = entry.getValue();
             if (toCopy != null) {
-                retValue.put(entry.getKey(), toCopy.clone());
+                retValue.put(entry.getKey(), toCopy.copy());
             }
         }
         return retValue;

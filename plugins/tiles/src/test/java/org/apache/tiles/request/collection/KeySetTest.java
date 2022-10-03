@@ -42,7 +42,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class KeySetTest {
 
-
     /**
      * The extractor to use.
      */
@@ -169,6 +168,7 @@ public class KeySetTest {
         Enumeration<String> values2 = createMock(Enumeration.class);
 
         expect(extractor.getKeys()).andReturn(keys);
+        expect(keys.hasMoreElements()).andReturn(true);
         expect(keys.hasMoreElements()).andReturn(true);
         expect(keys.nextElement()).andReturn("two");
 

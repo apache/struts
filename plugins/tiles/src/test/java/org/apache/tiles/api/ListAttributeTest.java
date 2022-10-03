@@ -103,7 +103,7 @@ public class ListAttributeTest {
         list.add(new Attribute("value2"));
         attribute.setValue(list);
         attribute.setInherit(true);
-        ListAttribute toCheck = attribute.clone();
+        ListAttribute toCheck = attribute.copy();
         assertEquals(attribute, toCheck);
     }
 }

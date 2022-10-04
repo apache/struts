@@ -16,24 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.interceptor;
-
-import java.io.Serializable;
+package org.apache.struts2.interceptor.exec;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 
+import java.io.Serializable;
+
 /**
  * Background thread to be executed by the ExecuteAndWaitInterceptor.
- *
  */
-public class BackgroundProcess implements Serializable {
+public class StrutsBackgroundProcess implements BackgroundProcess, Serializable {
 
     private static final long serialVersionUID = 3884464776311686443L;
 
+    private final String threadName;
+    private final int threadPriority;
+
+    private transient  Thread processThread;
     //WW-4900 transient since 2.5.15
-    transient protected ActionInvocation invocation;
-    transient protected Exception exception;
+    protected transient ActionInvocation invocation;
+    protected transient  Exception exception;
 
     protected String result;
     protected boolean done;
@@ -41,32 +44,47 @@ public class BackgroundProcess implements Serializable {
     /**
      * Constructs a background process
      *
-     * @param threadName The thread name
      * @param invocation The action invocation
-     * @param threadPriority The thread priority
+     * @param threadName The name of background thread
+     * @param threadPriority The priority of background thread
      */
-    public BackgroundProcess(String threadName, final ActionInvocation invocation, int threadPriority) {
+    public StrutsBackgroundProcess(ActionInvocation invocation, String threadName, int threadPriority) {
         this.invocation = invocation;
-        try {
-            final Thread t = new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        beforeInvocation();
-                        result = invocation.invokeActionOnly();
-                        afterInvocation();
-                    } catch (Exception e) {
-                        exception = e;
-                    }
+        this.threadName = threadName;
+        this.threadPriority = threadPriority;
+    }
 
-                    done = true;
+    @Override
+    public BackgroundProcess prepare() {
+        try {
+            processThread = new Thread(() -> {
+                try {
+                    beforeInvocation();
+                    result = invocation.invokeActionOnly();
+                    afterInvocation();
+                } catch (Exception e) {
+                    exception = e;
                 }
+
+                done = true;
             });
-            t.setName(threadName);
-            t.setPriority(threadPriority);
-            t.start();
+            processThread.setName(threadName);
+            processThread.setPriority(threadPriority);
         } catch (Exception e) {
+            done = true;
             exception = e;
         }
+        return this;
+    }
+
+    @Override
+    public void run() {
+        if (processThread == null) {
+            done = true;
+            exception = new IllegalStateException("Background thread " + threadName + " has not been prepared!");
+            return;
+        }
+        processThread.start();
     }
 
     /**
@@ -93,8 +111,9 @@ public class BackgroundProcess implements Serializable {
     /**
      * Retrieves the action.
      *
-     * @return  the action.
+     * @return the action.
      */
+    @Override
     public Object getAction() {
         return invocation.getAction();
     }
@@ -104,6 +123,7 @@ public class BackgroundProcess implements Serializable {
      *
      * @return the action invocation
      */
+    @Override
     public ActionInvocation getInvocation() {
         return invocation;
     }
@@ -111,8 +131,9 @@ public class BackgroundProcess implements Serializable {
     /**
      * Gets the result of the background process.
      *
-     * @return  the result; <tt>null</tt> if not done.
+     * @return the result; <tt>null</tt> if not done.
      */
+    @Override
     public String getResult() {
         return result;
     }
@@ -122,6 +143,7 @@ public class BackgroundProcess implements Serializable {
      *
      * @return the exception or <tt>null</tt> if no exception was thrown.
      */
+    @Override
     public Exception getException() {
         return exception;
     }
@@ -131,7 +153,13 @@ public class BackgroundProcess implements Serializable {
      *
      * @return <tt>true</tt> if finished, <tt>false</tt> otherwise
      */
+    @Override
     public boolean isDone() {
         return done;
+    }
+
+    @Override
+    public String toString() {
+        return "StrutsBackgroundProcess { name = " + processThread.getName() + " }";
     }
 }

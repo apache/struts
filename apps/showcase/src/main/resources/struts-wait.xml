@@ -24,6 +24,9 @@
 	"https://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
+
+    <bean type="org.apache.struts2.interceptor.exec.ExecutorProvider" class="org.apache.struts2.showcase.wait.ThreadPoolExecutorProvider"/>
+
     <package name="wait" extends="struts-default" namespace="/wait">
 
         <action name="example1">

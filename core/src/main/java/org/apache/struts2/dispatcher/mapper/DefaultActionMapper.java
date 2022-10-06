@@ -289,8 +289,8 @@ public class DefaultActionMapper implements ActionMapper {
         }
 
         parseNameAndNamespace(uri, mapping, configManager);
-        extractMethodName(mapping, configManager);
         handleSpecialParameters(request, mapping);
+        extractMethodName(mapping, configManager);
         return parseActionName(mapping);
     }
 

@@ -18,8 +18,6 @@
  */
 /**
  * The "tiles-jsp" tag library contains tags that are useful to create
- * templates, subpages other reusable view parts using the "tiles-core"
- * package.
+ * templates, subpages other reusable view parts using the "tiles-core" package.
  */
 package org.apache.tiles.web.jsp.taglib;
-

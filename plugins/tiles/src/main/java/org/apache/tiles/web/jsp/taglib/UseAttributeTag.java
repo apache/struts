@@ -58,7 +58,7 @@ public class UseAttributeTag extends SimpleTagSupport {
     private String name = null;
 
     /**
-     * Flag that, if <code>true</code>, ignores exceptions.
+     * Flag that, if true, ignores exceptions.
      */
     private boolean ignore = false;
 
@@ -126,10 +126,8 @@ public class UseAttributeTag extends SimpleTagSupport {
     /**
      * Set ignore flag.
      *
-     * @param ignore default: <code>false</code>: Exception is thrown when
-     *               attribute is not found, set to <code>
-     *               true</code> to
-     *               ignore missing attributes silently
+     * @param ignore default: false: Exception is thrown when attribute is not
+     *               found, set to true to ignore missing attributes silently
      */
     public void setIgnore(boolean ignore) {
         this.ignore = ignore;
@@ -138,10 +136,8 @@ public class UseAttributeTag extends SimpleTagSupport {
     /**
      * Get ignore flag.
      *
-     * @return default: <code>false</code>: Exception is thrown when attribute
-     * is not found, set to <code>
-     * true</code> to ignore missing
-     * attributes silently
+     * @return default: false: Exception is thrown when attribute is not found, set
+     *         to true to ignore missing attributes silently
      */
     public boolean isIgnore() {
         return ignore;
@@ -191,8 +187,8 @@ public class UseAttributeTag extends SimpleTagSupport {
     }
 
     /**
-     * Implementation of <code>TagExtraInfo</code> which identifies the
-     * scripting object(s) to be made visible.
+     * Implementation of TagExtraInfo which identifies the scripting object(s) to be
+     * made visible.
      */
     public static class Tei extends TagExtraInfo {
 
@@ -211,8 +207,7 @@ public class UseAttributeTag extends SimpleTagSupport {
                 id = data.getAttributeString("name");
             }
 
-            return new VariableInfo[]{new VariableInfo(id, classname, true,
-                VariableInfo.AT_END)};
+            return new VariableInfo[] { new VariableInfo(id, classname, true, VariableInfo.AT_END) };
 
         }
     }

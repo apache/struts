@@ -56,6 +56,15 @@ public class GetAsStringModel {
      * The attribute resolver to use.
      */
     private final AttributeResolver attributeResolver;
+    
+    /**
+     * Constructor that uses the defaut attribute resolver.
+     *
+     * @since 3.0.0
+     */
+    public GetAsStringModel() {
+        this(new DefaultAttributeResolver());
+    }
 
     /**
      * Constructor.

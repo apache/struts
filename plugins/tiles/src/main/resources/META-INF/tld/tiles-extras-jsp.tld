@@ -34,11 +34,11 @@
    <tag>
       <description>
       <![CDATA[
-      <p><strong>Use attribute value inside page.</strong></p>
-      <p>Declare a Java variable, and an attribute in the specified scope,
-      using its attribute value.</p>
-      <p>Java variable and attribute will have the name specified by 'id',
-      or the original name if not specified.</p>
+      <p>Use attribute value inside page.</p>
+      <p>Declare a Java variable, and an attribute in the specified scope, using its attribute
+      value.</p>
+      <p>Java variable and attribute will have the name specified by 'id', or the original name
+      if not specified.</p>
       ]]>
       </description>
       <name>useAttribute</name>
@@ -89,9 +89,9 @@
          <description>
          <![CDATA[
          <p>
-         If this attribute is set to true, and the attribute specified by the name
-         does not exist, simply return without error. The default value is false, which will
-         cause a runtime exception to be thrown.
+         If this attribute is set to true, and the attribute specified by the name does not exist,
+         simply return without error. The default value is false, which will cause a runtime
+         exception to be thrown.
          </p>
          ]]>
          </description>

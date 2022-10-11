@@ -26,7 +26,6 @@ import java.util.Map;
  * Resolves a definition starting from patterns stored in definition maps.
  *
  * @param <T> The type of the customization key.
- * @version $Rev$ $Date$
  * @since 2.2.0
  */
 public interface PatternDefinitionResolver<T> {

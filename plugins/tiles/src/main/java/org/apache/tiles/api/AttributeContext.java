@@ -25,7 +25,6 @@ import java.util.Set;
  * Encapsulation of the current state of execution.
  *
  * @since Tiles 2.0
- * @version $Rev$ $Date$
  */
 public interface AttributeContext {
 

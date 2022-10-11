@@ -30,6 +30,48 @@
     <artifactId>struts2-tiles-plugin</artifactId>
     <packaging>jar</packaging>
     <name>Struts 2 Tiles Plugin</name>
+    
+    <!-- mvn -P build-jsp-autotags exec:java -->
+    <profiles>
+        <profile>
+            <id>build-jsp-autotags</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                          <execution>
+                            <phase>compile</phase>
+                            <goals>
+                              <goal>java</goal>
+                            </goals>
+                          </execution>
+                        </executions>
+                        <configuration>
+                            <mainClass>org.apache.struts2.tiles.BuildJspAutotags</mainClass>
+                            <arguments>
+                                <!-- taglibURI   -->
+                                <argument>http://tiles.apache.org/tags-tiles</argument>
+                                <!-- packageName -->
+                                <argument>org.apache.tiles.web.jsp.taglib</argument>
+                                <!-- requestClass -->
+                                <argument>org.apache.tiles.request.Request</argument>
+                                <!-- jspRuntime -->
+                                <argument>org.apache.tiles.request.jsp.autotag.JspAutotagRuntime</argument>
+                                <!-- Output folder -->
+                                <argument>${project.build.directory}</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -56,8 +98,16 @@
             <artifactId>log4j-jcl</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+        </dependency>
     </dependencies>
     <properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

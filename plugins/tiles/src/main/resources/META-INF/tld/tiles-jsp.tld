@@ -19,13 +19,14 @@
  * under the License.
  */
 -->
+<!-- This file was automatically generated.  Please do not edit it manually -->
 <taglib
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
   xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   version="2.1">
    <description>
    <![CDATA[
-   <p>This tag library provides Tiles tags.</p>
+   This tag library provides Tiles tags.
    ]]>
    </description>
    <tlib-version>1.2</tlib-version>
@@ -34,13 +35,17 @@
    <tag>
       <description>
       <![CDATA[
-      <p>Insert a definition.</p>
       <p>
-      Insert a definition with the possibility to override and specify parameters (called attributes).
-      A definition can be seen as a (partially or totally) filled template that can override or
-      complete attribute values. &lt;tiles:insertDefinition&gt; allows to define these attributes
-      and pass them to the inserted jsp page, called template. Attributes are defined using nested
-      tag &lt;tiles:putAttribute&gt; or &lt;tiles:putListAttribute&gt;.
+      Insert a definition.
+      </p>
+      <p>
+      Insert a definition with the possibility to override and specify parameters
+      (called attributes). A definition can be seen as a (partially or totally)
+      filled template that can override or complete attribute values.
+      &lt;tiles:insertDefinition&gt; allows to define these attributes
+      and pass them to the inserted jsp page, called template. Attributes are
+      defined using nested tag &lt;tiles:putAttribute&gt; or
+      &lt;tiles:putListAttribute&gt;.
       </p>
       <p>
       You must specify name tag attribute, for inserting a definition from definitions factory.
@@ -48,14 +53,15 @@
       <p>
       Example : 
       </p>
+      
       <pre>
-        &lt;tiles:insertDefinition name=&quot;.my.tiles.defininition flush=&quot;true&quot;&gt;
-          &lt;tiles:putAttribute name=&quot;title&quot; value=&quot;My first page&quot; /&gt;
-          &lt;tiles:putAttribute name=&quot;header&quot; value=&quot;/common/header.jsp&quot; /&gt;
-          &lt;tiles:putAttribute name=&quot;footer&quot; value=&quot;/common/footer.jsp&quot; /&gt;
-          &lt;tiles:putAttribute name=&quot;menu&quot; value=&quot;/basic/menu.jsp&quot; /&gt;
-          &lt;tiles:putAttribute name=&quot;body&quot; value=&quot;/basic/helloBody.jsp&quot; /&gt;
-        &lt;/tiles:insertDefinition&gt;
+          &lt;tiles:insertDefinition name=&quot;.my.tiles.defininition flush=&quot;true&quot;&gt;
+              &lt;tiles:putAttribute name=&quot;title&quot; value=&quot;My first page&quot; /&gt;
+              &lt;tiles:putAttribute name=&quot;header&quot; value=&quot;/common/header.jsp&quot; /&gt;
+              &lt;tiles:putAttribute name=&quot;footer&quot; value=&quot;/common/footer.jsp&quot; /&gt;
+              &lt;tiles:putAttribute name=&quot;menu&quot; value=&quot;/basic/menu.jsp&quot; /&gt;
+              &lt;tiles:putAttribute name=&quot;body&quot; value=&quot;/basic/helloBody.jsp&quot; /&gt;
+          &lt;/tiles:insertDefinition&gt;
       </pre>
       ]]>
       </description>
@@ -109,8 +115,8 @@
       <attribute>
          <description>
          <![CDATA[
-         A comma-separated list of roles. If present, the definition will be rendered only if
-         the current user belongs to one of the roles.
+         A comma-separated list of roles. If present, the definition
+         will be rendered only if the current user belongs to one of the roles.
          ]]>
          </description>
          <name>role</name>
@@ -121,8 +127,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The preparer to use to invoke before the definition is rendered. If specified, it
-         overrides the preparer specified in the definition itself.
+         The preparer to use to invoke before the definition is
+         rendered. If specified, it overrides the preparer specified in the definition itself.
          ]]>
          </description>
          <name>preparer</name>
@@ -149,9 +155,9 @@
       Import attribute(s) in specified context.
       </p>
       <p>
-      Import attribute(s) to requested scope. Attribute name and scope are optional. If not
-      specified, all attributes are imported in page scope. Once imported, an attribute can be
-      used as any other beans from jsp contexts.
+      Import attribute(s) to requested scope. Attribute name and scope are
+      optional. If not specified, all attributes are imported in page scope. Once
+      imported, an attribute can be used as any other beans from jsp contexts.
       </p>
       ]]>
       </description>
@@ -172,8 +178,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The scope into which the attribute(s) will be imported. If null, the import will go in page
-         scope.
+         The scope into which the attribute(s) will be imported. If
+         null, the import will go in page scope.
          ]]>
          </description>
          <name>scope</name>
@@ -184,8 +190,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The name of the attribute into which the attribute will be imported. To be used in conjunction
-         to name. If null, the value of name will be used.
+         The name of the attribute into which the attribute will be
+         imported. To be used in conjunction to name. If null, the value of name will be used.
          ]]>
          </description>
          <name>toName</name>
@@ -217,7 +223,7 @@
       <attribute>
          <description>
          <![CDATA[
-         The key of the container to be used as 'current'. If null, the default one will be used.
+         The key of the container to be used as "current". If null, the default one will be used.
          ]]>
          </description>
          <name>containerKey</name>
@@ -233,9 +239,9 @@
       Declare a list that will be pass as an attribute. 
       </p>
       <p>
-      Declare a list that will be pass as an attribute . List elements are added using the tag
-      'addAttribute' or 'addListAttribute'. This tag can only be used inside 'insertTemplate',
-      'insertDefinition' or 'definition' tag.
+      Declare a list that will be pass as an attribute . List elements are added
+      using the tag 'addAttribute' or 'addListAttribute'. This tag can only be used
+      inside 'insertTemplate', 'insertDefinition' or 'definition' tag.
       </p>
       ]]>
       </description>
@@ -258,11 +264,12 @@
       <description>
       <![CDATA[
       <p>
-      Render the value of the specified template attribute to the current Writer
+       Render the value of the specified template attribute to the current Writer
       </p>
+      
       <p>
-      Retrieve the value of the specified template attribute property, and render it to the current
-      Writer as a String. The usual toString() conversions is applied on found value.
+      Retrieve the value of the specified template attribute property, and render
+      it to the current Writer as a String. The usual toString() conversions is applied on found value.
       </p>
       ]]>
       </description>
@@ -272,8 +279,8 @@
       <attribute>
          <description>
          <![CDATA[
-         If true, if an exception happens during rendering, of if the attribute is null, the problem
-         will be ignored.
+         If true, if an exception happens during
+         rendering, of if the attribute is null, the problem will be ignored.
          ]]>
          </description>
          <name>ignore</name>
@@ -295,8 +302,8 @@
       <attribute>
          <description>
          <![CDATA[
-         A comma-separated list of roles. If present, the attribute will be rendered only if
-         the current user belongs to one of the roles.
+         A comma-separated list of roles. If present, the attribute
+         will be rendered only if the current user belongs to one of the roles.
          ]]>
          </description>
          <name>role</name>
@@ -307,7 +314,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The default value of the attribute. To use only if the attribute was not computed.
+         The default value of the attribute. To use only if
+         the attribute was not computed.
          ]]>
          </description>
          <name>defaultValue</name>
@@ -318,7 +326,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The default comma-separated list of roles. To use only if the attribute was not computed.
+         The default comma-separated list of roles. To use
+         only if the attribute was not computed.
          ]]>
          </description>
          <name>defaultValueRole</name>
@@ -329,7 +338,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The default type of the attribute. To use only if the attribute was not computed.
+         The default type of the attribute. To use only if
+         the attribute was not computed.
          ]]>
          </description>
          <name>defaultValueType</name>
@@ -357,7 +367,7 @@
          <name>value</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
-         <type>org.apache.tiles.Attribute</type>
+         <type>org.apache.tiles.api.Attribute</type>
       </attribute>
    </tag>
    <tag>
@@ -367,18 +377,21 @@
       Inserts the value of an attribute into the page.
       </p>
       <p>
-      This tag can be flexibly used to insert the value of an attribute into a page. As in other
-      usages in Tiles, every attribute can be determined to have a 'type', either set explicitly
-      when it was defined, or 'computed'. If the type is not explicit, then if the attribute value
-      is a valid definition, it will be inserted as such. Otherwise, if it begins with a '/' character,
-      it will be treated as a 'template'. Finally, if it has not otherwise been assigned a type,
-      it will be treated as a String and included without any special handling.
+      This tag can be flexibly used to insert the value of an attribute into a
+      page. As in other usages in Tiles, every attribute can be determined to have
+      a "type", either set explicitly when it was defined, or "computed". If the
+      type is not explicit, then if the attribute value is a valid definition, it
+      will be inserted as such. Otherwise, if it begins with a "/" character, it
+      will be treated as a "template". Finally, if it has not otherwise been
+      assigned a type, it will be treated as a String and included without any special handling.
       </p>
+      
       <p>
       Example : 
       </p>
+      
       <pre>
-        &lt;tiles:insertAttribute name=&quot;body&quot; /&gt;
+          &lt;tiles:insertAttribute name=&quot;body&quot; /&gt;
       </pre>
       ]]>
       </description>
@@ -388,8 +401,8 @@
       <attribute>
          <description>
          <![CDATA[
-         If true, if an exception happens during rendering, of if the attribute is null,
-         the problem will be ignored.
+         If true, if an exception happens during
+         rendering, of if the attribute is null, the problem will be ignored.
          ]]>
          </description>
          <name>ignore</name>
@@ -411,8 +424,8 @@
       <attribute>
          <description>
          <![CDATA[
-         A comma-separated list of roles. If present, the attribute will be rendered only if
-         the current user belongs to one of the roles.
+         A comma-separated list of roles. If present, the attribute
+         will be rendered only if the current user belongs to one of the roles.
          ]]>
          </description>
          <name>role</name>
@@ -423,7 +436,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The default value of the attribute. To use only if the attribute was not computed.
+         The default value of the attribute. To use only if
+         the attribute was not computed.
          ]]>
          </description>
          <name>defaultValue</name>
@@ -434,7 +448,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The default comma-separated list of roles. To use only if the attribute was not computed.
+         The default comma-separated list of roles. To use
+         only if the attribute was not computed.
          ]]>
          </description>
          <name>defaultValueRole</name>
@@ -445,7 +460,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The default type of the attribute. To use only if the attribute was not computed.
+         The default type of the attribute. To use only if
+         the attribute was not computed.
          ]]>
          </description>
          <name>defaultValueType</name>
@@ -473,7 +489,7 @@
          <name>value</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
-         <type>org.apache.tiles.Attribute</type>
+         <type>org.apache.tiles.api.Attribute</type>
       </attribute>
       <attribute>
          <description>
@@ -502,24 +518,24 @@
       <li>&lt;insertDefinition&gt;</li>
       <li>&lt;putListAttribute&gt;</li>
       </ul>
-      or any other tag which implements the PutAttributeTagParent interface. Exception is thrown
-      if no appropriate tag can be found.
+      (or any other tag which implements the PutAttributeTagParent
+      interface. Exception is thrown if no appropriate tag can be found.
       </p>
       <p>
       Put tag can have following atributes :
       <ul>
       <li>name : Name of the attribute</li>
       <li>value : value to put as attribute</li>
-      <li>type : value type. Possible type are : string (value is used as direct string),
-      template (value is used as a page url to insert), definition (value is used as a definition
-      name to insert), object (value is used as it is)</li>
+      <li>type : value type. Possible type are : string (value is used as direct
+      string), template (value is used as a page url to insert), definition (value
+      is used as a definition name to insert), object (value is used as it is)</li>
       <li>role : Role to check when 'insertAttribute' will be called.</li>
       </ul>
       </p>
       <p>
-      Value can also come from tag body. Tag body is taken into account only if value is not set
-      by one of the tag attributes. In this case Attribute type is 'string', unless tag body define
-      another type.
+      Value can also come from tag body. Tag body is taken into account only if
+      value is not set by one of the tag attributes. In this case Attribute type is
+      "string", unless tag body define another type.
       </p>
       ]]>
       </description>
@@ -551,7 +567,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The expression to calculate the value from. Use this parameter, or value, or body.
+         The expression to calculate the value from. Use this
+         parameter, or value, or body.
          ]]>
          </description>
          <name>expression</name>
@@ -562,8 +579,8 @@
       <attribute>
          <description>
          <![CDATA[
-         A comma-separated list of roles. If present, the attribute will be rendered only if
-         the current user belongs to one of the roles.
+         A comma-separated list of roles. If present, the attribute
+         will be rendered only if the current user belongs to one of the roles.
          ]]>
          </description>
          <name>role</name>
@@ -601,8 +618,8 @@
       Create a definition at runtime. 
       </p>
       <p>
-      Create a new definition at runtime. Newly created definition will be available across the
-      entire request.
+      Create a new definition at runtime. Newly created definition will be
+      available across the entire request.
       </p>
       ]]>
       </description>
@@ -612,7 +629,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The name of the definition to create. If not specified, an anonymous definition will be created.
+         The name of the definition to create. If not specified, an
+         anonymous definition will be created.
          ]]>
          </description>
          <name>name</name>
@@ -634,8 +652,8 @@
       <attribute>
          <description>
          <![CDATA[
-         A comma-separated list of roles. If present, the definition will be rendered only if the
-         current user belongs to one of the roles.
+         A comma-separated list of roles. If present, the definition
+         will be rendered only if the current user belongs to one of the roles.
          ]]>
          </description>
          <name>role</name>
@@ -670,11 +688,14 @@
       <description>
       <![CDATA[
       <p>
-      Add an element to the surrounding list. Equivalent to 'putAttribute', but for list element.
+      Add an element to the surrounding list. Equivalent to 'putAttribute',
+      but for list element.
       </p>
+      
       <p>
-      Add an element to the surrounding list. This tag can only be used inside 'putListAttribute'
-      or 'addListAttribute' tags. Value can come from a direct assignment (value="aValue")
+      Add an element to the surrounding list. This tag can only be used inside
+      'putListAttribute' or 'addListAttribute' tags. Value can come from a direct
+      assignment (value="aValue")
       </p>
       ]]>
       </description>
@@ -695,7 +716,8 @@
       <attribute>
          <description>
          <![CDATA[
-         The expression to calculate the value from. Use this parameter, or value, or body.
+         The expression to calculate the value from. Use this
+         parameter, or value, or body.
          ]]>
          </description>
          <name>expression</name>
@@ -706,8 +728,8 @@
       <attribute>
          <description>
          <![CDATA[
-         A comma-separated list of roles. If present, the attribute will be rendered only if the
-         current user belongs to one of the roles.
+         A comma-separated list of roles. If present, the attribute
+         will be rendered only if the current user belongs to one of the roles.
          ]]>
          </description>
          <name>role</name>
@@ -734,9 +756,9 @@
       Declare a list that will be pass as attribute to tile. 
       </p>
       <p>
-      Declare a list that will be pass as attribute to tile. List elements are added using the tags
-      'addAttribute' or 'addListAttribute'. This tag can only be used inside 'insertTemplate',
-      'insertDefinition', 'definition' tags.
+      Declare a list that will be pass as attribute to tile. List elements are
+      added using the tags 'addAttribute' or 'addListAttribute'. This tag can only
+      be used inside 'insertTemplate', 'insertDefinition', 'definition' tags.
       </p>
       ]]>
       </description>
@@ -757,8 +779,8 @@
       <attribute>
          <description>
          <![CDATA[
-         A comma-separated list of roles. If present, the attribute will be rendered only if the
-         current user belongs to one of the roles.
+         A comma-separated list of roles. If present, the attribute
+         will be rendered only if the current user belongs to one of the roles.
          ]]>
          </description>
          <name>role</name>
@@ -769,8 +791,8 @@
       <attribute>
          <description>
          <![CDATA[
-         If true, the list attribute will use, as first elements, the list contained in the list
-         attribute, put with the same name, of the containing definition.
+         If true, the list attribute will use, as first elements, the
+         list contained in the list attribute, put with the same name, of the containing definition.
          ]]>
          </description>
          <name>inherit</name>
@@ -797,25 +819,30 @@
       Insert a template.
       </p>
       <p>
-      Insert a template with the possibility to pass parameters (called attributes). A template can
-      be seen as a procedure that can take parameters or attributes. &lt;tiles:insertTemplate&gt;
-      allows to define these attributes and pass them to the inserted jsp page, called template.
-      Attributes are defined using nested tag &lt;tiles:putAttribute&gt; or &lt;tiles:putListAttribute&gt;.
+      Insert a template with the possibility to pass parameters (called
+      attributes). A template can be seen as a procedure that can take parameters
+      or attributes. &lt;tiles:insertTemplate&gt; allows to define
+      these attributes and pass them to the inserted jsp page, called template.
+      Attributes are defined using nested tag
+      &lt;tiles:putAttribute&gt; or
+      &lt;tiles:putListAttribute&gt;.
       </p>
       <p>
       You must specify template attribute, for inserting a template
       </p>
+      
       <p>
-      Example : 
+      Example :
       </p>
+      
       <pre>
-        &lt;tiles:insertTemplate template=&quot;/basic/myLayout.jsp&quot; flush=&quot;true&quot;&gt;
-          &lt;tiles:putAttribute name=&quot;title&quot; value=&quot;My first page&quot; /&gt;
-          &lt;tiles:putAttribute name=&quot;header&quot; value=&quot;/common/header.jsp&quot; /&gt;
-          &lt;tiles:putAttribute name=&quot;footer&quot; value=&quot;/common/footer.jsp&quot; /&gt;
-          &lt;tiles:putAttribute name=&quot;menu&quot; value=&quot;/basic/menu.jsp&quot; /&gt;
-          &lt;tiles:putAttribute name=&quot;body&quot; value=&quot;/basic/helloBody.jsp&quot; /&gt;
-        &lt;/tiles:insertTemplate&gt;
+          &lt;tiles:insertTemplate template=&quot;/basic/myLayout.jsp&quot; flush=&quot;true&quot;&gt;
+              &lt;tiles:putAttribute name=&quot;title&quot; value=&quot;My first page&quot; /&gt;
+              &lt;tiles:putAttribute name=&quot;header&quot; value=&quot;/common/header.jsp&quot; /&gt;
+              &lt;tiles:putAttribute name=&quot;footer&quot; value=&quot;/common/footer.jsp&quot; /&gt;
+              &lt;tiles:putAttribute name=&quot;menu&quot; value=&quot;/basic/menu.jsp&quot; /&gt;
+              &lt;tiles:putAttribute name=&quot;body&quot; value=&quot;/basic/helloBody.jsp&quot; /&gt;
+          &lt;/tiles:insertTemplate&gt;
       </pre>
       ]]>
       </description>
@@ -858,8 +885,8 @@
       <attribute>
          <description>
          <![CDATA[
-         A comma-separated list of roles. If present, the template will be rendered only if the
-         current user belongs to one of the roles.
+         A comma-separated list of roles. If present, the template
+         will be rendered only if the current user belongs to one of the roles.
          ]]>
          </description>
          <name>role</name>
@@ -870,8 +897,9 @@
       <attribute>
          <description>
          <![CDATA[
-         The preparer to use to invoke before the definition is rendered. If specified, it overrides
-         the preparer specified in the definition itself.
+         The preparer to use to invoke before the definition is
+         rendered. If specified, it overrides the preparer specified in the
+         definition itself.
          ]]>
          </description>
          <name>preparer</name>

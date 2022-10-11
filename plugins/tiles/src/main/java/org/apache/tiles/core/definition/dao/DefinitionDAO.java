@@ -27,7 +27,6 @@ import java.util.Map;
  * customization key.
  *
  * @param <K> The customization key class.
- * @version $Rev$ $Date$
  * @since 2.1.0
  */
 public interface DefinitionDAO<K> {

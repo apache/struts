@@ -37,7 +37,6 @@ import java.util.Set;
  * method before using this resolver.
  *
  * @param <T> The type of the customization key.
- * @version $Rev$ $Date$
  * @since 2.2.0
  */
 public class PrefixedPatternDefinitionResolver<T> extends AbstractPatternDefinitionResolver<T> {

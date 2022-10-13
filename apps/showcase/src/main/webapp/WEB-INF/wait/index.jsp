@@ -21,24 +21,31 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
-    <title>Struts2 Showcase - Execute and Wait Examples - Complete</title>
+    <title>Struts2 Showcase - Execute and Wait Examples</title>
 </head>
 
 <body>
 <div class="page-header">
-    <h1>The process is complete</h1>
+    <h1>Execute and Wait Examples</h1>
 </div>
-
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12" style="text-align: center;">
 
-            <div class="panel">We have processed your request.</div>
+            <p>
+                These examples illustrate Struts build in support for execute and wait.
+            <p/>
+            <p>
+                When you have a process that takes a long time your users can be impatient and starts to submit/click
+                again.
+                <br/> A good solution is to show the user a progress page (wait page) while the process takes it time.
+            <p/>
 
-            <s:url var="back" value="/wait/index"/>
-            Click here to <s:a href="%{back}" cssClass="btn btn-primary">return</s:a>
-
+            <br/>
+            <br/><a href='<s:url value="example1"/>'>Example 1 (no delay)</a>
+            <br/><a href='<s:url value="example2"/>'>Example 2 (with delay)</a>
+            <br/><a href='<s:url value="example3"/>'>Example 3 (with longer check delay)</a>
         </div>
     </div>
 </div>

@@ -239,7 +239,7 @@
                             </li>
                             <li><s:a value="/person/index.html">Person Manager</s:a></li>
                             <li><s:a value="/skill/index.html">CRUD</s:a></li>
-                            <li><s:a value="/wait/index.html">Execute &amp; Wait</s:a></li>
+                            <li><s:a value="/wait/index">Execute &amp; Wait</s:a></li>
                             <li><s:a value="/token/index.html">Token</s:a></li>
                             <li><s:url var="url" namespace="/modelDriven" action="modelDriven"/><s:a
                                     href="%{url}">Model Driven</s:a></li>

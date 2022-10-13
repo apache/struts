@@ -22,12 +22,17 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.exec.BackgroundProcess;
+import org.apache.struts2.interceptor.exec.ExecutorProvider;
+import org.apache.struts2.interceptor.exec.StrutsBackgroundProcess;
+import org.apache.struts2.interceptor.exec.StrutsExecutorProvider;
 import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
@@ -84,7 +89,7 @@ import java.util.Map;
  * <!-- END SNIPPET: description -->
  *
  * <p><u>Interceptor parameters:</u></p>
- *
+ * <p>
  * <!-- START SNIPPET: parameters -->
  *
  * <ul>
@@ -94,11 +99,11 @@ import java.util.Map;
  * <li>delaySleepInterval (optional) - only used with delay. Used for waking up at certain intervals to check if the background process is already done. Default is 100 millis.</li>
  *
  * </ul>
- *
+ * <p>
  * <!-- END SNIPPET: parameters -->
  *
  * <p><u>Extending the interceptor:</u></p>
- *
+ * <p>
  * <!-- START SNIPPET: extending -->
  * <p>
  * If you wish to make special preparations before and/or after the invocation of the background thread, you can extend
@@ -167,9 +172,8 @@ import java.util.Map;
  *     &lt;result name="success"&gt;longRunningAction-success.jsp&lt;/result&gt;
  * &lt;/action&gt;
  * </pre>
- *
+ * <p>
  * <!-- END SNIPPET: example -->
- *
  */
 public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
@@ -186,22 +190,28 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     private int threadPriority = Thread.NORM_PRIORITY;
 
     private Container container;
+    private ExecutorProvider executor;
 
     @Inject
     public void setContainer(Container container) {
         this.container = container;
     }
 
+    @Inject(required = false)
+    public void setExecutorProvider(ExecutorProvider executorProvider) {
+        this.executor = executorProvider;
+    }
+
     /**
      * Creates a new background process
      *
-     * @param name The process name
+     * @param name             The process name
      * @param actionInvocation The action invocation
-     * @param threadPriority The thread priority
+     * @param threadPriority   The thread priority
      * @return The new process
      */
     protected BackgroundProcess getNewBackgroundProcess(String name, ActionInvocation actionInvocation, int threadPriority) {
-        return new BackgroundProcess(name + "BackgroundThread", actionInvocation, threadPriority);
+        return new StrutsBackgroundProcess(actionInvocation, name + "_background-process", threadPriority);
     }
 
     /**
@@ -209,7 +219,6 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
      * are mapped to requests.
      *
      * @param proxy action proxy
-     *
      * @return the name of the background thread
      */
     protected String getBackgroundProcessName(ActionProxy proxy) {
@@ -223,10 +232,10 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         ActionProxy proxy = actionInvocation.getProxy();
         String name = getBackgroundProcessName(proxy);
         ActionContext context = actionInvocation.getInvocationContext();
-        Map session = context.getSession();
+        Map<String, Object> session = context.getSession();
         HttpSession httpSession = ServletActionContext.getRequest().getSession(true);
 
-        Boolean secondTime  = true;
+        Boolean secondTime = true;
         if (executeAfterValidationPass) {
             secondTime = (Boolean) context.get(KEY);
             if (secondTime == null) {
@@ -250,8 +259,13 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
             }
 
             if ((!executeAfterValidationPass || secondTime) && bp == null) {
-                bp = getNewBackgroundProcess(name, actionInvocation, threadPriority);
+                bp = getNewBackgroundProcess(name, actionInvocation, threadPriority).prepare();
                 session.put(KEY + name, bp);
+                if (executor.isShutdown()) {
+                    LOG.warn("Executor is shutting down, cannot execute a new process");
+                    return actionInvocation.invoke();
+                }
+                executor.execute(bp);
                 performInitialDelay(bp); // first time let some time pass before showing wait page
                 secondTime = false;
             }
@@ -259,16 +273,16 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
             if ((!executeAfterValidationPass || !secondTime) && bp != null && !bp.isDone()) {
                 actionInvocation.getStack().push(bp.getAction());
 
-				final String token = TokenHelper.getToken();
-				if (token != null) {
-					TokenHelper.setSessionToken(TokenHelper.getTokenName(), token);
+                final String token = TokenHelper.getToken();
+                if (token != null) {
+                    TokenHelper.setSessionToken(TokenHelper.getTokenName(), token);
                 }
 
-                Map results = proxy.getConfig().getResults();
+                Map<String, ResultConfig> results = proxy.getConfig().getResults();
                 if (!results.containsKey(WAIT)) {
-                	LOG.warn("ExecuteAndWait interceptor has detected that no result named 'wait' is available. " +
-                            "Defaulting to a plain built-in wait page. It is highly recommend you " +
-                            "provide an action-specific or global result named '{}'.", WAIT);
+                    LOG.warn("ExecuteAndWait interceptor has detected that no result named 'wait' is available. " +
+                        "Defaulting to a plain built-in wait page. It is highly recommend you " +
+                        "provide an action-specific or global result named '{}'.", WAIT);
                     // no wait result? hmm -- let's try to do dynamically put it in for you!
 
                     //we used to add a fake "wait" result here, since the configuration is unmodifiable, that is no longer
@@ -286,7 +300,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                 session.remove(KEY + name);
                 actionInvocation.getStack().push(bp.getAction());
 
-                // if an exception occured during action execution, throw it here
+                // if an exception occurred during action execution, throw it here
                 if (bp.getException() != null) {
                     throw bp.getException();
                 }
@@ -369,5 +383,17 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         this.executeAfterValidationPass = executeAfterValidationPass;
     }
 
+    @Override
+    public void init() {
+        super.init();
+        if (executor == null) {
+            executor = new StrutsExecutorProvider();
+        }
+    }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        executor.shutdown();
+    }
 }

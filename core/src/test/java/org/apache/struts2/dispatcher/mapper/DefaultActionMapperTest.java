@@ -896,4 +896,78 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals(mapper.defaultMethodName, mapper.cleanupMethodName("${#foo='method',#foo}"));
     }
 
+    public void testTestAllowedNamespaceName() {
+        // give
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowedNamespaceNames("[a-z/]*");
+
+        // when
+        String result = mapper.cleanupNamespaceName("/ns");
+
+        // then
+        assertEquals("/ns", result);
+    }
+
+    public void testTestAllowedNamespaceNameAndFallbackToDefault() {
+        // give
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowedNamespaceNames("[a-z/]*");
+        mapper.setDefaultNamespaceName("/ns");
+
+        // when
+        String result = mapper.cleanupNamespaceName("/ns2");
+
+        // then
+        assertEquals("/ns", result);
+    }
+
+    public void testTestAllowedActionName() {
+        // give
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowedActionNames("[a-z]*");
+
+        // when
+        String result = mapper.cleanupActionName("action");
+
+        // then
+        assertEquals("action", result);
+    }
+
+    public void testTestAllowedActionNameAndFallbackToDefault() {
+        // give
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowedActionNames("[a-z]*");
+        mapper.setDefaultActionName("error");
+
+        // when
+        String result = mapper.cleanupActionName("action2");
+
+        // then
+        assertEquals("error", result);
+    }
+
+    public void testTestAllowedMethodName() {
+        // give
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowedMethodNames("[a-z]*");
+
+        // when
+        String result = mapper.cleanupMethodName("execute");
+
+        // then
+        assertEquals("execute", result);
+    }
+
+    public void testTestAllowedMethodNameAndFallbackToDefault() {
+        // give
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowedMethodNames("[a-z]*");
+        mapper.setDefaultMethodName("error");
+
+        // when
+        String result = mapper.cleanupMethodName("execute2");
+
+        // then
+        assertEquals("error", result);
+    }
 }

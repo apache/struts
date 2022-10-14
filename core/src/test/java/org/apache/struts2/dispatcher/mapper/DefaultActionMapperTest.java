@@ -640,6 +640,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetUriFromActionMapper1() {
         DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
         actionMapping.setName("myActionName");
@@ -651,6 +652,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetUriFromActionMapper2() {
         DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
         actionMapping.setName("myActionName");
@@ -662,6 +664,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetUriFromActionMapper3() {
         DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
         actionMapping.setName("myActionName");
@@ -670,7 +673,6 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         assertEquals("/myActionName!myMethod.action", uri);
     }
-
 
     public void testGetUriFromActionMapper4() {
         DefaultActionMapper mapper = new DefaultActionMapper();
@@ -692,9 +694,9 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myActionName.action", uri);
     }
 
-    //
     public void testGetUriFromActionMapper6() {
         DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
         actionMapping.setName("myActionName?test=bla");
@@ -706,6 +708,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetUriFromActionMapper7() {
         DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
         actionMapping.setName("myActionName?test=bla");
@@ -717,6 +720,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetUriFromActionMapper8() {
         DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
         actionMapping.setName("myActionName?test=bla");
@@ -726,6 +730,16 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("/myActionName!myMethod.action?test=bla", uri);
     }
 
+    public void testGetUriFromActionMapperWithDisabledDMI() {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        ActionMapping actionMapping = new ActionMapping();
+        actionMapping.setMethod("myMethod");
+        actionMapping.setName("myActionName?test=bla");
+        actionMapping.setNamespace("");
+        String uri = mapper.getUriFromActionMapping(actionMapping);
+
+        assertEquals("/myActionName.action?test=bla", uri);
+    }
 
     public void testGetUriFromActionMapper9() {
         DefaultActionMapper mapper = new DefaultActionMapper();
@@ -769,6 +783,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetUriFromActionMapper_justActionAndMethod() {
         DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
         actionMapping.setName("myActionName");
@@ -780,7 +795,8 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetUriFromActionMapperWhenBlankExtension() {
         DefaultActionMapper mapper = new DefaultActionMapper();
-        mapper.setExtensions(",,");
+        mapper.setExtensions(",");
+        mapper.setAllowDynamicMethodCalls("true");
         ActionMapping actionMapping = new ActionMapping();
         actionMapping.setMethod("myMethod");
         actionMapping.setName("myActionName");

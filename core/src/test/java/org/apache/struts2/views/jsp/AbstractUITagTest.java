@@ -23,6 +23,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
 
 import java.io.InputStream;
@@ -227,7 +229,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
         try (InputStream in = url.openStream()) {
 	        byte[] buf = new byte[4096];
 	        int nbytes;
-	
+
 	        while ((nbytes = in.read(buf)) > 0) {
 	            buffer.append(new String(buf, 0, nbytes));
 	        }
@@ -245,7 +247,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-
+        ((DefaultActionMapper) container.getInstance(ActionMapper.class)).setAllowDynamicMethodCalls("true");
         ServletActionContext.setServletContext(pageContext.getServletContext());
     }
 

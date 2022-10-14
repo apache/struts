@@ -31,10 +31,10 @@
     <packaging>jar</packaging>
     <name>Struts 2 Tiles Plugin</name>
     
-    <!-- mvn -P build-jsp-autotags exec:java -->
+    <!-- mvn -P build-autotags exec:java -->
     <profiles>
         <profile>
-            <id>build-jsp-autotags</id>
+            <id>build-autotags</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -53,16 +53,8 @@
                           </execution>
                         </executions>
                         <configuration>
-                            <mainClass>org.apache.struts2.tiles.BuildJspAutotags</mainClass>
+                            <mainClass>org.apache.struts2.tiles.BuildAutotags</mainClass>
                             <arguments>
-                                <!-- taglibURI   -->
-                                <argument>http://tiles.apache.org/tags-tiles</argument>
-                                <!-- packageName -->
-                                <argument>org.apache.tiles.web.jsp.taglib</argument>
-                                <!-- requestClass -->
-                                <argument>org.apache.tiles.request.Request</argument>
-                                <!-- jspRuntime -->
-                                <argument>org.apache.tiles.request.jsp.autotag.JspAutotagRuntime</argument>
                                 <!-- Output folder -->
                                 <argument>${project.build.directory}</argument>
                             </arguments>

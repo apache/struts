@@ -462,6 +462,10 @@ public class DefaultActionMapper implements ActionMapper {
      * @param configurationManager current instance of {@link ConfigurationManager}
      */
     protected void extractMethodName(ActionMapping mapping, ConfigurationManager configurationManager) {
+        if (mapping.getMethod() != null && allowDynamicMethodCalls) {
+            LOG.debug("DMI is enabled and method has been already mapped based on bang operator");
+            return;
+        }
         String methodName = null;
         for (PackageConfig cfg : configurationManager.getConfiguration().getPackageConfigs().values()) {
             if (cfg.getNamespace().equals(mapping.getNamespace())) {

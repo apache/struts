@@ -591,6 +591,47 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("next", actionMapping.getMethod());
     }
 
+    public void testActionPrefixWithBangWhenAllowed() {
+        Map<String, Object> parameterMap = new HashMap<>();
+        parameterMap.put("action:" + "next!another", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setupGetServletPath("/index.action");
+        request.setParameterMap(parameterMap);
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setContainer(container);
+        defaultActionMapper.setAllowActionPrefix("true");
+        defaultActionMapper.setAllowDynamicMethodCalls("true");
+
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+        assertNotNull(actionMapping);
+        assertEquals("/", actionMapping.getNamespace());
+        assertEquals("next", actionMapping.getName());
+        assertEquals("another", actionMapping.getMethod());
+    }
+
+    public void testMethodPrefixWhenAllowed() {
+        Map<String, Object> parameterMap = new HashMap<>();
+        parameterMap.put("method:" + "another", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setupGetServletPath("/index.action");
+        request.setParameterMap(parameterMap);
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setContainer(container);
+        defaultActionMapper.setAllowDynamicMethodCalls("true");
+
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+        assertNotNull(actionMapping);
+        assertEquals("/", actionMapping.getNamespace());
+        assertEquals("index", actionMapping.getName());
+        assertEquals("another", actionMapping.getMethod());
+    }
+
     public void testCustomActionPrefix() {
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("foo:myAction", "");

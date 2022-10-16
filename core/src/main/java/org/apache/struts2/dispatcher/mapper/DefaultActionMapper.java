@@ -241,6 +241,11 @@ public class DefaultActionMapper implements ActionMapper {
         this.allowActionPrefix = BooleanUtils.toBoolean(allowActionPrefix);
     }
 
+    /**
+     * @deprecated since 6.1.0 - please refactor your application to avoid using this functionality
+     * @param allowActionCrossNamespaceAccess true to enable cross namespace action access
+     */
+    @Deprecated
     @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES)
     public void setAllowActionCrossNamespaceAccess(String allowActionCrossNamespaceAccess) {
         this.allowActionCrossNamespaceAccess = BooleanUtils.toBoolean(allowActionCrossNamespaceAccess);

@@ -398,7 +398,11 @@ public final class StrutsConstants {
     /** Enables action: prefix */
     public static final String STRUTS_MAPPER_ACTION_PREFIX_ENABLED = "struts.mapper.action.prefix.enabled";
 
-    /** Enables access to actions in other namespaces than current with action: prefix */
+    /**
+     * Enables access to actions in other namespaces than current with action: prefix
+     * @deprecated it will be removed soon, please refactor your application
+     */
+    @Deprecated
     public static final String STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES = "struts.mapper.action.prefix.crossNamespaces";
 
     public static final String DEFAULT_TEMPLATE_TYPE_CONFIG_KEY = "struts.ui.templateSuffix";

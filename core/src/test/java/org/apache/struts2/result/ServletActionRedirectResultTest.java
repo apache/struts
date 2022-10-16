@@ -28,6 +28,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -163,7 +164,9 @@ public class ServletActionRedirectResultTest extends StrutsInternalTestCase {
         expect(mockInvocation.getStack()).andReturn(stack).anyTimes();
 
         control.replay();
-        result.setActionMapper(container.getInstance(ActionMapper.class));
+        DefaultActionMapper mapper = (DefaultActionMapper) container.getInstance(ActionMapper.class);
+        mapper.setAllowDynamicMethodCalls("true");
+        result.setActionMapper(mapper);
         result.execute(mockInvocation);
         assertEquals("/myNamespace${1-1}/myAction${1-1}!myMethod${1-1}.action?param1=value+1&param2=value+2&param3=value+3#fragment", res.getRedirectedUrl());
 
@@ -313,5 +316,5 @@ public class ServletActionRedirectResultTest extends StrutsInternalTestCase {
         ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, ActionContext.getContext().getContextMap());
         assertNotNull(result);
     }
-    
+
 }

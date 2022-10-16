@@ -28,6 +28,10 @@
     <bean type="org.apache.struts2.interceptor.exec.ExecutorProvider" class="org.apache.struts2.showcase.wait.ThreadPoolExecutorProvider"/>
 
     <package name="wait" extends="struts-default" namespace="/wait">
+        <default-action-ref name="index"/>
+        <action name="index">
+            <result>/WEB-INF/wait/index.jsp</result>
+        </action>
 
         <action name="example1">
             <result>/WEB-INF/wait/example1.jsp</result>

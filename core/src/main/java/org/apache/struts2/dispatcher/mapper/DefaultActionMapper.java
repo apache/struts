@@ -34,7 +34,12 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -344,8 +349,8 @@ public class DefaultActionMapper implements ActionMapper {
     /**
      * Parses the name and namespace from the uri
      *
-     * @param uri     The uri
-     * @param mapping The action mapping to populate
+     * @param uri           The uri
+     * @param mapping       The action mapping to populate
      * @param configManager configuration manager
      */
     protected void parseNameAndNamespace(String uri, ActionMapping mapping, ConfigurationManager configManager) {
@@ -453,10 +458,14 @@ public class DefaultActionMapper implements ActionMapper {
     /**
      * Reads defined method name for a given action from configuration
      *
-     * @param mapping current instance of {@link ActionMapping}
+     * @param mapping              current instance of {@link ActionMapping}
      * @param configurationManager current instance of {@link ConfigurationManager}
      */
     protected void extractMethodName(ActionMapping mapping, ConfigurationManager configurationManager) {
+        if (mapping.getMethod() != null && allowDynamicMethodCalls) {
+            LOG.debug("DMI is enabled and method has been already mapped based on bang operator");
+            return;
+        }
         String methodName = null;
         for (PackageConfig cfg : configurationManager.getConfiguration().getPackageConfigs().values()) {
             if (cfg.getNamespace().equals(mapping.getNamespace())) {
@@ -507,7 +516,7 @@ public class DefaultActionMapper implements ActionMapper {
     }
 
     /**
-     * @return  null if no extension is specified.
+     * @return null if no extension is specified.
      */
     protected String getDefaultExtension() {
         if (extensions == null) {
@@ -552,17 +561,19 @@ public class DefaultActionMapper implements ActionMapper {
     }
 
     protected void handleDynamicMethod(ActionMapping mapping, StringBuilder uri) {
+        if (!allowDynamicMethodCalls) {
+            LOG.debug("DMI is disabled, ignoring appending !method to the URI");
+            return;
+        }
         // See WW-3965
         if (StringUtils.isNotEmpty(mapping.getMethod())) {
-            if (allowDynamicMethodCalls) {
-                // handle "name!method" convention.
-                String name = mapping.getName();
-                if (!name.contains("!")) {
-                    // Append the method as no bang found
-                    uri.append("!").append(mapping.getMethod());
-                }
-            } else {
+            // handle "name!method" convention.
+            String name = mapping.getName();
+            if (!name.contains("!")) {
+                // Append the method as no bang found
                 uri.append("!").append(mapping.getMethod());
+            } else if (name.endsWith("!")) {
+                uri.append(mapping.getMethod());
             }
         }
     }

@@ -107,6 +107,7 @@ public class XStreamHandler extends AbstractContentTypeHandler {
             stream.addPermission(new ExplicitTypePermission(new Class[]{((ModelDriven<?>) invocation.getAction()).getModel().getClass()}));
         }
         stream.addPermission(NullPermission.NULL);
+        stream.addPermission(new ExplicitTypePermission(new Class[]{String.class}));
         stream.addPermission(PrimitiveTypePermission.PRIMITIVES);
         stream.addPermission(ArrayTypePermission.ARRAYS);
         stream.addPermission(CollectionTypePermission.COLLECTIONS);
@@ -126,8 +127,7 @@ public class XStreamHandler extends AbstractContentTypeHandler {
 
         @Override
         public boolean allows(Class type) {
-            return type != null && type.isInterface() &&
-                (Collection.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type));
+            return type != null && (Collection.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type));
         }
 
     }

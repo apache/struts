@@ -38,6 +38,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -135,16 +136,12 @@ public class XStreamHandlerTest extends XWorkTestCase {
 
         @Override
         public Set<String> allowedClassNames() {
-            HashSet<String> strings = new HashSet<>();
-            strings.add(ArrayList.class.getName());
-            return strings;
+            return Collections.emptySet();
         }
 
         @Override
         public Collection<TypePermission> getTypePermissions() {
-            ArrayList<TypePermission> permissions = new ArrayList<>();
-            permissions.add(new ExplicitTypePermission(new Class[]{String.class}));
-            return permissions;
+            return Collections.emptyList();
         }
     }
 

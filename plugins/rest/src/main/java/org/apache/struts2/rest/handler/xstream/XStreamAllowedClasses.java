@@ -16,12 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.rest.handler;
+package org.apache.struts2.rest.handler.xstream;
 
-import com.thoughtworks.xstream.security.TypePermission;
+import java.util.Set;
 
-import java.util.Collection;
-
-public interface XStreamPermissionProvider {
-    Collection<TypePermission> getTypePermissions();
+public interface XStreamAllowedClasses {
+    Set<Class<?>> allowedClasses();
 }

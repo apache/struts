@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.rest.handler;
+package org.apache.struts2.rest.handler.xstream;
 
 import java.util.Set;
 
-public interface AllowedClasses {
-    Set<Class<?>> allowedClasses();
+public interface XStreamAllowedClassNames {
+    Set<String> allowedClassNames();
 }

@@ -72,9 +72,6 @@ public class XStreamHandler extends AbstractContentTypeHandler {
             stream = new XStream(new StaxDriver());
         }
 
-        LOG.debug("Clears existing permissions");
-        stream.addPermission(NoTypePermission.NONE);
-
         LOG.debug("Adds per action permissions");
         addPerActionPermission(invocation, stream);
 

@@ -62,15 +62,6 @@ public class XStreamHandler extends AbstractContentTypeHandler {
         xstream.fromXML(in, target);
     }
 
-    /**
-     * @deprecated use version with {@link ActionInvocation}
-     */
-    @Deprecated
-    protected XStream createXStream() {
-        LOG.warn("You are using a deprecated API!");
-        return new XStream();
-    }
-
     protected XStream createXStream(ActionInvocation invocation) {
         XStream stream;
         if (invocation.getAction() instanceof XStreamProvider) {

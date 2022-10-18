@@ -59,7 +59,7 @@ public class BuildAutotags {
         // Freemarker classes
         me.buildFreemarker(args[0]);
 
-        // Freemarker classes
+        // Velocity classes
         me.buildVelocity(args[0]);
 
     }
@@ -173,7 +173,7 @@ public class BuildAutotags {
     }
 
     /**
-     * Builds the velocity classes.
+     * Builds the velocity classes and velocity.properties.
      * 
      * To build, change template-suite.xml as required and then run this program.
      * Copy the classes from the target autotag folder into the packageName

@@ -29,6 +29,7 @@ import org.apache.tiles.autotag.generate.TemplateGenerator;
 import org.apache.tiles.autotag.generate.TemplateGeneratorBuilder;
 import org.apache.tiles.autotag.jsp.JspTemplateGeneratorFactory;
 import org.apache.tiles.autotag.model.TemplateSuite;
+import org.apache.tiles.autotag.velocity.VelocityTemplateGeneratorFactory;
 import org.apache.velocity.app.VelocityEngine;
 
 import com.thoughtworks.xstream.XStream;
@@ -57,6 +58,9 @@ public class BuildAutotags {
 
         // Freemarker classes
         me.buildFreemarker(args[0]);
+
+        // Freemarker classes
+        me.buildVelocity(args[0]);
 
     }
 
@@ -118,7 +122,7 @@ public class BuildAutotags {
     }
 
     /**
-     * Builds the freemarker.
+     * Builds the Freemarker classes.
      * 
      * To build, change template-suite.xml as required and then run this program.
      * Copy the classes from the target autotag folder into the packageName
@@ -159,6 +163,60 @@ public class BuildAutotags {
 
             TemplateGenerator generator = new FMTemplateGeneratorFactory(classesOutputDirectory,
                     new VelocityEngine(props), TemplateGeneratorBuilder.createNewInstance()).createTemplateGenerator();
+
+            generator.generate(packageName, suite, null, runtime, requestClass);
+
+        } catch (Exception e) {
+            // ignored
+        }
+
+    }
+
+    /**
+     * Builds the velocity classes.
+     * 
+     * To build, change template-suite.xml as required and then run this program.
+     * Copy the classes from the target autotag folder into the packageName
+     * location, and velocity.properties to
+     * src/main/resources/META-INF/velocity.properties
+     *
+     * @param outputDir the output dir
+     */
+    public void buildVelocity(String outputDir) {
+
+        // Default values
+        String packageName = "org.apache.tiles.velocity.template";
+        String requestClass = "org.apache.tiles.request.Request";
+        String runtime = "org.apache.tiles.request.velocity.autotag.VelocityAutotagRuntime";
+        // outputDir = "/target"
+
+        try {
+
+            TemplateSuite suite;
+
+            InputStream stream = getClass().getResourceAsStream("/META-INF/template-suite.xml");
+
+            try {
+                XStream xstream = new XStream(new DomDriver());
+                xstream.allowTypes(new Class[] { org.apache.tiles.autotag.model.TemplateClass.class,
+                        org.apache.tiles.autotag.model.TemplateSuite.class,
+                        org.apache.tiles.autotag.model.TemplateParameter.class });
+                suite = (TemplateSuite) xstream.fromXML(stream);
+            } finally {
+                stream.close();
+            }
+
+            Properties props = new Properties();
+            InputStream propsStream = getClass().getResourceAsStream("/org/apache/tiles/autotag/velocity.properties");
+            props.load(propsStream);
+            propsStream.close();
+
+            File classesOutputDirectory = new File(outputDir + "/generated-sources/autotag/classes");
+            File resourcesOutputDirectory = new File(outputDir + "/generated-sources/autotag");
+
+            TemplateGenerator generator = new VelocityTemplateGeneratorFactory(classesOutputDirectory,
+                    resourcesOutputDirectory, new VelocityEngine(props), TemplateGeneratorBuilder.createNewInstance())
+                    .createTemplateGenerator();
 
             generator.generate(packageName, suite, null, runtime, requestClass);
 

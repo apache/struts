@@ -110,8 +110,8 @@
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.2</asm.version>
-        <jackson.version>2.13.2</jackson.version>
-        <jackson-databind.version>2.13.2.1</jackson-databind.version>
+        <jackson.version>2.13.4</jackson.version>
+        <jackson-databind.version>2.13.4.2</jackson-databind.version>
         <log4j2.version>2.19.0</log4j2.version>
         <ognl.version>3.3.3</ognl.version>
         <slf4j.version>1.7.32</slf4j.version>

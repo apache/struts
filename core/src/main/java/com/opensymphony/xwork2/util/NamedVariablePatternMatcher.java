@@ -18,6 +18,8 @@
  */
 package com.opensymphony.xwork2.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +59,7 @@ import java.util.regex.Pattern;
  * </table>
  *
  * <p>
- * Excaping hasn't been implemented since the intended use of these patterns will be in matching URLs.
+ * Escaping hasn't been implemented since the intended use of these patterns will be in matching URLs.
  * </p>
  *
  * @since 2.1
@@ -75,38 +77,47 @@ public class NamedVariablePatternMatcher implements PatternMatcher<NamedVariable
      * @return The compiled pattern, null if the pattern was null or empty
      */
     public CompiledPattern compilePattern(String data) {
-        StringBuilder regex = new StringBuilder();
-        if (data != null && data.length() > 0) {
-            List<String> varNames = new ArrayList<>();
-            StringBuilder varName = null;
-            for (int x=0; x<data.length(); x++) {
-                char c = data.charAt(x);
-                switch (c) {
-                    case '{' :  varName = new StringBuilder(); break;
-                    case '}' :  if (varName == null) {
-                                    throw new IllegalArgumentException("Mismatched braces in pattern");
-                                }
-                                varNames.add(varName.toString());
-                                regex.append("([^/]+)");
-                                varName = null;
-                                break;
-                    default  :  if (varName == null) {
-                                    regex.append(c);
-                                } else {
-                                    varName.append(c);
-                                }
-                }
-            }
-            return new CompiledPattern(Pattern.compile(regex.toString()), varNames);
+        if (StringUtils.isEmpty(data)) {
+            return null;
         }
-        return null;
+
+        int len = data.length();
+        StringBuilder regex = new StringBuilder();
+        List<String> varNames = new ArrayList<>();
+        int s = 0;
+        while (s < len) {
+            int e = data.indexOf('{', s);
+            if (e < 0 && data.indexOf('}') > -1) {
+                throw new IllegalArgumentException("Missing openning '{' in [" + data + "]!");
+            }
+            if (e < 0) {
+                regex.append(Pattern.quote(data.substring(s)));
+                break;
+            }
+            if (e > s) {
+                regex.append(Pattern.quote(data.substring(s, e)));
+            }
+            s = e + 1;
+            e = data.indexOf('}', s);
+            if (e < 0) {
+                return null;
+            }
+            String varName = data.substring(s, e);
+            if (StringUtils.isEmpty(varName)) {
+                throw new IllegalArgumentException("Missing variable name in [" + data + "]!");
+            }
+            varNames.add(varName);
+            regex.append("([^/]+)");
+            s = e + 1;
+        }
+        return new CompiledPattern(Pattern.compile(regex.toString()), varNames);
     }
 
     /**
      * Tries to process the data against the compiled expression.  If successful, the map will contain
      * the matched data, using the specified variable names in the original pattern.
      *
-     * @param map The map of variables
+     * @param map  The map of variables
      * @param data The data to match
      * @param expr The compiled pattern
      * @return True if matched, false if not matched, the data was null, or the data was an empty string
@@ -116,8 +127,8 @@ public class NamedVariablePatternMatcher implements PatternMatcher<NamedVariable
         if (data != null && data.length() > 0) {
             Matcher matcher = expr.getPattern().matcher(data);
             if (matcher.matches()) {
-                for (int x=0; x<expr.getVariableNames().size(); x++)  {
-                    map.put(expr.getVariableNames().get(x), matcher.group(x+1));
+                for (int x = 0; x < expr.getVariableNames().size(); x++) {
+                    map.put(expr.getVariableNames().get(x), matcher.group(x + 1));
                 }
                 return true;
             }
@@ -129,8 +140,8 @@ public class NamedVariablePatternMatcher implements PatternMatcher<NamedVariable
      * Stores the compiled pattern and the variable names matches will correspond to.
      */
     public static class CompiledPattern {
-        private Pattern pattern;
-        private List<String> variableNames;
+        private final Pattern pattern;
+        private final List<String> variableNames;
 
 
         public CompiledPattern(Pattern pattern, List<String> variableNames) {

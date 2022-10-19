@@ -34,22 +34,22 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Base JUnit TestCase to extend for XWork specific JUnit tests. Uses 
+ * Base JUnit TestCase to extend for XWork specific JUnit tests. Uses
  * the generic test setup for logic.
  *
  * @author plightbo
  */
 public abstract class XWorkTestCase extends TestCase {
-    
+
     protected ConfigurationManager configurationManager;
     protected Configuration configuration;
     protected Container container;
     protected ActionProxyFactory actionProxyFactory;
-    
+
     public XWorkTestCase() {
         super();
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         configurationManager = XWorkTestCaseHelper.setUp();
@@ -57,7 +57,7 @@ public abstract class XWorkTestCase extends TestCase {
         container = configuration.getContainer();
         actionProxyFactory = container.getInstance(ActionProxyFactory.class);
     }
-    
+
     @Override
     protected void tearDown() throws Exception {
         XWorkTestCaseHelper.tearDown(configurationManager);
@@ -66,34 +66,33 @@ public abstract class XWorkTestCase extends TestCase {
         container = null;
         actionProxyFactory = null;
     }
-    
+
     protected void loadConfigurationProviders(ConfigurationProvider... providers) {
         configurationManager = XWorkTestCaseHelper.loadConfigurationProviders(configurationManager, providers);
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();
         actionProxyFactory = container.getInstance(ActionProxyFactory.class);
     }
-    
-    protected void loadButAdd(final Class<?> type, final Object impl) {
+
+    protected <T> void loadButAdd(final Class<T> type, final T impl) {
         loadButAdd(type, Container.DEFAULT_NAME, impl);
     }
-    
-    protected void loadButAdd(final Class<?> type, final String name, final Object impl) {
+
+    protected <T> void loadButAdd(final Class<T> type, final String name, final T impl) {
         loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
-            public void register(ContainerBuilder builder,
-                    LocatableProperties props) throws ConfigurationException {
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
                 if (impl instanceof String || ClassUtils.isPrimitiveOrWrapper(impl.getClass())) {
                     props.setProperty(name, "" + impl);
                 } else {
-                    builder.factory(type, name, new Factory() {
-                        public Object create(Context context) throws Exception {
+                    builder.factory(type, name, new Factory<T>() {
+                        public T create(Context context) throws Exception {
                             return impl;
                         }
 
                         @Override
-                        public Class type() {
-                            return impl.getClass();
+                        public Class<T> type() {
+                            return (Class<T>) impl.getClass();
                         }
                     }, Scope.SINGLETON);
                 }

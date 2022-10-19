@@ -19,10 +19,26 @@ import com.opensymphony.xwork2.inject.util.ReferenceCache;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ReflectPermission;
 import java.security.AccessControlException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Default {@link Container} implementation.
@@ -39,11 +55,7 @@ class ContainerImpl implements Container {
         this.factories = factories;
         final Map<Class<?>, Set<String>> map = new HashMap<>();
         for (Key<?> key : factories.keySet()) {
-            Set<String> names = map.get(key.getType());
-            if (names == null) {
-                names = new HashSet<>();
-                map.put(key.getType(), names);
-            }
+            Set<String> names = map.computeIfAbsent(key.getType(), k -> new HashSet<>());
             names.add(key.getName());
         }
 
@@ -63,20 +75,20 @@ class ContainerImpl implements Container {
      * Field and method injectors.
      */
     final Map<Class<?>, List<Injector>> injectors =
-            new ReferenceCache<Class<?>, List<Injector>>() {
-                @Override
-                protected List<Injector> create(Class<?> key) {
-                    List<Injector> injectors = new ArrayList<>();
-                    addInjectors(key, injectors);
-                    return injectors;
-                }
-            };
+        new ReferenceCache<Class<?>, List<Injector>>() {
+            @Override
+            protected List<Injector> create(Class<?> key) {
+                List<Injector> injectors = new ArrayList<>();
+                addInjectors(key, injectors);
+                return injectors;
+            }
+        };
 
     /**
      * Recursively adds injectors for fields and methods from the given class to the given list. Injects parent classes
      * before sub classes.
      */
-    void addInjectors(Class clazz, List<Injector> injectors) {
+    void addInjectors(Class<?> clazz, List<Injector> injectors) {
         if (clazz == Object.class) {
             return;
         }
@@ -97,38 +109,24 @@ class ContainerImpl implements Container {
             addInjectorsForMethods(clazz.getDeclaredMethods(), true, injectors);
         }
 
-        callInContext(new ContextualCallable<Void>() {
-            public Void call(InternalContext context) {
-                for (Injector injector : injectors) {
-                    injector.inject(context, null);
-                }
-                return null;
+        callInContext((ContextualCallable<Void>) context -> {
+            for (Injector injector : injectors) {
+                injector.inject(context, null);
             }
+            return null;
         });
     }
 
     void addInjectorsForMethods(Method[] methods, boolean statics, List<Injector> injectors) {
-        addInjectorsForMembers(Arrays.asList(methods), statics, injectors,
-                new InjectorFactory<Method>() {
-                    public Injector create(ContainerImpl container, Method method,
-                                           String name) throws MissingDependencyException {
-                        return new MethodInjector(container, method, name);
-                    }
-                });
+        addInjectorsForMembers(Arrays.asList(methods), statics, injectors, MethodInjector::new);
     }
 
     void addInjectorsForFields(Field[] fields, boolean statics, List<Injector> injectors) {
-        addInjectorsForMembers(Arrays.asList(fields), statics, injectors,
-                new InjectorFactory<Field>() {
-                    public Injector create(ContainerImpl container, Field field,
-                                           String name) throws MissingDependencyException {
-                        return new FieldInjector(container, field, name);
-                    }
-                });
+        addInjectorsForMembers(Arrays.asList(fields), statics, injectors, FieldInjector::new);
     }
 
     <M extends Member & AnnotatedElement> void addInjectorsForMembers(
-            List<M> members, boolean statics, List<Injector> injectors, InjectorFactory<M> injectorFactory) {
+        List<M> members, boolean statics, List<Injector> injectors, InjectorFactory<M> injectorFactory) {
         for (M member : members) {
             if (isStatic(member) == statics) {
                 Inject inject = member.getAnnotation(Inject.class);
@@ -148,12 +146,12 @@ class ContainerImpl implements Container {
     interface InjectorFactory<M extends Member & AnnotatedElement> {
 
         Injector create(ContainerImpl container, M member, String name)
-                throws MissingDependencyException;
+            throws MissingDependencyException;
     }
 
     /**
      * Determines if a given {@link Member} is static or not.
-     * 
+     *
      * @param member checked for the static modifier.
      * @return true if member is static, false otherwise.
      */
@@ -163,13 +161,13 @@ class ContainerImpl implements Container {
 
     /**
      * Determines if a given {@link Member} is considered to be public for reflection usage or not.
-     * 
+     *
      * @param member checked to see if it is public for reflection usage.
      * @return true if member is public for reflection usage, false otherwise.
      */
     private static boolean isPublicForReflection(Member member) {
         return Modifier.isPublic(member.getModifiers()) &&
-               Modifier.isPublic(member.getDeclaringClass().getModifiers());
+            Modifier.isPublic(member.getDeclaringClass().getModifiers());
     }
 
     static class FieldInjector implements Injector {
@@ -179,7 +177,7 @@ class ContainerImpl implements Container {
         final ExternalContext<?> externalContext;
 
         public FieldInjector(ContainerImpl container, Field field, String name)
-                throws MissingDependencyException {
+            throws MissingDependencyException {
             this.field = field;
             if (!isPublicForReflection(field) && !field.isAccessible()) {
                 SecurityManager sm = System.getSecurityManager();
@@ -190,7 +188,7 @@ class ContainerImpl implements Container {
                     field.setAccessible(true);
                 } catch (AccessControlException e) {
                     throw new DependencyException("Security manager in use, could not access field: "
-                            + field.getDeclaringClass().getName() + "(" + field.getName() + ")", e);
+                        + field.getDeclaringClass().getName() + "(" + field.getName() + ")", e);
                 }
             }
 
@@ -225,8 +223,12 @@ class ContainerImpl implements Container {
      * @param parameterTypes parameter types
      * @return injections
      */
-    <M extends AccessibleObject & Member> ParameterInjector<?>[]
-    getParametersInjectors(M member, Annotation[][] annotations, Class[] parameterTypes, String defaultName) throws MissingDependencyException {
+    <M extends AccessibleObject & Member> ParameterInjector<?>[] getParametersInjectors(
+        M member,
+        Annotation[][] annotations,
+        Class<?>[] parameterTypes,
+        String defaultName
+    ) throws MissingDependencyException {
         final List<ParameterInjector<?>> parameterInjectors = new ArrayList<>();
 
         final Iterator<Annotation[]> annotationsIterator = Arrays.asList(annotations).iterator();
@@ -247,12 +249,11 @@ class ContainerImpl implements Container {
         }
 
         final ExternalContext<T> externalContext = ExternalContext.newInstance(member, key, this);
-        return new ParameterInjector<T>(externalContext, factory);
+        return new ParameterInjector<>(externalContext, factory);
     }
 
-    @SuppressWarnings("unchecked")
     private ParameterInjector<?>[] toArray(List<ParameterInjector<?>> parameterInjections) {
-        return parameterInjections.toArray(new ParameterInjector[parameterInjections.size()]);
+        return parameterInjections.toArray(new ParameterInjector[0]);
     }
 
     /**
@@ -261,7 +262,7 @@ class ContainerImpl implements Container {
     Inject findInject(Annotation[] annotations) {
         for (Annotation annotation : annotations) {
             if (annotation.annotationType() == Inject.class) {
-                return Inject.class.cast(annotation);
+                return (Inject) annotation;
             }
         }
         return null;
@@ -283,7 +284,7 @@ class ContainerImpl implements Container {
                     method.setAccessible(true);
                 } catch (AccessControlException e) {
                     throw new DependencyException("Security manager in use, could not access method: "
-                            + name + "(" + method.getName() + ")", e);
+                        + name + "(" + method.getName() + ")", e);
                 }
             }
 
@@ -292,7 +293,7 @@ class ContainerImpl implements Container {
                 throw new DependencyException(method + " has no parameters to inject.");
             }
             parameterInjectors = container.getParametersInjectors(
-                    method, method.getParameterAnnotations(), parameterTypes, name);
+                method, method.getParameterAnnotations(), parameterTypes, name);
         }
 
         @Override
@@ -305,14 +306,12 @@ class ContainerImpl implements Container {
         }
     }
 
-    Map<Class<?>, ConstructorInjector> constructors =
-            new ReferenceCache<Class<?>, ConstructorInjector>() {
-                @Override
-                @SuppressWarnings("unchecked")
-                protected ConstructorInjector<?> create(Class<?> implementation) {
-                    return new ConstructorInjector(ContainerImpl.this, implementation);
-                }
-            };
+    Map<Class<?>, ConstructorInjector<?>> constructors = new ReferenceCache<Class<?>, ConstructorInjector<?>>() {
+        @Override
+        protected ConstructorInjector<?> create(Class<?> implementation) {
+            return new ConstructorInjector<>(ContainerImpl.this, implementation);
+        }
+    };
 
     static class ConstructorInjector<T> {
 
@@ -334,7 +333,7 @@ class ContainerImpl implements Container {
                     constructor.setAccessible(true);
                 } catch (AccessControlException e) {
                     throw new DependencyException("Security manager in use, could not access constructor: "
-                            + implementation.getName() + "(" + constructor.getName() + ")", e);
+                        + implementation.getName() + "(" + constructor.getName() + ")", e);
                 }
             }
 
@@ -359,14 +358,14 @@ class ContainerImpl implements Container {
         }
 
         ParameterInjector<?>[] constructParameterInjector(
-                Inject inject, ContainerImpl container, Constructor<T> constructor) throws MissingDependencyException {
+            Inject inject, ContainerImpl container, Constructor<T> constructor) throws MissingDependencyException {
             return constructor.getParameterTypes().length == 0
-                    ? null // default constructor.
-                    : container.getParametersInjectors(
-                    constructor,
-                    constructor.getParameterAnnotations(),
-                    constructor.getParameterTypes(),
-                    inject.value()
+                ? null // default constructor.
+                : container.getParametersInjectors(
+                constructor,
+                constructor.getParameterAnnotations(),
+                constructor.getParameterTypes(),
+                inject.value()
             );
         }
 
@@ -378,7 +377,7 @@ class ContainerImpl implements Container {
                 if (constructor.getAnnotation(Inject.class) != null) {
                     if (found != null) {
                         throw new DependencyException("More than one constructor annotated"
-                                + " with @Inject found in " + implementation + ".");
+                            + " with @Inject found in " + implementation + ".");
                     }
                     found = constructor;
                 }
@@ -466,7 +465,7 @@ class ContainerImpl implements Container {
         }
     }
 
-    private static Object[] getParameters(Member member, InternalContext context, ParameterInjector[] parameterInjectors) {
+    private static Object[] getParameters(Member member, InternalContext context, ParameterInjector<?>[] parameterInjectors) {
         if (parameterInjectors == null) {
             return null;
         }
@@ -494,13 +493,12 @@ class ContainerImpl implements Container {
         }
     }
 
-    @SuppressWarnings("unchecked")
     <T> T getInstance(Class<T> type, String name, InternalContext context) {
         final ExternalContext<?> previous = context.getExternalContext();
         final Key<T> key = Key.newInstance(type, name);
         context.setExternalContext(ExternalContext.newInstance(null, key, this));
         try {
-            final InternalFactory o = getFactory(key);
+            final InternalFactory<? extends T> o = getFactory(key);
             if (o != null) {
                 return getFactory(key).create(context);
             } else {
@@ -517,39 +515,25 @@ class ContainerImpl implements Container {
 
     @Override
     public void inject(final Object o) {
-        callInContext(new ContextualCallable<Void>() {
-            public Void call(InternalContext context) {
-                inject(o, context);
-                return null;
-            }
+        callInContext((ContextualCallable<Void>) context -> {
+            inject(o, context);
+            return null;
         });
     }
 
     @Override
     public <T> T inject(final Class<T> implementation) {
-        return callInContext(new ContextualCallable<T>() {
-            public T call(InternalContext context) {
-                return inject(implementation, context);
-            }
-        });
+        return callInContext(context -> inject(implementation, context));
     }
 
     @Override
     public <T> T getInstance(final Class<T> type, final String name) {
-        return callInContext(new ContextualCallable<T>() {
-            public T call(InternalContext context) {
-                return getInstance(type, name, context);
-            }
-        });
+        return callInContext(context -> getInstance(type, name, context));
     }
 
     @Override
     public <T> T getInstance(final Class<T> type) {
-        return callInContext(new ContextualCallable<T>() {
-            public T call(InternalContext context) {
-                return getInstance(type, context);
-            }
-        });
+        return callInContext(context -> getInstance(type, context));
     }
 
     @Override
@@ -561,12 +545,7 @@ class ContainerImpl implements Container {
         return names;
     }
 
-    ThreadLocal<Object[]> localContext = new ThreadLocal<Object[]>() {
-        @Override
-        protected Object[] initialValue() {
-            return new Object[1];
-        }
-    };
+    ThreadLocal<Object[]> localContext = ThreadLocal.withInitial(() -> new Object[1]);
 
     /**
      * Looks up thread local context. Creates (and removes) a new context if necessary.
@@ -598,7 +577,7 @@ class ContainerImpl implements Container {
      */
     @SuppressWarnings("unchecked")
     <T> ConstructorInjector<T> getConstructor(Class<T> implementation) {
-        return constructors.get(implementation);
+        return (ConstructorInjector<T>) constructors.get(implementation);
     }
 
     final ThreadLocal<Object> localScopeStrategy = new ThreadLocal<>();

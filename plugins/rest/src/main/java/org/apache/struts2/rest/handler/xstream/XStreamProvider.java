@@ -16,10 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.rest.handler;
+package org.apache.struts2.rest.handler.xstream;
 
-import java.util.Set;
+import com.thoughtworks.xstream.XStream;
 
-public interface AllowedClassNames {
-    Set<String> allowedClassNames();
+/**
+ * An interface to be implemented by an action to create/provide an instance
+ * of XStream - it allows customisation per action
+ */
+public interface XStreamProvider {
+    XStream createXStream();
 }

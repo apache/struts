@@ -37,15 +37,18 @@ public class NamedVariablePatternMatcherTest {
         assertNull(matcher.compilePattern(null));
         assertNull(matcher.compilePattern(""));
 
-        CompiledPattern pattern = matcher.compilePattern("foo");
-        assertEquals("foo", pattern.getPattern().pattern());
+        CompiledPattern pattern = matcher.compilePattern("action.{format}");
+        assertEquals("\\Qaction.\\E([^/]+)", pattern.getPattern().pattern());
+
+        pattern = matcher.compilePattern("foo");
+        assertEquals("\\Qfoo\\E", pattern.getPattern().pattern());
 
         pattern = matcher.compilePattern("foo{jim}");
-        assertEquals("foo([^/]+)", pattern.getPattern().pattern());
+        assertEquals("\\Qfoo\\E([^/]+)", pattern.getPattern().pattern());
         assertEquals("jim", pattern.getVariableNames().get(0));
 
         pattern = matcher.compilePattern("foo{jim}/{bob}");
-        assertEquals("foo([^/]+)/([^/]+)", pattern.getPattern().pattern());
+        assertEquals("\\Qfoo\\E([^/]+)\\Q/\\E([^/]+)", pattern.getPattern().pattern());
         assertEquals("jim", pattern.getVariableNames().get(0));
         assertEquals("bob", pattern.getVariableNames().get(1));
         assertTrue(pattern.getPattern().matcher("foostar/jie").matches());
@@ -53,10 +56,24 @@ public class NamedVariablePatternMatcherTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testCompileWithMismatchedBracketsParses() {
+    public void testCompileWithMissingVariableName() {
+        NamedVariablePatternMatcher matcher = new NamedVariablePatternMatcher();
+
+        matcher.compilePattern("{}");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCompileWithMissingOpeningBracket1() {
         NamedVariablePatternMatcher matcher = new NamedVariablePatternMatcher();
 
         matcher.compilePattern("}");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCompileWithMissingOpeningBracket2() {
+        NamedVariablePatternMatcher matcher = new NamedVariablePatternMatcher();
+
+        matcher.compilePattern("test}");
     }
 
     @Test

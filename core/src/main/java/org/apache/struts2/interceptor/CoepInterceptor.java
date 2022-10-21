@@ -47,12 +47,11 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
     private static final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
 
     private final Set<String> exemptedPaths = new HashSet<>();
-    private boolean disabled = false;
     private String header = COEP_ENFORCING_HEADER;
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (disabled) {
+        if (this.isDisabled()) {
             LOG.trace("COEP interceptor has been disabled");
         } else {
             invocation.addPreResultListener(this);
@@ -62,7 +61,7 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
 
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
-        if (disabled) {
+        if (this.isDisabled()) {
             return;
         }
 
@@ -90,10 +89,6 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
         } else {
             header = COEP_REPORT_HEADER;
         }
-    }
-
-    public void setDisabled(String value) {
-        disabled = Boolean.parseBoolean(value);
     }
 
 }

@@ -49,12 +49,11 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
     private static final String COOP_HEADER = "Cross-Origin-Opener-Policy";
 
     private final Set<String> exemptedPaths = new HashSet<>();
-    private boolean disabled = false;
     private String mode = SAME_ORIGIN;
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (disabled) {
+        if (this.isDisabled()) {
             LOG.trace("COOP interceptor has been disabled");
         } else {
             invocation.addPreResultListener(this);
@@ -64,7 +63,7 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
 
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
-        if (disabled) {
+        if (this.isDisabled()) {
             return;
         }
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
@@ -95,7 +94,4 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
         this.mode = mode;
     }
 
-    public void setDisabled(String value) {
-        this.disabled = Boolean.parseBoolean(value);
-    }
 }

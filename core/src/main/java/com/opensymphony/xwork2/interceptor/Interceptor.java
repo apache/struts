@@ -219,4 +219,11 @@ public interface Interceptor extends Serializable {
      */
     String intercept(ActionInvocation invocation) throws Exception;
 
+    /**
+     * Allows to disable processing a given interceptor
+     *
+     * @return true if the given interceptor should be skipped
+     * @since 6.1.0
+     */
+    boolean isDisabled();
 }

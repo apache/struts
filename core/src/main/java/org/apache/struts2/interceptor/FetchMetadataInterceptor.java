@@ -55,8 +55,6 @@ public class FetchMetadataInterceptor extends AbstractInterceptor {
     private final Set<String> exemptedPaths = new HashSet<>();
     private final ResourceIsolationPolicy resourceIsolationPolicy = new StrutsResourceIsolationPolicy();
 
-    private boolean disabled = false;
-
     @Inject(required = false)
     public void setExemptedPaths(String paths) {
         this.exemptedPaths.addAll(TextParseUtil.commaDelimitedStringToSet(paths));
@@ -64,7 +62,7 @@ public class FetchMetadataInterceptor extends AbstractInterceptor {
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (disabled) {
+        if (this.isDisabled()) {
             LOG.trace("Fetch Metadata interceptor has been disabled");
             return invocation.invoke();
         }
@@ -111,7 +109,4 @@ public class FetchMetadataInterceptor extends AbstractInterceptor {
         response.setHeader(VARY_HEADER, VARY_HEADER_VALUE);
     }
 
-    public void setDisabled(String value) {
-        this.disabled = Boolean.parseBoolean(value);
-    }
 }

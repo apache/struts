@@ -56,6 +56,9 @@ public final class StrutsConstants {
     /** Comma separated list of patterns (java.util.regex.Pattern) to be excluded from Struts2-processing */
     public static final String STRUTS_ACTION_EXCLUDE_PATTERN = "struts.action.excludePattern";
 
+    /** A custom separator used to split list of patterns (java.util.regex.Pattern) to be excluded from Struts2-processing */
+    public static final String STRUTS_ACTION_EXCLUDE_PATTERN_SEPARATOR = "struts.action.excludePattern.separator";
+
     /** Whether to use the response encoding (JSP page encoding) for s:include tag processing (false - use STRUTS_I18N_ENCODING - by default) */
     public static final String STRUTS_TAG_INCLUDETAG_USERESPONSEENCODING = "struts.tag.includetag.useResponseEncoding";
 

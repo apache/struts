@@ -21,7 +21,12 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.StrutsConstants;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -36,10 +41,9 @@ public class InitOperations {
      * Creates and initializes the dispatcher
      *
      * @param filterConfig host configuration
-     *
      * @return the dispatcher
      */
-    public Dispatcher initDispatcher( HostConfig filterConfig ) {
+    public Dispatcher initDispatcher(HostConfig filterConfig) {
         Dispatcher dispatcher = createDispatcher(filterConfig);
         dispatcher.init();
         return dispatcher;
@@ -49,10 +53,10 @@ public class InitOperations {
      * Initializes the static content loader with the filter configuration
      *
      * @param filterConfig host configuration
-     * @param dispatcher the dispatcher
+     * @param dispatcher   the dispatcher
      * @return the static content loader
      */
-    public StaticContentLoader initStaticContentLoader( HostConfig filterConfig, Dispatcher dispatcher ) {
+    public StaticContentLoader initStaticContentLoader(HostConfig filterConfig, Dispatcher dispatcher) {
         StaticContentLoader loader = dispatcher.getContainer().getInstance(StaticContentLoader.class);
         loader.setHostConfig(filterConfig);
         return loader;
@@ -60,7 +64,6 @@ public class InitOperations {
 
     /**
      * @return The dispatcher on the thread.
-     *
      * @throws IllegalStateException If there is no dispatcher available
      */
     public Dispatcher findDispatcherOnThread() {
@@ -75,12 +78,11 @@ public class InitOperations {
      * Create a {@link Dispatcher}
      *
      * @param filterConfig host configuration
-     *
      * @return The dispatcher on the thread.
      */
     protected Dispatcher createDispatcher(HostConfig filterConfig) {
         Map<String, String> params = new HashMap<>();
-        for ( Iterator<String> parameterNames = filterConfig.getInitParameterNames(); parameterNames.hasNext(); ) {
+        for (Iterator<String> parameterNames = filterConfig.getInitParameterNames(); parameterNames.hasNext(); ) {
             String name = parameterNames.next();
             String value = filterConfig.getInitParameter(name);
             params.put(name, value);
@@ -96,20 +98,23 @@ public class InitOperations {
      * Extract a list of patterns to exclude from request filtering
      *
      * @param dispatcher The dispatcher to check for exclude pattern configuration
-     *
      * @return a List of Patterns for request to exclude if apply, or <tt>null</tt>
-     *
      * @see org.apache.struts2.StrutsConstants#STRUTS_ACTION_EXCLUDE_PATTERN
      */
-    public List<Pattern> buildExcludedPatternsList( Dispatcher dispatcher ) {
-        return buildExcludedPatternsList(dispatcher.getContainer().getInstance(String.class, StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN));
+    public List<Pattern> buildExcludedPatternsList(Dispatcher dispatcher) {
+        String excludePatterns = dispatcher.getContainer().getInstance(String.class, StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN);
+        String separator = dispatcher.getContainer().getInstance(String.class, StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN_SEPARATOR);
+        if (separator == null) {
+            separator = ",";
+        }
+        return buildExcludedPatternsList(excludePatterns, separator);
     }
-            
-    private List<Pattern> buildExcludedPatternsList( String patterns ) {
+
+    private List<Pattern> buildExcludedPatternsList(String patterns, String separator) {
         if (null != patterns && patterns.trim().length() != 0) {
             List<Pattern> list = new ArrayList<>();
-            String[] tokens = patterns.split(",");
-            for ( String token : tokens ) {
+            String[] tokens = patterns.split(separator);
+            for (String token : tokens) {
                 list.add(Pattern.compile(token.trim()));
             }
             return Collections.unmodifiableList(list);

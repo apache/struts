@@ -1073,12 +1073,6 @@ public abstract class UIBean extends Component {
         this.cssClass = cssClass;
     }
 
-    @Deprecated
-    @StrutsTagAttribute(description="(Deprecated) The css class to use for element - it's an alias of cssClass attribute.")
-    public void setClass(String cssClass) {
-        this.cssClass = cssClass;
-    }
-
     @StrutsTagAttribute(description="The css style definitions for element to use")
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;

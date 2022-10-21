@@ -123,7 +123,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelposition("top");
+        tag.setLabelPosition("top");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -151,7 +151,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelposition("top");
+        tag.setLabelPosition("top");
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
@@ -180,7 +180,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelposition("left");
+        tag.setLabelPosition("left");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -208,7 +208,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelposition("left");
+        tag.setLabelPosition("left");
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).

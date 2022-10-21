@@ -96,17 +96,6 @@ public class Checkbox extends UIBean {
         this.submitUnchecked = submitUnchecked;
     }
 
-    /**
-     * Deprecated since 2.5.27
-     * @deprecated use {@link #setLabelPosition(String)} instead
-     */
-    @Deprecated
-    @Override
-    @StrutsTagAttribute(description="(Deprecated) Define label position of form element (top/left), also 'right' is supported when using 'xhtml' theme")
-    public void setLabelposition(String labelPosition) {
-        super.setLabelPosition(labelPosition);
-    }
-
     @Override
     @StrutsTagAttribute(description="Define label position of form element (top/left), also 'right' is supported when using 'xhtml' theme")
     public void setLabelPosition(String labelPosition) {

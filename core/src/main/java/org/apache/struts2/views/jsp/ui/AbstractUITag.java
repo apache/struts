@@ -173,15 +173,6 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         this.label = label;
     }
 
-    /**
-     * Deprecated since 2.5.27
-     * @deprecated use {@link #setLabelPosition(String)} instead
-     */
-    @Deprecated
-    public void setLabelposition(String labelPosition) {
-        this.labelPosition = labelPosition;
-    }
-
     public void setLabelPosition(String labelPosition) {
         this.labelPosition = labelPosition;
     }

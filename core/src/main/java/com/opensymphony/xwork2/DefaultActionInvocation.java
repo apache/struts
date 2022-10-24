@@ -248,11 +248,11 @@ public class DefaultActionInvocation implements ActionInvocation {
                 if (interceptor instanceof WithLazyParams) {
                     interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
                 }
-                if (interceptor.isDisabled()) {
+                if (interceptor.isDisabled(this)) {
                     LOG.debug("Interceptor: {} is disabled, skipping to next", interceptor.getClass().getSimpleName());
                     resultCode = this.invoke();
                 } else {
-                    resultCode = interceptor.intercept(DefaultActionInvocation.this);
+                    resultCode = interceptor.intercept(this);
                 }
             } else {
                 resultCode = invokeActionOnly();

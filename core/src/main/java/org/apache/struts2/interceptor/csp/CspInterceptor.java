@@ -47,7 +47,7 @@ public final class CspInterceptor extends AbstractInterceptor implements PreResu
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (this.isDisabled()) {
+        if (this.isDisabled(invocation)) {
             LOG.trace("CSP interceptor has been disabled");
         } else {
             invocation.addPreResultListener(this);
@@ -56,7 +56,7 @@ public final class CspInterceptor extends AbstractInterceptor implements PreResu
     }
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {
-        if (this.isDisabled()) {
+        if (this.isDisabled(invocation)) {
             return;
         }
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();

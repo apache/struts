@@ -49,7 +49,7 @@ public abstract class AbstractInterceptor implements Interceptor {
     }
 
     @Override
-    public boolean isDisabled() {
+    public boolean isDisabled(ActionInvocation invocation) {
         return this.disabled;
     }
 }

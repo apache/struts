@@ -53,7 +53,7 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (this.isDisabled()) {
+        if (this.isDisabled(invocation)) {
             LOG.trace("COOP interceptor has been disabled");
         } else {
             invocation.addPreResultListener(this);
@@ -63,7 +63,7 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
 
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
-        if (this.isDisabled()) {
+        if (this.isDisabled(invocation)) {
             return;
         }
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();

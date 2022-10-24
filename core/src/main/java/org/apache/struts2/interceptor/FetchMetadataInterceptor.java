@@ -62,7 +62,7 @@ public class FetchMetadataInterceptor extends AbstractInterceptor {
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (this.isDisabled()) {
+        if (this.isDisabled(invocation)) {
             LOG.trace("Fetch Metadata interceptor has been disabled");
             return invocation.invoke();
         }

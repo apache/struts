@@ -222,8 +222,9 @@ public interface Interceptor extends Serializable {
     /**
      * Allows to disable processing a given interceptor
      *
+     * @param invocation current {@link ActionInvocation} to determine if the interceptor should be executed
      * @return true if the given interceptor should be skipped
      * @since 6.1.0
      */
-    boolean isDisabled();
+    boolean isDisabled(ActionInvocation invocation);
 }

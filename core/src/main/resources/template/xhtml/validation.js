@@ -76,7 +76,7 @@ function clearErrorLabelsXHTML(form) {
             parentEl = null;
         }
 
-         //if labelposition is 'top' the label is on the row above
+         //if labelPosition is 'top' the label is on the row above
         if(parentEl && parentEl.cells) {
           var labelRow = parentEl.cells.length > 1 ? parentEl : StrutsUtils.previousElement(parentEl, "tr");
           if (labelRow) {
@@ -120,7 +120,7 @@ function addErrorXHTML(e, errorText) {
         table.insertBefore(tr, row);
 
         // update the label too
-        //if labelposition is 'top' the label is on the row above
+        //if labelPosition is 'top' the label is on the row above
         var labelRow = row.cells.length > 1 ? row : StrutsUtils.previousElement(tr, "tr");
         var label = labelRow.cells[0].getElementsByTagName("label")[0];
         if (label) {

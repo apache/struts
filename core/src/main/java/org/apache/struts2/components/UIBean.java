@@ -689,7 +689,6 @@ public abstract class UIBean extends Component {
 
         if (labelPosition != null) {
             String labelPosition = findString(this.labelPosition);
-            addParameter("labelposition", labelPosition);
             addParameter("labelPosition", labelPosition);
         }
 
@@ -1117,16 +1116,6 @@ public abstract class UIBean extends Component {
     @StrutsTagAttribute(description="String that will be appended to the label", defaultValue=":")
     public void setLabelSeparator(String labelseparator) {
         this.labelSeparator = labelseparator;
-    }
-
-    /**
-     * Deprecated since 2.5.27
-     * @deprecated use {@link #setLabelPosition(String)} instead
-     */
-    @StrutsTagAttribute(description="(Deprecated) Define label position of form element (top/left)")
-    @Deprecated
-    public void setLabelposition(String labelPosition) {
-        this.labelPosition = labelPosition;
     }
 
     @StrutsTagAttribute(description="Define label position of form element (top/left)")

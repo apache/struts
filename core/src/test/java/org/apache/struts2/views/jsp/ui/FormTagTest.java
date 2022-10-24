@@ -1800,7 +1800,7 @@ public class FormTagTest extends AbstractUITagTest {
         form.setAction("testAction");
         form.setPageContext(pageContext);
         form.setIncludeContext(false);
-        form.setLabelposition("top");
+        form.setLabelPosition("top");
 
         TextFieldTag text = new TextFieldTag();
         text.setPageContext(pageContext);
@@ -1835,7 +1835,7 @@ public class FormTagTest extends AbstractUITagTest {
         form.setAction("testAction");
         form.setPageContext(pageContext);
         form.setIncludeContext(false);
-        form.setLabelposition("top");
+        form.setLabelPosition("top");
 
         TextFieldTag text = new TextFieldTag();
         text.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -1874,12 +1874,12 @@ public class FormTagTest extends AbstractUITagTest {
         form.setAction("testAction");
         form.setPageContext(pageContext);
         form.setIncludeContext(false);
-        form.setLabelposition("left");
+        form.setLabelPosition("left");
 
         TextFieldTag text = new TextFieldTag();
         text.setPageContext(pageContext);
         text.setLabel("label");
-        text.setLabelposition("top");
+        text.setLabelPosition("top");
 
         form.doStartTag();
         text.doStartTag();
@@ -1910,13 +1910,13 @@ public class FormTagTest extends AbstractUITagTest {
         form.setAction("testAction");
         form.setPageContext(pageContext);
         form.setIncludeContext(false);
-        form.setLabelposition("left");
+        form.setLabelPosition("left");
 
         TextFieldTag text = new TextFieldTag();
         text.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         text.setPageContext(pageContext);
         text.setLabel("label");
-        text.setLabelposition("top");
+        text.setLabelPosition("top");
 
         form.doStartTag();
         setComponentTagClearTagState(form, true);  // Ensure component tag state clearing is set true (to match tag).
@@ -1950,7 +1950,7 @@ public class FormTagTest extends AbstractUITagTest {
         form.setAction("testAction");
         form.setPageContext(pageContext);
         form.setIncludeContext(false);
-        form.setLabelposition("top");
+        form.setLabelPosition("top");
 
         TextFieldTag text = new TextFieldTag();
         text.setPageContext(pageContext);
@@ -1985,7 +1985,7 @@ public class FormTagTest extends AbstractUITagTest {
         form.setAction("testAction");
         form.setPageContext(pageContext);
         form.setIncludeContext(false);
-        form.setLabelposition("top");
+        form.setLabelPosition("top");
 
         TextFieldTag text = new TextFieldTag();
         text.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -2024,12 +2024,12 @@ public class FormTagTest extends AbstractUITagTest {
         form.setAction("testAction");
         form.setPageContext(pageContext);
         form.setIncludeContext(false);
-        form.setLabelposition("left");
+        form.setLabelPosition("left");
 
         TextFieldTag text = new TextFieldTag();
         text.setPageContext(pageContext);
         text.setLabel("label");
-        text.setLabelposition("top");
+        text.setLabelPosition("top");
 
         form.doStartTag();
         text.doStartTag();
@@ -2060,13 +2060,13 @@ public class FormTagTest extends AbstractUITagTest {
         form.setAction("testAction");
         form.setPageContext(pageContext);
         form.setIncludeContext(false);
-        form.setLabelposition("left");
+        form.setLabelPosition("left");
 
         TextFieldTag text = new TextFieldTag();
         text.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         text.setPageContext(pageContext);
         text.setLabel("label");
-        text.setLabelposition("top");
+        text.setLabelPosition("top");
 
         form.doStartTag();
         setComponentTagClearTagState(form, true);  // Ensure component tag state clearing is set true (to match tag).

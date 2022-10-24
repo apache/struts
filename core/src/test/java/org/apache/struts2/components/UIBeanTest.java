@@ -196,7 +196,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         TextField txtFld = new TextField(stack, req, res);
-        
+
         Template defaultTemplate = txtFld.buildTemplateName(null, defaultTemplateName);
         Template customTemplate = txtFld.buildTemplateName(customTemplateName, defaultTemplateName);
 
@@ -360,7 +360,7 @@ public class UIBeanTest extends StrutsInternalTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         TextField txtFld = new TextField(stack, req, res);
-        txtFld.setClass(cssClass);
+        txtFld.setCssClass(cssClass);
         txtFld.evaluateParams();
 
         assertEquals(cssClass, txtFld.getParameters().get("cssClass"));

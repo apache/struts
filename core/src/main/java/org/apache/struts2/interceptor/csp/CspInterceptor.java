@@ -45,11 +45,9 @@ public final class CspInterceptor extends AbstractInterceptor implements PreResu
 
     private final CspSettings settings = new DefaultCspSettings();
 
-    private boolean disabled = false;
-
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (disabled) {
+        if (this.isDisabled(invocation)) {
             LOG.trace("CSP interceptor has been disabled");
         } else {
             invocation.addPreResultListener(this);
@@ -58,7 +56,7 @@ public final class CspInterceptor extends AbstractInterceptor implements PreResu
     }
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {
-        if (disabled) {
+        if (this.isDisabled(invocation)) {
             return;
         }
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
@@ -93,7 +91,4 @@ public final class CspInterceptor extends AbstractInterceptor implements PreResu
         settings.setEnforcingMode(enforcingMode);
     }
 
-    public void setDisabled(String value) {
-        this.disabled = Boolean.parseBoolean(value);
-    }
 }

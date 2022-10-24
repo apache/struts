@@ -26,6 +26,8 @@ import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
+import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -90,6 +92,36 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         }
     }
 
+    public void testInvokeWithDisabledInterceptors() throws Exception {
+        // given
+        List<InterceptorMapping> interceptorMappings = new ArrayList<>();
+        MockInterceptor mockInterceptor1 = new MockInterceptor();
+        mockInterceptor1.setFoo("test1");
+        mockInterceptor1.setExpectedFoo("test1");
+        interceptorMappings.add(new InterceptorMapping("test1", mockInterceptor1));
+        MockInterceptor mockInterceptor2 = new MockInterceptor();
+        interceptorMappings.add(new InterceptorMapping("test2", mockInterceptor2));
+        mockInterceptor2.setDisabled("true");
+        MockInterceptor mockInterceptor3 = new MockInterceptor();
+        interceptorMappings.add(new InterceptorMapping("test3", mockInterceptor3));
+        mockInterceptor3.setFoo("test3");
+        mockInterceptor3.setExpectedFoo("test3");
+
+        // when
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocationTester(interceptorMappings);
+        container.inject(defaultActionInvocation);
+        defaultActionInvocation.stack = container.getInstance(ValueStackFactory.class).createValueStack();
+
+        defaultActionInvocation.setResultCode("");
+        defaultActionInvocation.invoke();
+
+        // then
+        assertTrue(mockInterceptor1.isExecuted());
+        assertFalse(mockInterceptor2.isExecuted());
+        assertTrue(mockInterceptor3.isExecuted());
+        assertTrue(defaultActionInvocation.isExecuted());
+    }
+
     public void testInvokingExistingExecuteMethod() throws Exception {
         // given
         DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
@@ -106,7 +138,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
-        dai.ognlUtil = new OgnlUtil();
+        dai.ognlUtil = createOgnlUtil();
 
         // when
         String result = dai.invokeAction(action, null);
@@ -138,7 +170,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
-        dai.ognlUtil = new OgnlUtil();
+        dai.ognlUtil = createOgnlUtil();
         dai.unknownHandlerManager = uhm;
 
         // when
@@ -154,7 +186,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertTrue(actual instanceof NoSuchMethodException);
     }
 
-    public void testInvokingExistingMethodThatThrowsException() throws Exception {
+    public void testInvokingExistingMethodThatThrowsException() {
         // given
         DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
         container.inject(dai);
@@ -170,7 +202,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
-        dai.ognlUtil = new OgnlUtil();
+        dai.ognlUtil = createOgnlUtil();
 
         // when
         Throwable actual = null;
@@ -185,7 +217,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertTrue(actual instanceof IllegalArgumentException);
     }
 
-    public void testUnknownHandlerManagerThatThrowsException() throws Exception {
+    public void testUnknownHandlerManagerThatThrowsException() {
         // given
         DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
         container.inject(dai);
@@ -207,7 +239,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
-        dai.ognlUtil = new OgnlUtil();
+        dai.ognlUtil = createOgnlUtil();
         dai.unknownHandlerManager = uhm;
 
         // when
@@ -224,7 +256,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         assertTrue(actual instanceof NoSuchMethodException);
     }
 
-    public void testUnknownHandlerManagerThatReturnsNull() throws Exception {
+    public void testUnknownHandlerManagerThatReturnsNull() {
         // given
         DefaultActionInvocation dai = new DefaultActionInvocation(ActionContext.getContext().getContextMap(), false);
         container.inject(dai);
@@ -246,7 +278,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
-        dai.ognlUtil = new OgnlUtil();
+        dai.ognlUtil = createOgnlUtil();
         dai.unknownHandlerManager = uhm;
 
         // when
@@ -284,7 +316,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
         dai.stack = container.getInstance(ValueStackFactory.class).createValueStack();
         dai.proxy = proxy;
-        dai.ognlUtil = new OgnlUtil();
+        dai.ognlUtil = createOgnlUtil();
         dai.unknownHandlerManager = uhm;
 
         // when
@@ -376,7 +408,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         interceptorMappings.add(new InterceptorMapping("test1", mockInterceptor1));
         dai.interceptors = interceptorMappings.iterator();
 
-        dai.ognlUtil = new OgnlUtil();
+        dai.ognlUtil = createOgnlUtil();
 
         dai.invoke();
 
@@ -480,8 +512,14 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         loadConfigurationProviders(configurationProvider);
     }
 
+    private OgnlUtil createOgnlUtil() {
+        return new OgnlUtil(
+            new DefaultOgnlExpressionCacheFactory<>(),
+            new DefaultOgnlBeanInfoCacheFactory<>()
+        );
+    }
 
-    private class SimpleActionEventListener implements ActionEventListener {
+    private static class SimpleActionEventListener implements ActionEventListener {
 
         private final String name;
         private final String result;
@@ -507,7 +545,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
 class DefaultActionInvocationTester extends DefaultActionInvocation {
     DefaultActionInvocationTester(List<InterceptorMapping> interceptorMappings) {
-        super(new HashMap<String, Object>(), false);
+        super(new HashMap<>(), false);
         interceptors = interceptorMappings.iterator();
         MockActionProxy actionProxy = new MockActionProxy();
         actionProxy.setMethod("execute");

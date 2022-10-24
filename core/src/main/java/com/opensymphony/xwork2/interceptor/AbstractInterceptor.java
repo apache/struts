@@ -25,21 +25,31 @@ import com.opensymphony.xwork2.ActionInvocation;
  */
 public abstract class AbstractInterceptor implements Interceptor {
 
+    private boolean disabled;
+
     /**
      * Does nothing
      */
     public void init() {
     }
-    
+
     /**
      * Does nothing
      */
     public void destroy() {
     }
 
-
     /**
      * Override to handle interception
      */
     public abstract String intercept(ActionInvocation invocation) throws Exception;
+
+    public void setDisabled(String disable) {
+        this.disabled = Boolean.parseBoolean(disable);
+    }
+
+    @Override
+    public boolean isDisabled(ActionInvocation invocation) {
+        return this.disabled;
+    }
 }

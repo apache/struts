@@ -23,6 +23,7 @@ The Apache Struts web framework
 [![Javadocs](https://javadoc.io/badge/org.apache.struts/struts2-core.svg)](https://javadoc.io/doc/org.apache.struts/struts2-core)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=apache_struts&metric=coverage)](https://sonarcloud.io/summary/new_code?id=apache_struts)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/struts/badge)](https://deps.dev/maven/org.apache.struts%3Astruts2-core)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6618/badge)](https://bestpractices.coreinfrastructure.org/projects/6618)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 The Apache Struts web framework is a free open-source solution for creating Java web applications.

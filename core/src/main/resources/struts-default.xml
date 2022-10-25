@@ -313,6 +313,11 @@
     <bean type="com.opensymphony.xwork2.ognl.BeanInfoCacheFactory" name="struts"
           class="com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory" scope="singleton"/>
 
+    <bean type="org.apache.struts2.url.UrlEncoder" name="strutsUrlEncoder"
+          class="org.apache.struts2.url.StrutsUrlEncoder" scope="singleton"/>
+    <bean type="org.apache.struts2.url.UrlDecoder" name="strutsUrlDecoder"
+          class="org.apache.struts2.url.StrutsUrlDecoder" scope="singleton"/>
+
     <package name="struts-default" abstract="true">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>

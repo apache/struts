@@ -18,26 +18,23 @@
  */
 package org.apache.struts2.views.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.url.UrlDecoder;
+import org.apache.struts2.url.UrlEncoder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.text.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.util.URLDecoderUtil;
-
-import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Default implementation of UrlHelper
@@ -49,16 +46,11 @@ public class DefaultUrlHelper implements UrlHelper {
     public static final String HTTP_PROTOCOL = "http";
     public static final String HTTPS_PROTOCOL = "https";
 
-    private String encoding = "UTF-8";
     private int httpPort = DEFAULT_HTTP_PORT;
     private int httpsPort = DEFAULT_HTTPS_PORT;
 
-    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public void setEncoding(String encoding) {
-        if (StringUtils.isNotEmpty(encoding)) {
-            this.encoding = encoding;
-        }
-    }
+    private UrlEncoder encoder;
+    private UrlDecoder decoder;
 
     @Inject(StrutsConstants.STRUTS_URL_HTTP_PORT)
     public void setHttpPort(String httpPort) {
@@ -68,6 +60,16 @@ public class DefaultUrlHelper implements UrlHelper {
     @Inject(StrutsConstants.STRUTS_URL_HTTPS_PORT)
     public void setHttpsPort(String httpsPort) {
         this.httpsPort = Integer.parseInt(httpsPort);
+    }
+
+    @Inject
+    public void setEncoder(UrlEncoder encoder) {
+        this.encoder = encoder;
+    }
+
+    @Inject
+    public void setDecoder(UrlDecoder decoder) {
+        this.decoder = decoder;
     }
 
     public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
@@ -81,7 +83,7 @@ public class DefaultUrlHelper implements UrlHelper {
 
     public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params, String scheme,
                            boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort) {
-    	return buildUrl(action, request, response, params, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, true);
+        return buildUrl(action, request, response, params, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, true);
     }
 
     public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params, String urlScheme,
@@ -108,7 +110,7 @@ public class DefaultUrlHelper implements UrlHelper {
                 // If switching schemes, use the configured port for the particular scheme.
                 if (!scheme.equals(reqScheme)) {
                     appendPort(link, scheme, HTTP_PROTOCOL.equals(scheme) ? httpPort : httpsPort);
-                // Else use the port from the current request.
+                    // Else use the port from the current request.
                 } else {
                     appendPort(link, scheme, request.getServerPort());
                 }
@@ -143,7 +145,7 @@ public class DefaultUrlHelper implements UrlHelper {
                     uri = request.getRequestURI();
                 }
 
-                link.append(uri.substring(0, uri.lastIndexOf('/') + 1));
+                link.append(uri, 0, uri.lastIndexOf('/') + 1);
             }
 
             // Add page
@@ -175,7 +177,7 @@ public class DefaultUrlHelper implements UrlHelper {
 
         String result = link.toString();
 
-        if (StringUtils.containsIgnoreCase(result, "<script")){
+        if (StringUtils.containsIgnoreCase(result, "<script")) {
             result = StringEscapeUtils.escapeEcmaScript(result);
         }
         try {
@@ -215,7 +217,7 @@ public class DefaultUrlHelper implements UrlHelper {
                 Object value = entry.getValue();
 
                 if (value instanceof Iterable) {
-                    for (Iterator iterator = ((Iterable) value).iterator(); iterator.hasNext();) {
+                    for (Iterator<?> iterator = ((Iterable<?>) value).iterator(); iterator.hasNext(); ) {
                         Object paramValue = iterator.next();
                         link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY, encode));
 
@@ -249,56 +251,50 @@ public class DefaultUrlHelper implements UrlHelper {
     }
 
     private String buildParameterSubstring(String name, String value, boolean encode) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(encode ? encode(name) : name);
-        builder.append('=');
-        builder.append(encode ? encode(value) : value);
-        return builder.toString();
+        String encodedName = encode ? encode(name) : name;
+        String encodedValue = encode ? encode(value) : value;
+        return encodedName + '=' + encodedValue;
     }
 
-	/**
-	 * Encodes the URL using {@link java.net.URLEncoder#encode} with the encoding specified in the configuration.
-	 *
-	 * @param input the input to encode
-	 * @return the encoded string
-	 */
-	public String encode( String input ) {
-		try {
-			return URLEncoder.encode(input, encoding);
-		} catch (UnsupportedEncodingException e) {
-			LOG.warn("Could not encode URL parameter '{}', returning value un-encoded", input);
-			return input;
-		}
-	}
-
-	/**
-	 * Decodes the URL using {@link URLDecoderUtil#decode(String, String)} with the encoding specified in the configuration.
-	 *
-	 * @param input the input to decode
-	 * @return the encoded string
-	 */
-	public String decode( String input ) {
-        return URLDecoderUtil.decode(input, encoding, false);
-	}
+    /**
+     * Encodes the URL using {@link UrlEncoder#encode} with the encoding specified in the configuration.
+     *
+     * @param input the input to encode
+     * @return the encoded string
+     * @deprecated since 6.1.0, use {@link UrlEncoder} directly, use {@link Inject} to inject a proper instance
+     */
+    @Deprecated
+    public String encode(String input) {
+        return encoder.encode(input);
+    }
 
     /**
-     * Decodes the URL using {@link URLDecoderUtil#decode(String, String, boolean)} with the encoding specified in the configuration.
+     * Decodes the URL using {@link UrlDecoder#decode(String, boolean)} with the encoding specified in the configuration.
      *
      * @param input the input to decode
+     * @return the encoded string
+     * @deprecated since 6.1.0, use {@link UrlDecoder} directly, use {@link Inject} to inject a proper instance
+     */
+    @Deprecated
+    public String decode(String input) {
+        return decoder.decode(input, false);
+    }
+
+    /**
+     * Decodes the URL using {@link UrlDecoder#decode(String, boolean)} with the encoding specified in the configuration.
+     *
+     * @param input         the input to decode
      * @param isQueryString whether input is a query string. If <code>true</code> other decoding rules apply.
      * @return the encoded string
+     * @deprecated since 6.1.0, use {@link UrlDecoder} directly, use {@link Inject} to inject a proper instance
      */
-    public String decode( String input, boolean isQueryString ) {
-        try {
-            return URLDecoderUtil.decode(input, encoding, isQueryString);
-        } catch (Exception e) {
-            LOG.warn("Could not decode URL parameter '{}', returning value un-decoded", input);
-        return input;
-        }
+    @Deprecated
+    public String decode(String input, boolean isQueryString) {
+        return decoder.decode(input, isQueryString);
     }
 
     public Map<String, Object> parseQueryString(String queryString, boolean forceValueArray) {
-        Map<String, Object> queryParams = new LinkedHashMap<String, Object>();
+        Map<String, Object> queryParams = new LinkedHashMap<>();
         if (queryString != null) {
             String[] params = queryString.split("&");
             for (String param : params) {
@@ -322,11 +318,11 @@ public class DefaultUrlHelper implements UrlHelper {
                             if (currentParam instanceof String) {
                                 queryParams.put(paramName, new String[]{(String) currentParam, translatedParamValue});
                             } else {
-                                String currentParamValues[] = (String[]) currentParam;
+                                String[] currentParamValues = (String[]) currentParam;
                                 if (currentParamValues != null) {
-                                    List<String> paramList = new ArrayList<String>(Arrays.asList(currentParamValues));
+                                    List<String> paramList = new ArrayList<>(Arrays.asList(currentParamValues));
                                     paramList.add(translatedParamValue);
-                                    queryParams.put(paramName, paramList.toArray(new String[paramList.size()]));
+                                    queryParams.put(paramName, paramList.toArray(new String[0]));
                                 } else {
                                     queryParams.put(paramName, new String[]{translatedParamValue});
                                 }

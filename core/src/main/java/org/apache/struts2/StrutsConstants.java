@@ -457,4 +457,7 @@ public final class StrutsConstants {
 
     /** See {@link org.apache.struts2.components.Date#setDateFormatter(DateFormatter)} */
     public static final String STRUTS_DATE_FORMATTER = "struts.date.formatter";
+
+    public static final String STRUTS_URL_ENCODER = "struts.url.encoder";
+    public static final String STRUTS_URL_DECODER = "struts.url.decoder";
 }

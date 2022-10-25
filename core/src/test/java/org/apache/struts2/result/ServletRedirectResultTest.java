@@ -251,7 +251,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         expect(mockInvocation.getInvocationContext()).andReturn(context);
 
         control.replay();
-        result.setActionMapper(container.getInstance(ActionMapper.class));
+        container.inject(result);
         result.execute(mockInvocation);
         assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3#fragment", res.getRedirectedUrl());
         control.verify();
@@ -311,7 +311,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         expect(mockValueStack.getActionContext()).andReturn(actionContext);
 
         control.replay();
-        result.setActionMapper(container.getInstance(ActionMapper.class));
+        container.inject(result);
         result.execute(mockInvocation);
         assertEquals("/myNamespace/myAction.action?param=value+1&param=value+2", res.getRedirectedUrl());
         control.verify();

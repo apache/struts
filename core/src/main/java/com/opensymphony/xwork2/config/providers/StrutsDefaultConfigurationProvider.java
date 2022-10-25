@@ -121,6 +121,10 @@ import ognl.PropertyAccessor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.url.StrutsUrlDecoder;
+import org.apache.struts2.url.StrutsUrlEncoder;
+import org.apache.struts2.url.UrlDecoder;
+import org.apache.struts2.url.UrlEncoder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -233,8 +237,8 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
 
                 .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON)
 
-                .factory(DateFormatter.class, "simpleDateFormatter", SimpleDateFormatAdapter.class, Scope.SINGLETON)
-                .factory(DateFormatter.class, "dateTimeFormatter", DateTimeFormatterAdapter.class, Scope.SINGLETON)
+                .factory(UrlEncoder.class, StrutsUrlEncoder.class, Scope.SINGLETON)
+                .factory(UrlDecoder.class, StrutsUrlDecoder.class, Scope.SINGLETON)
         ;
 
         props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());

@@ -1442,7 +1442,7 @@ public class SelectTest extends AbstractUITagTest {
             return id;
         }
     }
-    
+
     private void prepareTagGeneric(SelectTag tag) {
         TestAction testAction = (TestAction) action;
         ArrayList collection = new ArrayList();

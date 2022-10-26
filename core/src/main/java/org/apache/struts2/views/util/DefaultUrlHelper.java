@@ -251,8 +251,8 @@ public class DefaultUrlHelper implements UrlHelper {
     }
 
     private String buildParameterSubstring(String name, String value, boolean encode) {
-        String encodedName = encode ? encode(name) : name;
-        String encodedValue = encode ? encode(value) : value;
+        String encodedName = encode ? encoder.encode(name) : name;
+        String encodedValue = encode ? encoder.encode(value) : value;
         return encodedName + '=' + encodedValue;
     }
 
@@ -309,8 +309,8 @@ public class DefaultUrlHelper implements UrlHelper {
                         paramValue = tmpParams[1];
                     }
                     if (paramName != null) {
-                        paramName = decode(paramName, true);
-                        String translatedParamValue = decode(paramValue, true);
+                        paramName = decoder.decode(paramName, true);
+                        String translatedParamValue = decoder.decode(paramValue, true);
 
                         if (queryParams.containsKey(paramName) || forceValueArray) {
                             // WW-1619 append new param value to existing value(s)

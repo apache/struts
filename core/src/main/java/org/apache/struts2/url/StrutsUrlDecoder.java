@@ -83,7 +83,7 @@ public class StrutsUrlDecoder implements UrlDecoder {
                 if (ix + 2 > len) {
                     throw new IllegalArgumentException("The % character must be followed by two hexadecimal digits");
                 }
-                b = (byte) (((convertHexDigit(bytes[ix++]) << 4) + convertHexDigit(bytes[ix++])) & 0xff);
+                b = (byte) ((((convertHexDigit(bytes[ix++]) << 4) & 0xff) + convertHexDigit(bytes[ix++]) & 0xff) & 0xff);
             }
             bytes[ox++] = b;
         }

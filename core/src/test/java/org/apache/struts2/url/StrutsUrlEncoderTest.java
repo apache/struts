@@ -69,6 +69,19 @@ public class StrutsUrlEncoderTest {
         assertEquals("a+b", result);
     }
 
+    @Test
+    public void testEncodeException() {
+        String result = encoder.encode("a b", "UNKNOWN-8");
+        assertEquals("a b", result);
+    }
+
+    @Test
+    public void testSettingEncoding() {
+        encoder.setEncoding("ISO-8859-1");
+        String result = encoder.encode("%xxxx");
+        assertEquals("%25xxxx", result);
+    }
+
     @Before
     public void setUp() throws Exception {
         this.encoder = new StrutsUrlEncoder();

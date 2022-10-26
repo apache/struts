@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class StrutsUrlDecoderTest {
@@ -29,11 +30,11 @@ public class StrutsUrlDecoderTest {
     private StrutsUrlDecoder decoder;
 
     @Test
-    public void testURLDecodeStringInvalid() {
+    public void testDecodeStringInvalid() {
         // %n rather than %nn should throw an IAE according to the Javadoc
         Exception exception = null;
         try {
-            this.decoder.decode("%5xxxxx", "ISO-8859-1", false);
+            decoder.decode("%5xxxxx", "ISO-8859-1", false);
         } catch (Exception e) {
             exception = e;
         }
@@ -42,7 +43,7 @@ public class StrutsUrlDecoderTest {
         // Edge case trying to trigger ArrayIndexOutOfBoundsException
         exception = null;
         try {
-            this.decoder.decode("%5", "ISO-8859-1", false);
+            decoder.decode("%5", "ISO-8859-1", false);
         } catch (Exception e) {
             exception = e;
         }
@@ -50,45 +51,58 @@ public class StrutsUrlDecoderTest {
     }
 
     @Test
-    public void testURLDecodeStringValidIso88591Start() {
-        String result = this.decoder.decode("%41xxxx", "ISO-8859-1", false);
+    public void testDecodeStringValidIso88591Start() {
+        String result = decoder.decode("%41xxxx", "ISO-8859-1", false);
         assertEquals("Axxxx", result);
     }
 
     @Test
-    public void testURLDecodeStringValidIso88591Middle() {
-        String result = this.decoder.decode("xx%41xx", "ISO-8859-1", false);
+    public void testDecodeStringValidIso88591Middle() {
+        String result = decoder.decode("xx%41xx", "ISO-8859-1", false);
         assertEquals("xxAxx", result);
     }
 
     @Test
-    public void testURLDecodeStringValidIso88591End() {
-        String result = this.decoder.decode("xxxx%41", "ISO-8859-1", false);
+    public void testDecodeStringValidIso88591End() {
+        String result = decoder.decode("xxxx%41", "ISO-8859-1", false);
         assertEquals("xxxxA", result);
     }
 
     @Test
-    public void testURLDecodeStringValidUtf8Start() {
-        String result = this.decoder.decode("%c3%aaxxxx", "UTF-8", false);
+    public void testDecodeStringValidUtf8Start() {
+        String result = decoder.decode("%c3%aaxxxx", "UTF-8", false);
         assertEquals("\u00eaxxxx", result);
     }
 
     @Test
-    public void testURLDecodeStringValidUtf8Middle() {
-        String result = this.decoder.decode("xx%c3%aaxx", "UTF-8", false);
+    public void testDecodeStringValidUtf8Middle() {
+        String result = decoder.decode("xx%c3%aaxx", "UTF-8", false);
         assertEquals("xx\u00eaxx", result);
     }
 
     @Test
-    public void testURLDecodeStringValidUtf8End() {
-        String result = this.decoder.decode("xxxx%c3%aa", "UTF-8", false);
+    public void testDecodeStringValidUtf8End() {
+        String result = decoder.decode("xxxx%c3%aa", "UTF-8", false);
         assertEquals("xxxx\u00ea", result);
     }
 
     @Test
-    public void testURLDecodePlusCharAsSpace() {
-        String result = this.decoder.decode("a+b", "UTF-8", true);
+    public void testDecodePlusCharAsSpace() {
+        String result = decoder.decode("a+b", "UTF-8", true);
         assertEquals("a b", result);
+    }
+
+    @Test
+    public void testDecodeNull() {
+        String result = decoder.decode(null);
+        assertNull(result);
+    }
+
+    @Test
+    public void testSettingEncoding() {
+        decoder.setEncoding("ISO-8859-1");
+        String result = decoder.decode("xxxx%41");
+        assertEquals("xxxxA", result);
     }
 
     @Before

@@ -302,7 +302,7 @@ public class XSLTResult implements Result {
 
                 LOG.debug("Preparing XSLT stylesheet templates: {}", path);
 
-                TransformerFactory factory = TransformerFactory.newInstance();
+                TransformerFactory factory = createTransformerFactory();
                 factory.setURIResolver(getURIResolver());
                 factory.setErrorListener(buildErrorListener());
                 templates = factory.newTemplates(new StreamSource(resource.openStream()));

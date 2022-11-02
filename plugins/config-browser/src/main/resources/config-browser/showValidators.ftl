@@ -31,15 +31,17 @@
             <tr <#if i_index%2 gt 0>class="b" <#else>class="a"</#if>>
                 <td>${i.fieldName!"(see expression)"}</td>
                 <td>${action.stripPackage(i.class)}</td>
-                <td><a href="#" id="show-validators">details</a></td>
+                <td>
+                    <a href="#" id="showValidators_${row}">details</a>
+                    <@s.script>
+                        document.getElementById('showValidators_${row}').onclick = function() {
+                            window.open('validatorDetails.${extension}?clazz=${clazz}&context=${context}&selected=${row}', 'Validator Details', 'resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=1280,height=800');
+                            return false;
+                        }
+                    </@s.script>
+                </td>
             </tr>
             <#assign row = row + 1>
         </#foreach>
     </#if>
 </table>
-<@s.script>
-    document.getElementById('show-validators').onclick = function() {
-        window.open('validatorDetails.${extension}?clazz=${clazz}&context=${context}&selected=${row}', 'Validator Details', 'resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=640,height=480');
-        return false;
-    }
-</@s.script>

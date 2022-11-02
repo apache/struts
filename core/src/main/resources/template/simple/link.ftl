@@ -60,4 +60,5 @@
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" /><#rt/>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" /><#rt/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/nonce.ftl" /><#rt/>/>
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/nonce.ftl" /><#rt/>
+/>

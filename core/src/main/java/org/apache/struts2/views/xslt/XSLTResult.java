@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.views.xslt;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
@@ -32,7 +31,15 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.*;
+import javax.xml.XMLConstants;
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -49,10 +56,14 @@ public class XSLTResult implements Result {
 
     private static final long serialVersionUID = 6424691441777176763L;
 
-    /** Log instance for this result. */
+    /**
+     * Log instance for this result.
+     */
     private static final Logger LOG = LogManager.getLogger(XSLTResult.class);
 
-    /** 'stylesheetLocation' parameter.  Points to the xsl. */
+    /**
+     * 'stylesheetLocation' parameter.  Points to the xsl.
+     */
     public static final String DEFAULT_PARAM = "stylesheetLocation";
 
     /**
@@ -66,22 +77,34 @@ public class XSLTResult implements Result {
 
     // Configurable Parameters
 
-    /** Determines whether or not the result should allow caching. */
+    /**
+     * Determines whether or not the result should allow caching.
+     */
     protected boolean noCache;
 
-    /** Indicates the location of the xsl template. */
+    /**
+     * Indicates the location of the xsl template.
+     */
     private String stylesheetLocation;
 
-    /** Indicates the property name patterns which should be exposed to the xml. */
+    /**
+     * Indicates the property name patterns which should be exposed to the xml.
+     */
     private String matchingPattern;
 
-    /** Indicates the property name patterns which should be excluded from the xml. */
+    /**
+     * Indicates the property name patterns which should be excluded from the xml.
+     */
     private String excludingPattern;
 
-    /** Indicates the ognl expression representing the bean which is to be exposed as xml. */
+    /**
+     * Indicates the ognl expression representing the bean which is to be exposed as xml.
+     */
     private String exposedValue;
 
-    /** Indicates the status to return in the response */
+    /**
+     * Indicates the status to return in the response
+     */
     private int status = 200;
 
     private String encoding = "UTF-8";
@@ -96,7 +119,7 @@ public class XSLTResult implements Result {
         this();
         setStylesheetLocation(stylesheetLocation);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_XSLT_NOCACHE)
     public void setNoCache(String xsltNoCache) {
         this.noCache = BooleanUtils.toBoolean(xsltNoCache);
@@ -124,7 +147,7 @@ public class XSLTResult implements Result {
 
     public void setStatus(String status) {
         try {
-            this.status = Integer.valueOf(status);
+            this.status = Integer.parseInt(status);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Status value not number " + e.getMessage(), e);
         }
@@ -175,7 +198,8 @@ public class XSLTResult implements Result {
                 templates = getTemplates(location);
                 transformer = templates.newTransformer();
             } else {
-                transformer = TransformerFactory.newInstance().newTransformer();
+                TransformerFactory factory = createTransformerFactory();
+                transformer = factory.newTransformer();
             }
 
             transformer.setURIResolver(getURIResolver());
@@ -215,6 +239,14 @@ public class XSLTResult implements Result {
             LOG.error("Unable to render XSLT Template, '{}'", location, e);
             throw e;
         }
+    }
+
+    protected TransformerFactory createTransformerFactory() {
+        TransformerFactory factory = TransformerFactory.newInstance();
+        LOG.debug("Disables parsing external entities");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        return factory;
     }
 
     protected ErrorListener buildErrorListener() {
@@ -270,7 +302,7 @@ public class XSLTResult implements Result {
 
                 LOG.debug("Preparing XSLT stylesheet templates: {}", path);
 
-                TransformerFactory factory = TransformerFactory.newInstance();
+                TransformerFactory factory = createTransformerFactory();
                 factory.setURIResolver(getURIResolver());
                 factory.setErrorListener(buildErrorListener());
                 templates = factory.newTemplates(new StreamSource(resource.openStream()));
@@ -282,6 +314,6 @@ public class XSLTResult implements Result {
     }
 
     protected Source getDOMSourceForStack(Object value) throws IllegalAccessException, InstantiationException {
-        return new DOMSource(getAdapterFactory().adaptDocument("result", value) );
+        return new DOMSource(getAdapterFactory().adaptDocument("result", value));
     }
 }

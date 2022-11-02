@@ -28,9 +28,17 @@ import org.apache.struts2.StrutsException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.TransformerFactory;
@@ -48,28 +56,24 @@ import java.util.Map;
 public class DomHelper {
 
     private static final Logger LOG = LogManager.getLogger(DomHelper.class);
-    
-    public static final String XMLNS_URI = "http://www.w3.org/2000/xmlns/";
 
     public static Location getLocationObject(Element element) {
         return LocationAttributes.getLocation(element);
     }
 
-    
     /**
      * Creates a W3C Document that remembers the location of each element in
      * the source file. The location of element nodes can then be retrieved
      * using the {@link #getLocationObject(Element)} method.
      *
      * @param inputSource the inputSource to read the document from
-     *
      * @return the W3C Document
      */
     public static Document parse(InputSource inputSource) {
         return parse(inputSource, null);
     }
-    
-    
+
+
     /**
      * Creates a W3C Document that remembers the location of each element in
      * the source file. The location of element nodes can then be retrieved
@@ -77,17 +81,16 @@ public class DomHelper {
      *
      * @param inputSource the inputSource to read the document from
      * @param dtdMappings a map of DTD names and public ids
-     *
      * @return the W3C Document
      */
     public static Document parse(InputSource inputSource, Map<String, String> dtdMappings) {
-                
+
         SAXParserFactory factory = null;
         String parserProp = System.getProperty("xwork.saxParserFactory");
         if (parserProp != null) {
             try {
                 ObjectFactory objectFactory = ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
-                Class clazz = objectFactory.getClassInstance(parserProp);
+                Class<?> clazz = objectFactory.getClassInstance(parserProp);
                 factory = (SAXParserFactory) clazz.newInstance();
             } catch (Exception e) {
                 LOG.error("Unable to load saxParserFactory set by system property 'xwork.saxParserFactory': {}", parserProp, e);
@@ -96,6 +99,13 @@ public class DomHelper {
 
         if (factory == null) {
             factory = SAXParserFactory.newInstance();
+        }
+
+        try {
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        } catch (ParserConfigurationException | SAXNotRecognizedException | SAXNotSupportedException e) {
+            throw new StrutsException("Unable to disable resolving external entities!", e);
         }
 
         factory.setValidating((dtdMappings != null));
@@ -107,22 +117,22 @@ public class DomHelper {
         } catch (Exception ex) {
             throw new StrutsException("Unable to create SAX parser", ex);
         }
-        
-        
+
+
         DOMBuilder builder = new DOMBuilder();
 
         // Enhance the sax stream with location information
         ContentHandler locationHandler = new LocationAttributes.Pipe(builder);
-        
+
         try {
             parser.parse(inputSource, new StartHandler(locationHandler, dtdMappings));
         } catch (Exception ex) {
             throw new StrutsException(ex);
         }
-        
+
         return builder.getDocument();
     }
-    
+
     /**
      * The <code>DOMBuilder</code> is a utility class that will generate a W3C
      * DOM Document from SAX events.
@@ -130,27 +140,35 @@ public class DomHelper {
      * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
      */
     static public class DOMBuilder implements ContentHandler {
-    
-        /** The default transformer factory shared by all instances */
+
+        /**
+         * The default transformer factory shared by all instances
+         */
         protected static SAXTransformerFactory FACTORY;
-    
-        /** The transformer factory */
+
+        /**
+         * The transformer factory
+         */
         protected SAXTransformerFactory factory;
-    
-        /** The result */
+
+        /**
+         * The result
+         */
         protected DOMResult result;
-    
-        /** The parentNode */
+
+        /**
+         * The parentNode
+         */
         protected Node parentNode;
-        
+
         protected ContentHandler nextHandler;
-    
+
         static {
             String parserProp = System.getProperty("xwork.saxTransformerFactory");
             if (parserProp != null) {
                 try {
                     ObjectFactory objectFactory = ActionContext.getContext().getContainer().getInstance(ObjectFactory.class);
-                    Class clazz = objectFactory.getClassInstance(parserProp);
+                    Class<?> clazz = objectFactory.getClassInstance(parserProp);
                     FACTORY = (SAXTransformerFactory) clazz.newInstance();
                 } catch (Exception e) {
                     LOG.error("Unable to load SAXTransformerFactory set by system property 'xwork.saxTransformerFactory': {}", parserProp, e);
@@ -158,7 +176,7 @@ public class DomHelper {
             }
 
             if (FACTORY == null) {
-                 FACTORY = (SAXTransformerFactory) TransformerFactory.newInstance();
+                FACTORY = (SAXTransformerFactory) TransformerFactory.newInstance();
             }
         }
 
@@ -168,15 +186,16 @@ public class DomHelper {
         public DOMBuilder() {
             this((Node) null);
         }
-    
+
         /**
          * Construct a new instance of this DOMBuilder.
+         *
          * @param factory the SAX transformer factory
          */
         public DOMBuilder(SAXTransformerFactory factory) {
             this(factory, null);
         }
-    
+
         /**
          * Constructs a new instance that appends nodes to the given parent node.
          *
@@ -185,19 +204,19 @@ public class DomHelper {
         public DOMBuilder(Node parentNode) {
             this(null, parentNode);
         }
-    
+
         /**
          * Construct a new instance of this DOMBuilder.
          *
-         * @param factory the SAX transformer factory
+         * @param factory    the SAX transformer factory
          * @param parentNode the parent node
          */
         public DOMBuilder(SAXTransformerFactory factory, Node parentNode) {
-            this.factory = factory == null? FACTORY: factory;
+            this.factory = factory == null ? FACTORY : factory;
             this.parentNode = parentNode;
             setup();
         }
-    
+
         /**
          * Setup this instance transformer and result objects.
          */
@@ -215,7 +234,7 @@ public class DomHelper {
                 throw new StrutsException("Fatal-Error: Unable to get transformer handler", local);
             }
         }
-    
+
         /**
          * Return the newly built Document.
          *
@@ -230,60 +249,61 @@ public class DomHelper {
                 return this.result.getNode().getOwnerDocument();
             }
         }
-    
+
         public void setDocumentLocator(Locator locator) {
             nextHandler.setDocumentLocator(locator);
         }
-        
+
         public void startDocument() throws SAXException {
             nextHandler.startDocument();
         }
-        
+
         public void endDocument() throws SAXException {
             nextHandler.endDocument();
         }
-    
+
         public void startElement(String uri, String loc, String raw, Attributes attrs) throws SAXException {
             nextHandler.startElement(uri, loc, raw, attrs);
         }
-    
+
         public void endElement(String arg0, String arg1, String arg2) throws SAXException {
             nextHandler.endElement(arg0, arg1, arg2);
         }
-    
+
         public void startPrefixMapping(String arg0, String arg1) throws SAXException {
             nextHandler.startPrefixMapping(arg0, arg1);
         }
-    
+
         public void endPrefixMapping(String arg0) throws SAXException {
             nextHandler.endPrefixMapping(arg0);
         }
-    
+
         public void characters(char[] arg0, int arg1, int arg2) throws SAXException {
             nextHandler.characters(arg0, arg1, arg2);
         }
-    
+
         public void ignorableWhitespace(char[] arg0, int arg1, int arg2) throws SAXException {
             nextHandler.ignorableWhitespace(arg0, arg1, arg2);
         }
-    
+
         public void processingInstruction(String arg0, String arg1) throws SAXException {
             nextHandler.processingInstruction(arg0, arg1);
         }
-    
+
         public void skippedEntity(String arg0) throws SAXException {
             nextHandler.skippedEntity(arg0);
         }
     }
-    
+
     public static class StartHandler extends DefaultHandler {
-        
-        private ContentHandler nextHandler;
-        private Map<String, String> dtdMappings;
-        
+
+        private final ContentHandler nextHandler;
+        private final Map<String, String> dtdMappings;
+
         /**
          * Create a filter that is chained to another handler.
-         * @param next the next handler in the chain.
+         *
+         * @param next        the next handler in the chain.
          * @param dtdMappings map of DTD mappings
          */
         public StartHandler(ContentHandler next, Map<String, String> dtdMappings) {
@@ -295,12 +315,12 @@ public class DomHelper {
         public void setDocumentLocator(Locator locator) {
             nextHandler.setDocumentLocator(locator);
         }
-        
+
         @Override
         public void startDocument() throws SAXException {
             nextHandler.startDocument();
         }
-        
+
         @Override
         public void endDocument() throws SAXException {
             nextHandler.endDocument();
@@ -345,7 +365,7 @@ public class DomHelper {
         public void skippedEntity(String arg0) throws SAXException {
             nextHandler.skippedEntity(arg0);
         }
-        
+
         @Override
         public InputSource resolveEntity(String publicId, String systemId) {
             if (dtdMappings != null && dtdMappings.containsKey(publicId)) {
@@ -356,7 +376,7 @@ public class DomHelper {
             }
             return null;
         }
-        
+
         @Override
         public void warning(SAXParseException exception) {
         }

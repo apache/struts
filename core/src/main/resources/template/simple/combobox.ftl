@@ -18,21 +18,21 @@
  * under the License.
  */
 -->
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
+<@s.script type="text/javascript">
 	function autoPopulate_${parameters.escapedId}(targetElement) {
-		<#if parameters.headerKey?? && parameters.headerValue??>
+	<#if parameters.headerKey?? && parameters.headerValue??>
 		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey?js_string}') {
 			return;
 		}
-		</#if>
-		<#if parameters.emptyOption?default(false)>
+	</#if>
+	<#if parameters.emptyOption!false>
 		if (targetElement.options[targetElement.selectedIndex].value == '') {
-		    return;
+			return;
 		}
-		</#if>
+	</#if>
 		targetElement.form.elements['${parameters.name?js_string}'].value=targetElement.options[targetElement.selectedIndex].value;
 	}
-</script>
+</@s.script>
 <#include "/${parameters.templateDir}/simple/text.ftl" />
 <br />
 <#if parameters.list??>

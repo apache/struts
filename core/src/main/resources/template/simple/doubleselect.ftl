@@ -73,7 +73,7 @@
     </#if>
         />
 </#if>
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
+<@s.script type="text/javascript">
     <#assign itemCount = startCount/>
     var ${parameters.escapedId}Group = new Array(${parameters.listSize?number?c} + ${startCount});
     for (var i = 0; i < (${parameters.listSize?number?c} + ${startCount}); i++) {
@@ -193,4 +193,4 @@
             ${parameters.escapedId}Temp.options[0].selected = true;
         }
     }
-</script>
+</@s.script>

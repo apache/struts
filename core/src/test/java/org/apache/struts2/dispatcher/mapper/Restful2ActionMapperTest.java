@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import org.apache.struts2.url.StrutsUrlDecoder;
 
 import java.util.HashMap;
 
@@ -40,6 +41,7 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
         super.setUp();
         mapper = new Restful2ActionMapper();
         mapper.setExtensions("");
+        mapper.setDecoder(new StrutsUrlDecoder());
         req = new MockHttpServletRequest();
         req.setupGetParameterMap(new HashMap());
         req.setupGetContextPath("/my/namespace");
@@ -57,7 +59,7 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
             }
         };
     }
-    
+
     public void testGetIndex() throws Exception {
         req.setupGetRequestURI("/my/namespace/foo/");
         req.setupGetServletPath("/my/namespace/foo/");
@@ -136,7 +138,7 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
         assertEquals(1, mapping.getParams().size());
         assertEquals("1", mapping.getParams().get("bar"));
     }
- 
+
     public void testPutUpdate() throws Exception {
 
         req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
@@ -153,7 +155,7 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
         assertEquals(1, mapping.getParams().size());
         assertEquals("1", mapping.getParams().get("bar"));
     }
-    
+
     public void testPutUpdateWithIdParam() throws Exception {
 
         mapper.setIdParameterName("id");
@@ -171,7 +173,7 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
         assertEquals(2, mapping.getParams().size());
         assertEquals("1", mapping.getParams().get("bar"));
         assertEquals("2", mapping.getParams().get("id"));
-        
+
     }
 
     public void testPutUpdateWithFakePut() throws Exception {

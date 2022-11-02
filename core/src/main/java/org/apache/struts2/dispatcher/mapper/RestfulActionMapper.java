@@ -19,10 +19,11 @@
 package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
-import org.apache.struts2.util.URLDecoderUtil;
+import org.apache.struts2.url.UrlDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -32,10 +33,18 @@ import java.util.StringTokenizer;
 /**
  * Simple Restfull Action Mapper to support REST application
  * See docs for more information
- * https://struts.apache.org/core-developers/restful-action-mapper.html
+ * <a href="https://struts.apache.org/core-developers/restful-action-mapper.html">RestfulActionMapper</a>
  */
 public class RestfulActionMapper implements ActionMapper {
+
     protected static final Logger LOG = LogManager.getLogger(RestfulActionMapper.class);
+
+    private UrlDecoder decoder;
+
+    @Inject
+    public void setDecoder(UrlDecoder decoder) {
+        this.decoder = decoder;
+    }
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
@@ -64,10 +73,10 @@ public class RestfulActionMapper implements ActionMapper {
 
             while (st.hasMoreTokens()) {
                 if (isNameTok) {
-                    paramName = URLDecoderUtil.decode(st.nextToken(), "UTF-8");
+                    paramName = decoder.decode(st.nextToken(), "UTF-8", false);
                     isNameTok = false;
                 } else {
-                    paramValue = URLDecoderUtil.decode(st.nextToken(), "UTF-8");
+                    paramValue = decoder.decode(st.nextToken(), "UTF-8", false);
 
                     if ((paramName != null) && (paramName.length() > 0)) {
                         parameters.put(paramName, paramValue);
@@ -98,7 +107,7 @@ public class RestfulActionMapper implements ActionMapper {
         if (value != null) {
             retVal.append("/");
             retVal.append(value);
-        } 
+        }
 
         return retVal.toString();
     }

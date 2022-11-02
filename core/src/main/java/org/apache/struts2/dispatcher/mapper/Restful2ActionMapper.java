@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.util.URLDecoderUtil;
+import org.apache.struts2.url.UrlDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -32,16 +32,24 @@ import java.util.StringTokenizer;
 
 /**
  * Extended version of {@link RestfulActionMapper}, see documentation for more details
- * https://struts.apache.org/core-developers/restful-action-mapper.html
+ * <a href="https://struts.apache.org/core-developers/restful-action-mapper.html">Restful2ActionMapper</a>
  */
 public class Restful2ActionMapper extends DefaultActionMapper {
 
-    protected static final Logger LOG = LogManager.getLogger(Restful2ActionMapper.class);
+    private static final Logger LOG = LogManager.getLogger(Restful2ActionMapper.class);
+
     public static final String HTTP_METHOD_PARAM = "__http_method";
+
     private String idParameterName = null;
-    
+    private UrlDecoder decoder;
+
     public Restful2ActionMapper() {
     	setSlashesInActionNames("true");
+    }
+
+    @Inject
+    public void setDecoder(UrlDecoder decoder) {
+        this.decoder = decoder;
     }
 
     /*
@@ -54,7 +62,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
     		throw new IllegalStateException("This action mapper requires the setting 'slashesInActionNames' to be set to 'true'");
     	}
         ActionMapping mapping = super.getMapping(request, configManager);
-        
+
         if (mapping == null) {
             return null;
         }
@@ -78,7 +86,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     // Index e.g. foo/
                     if (isGet(request)) {
                         mapping.setMethod("index");
-                        
+
                     // Creating a new entry on POST e.g. foo/
                     } else if (isPost(request)) {
                         mapping.setMethod("create");
@@ -96,14 +104,14 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     // Removing an item e.g. foo/1
                     } else if (isDelete(request)) {
                         mapping.setMethod("remove");
-                    
-                    // Updating an item e.g. foo/1    
+
+                    // Updating an item e.g. foo/1
                     }  else if (isPut(request)) {
                         mapping.setMethod("update");
                     }
-                    
+
                 }
-                
+
                 if (idParameterName != null && lastSlashPos > -1) {
                 	actionName = actionName.substring(0, lastSlashPos);
                 }
@@ -129,10 +137,10 @@ public class Restful2ActionMapper extends DefaultActionMapper {
 
                     while (st.hasMoreTokens()) {
                         if (isNameTok) {
-                            paramName = URLDecoderUtil.decode(st.nextToken(), "UTF-8");
+                            paramName = decoder.decode(st.nextToken(), "UTF-8", false);
                             isNameTok = false;
                         } else {
-                            paramValue = URLDecoderUtil.decode(st.nextToken(), "UTF-8");
+                            paramValue = decoder.decode(st.nextToken(), "UTF-8", false);
 
                             if ((paramName != null) && (paramName.length() > 0)) {
                                 parameters.put(paramName, paramValue);
@@ -143,7 +151,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     }
                     if (parameters.size() > 0) {
                         if (mapping.getParams() == null) {
-                            mapping.setParams(new HashMap<String, Object>());
+                            mapping.setParams(new HashMap<>());
                         }
                         mapping.getParams().putAll(parameters);
                     }

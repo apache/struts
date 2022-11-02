@@ -34,6 +34,8 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
+import org.apache.struts2.url.StrutsUrlDecoder;
+import org.apache.struts2.url.StrutsUrlEncoder;
 
 
 /**
@@ -41,7 +43,7 @@ import com.opensymphony.xwork2.inject.Scope.Strategy;
  *
  */
 public class DefaultUrlHelperTest extends StrutsInternalTestCase {
-    
+
     private StubContainer stubContainer;
     private DefaultUrlHelper urlHelper;
 
@@ -204,7 +206,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params);
         assertEquals(expectedString, urlString);
     }
-    
+
     /**
      * just one &, not &amp;
      */
@@ -429,21 +431,23 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         stubContainer = new StubContainer(container);
         ActionContext.getContext().withContainer(stubContainer);
         urlHelper = new DefaultUrlHelper();
+        urlHelper.setEncoder(new StrutsUrlEncoder());
+        urlHelper.setDecoder(new StrutsUrlDecoder());
     }
-    
+
     private void setProp(String key, String val) {
         stubContainer.overrides.put(key, val);
     }
-    
+
     class StubContainer implements Container {
 
         Container parent;
-        
+
         public StubContainer(Container parent) {
             super();
             this.parent = parent;
         }
-        
+
         public Map<String, Object> overrides = new HashMap<String,Object>();
         public <T> T getInstance(Class<T> type, String name) {
             if (String.class.isAssignableFrom(type) && overrides.containsKey(name)) {
@@ -471,7 +475,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
 
         public void removeScopeStrategy() {
             parent.removeScopeStrategy();
-            
+
         }
 
         public void setScopeStrategy(Strategy scopeStrategy) {

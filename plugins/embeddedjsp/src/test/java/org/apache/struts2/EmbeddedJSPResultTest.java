@@ -35,6 +35,8 @@ import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.jasper.runtime.InstanceHelper;
+import org.apache.struts2.url.StrutsUrlDecoder;
+import org.apache.struts2.url.StrutsUrlEncoder;
 import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 import org.apache.tomcat.InstanceManager;
@@ -348,7 +350,9 @@ public class EmbeddedJSPResultTest extends TestCase {
         EasyMock.expect(container.getInstanceNames(FileManager.class)).andReturn(new HashSet<>()).anyTimes();
         EasyMock.expect(container.getInstance(FileManager.class)).andReturn(fileManager).anyTimes();
 
-        UrlHelper urlHelper = new DefaultUrlHelper();
+        DefaultUrlHelper urlHelper = new DefaultUrlHelper();
+        urlHelper.setDecoder(new StrutsUrlDecoder());
+        urlHelper.setEncoder(new StrutsUrlEncoder());
         EasyMock.expect(container.getInstance(UrlHelper.class)).andReturn(urlHelper).anyTimes();
         FileManagerFactory fileManagerFactory = new DummyFileManagerFactory();
         EasyMock.expect(container.getInstance(FileManagerFactory.class)).andReturn(fileManagerFactory).anyTimes();

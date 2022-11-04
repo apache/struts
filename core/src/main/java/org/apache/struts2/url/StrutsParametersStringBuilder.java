@@ -38,7 +38,7 @@ public class StrutsParametersStringBuilder implements ParametersStringBuilder {
     @Override
     public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator) {
         if ((params != null) && (params.size() > 0)) {
-            LOG.debug("Building query string out of: {}", params);
+            LOG.debug("Building query string out of: {} parameters", params.size());
             StringBuilder queryString = new StringBuilder();
 
             // Set params

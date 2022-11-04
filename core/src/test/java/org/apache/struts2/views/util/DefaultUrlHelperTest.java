@@ -18,36 +18,31 @@
  */
 package org.apache.struts2.views.util;
 
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Scope.Strategy;
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.url.StrutsUrlDecoder;
+import org.apache.struts2.url.StrutsUrlEncoder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsInternalTestCase;
-
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import org.apache.struts2.url.StrutsUrlDecoder;
-import org.apache.struts2.url.StrutsUrlEncoder;
-
-
 /**
  * Test case for DefaultUrlHelper.
- *
  */
 public class DefaultUrlHelperTest extends StrutsInternalTestCase {
 
-    private StubContainer stubContainer;
     private DefaultUrlHelper urlHelper;
 
-    public void testForceAddSchemeHostAndPort() throws Exception {
+    public void testForceAddSchemeHostAndPort() {
         String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
@@ -64,7 +59,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletRequest.verify();
     }
 
-    public void testDoNotForceAddSchemeHostAndPort() throws Exception {
+    public void testDoNotForceAddSchemeHostAndPort() {
         String expectedUrl = "/contextPath/path1/path2/myAction.action";
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
@@ -80,7 +75,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         assertEquals(expectedUrl, result);
     }
 
-    public void testForceAddSchemeHostAndPortWithNonStandardPort() throws Exception {
+    public void testForceAddSchemeHostAndPortWithNonStandardPort() {
         String expectedUrl = "http://localhost:9090/contextPath/path1/path2/myAction.action";
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
@@ -97,39 +92,64 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletRequest.verify();
     }
 
-    public void testBuildParametersStringWithUrlHavingSomeExistingParameters() throws Exception {
+    public void testBuildParametersStringWithUrlHavingSomeExistingParameters() {
         String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2&amp;param3%22%3CsCrIpT%3Ealert%281%29%3B%3C%2FsCrIpT%3E=value3";
 
-        Map parameters = new LinkedHashMap();
+        Map<String, Object> parameters = new LinkedHashMap<>();
         parameters.put("param1", "value1");
         parameters.put("param2", "value2");
-        parameters.put("param3\"<sCrIpT>alert(1);</sCrIpT>","value3");
+        parameters.put("param3\"<sCrIpT>alert(1);</sCrIpT>", "value3");
 
         StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 
         urlHelper.buildParametersString(parameters, url, UrlHelper.AMP);
 
         assertEquals(
-           expectedUrl, url.toString());
+            expectedUrl, url.toString());
     }
 
-    public void testBuildParametersStringWithJavaScriptInjected() throws Exception {
+    public void testBuildParametersStringWithJavaScriptInjected() {
         String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2&amp;param3%22%3Cscript+type%3D%22text%2Fjavascript%22%3Ealert%281%29%3B%3C%2Fscript%3E=value3";
 
-        Map parameters = new LinkedHashMap();
+        Map<String, Object> parameters = new LinkedHashMap<>();
         parameters.put("param1", "value1");
         parameters.put("param2", "value2");
-        parameters.put("param3\"<script type=\"text/javascript\">alert(1);</script>","value3");
+        parameters.put("param3\"<script type=\"text/javascript\">alert(1);</script>", "value3");
 
         StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 
         urlHelper.buildParametersString(parameters, url, UrlHelper.AMP);
 
         assertEquals(
-           expectedUrl, url.toString());
+            expectedUrl, url.toString());
     }
 
-    public void testForceAddNullSchemeHostAndPort() throws Exception {
+    public void testBuildParametersStringWithEmptyListParameters() {
+        String expectedUrl = "https://www.nowhere.com/myworld.html";
+        Map<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("param1", new String[]{});
+        parameters.put("param2", new ArrayList<>());
+        StringBuilder url = new StringBuilder("https://www.nowhere.com/myworld.html");
+        urlHelper.buildParametersString(parameters, url, UrlHelper.AMP);
+        assertEquals(expectedUrl, url.toString());
+    }
+
+    public void testBuildParametersStringWithListParameters() {
+        String expectedUrl = "https://www.nowhere.com/myworld.html?param1=x&param2=y&param2=z";
+        Map<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("param1", new String[]{"x"});
+        parameters.put("param2", new ArrayList<String>() {
+            {
+                add("y");
+                add("z");
+            }
+        });
+        StringBuilder url = new StringBuilder("https://www.nowhere.com/myworld.html");
+        urlHelper.buildParametersString(parameters, url, "&");
+        assertEquals(expectedUrl, url.toString());
+    }
+
+    public void testForceAddNullSchemeHostAndPort() {
         String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
@@ -144,14 +164,14 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
             expectedUrl);
 
         String result = urlHelper.buildUrl("/path1/path2/myAction.action",
-                (HttpServletRequest) mockHttpServletRequest.proxy(),
-                (HttpServletResponse) mockHttpServletResponse.proxy(), null,
-                null, true, true, true);
+            (HttpServletRequest) mockHttpServletRequest.proxy(),
+            (HttpServletResponse) mockHttpServletResponse.proxy(), null,
+            null, true, true, true);
         assertEquals(expectedUrl, result);
         mockHttpServletRequest.verify();
     }
 
-    public void testForceAddNullSchemeHostAndPort2() throws Exception {
+    public void testForceAddNullSchemeHostAndPort2() {
         String expectedUrl = "http://localhost:8080/contextPath/path1/path2/myAction.action";
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
@@ -166,9 +186,9 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
             expectedUrl);
 
         String result = urlHelper.buildUrl("/path1/path2/myAction.action",
-                (HttpServletRequest) mockHttpServletRequest.proxy(),
-                (HttpServletResponse) mockHttpServletResponse.proxy(), null,
-                null, true, true, true);
+            (HttpServletRequest) mockHttpServletRequest.proxy(),
+            (HttpServletResponse) mockHttpServletResponse.proxy(), null,
+            null, true, true, true);
         assertEquals(expectedUrl, result);
         mockHttpServletRequest.verify();
     }
@@ -184,7 +204,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
 
         String actualUrl = urlHelper.buildUrl(expectedUrl, (HttpServletRequest) mockHttpServletRequest.proxy(),
-                (HttpServletResponse) mockHttpServletResponse.proxy(), new HashMap());
+            (HttpServletResponse) mockHttpServletResponse.proxy(), new HashMap<>());
         assertEquals(expectedUrl, actualUrl);
     }
 
@@ -199,7 +219,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
 
         String actionName = "my.actionName";
-        TreeMap params = new TreeMap();
+        TreeMap<String, Object> params = new TreeMap<>();
         params.put("hello", "world");
         params.put("foo", "bar");
 
@@ -218,7 +238,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
 
         String actionName = "my.actionName";
-        TreeMap params = new TreeMap();
+        TreeMap<String, Object> params = new TreeMap<>();
         params.put("hello", "world");
         params.put("foo", "bar");
 
@@ -234,7 +254,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
 
         String actionName = "my.actionName";
-        TreeMap params = new TreeMap();
+        TreeMap<String, Object> params = new TreeMap<>();
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
@@ -259,7 +279,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
 
         String actionName = "/MyAction.action";
-        TreeMap params = new TreeMap();
+        TreeMap<String, Object> params = new TreeMap<>();
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
@@ -284,7 +304,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
 
         String actionName = "/MyAction.action";
-        TreeMap params = new TreeMap();
+        TreeMap<String, Object> params = new TreeMap<>();
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
@@ -313,7 +333,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
 
         String actionName = "/MyAction.action";
-        TreeMap params = new TreeMap();
+        TreeMap<String, Object> params = new TreeMap<>();
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
@@ -342,7 +362,7 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
 
         String actionName = "/MyAction.action";
-        TreeMap params = new TreeMap();
+        TreeMap<String, Object> params = new TreeMap<>();
         params.put("hello", new String[]{"earth", "mars"});
         params.put("foo", "bar");
 
@@ -371,15 +391,15 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
 
         String actionName = "promo.html";
-        Map params = new TreeMap();
+        TreeMap<String, Object> params = new TreeMap<>();
 
         String urlString = urlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "https", true, true);
         assertEquals(expectedString, urlString);
     }
 
 
-    public void testParseQuery() throws Exception {
-        Map result = urlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E", false);
+    public void testParseQuery() {
+        Map<String, Object> result = urlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E", false);
 
         assertEquals(result.get("aaa"), "aaaval");
         assertEquals(result.get("bbb"), "bbbval");
@@ -387,38 +407,21 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         assertEquals(result.get("<a\">"), "<val>");
     }
 
-    public void testParseEmptyQuery() throws Exception {
-        Map result = urlHelper.parseQueryString("", false);
+    public void testParseEmptyQuery() {
+        Map<String, Object> result = urlHelper.parseQueryString("", false);
 
         assertNotNull(result);
         assertEquals(result.size(), 0);
     }
 
-    public void testParseNullQuery() throws Exception {
-        Map result = urlHelper.parseQueryString(null, false);
+    public void testParseNullQuery() {
+        Map<String, Object> result = urlHelper.parseQueryString(null, false);
 
         assertNotNull(result);
         assertEquals(result.size(), 0);
     }
 
-
-    public void testEncode() throws Exception {
-        setProp(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-        String result = urlHelper.encode("\u65b0\u805e");
-        String expectedResult = "%E6%96%B0%E8%81%9E";
-
-        assertEquals(result, expectedResult);
-    }
-
-    public void testDecode() throws Exception {
-        setProp(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-        String result = urlHelper.decode("%E6%96%B0%E8%81%9E");
-        String expectedResult = "\u65b0\u805e";
-
-        assertEquals(result, expectedResult);
-    }
-
-    public void testDecodeSpacesInQueryString() throws Exception {
+    public void testDecodeSpacesInQueryString() {
         Map<String, Object> queryParameters = urlHelper.parseQueryString("name=value+with+space", false);
 
         assertTrue(queryParameters.containsKey("name"));
@@ -428,18 +431,14 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        stubContainer = new StubContainer(container);
+        StubContainer stubContainer = new StubContainer(container);
         ActionContext.getContext().withContainer(stubContainer);
         urlHelper = new DefaultUrlHelper();
         urlHelper.setEncoder(new StrutsUrlEncoder());
         urlHelper.setDecoder(new StrutsUrlDecoder());
     }
 
-    private void setProp(String key, String val) {
-        stubContainer.overrides.put(key, val);
-    }
-
-    class StubContainer implements Container {
+    static class StubContainer implements Container {
 
         Container parent;
 
@@ -448,7 +447,9 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
             this.parent = parent;
         }
 
-        public Map<String, Object> overrides = new HashMap<String,Object>();
+        public Map<String, Object> overrides = new HashMap<>();
+
+        @SuppressWarnings("unchecked")
         public <T> T getInstance(Class<T> type, String name) {
             if (String.class.isAssignableFrom(type) && overrides.containsKey(name)) {
                 return (T) overrides.get(name);

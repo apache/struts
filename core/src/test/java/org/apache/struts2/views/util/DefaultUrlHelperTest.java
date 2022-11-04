@@ -23,14 +23,13 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.url.StrutsParametersStringBuilder;
 import org.apache.struts2.url.StrutsUrlDecoder;
 import org.apache.struts2.url.StrutsUrlEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -90,63 +89,6 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         String result = urlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), null, "http", true, true, true);
         assertEquals(expectedUrl, result);
         mockHttpServletRequest.verify();
-    }
-
-    public void testBuildParametersStringWithUrlHavingSomeExistingParameters() {
-        String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2&amp;param3%22%3CsCrIpT%3Ealert%281%29%3B%3C%2FsCrIpT%3E=value3";
-
-        Map<String, Object> parameters = new LinkedHashMap<>();
-        parameters.put("param1", "value1");
-        parameters.put("param2", "value2");
-        parameters.put("param3\"<sCrIpT>alert(1);</sCrIpT>", "value3");
-
-        StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
-
-        urlHelper.buildParametersString(parameters, url, UrlHelper.AMP);
-
-        assertEquals(
-            expectedUrl, url.toString());
-    }
-
-    public void testBuildParametersStringWithJavaScriptInjected() {
-        String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2&amp;param3%22%3Cscript+type%3D%22text%2Fjavascript%22%3Ealert%281%29%3B%3C%2Fscript%3E=value3";
-
-        Map<String, Object> parameters = new LinkedHashMap<>();
-        parameters.put("param1", "value1");
-        parameters.put("param2", "value2");
-        parameters.put("param3\"<script type=\"text/javascript\">alert(1);</script>", "value3");
-
-        StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
-
-        urlHelper.buildParametersString(parameters, url, UrlHelper.AMP);
-
-        assertEquals(
-            expectedUrl, url.toString());
-    }
-
-    public void testBuildParametersStringWithEmptyListParameters() {
-        String expectedUrl = "https://www.nowhere.com/myworld.html";
-        Map<String, Object> parameters = new LinkedHashMap<>();
-        parameters.put("param1", new String[]{});
-        parameters.put("param2", new ArrayList<>());
-        StringBuilder url = new StringBuilder("https://www.nowhere.com/myworld.html");
-        urlHelper.buildParametersString(parameters, url, UrlHelper.AMP);
-        assertEquals(expectedUrl, url.toString());
-    }
-
-    public void testBuildParametersStringWithListParameters() {
-        String expectedUrl = "https://www.nowhere.com/myworld.html?param1=x&param2=y&param2=z";
-        Map<String, Object> parameters = new LinkedHashMap<>();
-        parameters.put("param1", new String[]{"x"});
-        parameters.put("param2", new ArrayList<String>() {
-            {
-                add("y");
-                add("z");
-            }
-        });
-        StringBuilder url = new StringBuilder("https://www.nowhere.com/myworld.html");
-        urlHelper.buildParametersString(parameters, url, "&");
-        assertEquals(expectedUrl, url.toString());
     }
 
     public void testForceAddNullSchemeHostAndPort() {
@@ -434,7 +376,9 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         StubContainer stubContainer = new StubContainer(container);
         ActionContext.getContext().withContainer(stubContainer);
         urlHelper = new DefaultUrlHelper();
-        urlHelper.setEncoder(new StrutsUrlEncoder());
+        StrutsUrlEncoder encoder = new StrutsUrlEncoder();
+        urlHelper.setParametersStringBuilder(new StrutsParametersStringBuilder(encoder));
+        urlHelper.setEncoder(encoder);
         urlHelper.setDecoder(new StrutsUrlDecoder());
     }
 

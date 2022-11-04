@@ -118,6 +118,8 @@ import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.url.ParametersStringBuilder;
+import org.apache.struts2.url.StrutsParametersStringBuilder;
 import org.apache.struts2.url.StrutsUrlDecoder;
 import org.apache.struts2.url.StrutsUrlEncoder;
 import org.apache.struts2.url.UrlDecoder;
@@ -234,6 +236,7 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
 
             .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON)
 
+            .factory(ParametersStringBuilder.class, StrutsParametersStringBuilder.class, Scope.SINGLETON)
             .factory(UrlEncoder.class, StrutsUrlEncoder.class, Scope.SINGLETON)
             .factory(UrlDecoder.class, StrutsUrlDecoder.class, Scope.SINGLETON)
         ;

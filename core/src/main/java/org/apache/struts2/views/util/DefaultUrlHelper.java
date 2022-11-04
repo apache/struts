@@ -24,6 +24,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.url.ParametersStringBuilder;
 import org.apache.struts2.url.UrlDecoder;
 import org.apache.struts2.url.UrlEncoder;
 
@@ -48,6 +49,7 @@ public class DefaultUrlHelper implements UrlHelper {
     private int httpPort = DEFAULT_HTTP_PORT;
     private int httpsPort = DEFAULT_HTTPS_PORT;
 
+    private ParametersStringBuilder parametersStringBuilder;
     private UrlEncoder encoder;
     private UrlDecoder decoder;
 
@@ -69,6 +71,11 @@ public class DefaultUrlHelper implements UrlHelper {
     @Inject
     public void setDecoder(UrlDecoder decoder) {
         this.decoder = decoder;
+    }
+
+    @Inject
+    public void setParametersStringBuilder(ParametersStringBuilder builder) {
+        this.parametersStringBuilder = builder;
     }
 
     public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
@@ -169,9 +176,9 @@ public class DefaultUrlHelper implements UrlHelper {
 
         //if the action was not explicitly set grab the params from the request
         if (escapeAmp) {
-            buildParametersString(params, link, AMP);
+            parametersStringBuilder.buildParametersString(params, link, AMP);
         } else {
-            buildParametersString(params, link, "&");
+            parametersStringBuilder.buildParametersString(params, link, "&");
         }
 
         String result = link.toString();
@@ -196,38 +203,16 @@ public class DefaultUrlHelper implements UrlHelper {
         }
     }
 
+    /**
+     * Builds parameters assigned to url - a query string
+     * @param params a set of params to assign
+     * @param link a based url
+     * @param paramSeparator separator used
+     * @deprecated since Struts 6.1.0, use {@link ParametersStringBuilder} instead
+     */
+    @Deprecated
     public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator) {
-        if ((params != null) && (params.size() > 0)) {
-            StringBuilder queryString = new StringBuilder();
-
-            // Set params
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
-                String name = entry.getKey();
-                Object value = entry.getValue();
-
-                if (value instanceof Iterable) {
-                    for (Object o : (Iterable<?>) value) {
-                        appendParameterSubstring(queryString, paramSeparator, name, o);
-                    }
-                } else if (value instanceof Object[]) {
-                    Object[] array = (Object[]) value;
-                    for (Object o : array) {
-                        appendParameterSubstring(queryString, paramSeparator, name, o);
-                    }
-                } else {
-                    appendParameterSubstring(queryString, paramSeparator, name, value);
-                }
-            }
-
-            if (queryString.length() > 0) {
-                if (!link.toString().contains("?")) {
-                    link.append("?");
-                } else {
-                    link.append(paramSeparator);
-                }
-                link.append(queryString);
-            }
-        }
+        parametersStringBuilder.buildParametersString(params, link, paramSeparator);
     }
 
     /**
@@ -245,21 +230,6 @@ public class DefaultUrlHelper implements UrlHelper {
 
     protected boolean isValidScheme(String scheme) {
         return HTTP_PROTOCOL.equals(scheme) || HTTPS_PROTOCOL.equals(scheme);
-    }
-
-    private void appendParameterSubstring(StringBuilder queryString, String paramSeparator, String name, Object value) {
-        if (queryString.length() > 0) {
-            queryString.append(paramSeparator);
-        }
-
-        String encodedName = encoder.encode(name);
-        queryString.append(encodedName);
-
-        queryString.append('=');
-        if (value != null) {
-            String encodedValue = encoder.encode(value.toString());
-            queryString.append(encodedValue);
-        }
     }
 
     /**

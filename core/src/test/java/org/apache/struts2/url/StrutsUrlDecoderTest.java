@@ -110,7 +110,7 @@ public class StrutsUrlDecoderTest {
     public void testDecoding() {
         String result = decoder.decode("%E6%96%B0%E8%81%9E");
 
-        assertEquals(result, "\u65b0\u805e");
+        assertEquals("\u65b0\u805e", result);
     }
 
     @Before

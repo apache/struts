@@ -86,7 +86,7 @@ public class StrutsUrlEncoderTest {
     public void testEncoding() {
         String result = encoder.encode("\u65b0\u805e");
 
-        assertEquals(result, "%E6%96%B0%E8%81%9E");
+        assertEquals("%E6%96%B0%E8%81%9E", result);
     }
 
     @Before

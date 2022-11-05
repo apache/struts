@@ -23,13 +23,7 @@ import java.util.Map;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-
-/**
- */
 public class CheckboxTest extends AbstractUITagTest {
-
-    public CheckboxTest() {
-    }
 
     /**
      * Initialize a map of {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder} for generic tag
@@ -472,7 +466,6 @@ public class CheckboxTest extends AbstractUITagTest {
         // Test value set
         tag.setSubmitUnchecked("false");
         verify(CheckboxTag.class.getResource("Checkbox-7.txt"));
-
     }
 
     public void testSubmitUncheckedAsTrue() throws Exception {

@@ -2,7 +2,7 @@
   title="someTitle" onclick="onclick1" ondblclick="ondblclick1" onmousedown="onmousedown1" onmouseup="onmouseup1"
   onmouseover="onmouseover1" onmousemove="onmousemove1" onmouseout="onmouseout1" onfocus="onfocus1" onblur="onblur1"
   onkeypress="onkeypress1" onkeydown="onkeydown1" onkeyup="onkeyup1" onselect="onchange"
-  onchange="someIdRedirect(this.selectedIndex)" select-name="firstName">
+  onchange="someIdRedirect(this.selectedIndex)" select-name="firstName" data-id="id-random">
   <option value="BE">Belgium</option>
   <option value="FR" selected="selected">France</option>
 </select>

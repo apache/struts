@@ -19,22 +19,23 @@
 package org.apache.struts2.views.jsp;
 
 import com.opensymphony.xwork2.ActionContext;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
 
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-
-/**
- */
 public abstract class AbstractUITagTest extends AbstractTagTest {
 
     private static final Logger LOG = LogManager.getLogger(AbstractUITagTest.class);
@@ -47,7 +48,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      *
      * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
      */
-    public class PropertyHolder {
+    public static class PropertyHolder {
         String name, value, expectation;
 
         public String getName() {
@@ -111,18 +112,16 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * subclasses.
      *
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
-     *         as key.
+     * as key.
      */
     protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
-        Map<String, PropertyHolder> result = new HashMap<String, PropertyHolder>();
+        Map<String, PropertyHolder> result = new HashMap<>();
         new PropertyHolder("name", "someName").addToMap(result);
         new PropertyHolder("id", "someId").addToMap(result);
         new PropertyHolder("cssClass", "cssClass1", "class=\"cssClass1\"").addToMap(result);
         new PropertyHolder("cssStyle", "cssStyle1", "style=\"cssStyle1\"").addToMap(result);
         new PropertyHolder("title", "someTitle").addToMap(result);
         new PropertyHolder("disabled", "true", "disabled=\"disabled\"").addToMap(result);
-        //new PropertyHolder("label", "label", "label=\"label\"").addToMap(result);
-        //new PropertyHolder("required", "someTitle").addToMap(result);
         new PropertyHolder("tabindex", "99").addToMap(result);
         new PropertyHolder("value", "someValue").addToMap(result);
         new PropertyHolder("onclick", "onclick1").addToMap(result);
@@ -155,11 +154,11 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      */
     public void verifyGenericProperties(AbstractUITag tag, String theme, Map<String, PropertyHolder> propertiesToTest, String[] exclude) throws Exception {
         if (tag != null && propertiesToTest != null) {
-            List excludeList;
+            List<String> excludeList;
             if (exclude != null) {
                 excludeList = Arrays.asList(exclude);
             } else {
-                excludeList = Collections.EMPTY_LIST;
+                excludeList = Collections.emptyList();
             }
 
             tag.setPageContext(pageContext);
@@ -172,6 +171,9 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
                     BeanUtils.setProperty(tag, propertyHolder.getName(), propertyHolder.getValue());
                 }
             }
+
+            tag.setDynamicAttribute(null, "data-id", "id-random");
+
             tag.doStartTag();
             tag.doEndTag();
             String writerString = normalize(writer.toString(), true);
@@ -184,6 +186,8 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
                     assertTrue("Expected to find: " + propertyHolder.getExpectation() + " in resulting String: " + writerString, writerString.contains(propertyHolder.getExpectation()));
                 }
             }
+
+            assertTrue(writerString.contains("data-id=\"id-random\""));
         }
     }
 
@@ -227,15 +231,15 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
 
         StringBuilder buffer = new StringBuilder(128);
         try (InputStream in = url.openStream()) {
-	        byte[] buf = new byte[4096];
-	        int nbytes;
+            byte[] buf = new byte[4096];
+            int nbytes;
 
-	        while ((nbytes = in.read(buf)) > 0) {
-	            buffer.append(new String(buf, 0, nbytes));
-	        }
+            while ((nbytes = in.read(buf)) > 0) {
+                buffer.append(new String(buf, 0, nbytes));
+            }
         }
 
-        /**
+        /*
          * compare the trimmed values of each buffer and make sure they're equivalent.  however, let's make sure to
          * normalize the strings first to account for line termination differences between platforms.
          */

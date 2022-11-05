@@ -21,7 +21,7 @@
 </form>
 
 <#if (parameters.customOnsubmitEnabled??)>
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
+<@s.script type="text/javascript">
 <#--
   Enable auto-select of optiontransferselect tag's entries upon containing form's
   submission.
@@ -96,7 +96,7 @@
 			}, true);
 	</#list>
 </#if>
-</script>
+</@s.script>
 </#if>
 
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-tooltips.ftl" />

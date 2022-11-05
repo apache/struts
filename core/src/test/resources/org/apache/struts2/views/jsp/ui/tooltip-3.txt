@@ -16,6 +16,6 @@
 </form>
 
 <!--javascript that is needed for tooltips-->
-<script type="text/javascript" src='/static/domTT.js'></script>
+<script type="text/javascript" src="/static/domTT.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/domTT.css"/>
 

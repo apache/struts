@@ -24,19 +24,19 @@
 <head>
 <title>${pageTitle}</title>
 <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" />
-<#include "/config-browser/config-styles.css" parse="y"></head>
+<#include "/config-browser/config-styles.ftl" parse="y"></head>
 <body class="composite" marginwidth="0" marginheight="0" leftmargin="0" topmargin="0">
 
 <div id="breadcrumbs">
 	<table border="0" cellspacing="0" cellpadding="4" width="100%">
 		<tr>
-			<td> 
+			<td>
 				Struts Configuration Browser > ${pageTitle}
 			</td>
 		</tr>
 	</table>
-</div>  
-  
+</div>
+
 <table border="0" cellspacing="0" cellpadding="4" width="100%" id="main">
 	<tr valign="top">
 	    <#if !hideNav??>		<td id="leftcol" width="20%">
@@ -94,4 +94,4 @@
 				<div id="apphead">
 					<h2>${pageTitle}</h2>
 				</div>
-				<div id="content" class="app">				
+				<div id="content" class="app">

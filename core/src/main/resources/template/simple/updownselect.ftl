@@ -19,7 +19,7 @@
  */
 -->
 <#if !stack.findValue("#optiontransferselect_js_included")??><#t/>
-	<script type="text/javascript" src="<@s.url value="${parameters.staticContentPath}/optiontransferselect.js" encode='false' includeParams='none'/>" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
+	<@s.script type="text/javascript" src="${base}${parameters.staticContentPath}/optiontransferselect.js" /><#t/>
 	<#assign temporaryVariable = stack.setValue("#optiontransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table>

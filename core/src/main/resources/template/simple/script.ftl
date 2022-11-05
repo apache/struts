@@ -18,36 +18,27 @@
  * under the License.
  */
 -->
-<script <#rt/>
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
-<#include "/${parameters.templateDir}/simple/nonce.ftl" />
-<#if parameters.async?has_content>
- <#if parameters.async=="true">
-  async<#rt/>
- </#if>
+<script<#rt/>
+<#if parameters.async?has_content && parameters.async == "true">
+ async<#rt/>
 </#if>
 <#if parameters.charset?has_content>
  charset="${parameters.charset}"<#rt/>
 </#if>
-<#if parameters.defer?has_content>
- <#if parameters.defer=="true">
-  defer<#rt/>
- </#if>
-</#if>
-<#if parameters.src?has_content>
- src="${parameters.src}"<#rt/>
+<#if parameters.defer?has_content && parameters.defer=="true">
+ defer<#rt/>
 </#if>
 <#if parameters.type?has_content>
  type="${parameters.type}"<#rt/>
 </#if>
+<#if parameters.src?has_content>
+ src="${parameters.src}"<#rt/>
+</#if>
 <#if parameters.referrerpolicy?has_content>
  referrerpolicy="${parameters.referrerpolicy}"<#rt/>
 </#if>
-<#if parameters.nomodule?has_content>
- <#if parameters.nomodule=="true">
-  nomodule<#rt/>
- </#if>
+<#if parameters.nomodule?has_content && parameters.nomodule=="true">
+ nomodule<#rt/>
 </#if>
 <#if parameters.integrity?has_content>
  integrity="${parameters.integrity}"<#rt/>
@@ -55,4 +46,6 @@
 <#if parameters.crossorigin?has_content>
  crossorigin="${parameters.crossorigin}"<#rt/>
 </#if>
->
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/nonce.ftl" />>

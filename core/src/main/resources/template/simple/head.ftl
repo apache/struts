@@ -18,4 +18,4 @@
  * under the License.
  */
 -->
-<script src="${base}${parameters.staticContentPath}/utils.js" type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
+<@s.script src="${base}${parameters.staticContentPath}/utils.js" type="text/javascript" />

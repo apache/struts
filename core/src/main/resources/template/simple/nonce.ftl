@@ -18,4 +18,6 @@
  * under the License.
  */
 -->
-<#if parameters.nonce?has_content>nonce="${parameters.nonce}"<#rt/></#if>
+<#if parameters.nonce?has_content><#rt/>
+ nonce="${parameters.nonce}"<#rt/>
+</#if><#rt/>

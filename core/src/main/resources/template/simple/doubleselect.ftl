@@ -20,58 +20,99 @@
 -->
 <#global dynamic_attributes_ignore = "second-"/>
 <#include "/${parameters.templateDir}/simple/select.ftl" />
-<#assign startCount = 0/>
+<#assign startCount = 0/><#rt/>
 <#if parameters.headerKey?? && parameters.headerValue??>
-    <#assign startCount = startCount + 1/>
+    <#assign startCount = startCount + 1/><#rt/>
 </#if>
 <#if parameters.emptyOption??>
-    <#assign startCount = startCount + 1/>
+    <#assign startCount = startCount + 1/><#rt/>
 </#if>
-
 <br/>
 <select<#rt/>
-        name="${(parameters.doubleName!"")}"<#rt/>
+ name="${(parameters.doubleName!"")}"<#rt/>
 <#if parameters.disabled!false>
-        disabled="disabled"<#rt/>
+ disabled="disabled"<#rt/>
 </#if>
 <#if parameters.doubleTabindex?has_content>
-        tabindex="${parameters.doubleTabindex}"<#rt/>
+ tabindex="${parameters.doubleTabindex}"<#rt/>
 </#if>
 <#if parameters.doubleId?has_content>
-        id="${parameters.doubleId}"<#rt/>
+ id="${parameters.doubleId}"<#rt/>
 </#if>
 <#if parameters.doubleCss?has_content>
-        class="${parameters.doubleCss}"<#rt/>
+ class="${parameters.doubleCss}"<#rt/>
 </#if>
 <#if parameters.doubleStyle?has_content>
-        style="${parameters.doubleStyle}"<#rt/>
+ style="${parameters.doubleStyle}"<#rt/>
 </#if>
 <#if parameters.title?has_content>
-        title="${parameters.title}"<#rt/>
+ title="${parameters.title}"<#rt/>
 </#if>
 <#if parameters.multiple!false>
-        multiple="multiple"<#rt/>
+ multiple="multiple"<#rt/>
 </#if>
 <#if parameters.get("doubleSize")?has_content>
-        size="${parameters.get("doubleSize")}"<#rt/>
+ size="${parameters.get("doubleSize")}"<#rt/>
 </#if>
 <#if parameters.doubleMultiple!false>
-        multiple="multiple"<#rt/>
+ multiple="multiple"<#rt/>
 </#if>
 <#if parameters.doubleDisabled!false>
-        disabled="disabled"<#rt/>
+ disabled="disabled"<#rt/>
+</#if>
+<#if parameters.doubleOnclick??>
+ onclick="<#outputformat 'JavaScript'>${parameters.doubleOnclick}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOndblclick??>
+ ondblclick="<#outputformat 'JavaScript'>${parameters.doubleOndblclick}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnmousedown??>
+ onmousedown="<#outputformat 'JavaScript'>${parameters.doubleOnmousedown}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnmouseup??>
+ onmouseup="<#outputformat 'JavaScript'>${parameters.doubleOnmouseup}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnmouseover??>
+ onmouseover="<#outputformat 'JavaScript'>${parameters.doubleOnmouseover}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnmousemove??>
+ onmousemove="<#outputformat 'JavaScript'>${parameters.doubleOnmousemove}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnmouseout??>
+ onmouseout="<#outputformat 'JavaScript'>${parameters.doubleOnmouseout}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnfocus??>
+ onfocus="<#outputformat 'JavaScript'>${parameters.doubleOnfocus}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnblur??>
+ onblur="<#outputformat 'JavaScript'>${parameters.doubleOnblur}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnkeypress??>
+ onkeypress="<#outputformat 'JavaScript'>${parameters.doubleOnkeypress}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnkeydown??>
+ onkeydown="<#outputformat 'JavaScript'>${parameters.doubleOnkeydown}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnkeyup??>
+ onkeyup="<#outputformat 'JavaScript'>${parameters.doubleOnkeyup}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnselect??>
+ onselect="<#outputformat 'JavaScript'>${parameters.doubleOnselect}</#outputformat>"<#rt/>
+</#if>
+<#if parameters.doubleOnchange??>
+ onchange="<#outputformat 'JavaScript'>${parameters.doubleOnchange}</#outputformat>"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/prefixed-dynamic-attributes.ftl" />
 <@prefixedDynamicAttributes prefix="second-"/>
-        >
+>
 </select>
 <#if parameters.doubleMultiple!false>
-<input type="hidden" id="__multiselect_${parameters.doubleId}"
-       name="__multiselect_${(parameters.doubleName!"")}" value=""<#rt/>
-    <#if parameters.doubleDisabled!false>
-       disabled="disabled"<#rt/>
-    </#if>
-        />
+<input type="hidden" id="__multiselect_${parameters.doubleId}"<#rt/>
+ name="__multiselect_${(parameters.doubleName!"")}" value=""<#rt/>
+<#if parameters.doubleDisabled!false>
+ disabled="disabled"<#rt/>
+</#if>
+/><#rt/>
 </#if>
 <@s.script type="text/javascript">
     <#assign itemCount = startCount/>

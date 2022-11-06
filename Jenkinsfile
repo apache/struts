@@ -168,7 +168,8 @@ pipeline {
                         sshTransfer(
                             remoteDirectory: '/struts/snapshot',
                             removePrefix: 'assembly/target/assembly/out',
-                            sourceFiles: 'assembly/target/assembly/out/struts-*.zip'
+                            sourceFiles: 'assembly/target/assembly/out/struts-*.zip',
+                            cleanRemote: true
                         )
                     ],
                     verbose: true

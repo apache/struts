@@ -1,0 +1,42 @@
+<select name="foo" id="foo" onchange="fooRedirect(this.selectedIndex)">
+    <option value="BE">Belgium</option>
+    <option value="FR">France</option>
+</select>
+
+<br/>
+<select name="region" id="region" onclick="testMe()" ondblclick="testMe()" onmousedown="testMe()" onmouseup="testMe()" onmouseover="testMe()" onmousemove="testMe()" onmouseout="testMe()" onfocus="testMe()" onblur="testMe()" onkeypress="testMe()" onkeydown="testMe()" onselect="testMe()" onchange="testMe()">
+</select>
+<script type="text/javascript"  >
+    var fooGroup = new Array(2 + 0);
+    for (var i = 0; i < (2 + 0); i++) {
+        fooGroup[i] = [];
+    }
+
+    fooGroup[0][0] = new Option("Antwerp", "AN");
+
+    fooGroup[0][1] = new Option("Gent", "GN");
+
+    fooGroup[0][2] = new Option("Brugge", "BRG");
+
+    fooGroup[1][0] = new Option("Paris", "PA");
+
+    fooGroup[1][1] = new Option("Bordeaux", "BOR");
+
+
+    var fooTemp = document.inputForm.region;
+    fooRedirect(0);
+    function fooRedirect(x) {
+        var selected = false;
+        for (var m = fooTemp.options.length - 1; m >= 0; m--) {
+            fooTemp.remove(m);
+        }
+
+        for (var i = 0; i < fooGroup[x].length; i++) {
+            fooTemp.options[i] = new Option(fooGroup[x][i].text, fooGroup[x][i].value);
+        }
+
+        if ((fooTemp.options.length > 0) && (! selected)) {
+            fooTemp.options[0].selected = true;
+        }
+    }
+</script>

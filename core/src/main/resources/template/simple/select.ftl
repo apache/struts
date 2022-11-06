@@ -45,9 +45,9 @@
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/dynamic-attributes.ftl" />
 >
 <#if parameters.headerKey?? && parameters.headerValue??>
-    <option value="${parameters.headerKey}"
+    <option value="${parameters.headerKey}"<#rt/>
     <#if tag.contains(parameters.nameValue, parameters.headerKey) == true>
-    selected="selected"
+    selected="selected"<#rt/>
     </#if>
     >${parameters.headerValue}</option>
 </#if>
@@ -121,9 +121,7 @@
         </#if>
     >${itemValue}</option><#lt/>
 </@s.iterator>
-
 <#include "/${parameters.templateDir}/${parameters.expandTheme}/optgroup.ftl" />
-
 </select>
 
 <#if parameters.multiple!false>

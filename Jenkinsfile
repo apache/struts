@@ -160,6 +160,7 @@ pipeline {
             branch 'master'
           }
           steps {
+            sh './mvnw -B package -DskipTests'
             sshPublisher(publishers: [
                 sshPublisherDesc(
                     configName: 'Nightlies',

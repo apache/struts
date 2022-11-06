@@ -66,6 +66,7 @@ import org.apache.struts2.dispatcher.DispatcherErrorHandler;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
+import org.apache.struts2.url.ParametersStringBuilder;
 import org.apache.struts2.url.UrlDecoder;
 import org.apache.struts2.url.UrlEncoder;
 import org.apache.struts2.util.ContentTypeMatcher;
@@ -431,6 +432,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(ExpressionCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, builder, props, Scope.SINGLETON);
         alias(BeanInfoCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, builder, props, Scope.SINGLETON);
 
+        alias(ParametersStringBuilder.class, StrutsConstants.STRUTS_URL_PARAMETERS_STRING_BUILDER, builder, props, Scope.SINGLETON);
         alias(UrlEncoder.class, StrutsConstants.STRUTS_URL_ENCODER, builder, props, Scope.SINGLETON);
         alias(UrlDecoder.class, StrutsConstants.STRUTS_URL_DECODER, builder, props, Scope.SINGLETON);
 

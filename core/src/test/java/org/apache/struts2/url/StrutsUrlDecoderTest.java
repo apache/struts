@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.url;
 
+import org.apache.struts2.StrutsConstants;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -103,6 +104,13 @@ public class StrutsUrlDecoderTest {
         decoder.setEncoding("ISO-8859-1");
         String result = decoder.decode("xxxx%41");
         assertEquals("xxxxA", result);
+    }
+
+    @Test
+    public void testDecoding() {
+        String result = decoder.decode("%E6%96%B0%E8%81%9E");
+
+        assertEquals("\u65b0\u805e", result);
     }
 
     @Before

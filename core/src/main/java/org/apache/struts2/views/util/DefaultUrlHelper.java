@@ -24,6 +24,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.url.ParametersStringBuilder;
 import org.apache.struts2.url.UrlDecoder;
 import org.apache.struts2.url.UrlEncoder;
 
@@ -31,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +49,7 @@ public class DefaultUrlHelper implements UrlHelper {
     private int httpPort = DEFAULT_HTTP_PORT;
     private int httpsPort = DEFAULT_HTTPS_PORT;
 
+    private ParametersStringBuilder parametersStringBuilder;
     private UrlEncoder encoder;
     private UrlDecoder decoder;
 
@@ -70,6 +71,11 @@ public class DefaultUrlHelper implements UrlHelper {
     @Inject
     public void setDecoder(UrlDecoder decoder) {
         this.decoder = decoder;
+    }
+
+    @Inject
+    public void setParametersStringBuilder(ParametersStringBuilder builder) {
+        this.parametersStringBuilder = builder;
     }
 
     public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
@@ -170,9 +176,9 @@ public class DefaultUrlHelper implements UrlHelper {
 
         //if the action was not explicitly set grab the params from the request
         if (escapeAmp) {
-            buildParametersString(params, link, AMP, true);
+            parametersStringBuilder.buildParametersString(params, link, AMP);
         } else {
-            buildParametersString(params, link, "&", true);
+            parametersStringBuilder.buildParametersString(params, link, "&");
         }
 
         String result = link.toString();
@@ -197,63 +203,33 @@ public class DefaultUrlHelper implements UrlHelper {
         }
     }
 
+    /**
+     * Builds parameters assigned to url - a query string
+     * @param params a set of params to assign
+     * @param link a based url
+     * @param paramSeparator separator used
+     * @deprecated since Struts 6.1.0, use {@link ParametersStringBuilder} instead
+     */
+    @Deprecated
     public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator) {
-        buildParametersString(params, link, paramSeparator, true);
+        parametersStringBuilder.buildParametersString(params, link, paramSeparator);
     }
 
+    /**
+     * Builds parameters assigned to url - a query string
+     * @param params a set of params to assign
+     * @param link a based url
+     * @param paramSeparator separator used
+     * @param encode if true, parameters will be encoded - ignored
+     * @deprecated since Struts 6.1.0, use {@link #buildParametersString(Map, StringBuilder, String)}
+     */
+    @Deprecated
     public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator, boolean encode) {
-        if ((params != null) && (params.size() > 0)) {
-            if (!link.toString().contains("?")) {
-                link.append("?");
-            } else {
-                link.append(paramSeparator);
-            }
-
-            // Set params
-            Iterator<Map.Entry<String, Object>> iter = params.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry<String, Object> entry = iter.next();
-                String name = entry.getKey();
-                Object value = entry.getValue();
-
-                if (value instanceof Iterable) {
-                    for (Iterator<?> iterator = ((Iterable<?>) value).iterator(); iterator.hasNext(); ) {
-                        Object paramValue = iterator.next();
-                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY, encode));
-
-                        if (iterator.hasNext()) {
-                            link.append(paramSeparator);
-                        }
-                    }
-                } else if (value instanceof Object[]) {
-                    Object[] array = (Object[]) value;
-                    for (int i = 0; i < array.length; i++) {
-                        Object paramValue = array[i];
-                        link.append(buildParameterSubstring(name, paramValue != null ? paramValue.toString() : StringUtils.EMPTY, encode));
-
-                        if (i < array.length - 1) {
-                            link.append(paramSeparator);
-                        }
-                    }
-                } else {
-                    link.append(buildParameterSubstring(name, value != null ? value.toString() : StringUtils.EMPTY, encode));
-                }
-
-                if (iter.hasNext()) {
-                    link.append(paramSeparator);
-                }
-            }
-        }
+        buildParametersString(params, link, paramSeparator);
     }
 
     protected boolean isValidScheme(String scheme) {
         return HTTP_PROTOCOL.equals(scheme) || HTTPS_PROTOCOL.equals(scheme);
-    }
-
-    private String buildParameterSubstring(String name, String value, boolean encode) {
-        String encodedName = encode ? encoder.encode(name) : name;
-        String encodedValue = encode ? encoder.encode(value) : value;
-        return encodedName + '=' + encodedValue;
     }
 
     /**

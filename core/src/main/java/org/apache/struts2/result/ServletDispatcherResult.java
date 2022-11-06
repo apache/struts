@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.views.util.UrlHelper;
+import org.apache.struts2.url.QueryStringParser;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +66,7 @@ import java.util.Map;
  * <!-- END SNIPPET: description -->
  *
  * <p><b>This result type takes the following parameters:</b></p>
- *
+ * <p>
  * <!-- START SNIPPET: params -->
  *
  * <ul>
@@ -76,7 +76,7 @@ import java.util.Map;
  * <li><b>parse</b> - true by default. If set to false, the location param will not be parsed for Ognl expressions.</li>
  *
  * </ul>
- *
+ * <p>
  * <!-- END SNIPPET: params -->
  *
  * <p><b>Example:</b></p>
@@ -99,7 +99,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
 
     private static final Logger LOG = LogManager.getLogger(ServletDispatcherResult.class);
 
-    private UrlHelper urlHelper;
+    private QueryStringParser queryStringParser;
 
     public ServletDispatcherResult() {
         super();
@@ -110,8 +110,8 @@ public class ServletDispatcherResult extends StrutsResultSupport {
     }
 
     @Inject
-    public void setUrlHelper(UrlHelper urlHelper) {
-        this.urlHelper = urlHelper;
+    public void setQueryStringParser(QueryStringParser queryStringParser) {
+        this.queryStringParser = queryStringParser;
     }
 
     /**
@@ -140,7 +140,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             if (StringUtils.isNotEmpty(finalLocation) && finalLocation.indexOf('?') > 0) {
                 String queryString = finalLocation.substring(finalLocation.indexOf('?') + 1);
                 HttpParameters parameters = getParameters(invocation);
-                Map<String, Object> queryParams = urlHelper.parseQueryString(queryString, true);
+                Map<String, Object> queryParams = queryStringParser.parse(queryString, true);
                 if (queryParams != null && !queryParams.isEmpty()) {
                     parameters = HttpParameters.create(queryParams).withParent(parameters).build();
                     invocation.getInvocationContext().setParameters(parameters);

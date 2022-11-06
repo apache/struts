@@ -18,14 +18,15 @@
  */
 package org.apache.struts2.url;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
- * A builder used to create a proper query string out of a set of parameters
+ * Used to parse Http Query String into a Map of parameters
  * @since Struts 6.1.0
  */
-public interface ParametersStringBuilder {
+public interface QueryStringParser extends Serializable {
 
-    void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator);
+    Map<String, Object> parse(String queryString, boolean forceValueArray);
 
 }

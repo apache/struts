@@ -24,16 +24,13 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.url.ParametersStringBuilder;
+import org.apache.struts2.url.QueryStringBuilder;
+import org.apache.struts2.url.QueryStringParser;
 import org.apache.struts2.url.UrlDecoder;
 import org.apache.struts2.url.UrlEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,7 +46,8 @@ public class DefaultUrlHelper implements UrlHelper {
     private int httpPort = DEFAULT_HTTP_PORT;
     private int httpsPort = DEFAULT_HTTPS_PORT;
 
-    private ParametersStringBuilder parametersStringBuilder;
+    private QueryStringBuilder queryStringBuilder;
+    private QueryStringParser queryStringParser;
     private UrlEncoder encoder;
     private UrlDecoder decoder;
 
@@ -74,8 +72,13 @@ public class DefaultUrlHelper implements UrlHelper {
     }
 
     @Inject
-    public void setParametersStringBuilder(ParametersStringBuilder builder) {
-        this.parametersStringBuilder = builder;
+    public void setQueryStringBuilder(QueryStringBuilder builder) {
+        this.queryStringBuilder = builder;
+    }
+
+    @Inject
+    public void setQueryStringParser(QueryStringParser queryStringParser) {
+        this.queryStringParser = queryStringParser;
     }
 
     public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
@@ -176,9 +179,9 @@ public class DefaultUrlHelper implements UrlHelper {
 
         //if the action was not explicitly set grab the params from the request
         if (escapeAmp) {
-            parametersStringBuilder.buildParametersString(params, link, AMP);
+            queryStringBuilder.build(params, link, AMP);
         } else {
-            parametersStringBuilder.buildParametersString(params, link, "&");
+            queryStringBuilder.build(params, link, "&");
         }
 
         String result = link.toString();
@@ -208,11 +211,11 @@ public class DefaultUrlHelper implements UrlHelper {
      * @param params a set of params to assign
      * @param link a based url
      * @param paramSeparator separator used
-     * @deprecated since Struts 6.1.0, use {@link ParametersStringBuilder} instead
+     * @deprecated since Struts 6.1.0, use {@link QueryStringBuilder} instead
      */
     @Deprecated
     public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator) {
-        parametersStringBuilder.buildParametersString(params, link, paramSeparator);
+        queryStringBuilder.build(params, link, paramSeparator);
     }
 
     /**
@@ -269,47 +272,11 @@ public class DefaultUrlHelper implements UrlHelper {
         return decoder.decode(input, isQueryString);
     }
 
+    /**
+     * @deprecated since 6.1.0, use {@link QueryStringParser} directly, use {@link Inject} to inject a proper instance
+     */
+    @Deprecated
     public Map<String, Object> parseQueryString(String queryString, boolean forceValueArray) {
-        Map<String, Object> queryParams = new LinkedHashMap<>();
-        if (queryString != null) {
-            String[] params = queryString.split("&");
-            for (String param : params) {
-                if (param.trim().length() > 0) {
-                    String[] tmpParams = param.split("=");
-                    String paramName = null;
-                    String paramValue = "";
-                    if (tmpParams.length > 0) {
-                        paramName = tmpParams[0];
-                    }
-                    if (tmpParams.length > 1) {
-                        paramValue = tmpParams[1];
-                    }
-                    if (paramName != null) {
-                        paramName = decoder.decode(paramName, true);
-                        String translatedParamValue = decoder.decode(paramValue, true);
-
-                        if (queryParams.containsKey(paramName) || forceValueArray) {
-                            // WW-1619 append new param value to existing value(s)
-                            Object currentParam = queryParams.get(paramName);
-                            if (currentParam instanceof String) {
-                                queryParams.put(paramName, new String[]{(String) currentParam, translatedParamValue});
-                            } else {
-                                String[] currentParamValues = (String[]) currentParam;
-                                if (currentParamValues != null) {
-                                    List<String> paramList = new ArrayList<>(Arrays.asList(currentParamValues));
-                                    paramList.add(translatedParamValue);
-                                    queryParams.put(paramName, paramList.toArray(new String[0]));
-                                } else {
-                                    queryParams.put(paramName, new String[]{translatedParamValue});
-                                }
-                            }
-                        } else {
-                            queryParams.put(paramName, translatedParamValue);
-                        }
-                    }
-                }
-            }
-        }
-        return queryParams;
+        return this.queryStringParser.parse(queryString, forceValueArray);
     }
 }

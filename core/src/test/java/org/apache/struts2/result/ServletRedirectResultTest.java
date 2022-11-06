@@ -32,8 +32,8 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.views.util.DefaultUrlHelper;
+import org.apache.struts2.url.StrutsQueryStringBuilder;
+import org.apache.struts2.url.StrutsUrlEncoder;
 import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -240,7 +240,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         result.setEncode(false);
         result.setPrependServletContext(false);
         result.setAnchor("fragment");
-        result.setUrlHelper(new DefaultUrlHelper());
+        result.setQueryStringBuilder(new StrutsQueryStringBuilder(new StrutsUrlEncoder()));
 
         IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
@@ -286,7 +286,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         result.setParse(true);
         result.setEncode(false);
         result.setPrependServletContext(false);
-        result.setUrlHelper(new DefaultUrlHelper());
+        result.setQueryStringBuilder(new StrutsQueryStringBuilder(new StrutsUrlEncoder()));
         result.setSuppressEmptyParameters(true);
 
         IMocksControl control = createControl();
@@ -433,7 +433,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         }
     }
 
-    public void testPassingNullInvocation() throws Exception{
+    public void testPassingNullInvocation() throws Exception {
         Result result = new ServletRedirectResult();
         try {
             result.execute(null);

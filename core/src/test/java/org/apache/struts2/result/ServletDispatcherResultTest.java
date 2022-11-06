@@ -18,29 +18,20 @@
  */
 package org.apache.struts2.result;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import ognl.Ognl;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
 
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import org.apache.struts2.result.ServletDispatcherResult;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-
-/**
- *
- */
 public class ServletDispatcherResultTest extends StrutsInternalTestCase implements StrutsStatics {
 
     public void testInclude() {

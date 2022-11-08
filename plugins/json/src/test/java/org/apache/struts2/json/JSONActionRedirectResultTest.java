@@ -26,10 +26,9 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.junit.StrutsTestCase;
-import org.apache.struts2.url.StrutsParametersStringBuilder;
-import org.apache.struts2.url.StrutsUrlDecoder;
+import org.apache.struts2.url.QueryStringBuilder;
+import org.apache.struts2.url.StrutsQueryStringBuilder;
 import org.apache.struts2.url.StrutsUrlEncoder;
-import org.apache.struts2.views.util.DefaultUrlHelper;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -37,7 +36,7 @@ import org.springframework.mock.web.MockServletContext;
 public class JSONActionRedirectResultTest extends StrutsTestCase {
 
     private DefaultActionMapper actionMapper;
-    private DefaultUrlHelper urlHelper;
+    private QueryStringBuilder queryStringBuilder;
 
     MockActionInvocation invocation;
     MockHttpServletResponse response;
@@ -50,7 +49,7 @@ public class JSONActionRedirectResultTest extends StrutsTestCase {
         JSONActionRedirectResult result = new JSONActionRedirectResult();
         result.setActionName("targetAction");
         result.setActionMapper(actionMapper);
-        result.setUrlHelper(urlHelper);
+        result.setQueryStringBuilder(queryStringBuilder);
 
         Object action = new Object();
         stack.push(action);
@@ -69,7 +68,7 @@ public class JSONActionRedirectResultTest extends StrutsTestCase {
         JSONActionRedirectResult result = new JSONActionRedirectResult();
         result.setActionName("targetAction");
         result.setActionMapper(actionMapper);
-        result.setUrlHelper(urlHelper);
+        result.setQueryStringBuilder(queryStringBuilder);
 
         request.setParameter("struts.enableJSONValidation", "true");
         request.setParameter("struts.validateOnly", "false");
@@ -89,7 +88,7 @@ public class JSONActionRedirectResultTest extends StrutsTestCase {
         JSONActionRedirectResult result = new JSONActionRedirectResult();
         result.setActionName("targetAction");
         result.setActionMapper(actionMapper);
-        result.setUrlHelper(urlHelper);
+        result.setQueryStringBuilder(queryStringBuilder);
 
         request.setParameter("struts.enableJSONValidation", "true");
         request.setParameter("struts.validateOnly", "true");
@@ -126,10 +125,6 @@ public class JSONActionRedirectResultTest extends StrutsTestCase {
         this.invocation.setProxy(mockActionProxy);
 
         this.actionMapper = new DefaultActionMapper();
-        this.urlHelper = new DefaultUrlHelper();
-        StrutsUrlEncoder encoder = new StrutsUrlEncoder();
-        this.urlHelper.setParametersStringBuilder(new StrutsParametersStringBuilder(encoder));
-        this.urlHelper.setEncoder(encoder);
-        this.urlHelper.setDecoder(new StrutsUrlDecoder());
+        this.queryStringBuilder = new StrutsQueryStringBuilder(new StrutsUrlEncoder());
     }
 }

@@ -18,7 +18,13 @@
  */
 package org.apache.struts2.url;
 
-public interface UrlDecoder {
+import java.io.Serializable;
+
+/**
+ * URL Decoder used internally by Struts
+ * @since Struts 6.1.0
+ */
+public interface UrlDecoder extends Serializable {
 
     /**
      * Decodes the input using default encoding, e.g.: struts.i18n.encoding

@@ -313,8 +313,10 @@
     <bean type="com.opensymphony.xwork2.ognl.BeanInfoCacheFactory" name="struts"
           class="com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory" scope="singleton"/>
 
-    <bean type="org.apache.struts2.url.ParametersStringBuilder" name="strutsParametersStringBuilder"
-          class="org.apache.struts2.url.StrutsParametersStringBuilder" scope="singleton"/>
+    <bean type="org.apache.struts2.url.QueryStringBuilder" name="strutsQueryStringBuilder"
+          class="org.apache.struts2.url.StrutsQueryStringBuilder" scope="singleton"/>
+    <bean type="org.apache.struts2.url.QueryStringParser" name="strutsQueryStringParser"
+          class="org.apache.struts2.url.StrutsQueryStringParser" scope="singleton"/>
     <bean type="org.apache.struts2.url.UrlEncoder" name="strutsUrlEncoder"
           class="org.apache.struts2.url.StrutsUrlEncoder" scope="singleton"/>
     <bean type="org.apache.struts2.url.UrlDecoder" name="strutsUrlDecoder"

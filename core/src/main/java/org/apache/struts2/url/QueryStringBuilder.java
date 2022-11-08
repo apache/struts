@@ -19,28 +19,20 @@
 package org.apache.struts2.url;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
- * URL Encoder used internally by Struts
+ * A builder used to create a proper Query String out of a set of parameters
  * @since Struts 6.1.0
  */
-public interface UrlEncoder extends Serializable {
+public interface QueryStringBuilder extends Serializable {
 
     /**
-     * Encodes the input tb be used with URL using the provided encoding
-     *
-     * @param input String to encode
-     * @param encoding encoding to use
-     * @return encoded string
+     * Builds a Query String with defined separator and appends it to the provided link
+     * @param params a Map used to build a Query String
+     * @param link to which the Query String should be added
+     * @param paramSeparator used to separate parameters in query string
      */
-    String encode(String input, String encoding);
-
-    /**
-     * Encodes the input to be used with URL using default encoding, e.g.: struts.i18n.encoding
-     *
-     * @param input String to encode
-     * @return encoded string
-     */
-    String encode(String input);
+    void build(Map<String, Object> params, StringBuilder link, String paramSeparator);
 
 }

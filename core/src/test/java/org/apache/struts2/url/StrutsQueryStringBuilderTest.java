@@ -28,9 +28,9 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class StrutsParametersStringBuilderTest {
+public class StrutsQueryStringBuilderTest {
 
-    private ParametersStringBuilder builder;
+    private QueryStringBuilder builder;
 
     @Test
     public void testBuildParametersStringWithUrlHavingSomeExistingParameters() {
@@ -43,7 +43,7 @@ public class StrutsParametersStringBuilderTest {
 
         StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 
-        builder.buildParametersString(parameters, url, UrlHelper.AMP);
+        builder.build(parameters, url, UrlHelper.AMP);
 
         assertEquals(expectedUrl, url.toString());
     }
@@ -59,7 +59,7 @@ public class StrutsParametersStringBuilderTest {
 
         StringBuilder url = new StringBuilder("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
 
-        builder.buildParametersString(parameters, url, UrlHelper.AMP);
+        builder.build(parameters, url, UrlHelper.AMP);
 
         assertEquals(expectedUrl, url.toString());
     }
@@ -71,7 +71,7 @@ public class StrutsParametersStringBuilderTest {
         parameters.put("param1", new String[]{});
         parameters.put("param2", new ArrayList<>());
         StringBuilder url = new StringBuilder("https://www.nowhere.com/myworld.html");
-        builder.buildParametersString(parameters, url, UrlHelper.AMP);
+        builder.build(parameters, url, UrlHelper.AMP);
         assertEquals(expectedUrl, url.toString());
     }
 
@@ -87,13 +87,13 @@ public class StrutsParametersStringBuilderTest {
             }
         });
         StringBuilder url = new StringBuilder("https://www.nowhere.com/myworld.html");
-        builder.buildParametersString(parameters, url, "&");
+        builder.build(parameters, url, "&");
         assertEquals(expectedUrl, url.toString());
     }
 
     @Before
     public void setUp() throws Exception {
-        builder = new StrutsParametersStringBuilder(new StrutsUrlEncoder());
+        builder = new StrutsQueryStringBuilder(new StrutsUrlEncoder());
     }
 
 }

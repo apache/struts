@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +26,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.portlet.util.PortletUrlHelperJSR286;
+import org.apache.struts2.url.QueryStringParser;
 import org.apache.struts2.views.util.UrlHelper;
 
 import javax.portlet.PortletMode;
@@ -66,6 +66,11 @@ public class PortletUrlRenderer implements UrlRenderer {
         servletRenderer.setUrlHelper(urlHelper);
     }
 
+    @Inject
+    public void setQueryStringParser(QueryStringParser queryStringParser) {
+        this.servletRenderer.setQueryStringParser(queryStringParser);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -75,37 +80,35 @@ public class PortletUrlRenderer implements UrlRenderer {
             return;
         }
         String result;
-        if (isPortletModeChange(urlComponent,PortletActionContext.getRequest().getPortletMode())
-        		&& StringUtils.isEmpty(urlComponent.getNamespace()))
-        {
-        	String mode = urlComponent.getPortletMode();
-        	PortletMode portletMode = new PortletMode(mode);
-        	String action = urlComponent.getAction();
-        	if (StringUtils.isEmpty(action)) {
-        		action = PortletActionContext.getModeActionMap().get(portletMode).getName();
-        	}
-        	String modeNamespace = PortletActionContext.getModeNamespaceMap().get(portletMode);
-    		result = portletUrlHelper.buildUrl(action, modeNamespace, urlComponent.getMethod(),
-    				urlComponent.getParameters(), urlComponent.getPortletUrlType(), mode, urlComponent.getWindowState());
+        if (isPortletModeChange(urlComponent, PortletActionContext.getRequest().getPortletMode())
+            && StringUtils.isEmpty(urlComponent.getNamespace())) {
+            String mode = urlComponent.getPortletMode();
+            PortletMode portletMode = new PortletMode(mode);
+            String action = urlComponent.getAction();
+            if (StringUtils.isEmpty(action)) {
+                action = PortletActionContext.getModeActionMap().get(portletMode).getName();
+            }
+            String modeNamespace = PortletActionContext.getModeNamespaceMap().get(portletMode);
+            result = portletUrlHelper.buildUrl(action, modeNamespace, urlComponent.getMethod(),
+                urlComponent.getParameters(), urlComponent.getPortletUrlType(), mode, urlComponent.getWindowState());
 
         } else {
-        	String namespace = urlComponent.determineNamespace(urlComponent.getNamespace(), urlComponent.getStack(), urlComponent.getHttpServletRequest());
-        	urlComponent.setNamespace(namespace);
-        	if (onlyActionSpecified(urlComponent)) {
-        	    if (StringUtils.isNotEmpty(urlComponent.getAction())) {
-        	        String action = urlComponent.findString(urlComponent.getAction());
+            String namespace = urlComponent.determineNamespace(urlComponent.getNamespace(), urlComponent.getStack(), urlComponent.getHttpServletRequest());
+            urlComponent.setNamespace(namespace);
+            if (onlyActionSpecified(urlComponent)) {
+                if (StringUtils.isNotEmpty(urlComponent.getAction())) {
+                    String action = urlComponent.findString(urlComponent.getAction());
                     result = portletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(),
-                                    urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
-        	    }
-        	    else {
+                        urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
+                } else {
                     result = portletUrlHelper.buildUrl(urlComponent.getAction(), urlComponent.getNamespace(), urlComponent.getMethod(),
-                                    urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
-        	    }
-        	} else if (onlyValueSpecified(urlComponent)) {
-        		result = portletUrlHelper.buildResourceUrl(urlComponent.getValue(), urlComponent.getParameters());
-        	} else {
-        		result = createDefaultUrl(urlComponent);
-        	}
+                        urlComponent.getParameters(), urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
+                }
+            } else if (onlyValueSpecified(urlComponent)) {
+                result = portletUrlHelper.buildResourceUrl(urlComponent.getValue(), urlComponent.getParameters());
+            } else {
+                result = createDefaultUrl(urlComponent);
+            }
         }
         String anchor = urlComponent.getAnchor();
         if (StringUtils.isNotEmpty(anchor)) {
@@ -128,19 +131,19 @@ public class PortletUrlRenderer implements UrlRenderer {
         }
     }
 
-	boolean isPortletModeChange(UrlProvider urlComponent,PortletMode currentMode) {
-		if (StringUtils.isNotEmpty(urlComponent.getPortletMode())) {
-			PortletMode newPortletMode = new PortletMode(urlComponent.getPortletMode());
-        	return !(newPortletMode.equals(currentMode));
+    boolean isPortletModeChange(UrlProvider urlComponent, PortletMode currentMode) {
+        if (StringUtils.isNotEmpty(urlComponent.getPortletMode())) {
+            PortletMode newPortletMode = new PortletMode(urlComponent.getPortletMode());
+            return !(newPortletMode.equals(currentMode));
         }
-		return false;
-	}
+        return false;
+    }
 
     private String createDefaultUrl(UrlProvider urlComponent) {
         ActionInvocation ai = urlComponent.getStack().getActionContext().getActionInvocation();
         String action = ai.getProxy().getActionName();
         return portletUrlHelper.buildUrl(action, urlComponent.getNamespace(), urlComponent.getMethod(), urlComponent.getParameters(),
-                urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
+            urlComponent.getPortletUrlType(), urlComponent.getPortletMode(), urlComponent.getWindowState());
     }
 
     private boolean onlyValueSpecified(UrlProvider urlComponent) {
@@ -160,7 +163,7 @@ public class PortletUrlRenderer implements UrlRenderer {
             return;
         }
         String namespace = formComponent.determineNamespace(formComponent.namespace, formComponent.getStack(),
-                formComponent.request);
+            formComponent.request);
         String action;
         if (formComponent.action != null) {
             action = formComponent.findString(formComponent.action);
@@ -177,7 +180,7 @@ public class PortletUrlRenderer implements UrlRenderer {
         }
         if (action != null) {
             String result = portletUrlHelper.buildUrl(action, namespace, null,
-                    formComponent.getParameters(), type, formComponent.portletMode, formComponent.windowState);
+                formComponent.getParameters(), type, formComponent.portletMode, formComponent.windowState);
             formComponent.addParameter("action", result);
 
 

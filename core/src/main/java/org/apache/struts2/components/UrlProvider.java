@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
- * Implemntations of this interface can be used to build a URL
+ * Implementations of this interface can be used to build a URL
  */
 public interface UrlProvider {
     /**
@@ -37,9 +37,9 @@ public interface UrlProvider {
      * get  - include only GET parameters in the URL (default)
      * all  - include both GET and POST parameters in the URL
      */
-    public static final String NONE = "none";
-    public static final String GET = "get";
-    public static final String ALL = "all";
+    String NONE = "none";
+    String GET = "get";
+    String ALL = "all";
 
     boolean isPutInContext();
 
@@ -55,7 +55,7 @@ public interface UrlProvider {
 
     String getIncludeParams();
 
-    Map getParameters();
+    Map<String, Object> getParameters();
 
     HttpServletRequest getHttpServletRequest();
 
@@ -78,19 +78,19 @@ public interface UrlProvider {
     boolean isForceAddSchemeHostAndPort();
 
     boolean isEscapeAmp();
-    
+
     String getPortletMode();
-    
+
     String getWindowState();
 
-    String determineActionURL(String action, String namespace, String method, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Map parameters, String scheme, boolean includeContext, boolean encode, boolean forceAddSchemeHostAndPort, boolean escapeAmp);
-    
+    String determineActionURL(String action, String namespace, String method, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Map<String, ?> parameters, String scheme, boolean includeContext, boolean encode, boolean forceAddSchemeHostAndPort, boolean escapeAmp);
+
     String determineNamespace(String namespace, ValueStack stack, HttpServletRequest req);
 
     String getAnchor();
-    
+
     String getPortletUrlType();
-    
+
     ValueStack getStack();
 
     void setUrlIncludeParams(String urlIncludeParams);

@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.url.StrutsParametersStringBuilder;
+import org.apache.struts2.url.StrutsQueryStringBuilder;
 import org.apache.struts2.url.StrutsUrlDecoder;
 import org.apache.struts2.url.StrutsUrlEncoder;
 
@@ -339,45 +339,13 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         assertEquals(expectedString, urlString);
     }
 
-
-    public void testParseQuery() {
-        Map<String, Object> result = urlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E", false);
-
-        assertEquals(result.get("aaa"), "aaaval");
-        assertEquals(result.get("bbb"), "bbbval");
-        assertEquals(result.get("ccc"), "");
-        assertEquals(result.get("<a\">"), "<val>");
-    }
-
-    public void testParseEmptyQuery() {
-        Map<String, Object> result = urlHelper.parseQueryString("", false);
-
-        assertNotNull(result);
-        assertEquals(result.size(), 0);
-    }
-
-    public void testParseNullQuery() {
-        Map<String, Object> result = urlHelper.parseQueryString(null, false);
-
-        assertNotNull(result);
-        assertEquals(result.size(), 0);
-    }
-
-    public void testDecodeSpacesInQueryString() {
-        Map<String, Object> queryParameters = urlHelper.parseQueryString("name=value+with+space", false);
-
-        assertTrue(queryParameters.containsKey("name"));
-        assertEquals("value with space", queryParameters.get("name"));
-    }
-
-
     public void setUp() throws Exception {
         super.setUp();
         StubContainer stubContainer = new StubContainer(container);
         ActionContext.getContext().withContainer(stubContainer);
         urlHelper = new DefaultUrlHelper();
         StrutsUrlEncoder encoder = new StrutsUrlEncoder();
-        urlHelper.setParametersStringBuilder(new StrutsParametersStringBuilder(encoder));
+        urlHelper.setQueryStringBuilder(new StrutsQueryStringBuilder(encoder));
         urlHelper.setEncoder(encoder);
         urlHelper.setDecoder(new StrutsUrlDecoder());
     }

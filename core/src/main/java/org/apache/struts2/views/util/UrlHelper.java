@@ -18,6 +18,10 @@
  */
 package org.apache.struts2.views.util;
 
+import com.opensymphony.xwork2.inject.Inject;
+import org.apache.struts2.url.QueryStringBuilder;
+import org.apache.struts2.url.QueryStringParser;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -30,14 +34,14 @@ public interface UrlHelper {
     /**
      * Default HTTP port (80).
      */
-    static final int DEFAULT_HTTP_PORT = 80;
+    int DEFAULT_HTTP_PORT = 80;
 
     /**
      * Default HTTPS port (443).
      */
-    static final int DEFAULT_HTTPS_PORT = 443;
+    int DEFAULT_HTTPS_PORT = 443;
 
-    static final String AMP = "&amp;";
+    String AMP = "&amp;";
 
     String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params);
 
@@ -50,8 +54,16 @@ public interface UrlHelper {
     String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params, String scheme,
                     boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort, boolean escapeAmp);
 
+    /**
+     * @deprecated since Struts 6.1.0, use {@link QueryStringBuilder} instead
+     */
+    @Deprecated
     void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator);
 
+    /**
+     * @deprecated since 6.1.0, use {@link QueryStringParser} directly, use {@link Inject} to inject a proper instance
+     */
+    @Deprecated
     Map<String, Object> parseQueryString(String queryString, boolean forceValueArray);
 
 }

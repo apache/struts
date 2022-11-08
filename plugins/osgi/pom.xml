@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>6.1.0-SNAPSHOT</version>
+        <version>6.1.0</version>
     </parent>
 
     <artifactId>struts2-osgi-plugin</artifactId>

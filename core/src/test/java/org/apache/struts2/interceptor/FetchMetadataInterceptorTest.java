@@ -261,12 +261,4 @@ public class FetchMetadataInterceptorTest extends XWorkTestCase {
         assertNotEquals("Expected interceptor to accept this request [" + "/" + fetchMetadataExemptedGlobalActionConfig.getName() + "]", SC_FORBIDDEN, configuredFetchMetadataInterceptor.intercept(mai));
     }
 
-    public void testDisabled() throws Exception {
-        interceptor.setDisabled("true");
-
-        interceptor.intercept(mai);
-
-        String header = response.getHeader(VARY_HEADER);
-        assertTrue("Fetch Metadata is not disabled", Strings.isEmpty(header));
-    }
 }

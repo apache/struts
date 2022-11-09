@@ -145,17 +145,6 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         }
     }
 
-    public void testDisabled() throws Exception {
-        interceptor.setDisabled("true");
-
-        interceptor.intercept(mai);
-
-        String header = response.getHeader(CSP_ENFORCE_HEADER);
-        assertTrue("CSP is not disabled", Strings.isEmpty(header));
-        header = response.getHeader(CSP_REPORT_HEADER);
-        assertTrue("CSP is not disabled", Strings.isEmpty(header));
-    }
-
     public void checkHeader(String reportUri, String enforcingMode) {
         String expectedCspHeader;
         if (Strings.isEmpty(reportUri)) {

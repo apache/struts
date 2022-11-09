@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.ConditionalInterceptor;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.interceptor.WithLazyParams;
@@ -248,10 +249,10 @@ public class DefaultActionInvocation implements ActionInvocation {
                 if (interceptor instanceof WithLazyParams) {
                     interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
                 }
-                if (interceptor.isDisabled(this)) {
-                    LOG.debug("Interceptor: {} is disabled, skipping to next", interceptor.getClass().getSimpleName());
-                    resultCode = this.invoke();
+                if (interceptor instanceof ConditionalInterceptor) {
+                    resultCode = executeConditional((ConditionalInterceptor) interceptor);
                 } else {
+                    LOG.debug("Executing normal interceptor: {}", interceptorMapping.getName());
                     resultCode = interceptor.intercept(this);
                 }
             } else {
@@ -290,6 +291,16 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
 
         return resultCode;
+    }
+
+    protected String executeConditional(ConditionalInterceptor conditionalInterceptor) throws Exception {
+        if (conditionalInterceptor.shouldIntercept(this)) {
+            LOG.debug("Executing conditional interceptor: {}", conditionalInterceptor.getClass().getSimpleName());
+            return conditionalInterceptor.intercept(this);
+        } else {
+            LOG.debug("Interceptor: {} is disabled, skipping to next", conditionalInterceptor.getClass().getSimpleName());
+            return this.invoke();
+        }
     }
 
     public String invokeActionOnly() throws Exception {

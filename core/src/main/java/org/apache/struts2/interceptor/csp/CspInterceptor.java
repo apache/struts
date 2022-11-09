@@ -21,8 +21,6 @@ package org.apache.struts2.interceptor.csp;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,24 +39,15 @@ import java.util.Optional;
  **/
 public final class CspInterceptor extends AbstractInterceptor implements PreResultListener {
 
-    private static final Logger LOG = LogManager.getLogger(CspInterceptor.class);
-
     private final CspSettings settings = new DefaultCspSettings();
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (this.isDisabled(invocation)) {
-            LOG.trace("CSP interceptor has been disabled");
-        } else {
-            invocation.addPreResultListener(this);
-        }
+        invocation.addPreResultListener(this);
         return invocation.invoke();
     }
 
     public void beforeResult(ActionInvocation invocation, String resultCode) {
-        if (this.isDisabled(invocation)) {
-            return;
-        }
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
         settings.addCspHeaders(request, response);

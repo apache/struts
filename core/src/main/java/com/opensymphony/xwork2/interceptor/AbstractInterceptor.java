@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 /**
  * Provides default implementations of optional lifecycle methods
  */
-public abstract class AbstractInterceptor implements Interceptor {
+public abstract class AbstractInterceptor implements ConditionalInterceptor {
 
     private boolean disabled;
 
@@ -44,12 +44,18 @@ public abstract class AbstractInterceptor implements Interceptor {
      */
     public abstract String intercept(ActionInvocation invocation) throws Exception;
 
+    /**
+     * Allows to skip executing a given interceptor, just define {@code <param name="disabled">true</param>}
+     * or use other way to override interceptor's parameters, see
+     * <a href="https://struts.apache.org/core-developers/interceptors#interceptor-parameter-overriding">docs</a>.
+     * @param disable if set to true, execution of a given interceptor will be skipped.
+     */
     public void setDisabled(String disable) {
         this.disabled = Boolean.parseBoolean(disable);
     }
 
     @Override
-    public boolean isDisabled(ActionInvocation invocation) {
-        return this.disabled;
+    public boolean shouldIntercept(ActionInvocation invocation) {
+        return !this.disabled;
     }
 }

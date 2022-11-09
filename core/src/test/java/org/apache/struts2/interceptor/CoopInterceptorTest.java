@@ -75,15 +75,6 @@ public class CoopInterceptorTest extends StrutsInternalTestCase {
         }
     }
 
-    public void testDisabled() throws Exception {
-        interceptor.setDisabled("true");
-
-        interceptor.intercept(mai);
-
-        String header = response.getHeader(COOP_HEADER);
-        assertTrue("COOP is not disabled", Strings.isEmpty(header));
-    }
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();

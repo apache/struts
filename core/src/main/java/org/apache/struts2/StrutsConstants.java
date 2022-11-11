@@ -379,7 +379,7 @@ public final class StrutsConstants {
     public static final String STRUTS_CONVERTER_FILE_PROCESSOR = "struts.converter.file.processor";
     public static final String STRUTS_CONVERTER_ANNOTATION_PROCESSOR = "struts.converter.annotation.processor";
     public static final String STRUTS_CONVERTER_CREATOR = "struts.converter.creator";
-    public static final String STRUTS_CONVERTER_HOLDER = "struts..converter.holder";
+    public static final String STRUTS_CONVERTER_HOLDER = "struts.converter.holder";
 
     public static final String STRUTS_EXPRESSION_PARSER = "struts.expression.parser";
 
@@ -462,4 +462,7 @@ public final class StrutsConstants {
     public static final String STRUTS_URL_QUERY_STRING_PARSER = "struts.url.queryStringParser";
     public static final String STRUTS_URL_ENCODER = "struts.url.encoder";
     public static final String STRUTS_URL_DECODER = "struts.url.decoder";
+
+    /** A global flag to set property {@link org.apache.struts2.components.Checkbox#setSubmitUnchecked(String)} */
+    public static final String STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED = "struts.ui.checkbox.submitUnchecked";
 }

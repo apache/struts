@@ -435,7 +435,10 @@ import java.util.Map;
  *
  */
 public abstract class UIBean extends Component {
+
     private static final Logger LOG = LogManager.getLogger(UIBean.class);
+
+    protected static final String ATTR_FIELD_VALUE = "fieldValue";
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;

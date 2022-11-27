@@ -168,6 +168,16 @@
         <packageUrl regex="true">^pkg:maven/net\.sf\.oval/oval@.*$</packageUrl>
         <cpe>cpe:/a:xstream_project:xstream</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[file name: oval-1.90.jar: xstream-1.4.19.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.thoughtworks\.xstream/xstream@.*$</packageUrl>
+        <cve>CVE-2022-40151</cve>
+        <cve>CVE-2022-40152</cve>
+        <cve>CVE-2022-40153</cve>
+        <cve>CVE-2022-40154</cve>
+        <cve>CVE-2022-40155</cve>
+        <cve>CVE-2022-40156</cve>
+    </suppress>
     <!-- TestNG -->
     <suppress>
         <notes><![CDATA[file name: guava-19.0.jar]]></notes>
@@ -189,5 +199,22 @@
         <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
         <cve>CVE-2020-11023</cve>
     </suppress>
-    <!-- TestNG -->
+    <suppress>
+        <notes><![CDATA[file name: testng-7.5.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.testng/testng@.*$</packageUrl>
+        <cve>CVE-2022-4065</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: spring-core-4.3.30.RELEASE.jar, spring-aop-4.3.30.RELEASE.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-.*@.*$</packageUrl>
+        <cve>CVE-2022-22965</cve>
+        <cve>CVE-2022-22950</cve>
+        <cve>CVE-2022-22968</cve>
+        <cve>CVE-2022-22970</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[file name: spring-web-5.3.23.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-web@.*$</packageUrl>
+        <cve>CVE-2016-1000027</cve>
+    </suppress>
 </suppressions>

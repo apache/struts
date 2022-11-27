@@ -36,6 +36,12 @@
         <dependency>
             <groupId>net.sf.oval</groupId>
             <artifactId>oval</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.thoughtworks.xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
          <dependency>

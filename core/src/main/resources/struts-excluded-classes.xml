@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
+        "https://struts.apache.org/dtds/struts-6.0.dtd">
+
+<struts>
+
+    <constant name="struts.excludedClasses"
+              value="
+                java.lang.Object,
+                java.lang.Runtime,
+                java.lang.System,
+                java.lang.Class,
+                java.lang.ClassLoader,
+                java.lang.Shutdown,
+                java.lang.ProcessBuilder,
+                java.lang.Thread,
+                sun.misc.Unsafe,
+                com.opensymphony.xwork2.ActionContext"/>
+
+    <constant name="struts.devMode.excludedClasses"
+              value="
+                java.lang.Object,
+                java.lang.Runtime,
+                java.lang.System,
+                java.lang.Class,
+                java.lang.ClassLoader,
+                java.lang.Shutdown,
+                java.lang.ProcessBuilder,
+                sun.misc.Unsafe"/>
+
+    <!-- this must be valid regex, each '.' in package name must be escaped! -->
+    <!-- it's more flexible but slower than simple string comparison -->
+    <!-- constant name="struts.excludedPackageNamePatterns" value="^java\.lang\..*,^ognl.*,^(?!javax\.servlet\..+)(javax\..+)" / -->
+    <!-- constant name="struts.devMode.excludedPackageNamePatterns" value="^java\.lang\..*,^ognl.*,^(?!javax\.servlet\..+)(javax\..+)" / -->
+
+    <!-- this is simpler version of the above used with string comparison -->
+    <constant name="struts.excludedPackageNames"
+              value="
+                ognl.,
+                java.io.,
+                java.net.,
+                java.nio.,
+                javax.,
+                freemarker.core.,
+                freemarker.template.,
+                freemarker.ext.jsp.,
+                freemarker.ext.rhino.,
+                sun.misc.,
+                sun.reflect.,
+                javassist.,
+                org.apache.velocity.,
+                org.objectweb.asm.,
+                org.springframework.context.,
+                com.opensymphony.xwork2.inject.,
+                com.opensymphony.xwork2.ognl.,
+                com.opensymphony.xwork2.security.,
+                com.opensymphony.xwork2.util.,
+                org.apache.tomcat.,
+                org.apache.catalina.core.,
+                org.wildfly.extension.undertow.deployment."/>
+
+    <constant name="struts.devMode.excludedPackageNames"
+              value="
+                ognl.,
+                java.io.,
+                java.net.,
+                java.nio.,
+                javax.,
+                freemarker.core.,
+                freemarker.template.,
+                freemarker.ext.jsp.,
+                freemarker.ext.rhino.,
+                sun.misc.,
+                sun.reflect.,
+                javassist.,
+                org.apache.velocity.,
+                org.objectweb.asm.,
+                org.springframework.context.,
+                com.opensymphony.xwork2.inject.,
+                com.opensymphony.xwork2.ognl.,
+                com.opensymphony.xwork2.security.,
+                com.opensymphony.xwork2.util."/>
+
+</struts>

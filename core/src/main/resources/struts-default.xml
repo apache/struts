@@ -341,15 +341,15 @@
             <interceptor name="autowiring"
                          class="com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor"/>
             <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
-            <interceptor name="coepInterceptor" class="org.apache.struts2.interceptor.CoepInterceptor"/>
+            <interceptor name="coep" class="org.apache.struts2.interceptor.CoepInterceptor"/>
             <interceptor name="conversionError"
                          class="org.apache.struts2.interceptor.StrutsConversionErrorInterceptor"/>
             <interceptor name="cookie" class="org.apache.struts2.interceptor.CookieInterceptor"/>
             <interceptor name="cookieProvider" class="org.apache.struts2.interceptor.CookieProviderInterceptor"/>
             <interceptor name="clearSession" class="org.apache.struts2.interceptor.ClearSessionInterceptor"/>
-            <interceptor name="coopInterceptor" class="org.apache.struts2.interceptor.CoopInterceptor"/>
+            <interceptor name="coop" class="org.apache.struts2.interceptor.CoopInterceptor"/>
             <interceptor name="createSession" class="org.apache.struts2.interceptor.CreateSessionInterceptor"/>
-            <interceptor name="cspInterceptor" class="org.apache.struts2.interceptor.csp.CspInterceptor"/>
+            <interceptor name="csp" class="org.apache.struts2.interceptor.csp.CspInterceptor"/>
             <interceptor name="debugging" class="org.apache.struts2.interceptor.debugging.DebuggingInterceptor"/>
             <interceptor name="execAndWait" class="org.apache.struts2.interceptor.ExecuteAndWaitInterceptor"/>
             <interceptor name="exception" class="com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor"/>
@@ -486,7 +486,7 @@
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="i18n"/>
-                <interceptor-ref name="cspInterceptor">
+                <interceptor-ref name="csp">
                     <param name="disabled">false</param>
                     <param name="enforcingMode">false</param>
                 </interceptor-ref>
@@ -502,12 +502,12 @@
                 <interceptor-ref name="actionMappingParams"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
-                <interceptor-ref name="coepInterceptor">
+                <interceptor-ref name="coep">
                     <param name="disabled">false</param>
                     <param name="enforcingMode">false</param>
                     <param name="exemptedPaths"/>
                 </interceptor-ref>
-                <interceptor-ref name="coopInterceptor">
+                <interceptor-ref name="coop">
                     <param name="disabled">false</param>
                     <param name="exemptedPaths"/>
                     <param name="mode">same-origin</param>

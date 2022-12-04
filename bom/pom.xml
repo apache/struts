@@ -181,6 +181,11 @@
                 <artifactId>struts2-velocity-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-xslt-plugin</artifactId>
+                <version>${struts-version.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

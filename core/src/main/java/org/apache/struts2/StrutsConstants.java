@@ -177,9 +177,6 @@ public final class StrutsConstants {
     @Deprecated
     public static final String STRUTS_OBJECTFACTORY_SPRING_ENABLE_AOP_SUPPORT = "struts.objectFactory.spring.enableAopSupport";
 
-    /** Whether or not XSLT templates should not be cached */
-    public static final String STRUTS_XSLT_NOCACHE = "struts.xslt.nocache";
-
     /** Location of additional configuration properties files to load */
     public static final String STRUTS_CUSTOM_PROPERTIES = "struts.custom.properties";
 

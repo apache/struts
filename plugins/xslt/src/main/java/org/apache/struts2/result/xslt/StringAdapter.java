@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import com.opensymphony.xwork2.util.DomHelper;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +46,8 @@ import java.util.List;
  */
 public class StringAdapter extends AbstractAdapterElement {
 
-    private Logger log = LogManager.getLogger(this.getClass());
+    private static final Logger LOG = LogManager.getLogger(StringAdapter.class);
+
     boolean parseStringAsXML;
 
     public StringAdapter() {
@@ -75,15 +76,16 @@ public class StringAdapter extends AbstractAdapterElement {
         return getPropertyValue().toString();
     }
 
+    @Override
     protected List<Node> buildChildAdapters() {
         Node node;
         if (getParseStringAsXML()) {
-            log.debug("parsing string as xml: {}", getStringValue());
+            LOG.debug("parsing string as xml: {}", getStringValue());
             // Parse the String to a DOM, then proxy that as our child
             node = DomHelper.parse(new InputSource(new StringReader(getStringValue())));
             node = getAdapterFactory().proxyNode(this, node);
         } else {
-            log.debug("using string as is: {}", getStringValue());
+            LOG.debug("using string as is: {}", getStringValue());
             // Create a Text node as our child
             node = new SimpleTextNode(getAdapterFactory(), this, "text", getStringValue());
         }

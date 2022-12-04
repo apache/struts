@@ -16,38 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ArrayAdapter extends AbstractAdapterElement {
+public class SimpleNodeList implements NodeList {
 
-    private Logger log = LogManager.getLogger(this.getClass());
+    private static final Logger LOG = LogManager.getLogger(SimpleNodeList.class);
 
-    public ArrayAdapter() {
+    private final List<Node> nodes;
+
+    public SimpleNodeList(List<Node> nodes) {
+        this.nodes = nodes;
     }
 
-    public ArrayAdapter(AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Object value) {
-        setContext(adapterFactory, parent, propertyName, value);
+    public int getLength() {
+        LOG.trace("getLength: {}", nodes.size());
+        return nodes.size();
     }
 
-    protected List<Node> buildChildAdapters() {
-        List<Node> children = new ArrayList<>();
-        Object[] values = (Object[]) getPropertyValue();
+    public Node item(int i) {
+        LOG.trace("getItem: {}", i);
+        return nodes.get(i);
+    }
 
-        for (Object value : values) {
-            Node childAdapter = getAdapterFactory().adaptNode(this, "item", value);
-            if (childAdapter != null)
-                children.add(childAdapter);
-
-            log.debug("{} adding adapter: {}", this, childAdapter);
+    public String toString() {
+        StringBuilder sb = new StringBuilder("SimpleNodeList: [");
+        for (int i = 0; i < getLength(); i++) {
+            sb.append(item(i).getNodeName()).append(',');
         }
-
-        return children;
+        sb.append("]");
+        return sb.toString();
     }
 }

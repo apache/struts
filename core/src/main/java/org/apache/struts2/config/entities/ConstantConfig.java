@@ -204,7 +204,6 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE_ALWAYS_RESPECT, Objects.toString(objectFactorySpringAutoWireAlwaysRespect, null));
         map.put(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE, Objects.toString(objectFactorySpringUseClassCache, null));
         map.put(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_ENABLE_AOP_SUPPORT, Objects.toString(objectFactorySpringEnableAopSupport, null));
-        map.put(StrutsConstants.STRUTS_XSLT_NOCACHE, Objects.toString(xsltNocache, null));
         map.put(StrutsConstants.STRUTS_CUSTOM_PROPERTIES, StringUtils.join(customProperties, ','));
         map.put(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, StringUtils.join(customI18nResources, ','));
         map.put(StrutsConstants.STRUTS_MAPPER_CLASS, beanConfToString(mapperClass));

@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -46,53 +47,48 @@ import java.util.Map;
  *      public String getLastName();
  * }
  * </pre>
- *
+ * <p>
  * would be rendered as: &lt;myPerson&gt; &lt;firstName&gt;...&lt;/firstName&gt; &lt;lastName&gt;...&lt;/lastName&gt; &lt;/myPerson&gt;
  */
 public class BeanAdapter extends AbstractAdapterElement {
-    //Static fields/initializer
 
-    private static final Object[] NULLPARAMS = new Object[0];
+    private static final Logger LOG = LogManager.getLogger(BeanAdapter.class);
+
+    private static final Object[] NULL_PARAMS = new Object[0];
 
     /**
      * Cache can savely be static because the cached information is the same for all instances of this class.
      */
-    private static Map<Class, PropertyDescriptor[]> propertyDescriptorCache;
-
-    //Instance fields
-
-    private Logger log = LogManager.getLogger(this.getClass());
-
-    //Constructors
+    private static Map<Class<?>, PropertyDescriptor[]> propertyDescriptorCache;
 
     public BeanAdapter() {
     }
 
-    public BeanAdapter(
-            AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Object value) {
+    public BeanAdapter(AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Object value) {
         setContext(adapterFactory, parent, propertyName, value);
     }
 
-    //Methods
-
+    @Override
     public String getTagName() {
         return getPropertyName();
     }
 
+    @Override
     public NodeList getChildNodes() {
         NodeList nl = super.getChildNodes();
         // Log child nodes for debug:
-        if (log.isDebugEnabled() && nl != null) {
-            log.debug("BeanAdapter getChildNodes for: {}", getTagName());
-            log.debug(nl.toString());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("BeanAdapter getChildNodes for: {}", getTagName());
+            LOG.debug(nl.toString());
         }
         return nl;
     }
 
+    @Override
     protected List<Node> buildChildAdapters() {
-        log.debug("BeanAdapter building children. Property name: {}", getPropertyName());
+        LOG.debug("BeanAdapter building children. Property name: {}", getPropertyName());
         List<Node> newAdapters = new ArrayList<>();
-        Class type = getPropertyValue().getClass();
+        Class<?> type = getPropertyValue().getClass();
         PropertyDescriptor[] props = getPropertyDescriptors(getPropertyValue());
 
         if (props.length > 0) {
@@ -100,10 +96,9 @@ public class BeanAdapter extends AbstractAdapterElement {
                 Method m = prop.getReadMethod();
 
                 if (m == null) {
-                    //FIXME: write only property or indexed access
                     continue;
                 }
-                log.debug("Bean reading property method: {}", m.getName());
+                LOG.debug("Bean reading property method: {}", m.getName());
 
                 String propertyName = prop.getName();
                 Object propertyValue;
@@ -114,12 +109,13 @@ public class BeanAdapter extends AbstractAdapterElement {
                     Perhaps with annotations in Java5?
                 */
                 try {
-                    propertyValue = m.invoke(getPropertyValue(), NULLPARAMS);
+                    propertyValue = m.invoke(getPropertyValue(), NULL_PARAMS);
                 } catch (Exception e) {
+                    Exception report = e;
                     if (e instanceof InvocationTargetException) {
-                        e = (Exception) ((InvocationTargetException) e).getTargetException();
+                        report = (Exception) ((InvocationTargetException) e).getTargetException();
                     }
-                    log.error("Cannot access bean property: {}", propertyName, e);
+                    LOG.error(new ParameterizedMessage("Cannot access bean property: {}", propertyName), report);
                     continue;
                 }
 
@@ -131,14 +127,15 @@ public class BeanAdapter extends AbstractAdapterElement {
                     childAdapter = getAdapterFactory().adaptNode(this, propertyName, propertyValue);
                 }
 
-                if (childAdapter != null)
+                if (childAdapter != null) {
                     newAdapters.add(childAdapter);
+                }
 
-                log.debug("{} adding adapter: {}", this, childAdapter);
+                LOG.debug("{} adding adapter: {}", this, childAdapter);
             }
         } else {
             // No properties found
-            log.info("Class {} has no readable properties, trying to adapt {} with StringAdapter...", type.getName(), getPropertyName());
+            LOG.info("Class {} has no readable properties, trying to adapt {} with StringAdapter...", type.getName(), getPropertyName());
         }
 
         return newAdapters;
@@ -150,13 +147,13 @@ public class BeanAdapter extends AbstractAdapterElement {
     private synchronized PropertyDescriptor[] getPropertyDescriptors(Object bean) {
         try {
             if (propertyDescriptorCache == null) {
-                propertyDescriptorCache = new HashMap<Class, PropertyDescriptor[]>();
+                propertyDescriptorCache = new HashMap<>();
             }
 
             PropertyDescriptor[] props = propertyDescriptorCache.get(bean.getClass());
 
             if (props == null) {
-                log.debug("Caching property descriptor for {}", bean.getClass().getName());
+                LOG.debug("Caching property descriptor for {}", bean.getClass().getName());
                 props = Introspector.getBeanInfo(bean.getClass(), Object.class).getPropertyDescriptors();
                 propertyDescriptorCache.put(bean.getClass(), props);
             }

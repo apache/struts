@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,14 +32,14 @@ import org.w3c.dom.Node;
  */
 public abstract class ProxyNodeAdapter extends AbstractAdapterNode {
 
-    private Logger log = LogManager.getLogger(this.getClass());
+    private static final Logger LOG = LogManager.getLogger(ProxyNodeAdapter.class);
 
-    public ProxyNodeAdapter(AdapterFactory factory, AdapterNode parent, Node value) {
-        setContext(factory, parent, "document"/*propname unused*/, value);
-        log.debug("Proxied node is: {}" + value);
-        log.debug("Node class is: {}", value.getClass());
-        log.debug("Node type is: {}", value.getNodeType());
-        log.debug("Node name is: {}", value.getNodeName());
+    protected ProxyNodeAdapter(AdapterFactory factory, AdapterNode parent, Node value) {
+        setContext(factory, parent, "document", value);
+        LOG.debug("Proxied node is: {}", value);
+        LOG.debug("Node class is: {}", value.getClass());
+        LOG.debug("Node type is: {}", value.getNodeType());
+        LOG.debug("Node name is: {}", value.getNodeName());
     }
 
     /**
@@ -60,72 +60,71 @@ public abstract class ProxyNodeAdapter extends AbstractAdapterNode {
     protected NamedNodeMap wrap(NamedNodeMap nnm) {
         return getAdapterFactory().proxyNamedNodeMap(this, nnm);
     }
-    //protected NodeList wrap( NodeList nl ) { }
 
-    //protected Node unwrap( Node child ) {
-    //  return ((ProxyNodeAdapter)child).node();
-    //}
-
-    // Proxied Node methods
-
+    @Override
     public String getNodeName() {
-        log.trace("getNodeName");
+        LOG.trace("getNodeName");
         return node().getNodeName();
     }
 
+    @Override
     public String getNodeValue() throws DOMException {
-        log.trace("getNodeValue");
+        LOG.trace("getNodeValue");
         return node().getNodeValue();
     }
 
+    @Override
     public short getNodeType() {
-        if (log.isTraceEnabled()) {
-            log.trace("getNodeType: " + getNodeName() + ": " + node().getNodeType());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("getNodeType: {}:{}", getNodeName(), node().getNodeType());
         }
         return node().getNodeType();
     }
 
+    @Override
     public NamedNodeMap getAttributes() {
         NamedNodeMap nnm = wrap(node().getAttributes());
-        if (log.isTraceEnabled()) {
-            log.trace("getAttributes: " + nnm);
-        }
+        LOG.trace("getAttributes: {}", nnm);
         return nnm;
     }
 
+    @Override
     public boolean hasChildNodes() {
-        log.trace("hasChildNodes");
+        LOG.trace("hasChildNodes");
         return node().hasChildNodes();
     }
 
+    @Override
     public boolean isSupported(String s, String s1) {
-        log.trace("isSupported");
-        // Is this ok?  What kind of features are they asking about?
+        LOG.trace("isSupported");
         return node().isSupported(s, s1);
     }
 
+    @Override
     public String getNamespaceURI() {
-        log.trace("getNamespaceURI");
+        LOG.trace("getNamespaceURI");
         return node().getNamespaceURI();
     }
 
+    @Override
     public String getPrefix() {
-        log.trace("getPrefix");
+        LOG.trace("getPrefix");
         return node().getPrefix();
     }
 
+    @Override
     public String getLocalName() {
-        log.trace("getLocalName");
+        LOG.trace("getLocalName");
         return node().getLocalName();
     }
 
+    @Override
     public boolean hasAttributes() {
-        log.trace("hasAttributes");
+        LOG.trace("hasAttributes");
         return node().hasAttributes();
     }
 
-    // End proxied Node methods
-
+    @Override
     public String toString() {
         return "ProxyNode for: " + node();
     }

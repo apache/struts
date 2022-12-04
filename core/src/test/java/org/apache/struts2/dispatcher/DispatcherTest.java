@@ -232,6 +232,8 @@ public class DispatcherTest extends StrutsInternalTestCase {
         assertNotNull(config);
         HashSet<String> expected = new HashSet<>();
         expected.add("struts-default.xml");
+        expected.add("struts-beans.xml");
+        expected.add("struts-excluded-classes.xml");
         expected.add("struts-plugin.xml");
         expected.add("struts.xml");
         assertEquals(expected, config.getLoadedFileNames());

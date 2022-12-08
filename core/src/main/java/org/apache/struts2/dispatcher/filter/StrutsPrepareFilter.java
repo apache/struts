@@ -86,7 +86,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
                 prepare.createActionContext(request, response);
                 prepare.assignDispatcherToThread();
                 request = prepare.wrapRequest(request);
-                prepare.findActionMapping(request, response);
+                prepare.findActionMapping(request, response, true);
             }
             chain.doFilter(request, response);
         } finally {

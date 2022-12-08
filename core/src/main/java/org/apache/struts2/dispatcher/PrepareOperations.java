@@ -52,6 +52,7 @@ public class PrepareOperations {
 
     private Dispatcher dispatcher;
     private static final String STRUTS_ACTION_MAPPING_KEY = "struts.actionMapping";
+    private static final String NO_ACTION_MAPPING = "noActionMapping";
     public static final String CLEANUP_RECURSION_COUNTER = "__cleanup_recursion_counter";
 
     public PrepareOperations(Dispatcher dispatcher) {
@@ -73,7 +74,7 @@ public class PrepareOperations {
         if (oldCounter != null) {
             counter = oldCounter + 1;
         }
-        
+
         ActionContext oldContext = ActionContext.getContext();
         if (oldContext != null) {
             // detected existing context, so we are probably in a forward
@@ -172,7 +173,7 @@ public class PrepareOperations {
      * has already been found, otherwise, it creates it and stores it in the request.  No mapping will be created in the
      * case of static resource requests or unidentifiable requests for other servlets, for example.
      * @param forceLookup if true, the action mapping will be looked up from the ActionMapper instance, ignoring if there is one
-     * in the request or not 
+     * in the request or not
      *
      * @param request servlet request
      * @param response servlet response
@@ -180,18 +181,24 @@ public class PrepareOperations {
      * @return the action mapping
      */
     public ActionMapping findActionMapping(HttpServletRequest request, HttpServletResponse response, boolean forceLookup) {
-        ActionMapping mapping = (ActionMapping) request.getAttribute(STRUTS_ACTION_MAPPING_KEY);
-        if (mapping == null || forceLookup) {
+        ActionMapping mapping = null;
+
+        Object mappingAttr = request.getAttribute(STRUTS_ACTION_MAPPING_KEY);
+        if (mappingAttr == null || forceLookup) {
             try {
                 mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
                 if (mapping != null) {
                     request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
+                } else {
+                    request.setAttribute(STRUTS_ACTION_MAPPING_KEY, NO_ACTION_MAPPING);
                 }
             } catch (Exception ex) {
                 if (dispatcher.isHandleException() || dispatcher.isDevMode()) {
                     dispatcher.sendError(request, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
                 }
             }
+        } else if (!NO_ACTION_MAPPING.equals(mappingAttr)) {
+            mapping = (ActionMapping) mappingAttr;
         }
 
         return mapping;

@@ -73,17 +73,10 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
 
         ActionMapping mapping = prepare.findActionMapping(request, response);
 
-        //if recursion counter is > 1, it means we are in a "forward", in that case a mapping will still be
-        //in the request, if we handle it, it will lead to an infinite loop, see WW-3077
-        Integer recursionCounter = (Integer) request.getAttribute(PrepareOperations.CLEANUP_RECURSION_COUNTER);
-
-        if (mapping == null || recursionCounter > 1) {
-            boolean handled = execute.executeStaticResourceRequest(request, response);
-            if (!handled) {
-                chain.doFilter(request, response);
-            }
-        } else {
+        if (mapping != null) {
             execute.executeAction(request, response, mapping);
+        } else if (!execute.executeStaticResourceRequest(request, response)) {
+            chain.doFilter(request, response);
         }
     }
 

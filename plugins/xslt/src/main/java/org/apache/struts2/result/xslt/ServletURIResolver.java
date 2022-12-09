@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,39 +31,39 @@ import java.io.InputStream;
 /**
  * ServletURIResolver is a URIResolver that can retrieve resources from the servlet context using the scheme "response".
  * e.g.
- *
+ * <p>
  * A URI resolver is called when a stylesheet uses an xsl:include, xsl:import, or document() function to find the
  * resource (file).
  */
 public class ServletURIResolver implements URIResolver {
 
-    private Logger log = LogManager.getLogger(getClass());
-    static final String PROTOCOL = "response:";
+    private static final Logger LOG = LogManager.getLogger(ServletURIResolver.class);
 
-    private ServletContext sc;
+    private static final String PROTOCOL = "response:";
 
-    public ServletURIResolver(ServletContext sc) {
-        log.trace("ServletURIResolver: {}", sc);
-        this.sc = sc;
+    private final ServletContext servletContext;
+
+    public ServletURIResolver(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
 
     public Source resolve(String href, String base) throws TransformerException {
-        log.debug("ServletURIResolver resolve(): href={}, base={}", href, base);
+        LOG.debug("ServletURIResolver resolve(): href={}, base={}", href, base);
         if (href.startsWith(PROTOCOL)) {
             String res = href.substring(PROTOCOL.length());
-            log.debug("Resolving resource <{}>", res);
+            LOG.debug("Resolving resource <{}>", res);
 
-            InputStream is = sc.getResourceAsStream(res);
+            InputStream is = servletContext.getResourceAsStream(res);
 
             if (is == null) {
                 throw new TransformerException(
-                        "Resource " + res + " not found in resources.");
+                    "Resource " + res + " not found in resources.");
             }
 
             return new StreamSource(is);
         }
 
         throw new TransformerException(
-                "Cannot handle protocol of resource " + href);
+            "Cannot handle protocol of resource " + href);
     }
 }

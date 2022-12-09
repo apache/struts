@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.*;
@@ -100,7 +100,7 @@ import java.util.Map;
  */
 public class AdapterFactory {
 
-    private Map<Class, Class> adapterTypes = new HashMap<>();
+    private final Map<Class<?>, Class<?>> adapterTypes = new HashMap<>();
 
     /**
      * Register an adapter type for a Java class type.
@@ -108,7 +108,7 @@ public class AdapterFactory {
      * @param type        the Java class type which is to be handled by the adapter.
      * @param adapterType The adapter class, which implements AdapterNode.
      */
-    public void registerAdapterType(Class type, Class adapterType) {
+    public void registerAdapterType(Class<?> type, Class<?> adapterType) {
         adapterTypes.put(type, adapterType);
     }
 
@@ -121,15 +121,10 @@ public class AdapterFactory {
      * @param propertyValue the property value
      *
      * @return the document object
-     *
-     * @throws IllegalAccessException in case of illegal access
-     * @throws InstantiationException in case of instantiation errors
      */
-    public Document adaptDocument(String propertyName, Object propertyValue)
-            throws IllegalAccessException, InstantiationException {
+    public Document adaptDocument(String propertyName, Object propertyValue) {
         return new SimpleAdapterDocument(this, null, propertyName, propertyValue);
     }
-
 
     /**
      * Create an Node adapter for a child element.
@@ -145,7 +140,7 @@ public class AdapterFactory {
      * @return a node
      */
     public Node adaptNode(AdapterNode parent, String propertyName, Object value) {
-        Class adapterClass = getAdapterForValue(value);
+        Class<?> adapterClass = getAdapterForValue(value);
         if (adapterClass != null) {
             return constructAdapterInstance(adapterClass, parent, propertyName, value);
         }
@@ -161,7 +156,7 @@ public class AdapterFactory {
         }
 
         // Check other supported types or default to generic JavaBean introspecting adapter
-        Class valueType = value.getClass();
+        Class<?> valueType = value.getClass();
 
         if (valueType.isArray()) {
             adapterClass = ArrayAdapter.class;
@@ -188,7 +183,6 @@ public class AdapterFactory {
      * </p>
      *
      * <p>
-     * // TODO:
      * NameSpaces are not yet supported.
      * </p>
      *
@@ -238,10 +232,10 @@ public class AdapterFactory {
      *
      * @return the new node
      */
-    private Node constructAdapterInstance(Class adapterClass, AdapterNode parent, String propertyName, Object propertyValue) {
+    private Node constructAdapterInstance(Class<?> adapterClass, AdapterNode parent, String propertyName, Object propertyValue) {
         // Check to see if the class has a no-args constructor
         try {
-            adapterClass.getConstructor(new Class []{});
+            adapterClass.getConstructor();
         } catch (NoSuchMethodException e1) {
             throw new StrutsException("Adapter class: " + adapterClass + " does not have a no-args constructor.");
         }
@@ -272,8 +266,8 @@ public class AdapterFactory {
         return new StringAdapter(this, parent, propertyName, "null");
     }
 
-    //TODO: implement Configuration option to provide additional adapter classes
-    public Class getAdapterForValue(Object value) {
+    public Class<?> getAdapterForValue(Object value) {
         return adapterTypes.get(value.getClass());
     }
+
 }

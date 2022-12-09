@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.w3c.dom.Node;
 
@@ -39,21 +39,22 @@ import java.util.Map;
  */
 public class MapAdapter extends AbstractAdapterElement {
 
-    public MapAdapter() { }
-
-    public MapAdapter(AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Map value) {
-        setContext( adapterFactory, parent, propertyName, value );
+    public MapAdapter() {
     }
 
-    public Map map() {
-        return (Map)getPropertyValue();
+    public MapAdapter(AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Map<?, ?> value) {
+        setContext(adapterFactory, parent, propertyName, value);
     }
 
+    public Map<?, ?> map() {
+        return (Map<?, ?>) getPropertyValue();
+    }
+
+    @Override
     protected List<Node> buildChildAdapters() {
         List<Node> children = new ArrayList<>(map().entrySet().size());
 
-        for (Object o : map().entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
+        for (Map.Entry<?, ?> entry : map().entrySet()) {
             Object key = entry.getKey();
             Object value = entry.getValue();
             EntryElement child = new EntryElement(getAdapterFactory(), this, "entry", key, value);
@@ -64,19 +65,20 @@ public class MapAdapter extends AbstractAdapterElement {
     }
 
     static class EntryElement extends AbstractAdapterElement {
-        Object key, value;
+        Object key;
+        Object value;
 
-        public EntryElement(  AdapterFactory adapterFactory,
-                              AdapterNode parent, String propertyName, Object key, Object value ) {
-            setContext( adapterFactory, parent, propertyName, null/*we have two values*/ );
+        public EntryElement(AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Object key, Object value) {
+            setContext(adapterFactory, parent, propertyName, null/*we have two values*/);
             this.key = key;
             this.value = value;
         }
 
+        @Override
         protected List<Node> buildChildAdapters() {
             List<Node> children = new ArrayList<>();
-            children.add( getAdapterFactory().adaptNode( this, "key", key ) );
-            children.add( getAdapterFactory().adaptNode( this, "value", value ) );
+            children.add(getAdapterFactory().adaptNode(this, "key", key));
+            children.add(getAdapterFactory().adaptNode(this, "value", value));
             return children;
         }
     }

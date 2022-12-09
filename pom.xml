@@ -2,24 +2,25 @@
 <!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
+ * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * regarding copyright ownership. The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * with the License. You may obtain a copy of the License at
  *
  *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -32,7 +33,7 @@
     <version>6.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
-    <url>http://struts.apache.org/</url>
+    <url>https://struts.apache.org/</url>
     <description>Apache Struts 2</description>
 
     <inceptionYear>2000</inceptionYear>
@@ -91,15 +92,15 @@
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
-            <comments />
+            <comments/>
         </license>
     </licenses>
 
     <organization>
         <name>Apache Software Foundation</name>
-        <url>http://www.apache.org</url>
+        <url>https://www.apache.org</url>
     </organization>
 
     <properties>
@@ -271,10 +272,10 @@
                             <exclude>**/TestBean.java</exclude>
                         </excludes>
                         <properties>
-                          <property>
-                            <name>junit</name>
-                            <value>false</value>
-                          </property>
+                            <property>
+                                <name>junit</name>
+                                <value>false</value>
+                            </property>
                         </properties>
                     </configuration>
                 </plugin>
@@ -315,10 +316,10 @@
                         <useDefaultExcludes>true</useDefaultExcludes>
                         <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
                         <licenses>
-                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20" />
+                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20"/>
                         </licenses>
                         <licenseFamilies>
-                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily" />
+                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily"/>
                         </licenseFamilies>
                         <includes>
                             <include>pom.xml</include>
@@ -367,7 +368,7 @@
                             <id>enforce</id>
                             <configuration>
                                 <rules>
-                                    <dependencyConvergence />
+                                    <dependencyConvergence/>
                                 </rules>
                             </configuration>
                             <goals>
@@ -674,6 +675,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-xslt-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>2.3.31</version>
@@ -683,7 +690,8 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
                 <version>6.0.3</version>
-                <scope>provided</scope>  <!-- felix-main provides everything in felix-framework (and more), override here to provent both JARs from being included in the build. -->
+                <scope>provided
+                </scope>  <!-- felix-main provides everything in felix-framework (and more), override here to provent both JARs from being included in the build. -->
             </dependency>
 
             <dependency>
@@ -1045,7 +1053,8 @@
                 <version>4.3.1</version>
                 <exclusions>
                     <!-- The mockito-core artifact and easymock artifact use different versions of objenesis (2.6 vs 3.1).
-                         Excluding the older version here to pass enforcer.  When next upgrading mockito-core, confirm whether this exclusion is still required. -->
+                         Excluding the older version here to pass enforcer. When next upgrading mockito-core,
+                         confirm whether this exclusion is still required. -->
                     <exclusion>
                         <groupId>org.objenesis</groupId>
                         <artifactId>objenesis</artifactId>

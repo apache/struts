@@ -16,10 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
-
-import java.util.HashMap;
-import java.util.Map;
+package org.apache.struts2.result.xslt;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -27,28 +24,33 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.TypeInfo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * AbstractAdapterElement extends the abstract Node type and implements
  * the DOM Element interface.
  */
 public abstract class AbstractAdapterElement extends AbstractAdapterNode implements Element {
 
-    private Map attributeAdapters;
+    private Map<String, Object> attributeAdapters;
 
-    public AbstractAdapterElement() { }
+    protected AbstractAdapterElement() {
+    }
 
     public void setAttribute(String string, String string1) throws DOMException {
         throw operationNotSupported();
     }
 
-    protected Map getAttributeAdapters() {
-        if ( attributeAdapters == null )
+    protected Map<String, Object> getAttributeAdapters() {
+        if (attributeAdapters == null) {
             attributeAdapters = buildAttributeAdapters();
+        }
         return attributeAdapters;
     }
 
-    protected Map buildAttributeAdapters() {
-        return new HashMap();
+    protected Map<String, Object> buildAttributeAdapters() {
+        return new HashMap<>();
     }
 
     /**
@@ -63,15 +65,15 @@ public abstract class AbstractAdapterElement extends AbstractAdapterNode impleme
     }
 
     public String getAttributeNS(String string, String string1) {
-        return null;
+        throw operationNotSupported();
     }
 
     public Attr setAttributeNode(Attr attr) throws DOMException {
         throw operationNotSupported();
     }
 
-    public Attr getAttributeNode( String name ) {
-        return (Attr)getAttributes().getNamedItem( name );
+    public Attr getAttributeNode(String name) {
+        return (Attr) getAttributes().getNamedItem(name);
     }
 
     public Attr setAttributeNodeNS(Attr attr) throws DOMException {
@@ -82,10 +84,12 @@ public abstract class AbstractAdapterElement extends AbstractAdapterNode impleme
         throw operationNotSupported();
     }
 
+    @Override
     public String getNodeName() {
         return getTagName();
     }
 
+    @Override
     public short getNodeType() {
         return Node.ELEMENT_NODE;
     }
@@ -102,6 +106,7 @@ public abstract class AbstractAdapterElement extends AbstractAdapterNode impleme
         return false;
     }
 
+    @Override
     public boolean hasChildNodes() {
         return getElementsByTagName("*").getLength() > 0;
     }

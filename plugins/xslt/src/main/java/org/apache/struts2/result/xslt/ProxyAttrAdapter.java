@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -35,12 +35,9 @@ public class ProxyAttrAdapter extends ProxyNodeAdapter implements Attr {
         super(factory, parent, value);
     }
 
-    // convenience
     protected Attr attr() {
         return (Attr) getPropertyValue();
     }
-
-    // Proxied Attr methods
 
     public String getName() {
         return attr().getName();
@@ -62,8 +59,6 @@ public class ProxyAttrAdapter extends ProxyNodeAdapter implements Attr {
         return (Element) getParent();
     }
 
-    // DOM level 3
-
     public TypeInfo getSchemaTypeInfo() {
         throw operationNotSupported();
     }
@@ -72,12 +67,10 @@ public class ProxyAttrAdapter extends ProxyNodeAdapter implements Attr {
         throw operationNotSupported();
     }
 
-    // end DOM level 3
-
-    // End Proxied Attr methods
-
+    @Override
     public String toString() {
         return "ProxyAttribute for: " + attr();
     }
+
 }
 

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
@@ -24,16 +24,16 @@ import org.w3c.dom.Node;
 
 /**
  * A NamedNodeMap that wraps the Nodes returned in their proxies.
- *
+ * <p>
  * Note: Since maps have no guaranteed order we don't need to worry about identity
  * here as we do with "child" adapters.  In that case we need to preserve identity
  * in order to support finding the next/previous siblings.
  */
 public class ProxyNamedNodeMap implements NamedNodeMap {
 
-    private NamedNodeMap nodes;
-    private AdapterFactory adapterFactory;
-    private AdapterNode parent;
+    private final NamedNodeMap nodes;
+    private final AdapterFactory adapterFactory;
+    private final AdapterNode parent;
 
     public ProxyNamedNodeMap(AdapterFactory factory, AdapterNode parent, NamedNodeMap nodes) {
         this.nodes = nodes;

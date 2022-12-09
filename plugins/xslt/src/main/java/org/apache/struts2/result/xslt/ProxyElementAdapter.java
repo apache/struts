@@ -16,11 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.w3c.dom.*;
+import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.TypeInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +45,7 @@ import java.util.List;
  */
 public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
 
-    private Logger log = LogManager.getLogger(this.getClass());
+    private static final Logger LOG = LogManager.getLogger(ProxyElementAdapter.class);
 
     public ProxyElementAdapter(AdapterFactory factory, AdapterNode parent, Element value) {
         super(factory, parent, value);
@@ -53,6 +58,7 @@ public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
         return (Element) getPropertyValue();
     }
 
+    @Override
     protected List<Node> buildChildAdapters() {
         List<Node> adapters = new ArrayList<>();
         NodeList children = node().getChildNodes();
@@ -60,7 +66,7 @@ public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
             Node child = children.item(i);
             Node adapter = wrap(child);
             if (adapter != null) {
-                log.debug("Wrapped child node: {}", child.getNodeName());
+                LOG.debug("Wrapped child node: {}", child.getNodeName());
                 adapters.add(adapter);
             }
         }
@@ -86,13 +92,8 @@ public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
     }
 
     public Attr getAttributeNode(String name) {
-        log.debug("Wrapping attribute: {}", name);
+        LOG.debug("Wrapping attribute: {}", name);
         return (Attr) wrap(element().getAttributeNode(name));
-    }
-
-    // I'm overriding this just for clarity.  The base impl is correct.
-    public NodeList getElementsByTagName(String name) {
-        return super.getElementsByTagName(name);
     }
 
     public String getAttributeNS(String namespaceURI, String localName) {
@@ -103,12 +104,7 @@ public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
         return (Attr) wrap(element().getAttributeNodeNS(namespaceURI, localName));
     }
 
-    public NodeList getElementsByTagNameNS(String namespaceURI, String localName) {
-        return super.getElementsByTagNameNS(namespaceURI, localName);
-    }
-
     // Unsupported mutators of Element
-
     public void removeAttribute(String name) throws DOMException {
         throw new UnsupportedOperationException();
     }
@@ -159,6 +155,7 @@ public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
 
     // end DOM level 3 methods
 
+    @Override
     public String toString() {
         return "ProxyElement for: " + element();
     }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * AbstractAdapterNode is the base for childAdapters that expose a read-only view
- * of a Java object as a DOM Node.  This class implements the core parent-child
+ * of a Java object as a DOM Node. This class implements the core parent-child
  * and sibling node traversal functionality shared by all adapter type nodes
  * and used in proxy node support.
  *
@@ -37,43 +37,44 @@ import java.util.List;
  */
 public abstract class AbstractAdapterNode implements AdapterNode {
 
-    private static final NamedNodeMap EMPTY_NAMEDNODEMAP =
-            new NamedNodeMap() {
-                public int getLength() {
-                    return 0;
-                }
+    private static final Logger LOG = LogManager.getLogger(AbstractAdapterNode.class);
 
-                public Node item(int index) {
-                    return null;
-                }
+    private static final NamedNodeMap EMPTY_NAMED_NODE_MAP =
+        new NamedNodeMap() {
+            public int getLength() {
+                return 0;
+            }
 
-                public Node getNamedItem(String name) {
-                    return null;
-                }
+            public Node item(int index) {
+                return null;
+            }
 
-                public Node removeNamedItem(String name) throws DOMException {
-                    return null;
-                }
+            public Node getNamedItem(String name) {
+                return null;
+            }
 
-                public Node setNamedItem(Node arg) throws DOMException {
-                    return null;
-                }
+            public Node removeNamedItem(String name) throws DOMException {
+                return null;
+            }
 
-                public Node setNamedItemNS(Node arg) throws DOMException {
-                    return null;
-                }
+            public Node setNamedItem(Node arg) throws DOMException {
+                return null;
+            }
 
-                public Node getNamedItemNS(String namespaceURI, String localName) {
-                    return null;
-                }
+            public Node setNamedItemNS(Node arg) throws DOMException {
+                return null;
+            }
 
-                public Node removeNamedItemNS(String namespaceURI, String localName) throws DOMException {
-                    return null;
-                }
-            };
+            public Node getNamedItemNS(String namespaceURI, String localName) {
+                return null;
+            }
+
+            public Node removeNamedItemNS(String namespaceURI, String localName) throws DOMException {
+                return null;
+            }
+        };
 
     private List<Node> childAdapters;
-    private Logger log = LogManager.getLogger(this.getClass());
 
     // The domain object that we are adapting
     private Object propertyValue;
@@ -81,19 +82,15 @@ public abstract class AbstractAdapterNode implements AdapterNode {
     private AdapterNode parent;
     private AdapterFactory adapterFactory;
 
-
-    public AbstractAdapterNode() {
-        if (LogManager.getLogger(getClass()).isDebugEnabled()) {
-            LogManager.getLogger(getClass()).debug("Creating " + this);
-        }
+    protected AbstractAdapterNode() {
+        LOG.debug("Creating: {}", this);
     }
 
     /**
-     *
      * @param adapterFactory the adapter factory
-     * @param parent the parent adapter node
-     * @param propertyName the property name
-     * @param value value
+     * @param parent         the parent adapter node
+     * @param propertyName   the property name
+     * @param value          value
      */
     protected void setContext(AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Object value) {
         setAdapterFactory(adapterFactory);
@@ -108,11 +105,11 @@ public abstract class AbstractAdapterNode implements AdapterNode {
      * @return List of child adapters.
      */
     protected List<Node> buildChildAdapters() {
-        return new ArrayList<Node>();
+        return new ArrayList<>();
     }
 
     /**
-     * Lazily initialize child childAdapters
+     * Lazily initialize child adapters
      *
      * @return node list
      */
@@ -124,27 +121,26 @@ public abstract class AbstractAdapterNode implements AdapterNode {
     }
 
     public Node getChildBeforeOrAfter(Node child, boolean before) {
-        log.debug("getChildBeforeOrAfter: ");
-        List adapters = getChildAdapters();
-        if (log.isDebugEnabled()) {
-            log.debug("childAdapters = {}", adapters);
-            log.debug("child = {}", child);
+        LOG.debug("getChildBeforeOrAfter: ");
+        List<Node> adapters = getChildAdapters();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("childAdapters = {}", adapters);
+            LOG.debug("child = {}", child);
         }
         int index = adapters.indexOf(child);
         if (index < 0)
             throw new StrutsException(child + " is no child of " + this);
         int siblingIndex = before ? index - 1 : index + 1;
-        return ((0 < siblingIndex) && (siblingIndex < adapters.size())) ?
-                ((Node) adapters.get(siblingIndex)) : null;
+        return ((0 < siblingIndex) && (siblingIndex < adapters.size())) ? adapters.get(siblingIndex) : null;
     }
 
     public Node getChildAfter(Node child) {
-        log.trace("getChildAfter");
+        LOG.trace("getChildAfter");
         return getChildBeforeOrAfter(child, false/*after*/);
     }
 
     public Node getChildBefore(Node child) {
-        log.trace("getChildBefore");
+        LOG.trace("getChildBefore");
         return getChildBeforeOrAfter(child, true/*after*/);
     }
 
@@ -165,19 +161,16 @@ public abstract class AbstractAdapterNode implements AdapterNode {
     }
 
     public NodeList getElementsByTagNameNS(String string, String string1) {
-        // TODO:
-        return null;
+        throw operationNotSupported();
     }
 
-    // Begin Node methods
-
     public NamedNodeMap getAttributes() {
-        return EMPTY_NAMEDNODEMAP;
+        return EMPTY_NAMED_NODE_MAP;
     }
 
     public NodeList getChildNodes() {
         NodeList nl = new SimpleNodeList(getChildAdapters());
-        log.debug("getChildNodes for tag: {} num children: {}", getNodeName(), nl.getLength());
+        LOG.debug("getChildNodes for tag: {} num children: {}", getNodeName(), nl.getLength());
         return nl;
     }
 
@@ -211,7 +204,7 @@ public abstract class AbstractAdapterNode implements AdapterNode {
     }
 
     public Node getParentNode() {
-        log.trace("getParentNode");
+        LOG.trace("getParentNode");
         return getParent();
     }
 
@@ -241,9 +234,9 @@ public abstract class AbstractAdapterNode implements AdapterNode {
 
     public Node getNextSibling() {
         Node next = getParent().getChildAfter(this);
-        if (log.isTraceEnabled()) {
-            log.trace("getNextSibling on " + getNodeName() + ": "
-                    + ((next == null) ? "null" : next.getNodeName()));
+
+        if (next != null) {
+            LOG.trace("getNextSibling on {}: {} ", getNodeName(), next.getNodeName());
         }
 
         return next;
@@ -278,7 +271,7 @@ public abstract class AbstractAdapterNode implements AdapterNode {
     }
 
     public Node cloneNode(boolean b) {
-        log.trace("cloneNode");
+        LOG.trace("cloneNode");
         throw operationNotSupported();
     }
 
@@ -295,7 +288,7 @@ public abstract class AbstractAdapterNode implements AdapterNode {
     }
 
     public void normalize() {
-        log.trace("normalize");
+        LOG.trace("normalize");
         throw operationNotSupported();
     }
 

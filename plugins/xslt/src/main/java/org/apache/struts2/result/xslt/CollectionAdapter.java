@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class CollectionAdapter extends AbstractAdapterElement {
 
-    private Logger log = LogManager.getLogger(this.getClass());
+    private static final Logger LOG = LogManager.getLogger(CollectionAdapter.class);
 
     public CollectionAdapter() { }
 
@@ -36,8 +36,9 @@ public class CollectionAdapter extends AbstractAdapterElement {
         setContext(rootAdapterFactory, parent, propertyName, value);
     }
 
+    @Override
     protected List<Node> buildChildAdapters() {
-        Collection values = (Collection) getPropertyValue();
+        Collection<?> values = (Collection<?>) getPropertyValue();
         List<Node> children = new ArrayList<>(values.size());
 
         for (Object value : values) {
@@ -47,10 +48,12 @@ public class CollectionAdapter extends AbstractAdapterElement {
             } else {
                 childAdapter = getAdapterFactory().adaptNode(this, "item", value);
             }
-            if (childAdapter != null)
-                children.add(childAdapter);
 
-            log.debug("{} adding adapter: {}", this, childAdapter);
+            if (childAdapter != null) {
+                children.add(childAdapter);
+            }
+
+            LOG.debug("{} adding adapter: {}", this, childAdapter);
         }
 
         return children;

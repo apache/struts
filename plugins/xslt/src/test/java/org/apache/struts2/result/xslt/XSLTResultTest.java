@@ -16,17 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.junit.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -43,7 +43,7 @@ import java.util.List;
  * Unit test for {@link XSLTResult}.
  *
  */
-public class XSLTResultTest extends StrutsInternalTestCase {
+public class XSLTResultTest extends StrutsTestCase {
 
     private XSLTResult result;
     private MockHttpServletResponse response;
@@ -57,7 +57,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
             result.setParse(false);
             result.setStylesheetLocation(null);
             result.execute(mai);
-            fail("Should have thrown an IllegalArgumentException");
+            TestCase.fail("Should have thrown an IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // success
         }
@@ -68,7 +68,7 @@ public class XSLTResultTest extends StrutsInternalTestCase {
             result.setParse(false);
             result.setStylesheetLocation("nofile.xsl");
             result.execute(mai);
-            fail("Should have thrown a TransformerException");
+            TestCase.fail("Should have thrown a TransformerException");
         } catch (TransformerException e) {
             // success
         }
@@ -80,8 +80,8 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         result.execute(mai);
 
         String out = response.getContentAsString();
-        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
+        TestCase.assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        TestCase.assertTrue(out.contains("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\""));
     }
 
     public void testSimpleTransform5() throws Exception {
@@ -90,14 +90,14 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         result.execute(mai);
 
         String out = response.getContentAsString();
-        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.contains("<title>WebWork in Action</title>"));
-        assertTrue(out.contains("<author>Patrick and Jason</author>"));
-        assertTrue(out.contains("<editions><edition value=\"I\">I</edition><edition value=\"IV\">IV</edition></editions>"));
-        assertTrue(out.contains("<book><title/><author/><editions/></book>"));
-        assertTrue(out.contains("<title>XWork not in Action</title>"));
-        assertTrue(out.contains("<author>Superman</author>"));
-        assertTrue(out.contains("<editions><edition value=\"1234\">1234</edition><edition value=\"345\">345</edition><edition value=\"6667\">6667</edition></editions>"));
+        TestCase.assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        TestCase.assertTrue(out.contains("<title>WebWork in Action</title>"));
+        TestCase.assertTrue(out.contains("<author>Patrick and Jason</author>"));
+        TestCase.assertTrue(out.contains("<editions><edition value=\"I\">I</edition><edition value=\"IV\">IV</edition></editions>"));
+        TestCase.assertTrue(out.contains("<book><title/><author/><editions/></book>"));
+        TestCase.assertTrue(out.contains("<title>XWork not in Action</title>"));
+        TestCase.assertTrue(out.contains("<author>Superman</author>"));
+        TestCase.assertTrue(out.contains("<editions><edition value=\"1234\">1234</edition><edition value=\"345\">345</edition><edition value=\"6667\">6667</edition></editions>"));
     }
 
     public void testSimpleTransformParse() throws Exception {
@@ -106,8 +106,8 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         result.execute(mai);
 
         String out = response.getContentAsString();
-        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
+        TestCase.assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        TestCase.assertTrue(out.contains("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\""));
     }
 
     public void testTransform2() throws Exception {
@@ -116,36 +116,36 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         result.execute(mai);
 
         String out = response.getContentAsString();
-        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.indexOf("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
-        assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
+        TestCase.assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        TestCase.assertTrue(out.contains("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\""));
+        TestCase.assertTrue(out.contains("Hello Santa Claus how are you?"));
     }
-    
+
     public void testTransform3() throws Exception {
         result.setParse(false);
         result.setStylesheetLocation("XSLTResultTest3.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
-        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.indexOf("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
-        assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
-        assertTrue(out.indexOf("WebWork in Action by Patrick and Jason") > -1);
-        assertTrue(out.indexOf("XWork not in Action by Superman") > -1);
+        TestCase.assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        TestCase.assertTrue(out.contains("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\""));
+        TestCase.assertTrue(out.contains("Hello Santa Claus how are you?"));
+        TestCase.assertTrue(out.contains("WebWork in Action by Patrick and Jason"));
+        TestCase.assertTrue(out.contains("XWork not in Action by Superman"));
     }
-    
+
     public void testTransformWithBoolean() throws Exception {
         result.setParse(false);
         result.setStylesheetLocation("XSLTResultTest5.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
-        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.indexOf("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
-        assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
-        assertTrue(out.indexOf("You are active: true") > -1);
+        TestCase.assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        TestCase.assertTrue(out.contains("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\""));
+        TestCase.assertTrue(out.contains("Hello Santa Claus how are you?"));
+        TestCase.assertTrue(out.contains("You are active: true"));
     }
-    
+
     public void testTransform4WithDocumentInclude() throws Exception {
         result = new XSLTResult(){
             protected URIResolver getURIResolver() {
@@ -153,21 +153,21 @@ public class XSLTResultTest extends StrutsInternalTestCase {
                     public Source resolve(String href, String base) throws TransformerException {
                         return new StreamSource(ClassLoaderUtil.getResourceAsStream(href, this.getClass()));
                     }
-                    
+
                 };
             }
-            
+
         };
         result.setParse(false);
         result.setStylesheetLocation("XSLTResultTest4.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
-        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.indexOf("<validators>") > -1);
+        TestCase.assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        TestCase.assertTrue(out.contains("<validators>"));
     }
 
-    public void testTransform4WithBadDocumentInclude() throws Exception {
+    public void testTransform4WithBadDocumentInclude() {
         result = new XSLTResult(){
             protected URIResolver getURIResolver() {
                 return new URIResolver() {
@@ -183,28 +183,26 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         result.setStylesheetLocation("XSLTResultTest4.badinclude.xsl");
         try {
             result.execute(mai);
-            fail("Should have thrown an exception");
+            TestCase.fail("Should have thrown an exception");
         } catch (Exception ex) {
-            assertEquals("Error transforming result", ex.getMessage());
+            TestCase.assertEquals("Error transforming result", ex.getMessage());
         }
     }
-    
-    public void testTransformWithError() throws Exception {
+
+    public void testTransformWithError() {
         result = new XSLTResult(){
             protected URIResolver getURIResolver() {
-                return new URIResolver() {
-                    public Source resolve(String href, String base) throws TransformerException {
-                        throw new TransformerException("Some random error");
-                    }
+                return (href, base) -> {
+                    throw new TransformerException("Some random error");
                 };
             }
         };
         result.setStylesheetLocation("XSLTResultTest4.xsl");
         try {
             result.execute(mai);
-            fail("Should have thrown an exception");
+            TestCase.fail("Should have thrown an exception");
         } catch (Exception ex) {
-            assertEquals("Error transforming result", ex.getMessage());
+            TestCase.assertEquals("Error transforming result", ex.getMessage());
         }
     }
 
@@ -213,9 +211,9 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         result.setStylesheetLocation("XSLTResultTest.bad.character.xsl");
         try {
             result.execute(mai);
-            fail("Should have thrown an exception");
+            TestCase.fail("Should have thrown an exception");
         } catch (Exception ex) {
-            assertEquals("Error transforming result", ex.getMessage());
+            TestCase.assertEquals("Error transforming result", ex.getMessage());
         }
     }
 
@@ -227,9 +225,9 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
         String out = response.getContentAsString();
 
-        assertEquals(302, response.getStatus());
-        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
+        TestCase.assertEquals(302, response.getStatus());
+        TestCase.assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        TestCase.assertTrue(out.contains("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\""));
     }
 
     public void testEncoding() throws Exception {
@@ -240,16 +238,16 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
         String actual = response.getCharacterEncoding();
 
-        assertEquals(actual, "ISO-8859-1");
+        TestCase.assertEquals(actual, "ISO-8859-1");
     }
 
     public void testPassingNullInvocation() throws Exception{
         Result result = new XSLTResult();
         try {
             result.execute(null);
-            fail("Exception should be thrown!");
+            TestCase.fail("Exception should be thrown!");
         } catch (IllegalArgumentException e) {
-            assertEquals("Invocation cannot be null!", e.getMessage());
+            TestCase.assertEquals("Invocation cannot be null!", e.getMessage());
         }
     }
 
@@ -298,13 +296,13 @@ public class XSLTResultTest extends StrutsInternalTestCase {
         public String getUsername() {
             return "Santa Claus";
         }
-        
+
         public boolean isActive() {
             return true;
         }
 
-        public List getBooks() {
-            List list = new ArrayList();
+        public List<Book> getBooks() {
+            List<Book> list = new ArrayList<>();
             list.add(new Book("WebWork in Action", "Patrick and Jason", Arrays.asList("I", "IV")));
             list.add(null);
             list.add(new Book("XWork not in Action", "Superman", Arrays.asList("1234", "345", "6667")));
@@ -313,11 +311,11 @@ public class XSLTResultTest extends StrutsInternalTestCase {
 
     }
 
-    public class Book {
+    public static class Book {
 
-        private String title;
-        private String author;
-        private List<String> editions;
+        private final String title;
+        private final String author;
+        private final List<String> editions;
 
         public Book(String title, String author, List<String> editions) {
             this.title = title;

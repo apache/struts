@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
@@ -27,7 +27,6 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -62,7 +61,7 @@ public class XSLTResult implements Result {
     private static final Logger LOG = LogManager.getLogger(XSLTResult.class);
 
     /**
-     * 'stylesheetLocation' parameter.  Points to the xsl.
+     * 'stylesheetLocation' parameter. Points to the xsl.
      */
     public static final String DEFAULT_PARAM = "stylesheetLocation";
 
@@ -88,16 +87,6 @@ public class XSLTResult implements Result {
     private String stylesheetLocation;
 
     /**
-     * Indicates the property name patterns which should be exposed to the xml.
-     */
-    private String matchingPattern;
-
-    /**
-     * Indicates the property name patterns which should be excluded from the xml.
-     */
-    private String excludingPattern;
-
-    /**
      * Indicates the ognl expression representing the bean which is to be exposed as xml.
      */
     private String exposedValue;
@@ -110,7 +99,7 @@ public class XSLTResult implements Result {
     private String encoding = "UTF-8";
 
     private boolean parse;
-    private AdapterFactory adapterFactory;
+    private transient AdapterFactory adapterFactory;
 
     public XSLTResult() {
     }
@@ -120,7 +109,7 @@ public class XSLTResult implements Result {
         setStylesheetLocation(stylesheetLocation);
     }
 
-    @Inject(StrutsConstants.STRUTS_XSLT_NOCACHE)
+    @Inject(XsltConstants.STRUTS_XSLT_NOCACHE)
     public void setNoCache(String xsltNoCache) {
         this.noCache = BooleanUtils.toBoolean(xsltNoCache);
     }
@@ -313,7 +302,7 @@ public class XSLTResult implements Result {
         return templates;
     }
 
-    protected Source getDOMSourceForStack(Object value) throws IllegalAccessException, InstantiationException {
+    protected Source getDOMSourceForStack(Object value) {
         return new DOMSource(getAdapterFactory().adaptDocument("result", value));
     }
 }

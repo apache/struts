@@ -16,10 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
-
-import java.util.Arrays;
-import java.util.List;
+package org.apache.struts2.result.xslt;
 
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.Attr;
@@ -38,12 +35,15 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * SimpleAdapterDocument adapted a Java object and presents it as
  * a Document.  This class represents the Document container and uses
  * the AdapterFactory to produce a child adapter for the wrapped object.
  * The adapter produced must be of an Element type or an exception is thrown.
- *
+ * <p>
  * Note: in theory we could base this on AbstractAdapterElement and then allow
  * the wrapped object to be a more general Node type.  We would just use
  * ourselves as the root element.  However I don't think this is an issue as
@@ -53,12 +53,11 @@ public class SimpleAdapterDocument extends AbstractAdapterNode implements Docume
 
     private Element rootElement;
 
-    public SimpleAdapterDocument(
-            AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Object value) {
+    public SimpleAdapterDocument(AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Object value) {
         setContext(adapterFactory, parent, propertyName, value);
-
     }
 
+    @Override
     public void setPropertyValue(Object prop) {
         super.setPropertyValue(prop);
         rootElement = null; // recreate the root element
@@ -68,24 +67,25 @@ public class SimpleAdapterDocument extends AbstractAdapterNode implements Docume
      * Lazily construct the root element adapter from the value object.
      */
     private Element getRootElement() {
-        if (rootElement != null)
+        if (rootElement != null) {
             return rootElement;
+        }
 
-        Node node = getAdapterFactory().adaptNode(
-                this, getPropertyName(), getPropertyValue());
-        if (node instanceof Element)
+        Node node = getAdapterFactory().adaptNode(this, getPropertyName(), getPropertyValue());
+        if (node instanceof Element) {
             rootElement = (Element) node;
-        else
-            throw new StrutsException(
-                    "Document adapter expected to wrap an Element type.  Node is not an element:" + node);
-
+        } else {
+            throw new StrutsException("Document adapter expected to wrap an Element type.  Node is not an element: " + node);
+        }
         return rootElement;
     }
 
+    @Override
     protected List<Node> getChildAdapters() {
-        return Arrays.asList(new Node[]{getRootElement()});
+        return Collections.singletonList(getRootElement());
     }
 
+    @Override
     public NodeList getChildNodes() {
         return new NodeList() {
             public Node item(int i) {
@@ -110,14 +110,17 @@ public class SimpleAdapterDocument extends AbstractAdapterNode implements Docume
         return null;
     }
 
+    @Override
     public NodeList getElementsByTagName(String string) {
         return null;
     }
 
+    @Override
     public NodeList getElementsByTagNameNS(String string, String string1) {
         return null;
     }
 
+    @Override
     public Node getFirstChild() {
         return getRootElement();
     }
@@ -126,14 +129,17 @@ public class SimpleAdapterDocument extends AbstractAdapterNode implements Docume
         return null;
     }
 
+    @Override
     public Node getLastChild() {
         return getRootElement();
     }
 
+    @Override
     public String getNodeName() {
         return "#document";
     }
 
+    @Override
     public short getNodeType() {
         return Node.DOCUMENT_NODE;
     }
@@ -178,6 +184,7 @@ public class SimpleAdapterDocument extends AbstractAdapterNode implements Docume
         return null;
     }
 
+    @Override
     public boolean hasChildNodes() {
         return true;
     }
@@ -186,10 +193,12 @@ public class SimpleAdapterDocument extends AbstractAdapterNode implements Docume
         return null;
     }
 
+    @Override
     public Node getChildAfter(Node child) {
         return null;
     }
 
+    @Override
     public Node getChildBefore(Node child) {
         return null;
     }

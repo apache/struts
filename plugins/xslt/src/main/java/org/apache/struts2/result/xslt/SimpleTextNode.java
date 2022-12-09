@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.xslt;
+package org.apache.struts2.result.xslt;
 
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.DOMException;
@@ -34,7 +34,7 @@ public class SimpleTextNode extends AbstractAdapterNode implements Node, Text {
     }
 
     public void setData(String string) throws DOMException {
-        throw new StrutsException("Operation not supported");
+        throw operationNotSupported();
     }
 
     public String getData() throws DOMException {
@@ -45,14 +45,17 @@ public class SimpleTextNode extends AbstractAdapterNode implements Node, Text {
         return getStringValue().length();
     }
 
+    @Override
     public String getNodeName() {
         return "#text";
     }
 
+    @Override
     public short getNodeType() {
         return Node.TEXT_NODE;
     }
 
+    @Override
     public String getNodeValue() throws DOMException {
         return getStringValue();
     }
@@ -62,19 +65,19 @@ public class SimpleTextNode extends AbstractAdapterNode implements Node, Text {
     }
 
     public void deleteData(int i, int i1) throws DOMException {
-        throw new StrutsException("Operation not supported");
+        throw operationNotSupported();
     }
 
     public void insertData(int i, String string) throws DOMException {
-        throw new StrutsException("Operation not supported");
+        throw operationNotSupported();
     }
 
     public void replaceData(int i, int i1, String string) throws DOMException {
-        throw new StrutsException("Operation not supported");
+        throw operationNotSupported();
     }
 
     public Text splitText(int i) throws DOMException {
-        throw new StrutsException("Operation not supported");
+        throw operationNotSupported();
     }
 
     public String substringData(int beginIndex, int endIndex) throws DOMException {

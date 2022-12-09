@@ -21,6 +21,8 @@ on:
     branches:
       - master
 
+permissions: read-all
+
 env:
   MAVEN_OPTS: -Xmx2048m -Xms1024m
   LANG: en_US.utf8

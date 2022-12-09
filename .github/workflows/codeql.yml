@@ -20,6 +20,14 @@ on:
     branches: [ "master" ]
   pull_request:
 
+permissions:
+  # Needed to upload the results to code-scanning dashboard.
+  security-events: write
+  actions: read
+  contents: read
+  # Needed to access OIDC token.
+  id-token: write
+
 jobs:
   analyze:
     name: Analyze
@@ -38,7 +46,7 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: ${{ matrix.language }}        
+        languages: ${{ matrix.language }}
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
     - name: Perform CodeQL Analysis

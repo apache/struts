@@ -70,81 +70,81 @@ public class ConfigurationManagerTest extends XWorkTestCase {
     }
 
     public void testDestroyConfiguration() throws Exception {
-    	class State {
-    		public boolean isDestroyed1 =false;
-    		public boolean isDestroyed2 =false;
-    	}
-    	
-    	final State state = new State();
-    	ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
-    	configurationManager.addContainerProvider(new ConfigurationProvider() {
-			public void destroy() { 
-				throw new RuntimeException("testing testing 123");
-			}
-			public void init(Configuration configuration) throws ConfigurationException {
-			}
-			public void loadPackages() throws ConfigurationException {
-			}
-			public boolean needsReload() { return false;
-			}
-			public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
-			}
-			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-			}
-    	});
-    	configurationManager.addContainerProvider(new ConfigurationProvider() {
-			public void destroy() { 
-				state.isDestroyed1 = true;
-			}
-			public void init(Configuration configuration) throws ConfigurationException {
-			}
-			public void loadPackages() throws ConfigurationException {
-			}
-			public boolean needsReload() { return false;
-			}
-			public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
-			}
-			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-			}
-    	});
-    	configurationManager.addContainerProvider(new ConfigurationProvider() {
-			public void destroy() { 
-				throw new RuntimeException("testing testing 123");
-			}
-			public void init(Configuration configuration) throws ConfigurationException {
-			}
-			public void loadPackages() throws ConfigurationException {
-			}
-			public boolean needsReload() { return false;
-			}
-			public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
-			}
-			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-			}
-    	});
-    	configurationManager.addContainerProvider(new ConfigurationProvider() {
-			public void destroy() { 
-				state.isDestroyed2 = true;
-			}
-			public void init(Configuration configuration) throws ConfigurationException {
-			}
-			public void loadPackages() throws ConfigurationException {
-			}
-			public boolean needsReload() { return false;
-			}
-			public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
-			}
-			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-			}
-    	});
-    	
-    	assertFalse(state.isDestroyed1);
-    	assertFalse(state.isDestroyed2);
-    	
-    	configurationManager.clearContainerProviders();
-    	
-    	assertTrue(state.isDestroyed1);
-    	assertTrue(state.isDestroyed2);
+        class State {
+            public boolean isDestroyed1 =false;
+            public boolean isDestroyed2 =false;
+        }
+
+        final State state = new State();
+        ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
+        configurationManager.addContainerProvider(new ConfigurationProvider() {
+            public void destroy() {
+                throw new RuntimeException("testing testing 123");
+            }
+            public void init(Configuration configuration) throws ConfigurationException {
+            }
+            public void loadPackages() throws ConfigurationException {
+            }
+            public boolean needsReload() { return false;
+            }
+            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            }
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+            }
+        });
+        configurationManager.addContainerProvider(new ConfigurationProvider() {
+            public void destroy() {
+                state.isDestroyed1 = true;
+            }
+            public void init(Configuration configuration) throws ConfigurationException {
+            }
+            public void loadPackages() throws ConfigurationException {
+            }
+            public boolean needsReload() { return false;
+            }
+            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            }
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+            }
+        });
+        configurationManager.addContainerProvider(new ConfigurationProvider() {
+            public void destroy() {
+                throw new RuntimeException("testing testing 123");
+            }
+            public void init(Configuration configuration) throws ConfigurationException {
+            }
+            public void loadPackages() throws ConfigurationException {
+            }
+            public boolean needsReload() { return false;
+            }
+            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            }
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+            }
+        });
+        configurationManager.addContainerProvider(new ConfigurationProvider() {
+            public void destroy() {
+                state.isDestroyed2 = true;
+            }
+            public void init(Configuration configuration) throws ConfigurationException {
+            }
+            public void loadPackages() throws ConfigurationException {
+            }
+            public boolean needsReload() { return false;
+            }
+            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            }
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+            }
+        });
+
+        assertFalse(state.isDestroyed1);
+        assertFalse(state.isDestroyed2);
+
+        configurationManager.clearContainerProviders();
+
+        assertTrue(state.isDestroyed1);
+        assertTrue(state.isDestroyed2);
     }
 
     public void testClearConfigurationProviders() throws Exception {

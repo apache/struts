@@ -30,6 +30,9 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 import java.util.Properties;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 
 /**
  * ConfigurationManagerTest
@@ -145,6 +148,19 @@ public class ConfigurationManagerTest extends XWorkTestCase {
 
         assertTrue(state.isDestroyed1);
         assertTrue(state.isDestroyed2);
+    }
+
+    public void testRemoveConfigurationProvider() throws Exception {
+        ConfigurationProvider configProvider1 = mock(ConfigurationProvider.class);
+        ConfigurationProvider configProvider2 = mock(ConfigurationProvider.class);
+        configurationManager.addContainerProvider(configProvider1);
+        configurationManager.addContainerProvider(configProvider2);
+
+        configurationManager.removeContainerProvider(configProvider1);
+
+        verify(configProvider1).destroy();
+        assertFalse(configurationManager.getContainerProviders().contains(configProvider1));
+        assertTrue(configurationManager.getContainerProviders().contains(configProvider2));
     }
 
     public void testClearConfigurationProviders() throws Exception {

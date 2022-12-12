@@ -90,7 +90,7 @@ public class ConfigurationManager {
      * </p>
      *
      * <p>
-     * TODO: The lazy instantiation of XmlConfigurationProvider should be refactored to be elsewhere. The behavior described above seems unintuitive.
+     * TODO: The lazy instantiation of StrutsDefaultConfigurationProvider should be refactored to be elsewhere. The behavior described above seems unintuitive.
      * </p>
      *
      * @return the list of registered ConfigurationProvider objects
@@ -133,6 +133,13 @@ public class ConfigurationManager {
     public void addContainerProvider(ContainerProvider provider) {
         if (!containerProviders.contains(provider)) {
             containerProviders.add(provider);
+            providersChanged = true;
+        }
+    }
+
+    public void removeContainerProvider(ContainerProvider provider) {
+        if (containerProviders.remove(provider)) {
+            clearContainerProvider(provider);
             providersChanged = true;
         }
     }

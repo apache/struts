@@ -38,7 +38,6 @@
             <result-type name="redirect" class="org.apache.struts2.result.ServletRedirectResult"/>
             <result-type name="redirectAction" class="org.apache.struts2.result.ServletActionRedirectResult"/>
             <result-type name="stream" class="org.apache.struts2.result.StreamResult"/>
-            <result-type name="xslt" class="org.apache.struts2.result.xslt.XSLTResult"/>
             <result-type name="plainText" class="org.apache.struts2.result.PlainTextResult"/>
             <result-type name="postback" class="org.apache.struts2.result.PostbackResult"/>
         </result-types>

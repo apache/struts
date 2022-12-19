@@ -80,8 +80,9 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
 
         try {
             if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
-                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, new Object());
+                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, true);
             } else {
+                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, false);
                 prepare.setEncodingAndLocale(request, response);
                 prepare.createActionContext(request, response);
                 prepare.assignDispatcherToThread();

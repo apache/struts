@@ -81,7 +81,7 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
     }
 
     private boolean excludeUrl(HttpServletRequest request) {
-        return request.getAttribute(StrutsPrepareFilter.REQUEST_EXCLUDED_FROM_ACTION_MAPPING) != null;
+        return Boolean.TRUE.equals(request.getAttribute(StrutsPrepareFilter.REQUEST_EXCLUDED_FROM_ACTION_MAPPING));
     }
 
     public void destroy() {

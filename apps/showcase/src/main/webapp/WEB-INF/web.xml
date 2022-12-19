@@ -142,6 +142,11 @@
         <load-on-startup>4</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>testServlet</servlet-name>
+        <servlet-class>org.apache.struts2.showcase.servlet.TestServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>dwr</servlet-name>
         <url-pattern>/dwr/*</url-pattern>
@@ -160,6 +165,11 @@
     <servlet-mapping>
         <servlet-name>strutsServlet</servlet-name>
         <url-pattern>/async/receiveNewMessages</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>testServlet</servlet-name>
+        <url-pattern>/testServlet/*</url-pattern>
     </servlet-mapping>
 
     <!-- END SNIPPET: dwr -->

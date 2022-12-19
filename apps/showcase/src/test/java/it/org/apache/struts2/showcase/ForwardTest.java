@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,26 +26,16 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class DispatcherResultTest {
+public class ForwardTest {
 
     @Test
-    public void testDispatchingToJSP() throws Exception {
+    public void testServletForwardingToAction() throws Exception {
         try (final WebClient webClient = new WebClient()) {
-            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/dispatcher/dispatch.action");
+            // Struts excluded URL, as defined by struts.action.excludePattern
+            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/testServlet/forward");
 
             DomElement div = page.getElementById("dispatcher-result");
             Assert.assertEquals("This page is a result of \"dispatching\" to it from an action", div.asNormalizedText());
         }
     }
-
-    @Test
-    public void testDispatchingToAction() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/dispatcher/forward.action");
-
-            DomElement div = page.getElementById("dispatcher-result");
-            Assert.assertEquals("This page is a result of \"dispatching\" to it from an action", div.asNormalizedText());
-        }
-    }
-
 }

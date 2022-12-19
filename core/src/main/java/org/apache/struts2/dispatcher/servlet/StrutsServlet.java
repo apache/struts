@@ -19,11 +19,10 @@
 package org.apache.struts2.dispatcher.servlet;
 
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.ExecuteOperations;
 import org.apache.struts2.dispatcher.InitOperations;
 import org.apache.struts2.dispatcher.PrepareOperations;
-import org.apache.struts2.dispatcher.servlet.ServletHostConfig;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

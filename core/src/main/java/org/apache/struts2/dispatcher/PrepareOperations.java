@@ -47,16 +47,41 @@ public class PrepareOperations {
     /**
      * Maintains per-request override of devMode configuration.
      */
-    private static ThreadLocal<Boolean> devModeOverride = new InheritableThreadLocal<>();
+    private static final ThreadLocal<Boolean> devModeOverride = new InheritableThreadLocal<>();
 
 
-    private Dispatcher dispatcher;
+    private final Dispatcher dispatcher;
     private static final String STRUTS_ACTION_MAPPING_KEY = "struts.actionMapping";
     private static final String NO_ACTION_MAPPING = "noActionMapping";
-    public static final String CLEANUP_RECURSION_COUNTER = "__cleanup_recursion_counter";
+    private static final String PREPARE_COUNTER = "__prepare_recursion_counter";
+    private static final String WRAP_COUNTER = "__wrap_recursion_counter";
 
     public PrepareOperations(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
+    }
+
+    /**
+     * Should be called by {@link org.apache.struts2.dispatcher.filter.StrutsPrepareFilter} to track how many times this
+     * request has been filtered.
+     */
+    public void trackRecursion(HttpServletRequest request) {
+        incrementRecursionCounter(request, PREPARE_COUNTER);
+    }
+
+    /**
+     * Cleans up request. When paired with {@link #trackRecursion}, only cleans up once the first filter instance has
+     * completed, preventing cleanup by recursive filter calls - i.e. before the request is completely processed.
+     */
+    public void cleanupRequest(final HttpServletRequest request) {
+        decrementRecursionCounter(request, PREPARE_COUNTER, () -> {
+            try {
+                dispatcher.cleanUpRequest(request);
+            } finally {
+                ActionContext.clear();
+                Dispatcher.setInstance(null);
+                devModeOverride.remove();
+            }
+        });
     }
 
     /**
@@ -69,12 +94,6 @@ public class PrepareOperations {
      */
     public ActionContext createActionContext(HttpServletRequest request, HttpServletResponse response) {
         ActionContext ctx;
-        int counter = 1;
-        Integer oldCounter = (Integer) request.getAttribute(CLEANUP_RECURSION_COUNTER);
-        if (oldCounter != null) {
-            counter = oldCounter + 1;
-        }
-
         ActionContext oldContext = ActionContext.getContext();
         if (oldContext != null) {
             // detected existing context, so we are probably in a forward
@@ -87,33 +106,7 @@ public class PrepareOperations {
                 ctx = ActionContext.of(stack.getContext()).bind();
             }
         }
-        request.setAttribute(CLEANUP_RECURSION_COUNTER, counter);
         return ctx;
-    }
-
-    /**
-     * Cleans up a request of thread locals
-     *
-     * @param request servlet request
-     */
-    public void cleanupRequest(HttpServletRequest request) {
-        Integer counterVal = (Integer) request.getAttribute(CLEANUP_RECURSION_COUNTER);
-        if (counterVal != null) {
-            counterVal -= 1;
-            request.setAttribute(CLEANUP_RECURSION_COUNTER, counterVal);
-            if (counterVal > 0 ) {
-                LOG.debug("skipping cleanup counter={}", counterVal);
-                return;
-            }
-        }
-        // always clean up the thread request, even if an action hasn't been executed
-        try {
-            dispatcher.cleanUpRequest(request);
-        } finally {
-            ActionContext.clear();
-            Dispatcher.setInstance(null);
-            devModeOverride.remove();
-        }
     }
 
     /**
@@ -135,14 +128,15 @@ public class PrepareOperations {
 
     /**
      * Wraps the request with the Struts wrapper that handles multipart requests better
+     * Also tracks additional calls to this method on the same request.
      *
-     * @param oldRequest servlet request
+     * @param request servlet request
      *
      * @return The new request, if there is one
      * @throws ServletException on any servlet related error
      */
-    public HttpServletRequest wrapRequest(HttpServletRequest oldRequest) throws ServletException {
-        HttpServletRequest request = oldRequest;
+    public HttpServletRequest wrapRequest(HttpServletRequest request) throws ServletException {
+        incrementRecursionCounter(request, WRAP_COUNTER);
         try {
             // Wrap request first, just in case it is multipart/form-data
             // parameters might not be accessible through before encoding (ww-1278)
@@ -152,6 +146,14 @@ public class PrepareOperations {
             throw new ServletException("Could not wrap servlet request with MultipartRequestWrapper!", e);
         }
         return request;
+    }
+
+    /**
+     * Should be called after whenever {@link #wrapRequest} is called. Ensures the request is only cleaned up at the
+     * instance it was initially wrapped in the case of multiple wrap calls - i.e. filter recursion.
+     */
+    public void cleanupWrappedRequest(final HttpServletRequest request) {
+        decrementRecursionCounter(request, WRAP_COUNTER, () -> dispatcher.cleanUpRequest(request));
     }
 
     /**
@@ -260,7 +262,6 @@ public class PrepareOperations {
 
     /**
      * Clear any override of the static devMode value being applied to the current thread.
-     *
      * This can be useful for any situation where {@link #overrideDevMode(boolean)} might be called
      * in a flow where {@link #cleanupRequest(javax.servlet.http.HttpServletRequest)} does not get called.
      * May be very situational (such as some unit tests), but may have other utility as well.
@@ -269,4 +270,30 @@ public class PrepareOperations {
         devModeOverride.remove();  // Remove current thread's value, enxure next read returns it to initialValue (typically null).
     }
 
+    /**
+     * Helper method to potentially count recursive executions with a request attribute. Should be used in conjunction
+     * with {@link #decrementRecursionCounter}.
+     */
+    public static void incrementRecursionCounter(HttpServletRequest request, String attributeName) {
+        Integer setCounter = (Integer) request.getAttribute(attributeName);
+        if (setCounter == null) {
+            setCounter = 0;
+        }
+        request.setAttribute(attributeName, ++setCounter);
+    }
+
+    /**
+     * Helper method to count execution completions with a request attribute, and optionally execute some code
+     * (e.g. cleanup) once all recursive executions have completed. Should be used in conjunction with
+     * {@link #incrementRecursionCounter}.
+     */
+    public static void decrementRecursionCounter(HttpServletRequest request, String attributeName, Runnable runnable) {
+        Integer setCounter = (Integer) request.getAttribute(attributeName);
+        if (setCounter != null) {
+            request.setAttribute(attributeName, --setCounter);
+        }
+        if ((setCounter == null || setCounter == 0) && runnable != null) {
+            runnable.run();
+        }
+    }
 }

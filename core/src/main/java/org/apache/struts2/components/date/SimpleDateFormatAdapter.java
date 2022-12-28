@@ -34,7 +34,7 @@ public class SimpleDateFormatAdapter implements DateFormatter {
         DateFormat df;
         Locale locale = ActionContext.getContext().getLocale();
         if (format == null) {
-            df = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, locale);
+            df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
         } else {
             df = new SimpleDateFormat(format, locale);
         }

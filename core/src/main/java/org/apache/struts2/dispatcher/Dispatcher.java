@@ -112,12 +112,12 @@ public class Dispatcher {
     /**
      * Provide a thread local instance.
      */
-    private static ThreadLocal<Dispatcher> instance = new ThreadLocal<>();
+    private static final ThreadLocal<Dispatcher> instance = new ThreadLocal<>();
 
     /**
      * Store list of DispatcherListeners.
      */
-    private static List<DispatcherListener> dispatcherListeners = new CopyOnWriteArrayList<>();
+    private static final List<DispatcherListener> dispatcherListeners = new CopyOnWriteArrayList<>();
 
     /**
      * Store state of StrutsConstants.STRUTS_DEVMODE setting.
@@ -140,7 +140,7 @@ public class Dispatcher {
     private String defaultLocale;
 
     /**
-     * Store state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
+     * Store state of {@link StrutsConstants#STRUTS_MULTIPART_SAVEDIR} setting.
      */
     private String multipartSaveDir;
 
@@ -399,6 +399,7 @@ public class Dispatcher {
     private void init_FileManager() throws ClassNotFoundException {
         if (initParams.containsKey(StrutsConstants.STRUTS_FILE_MANAGER)) {
             final String fileManagerClassName = initParams.get(StrutsConstants.STRUTS_FILE_MANAGER);
+            @SuppressWarnings("unchecked")
             final Class<FileManager> fileManagerClass = (Class<FileManager>) Class.forName(fileManagerClassName);
             LOG.info("Custom FileManager specified: {}", fileManagerClassName);
             configurationManager.addContainerProvider(new FileManagerProvider(fileManagerClass, fileManagerClass.getSimpleName()));
@@ -408,6 +409,7 @@ public class Dispatcher {
         }
         if (initParams.containsKey(StrutsConstants.STRUTS_FILE_MANAGER_FACTORY)) {
             final String fileManagerFactoryClassName = initParams.get(StrutsConstants.STRUTS_FILE_MANAGER_FACTORY);
+            @SuppressWarnings("unchecked")
             final Class<FileManagerFactory> fileManagerFactoryClass = (Class<FileManagerFactory>) Class.forName(fileManagerFactoryClassName);
             LOG.info("Custom FileManagerFactory specified: {}", fileManagerFactoryClassName);
             configurationManager.addContainerProvider(new FileManagerFactoryProvider(fileManagerFactoryClass));
@@ -471,7 +473,7 @@ public class Dispatcher {
             String[] classes = configProvs.split("\\s*[,]\\s*");
             for (String cname : classes) {
                 try {
-                    Class cls = ClassLoaderUtil.loadClass(cname, this.getClass());
+                    Class<?> cls = ClassLoaderUtil.loadClass(cname, this.getClass());
                     ConfigurationProvider prov = (ConfigurationProvider) cls.newInstance();
                     if (prov instanceof ServletContextAwareConfigurationProvider) {
                         ((ServletContextAwareConfigurationProvider) prov).initWithContext(servletContext);
@@ -807,33 +809,26 @@ public class Dispatcher {
 
         if (saveDir.equals("")) {
             File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
+            LOG.info("The 'struts.multipart.saveDir' constant is not defined, defaulting to 'javax.servlet.context.tempdir'");
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
                 setMultipartSaveDir(saveDir);
+            } else {
+                LOG.warn("Cannot figure out the save directory, please either define: '{}' or configure your servlet container",
+                    StrutsConstants.STRUTS_MULTIPART_SAVEDIR);
             }
         } else {
             File multipartSaveDir = new File(saveDir);
 
             if (!multipartSaveDir.exists()) {
                 if (!multipartSaveDir.mkdirs()) {
-                    String logMessage;
-                    try {
-                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.getCanonicalPath() + "'.";
-                    } catch (IOException e) {
-                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.toString() + "'.";
-                    }
-                    if (devMode) {
-                        LOG.error(logMessage);
-                    } else {
-                        LOG.warn(logMessage);
-                    }
+                    LOG.warn("Could not create multipart save directory '{}'", multipartSaveDir);
                 }
             }
         }
 
-        LOG.debug("saveDir={}", saveDir);
+        LOG.debug("The save directory is defined as: {}", saveDir);
 
         return saveDir;
     }
@@ -941,7 +936,7 @@ public class Dispatcher {
      * @return false if disabled
      * @since 2.5.11
      */
-    protected boolean isMultipartSupportEnabled(HttpServletRequest request) {
+    public boolean isMultipartSupportEnabled(HttpServletRequest request) {
         return multipartSupportEnabled;
     }
 
@@ -952,7 +947,7 @@ public class Dispatcher {
      * @return true if it is a multipart request
      * @since 2.5.11
      */
-    protected boolean isMultipartRequest(HttpServletRequest request) {
+    public boolean isMultipartRequest(HttpServletRequest request) {
         String httpMethod = request.getMethod();
         String contentType = request.getContentType();
 

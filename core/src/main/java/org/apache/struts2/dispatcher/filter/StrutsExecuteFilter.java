@@ -20,12 +20,17 @@ package org.apache.struts2.dispatcher.filter;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.ExecuteOperations;
 import org.apache.struts2.dispatcher.InitOperations;
 import org.apache.struts2.dispatcher.PrepareOperations;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,7 +39,7 @@ import java.io.IOException;
  * Executes the discovered request information.  This filter requires the {@link StrutsPrepareFilter} to have already
  * been executed in the current chain.
  */
-public class StrutsExecuteFilter implements StrutsStatics, Filter {
+public class StrutsExecuteFilter implements FileUploadSupport, StrutsStatics, Filter {
     protected PrepareOperations prepare;
     protected ExecuteOperations execute;
 
@@ -53,13 +58,17 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
             prepare = new PrepareOperations(dispatcher);
             execute = new ExecuteOperations(dispatcher);
         }
-
     }
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+
+        if (shouldSkipProcessingFileUploadRequest(request)) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         if (excludeUrl(request)) {
             chain.doFilter(request, response);

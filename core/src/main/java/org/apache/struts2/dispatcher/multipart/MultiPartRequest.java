@@ -18,11 +18,9 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
-import java.io.File;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
@@ -33,7 +31,7 @@ import java.util.List;
 public interface MultiPartRequest {
 
     void parse(HttpServletRequest request, String saveDir) throws IOException;
-    
+
     /**
      * Returns an enumeration of the parameter names for uploaded files
      *
@@ -48,7 +46,7 @@ public interface MultiPartRequest {
      *
      * @param fieldName input field name
      * @return an array of content encoding for the specified input field name or <tt>null</tt> if
-     *         no content type was specified.
+     * no content type was specified.
      */
     String[] getContentType(String fieldName);
 

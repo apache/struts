@@ -1,14 +1,11 @@
-README.txt - showcase
+# Showcase App
 
-Showcase is a collection of examples with code that you might be adopt and 
-adapt in your own applications. 
+Showcase is a collection of examples with code that you might be adopted and adapt in your own applications. 
 
-For more on getting started with Struts, see 
+For more on getting started with Struts, see https://struts.apache.org/getting-started/
 
-* http://cwiki.apache.org/WW/home.html
+## I18N
 
-I18N:
-=====
 Please note that this project was created with the assumption that it will be run
 in an environment where the default locale is set to English. This means that
 the default messages defined in package.properties are in English. If the default

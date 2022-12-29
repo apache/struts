@@ -26,6 +26,7 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -42,9 +43,10 @@ import java.util.ArrayList;
 public class StrutsPrepareAndExecuteFilterIntegrationTest extends TestCase {
 
     public void test404() throws ServletException, IOException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockServletContext context = new MockServletContext();
+        MockHttpServletRequest request = new MockHttpServletRequest(context);
         MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterConfig filterConfig = new MockFilterConfig();
+        MockFilterConfig filterConfig = new MockFilterConfig(context);
         MockFilterChain filterChain = new MockFilterChain() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res) {
@@ -62,9 +64,10 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest extends TestCase {
     }
 
     public void test200() throws ServletException, IOException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockServletContext context = new MockServletContext();
+        MockHttpServletRequest request = new MockHttpServletRequest(context);
         MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterConfig filterConfig = new MockFilterConfig();
+        MockFilterConfig filterConfig = new MockFilterConfig(context);
         MockFilterChain filterChain = new MockFilterChain() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res) {
@@ -82,9 +85,10 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest extends TestCase {
     }
 
     public void testActionMappingLookup() throws ServletException, IOException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockServletContext context = new MockServletContext();
+        MockHttpServletRequest request = new MockHttpServletRequest(context);
         MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterConfig filterConfig = new MockFilterConfig();
+        MockFilterConfig filterConfig = new MockFilterConfig(context);
         MockFilterChain filterChain = new MockFilterChain() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res) {
@@ -116,9 +120,10 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest extends TestCase {
     }
 
     public void testUriPatternExclusion() throws ServletException, IOException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockServletContext context = new MockServletContext();
+        MockHttpServletRequest request = new MockHttpServletRequest(context);
         MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterConfig filterConfig = new MockFilterConfig();
+        MockFilterConfig filterConfig = new MockFilterConfig(context);
         MockFilterChain filterChain = new MockFilterChain() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res) {
@@ -142,9 +147,10 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest extends TestCase {
     }
 
     public void testStaticFallthrough() throws ServletException, IOException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockServletContext context = new MockServletContext();
+        MockHttpServletRequest request = new MockHttpServletRequest(context);
         MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterConfig filterConfig = new MockFilterConfig();
+        MockFilterConfig filterConfig = new MockFilterConfig(context);
         MockFilterChain filterChain = new MockFilterChain() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res) {
@@ -169,9 +175,10 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest extends TestCase {
     }
 
     public void testStaticExecute() throws ServletException, IOException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockServletContext context = new MockServletContext();
+        MockHttpServletRequest request = new MockHttpServletRequest(context);
         MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterConfig filterConfig = new MockFilterConfig();
+        MockFilterConfig filterConfig = new MockFilterConfig(context);
         MockFilterChain filterChain = new MockFilterChain() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res) {

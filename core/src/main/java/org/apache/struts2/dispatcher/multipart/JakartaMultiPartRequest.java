@@ -39,7 +39,9 @@ import java.util.*;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
+ * @deprecated since Struts 6.2.0 - please use {@link ServletMultiPartRequest} instead
  */
+@Deprecated
 public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     static final Logger LOG = LogManager.getLogger(JakartaMultiPartRequest.class);

@@ -266,10 +266,10 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         }
 
         // bind allowed Files
-        Enumeration fileParameterNames = multiWrapper.getFileParameterNames();
+        Enumeration<String> fileParameterNames = multiWrapper.getFileParameterNames();
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
             // get the value of this input tag
-            String inputName = (String) fileParameterNames.nextElement();
+            String inputName = fileParameterNames.nextElement();
 
             // get the content type
             String[] contentType = multiWrapper.getContentTypes(inputName);
@@ -298,9 +298,9 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
                         if (!acceptedFiles.isEmpty()) {
                             Map<String, Parameter> newParams = new HashMap<>();
-                            newParams.put(inputName, new Parameter.File(inputName, acceptedFiles.toArray(new UploadedFile[acceptedFiles.size()])));
-                            newParams.put(contentTypeName, new Parameter.File(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()])));
-                            newParams.put(fileNameName, new Parameter.File(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()])));
+                            newParams.put(inputName, new Parameter.File(inputName, acceptedFiles.toArray(new UploadedFile[0])));
+                            newParams.put(contentTypeName, new Parameter.File(contentTypeName, acceptedContentTypes.toArray(new String[0])));
+                            newParams.put(fileNameName, new Parameter.File(fileNameName, acceptedFileNames.toArray(new String[0])));
                             ac.getParameters().appendAll(newParams);
                         }
                     }
@@ -430,9 +430,10 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
     private boolean isNonEmpty(Object[] objArray) {
         boolean result = false;
-        for (int index = 0; index < objArray.length && !result; index++) {
-            if (objArray[index] != null) {
+        for (Object o : objArray) {
+            if (o != null) {
                 result = true;
+                break;
             }
         }
         return result;

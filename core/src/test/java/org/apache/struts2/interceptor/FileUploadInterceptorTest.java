@@ -29,11 +29,13 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
+import org.apache.struts2.dispatcher.multipart.ServletMultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockPart;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -225,7 +227,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     public void testInvalidContentTypeMultipartRequest() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
 
-        req.setContentType("multipart/form-data"); // not a multipart contentype
+        req.setContentType("multipart/form-data"); // not a multipart content type
         req.setMethod("post");
 
         MyFileupAction action = container.inject(MyFileupAction.class);
@@ -279,6 +281,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 "\r\n" +
                 "-----1234--\r\n");
         req.setContent(content.getBytes("US-ASCII"));
+        MockPart part = new MockPart("file", "deleteme.txt", "Unit test of FileUploadInterceptor".getBytes());
+        part.getHeaders().setContentType(MediaType.TEXT_HTML);
+        req.addPart(part);
 
         MyFileupAction action = new MyFileupAction();
 
@@ -338,6 +343,15 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         content.append("--");
         content.append(endline);
         req.setContent(content.toString().getBytes());
+        MockPart part1 = new MockPart("file", "test.html", plainContent.getBytes());
+        part1.getHeaders().setContentType(MediaType.TEXT_PLAIN);
+        req.addPart(part1);
+        MockPart part2 = new MockPart("file", "test1.html", htmlContent.getBytes());
+        part2.getHeaders().setContentType(MediaType.TEXT_HTML);
+        req.addPart(part2);
+        MockPart part3 = new MockPart("file", "test2.html", htmlContent.getBytes());
+        part3.getHeaders().setContentType(MediaType.TEXT_HTML);
+        req.addPart(part3);
 
         assertTrue(ServletFileUpload.isMultipartContent(req));
 
@@ -430,7 +444,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize) throws IOException {
-        JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
+        ServletMultiPartRequest jak = new ServletMultiPartRequest();
         jak.setMaxSize(String.valueOf(maxsize));
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }

@@ -115,6 +115,12 @@
     </servlet>
 
     <servlet>
+        <servlet-name>fileUploadServlet</servlet-name>
+        <servlet-class>org.apache.struts2.dispatcher.servlet.FileUploadServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
         <servlet-name>strutsServlet</servlet-name>
         <servlet-class>org.apache.struts2.dispatcher.servlet.StrutsServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
@@ -141,6 +147,12 @@
         </init-param>
         <load-on-startup>4</load-on-startup>
     </servlet>
+
+    <servlet-mapping>
+        <servlet-name>fileUploadServlet</servlet-name>
+        <url-pattern>/fileupload/*</url-pattern>
+        <url-pattern>/tags/ui/*</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>dwr</servlet-name>

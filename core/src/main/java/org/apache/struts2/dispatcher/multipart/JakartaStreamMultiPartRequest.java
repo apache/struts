@@ -40,7 +40,9 @@ import java.util.*;
  *
  * @author Chris Cranford
  * @since 2.3.18
+ * @deprecated since Struts 6.2.0, please use {@link ServletMultiPartRequest} instead
  */
+@Deprecated
 public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
     static final Logger LOG = LogManager.getLogger(JakartaStreamMultiPartRequest.class);

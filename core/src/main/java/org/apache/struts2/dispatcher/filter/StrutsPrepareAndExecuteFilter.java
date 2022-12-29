@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  * Handles both the preparation and execution phases of the Struts dispatching process.  This filter is better to use
  * when you don't have another filter that needs access to action context information, such as Sitemesh.
  */
-public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
+public class StrutsPrepareAndExecuteFilter implements FileUploadSupport, StrutsStatics, Filter {
 
     private static final Logger LOG = LogManager.getLogger(StrutsPrepareAndExecuteFilter.class);
 
@@ -116,6 +116,11 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+
+        if (shouldSkipProcessingFileUploadRequest(request)) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         try {
             String uri = RequestUtils.getUri(request);

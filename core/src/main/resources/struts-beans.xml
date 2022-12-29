@@ -88,6 +88,8 @@
           class="org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest" scope="prototype"/>
     <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="jakarta-stream"
           class="org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest" scope="prototype"/>
+    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="servlet"
+          class="org.apache.struts2.dispatcher.multipart.ServletMultiPartRequest" scope="prototype"/>
 
     <bean type="org.apache.struts2.views.TagLibraryModelProvider" name="s"
           class="org.apache.struts2.views.DefaultTagLibrary"/>

@@ -20,44 +20,60 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import junit.framework.TestCase;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.dispatcher.filter.StrutsExecuteFilter;
 import org.apache.struts2.dispatcher.filter.StrutsPrepareFilter;
-import org.springframework.mock.web.*;
+import org.springframework.mock.web.MockFilterChain;
+import org.springframework.mock.web.MockFilterConfig;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 /**
  * Integration tests for the filter
  */
 public class TwoFilterIntegrationTest extends TestCase {
-    StrutsExecuteFilter filterExecute;
-    StrutsPrepareFilter filterPrepare;
-    Filter failFilter;
+
+    private StrutsExecuteFilter filterExecute;
+    private StrutsPrepareFilter filterPrepare;
+    private Filter failFilter;
     private Filter stringFilter;
 
     public void setUp() {
         filterPrepare = new StrutsPrepareFilter();
         filterExecute = new StrutsExecuteFilter();
         failFilter = new Filter() {
-            public void init(FilterConfig filterConfig) throws ServletException {}
+            public void init(FilterConfig filterConfig) throws ServletException {
+            }
+
             public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
                 fail("Should never get here");
             }
-            public void destroy() {}
+
+            public void destroy() {
+            }
         };
         stringFilter = new Filter() {
-            public void init(FilterConfig filterConfig) throws ServletException {}
+            public void init(FilterConfig filterConfig) throws ServletException {
+            }
+
             public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
                 response.getWriter().write("content");
                 assertNotNull(ActionContext.getContext());
                 assertNotNull(Dispatcher.getInstance());
             }
-            public void destroy() {}
+
+            public void destroy() {
+            }
         };
     }
 
@@ -86,7 +102,9 @@ public class TwoFilterIntegrationTest extends TestCase {
 
     public void testFilterInMiddle() throws ServletException, IOException {
         Filter middle = new Filter() {
-            public void init(FilterConfig filterConfig) throws ServletException {}
+            public void init(FilterConfig filterConfig) throws ServletException {
+            }
+
             public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
                 assertNotNull(ActionContext.getContext());
                 assertNotNull(Dispatcher.getInstance());
@@ -94,7 +112,9 @@ public class TwoFilterIntegrationTest extends TestCase {
                 chain.doFilter(request, response);
                 assertEquals("hello", ActionContext.getContext().getActionInvocation().getProxy().getActionName());
             }
-            public void destroy() {}
+
+            public void destroy() {
+            }
         };
         MockHttpServletResponse response = run("/hello.action", filterPrepare, middle, filterExecute, failFilter);
         assertEquals(200, response.getStatus());
@@ -102,9 +122,12 @@ public class TwoFilterIntegrationTest extends TestCase {
 
     private MockHttpServletResponse run(String uri, final Filter... filters) throws ServletException, IOException {
         final LinkedList<Filter> filterList = new LinkedList<>(Arrays.asList(filters));
-        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        MockServletContext context = new MockServletContext();
+        MockHttpServletRequest request = new MockHttpServletRequest(context);
         MockHttpServletResponse response = new MockHttpServletResponse();
-        MockFilterConfig filterConfig = new MockFilterConfig();
+        MockFilterConfig filterConfig = new MockFilterConfig(context);
+
         MockFilterChain filterChain = new MockFilterChain() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res) {

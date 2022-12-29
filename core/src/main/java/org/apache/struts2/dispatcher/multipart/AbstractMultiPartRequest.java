@@ -44,7 +44,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     public static final int BUFFER_SIZE = 10240;
 
     /**
-     * Internal list of raised errors to be passed to the the Struts2 framework.
+     * Internal list of raised errors to be passed to the Struts2 framework.
      */
     protected List<LocalizedMessage> errors = new ArrayList<>();
 
@@ -134,9 +134,9 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         int forwardSlash = fileName.lastIndexOf('/');
         int backwardSlash = fileName.lastIndexOf('\\');
         if (forwardSlash != -1 && forwardSlash > backwardSlash) {
-            fileName = fileName.substring(forwardSlash + 1, fileName.length());
+            fileName = fileName.substring(forwardSlash + 1);
         } else {
-            fileName = fileName.substring(backwardSlash + 1, fileName.length());
+            fileName = fileName.substring(backwardSlash + 1);
         }
         return fileName;
     }

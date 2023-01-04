@@ -66,7 +66,7 @@ public class DateTest extends StrutsInternalTestCase {
 
         java.util.Date now = new java.util.Date();
 
-        String expected = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, ActionContext.getContext().getLocale()).format(now);
+        String expected = prepareFormat().format(now);
         context.put("myDate", now);
 
         Writer writer = new StringWriter();
@@ -88,7 +88,7 @@ public class DateTest extends StrutsInternalTestCase {
 
         java.sql.Date now = new java.sql.Date(System.currentTimeMillis());
 
-        String expected = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, ActionContext.getContext().getLocale()).format(now);
+        String expected = prepareFormat().format(now);
         context.put("myDate", now);
 
         Writer writer = new StringWriter();
@@ -101,6 +101,34 @@ public class DateTest extends StrutsInternalTestCase {
 
         // then
         assertEquals(expected, writer.toString());
+    }
+
+    public void testJavaSqlTime() {
+        // given
+        Date date = new Date(stack);
+        date.setDateFormatter(new SimpleDateFormatAdapter());
+
+        java.sql.Time now = new java.sql.Time(System.currentTimeMillis());
+
+        String timeFormat = "hh:mm:ss";
+        String expected = new SimpleDateFormat(timeFormat, ActionContext.getContext().getLocale()).format(now);
+        context.put("myDate", now);
+
+        Writer writer = new StringWriter();
+
+        // when
+        date.setName("myDate");
+        date.setNice(false);
+        date.setFormat(timeFormat);
+        date.start(writer);
+        date.end(writer, "");
+
+        // then
+        assertEquals(expected, writer.toString());
+    }
+
+    private DateFormat prepareFormat() {
+        return SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, ActionContext.getContext().getLocale());
     }
 
     @Override

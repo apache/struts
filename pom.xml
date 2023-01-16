@@ -121,6 +121,7 @@
         <tiles-request.version>1.0.7</tiles-request.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
         <hibernate-validator.version>6.2.4.Final</hibernate-validator.version>
+        <freemarker.version>2.3.32</freemarker.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>
@@ -683,7 +684,7 @@
             <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.31</version>
+                <version>${freemarker.version}</version>
             </dependency>
 
             <dependency>

@@ -1091,7 +1091,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>7.5</version><!-- the latest version supporting Java 1.8 -->
+                <version>7.7.0</version><!-- the latest version supporting Java 1.8 -->
             </dependency>
 
             <dependency>

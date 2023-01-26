@@ -89,6 +89,7 @@
             <interceptor name="multiselect" class="org.apache.struts2.interceptor.MultiselectInterceptor"/>
             <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor"/>
             <interceptor name="fetchMetadata" class="org.apache.struts2.interceptor.FetchMetadataInterceptor"/>
+            <interceptor name="httpMethod" class="org.apache.struts2.interceptor.httpmethod.HttpMethodInterceptor" />
 
             <!-- Empty stack - performs no operations -->
             <interceptor-stack name="emptyStack">
@@ -99,6 +100,7 @@
             <interceptor-stack name="basicStack">
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="httpMethod"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="datetime"/>
@@ -160,6 +162,7 @@
                 <interceptor-ref name="multiselect"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="httpMethod"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="modelDriven"/>
@@ -191,6 +194,7 @@
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="httpMethod"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="csp">
                     <param name="disabled">false</param>

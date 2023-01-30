@@ -118,6 +118,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         try {
+            prepare.trackRecursion(request);
             String uri = RequestUtils.getUri(request);
             if (isRequestExcluded(request)) {
                 LOG.trace("Request: {} is excluded from handling by Struts, passing request to other filters", uri);
@@ -155,7 +156,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
                 execute.executeAction(wrappedRequest, response, mapping);
             }
         } finally {
-            prepare.cleanupRequest(wrappedRequest);
+            prepare.cleanupWrappedRequest(wrappedRequest);
         }
     }
 

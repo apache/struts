@@ -78,18 +78,25 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        boolean didWrap = false;
         try {
+            prepare.trackRecursion(request);
             if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
-                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, new Object());
+                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, true);
             } else {
+                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, false);
                 prepare.setEncodingAndLocale(request, response);
                 prepare.createActionContext(request, response);
                 prepare.assignDispatcherToThread();
                 request = prepare.wrapRequest(request);
+                didWrap = true;
                 prepare.findActionMapping(request, response, true);
             }
             chain.doFilter(request, response);
         } finally {
+            if (didWrap) {
+                prepare.cleanupWrappedRequest(request);
+            }
             prepare.cleanupRequest(request);
         }
     }

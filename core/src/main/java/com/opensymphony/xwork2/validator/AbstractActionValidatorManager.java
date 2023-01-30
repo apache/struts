@@ -276,7 +276,7 @@ public abstract class AbstractActionValidatorManager implements ActionValidatorM
                     retList = new ArrayList<>(validatorFileParser.parseActionValidatorConfigs(validatorFactory, is, fileName));
                 }
             } catch (IOException e) {
-                LOG.error("Caught exception while loading file {}", fileName, e);
+                LOG.error("Caught exception while closing file {}", fileName, e);
             }
 
             validatorFileCache.put(fileName, retList);

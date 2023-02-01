@@ -201,11 +201,25 @@ public enum Scope {
 
     <T> Callable<? extends T> toCallable(final InternalContext context,
                                          final InternalFactory<? extends T> factory) {
-        return new Callable<T>() {
-            public T call() throws Exception {
-                return InitializableFactory.wrapIfNeeded(factory).create(context);
-            }
-        };
+        return (Callable<T>) () -> InitializableFactory.wrapIfNeeded(factory).create(context);
+    }
+
+    public static Scope fromString(String scopeStr) {
+        switch (scopeStr) {
+            case "prototype":
+                return Scope.PROTOTYPE;
+            case "request":
+                return Scope.REQUEST;
+            case "session":
+                return Scope.SESSION;
+            case "thread":
+                return Scope.THREAD;
+            case "wizard":
+                return Scope.WIZARD;
+            case "singleton":
+            default:
+                return Scope.SINGLETON;
+        }
     }
 
     /**

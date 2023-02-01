@@ -44,7 +44,6 @@ import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ClassPathFinder;
 import com.opensymphony.xwork2.util.DomHelper;
-import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
@@ -75,6 +74,17 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
+import java.util.function.Consumer;
+
+import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Character.isLowerCase;
+import static java.lang.Character.toUpperCase;
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 
 /**
@@ -164,19 +174,44 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
         if (this == o) {
             return true;
         }
-
         if (!(o instanceof XmlConfigurationProvider)) {
             return false;
         }
-
-        final XmlConfigurationProvider xmlConfigurationProvider = (XmlConfigurationProvider) o;
-
+        XmlConfigurationProvider xmlConfigurationProvider = (XmlConfigurationProvider) o;
         return Objects.equals(configFileName, xmlConfigurationProvider.configFileName);
     }
 
     @Override
     public int hashCode() {
         return ((configFileName != null) ? configFileName.hashCode() : 0);
+    }
+
+    public static void iterateElementChildren(Document doc, Consumer<Element> function) {
+        iterateElementChildren(doc.getDocumentElement(), function);
+    }
+
+    public static void iterateElementChildren(Node node, Consumer<Element> function) {
+        iterateChildren(node, childNode -> {
+            if (!(childNode instanceof Element)) {
+                return;
+            }
+            function.accept((Element) childNode);
+        });
+    }
+
+    public static void iterateChildren(Node node, Consumer<Node> function) {
+        NodeList children = node.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            function.accept(children.item(i));
+        }
+    }
+
+    public static void iterateChildrenByTagName(Element el, String tagName, Consumer<Element> function) {
+        NodeList childrenByTag = el.getElementsByTagName(tagName);
+        for (int i = 0; i < childrenByTag.getLength(); i++) {
+            Element childEl = (Element) childrenByTag.item(i);
+            function.accept(childEl);
+        }
     }
 
     private void loadDocuments(String configFileName) {
@@ -194,145 +229,129 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
         LOG.trace("Parsing configuration file [{}]", configFileName);
         Map<String, Node> loadedBeans = new HashMap<>();
         for (Document doc : documents) {
-            Element rootElement = doc.getDocumentElement();
-            NodeList children = rootElement.getChildNodes();
-            int childSize = children.getLength();
+            iterateElementChildren(doc, child -> {
+                switch (child.getNodeName()) {
+                    case "bean-selection": {
+                        registerBeanSelection(child, containerBuilder, props);
+                        break;
+                    }
+                    case "bean": {
+                        registerBean(child, loadedBeans, containerBuilder);
+                        break;
+                    }
+                    case "constant": {
+                        registerConstant(child, props);
+                        break;
+                    }
+                    case "unknown-handler-stack":
+                        registerUnknownHandlerStack(child);
+                        break;
+                }
+            });
+        }
+    }
 
-            for (int i = 0; i < childSize; i++) {
-                Node childNode = children.item(i);
+    protected void registerBeanSelection(Element child, ContainerBuilder containerBuilder, LocatableProperties props) {
+        String name = child.getAttribute("name");
+        String impl = child.getAttribute("class");
+        try {
+            Class<?> classImpl = ClassLoaderUtil.loadClass(impl, getClass());
+            if (BeanSelectionProvider.class.isAssignableFrom(classImpl)) {
+                BeanSelectionProvider provider = (BeanSelectionProvider) classImpl.newInstance();
+                provider.register(containerBuilder, props);
+            } else {
+                throw new ConfigurationException(format("The bean-provider: name:%s class:%s does not implement %s", name, impl, BeanSelectionProvider.class.getName()), child);
+            }
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            throw new ConfigurationException(format("Unable to load bean-provider: name:%s class:%s", name, impl), e, child);
+        }
+    }
 
-                if (childNode instanceof Element) {
-                    Element child = (Element) childNode;
+    protected void registerBean(Element child, Map<String, Node> loadedBeans, ContainerBuilder containerBuilder) {
+        String type = child.getAttribute("type");
+        String name = child.getAttribute("name");
+        String impl = child.getAttribute("class");
+        String onlyStatic = child.getAttribute("static");
+        String scopeStr = child.getAttribute("scope");
+        boolean optional = "true".equals(child.getAttribute("optional"));
+        Scope scope = Scope.fromString(scopeStr);
 
-                    final String nodeName = child.getNodeName();
+        if (name.isEmpty()) {
+            name = Container.DEFAULT_NAME;
+        }
 
-                    if ("bean-selection".equals(nodeName)) {
-                        String name = child.getAttribute("name");
-                        String impl = child.getAttribute("class");
-                        try {
-                            Class classImpl = ClassLoaderUtil.loadClass(impl, getClass());
-                            if (BeanSelectionProvider.class.isAssignableFrom(classImpl)) {
-                                BeanSelectionProvider provider = (BeanSelectionProvider) classImpl.newInstance();
-                                provider.register(containerBuilder, props);
-                            } else {
-                                throw new ConfigurationException("The bean-provider: name:" + name + " class:" + impl + " does not implement " + BeanSelectionProvider.class.getName(), childNode);
-                            }
-                        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-                            throw new ConfigurationException("Unable to load bean-provider: name:" + name + " class:" + impl, e, childNode);
-                        }
-                    } else if ("bean".equals(nodeName)) {
-                        String type = child.getAttribute("type");
-                        String name = child.getAttribute("name");
-                        String impl = child.getAttribute("class");
-                        String onlyStatic = child.getAttribute("static");
-                        String scopeStr = child.getAttribute("scope");
-                        boolean optional = "true".equals(child.getAttribute("optional"));
-                        Scope scope;
-                        if ("prototype".equals(scopeStr)) {
-                            scope = Scope.PROTOTYPE;
-                        } else if ("request".equals(scopeStr)) {
-                            scope = Scope.REQUEST;
-                        } else if ("session".equals(scopeStr)) {
-                            scope = Scope.SESSION;
-                        } else if ("singleton".equals(scopeStr)) {
-                            scope = Scope.SINGLETON;
-                        } else if ("thread".equals(scopeStr)) {
-                            scope = Scope.THREAD;
-                        } else {
-                            scope = Scope.SINGLETON;
-                        }
-
-                        if (StringUtils.isEmpty(name)) {
-                            name = Container.DEFAULT_NAME;
-                        }
-
-                        try {
-                            Class classImpl = ClassLoaderUtil.loadClass(impl, getClass());
-                            Class classType = classImpl;
-                            if (StringUtils.isNotEmpty(type)) {
-                                classType = ClassLoaderUtil.loadClass(type, getClass());
-                            }
-                            if ("true".equals(onlyStatic)) {
-                                // Force loading of class to detect no class def found exceptions
-                                classImpl.getDeclaredClasses();
-                                containerBuilder.injectStatics(classImpl);
-                            } else {
-                                if (containerBuilder.contains(classType, name)) {
-                                    Location loc = LocationUtils.getLocation(loadedBeans.get(classType.getName() + name));
-                                    if (throwExceptionOnDuplicateBeans) {
-                                        throw new ConfigurationException("Bean type " + classType + " with the name " +
-                                                name + " has already been loaded by " + loc, child);
-                                    }
-                                }
-
-                                // Force loading of class to detect no class def found exceptions
-                                classImpl.getDeclaredConstructors();
-
-                                LOG.debug("Loaded type: {} name: {} impl: {}", type, name, impl);
-                                containerBuilder.factory(classType, name, new LocatableFactory(name, classType, classImpl, scope, childNode), scope);
-                            }
-                            loadedBeans.put(classType.getName() + name, child);
-                        } catch (Throwable ex) {
-                            if (!optional) {
-                                throw new ConfigurationException("Unable to load bean: type:" + type + " class:" + impl, ex, childNode);
-                            } else {
-                                LOG.debug("Unable to load optional class: {}", impl);
-                            }
-                        }
-                    } else if ("constant".equals(nodeName)) {
-                        String name = child.getAttribute("name");
-                        String value = child.getAttribute("value");
-
-                        if (valueSubstitutor != null) {
-                            LOG.debug("Substituting value [{}] using [{}]", value, valueSubstitutor.getClass().getName());
-                            value = valueSubstitutor.substitute(value);
-                        }
-
-                        props.setProperty(name, value, childNode);
-                    } else if (nodeName.equals("unknown-handler-stack")) {
-                        List<UnknownHandlerConfig> unknownHandlerStack = new ArrayList<UnknownHandlerConfig>();
-                        NodeList unknownHandlers = child.getElementsByTagName("unknown-handler-ref");
-                        int unknownHandlersSize = unknownHandlers.getLength();
-
-                        for (int k = 0; k < unknownHandlersSize; k++) {
-                            Element unknownHandler = (Element) unknownHandlers.item(k);
-                            Location location = LocationUtils.getLocation(unknownHandler);
-                            unknownHandlerStack.add(new UnknownHandlerConfig(unknownHandler.getAttribute("name"), location));
-                        }
-
-                        if (!unknownHandlerStack.isEmpty())
-                            configuration.setUnknownHandlerStack(unknownHandlerStack);
+        try {
+            Class<?> classImpl = ClassLoaderUtil.loadClass(impl, getClass());
+            Class<?> classType = classImpl;
+            if (!type.isEmpty()) {
+                classType = ClassLoaderUtil.loadClass(type, getClass());
+            }
+            if ("true".equals(onlyStatic)) {
+                // Force loading of class to detect no class def found exceptions
+                classImpl.getDeclaredClasses();
+                containerBuilder.injectStatics(classImpl);
+            } else {
+                if (containerBuilder.contains(classType, name)) {
+                    Location loc = LocationUtils.getLocation(loadedBeans.get(classType.getName() + name));
+                    if (throwExceptionOnDuplicateBeans) {
+                        throw new ConfigurationException(format("Bean type %s with the name %s has already been loaded by %s", classType, name, loc), child);
                     }
                 }
+
+                // Force loading of class to detect no class def found exceptions
+                classImpl.getDeclaredConstructors();
+
+                LOG.debug("Loaded type: {} name: {} impl: {}", type, name, impl);
+                containerBuilder.factory(classType, name, new LocatableFactory<>(name, classType, classImpl, scope, child), scope);
+            }
+            loadedBeans.put(classType.getName() + name, child);
+        } catch (Throwable ex) {
+            if (!optional) {
+                throw new ConfigurationException("Unable to load bean: type:" + type + " class:" + impl, ex, child);
+            } else {
+                LOG.debug("Unable to load optional class: {}", impl);
             }
         }
     }
 
+    protected void registerConstant(Element child, LocatableProperties props) {
+        String name = child.getAttribute("name");
+        String value = child.getAttribute("value");
+
+        if (valueSubstitutor != null) {
+            LOG.debug("Substituting value [{}] using [{}]", value, valueSubstitutor.getClass().getName());
+            value = valueSubstitutor.substitute(value);
+        }
+
+        props.setProperty(name, value, child);
+    }
+
+    protected void registerUnknownHandlerStack(Element child) {
+        List<UnknownHandlerConfig> unknownHandlerStack = new ArrayList<>();
+
+        iterateChildrenByTagName(child, "unknown-handler-ref", unknownHandler -> {
+            Location location = LocationUtils.getLocation(unknownHandler);
+            unknownHandlerStack.add(new UnknownHandlerConfig(unknownHandler.getAttribute("name"), location));
+        });
+
+        if (!unknownHandlerStack.isEmpty()) {
+            configuration.setUnknownHandlerStack(unknownHandlerStack);
+        }
+    }
+
     public void loadPackages() throws ConfigurationException {
-        List<Element> reloads = new ArrayList<Element>();
+        List<Element> reloads = new ArrayList<>();
         verifyPackageStructure();
 
         for (Document doc : documents) {
-            Element rootElement = doc.getDocumentElement();
-            NodeList children = rootElement.getChildNodes();
-            int childSize = children.getLength();
-
-            for (int i = 0; i < childSize; i++) {
-                Node childNode = children.item(i);
-
-                if (childNode instanceof Element) {
-                    Element child = (Element) childNode;
-
-                    final String nodeName = child.getNodeName();
-
-                    if ("package".equals(nodeName)) {
-                        PackageConfig cfg = addPackage(child);
-                        if (cfg.isNeedsRefresh()) {
-                            reloads.add(child);
-                        }
+            iterateElementChildren(doc, child -> {
+                if ("package".equals(child.getNodeName())) {
+                    PackageConfig cfg = addPackage(child);
+                    if (cfg.isNeedsRefresh()) {
+                        reloads.add(child);
                     }
                 }
-            }
+            });
             loadExtraConfiguration(doc);
         }
 
@@ -353,30 +372,21 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
         DirectedGraph<String> graph = new DirectedGraph<>();
 
         for (Document doc : documents) {
-            Element rootElement = doc.getDocumentElement();
-            NodeList children = rootElement.getChildNodes();
-            int childSize = children.getLength();
-            for (int i = 0; i < childSize; i++) {
-                Node childNode = children.item(i);
-                if (childNode instanceof Element) {
-                    Element child = (Element) childNode;
-
-                    final String nodeName = child.getNodeName();
-
-                    if ("package".equals(nodeName)) {
-                        String packageName = child.getAttribute("name");
-                        declaredPackages.put(packageName, child);
-                        graph.addNode(packageName);
-
-                        String extendsAttribute = child.getAttribute("extends");
-                        List<String> parents = ConfigurationUtil.buildParentListFromString(extendsAttribute);
-                        for (String parent : parents) {
-                            graph.addNode(parent);
-                            graph.addEdge(packageName, parent);
-                        }
-                    }
+            iterateElementChildren(doc, child -> {
+                if (!"package".equals(child.getNodeName())) {
+                    return;
                 }
-            }
+
+                String packageName = child.getAttribute("name");
+                declaredPackages.put(packageName, child);
+                graph.addNode(packageName);
+
+                String extendsAttribute = child.getAttribute("extends");
+                for (String parent : ConfigurationUtil.buildParentListFromString(extendsAttribute)) {
+                    graph.addNode(parent);
+                    graph.addEdge(packageName, parent);
+                }
+            });
         }
 
         CycleDetector<String> detector = new CycleDetector<>(graph);
@@ -391,30 +401,27 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
     }
 
     private void reloadRequiredPackages(List<Element> reloads) {
-        if (reloads.size() > 0) {
-            List<Element> result = new ArrayList<>();
-            for (Element pkg : reloads) {
-                PackageConfig cfg = addPackage(pkg);
-                if (cfg.isNeedsRefresh()) {
-                    result.add(pkg);
-                }
-            }
-            if ((result.size() > 0) && (result.size() != reloads.size())) {
-                reloadRequiredPackages(result);
-                return;
-            }
+        if (reloads.isEmpty()) {
+            return;
+        }
 
-            // Print out error messages for all misconfigured inheritance packages
-            if (result.size() > 0) {
-                for (Element rp : result) {
-                    String parent = rp.getAttribute("extends");
-                    if (parent != null) {
-                        List<PackageConfig> parents = ConfigurationUtil.buildParentsFromString(configuration, parent);
-                        if (parents != null && parents.size() <= 0) {
-                            LOG.error("Unable to find parent packages {}", parent);
-                        }
-                    }
-                }
+        List<Element> result = new ArrayList<>();
+        for (Element pkg : reloads) {
+            PackageConfig cfg = addPackage(pkg);
+            if (cfg.isNeedsRefresh()) {
+                result.add(pkg);
+            }
+        }
+        if (!result.isEmpty() && result.size() != reloads.size()) {
+            reloadRequiredPackages(result);
+            return;
+        }
+
+        // Print out error messages for all misconfigured inheritance packages
+        for (Element rp : result) {
+            String parent = rp.getAttribute("extends");
+            if (!parent.isEmpty() && ConfigurationUtil.buildParentsFromString(configuration, parent).isEmpty()) {
+                LOG.error("Unable to find parent packages {}", parent);
             }
         }
     }
@@ -426,7 +433,6 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
      * @return true if the file has been changed since the last time we read it
      */
     public boolean needsReload() {
-
         for (String url : loadedFileUrls) {
             if (fileManager.fileNeedsReloading(url)) {
                 return true;
@@ -439,28 +445,16 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
         String name = actionElement.getAttribute("name");
         String className = actionElement.getAttribute("class");
         //methodName should be null if it's not set
-        String methodName = StringUtils.trimToNull(actionElement.getAttribute("method"));
+        String methodName = trimToNull(actionElement.getAttribute("method"));
         Location location = DomHelper.getLocationObject(actionElement);
 
         if (location == null) {
             LOG.warn("Location null for {}", className);
         }
 
-        // if there isn't a class name specified for an <action/> then try to
-        // use the default-class-ref from the <package/>
-        if (StringUtils.isEmpty(className)) {
-            // if there is a package default-class-ref use that, otherwise use action support
-           /* if (StringUtils.isNotEmpty(packageContext.getDefaultClassRef())) {
-                className = packageContext.getDefaultClassRef();
-            } else {
-                className = ActionSupport.class.getName();
-            }*/
-
-        } else {
-            if (!verifyAction(className, name, location)) {
-                LOG.error("Unable to verify action [{}] with class [{}], from [{}]", name, className, location);
-                return;
-            }
+        if (!className.isEmpty() && !verifyAction(className, name, location)) {
+            LOG.error("Unable to verify action [{}] with class [{}], from [{}]", name, className, location);
+            return;
         }
 
         Map<String, ResultConfig> results;
@@ -489,7 +483,7 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
         packageContext.addActionConfig(name, actionConfig);
 
         LOG.debug("Loaded {}{} in '{}' package: {}",
-                StringUtils.isNotEmpty(packageContext.getNamespace()) ? (packageContext.getNamespace() + "/") : "",
+                isNotEmpty(packageContext.getNamespace()) ? (packageContext.getNamespace() + "/") : "",
                 name, packageContext.getName(), actionConfig);
     }
 
@@ -500,11 +494,11 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
         }
         try {
             if (objectFactory.isNoArgConstructorRequired()) {
-                Class clazz = objectFactory.getClassInstance(className);
+                Class<?> clazz = objectFactory.getClassInstance(className);
                 if (!Modifier.isPublic(clazz.getModifiers())) {
                     throw new ConfigurationException("Action class [" + className + "] is not public", loc);
                 }
-                clazz.getConstructor(new Class[]{});
+                clazz.getConstructor();
             }
         } catch (ClassNotFoundException e) {
             LOG.debug("Class not found for action [{}]", className, e);
@@ -568,12 +562,7 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
         loadGlobalExceptionMappings(newPackage, packageElement);
 
         // get actions
-        NodeList actionList = packageElement.getElementsByTagName("action");
-
-        for (int i = 0; i < actionList.getLength(); i++) {
-            Element actionElement = (Element) actionList.item(i);
-            addAction(actionElement, newPackage);
-        }
+        iterateChildrenByTagName(packageElement, "action", actionElement -> addAction(actionElement, newPackage));
 
         // load the default action reference for this package
         loadDefaultActionRef(newPackage, packageElement);
@@ -584,92 +573,82 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
     }
 
     protected void addResultTypes(PackageConfig.Builder packageContext, Element element) {
-        NodeList resultTypeList = element.getElementsByTagName("result-type");
-
-        for (int i = 0; i < resultTypeList.getLength(); i++) {
-            Element resultTypeElement = (Element) resultTypeList.item(i);
+        iterateChildrenByTagName(element, "result-type", resultTypeElement -> {
             String name = resultTypeElement.getAttribute("name");
             String className = resultTypeElement.getAttribute("class");
             String def = resultTypeElement.getAttribute("default");
 
             Location loc = DomHelper.getLocationObject(resultTypeElement);
 
-            Class clazz = verifyResultType(className, loc);
-            if (clazz != null) {
-                String paramName = null;
-                try {
-                    paramName = (String) clazz.getField("DEFAULT_PARAM").get(null);
-                } catch (Throwable t) {
-                    LOG.debug("The result type [{}] doesn't have a default param [DEFAULT_PARAM] defined!", className, t);
-                }
-                ResultTypeConfig.Builder resultType = new ResultTypeConfig.Builder(name, className).defaultResultParam(paramName)
-                        .location(DomHelper.getLocationObject(resultTypeElement));
-
-                Map<String, String> params = XmlHelper.getParams(resultTypeElement);
-
-                if (!params.isEmpty()) {
-                    resultType.addParams(params);
-                }
-                packageContext.addResultTypeConfig(resultType.build());
-
-                // set the default result type
-                if (BooleanUtils.toBoolean(def)) {
-                    packageContext.defaultResultType(name);
-                }
+            Class<?> clazz = verifyResultType(className, loc);
+            if (clazz == null) {
+                return;
             }
-        }
+            String paramName = null;
+            try {
+                paramName = (String) clazz.getField("DEFAULT_PARAM").get(null);
+            } catch (Throwable t) {
+                LOG.debug("The result type [{}] doesn't have a default param [DEFAULT_PARAM] defined!", className, t);
+            }
+            ResultTypeConfig.Builder resultType = new ResultTypeConfig.Builder(name, className).defaultResultParam(paramName)
+                    .location(DomHelper.getLocationObject(resultTypeElement));
+
+            Map<String, String> params = XmlHelper.getParams(resultTypeElement);
+
+            if (!params.isEmpty()) {
+                resultType.addParams(params);
+            }
+            packageContext.addResultTypeConfig(resultType.build());
+
+            // set the default result type
+            if (BooleanUtils.toBoolean(def)) {
+                packageContext.defaultResultType(name);
+            }
+        });
     }
 
-    protected Class verifyResultType(String className, Location loc) {
+    protected Class<?> verifyResultType(String className, Location loc) {
         try {
             return objectFactory.getClassInstance(className);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             LOG.warn("Result class [{}] doesn't exist ({}) at {}, ignoring", className, e.getClass().getSimpleName(), loc, e);
         }
-
         return null;
     }
 
     protected List<InterceptorMapping> buildInterceptorList(Element element, PackageConfig.Builder context) throws ConfigurationException {
         List<InterceptorMapping> interceptorList = new ArrayList<>();
-        NodeList interceptorRefList = element.getElementsByTagName("interceptor-ref");
 
-        for (int i = 0; i < interceptorRefList.getLength(); i++) {
-            Element interceptorRefElement = (Element) interceptorRefList.item(i);
-
-            if (interceptorRefElement.getParentNode().equals(element) || interceptorRefElement.getParentNode().getNodeName().equals(element.getNodeName())) {
-                List<InterceptorMapping> interceptors = lookupInterceptorReference(context, interceptorRefElement);
-                interceptorList.addAll(interceptors);
+        iterateChildrenByTagName(element, "interceptor-ref", interceptorRefElement -> {
+            Node parNode = interceptorRefElement.getParentNode();
+            if (!parNode.equals(element) && !parNode.getNodeName().equals(element.getNodeName())) {
+                return;
             }
-        }
+            List<InterceptorMapping> interceptors = lookupInterceptorReference(context, interceptorRefElement);
+            interceptorList.addAll(interceptors);
+        });
 
         return interceptorList;
     }
 
     /**
-     * <p>
-     * This method builds a package context by looking for the parents of this new package.
-     * </p>
-     *
-     * <p>
-     * If no parents are found, it will return a root package.
-     * </p>
+     * <p>This method builds a package context by looking for the parents of this new package.</p>
+     * <p>If no parents are found, it will return a root package.</p>
      *
      * @param packageElement the package element
-     *
      * @return the package config builder
      */
     protected PackageConfig.Builder buildPackageContext(Element packageElement) {
         String parent = packageElement.getAttribute("extends");
         String abstractVal = packageElement.getAttribute("abstract");
-        boolean isAbstract = Boolean.parseBoolean(abstractVal);
-        String name = StringUtils.defaultString(packageElement.getAttribute("name"));
-        String namespace = StringUtils.defaultString(packageElement.getAttribute("namespace"));
+        boolean isAbstract = parseBoolean(abstractVal);
+        String name = defaultString(packageElement.getAttribute("name"));
+        String namespace = defaultString(packageElement.getAttribute("namespace"));
 
-        // Strict DMI is enabled by default, it can disabled by user
+        // Strict DMI is enabled by default, it can be disabled by user
         boolean strictDMI = true;
         if (packageElement.hasAttribute("strict-method-invocation")) {
-            strictDMI = Boolean.parseBoolean(packageElement.getAttribute("strict-method-invocation"));
+            strictDMI = parseBoolean(packageElement.getAttribute("strict-method-invocation"));
         }
 
         PackageConfig.Builder cfg = new PackageConfig.Builder(name)
@@ -678,27 +657,30 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
                 .strictMethodInvocation(strictDMI)
                 .location(DomHelper.getLocationObject(packageElement));
 
-        if (StringUtils.isNotEmpty(StringUtils.defaultString(parent))) { // has parents, let's look it up
-            List<PackageConfig> parents = new ArrayList<>();
-            for (String parentPackageName : ConfigurationUtil.buildParentListFromString(parent)) {
-                if (configuration.getPackageConfigNames().contains(parentPackageName)) {
-                    parents.add(configuration.getPackageConfig(parentPackageName));
-                } else if (declaredPackages.containsKey(parentPackageName)) {
-                    if (configuration.getPackageConfig(parentPackageName) == null) {
-                        addPackage(declaredPackages.get(parentPackageName));
-                    }
-                    parents.add(configuration.getPackageConfig(parentPackageName));
-                } else {
-                    throw new ConfigurationException("Parent package is not defined: " + parentPackageName);
+        if (parent.isEmpty()) {
+            return cfg;
+        }
+
+        // has parents, let's look it up
+        List<PackageConfig> parents = new ArrayList<>();
+        for (String parentPackageName : ConfigurationUtil.buildParentListFromString(parent)) {
+            if (configuration.getPackageConfigNames().contains(parentPackageName)) {
+                parents.add(configuration.getPackageConfig(parentPackageName));
+            } else if (declaredPackages.containsKey(parentPackageName)) {
+                if (configuration.getPackageConfig(parentPackageName) == null) {
+                    addPackage(declaredPackages.get(parentPackageName));
                 }
-
-            }
-
-            if (parents.size() <= 0) {
-                cfg.needsRefresh(true);
+                parents.add(configuration.getPackageConfig(parentPackageName));
             } else {
-                cfg.addParents(parents);
+                throw new ConfigurationException("Parent package is not defined: " + parentPackageName);
             }
+
+        }
+
+        if (parents.isEmpty()) {
+            cfg.needsRefresh(true);
+        } else {
+            cfg.addParents(parents);
         }
 
         return cfg;
@@ -707,129 +689,125 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
     /**
      * Build a map of ResultConfig objects from below a given XML element.
      *
-     * @param element the given XML element
+     * @param element        the given XML element
      * @param packageContext the package context
-     *
      * @return map of result config objects
      */
     protected Map<String, ResultConfig> buildResults(Element element, PackageConfig.Builder packageContext) {
-        NodeList resultEls = element.getElementsByTagName("result");
-
         Map<String, ResultConfig> results = new LinkedHashMap<>();
 
-        for (int i = 0; i < resultEls.getLength(); i++) {
-            Element resultElement = (Element) resultEls.item(i);
+        iterateChildrenByTagName(element, "result", resultElement -> {
+            Node parNode = resultElement.getParentNode();
+            if (!parNode.equals(element) && !parNode.getNodeName().equals(element.getNodeName())) {
+                return;
+            }
 
-            if (resultElement.getParentNode().equals(element) || resultElement.getParentNode().getNodeName().equals(element.getNodeName())) {
-                String resultName = resultElement.getAttribute("name");
-                String resultType = resultElement.getAttribute("type");
+            String resultName = resultElement.getAttribute("name");
+            String resultType = resultElement.getAttribute("type");
 
-                // if you don't specify a name on <result/>, it defaults to "success"
-                if (StringUtils.isEmpty(resultName)) {
-                    resultName = Action.SUCCESS;
-                }
+            // if you don't specify a name on <result/>, it defaults to "success"
+            if (StringUtils.isEmpty(resultName)) {
+                resultName = Action.SUCCESS;
+            }
 
-                // there is no result type, so let's inherit from the parent package
-                if (StringUtils.isEmpty(resultType)) {
-                    resultType = packageContext.getFullDefaultResultType();
-
-                    // now check if there is a result type now
-                    if (StringUtils.isEmpty(resultType)) {
-                        // uh-oh, we have a problem
-                        throw new ConfigurationException("No result type specified for result named '"
-                                + resultName + "', perhaps the parent package does not specify the result type?", resultElement);
-                    }
-                }
-
-
-                ResultTypeConfig config = packageContext.getResultType(resultType);
-
-                if (config == null) {
-                    throw new ConfigurationException("There is no result type defined for type '" + resultType
-                            + "' mapped with name '" + resultName + "'."
-                            + "  Did you mean '" + guessResultType(resultType) + "'?", resultElement);
-                }
-
-                String resultClass = config.getClassName();
-
-                // invalid result type specified in result definition
-                if (resultClass == null) {
-                    throw new ConfigurationException("Result type '" + resultType + "' is invalid");
-                }
-
-                Map<String, String> resultParams = XmlHelper.getParams(resultElement);
-
-                if (resultParams.size() == 0) // maybe we just have a body - therefore a default parameter
-                {
-                    // if <result ...>something</result> then we add a parameter of 'something' as this is the most used result param
-                    if (resultElement.getChildNodes().getLength() >= 1) {
-                        resultParams = new LinkedHashMap<>();
-
-                        String paramName = config.getDefaultResultParam();
-                        if (paramName != null) {
-                            StringBuilder paramValue = new StringBuilder();
-                            for (int j = 0; j < resultElement.getChildNodes().getLength(); j++) {
-                                if (resultElement.getChildNodes().item(j).getNodeType() == Node.TEXT_NODE) {
-                                    String val = resultElement.getChildNodes().item(j).getNodeValue();
-                                    if (val != null) {
-                                        paramValue.append(val);
-                                    }
-                                }
-                            }
-                            String val = paramValue.toString().trim();
-                            if (val.length() > 0) {
-                                resultParams.put(paramName, val);
-                            }
-                        } else {
-                            LOG.debug("No default parameter defined for result [{}] of type [{}] ", config.getName(), config.getClassName());
-                        }
-                    }
-                }
-
-                // create new param map, so that the result param can override the config param
-                Map<String, String> params = new LinkedHashMap<String, String>();
-                Map<String, String> configParams = config.getParams();
-                if (configParams != null) {
-                    params.putAll(configParams);
-                }
-                params.putAll(resultParams);
-
-                Set<String> resultNamesSet = TextParseUtil.commaDelimitedStringToSet(resultName);
-                if (resultNamesSet.isEmpty()) {
-                    resultNamesSet.add(resultName);
-                }
-
-                for (String name : resultNamesSet) {
-                    ResultConfig resultConfig = new ResultConfig.Builder(name, resultClass)
-                            .addParams(params)
-                            .location(DomHelper.getLocationObject(element))
-                            .build();
-                    results.put(resultConfig.getName(), resultConfig);
+            // there is no result type, so let's inherit from the parent package
+            if (resultType.isEmpty()) {
+                resultType = packageContext.getFullDefaultResultType();
+                // now check if there is a result type now
+                if (resultType.isEmpty()) {
+                    throw new ConfigurationException("No result type specified for result named '"
+                            + resultName + "', perhaps the parent package does not specify the result type?", resultElement);
                 }
             }
-        }
+
+            ResultTypeConfig config = packageContext.getResultType(resultType);
+            if (config == null) {
+                throw new ConfigurationException(format("There is no result type defined for type '%s' mapped with name '%s'. Did you mean '%s'?", resultType, resultName, guessResultType(resultType)), resultElement);
+            }
+
+            String resultClass = config.getClassName();
+            if (resultClass == null) {
+                throw new ConfigurationException("Result type '" + resultType + "' is invalid");
+            }
+
+            Map<String, String> params = buildResultParams(resultElement, config);
+
+            Set<String> resultNamesSet = commaDelimitedStringToSet(resultName);
+            if (resultNamesSet.isEmpty()) {
+                resultNamesSet.add(resultName);
+            }
+
+            for (String name : resultNamesSet) {
+                ResultConfig resultConfig = new ResultConfig.Builder(name, resultClass)
+                        .addParams(params)
+                        .location(DomHelper.getLocationObject(element))
+                        .build();
+                results.put(resultConfig.getName(), resultConfig);
+            }
+        });
 
         return results;
     }
 
-    protected String guessResultType(String type) {
-        StringBuilder sb = null;
-        if (type != null) {
-            sb = new StringBuilder();
-            boolean capNext = false;
-            for (int x=0; x<type.length(); x++) {
-                char c = type.charAt(x);
-                if (c == '-') {
-                    capNext = true;
-                    continue;
-                } else if (Character.isLowerCase(c) && capNext) {
-                    c = Character.toUpperCase(c);
-                    capNext = false;
+    protected Map<String, String> buildResultParams(Element resultElement, ResultTypeConfig config) {
+        Map<String, String> resultParams = XmlHelper.getParams(resultElement);
+
+        // maybe we just have a body - therefore a default parameter
+        if (resultParams.isEmpty() && resultElement.getChildNodes().getLength() > 0) {
+            // if <result ...>something</result> then we add a parameter of 'something' as this is the most used result param
+            resultParams = new LinkedHashMap<>();
+
+            String paramName = config.getDefaultResultParam();
+            if (paramName != null) {
+                StringBuilder paramValue = new StringBuilder();
+                iterateChildren(resultElement, child -> {
+                    if (child.getNodeType() == Node.TEXT_NODE) {
+                        String val = child.getNodeValue();
+                        if (val != null) {
+                            paramValue.append(val);
+                        }
+                    }
+                });
+                String val = paramValue.toString().trim();
+                if (val.length() > 0) {
+                    resultParams.put(paramName, val);
                 }
-                sb.append(c);
+            } else {
+                LOG.debug(
+                        "No default parameter defined for result [{}] of type [{}] ",
+                        config.getName(),
+                        config.getClassName());
             }
         }
-        return (sb != null ? sb.toString() : null);
+
+        // create new param map, so that the result param can override the config param
+        Map<String, String> params = new LinkedHashMap<>();
+        Map<String, String> configParams = config.getParams();
+        if (configParams != null) {
+            params.putAll(configParams);
+        }
+        params.putAll(resultParams);
+        return params;
+    }
+
+    protected static String guessResultType(String type) {
+        if (type == null) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        boolean capNext = false;
+        for (int x = 0; x < type.length(); x++) {
+            char c = type.charAt(x);
+            if (c == '-') {
+                capNext = true;
+                continue;
+            } else if (isLowerCase(c) && capNext) {
+                c = toUpperCase(c);
+                capNext = false;
+            }
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     /**
@@ -841,31 +819,28 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
      * @return list of exception mapping config objects
      */
     protected List<ExceptionMappingConfig> buildExceptionMappings(Element element, PackageConfig.Builder packageContext) {
-        NodeList exceptionMappingEls = element.getElementsByTagName("exception-mapping");
-
         List<ExceptionMappingConfig> exceptionMappings = new ArrayList<>();
 
-        for (int i = 0; i < exceptionMappingEls.getLength(); i++) {
-            Element ehElement = (Element) exceptionMappingEls.item(i);
-
-            if (ehElement.getParentNode().equals(element) || ehElement.getParentNode().getNodeName().equals(element.getNodeName())) {
-                String emName = ehElement.getAttribute("name");
-                String exceptionClassName = ehElement.getAttribute("exception");
-                String exceptionResult = ehElement.getAttribute("result");
-
-                Map<String, String> params = XmlHelper.getParams(ehElement);
-
-                if (StringUtils.isEmpty(emName)) {
-                    emName = exceptionResult;
-                }
-
-                ExceptionMappingConfig ehConfig = new ExceptionMappingConfig.Builder(emName, exceptionClassName, exceptionResult)
-                        .addParams(params)
-                        .location(DomHelper.getLocationObject(ehElement))
-                        .build();
-                exceptionMappings.add(ehConfig);
+        iterateChildrenByTagName(element, "exception-mapping", ehElement -> {
+            Node parNode = ehElement.getParentNode();
+            if (!parNode.equals(element) && !parNode.getNodeName().equals(element.getNodeName())) {
+                return;
             }
-        }
+
+            String emName = ehElement.getAttribute("name");
+            String exceptionClassName = ehElement.getAttribute("exception");
+            String exceptionResult = ehElement.getAttribute("result");
+            Map<String, String> params = XmlHelper.getParams(ehElement);
+            if (emName.isEmpty()) {
+                emName = exceptionResult;
+            }
+
+            ExceptionMappingConfig ehConfig = new ExceptionMappingConfig.Builder(emName, exceptionClassName, exceptionResult)
+                    .addParams(params)
+                    .location(DomHelper.getLocationObject(ehElement))
+                    .build();
+            exceptionMappings.add(ehConfig);
+        });
 
         return exceptionMappings;
     }
@@ -878,26 +853,10 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
             // user defined 'allowed-methods' so used them whatever Strict DMI was enabled or not
             allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
             // Fix for WW-5029 (concatenate all possible text node children)
-            final Node allowedMethodsNode = allowedMethodsEls.item(0);
-            if (allowedMethodsNode != null) {
-                final NodeList allowedMethodsChildren = allowedMethodsNode.getChildNodes();
-                final StringBuilder allowedMethodsSB = new StringBuilder();
-                for (int i = 0; i < allowedMethodsChildren.getLength(); i++) {
-                    Node allowedMethodsChildNode = allowedMethodsChildren.item(i);
-                    if (allowedMethodsChildNode != null && allowedMethodsChildNode.getNodeType() == Node.TEXT_NODE) {
-                        String childNodeValue = allowedMethodsChildNode.getNodeValue();
-                        childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
-                        if (childNodeValue.length() > 0) {
-                            allowedMethodsSB.append(childNodeValue);
-                        }
-                    }
-                }
-                if (allowedMethodsSB.length() > 0) {
-                    allowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(allowedMethodsSB.toString()));
-                }
-            }
+            Node allowedMethodsNode = allowedMethodsEls.item(0);
+            addAllowedMethodsToSet(allowedMethodsNode, allowedMethods);
         } else if (packageContext.isStrictMethodInvocation()) {
-            // user enabled Strict DMI but didn't defined action specific 'allowed-methods' so we use 'global-allowed-methods' only
+            // user enabled Strict DMI but didn't define action specific 'allowed-methods' so we use 'global-allowed-methods' only
             allowedMethods = new HashSet<>(packageContext.getGlobalAllowedMethods());
         } else {
             // Strict DMI is disabled so any method can be called
@@ -929,7 +888,7 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
     }
 
     /**
-     * Load all of the global results for this package from the XML element.
+     * Load all the global results for this package from the XML element.
      *
      * @param packageContext the package context
      * @param packageElement the given XML element
@@ -950,25 +909,28 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
         if (globalAllowedMethodsElms.getLength() > 0) {
             Set<String> globalAllowedMethods = new HashSet<>();
             // Fix for WW-5029 (concatenate all possible text node children)
-            Node globaAllowedMethodsNode = globalAllowedMethodsElms.item(0);
-            if (globaAllowedMethodsNode != null) {
-                NodeList globaAllowedMethodsChildren = globaAllowedMethodsNode.getChildNodes();
-                final StringBuilder globalAllowedMethodsSB = new StringBuilder();
-                for (int i = 0; i < globaAllowedMethodsChildren.getLength(); i++) {
-                    Node globalAllowedMethodsChildNode = globaAllowedMethodsChildren.item(i);
-                    if (globalAllowedMethodsChildNode != null && globalAllowedMethodsChildNode.getNodeType() == Node.TEXT_NODE) {
-                        String childNodeValue = globalAllowedMethodsChildNode.getNodeValue();
-                        childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
-                        if (childNodeValue.length() > 0) {
-                            globalAllowedMethodsSB.append(childNodeValue);
-                        }
-                    }
-                }
-                if (globalAllowedMethodsSB.length() > 0) {
-                    globalAllowedMethods.addAll(TextParseUtil.commaDelimitedStringToSet(globalAllowedMethodsSB.toString()));
+            Node globalAllowedMethodsNode = globalAllowedMethodsElms.item(0);
+            addAllowedMethodsToSet(globalAllowedMethodsNode, globalAllowedMethods);
+            packageContext.addGlobalAllowedMethods(globalAllowedMethods);
+        }
+    }
+
+    protected static void addAllowedMethodsToSet(Node allowedMethodsNode, Set<String> allowedMethodsSet) {
+        if (allowedMethodsNode == null) {
+            return;
+        }
+        StringBuilder allowedMethodsSB = new StringBuilder();
+        iterateChildren(allowedMethodsNode, allowedMethodsChildNode -> {
+            if (allowedMethodsChildNode != null && allowedMethodsChildNode.getNodeType() == Node.TEXT_NODE) {
+                String childNodeValue = allowedMethodsChildNode.getNodeValue();
+                childNodeValue = (childNodeValue != null ? childNodeValue.trim() : "");
+                if (childNodeValue.length() > 0) {
+                    allowedMethodsSB.append(childNodeValue);
                 }
             }
-            packageContext.addGlobalAllowedMethods(globalAllowedMethods);
+        });
+        if (allowedMethodsSB.length() > 0) {
+            allowedMethodsSet.addAll(commaDelimitedStringToSet(allowedMethodsSB.toString()));
         }
     }
 
@@ -981,7 +943,7 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
     }
 
     /**
-     * Load all of the global results for this package from the XML element.
+     * Load all the global results for this package from the XML element.
      *
      * @param packageContext the package context
      * @param packageElement the given XML element
@@ -998,37 +960,26 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
 
     protected InterceptorStackConfig loadInterceptorStack(Element element, PackageConfig.Builder context) throws ConfigurationException {
         String name = element.getAttribute("name");
-
         InterceptorStackConfig.Builder config = new InterceptorStackConfig.Builder(name)
                 .location(DomHelper.getLocationObject(element));
-        NodeList interceptorRefList = element.getElementsByTagName("interceptor-ref");
 
-        for (int j = 0; j < interceptorRefList.getLength(); j++) {
-            Element interceptorRefElement = (Element) interceptorRefList.item(j);
+        iterateChildrenByTagName(element, "interceptor-ref", interceptorRefElement -> {
             List<InterceptorMapping> interceptors = lookupInterceptorReference(context, interceptorRefElement);
             config.addInterceptors(interceptors);
-        }
+        });
 
         return config.build();
     }
 
     protected void loadInterceptorStacks(Element element, PackageConfig.Builder context) throws ConfigurationException {
-        NodeList interceptorStackList = element.getElementsByTagName("interceptor-stack");
-
-        for (int i = 0; i < interceptorStackList.getLength(); i++) {
-            Element interceptorStackElement = (Element) interceptorStackList.item(i);
-
+        iterateChildrenByTagName(element, "interceptor-stack", interceptorStackElement -> {
             InterceptorStackConfig config = loadInterceptorStack(interceptorStackElement, context);
-
             context.addInterceptorStackConfig(config);
-        }
+        });
     }
 
     protected void loadInterceptors(PackageConfig.Builder context, Element element) throws ConfigurationException {
-        NodeList interceptorList = element.getElementsByTagName("interceptor");
-
-        for (int i = 0; i < interceptorList.getLength(); i++) {
-            Element interceptorElement = (Element) interceptorList.item(i);
+        iterateChildrenByTagName(element, "interceptor", interceptorElement -> {
             String name = interceptorElement.getAttribute("name");
             String className = interceptorElement.getAttribute("class");
 
@@ -1039,109 +990,103 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
                     .build();
 
             context.addInterceptorConfig(config);
-        }
+        });
 
         loadInterceptorStacks(element, context);
     }
 
     private List<Document> loadConfigurationFiles(String fileName, Element includeElement) {
+        if (includedFileNames.contains(fileName)) {
+            return emptyList();
+        }
+        LOG.debug("Loading action configurations from: {}", fileName);
+        includedFileNames.add(fileName);
+
+        Iterator<URL> urls = getURLs(fileName);
+        if (urls == null) {
+            return emptyList();
+        }
+
+        List<Document> docs = getDocs(urls, fileName, includeElement);
+        List<Document> finalDocs = getFinalDocs(docs);
+        LOG.debug("Loaded action configuration from: {}", fileName);
+        return finalDocs;
+    }
+
+    private Iterator<URL> getURLs(String fileName) {
+        Iterator<URL> urls = null;
+        try {
+            urls = getConfigurationUrls(fileName);
+        } catch (IOException ex) {
+            LOG.debug("Ignoring file that does not exist: " + fileName, ex);
+        }
+        if (urls != null && !urls.hasNext()) {
+            LOG.debug("Ignoring file that has no URLs: " + fileName);
+            urls = null;
+        }
+        return urls;
+    }
+
+    private List<Document> getDocs(Iterator<URL> urls, String fileName, Element includeElement) {
         List<Document> docs = new ArrayList<>();
-        List<Document> finalDocs = new ArrayList<>();
-        if (!includedFileNames.contains(fileName)) {
-            LOG.debug("Loading action configurations from: {}", fileName);
 
-            includedFileNames.add(fileName);
-
-            Iterator<URL> urls = null;
+        while (urls.hasNext()) {
             InputStream is = null;
-
-            IOException ioException = null;
-            try {
-                urls = getConfigurationUrls(fileName);
-            } catch (IOException ex) {
-                ioException = ex;
-            }
-
-            if (urls == null || !urls.hasNext()) {
-                LOG.debug("Ignoring file that does not exist: " + fileName, ioException);
-                return docs;
-            }
-
             URL url = null;
-            while (urls.hasNext()) {
-                try {
-                    url = urls.next();
-                    is = fileManager.loadFile(url);
-
-                    InputSource in = new InputSource(is);
-
-                    in.setSystemId(url.toString());
-                    
-                    Document helperDoc = DomHelper.parse(in, dtdMappings);
-                    if (helperDoc != null) {
-                        docs.add(helperDoc);
-                    }
-                    
-                    loadedFileUrls.add(url.toString());
-                } catch (StrutsException e) {
-                    if (includeElement != null) {
-                        throw new ConfigurationException("Unable to load " + url, e, includeElement);
-                    } else {
-                        throw new ConfigurationException("Unable to load " + url, e);
-                    }
-                } catch (Exception e) {
-                    throw new ConfigurationException("Caught exception while loading file " + fileName, e, includeElement);
-                } finally {
-                    if (is != null) {
-                        try {
-                            is.close();
-                        } catch (IOException e) {
-                            LOG.error("Unable to close input stream", e);
-                        }
+            try {
+                url = urls.next();
+                is = fileManager.loadFile(url);
+                InputSource in = new InputSource(is);
+                in.setSystemId(url.toString());
+                Document helperDoc = DomHelper.parse(in, dtdMappings);
+                if (helperDoc != null) {
+                    docs.add(helperDoc);
+                }
+                loadedFileUrls.add(url.toString());
+            } catch (StrutsException e) {
+                if (includeElement != null) {
+                    throw new ConfigurationException("Unable to load " + url, e, includeElement);
+                } else {
+                    throw new ConfigurationException("Unable to load " + url, e);
+                }
+            } catch (Exception e) {
+                throw new ConfigurationException("Caught exception while loading file " + fileName, e, includeElement);
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        LOG.error("Unable to close input stream", e);
                     }
                 }
             }
+        }
+        return docs;
+    }
 
-            //sort the documents, according to the "order" attribute
-            Collections.sort(docs, new Comparator<Document>() {
-                public int compare(Document doc1, Document doc2) {
-                    return XmlHelper.getLoadOrder(doc1).compareTo(XmlHelper.getLoadOrder(doc2));
+    private List<Document> getFinalDocs(List<Document> docs) {
+        List<Document> finalDocs = new ArrayList<>();
+        docs.sort(Comparator.comparing(XmlHelper::getLoadOrder));
+        for (Document doc : docs) {
+            iterateElementChildren(doc, child -> {
+                if (!"include".equals(child.getNodeName())) {
+                    return;
+                }
+
+                String includeFileName = child.getAttribute("file");
+                if (includeFileName.indexOf('*') == -1) {
+                    finalDocs.addAll(loadConfigurationFiles(includeFileName, child));
+                    return;
+                }
+                // handleWildCardIncludes(includeFileName, docs, child);
+                ClassPathFinder wildcardFinder = new ClassPathFinder();
+                wildcardFinder.setPattern(includeFileName);
+                Vector<String> wildcardMatches = wildcardFinder.findMatches();
+                for (String match : wildcardMatches) {
+                    finalDocs.addAll(loadConfigurationFiles(match, child));
                 }
             });
-
-            for (Document doc : docs) {
-                Element rootElement = doc.getDocumentElement();
-                NodeList children = rootElement.getChildNodes();
-                int childSize = children.getLength();
-
-                for (int i = 0; i < childSize; i++) {
-                    Node childNode = children.item(i);
-
-                    if (childNode instanceof Element) {
-                        Element child = (Element) childNode;
-
-                        final String nodeName = child.getNodeName();
-
-                        if ("include".equals(nodeName)) {
-                            String includeFileName = child.getAttribute("file");
-                            if (includeFileName.indexOf('*') != -1) {
-                                // handleWildCardIncludes(includeFileName, docs, child);
-                                ClassPathFinder wildcardFinder = new ClassPathFinder();
-                                wildcardFinder.setPattern(includeFileName);
-                                Vector<String> wildcardMatches = wildcardFinder.findMatches();
-                                for (String match : wildcardMatches) {
-                                    finalDocs.addAll(loadConfigurationFiles(match, child));
-                                }
-                            } else {
-                                finalDocs.addAll(loadConfigurationFiles(includeFileName, child));
-                            }
-                        }
-                    }
-                }
-                finalDocs.add(doc);
-            }
-
-            LOG.debug("Loaded action configuration from: {}", fileName);
+            finalDocs.add(doc);
         }
         return finalDocs;
     }
@@ -1163,7 +1108,7 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
      * Looks up the Interceptor Class from the interceptor-ref name and creates an instance, which is added to the
      * provided List, or, if this is a ref to a stack, it adds the Interceptor instances from the List to this stack.
      *
-     * @param context               The PackageConfig to lookup the interceptor from
+     * @param context               The PackageConfig to look up the interceptor from
      * @param interceptorRefElement Element to pull interceptor ref data from
      * @return A list of Interceptor objects
      * @throws ConfigurationException in case of configuration errors
@@ -1182,8 +1127,6 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
 
     @Override
     public String toString() {
-        return "XmlConfigurationProvider{" +
-                "configFileName='" + configFileName + '\'' +
-                '}';
+        return format("XmlConfigurationProvider{configFileName='%s'}", configFileName);
     }
 }

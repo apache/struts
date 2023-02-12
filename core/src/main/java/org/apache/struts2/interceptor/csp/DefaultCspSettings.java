@@ -111,4 +111,12 @@ public class DefaultCspSettings implements CspSettings {
         this.reportUri = reportUri;
     }
 
+    @Override
+    public String toString() {
+        return "DefaultCspSettings{" +
+            "reportUri='" + reportUri + '\'' +
+            ", cspHeader='" + cspHeader + '\'' +
+            '}';
+    }
+
 }

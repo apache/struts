@@ -51,9 +51,13 @@ public interface CspSettings {
 
     void addCspHeaders(HttpServletRequest request, HttpServletResponse response);
 
-    // sets the uri where csp violation reports will be sent
+    /**
+     * Sets the uri where csp violation reports will be sent
+     */
     void setReportUri(String uri);
 
-    // sets CSP headers in enforcing mode when true, and report-only when false
+    /**
+     * Sets CSP headers in enforcing mode when true, and report-only when false
+     */
     void setEnforcingMode(boolean value);
 }

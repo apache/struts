@@ -37,56 +37,11 @@ import java.util.List;
  * @author Rainer Hermanns
  * @author jepjep
  */
-public class AnnotationActionValidatorManager extends AbstractActionValidatorManager {
+public class AnnotationActionValidatorManager extends DefaultActionValidatorManager {
 
     private static final Logger LOG = LogManager.getLogger(AnnotationActionValidatorManager.class);
 
     @Override
-    public List<Validator> getValidators(Class clazz, String context) {
-        return getValidators(clazz, context, null);
-    }
-
-    @Override
-    public List<Validator> getValidators(Class clazz, String context, String method) {
-        String validatorKey = buildValidatorKey(clazz, context);
-
-        if (validatorCache.containsKey(validatorKey)) {
-            if (reloadingConfigs) {
-                validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
-            }
-        } else {
-            validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, false, null));
-        }
-
-        // get the set of validator configs
-        List<ValidatorConfig> cfgs = new ArrayList<>(validatorCache.get(validatorKey));
-
-        ValueStack stack = ActionContext.getContext().getValueStack();
-
-        // create clean instances of the validators for the caller's use
-        ArrayList<Validator> validators = new ArrayList<>(cfgs.size());
-        for (ValidatorConfig cfg : cfgs) {
-            if (method == null || method.equals(cfg.getParams().get("methodName"))) {
-                Validator validator = validatorFactory.getValidator(
-                        new ValidatorConfig.Builder(cfg)
-                                .removeParam("methodName")
-                                .build());
-                validator.setValidatorType(cfg.getType());
-                validator.setValueStack(stack);
-                validators.add(validator);
-            }
-        }
-
-        return validators;
-    }
-
-    /**
-     * Builds a key for validators - used when caching validators.
-     *
-     * @param clazz the action.
-     * @param context context
-     * @return a validator key which is the class name plus context.
-     */
     protected String buildValidatorKey(Class clazz, String context) {
         ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
         ActionProxy proxy = invocation.getProxy();
@@ -98,20 +53,11 @@ public class AnnotationActionValidatorManager extends AbstractActionValidatorMan
             sb.append(config.getPackageName());
             sb.append("/");
         }
-
-        // the key needs to use the name of the action from the config file,
-        // instead of the url, so wild card actions will have the same validator
-        // see WW-2996
-
-        // UPDATE:
-        // WW-3753 Using the config name instead of the context only for
-        // wild card actions to keep the flexibility provided
-        // by the original design (such as mapping different contexts
-        // to the same action and method if desired)
-
-        // UPDATE:
-        // WW-4536 Using NameVariablePatternMatcher allows defines actions
-        // with patterns enclosed with '{}', it's similar case to WW-3753
+        // WW-2996: key needs to use the name of the action from the config file, instead of the url,
+        // so wildcard actions will have the same validator
+        // WW-3753: Using the config name instead of the context only for wildcard actions to keep the flexibility
+        // provided by the original design (such as mapping different contexts to the same action and method if desired)
+        // WW-4536: Using NamedVariablePatternMatcher allows defines actions with patterns enclosed with '{}'
         String configName = config.getName();
         if (configName.contains(ActionConfig.WILDCARD) || (configName.contains("{") && configName.contains("}"))) {
             sb.append(configName);
@@ -120,8 +66,18 @@ public class AnnotationActionValidatorManager extends AbstractActionValidatorMan
         } else {
             sb.append(context);
         }
-
         return sb.toString();
+    }
+
+    @Override
+    protected Validator getValidatorFromValidatorConfig(ValidatorConfig config, ValueStack stack) {
+        Validator validator = validatorFactory.getValidator(
+                new ValidatorConfig.Builder(config)
+                        .removeParam("methodName")
+                        .build());
+        validator.setValidatorType(config.getType());
+        validator.setValueStack(stack);
+        return validator;
     }
 
     @Override

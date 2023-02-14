@@ -44,7 +44,7 @@ import java.util.List;
  * DefaultActionValidatorManagerTest
  *
  * @author Jason Carreira
- * @author tm_jee 
+ * @author tm_jee
  * @version $Date$ $Id$
  */
 public class DefaultActionValidatorManagerTest extends XWorkTestCase {
@@ -87,7 +87,7 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
 
 
     public void testBuildValidatorKey() {
-        String validatorKey = DefaultActionValidatorManager.buildValidatorKey(SimpleAction.class, alias);
+        String validatorKey = actionValidatorManager.buildValidatorKey(SimpleAction.class, alias);
         assertEquals(SimpleAction.class.getName() + "/" + alias, validatorKey);
     }
 
@@ -239,7 +239,7 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
             user.setName("Mark");
             // * mark both email to starts with mark to get pass the action-level validator,
             // so we could concentrate on testing the field-level validators (User-validation.xml)
-            // * make both email the same to pass the action-level validator at 
+            // * make both email the same to pass the action-level validator at
             // UserMarker-validation.xml
             user.setEmail("mark_bad_email_for_field_val@foo.com");
             user.setEmail2("mark_bad_email_for_field_val@foo.com");
@@ -255,51 +255,51 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
             assertEquals(1, l.size()); // because email-field-val is short-circuit
             assertEquals("Email not from the right company.", l.get(0));
 
-            
+
             // check action errors
             l = (List) context.getActionErrors();
             assertFalse(context.hasActionErrors());
             assertEquals(0, l.size());
-            
-            
+
+
         } catch (ValidationException ex) {
             ex.printStackTrace();
             fail("Validation error: " + ex.getMessage());
         }
     }
 
-    
+
     public void testActionLevelShortCircuit() throws Exception {
-    	
+
     	List validatorList = actionValidatorManager.getValidators(User.class, null);
         assertEquals(10, validatorList.size());
-        
+
         User user = new User();
         // all fields will trigger error, but sc of action-level, cause it to not appear
-        user.setName(null);		
+        user.setName(null);
         user.setEmail("tmjee(at)yahoo.co.uk");
         user.setEmail("tm_jee(at)yahoo.co.uk");
-        
+
         ValidatorContext context = new GenericValidatorContext(user);
         actionValidatorManager.validate(user, null, context);
-    	
+
     	// check field level errors
         // shouldn't have any because action error prevents validation of anything else
         List l = (List) context.getFieldErrors().get("email2");
         assertNull(l);
-    	
-    	
+
+
         // check action errors
         assertTrue(context.hasActionErrors());
         l = (List) context.getActionErrors();
         assertNotNull(l);
         // we only get one, because UserMarker-validation.xml action-level validator
         // already sc it   :-)
-        assertEquals(1, l.size()); 
+        assertEquals(1, l.size());
         assertEquals("Email not the same as email2", l.get(0));
     }
-    
-    
+
+
     public void testShortCircuitNoErrors() {
         // get validators
         List validatorList = actionValidatorManager.getValidators(User.class, null);
@@ -319,65 +319,65 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
             fail("Validation error: " + ex.getMessage());
         }
     }
-    
+
     public void testFieldErrorsOrder() throws Exception {
     	ValidationOrderAction action = new ValidationOrderAction();
     	actionValidatorManager.validate(action, "actionContext");
     	Map fieldErrors = action.getFieldErrors();
     	Iterator i = fieldErrors.entrySet().iterator();
-    	
+
     	assertNotNull(fieldErrors);
     	assertEquals(fieldErrors.size(), 12);
-    	
-    	
+
+
     	Map.Entry e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "username");
     	assertEquals(((List)e.getValue()).get(0), "username required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "password");
     	assertEquals(((List)e.getValue()).get(0), "password required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "confirmPassword");
     	assertEquals(((List)e.getValue()).get(0), "confirm password required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "firstName");
     	assertEquals(((List)e.getValue()).get(0), "first name required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "lastName");
     	assertEquals(((List)e.getValue()).get(0), "last name required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "city");
     	assertEquals(((List)e.getValue()).get(0), "city is required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "province");
     	assertEquals(((List)e.getValue()).get(0), "province is required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "country");
     	assertEquals(((List)e.getValue()).get(0), "country is required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "postalCode");
     	assertEquals(((List)e.getValue()).get(0), "postal code is required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "email");
     	assertEquals(((List)e.getValue()).get(0), "email is required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "website");
     	assertEquals(((List)e.getValue()).get(0), "website is required");
-    	
+
     	e = (Map.Entry) i.next();
     	assertEquals(e.getKey(), "passwordHint");
     	assertEquals(((List)e.getValue()).get(0), "password hint is required");
-    	
+
     }
     */
 }

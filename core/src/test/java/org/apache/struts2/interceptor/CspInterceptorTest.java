@@ -22,23 +22,16 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.action.CspSettingsAware;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.csp.CspInterceptor;
+import org.apache.struts2.interceptor.csp.CspSettings;
+import org.apache.struts2.interceptor.csp.DefaultCspSettings;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.HttpSession;
 
-import static org.apache.struts2.interceptor.csp.CspSettings.BASE_URI;
-import static org.apache.struts2.interceptor.csp.CspSettings.CSP_ENFORCE_HEADER;
-import static org.apache.struts2.interceptor.csp.CspSettings.CSP_REPORT_HEADER;
-import static org.apache.struts2.interceptor.csp.CspSettings.HTTP;
-import static org.apache.struts2.interceptor.csp.CspSettings.HTTPS;
-import static org.apache.struts2.interceptor.csp.CspSettings.NONE;
-import static org.apache.struts2.interceptor.csp.CspSettings.OBJECT_SRC;
-import static org.apache.struts2.interceptor.csp.CspSettings.REPORT_URI;
-import static org.apache.struts2.interceptor.csp.CspSettings.SCRIPT_SRC;
-import static org.apache.struts2.interceptor.csp.CspSettings.STRICT_DYNAMIC;
 import static org.junit.Assert.assertNotEquals;
 
 public class CspInterceptorTest extends StrutsInternalTestCase {
@@ -145,28 +138,35 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         }
     }
 
+    public void testCustomPreResultListener() throws Exception {
+        mai.setAction(new CustomerCspAction("/report-uri"));
+        interceptor.setEnforcingMode("false");
+        interceptor.intercept(mai);
+        checkHeader("/report-uri", "false");
+    }
+
     public void checkHeader(String reportUri, String enforcingMode) {
         String expectedCspHeader;
         if (Strings.isEmpty(reportUri)) {
             expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; ",
-                OBJECT_SRC, NONE,
-                SCRIPT_SRC, session.getAttribute("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
-                BASE_URI, NONE
+                CspSettings.OBJECT_SRC, CspSettings.NONE,
+                CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
+                CspSettings.BASE_URI, CspSettings.NONE
             );
         } else {
             expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s",
-                OBJECT_SRC, NONE,
-                SCRIPT_SRC, session.getAttribute("nonce"), STRICT_DYNAMIC, HTTP, HTTPS,
-                BASE_URI, NONE,
-                REPORT_URI, reportUri
+                CspSettings.OBJECT_SRC, CspSettings.NONE,
+                CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
+                CspSettings.BASE_URI, CspSettings.NONE,
+                CspSettings.REPORT_URI, reportUri
             );
         }
 
         String header;
         if (enforcingMode.equals("true")) {
-            header = response.getHeader(CSP_ENFORCE_HEADER);
+            header = response.getHeader(CspSettings.CSP_ENFORCE_HEADER);
         } else {
-            header = response.getHeader(CSP_REPORT_HEADER);
+            header = response.getHeader(CspSettings.CSP_REPORT_HEADER);
         }
 
         assertFalse("No CSP header exists", Strings.isEmpty(header));
@@ -184,5 +184,21 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
             .bind();
         mai.setInvocationContext(context);
         session = request.getSession();
+    }
+
+    private static class CustomerCspAction implements CspSettingsAware {
+
+        private final String reportUri;
+
+        private CustomerCspAction(String reportUri) {
+            this.reportUri = reportUri;
+        }
+
+        @Override
+        public CspSettings getCspSettings() {
+            DefaultCspSettings settings = new DefaultCspSettings();
+            settings.setReportUri(reportUri);
+            return settings;
+        }
     }
 }

@@ -22,10 +22,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +35,6 @@ import java.util.List;
  * @author jepjep
  */
 public class AnnotationActionValidatorManager extends DefaultActionValidatorManager {
-
-    private static final Logger LOG = LogManager.getLogger(AnnotationActionValidatorManager.class);
 
     @Override
     protected String buildValidatorKey(Class clazz, String context) {
@@ -67,17 +62,6 @@ public class AnnotationActionValidatorManager extends DefaultActionValidatorMana
             sb.append(context);
         }
         return sb.toString();
-    }
-
-    @Override
-    protected Validator getValidatorFromValidatorConfig(ValidatorConfig config, ValueStack stack) {
-        Validator validator = validatorFactory.getValidator(
-                new ValidatorConfig.Builder(config)
-                        .removeParam("methodName")
-                        .build());
-        validator.setValidatorType(config.getType());
-        validator.setValueStack(stack);
-        return validator;
     }
 
     @Override

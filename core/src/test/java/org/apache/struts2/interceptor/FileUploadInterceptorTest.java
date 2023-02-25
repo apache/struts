@@ -370,6 +370,49 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertNotNull("test1.html", fileRealFilenames[0]);
     }
 
+    public void testUnacceptedNumberOfFiles() throws Exception {
+        final String htmlContent = "<html><head></head><body>html content</body></html>";
+        final String plainContent = "plain content";
+        final String bondary = "simple boundary";
+        final String endline = "\r\n";
+
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setMethod("POST");
+        req.addHeader("Content-type", "multipart/form-data; boundary=" + bondary);
+        StringBuilder content = new StringBuilder(128);
+        content.append(encodeTextFile(bondary, endline, "file", "test.html", "text/plain", plainContent));
+        content.append(encodeTextFile(bondary, endline, "file", "test1.html", "text/html", htmlContent));
+        content.append(encodeTextFile(bondary, endline, "file", "test2.html", "text/html", htmlContent));
+        content.append(encodeTextFile(bondary, endline, "file", "test3.html", "text/html", htmlContent));
+        content.append(endline);
+        content.append("--");
+        content.append(bondary);
+        content.append("--");
+        content.append(endline);
+        req.setContent(content.toString().getBytes());
+
+        assertTrue(ServletFileUpload.isMultipartContent(req));
+
+        MyFileupAction action = new MyFileupAction();
+        container.inject(action);
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        Map<String, Object> param = new HashMap<>();
+        ActionContext.getContext().setParameters(HttpParameters.create(param).build());
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
+
+        interceptor.setAllowedTypes("text/html");
+        interceptor.intercept(mai);
+
+        HttpParameters parameters = mai.getInvocationContext().getParameters();
+        assertEquals(0, parameters.keySet().size());
+        assertEquals(1, action.getActionErrors().size());
+        assertEquals("Request exceeded allowed number of files! Max allowed files number is: 3!", action.getActionErrors().iterator().next());
+    }
+
     public void testMultipartRequestLocalizedError() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setCharacterEncoding(StandardCharsets.UTF_8.name());
@@ -432,6 +475,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize) throws IOException {
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
         jak.setMaxSize(String.valueOf(maxsize));
+        jak.setMaxFiles("3");
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 

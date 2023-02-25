@@ -212,6 +212,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             if (maxSizeProvided) {
                 servletFileUpload.setSizeMax(maxSize);
             }
+            if (maxFilesProvided) {
+                servletFileUpload.setFileCountMax(maxFiles);
+            }
             FileItemIterator i = servletFileUpload.getItemIterator(request);
 
             // Iterate the file items

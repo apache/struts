@@ -51,15 +51,15 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
         //calling the constructor.  See javadoc for MultipartRequest.setEncoding().
         synchronized (this) {
             setEncoding();
-            if (maxSizeProvided){
-                int intMaxSize = (maxSize >= Integer.MAX_VALUE ? Integer.MAX_VALUE : Long.valueOf(maxSize).intValue());
+            if (maxSize != null && maxSize > -1){
+                int intMaxSize = (maxSize >= Integer.MAX_VALUE ? Integer.MAX_VALUE : maxSize.intValue());
             	multi = new ServletMultipartRequest(servletRequest, saveDir, intMaxSize);
             }else{
             	multi = new ServletMultipartRequest(servletRequest, saveDir);
             }
         }
     }
-    
+
     public Enumeration getFileParameterNames() {
         return multi.getFileParameterNames();
     }

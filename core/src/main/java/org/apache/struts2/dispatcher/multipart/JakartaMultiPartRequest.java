@@ -160,8 +160,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     protected ServletFileUpload createServletFileUpload(DiskFileItemFactory fac) {
         ServletFileUpload upload = new ServletFileUpload(fac);
-        upload.setSizeMax(maxSize);
-        upload.setFileCountMax(maxFiles);
+        if (maxSize != null) {
+            upload.setSizeMax(maxSize);
+        }
+        if (maxFiles != null) {
+            upload.setFileCountMax(maxFiles);
+        }
         return upload;
     }
 

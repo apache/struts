@@ -30,15 +30,15 @@ import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
  * Multi-part form data request adapter for Jakarta Commons FileUpload package that
  * leverages the streaming API rather than the traditional non-streaming API.
- *
+ * <p>
  * For more details see WW-3025
  *
- * @author Chris Cranford
  * @since 2.3.18
  */
 public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
@@ -85,7 +85,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             types.add(fileInfo.getContentType());
         }
 
-        return types.toArray(new String[types.size()]);
+        return types.toArray(new String[0]);
     }
 
     /* (non-Javadoc)
@@ -102,7 +102,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             files.add(new StrutsUploadedFile(fileInfo.getFile()));
         }
 
-        return files.toArray(new UploadedFile[files.size()]);
+        return files.toArray(new UploadedFile[0]);
     }
 
     /* (non-Javadoc)
@@ -119,7 +119,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             names.add(getCanonicalName(fileInfo.getOriginalName()));
         }
 
-        return names.toArray(new String[names.size()]);
+        return names.toArray(new String[0]);
     }
 
     /* (non-Javadoc)
@@ -143,7 +143,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             names.add(fileInfo.getFile().getName());
         }
 
-        return names.toArray(new String[names.size()]);
+        return names.toArray(new String[0]);
     }
 
     /* (non-Javadoc)
@@ -170,7 +170,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     public String[] getParameterValues(String name) {
         List<String> values = parameters.get(name);
         if (values != null && values.size() > 0) {
-            return values.toArray(new String[values.size()]);
+            return values.toArray(new String[0]);
         }
         return null;
     }
@@ -209,10 +209,10 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             // Interface with Commons FileUpload API
             // Using the Streaming API
             ServletFileUpload servletFileUpload = new ServletFileUpload();
-            if (maxSizeProvided) {
+            if (maxSize != null) {
                 servletFileUpload.setSizeMax(maxSize);
             }
-            if (maxFilesProvided) {
+            if (maxFiles != null) {
                 servletFileUpload.setFileCountMax(maxFiles);
             }
             FileItemIterator i = servletFileUpload.getItemIterator(request);
@@ -261,7 +261,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         // if maxSize is specified as -1, there is no sanity check and it's
         // safe to return true for any request, delegating the failure
         // checks later in the upload process.
-        if (maxSize == -1 || request == null) {
+        if ((maxSize != null && maxSize == -1) || request == null) {
             return true;
         }
 
@@ -289,8 +289,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     protected void addFileSkippedError(String fileName, HttpServletRequest request) {
         String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
-        FileSizeLimitExceededException exception = new FileUploadBase.FileSizeLimitExceededException(exceptionMessage, getRequestSize(request), maxSize);
-        LocalizedMessage message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), maxSize});
+        long allowedMaxSize = maxSize != null ? maxSize : -1;
+        FileSizeLimitExceededException exception = new FileUploadBase.FileSizeLimitExceededException(exceptionMessage, getRequestSize(request), allowedMaxSize);
+        LocalizedMessage message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), allowedMaxSize});
         if (!errors.contains(message)) {
             errors.add(message);
         }
@@ -389,12 +390,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @throws IOException in case of IO errors
      */
     protected boolean streamFileToDisk(FileItemStream itemStream, File file) throws IOException {
-        boolean result = false;
+        boolean result;
         try (InputStream input = itemStream.openStream();
-                OutputStream output = new BufferedOutputStream(new FileOutputStream(file), bufferSize)) {
+                OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
             byte[] buffer = new byte[bufferSize];
             LOG.debug("Streaming file using buffer size {}.", bufferSize);
-            for (int length = 0; ((length = input.read(buffer)) > 0); ) {
+            for (int length; ((length = input.read(buffer)) > 0); ) {
                 output.write(buffer, 0, length);
             }
             result = true;
@@ -436,9 +437,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
         private static final long serialVersionUID = 1083158552766906037L;
 
-        private File file;
-        private String contentType;
-        private String originalName;
+        private final File file;
+        private final String contentType;
+        private final String originalName;
 
         /**
          * Default constructor.

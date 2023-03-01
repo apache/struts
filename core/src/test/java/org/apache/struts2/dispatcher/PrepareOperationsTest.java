@@ -73,6 +73,7 @@ public class PrepareOperationsTest extends StrutsInternalTestCase {
         });
         IntStream.range(0, mockedRecursions - 1).forEach(i -> prepare.cleanupWrappedRequest(req));
 
+        // Assert org.apache.struts2.dispatcher.Dispatcher#cleanUpRequest has not yet run
         assertNotNull(ContainerHolder.get());
 
         prepare.cleanupWrappedRequest(req);

@@ -19,27 +19,41 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
-import junit.framework.TestCase;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.dispatcher.filter.StrutsExecuteFilter;
 import org.apache.struts2.dispatcher.filter.StrutsPrepareFilter;
-import org.springframework.mock.web.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.mock.web.MockFilterChain;
+import org.springframework.mock.web.MockFilterConfig;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Arrays;
+import java.util.LinkedList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Integration tests for the filter
  */
-public class TwoFilterIntegrationTest extends TestCase {
-    StrutsExecuteFilter filterExecute;
-    StrutsPrepareFilter filterPrepare;
-    Filter failFilter;
+public class TwoFilterIntegrationTest {
+    private StrutsExecuteFilter filterExecute;
+    private StrutsPrepareFilter filterPrepare;
+    private Filter failFilter;
     private Filter stringFilter;
 
+    @Before
     public void setUp() {
         filterPrepare = new StrutsPrepareFilter();
         filterExecute = new StrutsExecuteFilter();
@@ -61,16 +75,19 @@ public class TwoFilterIntegrationTest extends TestCase {
         };
     }
 
+    @Test
     public void test404() throws ServletException, IOException {
         MockHttpServletResponse response = run("/foo.action", filterPrepare, filterExecute, failFilter);
         assertEquals(404, response.getStatus());
     }
 
+    @Test
     public void test200() throws ServletException, IOException {
         MockHttpServletResponse response = run("/hello.action", filterPrepare, filterExecute, failFilter);
         assertEquals(200, response.getStatus());
     }
 
+    @Test
     public void testStaticFallthrough() throws ServletException, IOException {
         MockHttpServletResponse response = run("/foo.txt", filterPrepare, filterExecute, stringFilter);
         assertEquals(200, response.getStatus());
@@ -78,12 +95,14 @@ public class TwoFilterIntegrationTest extends TestCase {
 
     }
 
+    @Test
     public void testStaticExecute() throws ServletException, IOException {
         MockHttpServletResponse response = run("/static/utils.js", filterPrepare, filterExecute, failFilter);
         assertEquals(200, response.getStatus());
         assertTrue(response.getContentAsString().contains("StrutsUtils"));
     }
 
+    @Test
     public void testFilterInMiddle() throws ServletException, IOException {
         Filter middle = new Filter() {
             public void init(FilterConfig filterConfig) throws ServletException {}
@@ -129,6 +148,4 @@ public class TwoFilterIntegrationTest extends TestCase {
         assertNull(Dispatcher.getInstance());
         return response;
     }
-
-
 }

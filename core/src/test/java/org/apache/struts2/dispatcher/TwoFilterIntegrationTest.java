@@ -40,6 +40,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -104,6 +105,43 @@ public class TwoFilterIntegrationTest {
             assertEquals("hello", ActionContext.getContext().getActionInvocation().getProxy().getActionName());
         });
         MockHttpServletResponse response = run("/hello.action", filterPrepare, middle, filterExecute, failFilter);
+        assertEquals(200, response.getStatus());
+    }
+
+    /**
+     * It is possible for a Struts excluded URL to be forwarded to a Struts URL. If this happens, the ActionContext
+     * should not be cleared until the very first execution of the StrutsPrepareFilter, otherwise SiteMesh will malfunction.
+     */
+    @Test
+    public void testActionContextNotClearedUntilEndWhenForwardedFromExcludedUrl() throws ServletException, IOException {
+        Filter firstFilter = newFilter((req, res, chain) -> {
+            chain.doFilter(req, res);
+            // Assert ActionContext cleared at end of request lifecycle
+            assertNull(ActionContext.getContext());
+        });
+        Filter dummySiteMesh = newFilter((req, res, chain) -> {
+            // Assert ActionContext not created initially, as URL is Struts excluded
+            assertNull(ActionContext.getContext());
+            chain.doFilter(req, res);
+            // Assert ActionContext not cleared by second StrutsPrepareFilter even though it created it
+            assertNotNull(ActionContext.getContext());
+        });
+        Filter dummyForward = newFilter((req, res, chain) -> {
+            MockHttpServletRequest castReq = (MockHttpServletRequest) req;
+            String oldUri = castReq.getRequestURI();
+            castReq.setRequestURI("/hello.action");
+            chain.doFilter(castReq, res);
+            castReq.setRequestURI(oldUri);
+        });
+        MockHttpServletResponse response = run(
+                "/excluded/hello.action",
+                singletonMap("struts.action.excludePattern", "^/excluded/hello.action"),
+                firstFilter,
+                filterPrepare,
+                dummySiteMesh,
+                filterExecute,
+                dummyForward,
+                filterPrepare);
         assertEquals(200, response.getStatus());
     }
 

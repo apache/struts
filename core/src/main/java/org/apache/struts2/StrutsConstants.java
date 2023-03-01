@@ -465,4 +465,10 @@ public final class StrutsConstants {
 
     /** A global flag to set property {@link org.apache.struts2.components.Checkbox#setSubmitUnchecked(String)} */
     public static final String STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED = "struts.ui.checkbox.submitUnchecked";
+
+    /**
+     * Create ActionContext even for excluded urls, i.e. defined by struts.action.excludePattern.
+     * This is needed when running SiteMesh on excluded urls.
+     */
+    public static final String STRUTS_ALWAYS_CREATE_ACTION_CONTEXT = "struts.alwaysCreateActionContext";
 }

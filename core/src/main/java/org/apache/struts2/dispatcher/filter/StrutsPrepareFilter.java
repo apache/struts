@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.dispatcher.filter;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.InitOperations;
@@ -44,6 +45,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
 
     protected PrepareOperations prepare;
     protected List<Pattern> excludedPatterns = null;
+    protected boolean alwaysCreateActionContext = false;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = new InitOperations();
@@ -54,6 +56,8 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
 
             prepare = new PrepareOperations(dispatcher);
             this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
+            this.alwaysCreateActionContext = Boolean.parseBoolean(dispatcher.getContainer()
+                    .getInstance(String.class, StrutsConstants.STRUTS_ALWAYS_CREATE_ACTION_CONTEXT));
 
             postInit(dispatcher, filterConfig);
         } finally {
@@ -83,6 +87,9 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             prepare.trackRecursion(request);
             if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
                 request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, true);
+                if (alwaysCreateActionContext) {
+                    prepare.createActionContext(request, response);
+                }
             } else {
                 request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, false);
                 prepare.setEncodingAndLocale(request, response);

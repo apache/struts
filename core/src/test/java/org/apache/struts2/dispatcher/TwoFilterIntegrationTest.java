@@ -37,7 +37,9 @@ import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Map;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -57,22 +59,12 @@ public class TwoFilterIntegrationTest {
     public void setUp() {
         filterPrepare = new StrutsPrepareFilter();
         filterExecute = new StrutsExecuteFilter();
-        failFilter = new Filter() {
-            public void init(FilterConfig filterConfig) throws ServletException {}
-            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-                fail("Should never get here");
-            }
-            public void destroy() {}
-        };
-        stringFilter = new Filter() {
-            public void init(FilterConfig filterConfig) throws ServletException {}
-            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-                response.getWriter().write("content");
-                assertNotNull(ActionContext.getContext());
-                assertNotNull(Dispatcher.getInstance());
-            }
-            public void destroy() {}
-        };
+        failFilter = newFilter((req, res, chain) -> fail("Should never get here"));
+        stringFilter = newFilter((req, res, chain) -> {
+            res.getWriter().write("content");
+            assertNotNull(ActionContext.getContext());
+            assertNotNull(Dispatcher.getInstance());
+        });
     }
 
     @Test
@@ -104,22 +96,22 @@ public class TwoFilterIntegrationTest {
 
     @Test
     public void testFilterInMiddle() throws ServletException, IOException {
-        Filter middle = new Filter() {
-            public void init(FilterConfig filterConfig) throws ServletException {}
-            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-                assertNotNull(ActionContext.getContext());
-                assertNotNull(Dispatcher.getInstance());
-                assertNull(ActionContext.getContext().getActionInvocation());
-                chain.doFilter(request, response);
-                assertEquals("hello", ActionContext.getContext().getActionInvocation().getProxy().getActionName());
-            }
-            public void destroy() {}
-        };
+        Filter middle = newFilter((req, res, chain) -> {
+            assertNotNull(ActionContext.getContext());
+            assertNotNull(Dispatcher.getInstance());
+            assertNull(ActionContext.getContext().getActionInvocation());
+            chain.doFilter(req, res);
+            assertEquals("hello", ActionContext.getContext().getActionInvocation().getProxy().getActionName());
+        });
         MockHttpServletResponse response = run("/hello.action", filterPrepare, middle, filterExecute, failFilter);
         assertEquals(200, response.getStatus());
     }
 
     private MockHttpServletResponse run(String uri, final Filter... filters) throws ServletException, IOException {
+        return run(uri, emptyMap(), filters);
+    }
+
+    private MockHttpServletResponse run(String uri, Map<String, String> filterInitParams, final Filter... filters) throws ServletException, IOException {
         final LinkedList<Filter> filterList = new LinkedList<>(Arrays.asList(filters));
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -137,7 +129,7 @@ public class TwoFilterIntegrationTest {
                 }
             }
         };
-
+        filterInitParams.forEach(filterConfig::addInitParameter);
         request.setRequestURI(uri);
         for (Filter filter : filters) {
             filter.init(filterConfig);
@@ -147,5 +139,24 @@ public class TwoFilterIntegrationTest {
         assertNull(ActionContext.getContext());
         assertNull(Dispatcher.getInstance());
         return response;
+    }
+
+    private Filter newFilter(DoFilterConsumer doFilterConsumer) {
+        return new Filter() {
+            public void init(FilterConfig filterConfig) {
+            }
+
+            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+                doFilterConsumer.accept(request, response, chain);
+            }
+
+            public void destroy() {
+            }
+        };
+    }
+
+    @FunctionalInterface
+    public interface DoFilterConsumer {
+        void accept(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException;
     }
 }

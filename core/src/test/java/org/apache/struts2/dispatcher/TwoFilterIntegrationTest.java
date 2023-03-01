@@ -36,6 +36,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -104,6 +105,26 @@ public class TwoFilterIntegrationTest {
             assertEquals("hello", ActionContext.getContext().getActionInvocation().getProxy().getActionName());
         });
         MockHttpServletResponse response = run("/hello.action", filterPrepare, middle, filterExecute, failFilter);
+        assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    public void testActionContextCreatedForExcludedUrlWhenEnabled() throws ServletException, IOException {
+        Filter middle = newFilter((req, res, chain) -> {
+            assertNotNull(ActionContext.getContext());
+            chain.doFilter(req, res);
+            assertNotNull(ActionContext.getContext());
+        });
+
+        MockHttpServletResponse response = run(
+                "/excluded/hello.action",
+                new HashMap<String, String>() {{
+                    put("struts.alwaysCreateActionContext", "true");
+                    put("struts.action.excludePattern", "^/excluded/hello.action");
+                }},
+                filterPrepare,
+                middle,
+                filterExecute);
         assertEquals(200, response.getStatus());
     }
 

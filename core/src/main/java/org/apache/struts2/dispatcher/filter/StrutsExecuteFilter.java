@@ -20,12 +20,17 @@ package org.apache.struts2.dispatcher.filter;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.ExecuteOperations;
 import org.apache.struts2.dispatcher.InitOperations;
 import org.apache.struts2.dispatcher.PrepareOperations;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -46,14 +51,43 @@ public class StrutsExecuteFilter implements StrutsStatics, Filter {
 
     protected synchronized void lazyInit() {
         if (execute == null) {
-            InitOperations init = new InitOperations();
+            InitOperations init = createInitOperations();
             Dispatcher dispatcher = init.findDispatcherOnThread();
             init.initStaticContentLoader(new FilterHostConfig(filterConfig), dispatcher);
 
-            prepare = new PrepareOperations(dispatcher);
-            execute = new ExecuteOperations(dispatcher);
+            prepare = createPrepareOperations(dispatcher);
+            execute = createExecuteOperations(dispatcher);
         }
+    }
 
+    /**
+     * Creates a new instance of {@link InitOperations} to be used during
+     * initialising {@link Dispatcher}
+     *
+     * @return instance of {@link InitOperations}
+     */
+    protected InitOperations createInitOperations() {
+        return new InitOperations();
+    }
+
+    /**
+     * Creates a new instance of {@link PrepareOperations} to be used during
+     * initialising {@link Dispatcher}
+     *
+     * @return instance of {@link PrepareOperations}
+     */
+    protected PrepareOperations createPrepareOperations(Dispatcher dispatcher) {
+        return new PrepareOperations(dispatcher);
+    }
+
+    /**
+     * Creates a new instance of {@link ExecuteOperations} to be used during
+     * initialising {@link Dispatcher}
+     *
+     * @return instance of {@link ExecuteOperations}
+     */
+    protected ExecuteOperations createExecuteOperations(Dispatcher dispatcher) {
+        return new ExecuteOperations(dispatcher);
     }
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {

@@ -19,7 +19,8 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.util.TextParseUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -31,17 +32,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class SecurityMemberAccessTest extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class SecurityMemberAccessTest {
 
     private Map context;
     private FooBar target;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        context = new HashMap();
+        context = new HashMap<>();
         target = new FooBar();
     }
 
+    @Test
     public void testWithoutClassExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -56,6 +61,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue(accessible);
     }
 
+    @Test
     public void testClassExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -74,6 +80,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse(accessible);
     }
 
+    @Test
     public void testObjectClassExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -88,6 +95,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("toString() from Object is accessible!!!", accessible);
     }
 
+    @Test
     public void testObjectOverwrittenMethodsExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -102,6 +110,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("hashCode() from FooBar isn't accessible!!!", accessible);
     }
 
+    @Test
     public void testInterfaceInheritanceExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -120,6 +129,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
     }
 
+    @Test
     public void testMiddleOfInheritanceExclusion1() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -138,6 +148,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("fooLogic() from FooInterface isn't accessible!!!", accessible);
     }
 
+    @Test
     public void testMiddleOfInheritanceExclusion2() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -156,6 +167,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
     }
 
+    @Test
     public void testMiddleOfInheritanceExclusion3() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -174,6 +186,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("barLogic() from BarInterface isn't accessible!!!", accessible);
     }
 
+    @Test
     public void testMiddleOfInheritanceExclusion4() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -192,6 +205,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
     }
 
+    @Test
     public void testPackageExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -210,6 +224,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("stringField is accessible!", actual);
     }
 
+    @Test
     public void testPackageExclusionExemption() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
@@ -232,6 +247,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("stringField isn't accessible!", actual);
     }
 
+    @Test
     public void testPackageNameExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -250,7 +266,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("stringField is accessible!", actual);
     }
 
-
+    @Test
     public void testPackageNameExclusionExemption() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
@@ -273,7 +289,8 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("stringField isn't accessible!", actual);
     }
 
-    public void testPackageNameExclusionExemptionInheritance() throws Exception {
+    @Test
+    public void testPackageNameExclusionExemption2() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(false);
 
@@ -281,8 +298,34 @@ public class SecurityMemberAccessTest extends TestCase {
         excluded.add(FooBar.class.getPackage().getName());
         sma.setExcludedPackageNames(excluded);
 
+        // Exemption must exist for both classes (target and member) if they both match a banned package
         Set<Class<?>> allowed = new HashSet<>();
         allowed.add(BarInterface.class);
+        sma.setExcludedPackageExemptClasses(allowed);
+
+        String propertyName = "barLogic";
+        Member member = BarInterface.class.getMethod(propertyName);
+
+        // when
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertFalse("barLogic is accessible!", actual);
+    }
+
+    @Test
+    public void testPackageNameExclusionExemption3() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        Set<String> excluded = new HashSet<>();
+        excluded.add(FooBar.class.getPackage().getName());
+        sma.setExcludedPackageNames(excluded);
+
+        // Exemption must exist for both classes (target and member) if they both match a banned package
+        Set<Class<?>> allowed = new HashSet<>();
+        allowed.add(BarInterface.class);
+        allowed.add(FooBar.class);
         sma.setExcludedPackageExemptClasses(allowed);
 
         String propertyName = "barLogic";
@@ -295,7 +338,8 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("barLogic isn't accessible!", actual);
     }
 
-    public void testDefaultPackageExclusion() {
+    @Test
+    public void testDefaultPackageExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
@@ -303,14 +347,17 @@ public class SecurityMemberAccessTest extends TestCase {
         excluded.add(Pattern.compile("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*"));
         sma.setExcludedPackageNamePatterns(excluded);
 
+        Class<?> clazz = Class.forName("PackagelessAction");
+
         // when
-        boolean actual = sma.isPackageExcluded(null, null);
+        boolean actual = sma.isPackageExcluded(clazz, clazz);
 
         // then
         assertFalse("default package is excluded!", actual);
     }
 
-    public void testDefaultPackageExclusion2() {
+    @Test
+    public void testDefaultPackageExclusion2() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
@@ -318,13 +365,16 @@ public class SecurityMemberAccessTest extends TestCase {
         excluded.add(Pattern.compile("^$"));
         sma.setExcludedPackageNamePatterns(excluded);
 
+        Class<?> clazz = Class.forName("PackagelessAction");
+
         // when
-        boolean actual = sma.isPackageExcluded(null, null);
+        boolean actual = sma.isPackageExcluded(clazz, clazz);
 
         // then
         assertTrue("default package isn't excluded!", actual);
     }
 
+    @Test
     public void testAccessEnum() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -337,6 +387,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("Access to enums is blocked!", actual);
     }
 
+    @Test
     public void testAccessStaticMethod() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -350,6 +401,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("Access to static method is not blocked!", actual);
     }
 
+    @Test
     public void testAccessStaticField() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -363,6 +415,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("Access to static field is blocked!", actual);
     }
 
+    @Test
     public void testBlockedStaticFieldWhenFlagIsFalse() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -460,6 +513,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("Access to private final static field is allowed?", actual);
     }
 
+    @Test
     public void testBlockedStaticFieldWhenClassIsExcluded() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -473,6 +527,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("Access to static field isn't blocked!", actual);
     }
 
+    @Test
     public void testBlockStaticMethodAccess() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -486,6 +541,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("Access to static isn't blocked!", actual);
     }
 
+    @Test
     public void testBlockStaticAccessIfClassIsExcluded() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -499,6 +555,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertFalse("Access to static method of excluded class isn't blocked!", actual);
     }
 
+    @Test
     public void testAllowStaticAccessIfClassIsNotExcluded() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -512,6 +569,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("Invalid test! Access to static method of excluded class is blocked!", actual);
     }
 
+    @Test
     public void testAccessPrimitiveInt() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -527,6 +585,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue(accessible);
     }
 
+    @Test
     public void testAccessPrimitiveDoubleWithNames() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -542,10 +601,11 @@ public class SecurityMemberAccessTest extends TestCase {
         sma.setExcludedClasses(excluded);
 
         String propertyName = "doubleValue";
+        double myDouble = 1;
         Member member = Double.class.getMethod(propertyName);
 
         // when
-        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, myDouble, member, propertyName);
 
         // then
         assertTrue(accessible);
@@ -579,6 +639,7 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue(accessible);
     }
 
+    @Test
     public void testAccessPrimitiveDoubleWithPackageRegExs() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -587,15 +648,17 @@ public class SecurityMemberAccessTest extends TestCase {
         sma.setExcludedPackageNamePatterns(patterns);
 
         String propertyName = "doubleValue";
+        double myDouble = 1;
         Member member = Double.class.getMethod(propertyName);
 
         // when
-        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, myDouble, member, propertyName);
 
         // then
         assertTrue(accessible);
     }
 
+    @Test
     public void testAccessMemberAccessIsAccessible() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -608,12 +671,13 @@ public class SecurityMemberAccessTest extends TestCase {
         Member member = SecurityMemberAccess.class.getMethod(setter, Set.class);
 
         // when
-        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, sma, member, propertyName);
 
         // then
         assertTrue(accessible);
     }
 
+    @Test
     public void testAccessMemberAccessIsBlocked() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -626,12 +690,13 @@ public class SecurityMemberAccessTest extends TestCase {
         Member member = SecurityMemberAccess.class.getMethod(setter, Set.class);
 
         // when
-        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+        boolean accessible = sma.isAccessible(context, sma, member, propertyName);
 
         // then
         assertFalse(accessible);
     }
 
+    @Test
     public void testPackageNameExclusionAsCommaDelimited() {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
@@ -639,8 +704,7 @@ public class SecurityMemberAccessTest extends TestCase {
         sma.setExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang."));
 
         // when
-        boolean actual = sma.isPackageExcluded(String.class.getPackage(), null);
-        actual &= sma.isPackageExcluded(null, String.class.getPackage());
+        boolean actual = sma.isPackageExcluded(String.class, String.class);
 
         // then
         assertTrue("package java.lang. is accessible!", actual);

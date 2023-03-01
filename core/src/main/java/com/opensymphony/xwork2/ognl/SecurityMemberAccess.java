@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -95,6 +96,12 @@ public class SecurityMemberAccess implements MemberAccess {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
         final int memberModifiers = member.getModifiers();
+        final Class<?> memberClass = member.getDeclaringClass();
+        // target can be null in case of accessing static fields, since OGNL 3.2.8
+        final Class<?> targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
+        if (!memberClass.isAssignableFrom(targetClass)) {
+            throw new IllegalArgumentException("Target does not match member!");
+        }
 
         if (!checkPublicMemberAccess(memberModifiers)) {
             LOG.warn("Access to non-public [{}] is blocked!", member);
@@ -117,10 +124,6 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        final Class<?> memberClass = member.getDeclaringClass();
-        // target can be null in case of accessing static fields, since OGNL 3.2.8
-        final Class<?> targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
-
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", member);
             return false;
@@ -131,10 +134,18 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        if (!isClassExcludedPackageExempt(targetClass) && !isClassExcludedPackageExempt(memberClass)
-                && isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
-            LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!",
-                    targetClass.getPackage(), targetClass, target, memberClass.getPackage(), member);
+        if (targetClass.getPackage() == null || memberClass.getPackage() == null) {
+            LOG.warn("The use of the default (unnamed) package is discouraged!");
+        }
+
+        if (isPackageExcluded(targetClass, memberClass)) {
+            LOG.warn(
+                    "Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!",
+                    targetClass.getPackage(),
+                    targetClass,
+                    target,
+                    memberClass.getPackage(),
+                    member);
             return false;
         }
 
@@ -197,29 +208,49 @@ public class SecurityMemberAccess implements MemberAccess {
         return false;
     }
 
-    protected boolean isPackageExcluded(Package targetPackage, Package memberPackage) {
-        if (targetPackage == null || memberPackage == null) {
-            LOG.warn("The use of the default (unnamed) package is discouraged!");
+    protected boolean isPackageExcluded(Class<?> targetClass, Class<?> memberClass) {
+        if (targetClass == null || memberClass == null) {
+            throw new IllegalArgumentException(
+                    "Parameters should never be null - if member is static, targetClass should be the same as memberClass.");
         }
 
-        String targetPackageName = targetPackage == null ? "" : targetPackage.getName();
-        String memberPackageName = memberPackage == null ? "" : memberPackage.getName();
+        Set<Class<?>> classesToCheck = new HashSet<>();
+        classesToCheck.add(targetClass);
+        classesToCheck.add(memberClass);
 
+        for (Class<?> clazz : classesToCheck) {
+            if (!isExcludedPackageExempt(clazz) && (isExcludedPackageNamePatterns(clazz) || isExcludedPackageNames(clazz))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected String toPackageName(Class<?> clazz) {
+        if (clazz.getPackage() == null) {
+            return "";
+        } else {
+            return clazz.getPackage().getName();
+        }
+    }
+
+    protected boolean isExcludedPackageNamePatterns(Class<?> clazz) {
+        String packageName = toPackageName(clazz);
         for (Pattern pattern : excludedPackageNamePatterns) {
-            if (pattern.matcher(targetPackageName).matches() || pattern.matcher(memberPackageName).matches()) {
+            if (pattern.matcher(packageName).matches()) {
                 return true;
             }
         }
+        return false;
+    }
 
-        targetPackageName = targetPackageName + ".";
-        memberPackageName = memberPackageName + ".";
-
-        for (String packageName : excludedPackageNames) {
-            if (targetPackageName.startsWith(packageName) || memberPackageName.startsWith(packageName)) {
+    protected boolean isExcludedPackageNames(Class<?> clazz) {
+        String suffixedPackageName = toPackageName(clazz) + ".";
+        for (String excludedPackageName : excludedPackageNames) {
+            if (suffixedPackageName.startsWith(excludedPackageName)) {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -227,21 +258,11 @@ public class SecurityMemberAccess implements MemberAccess {
         if (clazz == Object.class || (clazz == Class.class && !allowStaticFieldAccess)) {
             return true;
         }
-        for (Class<?> excludedClass : excludedClasses) {
-            if (clazz.isAssignableFrom(excludedClass)) {
-                return true;
-            }
-        }
-        return false;
+        return excludedClasses.stream().anyMatch(clazz::isAssignableFrom);
     }
 
-    protected boolean isClassExcludedPackageExempt(Class<?> clazz) {
-        for (Class<?> excludedPackageExemptClass : excludedPackageExemptClasses) {
-            if (clazz.isAssignableFrom(excludedPackageExemptClass)) {
-                return true;
-            }
-        }
-        return false;
+    protected boolean isExcludedPackageExempt(Class<?> clazz) {
+        return excludedPackageExemptClasses.stream().anyMatch(clazz::equals);
     }
 
     protected boolean isAcceptableProperty(String name) {

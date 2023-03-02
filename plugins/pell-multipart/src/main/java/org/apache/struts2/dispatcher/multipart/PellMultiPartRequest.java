@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import http.utils.multipartrequest.ServletMultipartRequest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -51,11 +51,11 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
         //calling the constructor.  See javadoc for MultipartRequest.setEncoding().
         synchronized (this) {
             setEncoding();
-            if (maxSize != null && maxSize > -1){
+            if (maxSize != null && maxSize > -1) {
                 int intMaxSize = (maxSize >= Integer.MAX_VALUE ? Integer.MAX_VALUE : maxSize.intValue());
-            	multi = new ServletMultipartRequest(servletRequest, saveDir, intMaxSize);
-            }else{
-            	multi = new ServletMultipartRequest(servletRequest, saveDir);
+                multi = new ServletMultipartRequest(servletRequest, saveDir, intMaxSize);
+            } else {
+                multi = new ServletMultipartRequest(servletRequest, saveDir);
             }
         }
     }

@@ -18,6 +18,10 @@
  */
 package org.apache.struts2.config.entities;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.StaticContentLoader;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,10 +30,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.StaticContentLoader;
 
 public class ConstantConfig {
     private Boolean devMode;
@@ -65,6 +65,7 @@ public class ConstantConfig {
     private String uiThemeExpansionToken;
     private Long multipartMaxSize;
     private Long multipartMaxFiles;
+    private Long multipartMaxFileSize;
     private String multipartSaveDir;
     private Integer multipartBufferSize;
     private BeanConfig multipartParser;
@@ -197,6 +198,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_UI_THEME_EXPANSION_TOKEN, uiThemeExpansionToken);
         map.put(StrutsConstants.STRUTS_MULTIPART_MAXSIZE, Objects.toString(multipartMaxSize, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_MAXFILES, Objects.toString(multipartMaxFiles, null));
+        map.put(StrutsConstants.STRUTS_MULTIPART_MAXFILESIZE, Objects.toString(multipartMaxFileSize, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_SAVEDIR, multipartSaveDir);
         map.put(StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE, Objects.toString(multipartBufferSize, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_PARSER, beanConfToString(multipartParser));
@@ -587,6 +589,14 @@ public class ConstantConfig {
 
     public void setMultipartMaxFiles(Long multipartMaxFiles) {
         this.multipartMaxFiles = multipartMaxFiles;
+    }
+
+    public Long getMultipartMaxFileSize() {
+        return multipartMaxFileSize;
+    }
+
+    public void setMultipartMaxFileSize(Long multipartMaxFileSize) {
+        this.multipartMaxFileSize = multipartMaxFileSize;
     }
 
     public String getMultipartSaveDir() {

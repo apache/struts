@@ -59,6 +59,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     protected Long maxFiles;
 
     /**
+     * Specifies the maximum size per file in the request.
+     */
+    protected Long maxFileSize;
+
+    /**
      * Specifies the buffer size to use during streaming.
      */
     protected int bufferSize = BUFFER_SIZE;
@@ -84,7 +89,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     }
 
     /**
-     * @param maxSize Injects the Struts multiple part maximum size.
+     * @param maxSize Injects the Struts multipart request maximum size.
      */
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
     public void setMaxSize(String maxSize) {
@@ -94,6 +99,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAXFILES)
     public void setMaxFiles(String maxFiles) {
         this.maxFiles = Long.parseLong(maxFiles);
+    }
+
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXFILESIZE)
+    public void setMaxFileSize(String maxFileSize) {
+        this.maxFileSize = Long.parseLong(maxFileSize);
     }
 
     @Inject

@@ -139,12 +139,14 @@ public final class StrutsConstants {
     /** A global flag to enable/disable html body escaping in tags, can be overwritten per tag */
     public static final String STRUTS_UI_ESCAPE_HTML_BODY = "struts.ui.escapeHtmlBody";
 
-    /** The maximize size of a multipart request (file upload) */
+    /** The maximum size of a multipart request (file upload) */
     public static final String STRUTS_MULTIPART_MAXSIZE = "struts.multipart.maxSize";
 
-    /** The maximized number of files allowed to upload */
+    /** The maximum number of files allowed in a multipart request */
     public static final String STRUTS_MULTIPART_MAXFILES = "struts.multipart.maxFiles";
 
+    /** The maximum size per file in a multipart request */
+    public static final String STRUTS_MULTIPART_MAXFILESIZE = "struts.multipart.maxFileSize";
     /** The directory to use for storing uploaded files */
     public static final String STRUTS_MULTIPART_SAVEDIR = "struts.multipart.saveDir";
 

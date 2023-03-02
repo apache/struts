@@ -18,21 +18,14 @@
  */
 package org.apache.struts2.config.entities;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TestBean;
 import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.components.TextField;
 import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -83,9 +76,11 @@ public class ConstantConfigTest {
         constantConfig.setExcludedClasses(null);
         constantConfig.setExcludedPackageNamePatterns(null);
         constantConfig.setExcludedPackageNames(null);
+        constantConfig.setExcludedPackageExemptClasses(null);
         constantConfig.setDevModeExcludedClasses(null);
         constantConfig.setDevModeExcludedPackageNamePatterns(null);
         constantConfig.setDevModeExcludedPackageNames(null);
+        constantConfig.setDevModeExcludedPackageExemptClasses(null);
 
         Map<String, String> map = constantConfig.getAllAsStringsMap();
         Assert.assertNull(map.get(StrutsConstants.STRUTS_EXCLUDED_CLASSES));
@@ -113,6 +108,25 @@ public class ConstantConfigTest {
             map.get(StrutsConstants.STRUTS_EXCLUDED_CLASSES));
         Assert.assertEquals("java.lang.Object,java.lang.Runtime,java.lang.System",
             map.get(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES));
+    }
+
+    @Test
+    public void testExemptClassesToString() {
+        ConstantConfig constantConfig = new ConstantConfig();
+
+        Set<Class<?>> exemptClasses = new LinkedHashSet<>();
+        exemptClasses.add(Object.class);
+        exemptClasses.add(Runtime.class);
+        exemptClasses.add(System.class);
+
+        constantConfig.setExcludedPackageExemptClasses(exemptClasses);
+        constantConfig.setDevModeExcludedPackageExemptClasses(exemptClasses);
+
+        Map<String, String> map = constantConfig.getAllAsStringsMap();
+        Assert.assertEquals("java.lang.Object,java.lang.Runtime,java.lang.System",
+                map.get(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES));
+        Assert.assertEquals("java.lang.Object,java.lang.Runtime,java.lang.System",
+                map.get(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES));
     }
 
     @Test

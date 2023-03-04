@@ -50,7 +50,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
     protected PrepareOperations prepare;
     protected ExecuteOperations execute;
-    protected List<Pattern> excludedPatterns = null;
+    protected List<Pattern> excludedPatterns;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = createInitOperations();
@@ -62,6 +62,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
             prepare = createPrepareOperations(dispatcher);
             execute = createExecuteOperations(dispatcher);
+            // Note: Currently, excluded patterns are not refreshed following an XWork config reload
             this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);
@@ -120,7 +121,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
         try {
             prepare.trackRecursion(request);
             String uri = RequestUtils.getUri(request);
-            if (isRequestExcluded(request)) {
+            if (prepare.isUrlExcluded(request, excludedPatterns)) {
                 LOG.trace("Request: {} is excluded from handling by Struts, passing request to other filters", uri);
                 chain.doFilter(request, response);
             } else {
@@ -158,10 +159,6 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
         } finally {
             prepare.cleanupWrappedRequest(wrappedRequest);
         }
-    }
-
-    private boolean isRequestExcluded(HttpServletRequest request) {
-        return excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns);
     }
 
     public void destroy() {

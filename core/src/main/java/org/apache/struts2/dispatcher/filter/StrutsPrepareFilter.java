@@ -45,7 +45,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
 
     protected PrepareOperations prepare;
     protected List<Pattern> excludedPatterns = null;
-    protected boolean alwaysCreateActionContext = false;
+    private Dispatcher dispatcher;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = createInitOperations();
@@ -107,7 +107,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             prepare.trackRecursion(request);
             if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
                 request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, true);
-                if (alwaysCreateActionContext) {
+                if (alwaysCreateActionContext()) {
                     prepare.createActionContext(request, response);
                 }
             } else {
@@ -126,6 +126,11 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             }
             prepare.cleanupRequest(request);
         }
+    }
+
+    private boolean alwaysCreateActionContext() {
+        return Boolean.parseBoolean(dispatcher.getContainer()
+                .getInstance(String.class, StrutsConstants.STRUTS_ALWAYS_CREATE_ACTION_CONTEXT));
     }
 
     public void destroy() {

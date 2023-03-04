@@ -43,7 +43,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
     protected static final String REQUEST_EXCLUDED_FROM_ACTION_MAPPING = StrutsPrepareFilter.class.getName() + ".REQUEST_EXCLUDED_FROM_ACTION_MAPPING";
 
     protected PrepareOperations prepare;
-    protected List<Pattern> excludedPatterns = null;
+    protected List<Pattern> excludedPatterns;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = createInitOperations();
@@ -53,6 +53,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             dispatcher = init.initDispatcher(config);
 
             prepare = createPrepareOperations(dispatcher);
+            // Note: Currently, excluded patterns are not refreshed following an XWork config reload
             this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);
@@ -101,7 +102,7 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
         boolean didWrap = false;
         try {
             prepare.trackRecursion(request);
-            if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
+            if (prepare.isUrlExcluded(request, excludedPatterns)) {
                 request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, true);
             } else {
                 request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, false);

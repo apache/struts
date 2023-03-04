@@ -181,18 +181,20 @@ public class ConfigurationManager {
             if (needReloadContainerProviders() || needReloadPackageProviders()) {
                 destroyAndReload();
             }
+            providersChanged = false;
         }
     }
 
     private void updateAlwaysReloadFlag() {
-        alwaysReloadConfigs = Boolean.parseBoolean(configuration.getContainer()
+        boolean newValue = Boolean.parseBoolean(configuration.getContainer()
                 .getInstance(String.class, STRUTS_CONFIGURATION_XML_RELOAD));
-        if (LOG.isDebugEnabled()) {
+        if (alwaysReloadConfigs != newValue) {
             LOG.debug(
                     "Updating [{}], current value is [{}], new value [{}]",
                     STRUTS_CONFIGURATION_XML_RELOAD,
                     String.valueOf(alwaysReloadConfigs),
-                    String.valueOf(alwaysReloadConfigs));
+                    String.valueOf(newValue));
+            alwaysReloadConfigs = newValue;
         }
     }
 
@@ -223,8 +225,8 @@ public class ConfigurationManager {
         if (wasConfigInitialised()) {
             LOG.debug("Reloading all providers.");
             packageProviders = configuration.reloadContainer(containerProviders);
-            updateAlwaysReloadFlag();
             providersChanged = false;
+            updateAlwaysReloadFlag();
         }
     }
 }

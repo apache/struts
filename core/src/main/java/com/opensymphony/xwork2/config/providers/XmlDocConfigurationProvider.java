@@ -426,8 +426,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     protected void addAction(Element actionElement, PackageConfig.Builder packageContext) throws ConfigurationException {
         String name = actionElement.getAttribute("name");
         String className = actionElement.getAttribute("class");
-        //methodName should be null if it's not set
-        String methodName = trimToNull(actionElement.getAttribute("method"));
+
         Location location = DomHelper.getLocationObject(actionElement);
 
         if (location == null) {
@@ -443,16 +442,34 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         try {
             results = buildResults(actionElement, packageContext);
         } catch (ConfigurationException e) {
-            throw new ConfigurationException("Error building results for action " + name + " in namespace " + packageContext.getNamespace(), e, actionElement);
+            throw new ConfigurationException(
+                    format("Error building results for action %s in namespace %s", name, packageContext.getNamespace()),
+                    e,
+                    actionElement);
         }
 
+        ActionConfig actionConfig = buildActionConfig(name, className, location, actionElement, packageContext, results);
+        packageContext.addActionConfig(actionConfig.getName(), actionConfig);
+
+        LOG.debug("Loaded {}{} in '{}' package: {}",
+                isNotEmpty(packageContext.getNamespace()) ? (packageContext.getNamespace() + "/") : "",
+                name, packageContext.getName(), actionConfig);
+    }
+
+    protected ActionConfig buildActionConfig(String actionName,
+                                             String className,
+                                             Location location,
+                                             Element actionElement,
+                                             PackageConfig.Builder packageContext,
+                                             Map<String, ResultConfig> results) {
+        // methodName should be null if it's not set
+        String methodName = trimToNull(actionElement.getAttribute("method"));
+
         List<InterceptorMapping> interceptorList = buildInterceptorList(actionElement, packageContext);
-
         List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(actionElement, packageContext);
-
         Set<String> allowedMethods = buildAllowedMethods(actionElement, packageContext);
 
-        ActionConfig actionConfig = new ActionConfig.Builder(packageContext.getName(), name, className)
+        return new ActionConfig.Builder(packageContext.getName(), actionName, className)
                 .methodName(methodName)
                 .addResultConfigs(results)
                 .addInterceptors(interceptorList)
@@ -462,11 +479,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 .addAllowedMethod(allowedMethods)
                 .location(location)
                 .build();
-        packageContext.addActionConfig(name, actionConfig);
-
-        LOG.debug("Loaded {}{} in '{}' package: {}",
-                isNotEmpty(packageContext.getNamespace()) ? (packageContext.getNamespace() + "/") : "",
-                name, packageContext.getName(), actionConfig);
     }
 
     /**

@@ -129,6 +129,10 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     public void destroy() {
     }
 
+    protected Class<?> loadClass(String className) throws ClassNotFoundException {
+        return objectFactory.getClassInstance(className);
+    }
+
     public static void iterateElementChildren(Document doc, Consumer<Element> function) {
         iterateElementChildren(doc.getDocumentElement(), function);
     }
@@ -187,7 +191,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         String name = child.getAttribute("name");
         String impl = child.getAttribute("class");
         try {
-            Class<?> classImpl = ClassLoaderUtil.loadClass(impl, getClass());
+            Class<?> classImpl = loadClass(impl);
             if (BeanSelectionProvider.class.isAssignableFrom(classImpl)) {
                 BeanSelectionProvider provider = (BeanSelectionProvider) classImpl.newInstance();
                 provider.register(containerBuilder, props);
@@ -499,7 +503,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         }
         try {
             if (objectFactory.isNoArgConstructorRequired()) {
-                Class<?> clazz = objectFactory.getClassInstance(className);
+                Class<?> clazz = loadClass(className);
                 if (!Modifier.isPublic(clazz.getModifiers())) {
                     throw new ConfigurationException("Action class [" + className + "] is not public", loc);
                 }
@@ -566,7 +570,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
     protected Class<?> verifyResultType(String className, Location loc) {
         try {
-            return objectFactory.getClassInstance(className);
+            return loadClass(className);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             LOG.warn("Result class [{}] doesn't exist ({}) at {}, ignoring", className, e.getClass().getSimpleName(), loc, e);
         }

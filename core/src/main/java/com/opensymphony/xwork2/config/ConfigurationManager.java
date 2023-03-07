@@ -210,7 +210,7 @@ public class ConfigurationManager {
     private boolean needReloadContainerProviders() {
         Optional<ContainerProvider> provider = containerProviders.stream().filter(ContainerProvider::needsReload).findAny();
         if (provider.isPresent()) {
-            LOG.info("Detected container provider [{}] needs to be reloaded.", provider);
+            LOG.info("Detected container provider [{}] needs to be reloaded.", provider.get());
             return true;
         }
         return false;

@@ -88,7 +88,7 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 
 /**
- * Looks in the classpath for an XML file, "xwork.xml" by default,
+ * Looks in the classpath for an XML file, "struts.xml" by default,
  * and uses it for the XWork configuration.
  *
  * @author tmjee
@@ -117,15 +117,19 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
     private ValueSubstitutor valueSubstitutor;
 
     public XmlConfigurationProvider() {
-        this("struts.xml", true);
+        this("struts.xml");
     }
 
     public XmlConfigurationProvider(String filename) {
-        this(filename, true);
+        this.configFileName = filename;
     }
 
+    /**
+     * @deprecated since 6.2.0, use {@link #XmlConfigurationProvider(String)}
+     */
+    @Deprecated
     public XmlConfigurationProvider(String filename, @Deprecated boolean notUsed) {
-        this.configFileName = filename;
+        this(filename);
     }
 
     public void setThrowExceptionOnDuplicateBeans(boolean val) {
@@ -487,7 +491,15 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
                 name, packageContext.getName(), actionConfig);
     }
 
+    /**
+     * @deprecated since 6.2.0, use {@link #verifyAction(String, Location)}
+     */
+    @Deprecated
     protected boolean verifyAction(String className, String name, Location loc) {
+        return verifyAction(className, loc);
+    }
+
+    protected boolean verifyAction(String className, Location loc) {
         if (className.contains("{")) {
             LOG.debug("Action class [{}] contains a wildcard replacement value, so it can't be verified", className);
             return true;
@@ -811,14 +823,20 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
     }
 
     /**
+     * @deprecated since 6.2.0, use {@link #buildExceptionMappings(Element)}
+     */
+    @Deprecated
+    protected List<ExceptionMappingConfig> buildExceptionMappings(Element element, PackageConfig.Builder packageContext) {
+        return buildExceptionMappings(element);
+    }
+
+    /**
      * Build a list of exception mapping objects from below a given XML element.
      *
      * @param element the given XML element
-     * @param packageContext the package context
-     *
      * @return list of exception mapping config objects
      */
-    protected List<ExceptionMappingConfig> buildExceptionMappings(Element element, PackageConfig.Builder packageContext) {
+    protected List<ExceptionMappingConfig> buildExceptionMappings(Element element) {
         List<ExceptionMappingConfig> exceptionMappings = new ArrayList<>();
 
         iterateChildrenByTagName(element, "exception-mapping", ehElement -> {

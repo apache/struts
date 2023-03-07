@@ -51,13 +51,20 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     private final ServletContext servletContext;
 
     /**
+     * Constructs the Struts configuration provider using the default struts.xml and no ServletContext
+     */
+    public StrutsXmlConfigurationProvider() {
+        this("struts.xml", null);
+    }
+
+    /**
      * Constructs the configuration provider
      *
      * @param errorIfMissing If we should throw an exception if the file can't be found
      */
     @Deprecated
     public StrutsXmlConfigurationProvider(boolean errorIfMissing) {
-        this("struts.xml", errorIfMissing, null);
+        this("struts.xml", null);
     }
 
     /**
@@ -66,22 +73,21 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      * @param filename file with Struts configuration
      */
     public StrutsXmlConfigurationProvider(String filename) {
-        this(filename, false, null);
+        this(filename, null);
     }
 
     /**
-     * Constructs the configuration provider
+     * Constructs the Struts configuration provider
      *
      * @param filename The filename to look for
-     * @param errorIfMissing If we should throw an exception if the file can't be found, @deprecated and should be dropped
      * @param ctx Our ServletContext
      */
-    public StrutsXmlConfigurationProvider(String filename, @Deprecated boolean errorIfMissing, ServletContext ctx) {
-        super(filename, errorIfMissing);
+    public StrutsXmlConfigurationProvider(String filename, ServletContext ctx) {
+        super(filename);
         this.servletContext = ctx;
         this.filename = filename;
         reloadKey = "configurationReload-" + filename;
-        Map<String,String> dtdMappings = new HashMap<>(getDtdMappings());
+        Map<String, String> dtdMappings = new HashMap<>(getDtdMappings());
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN", "struts-2.1.7.dtd");
@@ -93,6 +99,14 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         if (file.getParent() != null) {
             this.baseDir = file.getParentFile();
         }
+    }
+
+    /**
+     * @deprecated since 6.2.0, use {@link #StrutsXmlConfigurationProvider(String, ServletContext)}
+     */
+    @Deprecated
+    public StrutsXmlConfigurationProvider(String filename, @Deprecated boolean errorIfMissing, ServletContext ctx) {
+        this(filename, ctx);
     }
 
     /* (non-Javadoc)

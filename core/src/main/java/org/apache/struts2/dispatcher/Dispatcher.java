@@ -112,12 +112,12 @@ public class Dispatcher {
     /**
      * Provide a thread local instance.
      */
-    private static ThreadLocal<Dispatcher> instance = new ThreadLocal<>();
+    private static final ThreadLocal<Dispatcher> instance = new ThreadLocal<>();
 
     /**
      * Store list of DispatcherListeners.
      */
-    private static List<DispatcherListener> dispatcherListeners = new CopyOnWriteArrayList<>();
+    private static final List<DispatcherListener> dispatcherListeners = new CopyOnWriteArrayList<>();
 
     /**
      * Store state of StrutsConstants.STRUTS_DEVMODE setting.
@@ -353,7 +353,7 @@ public class Dispatcher {
             try {
                 ((ObjectFactoryDestroyable) objectFactory).destroy();
             } catch (Exception e) {
-                // catch any exception that may occurred during destroy() and log it
+                // catch any exception that may occur during destroy() and log it
                 LOG.error("Exception occurred while destroying ObjectFactory [{}]", objectFactory.toString(), e);
             }
         }
@@ -437,8 +437,16 @@ public class Dispatcher {
         }
     }
 
+    protected XmlConfigurationProvider createStrutsXmlConfigurationProvider(String filename, ServletContext ctx) {
+        return new StrutsXmlConfigurationProvider(filename, ctx);
+    }
+
+    /**
+     * @deprecated since 6.2.0, use {@link #createStrutsXmlConfigurationProvider(String, ServletContext)}
+     */
+    @Deprecated
     protected XmlConfigurationProvider createStrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
-        return new StrutsXmlConfigurationProvider(filename, errorIfMissing, ctx);
+        return createStrutsXmlConfigurationProvider(filename, ctx);
     }
 
     private void init_JavaConfigurations() {

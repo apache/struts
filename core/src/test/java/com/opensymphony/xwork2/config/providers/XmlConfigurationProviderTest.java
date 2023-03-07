@@ -75,7 +75,7 @@ public class XmlConfigurationProviderTest extends ConfigurationTestBase {
         prov.setObjectFactory(container.getInstance(ObjectFactory.class));
         prov.setFileManagerFactory(container.getInstance(FileManagerFactory.class));
         prov.init(configuration);
-        List<Document> docs = prov.getDocuments();
+        List<Document> docs = prov.documents;
         assertEquals(3, docs.size());
 
         assertEquals(1, XmlHelper.getLoadOrder(docs.get(0)).intValue());

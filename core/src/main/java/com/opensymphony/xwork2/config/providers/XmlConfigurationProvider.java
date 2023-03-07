@@ -104,7 +104,7 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
     private final Set<String> loadedFileUrls = new HashSet<>();
     private final Map<String, Element> declaredPackages = new HashMap<>();
 
-    private List<Document> documents;
+    protected List<Document> documents;
     private Set<String> includedFileNames;
     private ObjectFactory objectFactory;
 
@@ -1137,10 +1137,6 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
 
         Location loc = LocationUtils.getLocation(interceptorRefElement);
         return InterceptorBuilder.constructInterceptorReference(context, refName, refParams, loc, objectFactory);
-    }
-
-    List<Document> getDocuments() {
-        return documents;
     }
 
     @Override

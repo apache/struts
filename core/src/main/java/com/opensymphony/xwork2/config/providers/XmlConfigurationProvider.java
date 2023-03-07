@@ -94,13 +94,13 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
     public void init(Configuration configuration) {
         super.init(configuration);
         includedFileNames = configuration.getLoadedFileNames();
-        loadDocuments(configFileName);
+        documents = parseFile(configFileName);
     }
 
     @Override
     public void loadPackages() throws ConfigurationException {
         super.loadPackages();
-        documents.clear();
+        documents = emptyList();
     }
 
     @Override
@@ -120,10 +120,10 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
         return loadedFileUrls.stream().anyMatch(url -> fileManager.fileNeedsReloading(url));
     }
 
-    private void loadDocuments(String configFileName) {
+    private List<Document> parseFile(String configFileName) {
         try {
             loadedFileUrls.clear();
-            documents = loadConfigurationFiles(configFileName, null);
+            return loadConfigurationFiles(configFileName, null);
         } catch (ConfigurationException e) {
             throw e;
         } catch (Exception e) {

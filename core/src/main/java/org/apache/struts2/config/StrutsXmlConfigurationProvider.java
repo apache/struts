@@ -39,12 +39,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.unmodifiableMap;
+
 /**
  * Override Xwork class so we can use an arbitrary config file
  */
 public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
 
     private static final Logger LOG = LogManager.getLogger(StrutsXmlConfigurationProvider.class);
+    private static final Map<String, String> STRUTS_DTD_MAPPINGS = unmodifiableMap(new HashMap<String, String>() {{
+        put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
+        put("-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd");
+        put("-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN", "struts-2.1.7.dtd");
+        put("-//Apache Software Foundation//DTD Struts Configuration 2.3//EN", "struts-2.3.dtd");
+        put("-//Apache Software Foundation//DTD Struts Configuration 2.5//EN", "struts-2.5.dtd");
+        put("-//Apache Software Foundation//DTD Struts Configuration 6.0//EN", "struts-6.0.dtd");
+    }});
     private File baseDir = null;
     private final String filename;
     private final String reloadKey;
@@ -87,14 +97,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         this.servletContext = ctx;
         this.filename = filename;
         reloadKey = "configurationReload-" + filename;
-        Map<String, String> dtdMappings = new HashMap<>(getDtdMappings());
-        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
-        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd");
-        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN", "struts-2.1.7.dtd");
-        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.3//EN", "struts-2.3.dtd");
-        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.5//EN", "struts-2.5.dtd");
-        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 6.0//EN", "struts-6.0.dtd");
-        setDtdMappings(dtdMappings);
+        setDtdMappings(STRUTS_DTD_MAPPINGS);
         File file = new File(filename);
         if (file.getParent() != null) {
             this.baseDir = file.getParentFile();

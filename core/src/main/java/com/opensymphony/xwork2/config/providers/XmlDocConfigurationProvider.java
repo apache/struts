@@ -904,20 +904,22 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     }
 
     protected void loadInterceptors(PackageConfig.Builder context, Element element) throws ConfigurationException {
-        iterateChildrenByTagName(element, "interceptor", interceptorElement -> {
-            String name = interceptorElement.getAttribute("name");
-            String className = interceptorElement.getAttribute("class");
-
-            Map<String, String> params = XmlHelper.getParams(interceptorElement);
-            InterceptorConfig config = new InterceptorConfig.Builder(name, className)
-                    .addParams(params)
-                    .location(DomHelper.getLocationObject(interceptorElement))
-                    .build();
-
-            context.addInterceptorConfig(config);
-        });
-
+        iterateChildrenByTagName(
+                element,
+                "interceptor",
+                interceptorElement -> context.addInterceptorConfig(buildInterceptorConfig(interceptorElement)));
         loadInterceptorStacks(element, context);
+    }
+
+    protected InterceptorConfig buildInterceptorConfig(Element interceptorElement) {
+        String interceptorName = interceptorElement.getAttribute("name");
+        String className = interceptorElement.getAttribute("class");
+
+        Map<String, String> params = XmlHelper.getParams(interceptorElement);
+        return new InterceptorConfig.Builder(interceptorName, className)
+                .addParams(params)
+                .location(DomHelper.getLocationObject(interceptorElement))
+                .build();
     }
 
     protected void loadInterceptorStacks(Element element, PackageConfig.Builder context) throws ConfigurationException {

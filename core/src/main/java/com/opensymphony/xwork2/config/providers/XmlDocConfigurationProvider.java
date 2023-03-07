@@ -86,6 +86,9 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     protected boolean throwExceptionOnDuplicateBeans = true;
     protected ValueSubstitutor valueSubstitutor;
 
+    // Store added result types for potential use by subclasses
+    protected List<ResultTypeConfig> addedResultTypes;
+
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
@@ -393,7 +396,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         LOG.debug("Loaded {}", newPackage);
 
         // add result types (and default result) to this package
-        addResultTypes(newPackage, packageElement);
+        addedResultTypes = addResultTypes(newPackage, packageElement);
 
         // load the interceptors and interceptor stacks for this package
         loadInterceptors(newPackage, packageElement);
@@ -520,7 +523,9 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         return true;
     }
 
-    protected void addResultTypes(PackageConfig.Builder packageContext, Element element) {
+    protected List<ResultTypeConfig> addResultTypes(PackageConfig.Builder packageContext, Element element) {
+        List<ResultTypeConfig> addedResultTypes = new ArrayList<>();
+
         iterateChildrenByTagName(element, "result-type", resultTypeElement -> {
             String name = resultTypeElement.getAttribute("name");
             String className = resultTypeElement.getAttribute("class");
@@ -546,13 +551,17 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             if (!params.isEmpty()) {
                 resultType.addParams(params);
             }
-            packageContext.addResultTypeConfig(resultType.build());
+            ResultTypeConfig resultTypeConfig = resultType.build();
+            packageContext.addResultTypeConfig(resultTypeConfig);
+            addedResultTypes.add(resultTypeConfig);
 
             // set the default result type
             if (BooleanUtils.toBoolean(def)) {
                 packageContext.defaultResultType(name);
             }
         });
+
+        return addedResultTypes;
     }
 
     protected Class<?> verifyResultType(String className, Location loc) {
@@ -663,23 +672,32 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 throw new ConfigurationException("Result type '" + resultType + "' is invalid");
             }
 
-            Map<String, String> params = buildResultParams(resultElement, config);
-
             Set<String> resultNamesSet = commaDelimitedStringToSet(resultName);
             if (resultNamesSet.isEmpty()) {
                 resultNamesSet.add(resultName);
             }
 
+            Map<String, String> params = buildResultParams(resultElement, config);
+            Location location = DomHelper.getLocationObject(element);
+
             for (String name : resultNamesSet) {
-                ResultConfig resultConfig = new ResultConfig.Builder(name, resultClass)
-                        .addParams(params)
-                        .location(DomHelper.getLocationObject(element))
-                        .build();
+                ResultConfig resultConfig = buildResultConfig(name, resultClass, params, location, config);
                 results.put(resultConfig.getName(), resultConfig);
             }
         });
 
         return results;
+    }
+
+    /**
+     * @param resultTypeConfig intentionally unused, provided for use by subclasses
+     */
+    protected ResultConfig buildResultConfig(String name,
+                                             String resultClass,
+                                             Map<String, String> params,
+                                             Location location,
+                                             ResultTypeConfig resultTypeConfig) {
+        return new ResultConfig.Builder(name, resultClass).addParams(params).location(location).build();
     }
 
     protected Map<String, String> buildResultParams(Element resultElement, ResultTypeConfig config) {

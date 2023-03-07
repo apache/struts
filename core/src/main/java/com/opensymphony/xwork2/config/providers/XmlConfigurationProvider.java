@@ -21,11 +21,9 @@ package com.opensymphony.xwork2.config.providers;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
-import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.BeanSelectionProvider;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.ConfigurationUtil;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
@@ -96,25 +94,15 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
  * @author Neo
  * @version $Revision$
  */
-public abstract class XmlConfigurationProvider implements ConfigurationProvider {
+public class XmlConfigurationProvider extends XmlDocConfigurationProvider {
 
     private static final Logger LOG = LogManager.getLogger(XmlConfigurationProvider.class);
 
     private final String configFileName;
     private final Set<String> loadedFileUrls = new HashSet<>();
-    private final Map<String, Element> declaredPackages = new HashMap<>();
-
-    protected List<Document> documents;
     private Set<String> includedFileNames;
-    private ObjectFactory objectFactory;
-
-    private Map<String, String> dtdMappings = new HashMap<>();
-    private Configuration configuration;
-
-    private boolean throwExceptionOnDuplicateBeans = true;
 
     private FileManager fileManager;
-    private ValueSubstitutor valueSubstitutor;
 
     public XmlConfigurationProvider() {
         this("struts.xml");
@@ -132,45 +120,16 @@ public abstract class XmlConfigurationProvider implements ConfigurationProvider 
         this(filename);
     }
 
-    public void setThrowExceptionOnDuplicateBeans(boolean val) {
-        this.throwExceptionOnDuplicateBeans = val;
-    }
-
-    public void setDtdMappings(Map<String, String> mappings) {
-        this.dtdMappings = Collections.unmodifiableMap(mappings);
-    }
-
-    @Inject
-    public void setObjectFactory(ObjectFactory objectFactory) {
-        this.objectFactory = objectFactory;
-    }
-
     @Inject
     public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
         this.fileManager = fileManagerFactory.getFileManager();
     }
 
-    @Inject(required = false)
-    public void setValueSubstitutor(ValueSubstitutor valueSubstitutor) {
-        this.valueSubstitutor = valueSubstitutor;
-    }
-
-    /**
-     * Returns an unmodifiable map of DTD mappings
-     *
-     * @return map of DTD mappings
-     */
-    public Map<String, String> getDtdMappings() {
-        return dtdMappings;
-    }
-
+    @Override
     public void init(Configuration configuration) {
-        this.configuration = configuration;
+        super.init(configuration);
         this.includedFileNames = configuration.getLoadedFileNames();
         loadDocuments(configFileName);
-    }
-
-    public void destroy() {
     }
 
     @Override

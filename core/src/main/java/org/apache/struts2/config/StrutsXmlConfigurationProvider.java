@@ -96,7 +96,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         super(filename);
         this.servletContext = ctx;
         this.filename = filename;
-        reloadKey = "configurationReload-" + filename;
+        this.reloadKey = "configurationReload-" + filename;
         setDtdMappings(STRUTS_DTD_MAPPINGS);
         File file = new File(filename);
         if (file.getParent() != null) {

@@ -229,13 +229,14 @@ public class PrepareOperations {
      *
      * @return <tt>true</tt> if the request URI matches one of the given patterns
      */
-    public boolean isUrlExcluded( HttpServletRequest request, List<Pattern> excludedPatterns ) {
-        if (excludedPatterns != null) {
-            String uri = RequestUtils.getUri(request);
-            for ( Pattern pattern : excludedPatterns ) {
-                if (pattern.matcher(uri).matches()) {
-                    return true;
-                }
+    public boolean isUrlExcluded(HttpServletRequest request, List<Pattern> excludedPatterns) {
+        if (excludedPatterns == null) {
+            return false;
+        }
+        String uri = RequestUtils.getUri(request);
+        for (Pattern pattern : excludedPatterns) {
+            if (pattern.matcher(uri).matches()) {
+                return true;
             }
         }
         return false;

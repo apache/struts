@@ -180,7 +180,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         ActionContext context = ActionContext.getContext()
             .withServletRequest(request)
             .withServletResponse(response)
-            .withSession(new SessionMap<>(request))
+            .withSession(new SessionMap(request))
             .bind();
         mai.setInvocationContext(context);
         session = request.getSession();

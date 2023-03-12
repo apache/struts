@@ -101,7 +101,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         this.maxFiles = Long.parseLong(maxFiles);
     }
 
-    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXFILESIZE)
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_MAXFILESIZE, required = false)
     public void setMaxFileSize(String maxFileSize) {
         this.maxFileSize = Long.parseLong(maxFileSize);
     }

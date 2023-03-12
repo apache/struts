@@ -34,7 +34,6 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
-import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -45,11 +44,9 @@ import ognl.PropertyAccessor;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.junit.Assert;
-import org.springframework.ejb.access.SimpleRemoteStatelessSessionProxyFactoryBean;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -777,6 +774,162 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         assertNotNull(action.getBeanList());
         assertFalse(action.getBeanList().isEmpty());
     }
+
+    public void testExcludedParametersValuesAreIgnored() throws Exception {
+        ParametersInterceptor pi = createParametersInterceptor();
+        // Contains (based on pattern)
+        pi.setExcludedValuePatterns(".*\\$\\{.*?\\}.*,.*%\\{.*?\\}.*");
+
+        assertTrue("${2*2} was excluded by isParamValueExcluded", pi.isParamValueExcluded("${2*2}"));
+
+        final Map<String, Object> actual = injectValueStackFactory(pi);
+        ValueStack stack = injectValueStack(actual);
+
+        final Map<String, Object> expected = new HashMap<String, Object>() {
+            {
+                put("fooKey", "fooValue");
+                put("fooKey2", "");
+            }
+        };
+
+        Map<String, Object> parameters = new HashMap<String, Object>() {
+            {
+                put("barKey$", "${2+2}");
+                put("barKey2$", "foo${2+2}");
+                put("barKey3$", "foo${2+2}foo");
+                put("barKey%", "%{2+2}");
+                put("barKey2%", "foo%{2+2}");
+                put("barKey3%", "foo%{2+2}foo");
+                put("allowedKey", "${foo}");
+                put("allowedKey2", "%{bar}");
+                put("fooKey", "fooValue");
+                put("fooKey2", "");
+            }
+        };
+        pi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        assertEquals(expected, actual);
+    }
+
+    public void testAcceptedParametersValuesAreIgnored() throws Exception {
+        ParametersInterceptor pi = createParametersInterceptor();
+        // Starts with (based on pattern)
+        pi.setAcceptedValuePatterns("^\\$\\{foo\\}.*,^%\\{bar\\}.*,^fooValue");
+
+        assertTrue("${foo} was allowed by isParamValueAccepted", pi.isParamValueAccepted("${foo}"));
+
+        final Map<String, Object> actual = injectValueStackFactory(pi);
+        ValueStack stack = injectValueStack(actual);
+
+        final Map<String, Object> expected = new HashMap<String, Object>() {
+            {
+                put("fooKey", "fooValue");
+                put("fooKey2", "");
+                put("allowedKey", "${foo}");
+                put("allowedKey2", "%{bar}");
+            }
+        };
+
+        Map<String, Object> parameters = new HashMap<String, Object>() {
+            {
+                put("barKey$", "${2+2}");
+                put("barKey2$", "foo${2+2}");
+                put("barKey3$", "foo${2+2}foo");
+                put("barKey%", "%{2+2}");
+                put("barKey2%", "foo%{2+2}");
+                put("barKey3%", "foo%{2+2}foo");
+                put("allowedKey", "${foo}");
+                put("allowedKey2", "%{bar}");
+                put("fooKey", "fooValue");
+                put("fooKey2", "");
+            }
+        };
+        pi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        assertEquals(expected, actual);
+    }
+
+    public void testAcceptedAndExcludedParametersValuesAreIgnored() throws Exception {
+        ParametersInterceptor pi = createParametersInterceptor();
+        // Starts with (based on pattern)
+        pi.setAcceptedValuePatterns("^\\$\\{foo\\}.*,^%\\{bar\\}.*,^fooValue");
+        pi.setExcludedValuePatterns(".*\\$\\{2.*2\\}.*,.*\\%\\{2.*2\\}.*");
+
+        assertTrue("${foo} was allowed by isParamValueAccepted", pi.isParamValueAccepted("${foo}"));
+        assertTrue("${2*2} was excluded by isParamValueExcluded", pi.isParamValueExcluded("${2*2}"));
+
+        final Map<String, Object> actual = injectValueStackFactory(pi);
+        ValueStack stack = injectValueStack(actual);
+
+        final Map<String, Object> expected = new HashMap<String, Object>() {
+            {
+                put("fooKey", "fooValue");
+                put("allowedKey", "${foo}");
+                put("allowedKey2", "%{bar}");
+                put("fooKey2", "");
+            }
+        };
+
+        Map<String, Object> parameters = new HashMap<String, Object>() {
+            {
+                put("barKey$", "${2+2}");
+                put("barKey2$", "foo${2+2}");
+                put("barKey%", "%{2+2}");
+                put("barKey2%", "foo%{2+2}");
+                put("barKey3", "nothing");
+
+                put("allowedKey", "${foo}");
+                put("allowedKey2", "%{bar}");
+                put("fooKey", "fooValue");
+                put("fooKey2", "");
+            }
+        };
+        pi.setParameters(new NoParametersAction(), stack, HttpParameters.create(parameters).build());
+        assertEquals(expected, actual);
+    }
+
+    public void testExcludedParametersValuesAreIgnoredWithParameterValueAware() throws Exception {
+        ParametersInterceptor pi = createParametersInterceptor();
+        // Contains (based on pattern)
+        pi.setExcludedValuePatterns(".*\\$\\{.*?\\}.*,.*%\\{.*?\\}.*");
+
+        assertTrue("${2*2} was excluded by isParamValueExcluded", pi.isParamValueExcluded("${2*2}"));
+
+        final Map<String, Object> actual = injectValueStackFactory(pi);
+        ValueStack stack = injectValueStack(actual);
+
+        final Map<String, Object> expected = new HashMap<String, Object>() {
+            {
+            	// acceptableParameterValue only allows fooValue even though fooKey2 and fooKey3 pass the excludeValuePatterns check
+                put("fooKey", "fooValue");
+            }
+        };
+
+        Object a = new ParameterValueAware() {
+			@Override
+			public boolean acceptableParameterValue(String parameterValue) {
+				// Only fooValue will be allowed because the excludeValuePatterns will block ${2+2}
+				return parameterValue.equals("fooValue") || parameterValue.equals("${2+2}");
+			}
+		};
+
+        Map<String, Object> parameters = new HashMap<String, Object>() {
+            {
+                put("barKey$", "${2+2}");
+                put("barKey2$", "foo${2+2}");
+                put("barKey3$", "foo${2+2}foo");
+                put("barKey%", "%{2+2}");
+                put("barKey2%", "foo%{2+2}");
+                put("barKey3%", "foo%{2+2}foo");
+                put("allowedKey", "${foo}");
+                put("allowedKey2", "%{bar}");
+                put("fooKey", "fooValue");
+                put("fooKey2", "fooValue2");
+                put("fooKey3", "");
+            }
+        };
+        pi.setParameters(a, stack, HttpParameters.create(parameters).build());
+        assertEquals(expected, actual);
+    }
+
 
     private ValueStack injectValueStack(Map<String, Object> actual) {
         ValueStack stack = createStubValueStack(actual);

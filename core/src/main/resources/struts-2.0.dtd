@@ -24,10 +24,10 @@
 <!--
    Struts configuration DTD.
    Use the following DOCTYPE
-   
-   <!DOCTYPE struts PUBLIC 
+
+   <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-	"http://struts.apache.org/dtds/struts-2.0.dtd">
+	"https://struts.apache.org/dtds/struts-2.0.dtd">
 -->
 
 <!ELEMENT struts (package|include|bean|constant)*>
@@ -131,7 +131,7 @@
 <!ELEMENT constant (#PCDATA)>
 <!ATTLIST constant
     name CDATA #REQUIRED
-    value CDATA #REQUIRED    
+    value CDATA #REQUIRED
 >
 
 <!-- END SNIPPET: strutsDtd -->

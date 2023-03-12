@@ -34,7 +34,6 @@ public class CoopInterceptorTest extends StrutsInternalTestCase {
     private final MockHttpServletResponse response = new MockHttpServletResponse();
 
     String SAME_ORIGIN = "same-origin";
-    String SAME_SITE = "same-site";
     String UNSAFE_NONE = "unsafe-none";
     String COOP_HEADER = "Cross-Origin-Opener-Policy";
 
@@ -65,7 +64,7 @@ public class CoopInterceptorTest extends StrutsInternalTestCase {
         assertEquals("Coop header is not same-origin", UNSAFE_NONE, header);
     }
 
-    public void testErrorNotRecognizedMode() throws Exception {
+    public void testErrorNotRecognizedMode() {
         request.setContextPath("/some");
 
         try{

@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * <p>
@@ -435,7 +436,12 @@ import java.util.Map;
  *
  */
 public abstract class UIBean extends Component {
+
     private static final Logger LOG = LogManager.getLogger(UIBean.class);
+
+    protected static final String ATTR_FIELD_VALUE = "fieldValue";
+    protected static final String ATTR_NAME_VALUE = "nameValue";
+    protected static final String ATTR_VALUE = "value";
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
@@ -689,7 +695,6 @@ public abstract class UIBean extends Component {
 
         if (labelPosition != null) {
             String labelPosition = findString(this.labelPosition);
-            addParameter("labelposition", labelPosition);
             addParameter("labelPosition", labelPosition);
         }
 
@@ -795,37 +800,7 @@ public abstract class UIBean extends Component {
             addParameter("title", findString(title));
         }
 
-
-        // see if the value was specified as a parameter already
-        final String NAME_VALUE = "nameValue";
-        if (parameters.containsKey("value")) {
-            parameters.put(NAME_VALUE, parameters.get("value"));
-        } else {
-            if (evaluateNameValue()) {
-                final Class<?> valueClazz = getValueClassType();
-
-                if (valueClazz != null) {
-                    if (value != null) {
-                        addParameter(NAME_VALUE, findValue(value, valueClazz));
-                    } else if (translatedName != null) {
-                        boolean evaluated = !translatedName.equals(this.name);
-                        boolean reevaluate = !evaluated || isAcceptableExpression(translatedName);
-                        if (!reevaluate) {
-                            addParameter(NAME_VALUE, translatedName);
-                        } else {
-                            String expr = completeExpression(translatedName);
-                            addParameter(NAME_VALUE, findValue(expr, valueClazz));
-                        }
-                    }
-                } else {
-                    if (value != null) {
-                        addParameter(NAME_VALUE, findValue(value));
-                    } else if (translatedName != null) {
-                        addParameter(NAME_VALUE, findValue(translatedName));
-                    }
-                }
-            }
-        }
+        applyValueParameter(translatedName);
 
         final Form form = (Form) findAncestor(Form.class);
 
@@ -907,6 +882,46 @@ public abstract class UIBean extends Component {
         }
 
         evaluateExtraParams();
+    }
+
+    /**
+     * Tries to calculate the "value" parameter based either on the provided {@link #value} or {@link #name}
+     * @param translatedName the already evaluated {@link #name}
+     */
+    protected void applyValueParameter(String translatedName) {
+        // see if the value has been specified as a parameter already
+        if (parameters.containsKey(ATTR_VALUE)) {
+            parameters.put(ATTR_NAME_VALUE, parameters.get(ATTR_VALUE));
+        } else {
+            if (evaluateNameValue()) {
+                final Class<?> valueClazz = getValueClassType();
+
+                if (valueClazz != null) {
+                    if (value != null) {
+                        addParameter(ATTR_NAME_VALUE, findValue(value, valueClazz));
+                    } else if (translatedName != null) {
+                        processTranslatedName(translatedName, (expr) -> findValue(expr, valueClazz));
+                    }
+                } else {
+                    if (value != null) {
+                        addParameter(ATTR_NAME_VALUE, findValue(value));
+                    } else if (translatedName != null) {
+                        processTranslatedName(translatedName, this::findValue);
+                    }
+                }
+            }
+        }
+    }
+
+    private void processTranslatedName(String translatedName, Function<String, Object> evaluator) {
+        boolean evaluated = !translatedName.equals(this.name);
+        boolean reevaluate = !evaluated || isAcceptableExpression(translatedName);
+        if (!reevaluate) {
+            addParameter(ATTR_NAME_VALUE, translatedName);
+        } else {
+            String expr = completeExpression(translatedName);
+            addParameter(ATTR_NAME_VALUE, evaluator.apply(expr));
+        }
     }
 
     protected String escape(String name) {
@@ -1073,12 +1088,6 @@ public abstract class UIBean extends Component {
         this.cssClass = cssClass;
     }
 
-    @Deprecated
-    @StrutsTagAttribute(description="(Deprecated) The css class to use for element - it's an alias of cssClass attribute.")
-    public void setClass(String cssClass) {
-        this.cssClass = cssClass;
-    }
-
     @StrutsTagAttribute(description="The css style definitions for element to use")
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
@@ -1117,16 +1126,6 @@ public abstract class UIBean extends Component {
     @StrutsTagAttribute(description="String that will be appended to the label", defaultValue=":")
     public void setLabelSeparator(String labelseparator) {
         this.labelSeparator = labelseparator;
-    }
-
-    /**
-     * Deprecated since 2.5.27
-     * @deprecated use {@link #setLabelPosition(String)} instead
-     */
-    @StrutsTagAttribute(description="(Deprecated) Define label position of form element (top/left)")
-    @Deprecated
-    public void setLabelposition(String labelPosition) {
-        this.labelPosition = labelPosition;
     }
 
     @StrutsTagAttribute(description="Define label position of form element (top/left)")

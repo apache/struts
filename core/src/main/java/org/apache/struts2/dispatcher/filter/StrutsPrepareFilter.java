@@ -43,16 +43,17 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
     protected static final String REQUEST_EXCLUDED_FROM_ACTION_MAPPING = StrutsPrepareFilter.class.getName() + ".REQUEST_EXCLUDED_FROM_ACTION_MAPPING";
 
     protected PrepareOperations prepare;
-    protected List<Pattern> excludedPatterns = null;
+    protected List<Pattern> excludedPatterns;
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        InitOperations init = new InitOperations();
+        InitOperations init = createInitOperations();
         Dispatcher dispatcher = null;
         try {
             FilterHostConfig config = new FilterHostConfig(filterConfig);
             dispatcher = init.initDispatcher(config);
 
-            prepare = new PrepareOperations(dispatcher);
+            prepare = createPrepareOperations(dispatcher);
+            // Note: Currently, excluded patterns are not refreshed following an XWork config reload
             this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);
@@ -62,6 +63,26 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             }
             init.cleanup();
         }
+    }
+
+    /**
+     * Creates a new instance of {@link InitOperations} to be used during
+     * initialising {@link Dispatcher}
+     *
+     * @return instance of {@link InitOperations}
+     */
+    protected InitOperations createInitOperations() {
+        return new InitOperations();
+    }
+
+    /**
+     * Creates a new instance of {@link PrepareOperations} to be used during
+     * initialising {@link Dispatcher}
+     *
+     * @return instance of {@link PrepareOperations}
+     */
+    protected PrepareOperations createPrepareOperations(Dispatcher dispatcher) {
+        return new PrepareOperations(dispatcher);
     }
 
     /**
@@ -78,18 +99,25 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        boolean didWrap = false;
         try {
-            if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
-                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, new Object());
+            prepare.trackRecursion(request);
+            if (prepare.isUrlExcluded(request, excludedPatterns)) {
+                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, true);
             } else {
+                request.setAttribute(REQUEST_EXCLUDED_FROM_ACTION_MAPPING, false);
                 prepare.setEncodingAndLocale(request, response);
                 prepare.createActionContext(request, response);
                 prepare.assignDispatcherToThread();
                 request = prepare.wrapRequest(request);
-                prepare.findActionMapping(request, response);
+                didWrap = true;
+                prepare.findActionMapping(request, response, true);
             }
             chain.doFilter(request, response);
         } finally {
+            if (didWrap) {
+                prepare.cleanupWrappedRequest(request);
+            }
             prepare.cleanupRequest(request);
         }
     }

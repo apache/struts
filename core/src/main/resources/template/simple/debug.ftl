@@ -18,8 +18,7 @@
  * under the License.
  */
 -->
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
-<!--
+<@s.script>
     function toggleDebug(debugId) {
         var debugDiv = document.getElementById(debugId);
         if (debugDiv) {
@@ -31,10 +30,9 @@
             }
         }
     }
--->
-</script>
+</@s.script>
 
-<style type="text/css">
+<style>
 <!--
     table.debugTable {border-collapse:collapse; border-spacing:0; background-color:#DDDDDD;}
     table.debugTable th, table.debugTable td {padding:2px;}
@@ -42,7 +40,7 @@
 </style>
 <br>
 
-<a href="#" onclick="toggleDebug('<#if parameters.id??>${parameters.id}<#else>debug</#if>');return false;">[Debug]</a>
+<a href="#" id="toggle-button">[Debug]</a>
 <div style="display:none" id="<#if parameters.id??>${parameters.id}<#else>debug</#if>">
 <h2>Struts ValueStack Debug</h2>
 <br>
@@ -86,3 +84,9 @@
     </#list>
 </table>
 </div>
+<@s.script>
+    document.getElementById('toggle-button').onclick = function() {
+        toggleDebug('<#if parameters.id??>${parameters.id}<#else>debug</#if>');
+        return false;
+    }
+</@s.script>

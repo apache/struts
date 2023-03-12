@@ -32,8 +32,8 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.views.util.DefaultUrlHelper;
+import org.apache.struts2.url.StrutsQueryStringBuilder;
+import org.apache.struts2.url.StrutsUrlEncoder;
 import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -240,7 +240,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         result.setEncode(false);
         result.setPrependServletContext(false);
         result.setAnchor("fragment");
-        result.setUrlHelper(new DefaultUrlHelper());
+        result.setQueryStringBuilder(new StrutsQueryStringBuilder(new StrutsUrlEncoder()));
 
         IMocksControl control = createControl();
         ActionProxy mockActionProxy = control.createMock(ActionProxy.class);
@@ -251,7 +251,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         expect(mockInvocation.getInvocationContext()).andReturn(context);
 
         control.replay();
-        result.setActionMapper(container.getInstance(ActionMapper.class));
+        container.inject(result);
         result.execute(mockInvocation);
         assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3#fragment", res.getRedirectedUrl());
         control.verify();
@@ -286,7 +286,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         result.setParse(true);
         result.setEncode(false);
         result.setPrependServletContext(false);
-        result.setUrlHelper(new DefaultUrlHelper());
+        result.setQueryStringBuilder(new StrutsQueryStringBuilder(new StrutsUrlEncoder()));
         result.setSuppressEmptyParameters(true);
 
         IMocksControl control = createControl();
@@ -311,7 +311,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         expect(mockValueStack.getActionContext()).andReturn(actionContext);
 
         control.replay();
-        result.setActionMapper(container.getInstance(ActionMapper.class));
+        container.inject(result);
         result.execute(mockInvocation);
         assertEquals("/myNamespace/myAction.action?param=value+1&param=value+2", res.getRedirectedUrl());
         control.verify();
@@ -433,7 +433,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         }
     }
 
-    public void testPassingNullInvocation() throws Exception{
+    public void testPassingNullInvocation() throws Exception {
         Result result = new ServletRedirectResult();
         try {
             result.execute(null);

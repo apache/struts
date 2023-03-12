@@ -32,6 +32,7 @@ import java.io.Writer;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -294,7 +295,9 @@ public class Date extends ContextBean {
         // find the name on the valueStack
         Object dateObject = findValue(name);
         if (dateObject instanceof java.sql.Date) {
-            date = ((java.sql.Date) dateObject).toLocalDate().atStartOfDay(tz);
+            date = ((java.sql.Date) dateObject).toLocalDate().atTime(LocalTime.now(tz)).atZone(tz);
+        } else if (dateObject instanceof java.sql.Time) {
+            date = ((java.sql.Time) dateObject).toLocalTime().atDate(ZonedDateTime.now(tz).toLocalDate()).atZone(tz);
         } else if (dateObject instanceof java.util.Date) {
             date = ((java.util.Date) dateObject).toInstant().atZone(tz);
         } else if (dateObject instanceof Calendar) {

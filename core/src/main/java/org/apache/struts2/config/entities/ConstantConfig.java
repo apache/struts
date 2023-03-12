@@ -64,6 +64,7 @@ public class ConstantConfig {
     private String uiTheme;
     private String uiThemeExpansionToken;
     private Long multipartMaxSize;
+    private Long multipartMaxFiles;
     private String multipartSaveDir;
     private Integer multipartBufferSize;
     private BeanConfig multipartParser;
@@ -195,6 +196,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_UI_THEME, uiTheme);
         map.put(StrutsConstants.STRUTS_UI_THEME_EXPANSION_TOKEN, uiThemeExpansionToken);
         map.put(StrutsConstants.STRUTS_MULTIPART_MAXSIZE, Objects.toString(multipartMaxSize, null));
+        map.put(StrutsConstants.STRUTS_MULTIPART_MAXFILES, Objects.toString(multipartMaxFiles, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_SAVEDIR, multipartSaveDir);
         map.put(StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE, Objects.toString(multipartBufferSize, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_PARSER, beanConfToString(multipartParser));
@@ -204,7 +206,6 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE_ALWAYS_RESPECT, Objects.toString(objectFactorySpringAutoWireAlwaysRespect, null));
         map.put(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE, Objects.toString(objectFactorySpringUseClassCache, null));
         map.put(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_ENABLE_AOP_SUPPORT, Objects.toString(objectFactorySpringEnableAopSupport, null));
-        map.put(StrutsConstants.STRUTS_XSLT_NOCACHE, Objects.toString(xsltNocache, null));
         map.put(StrutsConstants.STRUTS_CUSTOM_PROPERTIES, StringUtils.join(customProperties, ','));
         map.put(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES, StringUtils.join(customI18nResources, ','));
         map.put(StrutsConstants.STRUTS_MAPPER_CLASS, beanConfToString(mapperClass));
@@ -578,6 +579,14 @@ public class ConstantConfig {
 
     public void setMultipartMaxSize(Long multipartMaxSize) {
         this.multipartMaxSize = multipartMaxSize;
+    }
+
+    public Long getMultipartMaxFiles() {
+        return multipartMaxFiles;
+    }
+
+    public void setMultipartMaxFiles(Long multipartMaxFiles) {
+        this.multipartMaxFiles = multipartMaxFiles;
     }
 
     public String getMultipartSaveDir() {

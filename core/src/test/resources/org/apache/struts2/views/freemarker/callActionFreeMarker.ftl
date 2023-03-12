@@ -1,7 +1,5 @@
 <#--
 /*
- * $Id: someFreeMarkerFile.ftl 590812 2007-10-31 20:32:54Z apetrelli $
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

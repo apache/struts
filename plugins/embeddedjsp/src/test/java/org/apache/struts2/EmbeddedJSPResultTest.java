@@ -35,8 +35,9 @@ import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.jasper.runtime.InstanceHelper;
-import org.apache.struts2.views.util.DefaultUrlHelper;
-import org.apache.struts2.views.util.UrlHelper;
+import org.apache.struts2.url.QueryStringParser;
+import org.apache.struts2.url.StrutsQueryStringParser;
+import org.apache.struts2.url.StrutsUrlDecoder;
 import org.apache.tomcat.InstanceManager;
 import org.easymock.EasyMock;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -55,6 +56,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+
+import static org.apache.struts2.ServletActionContext.STRUTS_VALUESTACK_KEY;
 
 
 public class EmbeddedJSPResultTest extends TestCase {
@@ -322,17 +325,18 @@ public class EmbeddedJSPResultTest extends TestCase {
         HttpSession session = EasyMock.createNiceMock(HttpSession.class);
         EasyMock.replay(session);
 
-        EasyMock.expect(request.getSession()).andReturn(session).anyTimes();
-        EasyMock.expect(request.getParameterMap()).andReturn(params).anyTimes();
-        EasyMock.expect(request.getParameter("username")).andAnswer(() -> ActionContext.getContext().getParameters().get("username").getValue());
-        EasyMock.expect(request.getAttribute("something")).andReturn("somethingelse").anyTimes();
-
-        EasyMock.replay(request);
-
         //mock value stack
         ValueStack valueStack = EasyMock.createNiceMock(ValueStack.class);
         EasyMock.expect(valueStack.getActionContext()).andReturn(ActionContext.getContext()).anyTimes();
         EasyMock.replay(valueStack);
+
+        EasyMock.expect(request.getSession()).andReturn(session).anyTimes();
+        EasyMock.expect(request.getParameterMap()).andReturn(params).anyTimes();
+        EasyMock.expect(request.getParameter("username")).andAnswer(() -> ActionContext.getContext().getParameters().get("username").getValue());
+        EasyMock.expect(request.getAttribute(STRUTS_VALUESTACK_KEY)).andReturn(valueStack).anyTimes();
+        EasyMock.expect(request.getAttribute("something")).andReturn("somethingelse").anyTimes();
+
+        EasyMock.replay(request);
 
         //mock converter
         XWorkConverter converter = new DummyConverter();
@@ -348,8 +352,8 @@ public class EmbeddedJSPResultTest extends TestCase {
         EasyMock.expect(container.getInstanceNames(FileManager.class)).andReturn(new HashSet<>()).anyTimes();
         EasyMock.expect(container.getInstance(FileManager.class)).andReturn(fileManager).anyTimes();
 
-        UrlHelper urlHelper = new DefaultUrlHelper();
-        EasyMock.expect(container.getInstance(UrlHelper.class)).andReturn(urlHelper).anyTimes();
+        QueryStringParser queryStringParser = new StrutsQueryStringParser(new StrutsUrlDecoder());
+        EasyMock.expect(container.getInstance(QueryStringParser.class)).andReturn(queryStringParser).anyTimes();
         FileManagerFactory fileManagerFactory = new DummyFileManagerFactory();
         EasyMock.expect(container.getInstance(FileManagerFactory.class)).andReturn(fileManagerFactory).anyTimes();
 

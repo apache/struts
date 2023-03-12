@@ -24,7 +24,9 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.stream.IntStream;
 
 public class PrepareOperationsTest extends StrutsInternalTestCase {
     public void testCreateActionContextWhenRequestHasOne() {
@@ -38,5 +40,45 @@ public class PrepareOperationsTest extends StrutsInternalTestCase {
         ActionContext actionContext = prepare.createActionContext(req, null);
 
         assertEquals(stack.getContext(), actionContext.getContextMap());
+    }
+
+    public void testRequestCleanup() {
+        HttpServletRequest req = new MockHttpServletRequest();
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        int mockedRecursions = 5;
+        IntStream.range(0, mockedRecursions).forEach(i -> prepare.trackRecursion(req));
+        IntStream.range(0, mockedRecursions - 1).forEach(i -> prepare.cleanupRequest(req));
+
+        assertNotNull(ActionContext.getContext());
+        assertNotNull(Dispatcher.getInstance());
+        assertNotNull(ContainerHolder.get());
+
+        prepare.cleanupRequest(req);
+
+        assertNull(ActionContext.getContext());
+        assertNull(Dispatcher.getInstance());
+        assertNull(ContainerHolder.get());
+    }
+
+    public void testWrappedRequestCleanup() {
+        HttpServletRequest req = new MockHttpServletRequest();
+        PrepareOperations prepare = new PrepareOperations(dispatcher);
+        int mockedRecursions = 5;
+        IntStream.range(0, mockedRecursions).forEach(i -> {
+            try {
+                prepare.wrapRequest(req);
+            } catch (ServletException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        IntStream.range(0, mockedRecursions - 1).forEach(i -> prepare.cleanupWrappedRequest(req));
+
+        // Assert org.apache.struts2.dispatcher.Dispatcher#cleanUpRequest has not yet run
+        assertNotNull(ContainerHolder.get());
+
+        prepare.cleanupWrappedRequest(req);
+
+        // Assert org.apache.struts2.dispatcher.Dispatcher#cleanUpRequest has run after final #cleanupWrappedRequest
+        assertNull(ContainerHolder.get());
     }
 }

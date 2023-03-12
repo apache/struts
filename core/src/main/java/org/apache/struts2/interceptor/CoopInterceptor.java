@@ -60,14 +60,15 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-        HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
         String path = request.getContextPath();
 
         if (isExempted(path)) {
             // no need to add headers
             LOG.debug("Skipping COOP header for exempted path {}", path);
         } else {
-            response.setHeader(COOP_HEADER, getMode());
+            LOG.trace("Applying COOP header: {} with value: {}", COOP_HEADER, mode);
+            HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
+            response.setHeader(COOP_HEADER, mode);
         }
     }
 
@@ -77,10 +78,6 @@ public class CoopInterceptor extends AbstractInterceptor implements PreResultLis
 
     public void setExemptedPaths(String paths) {
         exemptedPaths.addAll(TextParseUtil.commaDelimitedStringToSet(paths));
-    }
-
-    private String getMode() {
-        return mode;
     }
 
     public void setMode(String mode) {

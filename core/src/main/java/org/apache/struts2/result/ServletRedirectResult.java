@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.views.util.UrlHelper;
+import org.apache.struts2.url.QueryStringBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,7 +54,7 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
  * available. This is because actions are built on a single-thread model. The
  * only way to pass data is through the session or with web parameters
  * (url?name=value) which can be OGNL expressions.
- *
+ * <p>
  * <b>This result type takes the following parameters:</b>
  *
  * <ul>
@@ -65,7 +65,7 @@ import static javax.servlet.http.HttpServletResponse.SC_FOUND;
  * "hash".  You can specify an anchor for a result.</li>
  * </ul>
  * This result follows the same rules from {@link StrutsResultSupport}.
- *
+ * <p>
  * <b>Example:</b>
  * <pre>
  * <!-- START SNIPPET: example -->
@@ -94,7 +94,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     protected Map<String, Object> requestParameters = new LinkedHashMap<>();
     protected String anchor;
 
-    private UrlHelper urlHelper;
+    private QueryStringBuilder queryStringBuilder;
 
     public ServletRedirectResult() {
         super();
@@ -115,8 +115,8 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
     }
 
     @Inject
-    public void setUrlHelper(UrlHelper urlHelper) {
-        this.urlHelper = urlHelper;
+    public void setQueryStringBuilder(QueryStringBuilder queryStringBuilder) {
+        this.queryStringBuilder = queryStringBuilder;
     }
 
     public void setStatusCode(int code) {
@@ -202,7 +202,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
         }
 
         StringBuilder tmpLocation = new StringBuilder(finalLocation);
-        urlHelper.buildParametersString(requestParameters, tmpLocation, "&");
+        queryStringBuilder.build(requestParameters, tmpLocation, "&");
 
         // add the anchor
         if (anchor != null) {
@@ -283,10 +283,7 @@ public class ServletRedirectResult extends StrutsResultSupport implements Reflec
                 LOG.debug("[{}] isn't absolute URI, assuming it's a path", url);
                 return true;
             }
-        } catch (IllegalArgumentException e) {
-            LOG.debug("[{}] isn't a valid URL, assuming it's a path", url, e);
-            return true;
-        } catch (MalformedURLException e) {
+        } catch (IllegalArgumentException | MalformedURLException e) {
             LOG.debug("[{}] isn't a valid URL, assuming it's a path", url, e);
             return true;
         }

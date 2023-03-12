@@ -64,14 +64,14 @@
     <title><decorator:title default="Struts2 Showcase"/></title>
 
     <s:url var="bootstrapCss" value='/styles/bootstrap.css' encode='false' includeParams='none'/>
-    <s:link href="%{bootstrapCss}" rel="stylesheet" type="text/css" media="all"></s:link>
+    <s:link href="%{bootstrapCss}" rel="stylesheet" type="text/css" media="all"/>
     <s:url var="mainCss" value='/styles/main.css' encode='false' includeParams='none'/>
-    <s:link href="%{mainCss}" rel="stylesheet" type="text/css" media="all"></s:link>
+    <s:link href="%{mainCss}" rel="stylesheet" type="text/css" media="all"/>
 
     <s:url var="jqueryJs" value='/js/jquery-2.1.4.min.js' encode='false' includeParams='none'/>
-    <s:script src="%{jqueryJs}"></s:script>
+    <s:script src="%{jqueryJs}"/>
     <s:url var="bootstrapJs" value='/js/bootstrap.min.js' encode='false' includeParams='none'/>
-    <s:script src="%{bootstrapJs}"></s:script>
+    <s:script src="%{bootstrapJs}"/>
     <s:script type="text/javascript">
         $(function () {
             var alerts = $('ul.alert').wrap('<div />');
@@ -82,19 +82,22 @@
 
     <!-- Prettify -->
     <s:url var="prettifyCss" value='/styles/prettify.css' encode='false' includeParams='none'/>
-    <s:link href="%{prettifyCss}" rel="stylesheet"></s:link>
+    <s:link href="%{prettifyCss}" rel="stylesheet"/>
     <s:url var="prettifyJs" value='/js/prettify.js' encode='false' includeParams='none'/>
-    <s:script src="%{prettifyJs}"></s:script>
+    <s:script src="%{prettifyJs}"/>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-    <s:script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></s:script>
+    <s:script src="http://html5shim.googlecode.com/svn/trunk/html5.js"/>
     <![endif]-->
 
+    <s:script>
+        jQuery(document).ready(function() { prettyPrint(); } );
+    </s:script>
     <decorator:head/>
 </head>
 
-<body id="page-home" onload="prettyPrint();">
+<body id="page-home">
 
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
@@ -239,7 +242,7 @@
                             </li>
                             <li><s:a value="/person/index.html">Person Manager</s:a></li>
                             <li><s:a value="/skill/index.html">CRUD</s:a></li>
-                            <li><s:a value="/wait/index.html">Execute &amp; Wait</s:a></li>
+                            <li><s:a value="/wait/index">Execute &amp; Wait</s:a></li>
                             <li><s:a value="/token/index.html">Token</s:a></li>
                             <li><s:url var="url" namespace="/modelDriven" action="modelDriven"/><s:a
                                     href="%{url}">Model Driven</s:a></li>

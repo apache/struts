@@ -20,8 +20,7 @@ package org.apache.struts2;
 
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.dispatcher.Parameter;
-import org.apache.struts2.views.util.DefaultUrlHelper;
-import org.apache.struts2.views.util.UrlHelper;
+import org.apache.struts2.url.QueryStringParser;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
@@ -53,11 +52,13 @@ public abstract class JSPRuntime {
         int i = location.indexOf("?");
         if (i > 0) {
             //extract params from the url and add them to the request
-            final UrlHelper urlHelperGetInstance = ServletActionContext.getContext().getInstance(UrlHelper.class);
-            final UrlHelper contextUrlHelper = (urlHelperGetInstance != null ? urlHelperGetInstance : (UrlHelper) ActionContext.getContext().get(StrutsConstants.STRUTS_URL_HELPER));
-            final UrlHelper urlHelper = (contextUrlHelper != null ? contextUrlHelper : new DefaultUrlHelper());
+            ActionContext actionContext = ServletActionContext.getActionContext();
+            if (actionContext == null) {
+                throw new StrutsException("Running out of action context!");
+            }
+            final QueryStringParser parser = actionContext.getInstance(QueryStringParser.class);
             String query = location.substring(i + 1);
-            Map<String, Object> queryParams = urlHelper.parseQueryString(query, true);
+            Map<String, Object> queryParams = parser.parse(query, true);
             if (queryParams != null && !queryParams.isEmpty()) {
                 Map<String, Parameter> newParams = new HashMap<>();
                 for (Map.Entry<String, Object> entry : queryParams.entrySet()) {

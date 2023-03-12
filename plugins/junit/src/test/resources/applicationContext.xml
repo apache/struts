@@ -33,6 +33,6 @@
         </property>
     </bean>
 
-    <bean id="testAction" class="org.apache.struts2.JUnitTestAction"/>
-    <bean id="mySessionBean" class="org.apache.struts2.MySessionBean" scope="session" />
+    <bean id="testAction" class="org.apache.struts2.junit.JUnitTestAction"/>
+    <bean id="mySessionBean" class="org.apache.struts2.junit.MySessionBean" scope="session"/>
 </beans>

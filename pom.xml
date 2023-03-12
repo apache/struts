@@ -2,24 +2,25 @@
 <!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
+ * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * regarding copyright ownership. The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * with the License. You may obtain a copy of the License at
  *
  *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -29,10 +30,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-parent</artifactId>
-    <version>6.1.0-SNAPSHOT</version>
+    <version>6.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
-    <url>http://struts.apache.org/</url>
+    <url>https://struts.apache.org/</url>
     <description>Apache Struts 2</description>
 
     <inceptionYear>2000</inceptionYear>
@@ -91,45 +92,47 @@
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
-            <comments />
+            <comments/>
         </license>
     </licenses>
 
     <organization>
         <name>Apache Software Foundation</name>
-        <url>http://www.apache.org</url>
+        <url>https://www.apache.org</url>
     </organization>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2022-06-02T07:11:11Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2022-11-15T14:30:13Z</project.build.outputTimestamp>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.2</asm.version>
-        <jackson.version>2.13.2</jackson.version>
-        <jackson-databind.version>2.13.2.1</jackson-databind.version>
-        <log4j2.version>2.18.0</log4j2.version>
-        <ognl.version>3.3.3</ognl.version>
+        <jackson.version>2.14.1</jackson.version>
+        <jackson-databind.version>2.14.1</jackson-databind.version>
+        <log4j2.version>2.19.0</log4j2.version>
+        <ognl.version>3.3.4</ognl.version>
         <slf4j.version>1.7.32</slf4j.version>
-        <spring.platformVersion>5.3.20</spring.platformVersion>
+        <spring.platformVersion>5.3.23</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
-        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
         <hibernate-validator.version>6.2.4.Final</hibernate-validator.version>
+        <freemarker.version>2.3.32</freemarker.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>
 
         <!-- Sonar -->
+        <sonar.organization>apache</sonar.organization>
         <sonar.projectKey>apache_struts</sonar.projectKey>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
-        <sonar.organization>apache</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.exclusions>apps/**</sonar.exclusions>
+
+        <argLine>-Duser.language=en -Duser.country=US -Duser.region=US</argLine>
     </properties>
 
     <profiles>
@@ -183,17 +186,6 @@
             </build>
         </profile>
         <profile>
-            <id>jdk9</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <properties>
-                <!-- coverall version 4.3.0 does not work with java 9, see https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
-                <!-- TODO delete coveralls.skip property after fix of https://github.com/cobertura/cobertura/issues/271 -->
-                <coveralls.skip>true</coveralls.skip>
-            </properties>
-        </profile>
-        <profile>
             <id>jdk17</id>
             <activation>
                 <jdk>[17,)</jdk>
@@ -210,6 +202,7 @@
                                     --add-opens java.base/java.lang=ALL-UNNAMED
                                     --add-opens java.base/java.util=ALL-UNNAMED
                                     -Dillegal-access=permit
+                                    @{argLine}
                                 </argLine>
                             </configuration>
                         </plugin>
@@ -218,33 +211,8 @@
             </build>
         </profile>
         <profile>
-            <id>travis-coveralls</id>
+            <id>coverage</id>
             <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <configuration>
-                                <argLine>${argLine}</argLine>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-failsafe-plugin</artifactId>
-                            <configuration>
-                                <argLine>${argLine}</argLine>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.eclipse.jetty</groupId>
-                            <artifactId>jetty-maven-plugin</artifactId>
-                            <configuration>
-                                <jvmArgs>${argLine}</jvmArgs>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
                 <plugins>
                     <plugin>
                         <groupId>org.jacoco</groupId>
@@ -255,20 +223,22 @@
                                 <id>prepare-agent</id>
                                 <goals>
                                     <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>prepare-agent-integration</id>
-                                <goals>
                                     <goal>prepare-agent-integration</goal>
                                 </goals>
                             </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                    <goal>report-integration</goal>
+                                </goals>
+                                <configuration>
+                                    <formats>
+                                        <format>XML</format>
+                                    </formats>
+                                </configuration>
+                            </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>io.jsonwebtoken.coveralls</groupId>
-                        <artifactId>coveralls-maven-plugin</artifactId>
-                        <version>4.4.1</version>
                     </plugin>
                 </plugins>
             </build>
@@ -295,7 +265,7 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <argLine>-Duser.language=en -Duser.region=US</argLine>
+                        <argLine>@{argLine}</argLine>
                         <includes>
                             <include>**/*Test.java</include>
                         </includes>
@@ -303,10 +273,10 @@
                             <exclude>**/TestBean.java</exclude>
                         </excludes>
                         <properties>
-                          <property>
-                            <name>junit</name>
-                            <value>false</value>
-                          </property>
+                            <property>
+                                <name>junit</name>
+                                <value>false</value>
+                            </property>
                         </properties>
                     </configuration>
                 </plugin>
@@ -340,16 +310,17 @@
                 <plugin>
                     <groupId>org.apache.rat</groupId>
                     <artifactId>apache-rat-plugin</artifactId>
+                    <version>0.15</version>
                     <configuration>
                         <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
                         <useIdeaDefaultExcludes>true</useIdeaDefaultExcludes>
                         <useDefaultExcludes>true</useDefaultExcludes>
                         <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
                         <licenses>
-                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20" />
+                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20"/>
                         </licenses>
                         <licenseFamilies>
-                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily" />
+                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily"/>
                         </licenseFamilies>
                         <includes>
                             <include>pom.xml</include>
@@ -379,7 +350,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>7.0.1</version>
+                    <version>7.2.0</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
@@ -392,13 +363,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M3</version>
+                    <version>3.1.0</version>
                     <executions>
                         <execution>
                             <id>enforce</id>
                             <configuration>
                                 <rules>
-                                    <dependencyConvergence />
+                                    <dependencyConvergence/>
                                 </rules>
                             </configuration>
                             <goals>
@@ -555,7 +526,7 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-annotations</artifactId>
-                <version>1.0.7</version>
+                <version>1.0.8</version>
             </dependency>
 
             <dependency>
@@ -705,16 +676,23 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-xslt-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
-                <version>2.3.31</version>
+                <version>${freemarker.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
                 <version>6.0.3</version>
-                <scope>provided</scope>  <!-- felix-main provides everything in felix-framework (and more), override here to provent both JARs from being included in the build. -->
+                <scope>provided
+                </scope>  <!-- felix-main provides everything in felix-framework (and more), override here to provent both JARs from being included in the build. -->
             </dependency>
 
             <dependency>
@@ -818,7 +796,7 @@
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.el</artifactId>
-                <version>3.0.1-b11</version>
+                <version>3.0.1-b12</version>
             </dependency>
 
             <dependency>
@@ -939,7 +917,7 @@
             <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
-                <version>1.4</version>
+                <version>1.5</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -954,7 +932,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
-                <version>1.8</version>
+                <version>1.10.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-digester</groupId>
@@ -1076,7 +1054,8 @@
                 <version>4.3.1</version>
                 <exclusions>
                     <!-- The mockito-core artifact and easymock artifact use different versions of objenesis (2.6 vs 3.1).
-                         Excluding the older version here to pass enforcer.  When next upgrading mockito-core, confirm whether this exclusion is still required. -->
+                         Excluding the older version here to pass enforcer. When next upgrading mockito-core,
+                         confirm whether this exclusion is still required. -->
                     <exclusion>
                         <groupId>org.objenesis</groupId>
                         <artifactId>objenesis</artifactId>
@@ -1112,9 +1091,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>7.1.0</version>
-                <scope>compile</scope>
-                <optional>true</optional>
+                <version>7.5</version><!-- the latest version supporting Java 1.8 -->
             </dependency>
 
             <dependency>
@@ -1204,13 +1181,13 @@
             <dependency>
                 <groupId>org.jboss.weld</groupId>
                 <artifactId>weld-core</artifactId>
-                <version>2.2.16.SP1</version>
+                <version>2.4.8.Final</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se</artifactId>
-                <version>2.2.16.SP1</version>
+                <version>2.4.8.Final</version>
             </dependency>
 
             <dependency>

@@ -32,7 +32,7 @@ Only the following validators are supported:
 END SNIPPET: supported-validators
 -->
 <#if ((parameters.validate!false == true) && (parameters.performValidation!false == true))>
-<script type="text/javascript" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> >
+<@s.script type="text/javascript">
     function validateForm_${parameters.escapedId}() {
         <#--
             In case of multiselect fields return only the first value.
@@ -75,7 +75,7 @@ END SNIPPET: supported-validators
 
             var error = "${validator.getMessage(action)?js_string}";
             var fieldValue = getFieldValue(field);
-            
+
             <#if validator.validatorType = "required">
             if (fieldValue === "") {
                 addError(field, error);
@@ -152,5 +152,5 @@ END SNIPPET: supported-validators
 
         return !errors;
     }
-</script>
+</@s.script>
 </#if>

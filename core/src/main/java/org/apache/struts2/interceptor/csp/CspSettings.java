@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.interceptor.csp;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -42,9 +43,21 @@ public interface CspSettings {
     String HTTPS = "https:";
     String CSP_REPORT_TYPE = "application/csp-report";
 
+    /**
+     * @deprecated use {@link #addCspHeaders(HttpServletRequest, HttpServletResponse)} instead
+     */
+    @Deprecated
     void addCspHeaders(HttpServletResponse response);
-    // sets the uri where csp violation reports will be sent
+
+    void addCspHeaders(HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * Sets the uri where csp violation reports will be sent
+     */
     void setReportUri(String uri);
-    // sets CSP headers in enforcing mode when true, and report-only when false
+
+    /**
+     * Sets CSP headers in enforcing mode when true, and report-only when false
+     */
     void setEnforcingMode(boolean value);
 }

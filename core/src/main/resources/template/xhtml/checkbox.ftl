@@ -106,12 +106,11 @@ ${parameters.label}<#t/>
 </#if>
     </td>
     <td class="tdCheckboxInput">
-
 <#if (labelPos!"") != 'top'>
  <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
 </#if>
 <#if (labelPos!"") != 'top' && (labelPos!"") != 'left'>
-<#if parameters.label??> <label<#t/>
+<#if parameters.label??><label<#rt/>
 <#if parameters.id??>
  for="${parameters.id}"<#rt/>
 </#if>
@@ -124,4 +123,4 @@ ${parameters.label}<#t/>
 </#if>
 </#if>
 </#if>
- <#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" /><#nt/>
+<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" /><#nt/>

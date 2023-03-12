@@ -26,7 +26,13 @@ import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import ognl.*;
+import ognl.ClassResolver;
+import ognl.Ognl;
+import ognl.OgnlContext;
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.SimpleNode;
+import ognl.TypeConverter;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,7 +43,12 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
@@ -66,10 +77,12 @@ public class OgnlUtil {
     private Set<Class<?>> excludedClasses;
     private Set<Pattern> excludedPackageNamePatterns;
     private Set<String> excludedPackageNames;
+    private Set<Class<?>> excludedPackageExemptClasses;
 
     private Set<Class<?>> devModeExcludedClasses;
     private Set<Pattern> devModeExcludedPackageNamePatterns;
     private Set<String> devModeExcludedPackageNames;
+    private Set<Class<?>> devModeExcludedPackageExemptClasses;
 
     private Container container;
     private boolean allowStaticFieldAccess = true;
@@ -82,7 +95,9 @@ public class OgnlUtil {
      */
     @Deprecated
     public OgnlUtil() {
-        this(null, null);  // Instantiate default Expression and BeanInfo caches (null factories)
+        // Instantiate default Expression and BeanInfo caches (factories must be non-null).
+        this(new DefaultOgnlExpressionCacheFactory<String, Object>(),
+             new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
     }
 
     /**
@@ -96,23 +111,29 @@ public class OgnlUtil {
      * @param ognlExpressionCacheFactory factory for Expression cache instance.  If null, it uses a default
      * @param ognlBeanInfoCacheFactory factory for BeanInfo cache instance.  If null, it uses a default
      */
+    @Inject
     public OgnlUtil(
-            @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, required = false) ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
-            @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, required = false) BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
+            @Inject ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
+            @Inject BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
     ) {
+        if (ognlExpressionCacheFactory == null) {
+            throw new IllegalArgumentException("ExpressionCacheFactory parameter cannot be null");
+        }
+        if (ognlBeanInfoCacheFactory == null) {
+            throw new IllegalArgumentException("BeanInfoCacheFactory parameter cannot be null");
+        }
         excludedClasses = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         excludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
+        excludedPackageExemptClasses = Collections.unmodifiableSet(new HashSet<>());
 
         devModeExcludedClasses = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNamePatterns = Collections.unmodifiableSet(new HashSet<>());
         devModeExcludedPackageNames = Collections.unmodifiableSet(new HashSet<>());
+        devModeExcludedPackageExemptClasses = Collections.unmodifiableSet(new HashSet<>());
 
-        OgnlCacheFactory<String, Object> ognlExpressionCacheFactory1 = (ognlExpressionCacheFactory != null ? ognlExpressionCacheFactory : new DefaultOgnlExpressionCacheFactory<>());
-        OgnlCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory1 = (ognlBeanInfoCacheFactory != null ? ognlBeanInfoCacheFactory : new DefaultOgnlBeanInfoCacheFactory<>());
-
-        this.expressionCache = ognlExpressionCacheFactory1.buildOgnlCache();
-        this.beanInfoCache = ognlBeanInfoCacheFactory1.buildOgnlCache();
+        this.expressionCache = ognlExpressionCacheFactory.buildOgnlCache();
+        this.beanInfoCache = ognlBeanInfoCacheFactory.buildOgnlCache();
     }
 
     @Inject
@@ -153,7 +174,7 @@ public class OgnlUtil {
     protected void setExcludedClasses(String commaDelimitedClasses) {
         Set<Class<?>> excludedClasses = new HashSet<>();
         excludedClasses.addAll(this.excludedClasses);
-        excludedClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
+        excludedClasses.addAll(parseClasses(commaDelimitedClasses));
         this.excludedClasses = Collections.unmodifiableSet(excludedClasses);
     }
 
@@ -161,11 +182,11 @@ public class OgnlUtil {
     protected void setDevModeExcludedClasses(String commaDelimitedClasses) {
         Set<Class<?>> excludedClasses = new HashSet<>();
         excludedClasses.addAll(this.devModeExcludedClasses);
-        excludedClasses.addAll(parseExcludedClasses(commaDelimitedClasses));
+        excludedClasses.addAll(parseClasses(commaDelimitedClasses));
         this.devModeExcludedClasses = Collections.unmodifiableSet(excludedClasses);
     }
 
-    private Set<Class<?>> parseExcludedClasses(String commaDelimitedClasses) {
+    private Set<Class<?>> parseClasses(String commaDelimitedClasses) {
         Set<String> classNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
         Set<Class<?>> classes = new HashSet<>();
 
@@ -173,7 +194,7 @@ public class OgnlUtil {
             try {
                 classes.add(Class.forName(className));
             } catch (ClassNotFoundException e) {
-                throw new ConfigurationException("Cannot load excluded class: " + className, e);
+                throw new ConfigurationException("Cannot load class for exclusion/exemption configuration: " + className, e);
             }
         }
 
@@ -223,6 +244,22 @@ public class OgnlUtil {
         this.devModeExcludedPackageNames = Collections.unmodifiableSet(excludedPackageNames);
     }
 
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
+    public void setExcludedPackageExemptClasses(String commaDelimitedClasses) {
+        Set<Class<?>> excludedPackageExemptClasses = new HashSet<>();
+        excludedPackageExemptClasses.addAll(this.excludedPackageExemptClasses);
+        excludedPackageExemptClasses.addAll(parseClasses(commaDelimitedClasses));
+        this.excludedPackageExemptClasses = Collections.unmodifiableSet(excludedPackageExemptClasses);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
+    public void setDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
+        Set<Class<?>> excludedPackageExemptClasses = new HashSet<>();
+        excludedPackageExemptClasses.addAll(this.devModeExcludedPackageExemptClasses);
+        excludedPackageExemptClasses.addAll(parseClasses(commaDelimitedClasses));
+        this.devModeExcludedPackageExemptClasses = Collections.unmodifiableSet(excludedPackageExemptClasses);
+    }
+
     private Set<String> parseExcludedPackageNames(String commaDelimitedPackageNames) {
         return TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
     }
@@ -237,6 +274,10 @@ public class OgnlUtil {
 
     public Set<String> getExcludedPackageNames() {
         return excludedPackageNames;
+    }
+
+    public Set<Class<?>> getExcludedPackageExemptClasses() {
+        return excludedPackageExemptClasses;
     }
 
     @Inject
@@ -262,10 +303,10 @@ public class OgnlUtil {
         try {
             if (maxLength == null || maxLength.isEmpty()) {
                 Ognl.applyExpressionMaxLength(null);
-                LOG.info("OGNL Expression Max Length disabled.");
+                LOG.warn("OGNL Expression Max Length disabled.");
             } else {
                 Ognl.applyExpressionMaxLength(Integer.parseInt(maxLength));
-                LOG.info("OGNL Expression Max Length enabled with {}.", maxLength);
+                LOG.debug("OGNL Expression Max Length enabled with {}.", maxLength);
             }
         } catch (Exception ex) {
             LOG.error("Unable to set OGNL Expression Max Length {}.", maxLength);  // Help configuration debugging.
@@ -841,10 +882,12 @@ public class OgnlUtil {
             memberAccess.setExcludedClasses(devModeExcludedClasses);
             memberAccess.setExcludedPackageNamePatterns(devModeExcludedPackageNamePatterns);
             memberAccess.setExcludedPackageNames(devModeExcludedPackageNames);
+            memberAccess.setExcludedPackageExemptClasses(devModeExcludedPackageExemptClasses);
         } else {
             memberAccess.setExcludedClasses(excludedClasses);
             memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
             memberAccess.setExcludedPackageNames(excludedPackageNames);
+            memberAccess.setExcludedPackageExemptClasses(excludedPackageExemptClasses);
         }
 
         return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);

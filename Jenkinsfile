@@ -79,7 +79,7 @@ pipeline {
         }
         stage('Test') {
           steps {
-            sh './mvnw -B test'
+            sh './mvnw -B verify -Pcoverage -DskipAssembly'
           }
           post {
             always {
@@ -94,7 +94,7 @@ pipeline {
           }
           steps {
             withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-              sh './mvnw sonar:sonar -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN}'
+              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
             }
           }
         }
@@ -160,6 +160,7 @@ pipeline {
             branch 'master'
           }
           steps {
+            sh './mvnw -B package -DskipTests'
             sshPublisher(publishers: [
                 sshPublisherDesc(
                     configName: 'Nightlies',
@@ -167,7 +168,8 @@ pipeline {
                         sshTransfer(
                             remoteDirectory: '/struts/snapshot',
                             removePrefix: 'assembly/target/assembly/out',
-                            sourceFiles: 'assembly/target/assembly/out/struts-*.zip'
+                            sourceFiles: 'assembly/target/assembly/out/struts-*.zip',
+                            cleanRemote: true
                         )
                     ],
                     verbose: true

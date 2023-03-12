@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.*;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

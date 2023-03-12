@@ -41,15 +41,6 @@ public class CoepInterceptorTest extends StrutsInternalTestCase {
     private final String HEADER_CONTENT = "require-corp";
 
 
-    public void testDisabled() throws Exception {
-        interceptor.setDisabled("true");
-
-        interceptor.intercept(mai);
-
-        String header = response.getHeader(COEP_ENFORCING_HEADER);
-        assertTrue("COEP is not disabled", Strings.isEmpty(header));
-    }
-
     public void testEnforcingHeader() throws Exception {
         interceptor.setEnforcingMode("true");
 

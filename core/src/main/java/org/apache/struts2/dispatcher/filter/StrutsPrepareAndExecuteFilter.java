@@ -23,10 +23,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.ExecuteOperations;
 import org.apache.struts2.dispatcher.InitOperations;
 import org.apache.struts2.dispatcher.PrepareOperations;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -50,7 +50,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
     protected PrepareOperations prepare;
     protected ExecuteOperations execute;
-    protected List<Pattern> excludedPatterns = null;
+    protected List<Pattern> excludedPatterns;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = createInitOperations();
@@ -62,6 +62,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
             prepare = createPrepareOperations(dispatcher);
             execute = createExecuteOperations(dispatcher);
+            // Note: Currently, excluded patterns are not refreshed following an XWork config reload
             this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);
@@ -106,7 +107,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
     /**
      * Callback for post initialization
      *
-     * @param dispatcher the dispatcher
+     * @param dispatcher   the dispatcher
      * @param filterConfig the filter config
      */
     protected void postInit(Dispatcher dispatcher, FilterConfig filterConfig) {
@@ -118,31 +119,45 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         try {
+            prepare.trackRecursion(request);
             String uri = RequestUtils.getUri(request);
-            if (excludedPatterns != null && prepare.isUrlExcluded(request, excludedPatterns)) {
-                LOG.trace("Request {} is excluded from handling by Struts, passing request to other filters", uri);
+            if (prepare.isUrlExcluded(request, excludedPatterns)) {
+                LOG.trace("Request: {} is excluded from handling by Struts, passing request to other filters", uri);
                 chain.doFilter(request, response);
             } else {
-                LOG.trace("Checking if {} is a static resource", uri);
-                boolean handled = execute.executeStaticResourceRequest(request, response);
-                if (!handled) {
-                    LOG.trace("Uri {} is not a static resource, assuming action", uri);
-                    prepare.setEncodingAndLocale(request, response);
-                    prepare.createActionContext(request, response);
-                    prepare.assignDispatcherToThread();
-                    HttpServletRequest wrappedRequest = prepare.wrapRequest(request);
-                    ActionMapping mapping = prepare.findActionMapping(wrappedRequest, response, true);
-                    if (mapping == null) {
-                        LOG.trace("Cannot find mapping for {}, passing to other filters", uri);
-                        chain.doFilter(request, response);
-                    } else {
-                        LOG.trace("Found mapping {} for {}", mapping, uri);
-                        execute.executeAction(wrappedRequest, response, mapping);
-                    }
-                }
+                tryHandleRequest(chain, request, response, uri);
             }
         } finally {
             prepare.cleanupRequest(request);
+        }
+    }
+
+    private void tryHandleRequest(FilterChain chain, HttpServletRequest request, HttpServletResponse response, String uri) throws IOException, ServletException {
+        LOG.trace("Checking if: {} is a static resource", uri);
+        boolean handled = execute.executeStaticResourceRequest(request, response);
+        if (!handled) {
+            LOG.trace("Uri: {} is not a static resource, assuming action", uri);
+            handleRequest(chain, request, response, uri);
+        }
+    }
+
+    private void handleRequest(FilterChain chain, HttpServletRequest request, HttpServletResponse response, String uri) throws ServletException, IOException {
+        prepare.setEncodingAndLocale(request, response);
+        prepare.createActionContext(request, response);
+        prepare.assignDispatcherToThread();
+
+        HttpServletRequest wrappedRequest = prepare.wrapRequest(request);
+        try {
+            ActionMapping mapping = prepare.findActionMapping(wrappedRequest, response, true);
+            if (mapping == null) {
+                LOG.trace("Cannot find mapping for: {}, passing to other filters", uri);
+                chain.doFilter(request, response);
+            } else {
+                LOG.trace("Found mapping: {} for: {}", mapping, uri);
+                execute.executeAction(wrappedRequest, response, mapping);
+            }
+        } finally {
+            prepare.cleanupWrappedRequest(wrappedRequest);
         }
     }
 

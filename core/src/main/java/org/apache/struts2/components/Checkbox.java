@@ -18,13 +18,14 @@
  */
 package org.apache.struts2.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -46,15 +47,19 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
- *
  */
 @StrutsTag(
-    name="checkbox",
-    tldTagClass="org.apache.struts2.views.jsp.ui.CheckboxTag",
-    description="Render a checkbox input field",
-    allowDynamicAttributes=true)
+    name = "checkbox",
+    tldTagClass = "org.apache.struts2.views.jsp.ui.CheckboxTag",
+    description = "Render a checkbox input field",
+    allowDynamicAttributes = true)
 public class Checkbox extends UIBean {
-    final public static String TEMPLATE = "checkbox";
+
+    private static final String ATTR_SUBMIT_UNCHECKED = "submitUnchecked";
+
+    public static final String TEMPLATE = "checkbox";
+
+    private String submitUncheckedGlobal;
 
     protected String fieldValue;
     protected String submitUnchecked;
@@ -69,46 +74,45 @@ public class Checkbox extends UIBean {
 
     protected void evaluateExtraParams() {
         if (fieldValue != null) {
-            addParameter("fieldValue", findString(fieldValue));
+            addParameter(ATTR_FIELD_VALUE, findString(fieldValue));
         } else {
-            addParameter("fieldValue", "true");
+            addParameter(ATTR_FIELD_VALUE, "true");
         }
 
         if (submitUnchecked != null) {
             Object parsedValue = findValue(submitUnchecked, Boolean.class);
-            addParameter("submitUnchecked", parsedValue == null ? Boolean.valueOf(submitUnchecked) : parsedValue);
+            addParameter(ATTR_SUBMIT_UNCHECKED, parsedValue == null ? Boolean.valueOf(submitUnchecked) : parsedValue);
+        } else if (submitUncheckedGlobal != null) {
+            addParameter(ATTR_SUBMIT_UNCHECKED, Boolean.parseBoolean(submitUncheckedGlobal));
         } else {
-            addParameter("submitUnchecked", false);
+            addParameter(ATTR_SUBMIT_UNCHECKED, false);
         }
     }
 
-    protected Class getValueClassType() {
+    @Override
+    protected Class<?> getValueClassType() {
         return Boolean.class; // for checkboxes, everything needs to end up as a Boolean
     }
 
-    @StrutsTagAttribute(description="The actual HTML value attribute of the checkbox.", defaultValue="true")
+    @Inject(value = StrutsConstants.STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED, required = false)
+    public void setSubmitUncheckedGlobal(String submitUncheckedGlobal) {
+        this.submitUncheckedGlobal = submitUncheckedGlobal;
+    }
+
+    @StrutsTagAttribute(description = "The actual HTML value attribute of the checkbox.", defaultValue = "true")
     public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;
     }
 
-    @StrutsTagAttribute(description="If set to true, unchecked elements will be submitted with the form.", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "If set to true, unchecked elements will be submitted with the form. " +
+        "Since Struts 6.1.1 you can use a constant \"" + StrutsConstants.STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED + "\" to set this attribute globally",
+        type = "Boolean", defaultValue = "false")
     public void setSubmitUnchecked(String submitUnchecked) {
         this.submitUnchecked = submitUnchecked;
     }
 
-    /**
-     * Deprecated since 2.5.27
-     * @deprecated use {@link #setLabelPosition(String)} instead
-     */
-    @Deprecated
     @Override
-    @StrutsTagAttribute(description="(Deprecated) Define label position of form element (top/left), also 'right' is supported when using 'xhtml' theme")
-    public void setLabelposition(String labelPosition) {
-        super.setLabelPosition(labelPosition);
-    }
-
-    @Override
-    @StrutsTagAttribute(description="Define label position of form element (top/left), also 'right' is supported when using 'xhtml' theme")
+    @StrutsTagAttribute(description = "Define label position of form element (top/left), also 'right' is supported when using 'xhtml' theme")
     public void setLabelPosition(String labelPosition) {
         super.setLabelPosition(labelPosition);
     }

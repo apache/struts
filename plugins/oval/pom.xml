@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>6.1.0-SNAPSHOT</version>
+        <version>6.2.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-oval-plugin</artifactId>
@@ -36,6 +36,12 @@
         <dependency>
             <groupId>net.sf.oval</groupId>
             <artifactId>oval</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.thoughtworks.xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
          <dependency>

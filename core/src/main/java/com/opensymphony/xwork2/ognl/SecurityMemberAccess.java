@@ -47,6 +47,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<Class<?>> excludedClasses = Collections.emptySet();
     private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
     private Set<String> excludedPackageNames = Collections.emptySet();
+    private Set<Class<?>> excludedPackageExemptClasses = Collections.emptySet();
     private boolean disallowProxyMemberAccess;
 
     /**
@@ -117,23 +118,23 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         final Class<?> memberClass = member.getDeclaringClass();
+        // target can be null in case of accessing static fields, since OGNL 3.2.8
+        final Class<?> targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
 
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", member);
             return false;
         }
 
-        // target can be null in case of accessing static fields, since OGNL 3.2.8
-        final Class<?> targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
-
-        if (isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
-            LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!", targetClass.getPackage(), targetClass,
-                target, memberClass.getPackage(), member);
+        if (isClassExcluded(targetClass)) {
+            LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
             return false;
         }
 
-        if (isClassExcluded(targetClass)) {
-            LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
+        if (!isClassExcludedPackageExempt(targetClass) && !isClassExcludedPackageExempt(memberClass)
+                && isPackageExcluded(targetClass.getPackage(), memberClass.getPackage())) {
+            LOG.warn("Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!",
+                    targetClass.getPackage(), targetClass, target, memberClass.getPackage(), member);
             return false;
         }
 
@@ -234,6 +235,15 @@ public class SecurityMemberAccess implements MemberAccess {
         return false;
     }
 
+    protected boolean isClassExcludedPackageExempt(Class<?> clazz) {
+        for (Class<?> excludedPackageExemptClass : excludedPackageExemptClasses) {
+            if (clazz.isAssignableFrom(excludedPackageExemptClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected boolean isAcceptableProperty(String name) {
         return name == null || ((!isExcluded(name)) && isAccepted(name));
     }
@@ -285,6 +295,10 @@ public class SecurityMemberAccess implements MemberAccess {
 
     public void setExcludedPackageNames(Set<String> excludedPackageNames) {
         this.excludedPackageNames = excludedPackageNames;
+    }
+
+    public void setExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
+        this.excludedPackageExemptClasses = excludedPackageExemptClasses;
     }
 
     public void setDisallowProxyMemberAccess(boolean disallowProxyMemberAccess) {

@@ -32,42 +32,46 @@ import java.io.StringReader;
  */
 public class DomHelperTest extends TestCase {
 
-    private String xml = "<!DOCTYPE foo [\n" +
-                         "<!ELEMENT foo (bar)>\n" +
-                         "<!ELEMENT bar (#PCDATA)>\n" +
-                         "]>\n" +
-                         "<foo>\n" +
-                         " <bar/>\n" +
-                         "</foo>\n";
-    
-    public void testParse() throws Exception {
+    private final String xml = "<!DOCTYPE foo [<!ELEMENT foo (bar)><!ELEMENT bar (#PCDATA)>]>\n<foo>\n<bar/>\n</foo>\n";
+
+    public void testParse() {
         InputSource in = new InputSource(new StringReader(xml));
         in.setSystemId("foo://bar");
-        
+
         Document doc = DomHelper.parse(in);
         assertNotNull(doc);
-        assertTrue("Wrong root node",
-            "foo".equals(doc.getDocumentElement().getNodeName()));
-        
+        assertEquals("Wrong root node", "foo", doc.getDocumentElement().getNodeName());
+
         NodeList nl = doc.getElementsByTagName("bar");
-        assertTrue(nl.getLength() == 1);
-        
-        
-        
+        assertEquals(1, nl.getLength());
     }
-    
-    public void testGetLocationObject() throws Exception {
+
+    public void testGetLocationObject() {
         InputSource in = new InputSource(new StringReader(xml));
         in.setSystemId("foo://bar");
-        
+
         Document doc = DomHelper.parse(in);
-        
+
         NodeList nl = doc.getElementsByTagName("bar");
-        
-        Location loc = DomHelper.getLocationObject((Element)nl.item(0));
-        
+
+        Location loc = DomHelper.getLocationObject((Element) nl.item(0));
+
         assertNotNull(loc);
-        assertTrue("Should be line 6, was "+loc.getLineNumber(), 
-            6==loc.getLineNumber());
+        assertEquals("Should be line 3, was " + loc.getLineNumber(), 3, loc.getLineNumber());
+    }
+
+    public void testExternalEntities() {
+        String dtdFile = getClass().getResource("/author.dtd").getPath();
+        String xml = "<!DOCTYPE foo [<!ELEMENT foo (bar)><!ELEMENT bar (#PCDATA)><!ENTITY writer SYSTEM \"file://" + dtdFile + "\">]><foo><bar>&writer;</bar></foo>";
+        InputSource in = new InputSource(new StringReader(xml));
+        in.setSystemId("foo://bar");
+
+        Document doc = DomHelper.parse(in);
+        assertNotNull(doc);
+        assertEquals("Wrong root node", "foo", doc.getDocumentElement().getNodeName());
+
+        NodeList nl = doc.getElementsByTagName("bar");
+        assertEquals(1, nl.getLength());
+        assertNull(nl.item(0).getNodeValue());
     }
 }

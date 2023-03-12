@@ -243,7 +243,8 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         EasyMock.expect(servletContext.getRealPath("/template/~~~xhtml/dynamic-attributes.ftl")).andReturn(file.getAbsolutePath());
 
         file = new File(ClassLoaderUtil.getResource("template/simple/nonce.ftl", getClass()).toURI());
-        EasyMock.expect(servletContext.getRealPath("/template/simple/nonce.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/xhtml/nonce.ftl")).andReturn(file.getAbsolutePath());
+        EasyMock.expect(servletContext.getRealPath("/template/~~~xhtml/nonce.ftl")).andReturn(file.getAbsolutePath());
 
         file = new File(ClassLoaderUtil.getResource("template/simple/script.ftl", getClass()).toURI());
         EasyMock.expect(servletContext.getRealPath("/template/simple/script.ftl")).andReturn(file.getAbsolutePath());
@@ -259,6 +260,8 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         EasyMock.replay(servletContext);
 
         init();
+        // create session
+        request.getSession();
 
         request.setRequestURI("/tutorial/test10.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);

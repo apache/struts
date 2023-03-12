@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>6.1.0-SNAPSHOT</version>
+        <version>6.2.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-plugins</artifactId>
@@ -58,6 +58,7 @@
         <module>testng</module>
         <module>tiles</module>
         <module>velocity</module>
+        <module>xslt</module>
     </modules>
 
     <dependencies>

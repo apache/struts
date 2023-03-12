@@ -56,6 +56,9 @@ public final class StrutsConstants {
     /** Comma separated list of patterns (java.util.regex.Pattern) to be excluded from Struts2-processing */
     public static final String STRUTS_ACTION_EXCLUDE_PATTERN = "struts.action.excludePattern";
 
+    /** A custom separator used to split list of patterns (java.util.regex.Pattern) to be excluded from Struts2-processing */
+    public static final String STRUTS_ACTION_EXCLUDE_PATTERN_SEPARATOR = "struts.action.excludePattern.separator";
+
     /** Whether to use the response encoding (JSP page encoding) for s:include tag processing (false - use STRUTS_I18N_ENCODING - by default) */
     public static final String STRUTS_TAG_INCLUDETAG_USERESPONSEENCODING = "struts.tag.includetag.useResponseEncoding";
 
@@ -139,6 +142,9 @@ public final class StrutsConstants {
     /** The maximize size of a multipart request (file upload) */
     public static final String STRUTS_MULTIPART_MAXSIZE = "struts.multipart.maxSize";
 
+    /** The maximized number of files allowed to upload */
+    public static final String STRUTS_MULTIPART_MAXFILES = "struts.multipart.maxFiles";
+
     /** The directory to use for storing uploaded files */
     public static final String STRUTS_MULTIPART_SAVEDIR = "struts.multipart.saveDir";
 
@@ -173,9 +179,6 @@ public final class StrutsConstants {
     /** Uses different logic to construct beans, see https://issues.apache.org/jira/browse/WW-4110 */
     @Deprecated
     public static final String STRUTS_OBJECTFACTORY_SPRING_ENABLE_AOP_SUPPORT = "struts.objectFactory.spring.enableAopSupport";
-
-    /** Whether or not XSLT templates should not be cached */
-    public static final String STRUTS_XSLT_NOCACHE = "struts.xslt.nocache";
 
     /** Location of additional configuration properties files to load */
     public static final String STRUTS_CUSTOM_PROPERTIES = "struts.custom.properties";
@@ -376,7 +379,7 @@ public final class StrutsConstants {
     public static final String STRUTS_CONVERTER_FILE_PROCESSOR = "struts.converter.file.processor";
     public static final String STRUTS_CONVERTER_ANNOTATION_PROCESSOR = "struts.converter.annotation.processor";
     public static final String STRUTS_CONVERTER_CREATOR = "struts.converter.creator";
-    public static final String STRUTS_CONVERTER_HOLDER = "struts..converter.holder";
+    public static final String STRUTS_CONVERTER_HOLDER = "struts.converter.holder";
 
     public static final String STRUTS_EXPRESSION_PARSER = "struts.expression.parser";
 
@@ -398,7 +401,11 @@ public final class StrutsConstants {
     /** Enables action: prefix */
     public static final String STRUTS_MAPPER_ACTION_PREFIX_ENABLED = "struts.mapper.action.prefix.enabled";
 
-    /** Enables access to actions in other namespaces than current with action: prefix */
+    /**
+     * Enables access to actions in other namespaces than current with action: prefix
+     * @deprecated it will be removed soon, please refactor your application
+     */
+    @Deprecated
     public static final String STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES = "struts.mapper.action.prefix.crossNamespaces";
 
     public static final String DEFAULT_TEMPLATE_TYPE_CONFIG_KEY = "struts.ui.templateSuffix";
@@ -410,11 +417,14 @@ public final class StrutsConstants {
     public static final String STRUTS_EXCLUDED_CLASSES = "struts.excludedClasses";
     public static final String STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS = "struts.excludedPackageNamePatterns";
     public static final String STRUTS_EXCLUDED_PACKAGE_NAMES = "struts.excludedPackageNames";
+    public static final String STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES = "struts.excludedPackageExemptClasses";
 
     /** Comma delimited set of excluded classes and package names which cannot be accessed via expressions in devMode */
     public static final String STRUTS_DEV_MODE_EXCLUDED_CLASSES = "struts.devMode.excludedClasses";
     public static final String STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS = "struts.devMode.excludedPackageNamePatterns";
     public static final String STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES = "struts.devMode.excludedPackageNames";
+    public static final String STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES = "struts.devMode.excludedPackageExemptClasses";
+
 
     /** Dedicated services to check if passed string is excluded/accepted */
     public static final String STRUTS_EXCLUDED_PATTERNS_CHECKER = "struts.excludedPatterns.checker";
@@ -450,4 +460,12 @@ public final class StrutsConstants {
 
     /** See {@link org.apache.struts2.components.Date#setDateFormatter(DateFormatter)} */
     public static final String STRUTS_DATE_FORMATTER = "struts.date.formatter";
+
+    public static final String STRUTS_URL_QUERY_STRING_BUILDER = "struts.url.queryStringBuilder";
+    public static final String STRUTS_URL_QUERY_STRING_PARSER = "struts.url.queryStringParser";
+    public static final String STRUTS_URL_ENCODER = "struts.url.encoder";
+    public static final String STRUTS_URL_DECODER = "struts.url.decoder";
+
+    /** A global flag to set property {@link org.apache.struts2.components.Checkbox#setSubmitUnchecked(String)} */
+    public static final String STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED = "struts.ui.checkbox.submitUnchecked";
 }

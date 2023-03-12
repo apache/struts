@@ -22,12 +22,12 @@ import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.StrutsConstants;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.Optional;
+
+import static org.apache.struts2.StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD;
 
 
 /**
@@ -42,12 +42,11 @@ public class ConfigurationManager {
 
     protected static final Logger LOG = LogManager.getLogger(ConfigurationManager.class);
     protected Configuration configuration;
-    protected Lock providerLock = new ReentrantLock();
-    private List<ContainerProvider> containerProviders = new CopyOnWriteArrayList<>();
-    private List<PackageProvider> packageProviders = new CopyOnWriteArrayList<>();
+    private List<ContainerProvider> containerProviders = new ArrayList<>();
+    private List<PackageProvider> packageProviders = new ArrayList<>();
     protected String defaultFrameworkBeanName;
-    private boolean providersChanged = false;
-    private boolean reloadConfigs = true; // for the first time
+    private boolean providersChanged = true;
+    private boolean alwaysReloadConfigs = false;
 
     public ConfigurationManager(String name) {
         this.defaultFrameworkBeanName = name;
@@ -59,23 +58,55 @@ public class ConfigurationManager {
      * @see com.opensymphony.xwork2.config.impl.DefaultConfiguration
      */
     public synchronized Configuration getConfiguration() {
-        if (configuration == null) {
-            setConfiguration(createConfiguration(defaultFrameworkBeanName));
-            try {
-                configuration.reloadContainer(getContainerProviders());
-            } catch (ConfigurationException e) {
-                setConfiguration(null);
-                throw new ConfigurationException("Unable to load configuration.", e);
-            }
-        } else {
+        if (wasConfigInitialised()) {
             conditionalReload();
         }
-
         return configuration;
+    }
+
+    /**
+     * @return whether configuration was initialised (was null)
+     */
+    private boolean wasConfigInitialised() {
+        if (configuration == null) {
+            initialiseConfiguration();
+            return false;
+        }
+        return true;
+    }
+
+    protected void initialiseConfiguration() {
+        if (containerProviders.isEmpty()) {
+            addDefaultContainerProviders();
+        }
+        configuration = createConfiguration(defaultFrameworkBeanName);
+        try {
+            reload();
+        } catch (ConfigurationException e) {
+            configuration.destroy();
+            configuration = null;
+            providersChanged = true;
+            throw new ConfigurationException("Unable to load configuration.", e);
+        }
+    }
+
+    protected void addDefaultContainerProviders() {
+        containerProviders.add(new StrutsDefaultConfigurationProvider());
     }
 
     protected Configuration createConfiguration(String beanName) {
         return new DefaultConfiguration(beanName);
+    }
+
+    /**
+     * Clear all container providers and destroy managing Configuration instance
+     */
+    public synchronized void destroyConfiguration() {
+        clearContainerProviders();
+        if (configuration != null) {
+            configuration.destroy();
+            configuration = null;
+        }
     }
 
     public synchronized void setConfiguration(Configuration configuration) {
@@ -83,30 +114,13 @@ public class ConfigurationManager {
     }
 
     /**
-     * <p>
-     * Get the current list of ConfigurationProviders. If no custom ConfigurationProviders have been added, this method
-     * will return a list containing only a default ConfigurationProvider, {@link StrutsDefaultConfigurationProvider}.
-     * If a custom ConfigurationProvider has been added, then the StrutsDefaultConfigurationProvider must be added by hand.
-     * </p>
-     *
-     * <p>
-     * TODO: The lazy instantiation of XmlConfigurationProvider should be refactored to be elsewhere. The behavior described above seems unintuitive.
-     * </p>
+     * Get the current list of ConfigurationProviders.
      *
      * @return the list of registered ConfigurationProvider objects
      * @see ConfigurationProvider
      */
-    public List<ContainerProvider> getContainerProviders() {
-        providerLock.lock();
-        try {
-            if (containerProviders.size() == 0) {
-                containerProviders.add(new StrutsDefaultConfigurationProvider());
-            }
-
-            return containerProviders;
-        } finally {
-            providerLock.unlock();
-        }
+    public synchronized List<ContainerProvider> getContainerProviders() {
+        return new ArrayList<>(containerProviders);
     }
 
     /**
@@ -114,14 +128,9 @@ public class ConfigurationManager {
      *
      * @param containerProviders list of {@link ConfigurationProvider} to be set
      */
-    public void setContainerProviders(List<ContainerProvider> containerProviders) {
-        providerLock.lock();
-        try {
-            this.containerProviders = new CopyOnWriteArrayList<>(containerProviders);
-            providersChanged = true;
-        } finally {
-            providerLock.unlock();
-        }
+    public synchronized void setContainerProviders(List<ContainerProvider> containerProviders) {
+        this.containerProviders = new ArrayList<>(containerProviders);
+        providersChanged = true;
     }
 
     /**
@@ -130,22 +139,32 @@ public class ConfigurationManager {
      *
      * @param provider the ConfigurationProvider to register
      */
-    public void addContainerProvider(ContainerProvider provider) {
+    public synchronized void addContainerProvider(ContainerProvider provider) {
         if (!containerProviders.contains(provider)) {
             containerProviders.add(provider);
             providersChanged = true;
         }
     }
 
-    public void clearContainerProviders() {
-        for (ContainerProvider containerProvider : containerProviders) {
-            clearContainerProvider(containerProvider);
+    public synchronized void removeContainerProvider(ContainerProvider provider) {
+        if (containerProviders.remove(provider)) {
+            destroyContainerProvider(provider);
+            providersChanged = true;
         }
+    }
+
+    public synchronized void clearContainerProviders() {
+        destroyContainerProviders();
         containerProviders.clear();
         providersChanged = true;
     }
 
-    private void clearContainerProvider(ContainerProvider containerProvider) {
+    private void destroyContainerProviders() {
+        LOG.debug("Destroying all providers.");
+        containerProviders.forEach(this::destroyContainerProvider);
+    }
+
+    private void destroyContainerProvider(ContainerProvider containerProvider) {
         try {
             containerProvider.destroy();
         } catch (Exception e) {
@@ -154,79 +173,60 @@ public class ConfigurationManager {
     }
 
     /**
-     * Destroy its managing Configuration instance
-     */
-    public synchronized void destroyConfiguration() {
-        clearContainerProviders(); // let's destroy the ConfigurationProvider first
-        containerProviders = new CopyOnWriteArrayList<>();
-        if (configuration != null)
-            configuration.destroy(); // let's destroy it first, before nulling it.
-        configuration = null;
-    }
-
-
-    /**
      * Reloads the Configuration files if the configuration files indicate that they need to be reloaded.
      */
     public synchronized void conditionalReload() {
-        if (reloadConfigs || providersChanged) {
+        if (alwaysReloadConfigs || providersChanged) {
             LOG.debug("Checking ConfigurationProviders for reload.");
-            List<ContainerProvider> providers = getContainerProviders();
-            boolean reload = needReloadContainerProviders(providers);
-            if (!reload) {
-                reload = needReloadPackageProviders();
+            if (needReloadContainerProviders() || needReloadPackageProviders()) {
+                destroyAndReload();
             }
-            if (reload) {
-                reloadProviders(providers);
-            }
-            updateReloadConfigsFlag();
             providersChanged = false;
         }
     }
 
-    private void updateReloadConfigsFlag() {
-        reloadConfigs = Boolean.parseBoolean(configuration.getContainer().getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD));
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Updating [{}], current value is [{}], new value [{}]",
-                    StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, String.valueOf(reloadConfigs), String.valueOf(reloadConfigs));
+    private void updateAlwaysReloadFlag() {
+        boolean newValue = Boolean.parseBoolean(configuration.getContainer()
+                .getInstance(String.class, STRUTS_CONFIGURATION_XML_RELOAD));
+        if (alwaysReloadConfigs != newValue) {
+            LOG.debug(
+                    "Updating [{}], current value is [{}], new value [{}]",
+                    STRUTS_CONFIGURATION_XML_RELOAD,
+                    String.valueOf(alwaysReloadConfigs),
+                    String.valueOf(newValue));
+            alwaysReloadConfigs = newValue;
         }
     }
 
     private boolean needReloadPackageProviders() {
-        if (packageProviders != null) {
-            for (PackageProvider provider : packageProviders) {
-                if (provider.needsReload()) {
-                    LOG.info("Detected package provider [{}] needs to be reloaded. Reloading all providers.", provider);
-                    return true;
-                }
-            }
+        Optional<PackageProvider> provider = packageProviders.stream().filter(PackageProvider::needsReload).findAny();
+        if (provider.isPresent()) {
+            LOG.info("Detected package provider [{}] needs to be reloaded.", provider.get());
+            return true;
         }
         return false;
     }
 
-    private boolean needReloadContainerProviders(List<ContainerProvider> providers) {
-        for (ContainerProvider provider : providers) {
-            if (provider.needsReload()) {
-                LOG.info("Detected container provider [{}] needs to be reloaded. Reloading all providers.", provider);
-                return true;
-            }
+    private boolean needReloadContainerProviders() {
+        Optional<ContainerProvider> provider = containerProviders.stream().filter(ContainerProvider::needsReload).findAny();
+        if (provider.isPresent()) {
+            LOG.info("Detected container provider [{}] needs to be reloaded.", provider.get());
+            return true;
         }
         return false;
     }
 
-    private void reloadProviders(List<ContainerProvider> providers) {
-        for (ContainerProvider containerProvider : containerProviders) {
-            try {
-                containerProvider.destroy();
-            } catch (Exception e) {
-                LOG.warn("error while destroying configuration provider [{}]", containerProvider, e);
-            }
-        }
-        packageProviders = this.configuration.reloadContainer(providers);
+    public synchronized void destroyAndReload() {
+        destroyContainerProviders();
+        reload();
     }
 
     public synchronized void reload() {
-        packageProviders = getConfiguration().reloadContainer(getContainerProviders());
+        if (wasConfigInitialised()) {
+            LOG.debug("Reloading all providers.");
+            packageProviders = configuration.reloadContainer(containerProviders);
+            providersChanged = false;
+            updateAlwaysReloadFlag();
+        }
     }
-
 }

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-apps</artifactId>
-        <version>6.1.0-SNAPSHOT</version>
+        <version>6.2.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-showcase</artifactId>
@@ -97,6 +97,11 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-velocity-plugin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-xslt-plugin</artifactId>
         </dependency>
 
         <dependency>
@@ -237,6 +242,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <argLine>@{argLine}</argLine>
                     <excludes>
                         <exclude>it/**</exclude>
                         <exclude>**/*$*</exclude>

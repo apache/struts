@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import org.apache.commons.fileupload.FileCountLimitExceededException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
@@ -35,7 +36,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
@@ -65,9 +72,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         } catch (FileUploadException e) {
             LOG.warn("Request exceeded size limit!", e);
             LocalizedMessage errorMessage;
-            if(e instanceof FileUploadBase.SizeLimitExceededException) {
+            if (e instanceof FileUploadBase.SizeLimitExceededException) {
                 FileUploadBase.SizeLimitExceededException ex = (FileUploadBase.SizeLimitExceededException) e;
                 errorMessage = buildErrorMessage(e, new Object[]{ex.getPermittedSize(), ex.getActualSize()});
+            } else if (e instanceof FileCountLimitExceededException) {
+                FileCountLimitExceededException ex = (FileCountLimitExceededException) e;
+                errorMessage = buildErrorMessage(e, new Object[]{ex.getLimit()});
             } else {
                 errorMessage = buildErrorMessage(e, new Object[]{});
             }
@@ -150,7 +160,12 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     protected ServletFileUpload createServletFileUpload(DiskFileItemFactory fac) {
         ServletFileUpload upload = new ServletFileUpload(fac);
-        upload.setSizeMax(maxSize);
+        if (maxSize != null) {
+            upload.setSizeMax(maxSize);
+        }
+        if (maxFiles != null) {
+            upload.setFileCountMax(maxFiles);
+        }
         return upload;
     }
 
@@ -316,14 +331,14 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     /* (non-Javadoc)
-    * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
-    */
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
+     */
     public void cleanUp() {
         Set<String> names = files.keySet();
         for (String name : names) {
             List<FileItem> items = files.get(name);
             for (FileItem item : items) {
-                LOG.debug("Removing file {} {}", name, item );
+                LOG.debug("Removing file {} {}", name, item);
                 if (!item.isInMemory()) {
                     item.delete();
                 }

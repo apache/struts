@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>6.1.0-SNAPSHOT</version>
+        <version>6.2.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-embeddedjsp-plugin</artifactId>
@@ -97,6 +97,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <argLine>@{argLine}</argLine>
                     <additionalClasspathElements>
                         <element>${project.build.testOutputDirectory}/jsps.jar</element>
                     </additionalClasspathElements>

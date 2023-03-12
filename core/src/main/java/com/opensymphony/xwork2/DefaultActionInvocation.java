@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.interceptor.ConditionalInterceptor;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.interceptor.WithLazyParams;
@@ -73,7 +74,7 @@ public class DefaultActionInvocation implements ActionInvocation {
     protected UnknownHandlerManager unknownHandlerManager;
     protected OgnlUtil ognlUtil;
     protected AsyncManager asyncManager;
-    protected Callable asyncAction;
+    protected Callable<?> asyncAction;
     protected WithLazyParams.LazyParamInjector lazyParamInjector;
 
     public DefaultActionInvocation(final Map<String, Object> extraContext, final boolean pushAction) {
@@ -101,7 +102,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         this.container = cont;
     }
 
-    @Inject(required=false)
+    @Inject(required = false)
     public void setActionEventListener(ActionEventListener listener) {
         this.actionEventListener = listener;
     }
@@ -111,7 +112,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         this.ognlUtil = ognlUtil;
     }
 
-    @Inject(required=false)
+    @Inject(required = false)
     public void setAsyncManager(AsyncManager asyncManager) {
         this.asyncManager = asyncManager;
     }
@@ -214,7 +215,7 @@ public class DefaultActionInvocation implements ActionInvocation {
         } catch (NullPointerException e) {
             LOG.debug("Got NPE trying to read result configuration for resultCode [{}]", resultCode);
         }
-        
+
         if (resultConfig == null) {
             // If no result is found for the given resultCode, try to get a wildcard '*' match.
             resultConfig = results.get("*");
@@ -248,7 +249,12 @@ public class DefaultActionInvocation implements ActionInvocation {
                 if (interceptor instanceof WithLazyParams) {
                     interceptor = lazyParamInjector.injectParams(interceptor, interceptorMapping.getParams(), invocationContext);
                 }
-                resultCode = interceptor.intercept(DefaultActionInvocation.this);
+                if (interceptor instanceof ConditionalInterceptor) {
+                    resultCode = executeConditional((ConditionalInterceptor) interceptor);
+                } else {
+                    LOG.debug("Executing normal interceptor: {}", interceptorMapping.getName());
+                    resultCode = interceptor.intercept(this);
+                }
             } else {
                 resultCode = invokeActionOnly();
             }
@@ -268,9 +274,7 @@ public class DefaultActionInvocation implements ActionInvocation {
                 if (preResultListeners != null) {
                     LOG.trace("Executing PreResultListeners for result [{}]", result);
 
-                    for (Object preResultListener : preResultListeners) {
-                        PreResultListener listener = (PreResultListener) preResultListener;
-
+                    for (PreResultListener listener : preResultListeners) {
                         listener.beforeResult(this, resultCode);
                     }
                 }
@@ -287,6 +291,16 @@ public class DefaultActionInvocation implements ActionInvocation {
         }
 
         return resultCode;
+    }
+
+    protected String executeConditional(ConditionalInterceptor conditionalInterceptor) throws Exception {
+        if (conditionalInterceptor.shouldIntercept(this)) {
+            LOG.debug("Executing conditional interceptor: {}", conditionalInterceptor.getClass().getSimpleName());
+            return conditionalInterceptor.intercept(this);
+        } else {
+            LOG.debug("Interceptor: {} is disabled, skipping to next", conditionalInterceptor.getClass().getSimpleName());
+            return this.invoke();
+        }
     }
 
     public String invokeActionOnly() throws Exception {
@@ -314,7 +328,7 @@ public class DefaultActionInvocation implements ActionInvocation {
                 gripe = "Unable to instantiate Action, " + proxy.getConfig().getClassName() + ",  defined for '" + proxy.getActionName() + "' in namespace '" + proxy.getNamespace() + "'";
             }
 
-            gripe += (((" -- " + e.getMessage()) != null) ? e.getMessage() : " [no message in exception]");
+            gripe += e.getMessage();
             throw new StrutsException(gripe, e, proxy.getConfig());
         }
 
@@ -363,7 +377,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             result.execute(this);
         } else if (resultCode != null && !Action.NONE.equals(resultCode)) {
             throw new ConfigurationException("No result defined for action " + getAction().getClass().getName()
-                    + " and result " + getResultCode(), proxy.getConfig());
+                + " and result " + getResultCode(), proxy.getConfig());
         } else {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("No result returned for action {} at {}", getAction().getClass().getName(), proxy.getConfig().getLocation());
@@ -464,6 +478,7 @@ public class DefaultActionInvocation implements ActionInvocation {
 
     /**
      * Save the result to be used later.
+     *
      * @param actionConfig current ActionConfig
      * @param methodResult the result of the action.
      * @return the result code to process.
@@ -476,7 +491,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             container.inject(explicitResult);
             return null;
         } else if (methodResult instanceof Callable) {
-            asyncAction = (Callable) methodResult;
+            asyncAction = (Callable<?>) methodResult;
             return null;
         } else {
             return (String) methodResult;

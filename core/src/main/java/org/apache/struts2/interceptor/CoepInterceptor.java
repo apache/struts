@@ -47,7 +47,6 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
     private static final String COEP_REPORT_HEADER = "Cross-Origin-Embedder-Policy-Report-Only";
 
     private final Set<String> exemptedPaths = new HashSet<>();
-    private boolean disabled = false;
     private String header = COEP_ENFORCING_HEADER;
 
     @Override
@@ -59,14 +58,15 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
     @Override
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         HttpServletRequest req = invocation.getInvocationContext().getServletRequest();
-        HttpServletResponse res = invocation.getInvocationContext().getServletResponse();
         final String path = req.getContextPath();
 
         if (exemptedPaths.contains(path)) {
             // no need to add headers
-            LOG.debug("Skipping COEP header for exempted path {}", path);
-        } else if (!disabled) {
-            res.setHeader(header, REQUIRE_COEP_HEADER);
+            LOG.debug("Skipping COEP header for exempted path: {}", path);
+        } else {
+            LOG.trace("Applying COEP header: {} with value: {}", header, REQUIRE_COEP_HEADER);
+            HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
+            response.setHeader(header, REQUIRE_COEP_HEADER);
         }
     }
 
@@ -81,10 +81,6 @@ public class CoepInterceptor extends AbstractInterceptor implements PreResultLis
         } else {
             header = COEP_REPORT_HEADER;
         }
-    }
-
-    public void setDisabled(String value) {
-        disabled = Boolean.parseBoolean(value);
     }
 
 }

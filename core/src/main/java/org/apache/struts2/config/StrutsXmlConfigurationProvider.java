@@ -33,7 +33,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Override Xwork class so we can use an arbitrary config file
@@ -42,9 +46,9 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
 
     private static final Logger LOG = LogManager.getLogger(StrutsXmlConfigurationProvider.class);
     private File baseDir = null;
-    private String filename;
-    private String reloadKey;
-    private ServletContext servletContext;
+    private final String filename;
+    private final String reloadKey;
+    private final ServletContext servletContext;
 
     /**
      * Constructs the configuration provider
@@ -77,7 +81,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         this.servletContext = ctx;
         this.filename = filename;
         reloadKey = "configurationReload-" + filename;
-        Map<String,String> dtdMappings = new HashMap<String,String>(getDtdMappings());
+        Map<String,String> dtdMappings = new HashMap<>(getDtdMappings());
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1//EN", "struts-2.1.dtd");
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN", "struts-2.1.7.dtd");

@@ -25,7 +25,7 @@
 
   <!DOCTYPE validators PUBLIC
   		"-//Apache Struts//XWork Validator Definition 1.0//EN"
-  		"http://struts.apache.org/dtds/xwork-validator-definition-1.0.dtd">
+  		"https://struts.apache.org/dtds/xwork-validator-definition-1.0.dtd">
 -->
 
 <!ELEMENT validators (validator*)>

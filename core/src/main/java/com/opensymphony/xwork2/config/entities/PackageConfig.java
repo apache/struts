@@ -20,12 +20,9 @@ package com.opensymphony.xwork2.config.entities;
 
 import com.opensymphony.xwork2.util.location.Located;
 import com.opensymphony.xwork2.util.location.Location;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.*;
-
 
 /**
  * Configuration for Package.
@@ -33,13 +30,8 @@ import java.util.*;
  * <p>
  * In the xml configuration file this is defined as the <code>package</code> tag.
  * </p>
- *
- * @author Rainer Hermanns
- * @version $Revision$
  */
-public class PackageConfig extends Located implements Comparable, Serializable, InterceptorLocator {
-
-    private static final Logger LOG = LogManager.getLogger(PackageConfig.class);
+public class PackageConfig extends Located implements Comparable<PackageConfig>, Serializable, InterceptorLocator {
 
     protected Map<String, ActionConfig> actionConfigs;
     protected Map<String, ResultConfig> globalResultConfigs;
@@ -422,8 +414,7 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
         return "PackageConfig: [" + name + "] for namespace [" + namespace + "] with parents [" + parents + "]";
     }
 
-    public int compareTo(Object o) {
-        PackageConfig other = (PackageConfig) o;
+    public int compareTo(PackageConfig other) {
         String full = namespace + "!" + name;
         String otherFull = other.namespace + "!" + other.name;
 
@@ -443,7 +434,6 @@ public class PackageConfig extends Located implements Comparable, Serializable, 
     public static class Builder implements InterceptorLocator {
 
         protected PackageConfig target;
-        private boolean strictDMI = true;
 
         public Builder(String name) {
             target = new PackageConfig(name);

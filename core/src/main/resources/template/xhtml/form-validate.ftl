@@ -19,7 +19,7 @@
  */
 -->
 <#if parameters.validate!false == true>
-	<script type="text/javascript" src="${base}${parameters.staticContentPath}/xhtml/validation.js" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> ></script>
+	<@s.script type="text/javascript" src="${base}${parameters.staticContentPath}/xhtml/validation.js" />
 	<#if parameters.onsubmit??>
 		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.escapedId}();")}
 	<#else>

@@ -20,7 +20,6 @@ package com.opensymphony.xwork2.config;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import com.opensymphony.xwork2.conversion.TypeConverterHolder;
@@ -29,6 +28,9 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 import java.util.Properties;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -40,111 +42,124 @@ import java.util.Properties;
 public class ConfigurationManagerTest extends XWorkTestCase {
 
     Mock configProviderMock;
-    private Configuration configuration;
 
-    public void testConfigurationReload() {
-        // now check that it reloads
-        configProviderMock.expectAndReturn("needsReload", Boolean.TRUE);
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        configurationManager.destroyConfiguration();
+
+        configProviderMock = new Mock(ConfigurationProvider.class);
+        configProviderMock.matchAndReturn("equals", C.ANY_ARGS, false);
+
+        ConfigurationProvider mockProvider = (ConfigurationProvider) configProviderMock.proxy();
+        configurationManager.addContainerProvider(new StrutsDefaultConfigurationProvider());
+        configurationManager.addContainerProvider(mockProvider);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        configProviderMock.expect("destroy");
+        super.tearDown();
+    }
+
+    public void testInit() {
         configProviderMock.expect("init", C.isA(Configuration.class));
         configProviderMock.expect("register", C.ANY_ARGS);
         configProviderMock.expect("loadPackages", C.ANY_ARGS);
-        configProviderMock.expect("destroy", C.ANY_ARGS);
         configProviderMock.matchAndReturn("toString", "mock");
-        configuration.getContainer().getInstance(FileManagerFactory.class).getFileManager().setReloadingConfigs(true);
+
         configuration = configurationManager.getConfiguration();
-        configProviderMock.verify();
-
-        // this will be called in teardown
-        configProviderMock.expect("destroy");
-    }
-
-    public void testNoConfigurationReload() {
-        configProviderMock.expectAndReturn("needsReload", Boolean.FALSE);
-        // now check that it doesn't try to reload
-        configuration = configurationManager.getConfiguration();
-
-        configProviderMock.verify();
-
-        // this will be called in teardown
-        configProviderMock.expect("destroy");
     }
 
     public void testDestroyConfiguration() throws Exception {
-    	class State {
-    		public boolean isDestroyed1 =false;
-    		public boolean isDestroyed2 =false;
-    	}
-    	
-    	final State state = new State();
-    	ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
-    	configurationManager.addContainerProvider(new ConfigurationProvider() {
-			public void destroy() { 
-				throw new RuntimeException("testing testing 123");
-			}
-			public void init(Configuration configuration) throws ConfigurationException {
-			}
-			public void loadPackages() throws ConfigurationException {
-			}
-			public boolean needsReload() { return false;
-			}
-			public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
-			}
-			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-			}
-    	});
-    	configurationManager.addContainerProvider(new ConfigurationProvider() {
-			public void destroy() { 
-				state.isDestroyed1 = true;
-			}
-			public void init(Configuration configuration) throws ConfigurationException {
-			}
-			public void loadPackages() throws ConfigurationException {
-			}
-			public boolean needsReload() { return false;
-			}
-			public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
-			}
-			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-			}
-    	});
-    	configurationManager.addContainerProvider(new ConfigurationProvider() {
-			public void destroy() { 
-				throw new RuntimeException("testing testing 123");
-			}
-			public void init(Configuration configuration) throws ConfigurationException {
-			}
-			public void loadPackages() throws ConfigurationException {
-			}
-			public boolean needsReload() { return false;
-			}
-			public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
-			}
-			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-			}
-    	});
-    	configurationManager.addContainerProvider(new ConfigurationProvider() {
-			public void destroy() { 
-				state.isDestroyed2 = true;
-			}
-			public void init(Configuration configuration) throws ConfigurationException {
-			}
-			public void loadPackages() throws ConfigurationException {
-			}
-			public boolean needsReload() { return false;
-			}
-			public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
-			}
-			public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-			}
-    	});
-    	
-    	assertFalse(state.isDestroyed1);
-    	assertFalse(state.isDestroyed2);
-    	
-    	configurationManager.clearContainerProviders();
-    	
-    	assertTrue(state.isDestroyed1);
-    	assertTrue(state.isDestroyed2);
+        class State {
+            public boolean isDestroyed1 =false;
+            public boolean isDestroyed2 =false;
+        }
+
+        final State state = new State();
+        ConfigurationManager configurationManager = new ConfigurationManager(Container.DEFAULT_NAME);
+        configurationManager.addContainerProvider(new ConfigurationProvider() {
+            public void destroy() {
+                throw new RuntimeException("testing testing 123");
+            }
+            public void init(Configuration configuration) throws ConfigurationException {
+            }
+            public void loadPackages() throws ConfigurationException {
+            }
+            public boolean needsReload() { return false;
+            }
+            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            }
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+            }
+        });
+        configurationManager.addContainerProvider(new ConfigurationProvider() {
+            public void destroy() {
+                state.isDestroyed1 = true;
+            }
+            public void init(Configuration configuration) throws ConfigurationException {
+            }
+            public void loadPackages() throws ConfigurationException {
+            }
+            public boolean needsReload() { return false;
+            }
+            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            }
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+            }
+        });
+        configurationManager.addContainerProvider(new ConfigurationProvider() {
+            public void destroy() {
+                throw new RuntimeException("testing testing 123");
+            }
+            public void init(Configuration configuration) throws ConfigurationException {
+            }
+            public void loadPackages() throws ConfigurationException {
+            }
+            public boolean needsReload() { return false;
+            }
+            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            }
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+            }
+        });
+        configurationManager.addContainerProvider(new ConfigurationProvider() {
+            public void destroy() {
+                state.isDestroyed2 = true;
+            }
+            public void init(Configuration configuration) throws ConfigurationException {
+            }
+            public void loadPackages() throws ConfigurationException {
+            }
+            public boolean needsReload() { return false;
+            }
+            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            }
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+            }
+        });
+
+        assertFalse(state.isDestroyed1);
+        assertFalse(state.isDestroyed2);
+
+        configurationManager.clearContainerProviders();
+
+        assertTrue(state.isDestroyed1);
+        assertTrue(state.isDestroyed2);
+    }
+
+    public void testRemoveConfigurationProvider() throws Exception {
+        ConfigurationProvider configProvider1 = mock(ConfigurationProvider.class);
+        ConfigurationProvider configProvider2 = mock(ConfigurationProvider.class);
+        configurationManager.addContainerProvider(configProvider1);
+        configurationManager.addContainerProvider(configProvider2);
+
+        configurationManager.removeContainerProvider(configProvider1);
+
+        verify(configProvider1).destroy();
+        assertFalse(configurationManager.getContainerProviders().contains(configProvider1));
+        assertTrue(configurationManager.getContainerProviders().contains(configProvider2));
     }
 
     public void testClearConfigurationProviders() throws Exception {
@@ -158,32 +173,4 @@ public class ConfigurationManagerTest extends XWorkTestCase {
         assertTrue("java.io.File mapping should being putted by DefaultConversionPropertiesProcessor.init()",
                 converterHolder.containsDefaultMapping("java.io.File"));
     }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        configurationManager.destroyConfiguration();
-
-        configProviderMock = new Mock(ConfigurationProvider.class);
-        configProviderMock.matchAndReturn("equals", C.ANY_ARGS, false);
-
-        ConfigurationProvider mockProvider = (ConfigurationProvider) configProviderMock.proxy();
-        configurationManager.addContainerProvider(new StrutsDefaultConfigurationProvider());
-        configurationManager.addContainerProvider(mockProvider);
-
-        //the first time it always inits
-        configProviderMock.expect("init", C.isA(Configuration.class));
-        configProviderMock.expect("register", C.ANY_ARGS);
-        configProviderMock.expect("loadPackages", C.ANY_ARGS);
-        configProviderMock.matchAndReturn("toString", "mock");
-
-        configuration = configurationManager.getConfiguration();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        configProviderMock.expect("destroy");
-        super.tearDown();
-    }
-
 }

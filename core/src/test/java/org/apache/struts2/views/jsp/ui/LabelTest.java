@@ -80,7 +80,7 @@ public class LabelTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
-    public void testSimpleWithLabelposition() throws Exception {
+    public void testSimpleWithLabelPosition() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
 
@@ -89,7 +89,7 @@ public class LabelTest extends AbstractUITagTest {
         tag.setLabel("mylabel");
         tag.setName("myname");
         tag.setValue("%{foo}");
-        tag.setLabelposition("top");
+        tag.setLabelPosition("top");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -104,7 +104,7 @@ public class LabelTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
-    public void testSimpleWithLabelposition_clearTagStateSet()  throws Exception {
+    public void testSimpleWithLabelPosition_clearTagStateSet()  throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
 
@@ -114,7 +114,7 @@ public class LabelTest extends AbstractUITagTest {
         tag.setLabel("mylabel");
         tag.setName("myname");
         tag.setValue("%{foo}");
-        tag.setLabelposition("top");
+        tag.setLabelPosition("top");
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
@@ -398,7 +398,7 @@ public class LabelTest extends AbstractUITagTest {
 
         tag.doStartTag();
         tag.doEndTag();
- 
+
         verify(LabelTest.class.getResource("Label-7.txt"));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().

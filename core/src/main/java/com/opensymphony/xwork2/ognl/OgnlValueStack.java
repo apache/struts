@@ -29,7 +29,12 @@ import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import ognl.*;
+import ognl.MethodFailedException;
+import ognl.NoSuchPropertyException;
+import ognl.Ognl;
+import ognl.OgnlContext;
+import ognl.OgnlException;
+import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -87,6 +92,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         securityMemberAccess.setExcludedClasses(ognlUtil.getExcludedClasses());
         securityMemberAccess.setExcludedPackageNamePatterns(ognlUtil.getExcludedPackageNamePatterns());
         securityMemberAccess.setExcludedPackageNames(ognlUtil.getExcludedPackageNames());
+        securityMemberAccess.setExcludedPackageExemptClasses(ognlUtil.getExcludedPackageExemptClasses());
         securityMemberAccess.setDisallowProxyMemberAccess(ognlUtil.isDisallowProxyMemberAccess());
     }
 

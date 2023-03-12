@@ -18,16 +18,16 @@
  */
 package org.apache.struts2.interceptor.csp;
 
-import static java.lang.String.format;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.opensymphony.xwork2.ActionContext;
-
-import java.util.function.Supplier;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.Map;
+import java.util.Objects;
 
+import static java.lang.String.format;
 
 /**
  * Default implementation of {@link CspSettings}.
@@ -37,57 +37,62 @@ import java.util.Map;
  * @see CspInterceptor
  */
 public class DefaultCspSettings implements CspSettings {
-    private final SecureRandom sRand  = new SecureRandom();
-    // this lazy supplier computes a policy format the first time it's called and caches the result
-    // to reduce string operations when attaching policies to HTTP responses
-    private final Supplier<String> lazyPolicyBuilder = new Supplier<String>() {
-        boolean hasBeenCalled;
-        String policyFormat;
 
-        @Override
-        public String get() {
-            if (!hasBeenCalled) {
-                StringBuilder policyFormatBuilder = new StringBuilder()
-                    .append(OBJECT_SRC)
-                    .append(format(" '%s'; ", NONE))
-                    .append(SCRIPT_SRC)
-                    .append(" 'nonce-%s' ")             // nonce placeholder
-                    .append(format("'%s' ", STRICT_DYNAMIC))
-                    .append(format("%s %s; ", HTTP, HTTPS))
-                    .append(BASE_URI)
-                    .append(format(" '%s'; ", NONE));
+    private final static Logger LOG = LogManager.getLogger(DefaultCspSettings.class);
 
-                if (reportUri != null) {
-                    policyFormatBuilder
-                        .append(REPORT_URI)
-                        .append(format(" %s", reportUri));
-                }
-
-                policyFormat = policyFormatBuilder.toString();
-            }
-
-            return format(policyFormat, getNonceString());
-        }
-    };
+    private final SecureRandom sRand = new SecureRandom();
 
     private String reportUri;
     // default to reporting mode
     private String cspHeader = CSP_REPORT_HEADER;
 
+    @Override
     public void addCspHeaders(HttpServletResponse response) {
-        associateNonceWithSession();
-        response.setHeader(cspHeader, lazyPolicyBuilder.get());
+        throw new UnsupportedOperationException("Unsupported implementation, use #addCspHeaders(HttpServletRequest request, HttpServletResponse response)");
     }
 
-    private String getNonceString() {
-        Map<String, Object> session = ActionContext.getContext().getSession();
-        return (String) session.get("nonce");
+    public void addCspHeaders(HttpServletRequest request, HttpServletResponse response) {
+        if (isSessionActive(request)) {
+            LOG.trace("Session is active, applying CSP settings");
+            associateNonceWithSession(request);
+            response.setHeader(cspHeader, cratePolicyFormat(request));
+        } else {
+            LOG.trace("Session is not active, ignoring CSP settings");
+        }
     }
 
-    private void associateNonceWithSession() {
-        Map<String, Object> session = ActionContext.getContext().getSession();
+    private boolean isSessionActive(HttpServletRequest request) {
+        return request.getSession(false) != null;
+    }
+
+    private void associateNonceWithSession(HttpServletRequest request) {
         String nonceValue = Base64.getUrlEncoder().encodeToString(getRandomBytes());
-        session.put("nonce", nonceValue);
+        request.getSession().setAttribute("nonce", nonceValue);
+    }
+
+    private String cratePolicyFormat(HttpServletRequest request) {
+        StringBuilder policyFormatBuilder = new StringBuilder()
+            .append(OBJECT_SRC)
+            .append(format(" '%s'; ", NONE))
+            .append(SCRIPT_SRC)
+            .append(" 'nonce-%s' ") // nonce placeholder
+            .append(format("'%s' ", STRICT_DYNAMIC))
+            .append(format("%s %s; ", HTTP, HTTPS))
+            .append(BASE_URI)
+            .append(format(" '%s'; ", NONE));
+
+        if (reportUri != null) {
+            policyFormatBuilder
+                .append(REPORT_URI)
+                .append(format(" %s", reportUri));
+        }
+
+        return format(policyFormatBuilder.toString(), getNonceString(request));
+    }
+
+    private String getNonceString(HttpServletRequest request) {
+        Object nonce = request.getSession().getAttribute("nonce");
+        return Objects.toString(nonce);
     }
 
     private byte[] getRandomBytes() {
@@ -105,4 +110,13 @@ public class DefaultCspSettings implements CspSettings {
     public void setReportUri(String reportUri) {
         this.reportUri = reportUri;
     }
+
+    @Override
+    public String toString() {
+        return "DefaultCspSettings{" +
+            "reportUri='" + reportUri + '\'' +
+            ", cspHeader='" + cspHeader + '\'' +
+            '}';
+    }
+
 }

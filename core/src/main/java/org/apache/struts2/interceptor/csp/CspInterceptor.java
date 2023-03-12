@@ -20,10 +20,14 @@ package org.apache.struts2.interceptor.csp;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.action.CspSettingsAware;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.util.Optional;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Interceptor that implements Content Security Policy on incoming requests used to protect against
@@ -35,18 +39,43 @@ import javax.servlet.http.HttpServletResponse;
  * @see CspSettings
  * @see DefaultCspSettings
  **/
-public final class CspInterceptor extends AbstractInterceptor implements PreResultListener {
-    private final CspSettings settings = new DefaultCspSettings();
+public final class CspInterceptor extends AbstractInterceptor {
+
+    private static final Logger LOG = LogManager.getLogger(CspInterceptor.class);
+
+    private Boolean enforcingMode;
+    private String reportUri;
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-        invocation.addPreResultListener(this);
+        Object action = invocation.getAction();
+        if (action instanceof CspSettingsAware) {
+            LOG.trace("Using CspSettings provided by the action: {}", action);
+            applySettings(invocation, ((CspSettingsAware) action).getCspSettings());
+        } else {
+            LOG.trace("Using DefaultCspSettings with action: {}", action);
+            applySettings(invocation, new DefaultCspSettings());
+        }
         return invocation.invoke();
     }
 
-    public void beforeResult(ActionInvocation invocation, String resultCode) {
+    private void applySettings(ActionInvocation invocation, CspSettings cspSettings) {
+        if (enforcingMode != null) {
+            LOG.trace("Applying: {} to enforcingMode", enforcingMode);
+            cspSettings.setEnforcingMode(enforcingMode);
+        }
+        if (reportUri != null) {
+            LOG.trace("Applying: {} to reportUri", reportUri);
+            cspSettings.setReportUri(reportUri);
+        }
+
+        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
-        settings.addCspHeaders(response);
+
+        invocation.addPreResultListener((actionInvocation, resultCode) -> {
+            LOG.trace("Applying CSP header: {} to the request", cspSettings);
+            cspSettings.addCspHeaders(request, response);
+        });
     }
 
     public void setReportUri(String reportUri) {
@@ -59,20 +88,19 @@ public final class CspInterceptor extends AbstractInterceptor implements PreResu
             throw new IllegalArgumentException("Illegal configuration: report URI is not relative to the root. Please set a report URI that starts with /");
         }
 
-        settings.setReportUri(reportUri);
+        this.reportUri = reportUri;
     }
 
     private Optional<URI> buildUri(String reportUri) {
         try {
             return Optional.of(URI.create(reportUri));
         } catch (IllegalArgumentException ignored) {
+            return Optional.empty();
         }
-
-        return Optional.empty();
     }
 
-    public void setEnforcingMode(String value){
-        boolean enforcingMode = Boolean.parseBoolean(value);
-        settings.setEnforcingMode(enforcingMode);
+    public void setEnforcingMode(String value) {
+        this.enforcingMode = Boolean.parseBoolean(value);
     }
+
 }

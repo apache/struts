@@ -232,6 +232,8 @@ public class DispatcherTest extends StrutsInternalTestCase {
         assertNotNull(config);
         HashSet<String> expected = new HashSet<>();
         expected.add("struts-default.xml");
+        expected.add("struts-beans.xml");
+        expected.add("struts-excluded-classes.xml");
         expected.add("struts-plugin.xml");
         expected.add("struts.xml");
         assertEquals(expected, config.getLoadedFileNames());
@@ -249,14 +251,10 @@ public class DispatcherTest extends StrutsInternalTestCase {
         cm.setConfiguration((Configuration) mockConfiguration.proxy());
 
         Mock mockContainer = new Mock(Container.class);
-        String reloadConfigs = container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD);
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)),
-            reloadConfigs);
         final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
         destroyedObjectFactory.setContainer((Container) mockContainer.proxy());
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), destroyedObjectFactory);
 
-        mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
         mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
         mockConfiguration.expect("destroy");
         mockConfiguration.matchAndReturn("getPackageConfigs", new HashMap<String, PackageConfig>());
@@ -285,9 +283,6 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         Mock mockContainer = new Mock(Container.class);
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), new ObjectFactory());
-        String reloadConfigs = container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD);
-        mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)),
-            reloadConfigs);
 
         Mock mockConfiguration = new Mock(Configuration.class);
         mockConfiguration.matchAndReturn("getPackageConfigs", packageConfigs);

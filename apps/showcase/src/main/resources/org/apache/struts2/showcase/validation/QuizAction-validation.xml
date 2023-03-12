@@ -19,11 +19,11 @@
  * under the License.
  */
 -->
-<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "https://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
 <!--  START SNIPPET: quizValidators -->
 <!--
     Add the following DOCTYPE declaration as first line of your XXX-validation.xml file:
-    <!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+    <!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.2//EN" "https://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
 -->
 <validators>
     <field name="name">

@@ -32,7 +32,16 @@ import org.apache.struts2.StrutsConstants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static java.util.Collections.synchronizedMap;
 
 /**
  * <p>
@@ -53,28 +62,29 @@ import java.util.*;
  */
 public class DefaultActionValidatorManager implements ActionValidatorManager {
 
-    private final static Logger LOG = LogManager.getLogger(DefaultActionValidatorManager.class);
-
-    /** The file suffix for any validation file. */
+    /**
+     * The file suffix for any validation file.
+     */
     protected static final String VALIDATION_CONFIG_SUFFIX = "-validation.xml";
 
-    private final Map<String, List<ValidatorConfig>> validatorCache = Collections.synchronizedMap(new HashMap<String, List<ValidatorConfig>>());
-    private final Map<String, List<ValidatorConfig>> validatorFileCache = Collections.synchronizedMap(new HashMap<String, List<ValidatorConfig>>());
+    protected final Map<String, List<ValidatorConfig>> validatorCache = synchronizedMap(new HashMap<>());
+    protected final Map<String, List<ValidatorConfig>> validatorFileCache = synchronizedMap(new HashMap<>());
+    private static final Logger LOG = LogManager.getLogger(DefaultActionValidatorManager.class);
 
-    private ValidatorFactory validatorFactory;
-    private ValidatorFileParser validatorFileParser;
-    private FileManager fileManager;
-    private boolean reloadingConfigs;
-    private TextProviderFactory textProviderFactory;
+    protected ValidatorFactory validatorFactory;
+    protected ValidatorFileParser validatorFileParser;
+    protected FileManager fileManager;
+    protected boolean reloadingConfigs;
+    protected TextProviderFactory textProviderFactory;
+
+    @Inject
+    public void setValidatorFactory(ValidatorFactory fac) {
+        this.validatorFactory = fac;
+    }
 
     @Inject
     public void setValidatorFileParser(ValidatorFileParser parser) {
         this.validatorFileParser = parser;
-    }
-    
-    @Inject
-    public void setValidatorFactory(ValidatorFactory fac) {
-        this.validatorFactory = fac;
     }
 
     @Inject
@@ -92,153 +102,137 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         this.textProviderFactory = textProviderFactory;
     }
 
-    public synchronized List<Validator> getValidators(Class clazz, String context) {
-        return getValidators(clazz, context, null);
-    }
-
-    public synchronized List<Validator> getValidators(Class clazz, String context, String method) {
-        final String validatorKey = buildValidatorKey(clazz, context);
-
-        if (validatorCache.containsKey(validatorKey)) {
-            if (reloadingConfigs) {
-                validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
-            }
-        } else {
-            validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, false, null));
-        }
-        ValueStack stack = ActionContext.getContext().getValueStack();
-
-        // get the set of validator configs
-        List<ValidatorConfig> cfgs = validatorCache.get(validatorKey);
-
-        // create clean instances of the validators for the caller's use
-        ArrayList<Validator> validators = new ArrayList<>(cfgs.size());
-        for (ValidatorConfig cfg : cfgs) {
-            if (method == null || method.equals(cfg.getParams().get("methodName"))) {
-                Validator validator = validatorFactory.getValidator(cfg);
-                validator.setValidatorType(cfg.getType());
-                validator.setValueStack(stack);
-                validators.add(validator);
-            }
-        }
-        return validators;
-    }
-
+    @Override
     public void validate(Object object, String context) throws ValidationException {
         validate(object, context, (String) null);
     }
 
+    @Override
     public void validate(Object object, String context, String method) throws ValidationException {
         ValidatorContext validatorContext = new DelegatingValidatorContext(object, textProviderFactory);
         validate(object, context, validatorContext, method);
     }
 
+    @Override
     public void validate(Object object, String context, ValidatorContext validatorContext) throws ValidationException {
         validate(object, context, validatorContext, null);
-    }
-
-    public void validate(Object object, String context, ValidatorContext validatorContext, String method) throws ValidationException {
-        List<Validator> validators = getValidators(object.getClass(), context, method);
-        Set<String> shortcircuitedFields = null;
-
-        for (final Validator validator : validators) {
-            try {
-                validator.setValidatorContext(validatorContext);
-
-                LOG.debug("Running validator: {} for object {} and method {}", validator, object, method);
-
-                FieldValidator fValidator = null;
-                String fullFieldName = null;
-
-                if (validator instanceof FieldValidator) {
-                    fValidator = (FieldValidator) validator;
-                    fullFieldName = fValidator.getValidatorContext().getFullFieldName(fValidator.getFieldName());
-
-                    if ((shortcircuitedFields != null) && shortcircuitedFields.contains(fullFieldName)) {
-                        LOG.debug("Short-circuited, skipping");
-                        continue;
-                    }
-                }
-
-                if (validator instanceof ShortCircuitableValidator && ((ShortCircuitableValidator) validator).isShortCircuit()) {
-                    // get number of existing errors
-                    List<String> errs = null;
-
-                    if (fValidator != null) {
-                        if (validatorContext.hasFieldErrors()) {
-                            Collection<String> fieldErrors = validatorContext.getFieldErrors().get(fullFieldName);
-
-                            if (fieldErrors != null) {
-                                errs = new ArrayList<>(fieldErrors);
-                            }
-                        }
-                    } else if (validatorContext.hasActionErrors()) {
-                        Collection<String> actionErrors = validatorContext.getActionErrors();
-
-                        if (actionErrors != null) {
-                            errs = new ArrayList<String>(actionErrors);
-                        }
-                    }
-
-                    validator.validate(object);
-
-                    if (fValidator != null) {
-                        if (validatorContext.hasFieldErrors()) {
-                            Collection<String> errCol = validatorContext.getFieldErrors().get(fullFieldName);
-
-                            if ((errCol != null) && !errCol.equals(errs)) {
-                                LOG.debug("Short-circuiting on field validation");
-
-                                if (shortcircuitedFields == null) {
-                                    shortcircuitedFields = new TreeSet<>();
-                                }
-
-                                shortcircuitedFields.add(fullFieldName);
-                            }
-                        }
-                    } else if (validatorContext.hasActionErrors()) {
-                        Collection<String> errCol = validatorContext.getActionErrors();
-
-                        if ((errCol != null) && !errCol.equals(errs)) {
-                            LOG.debug("Short-circuiting");
-                            break;
-                        }
-                    }
-                    continue;
-                }
-
-                validator.validate(object);
-            }
-            finally {
-                validator.setValidatorContext(null);
-            }
-        }
     }
 
     /**
      * Builds a key for validators - used when caching validators.
      *
      * @param clazz the action.
-     * @param context the action's context.
+     * @param context context
      * @return a validator key which is the class name plus context.
      */
-    protected static String buildValidatorKey(Class clazz, String context) {
-        StringBuilder sb = new StringBuilder(clazz.getName());
-        sb.append("/");
-        sb.append(context);
-        return sb.toString();
+    protected String buildValidatorKey(Class clazz, String context) {
+        return clazz.getName() + "/" + context;
     }
 
-    private List<ValidatorConfig> buildAliasValidatorConfigs(Class aClass, String context, boolean checkFile) {
-        String fileName = aClass.getName().replace('.', '/') + "-" + context + VALIDATION_CONFIG_SUFFIX;
-
-        return loadFile(fileName, aClass, checkFile);
+    protected Validator getValidatorFromValidatorConfig(ValidatorConfig config, ValueStack stack) {
+        Validator validator = validatorFactory.getValidator(config);
+        validator.setValidatorType(config.getType());
+        validator.setValueStack(stack);
+        return validator;
     }
 
-    private List<ValidatorConfig> buildClassValidatorConfigs(Class aClass, boolean checkFile) {
-        String fileName = aClass.getName().replace('.', '/') + VALIDATION_CONFIG_SUFFIX;
+    @Override
+    public synchronized List<Validator> getValidators(Class clazz, String context, String method) {
+        String validatorKey = buildValidatorKey(clazz, context);
 
-        return loadFile(fileName, aClass, checkFile);
+        if (!validatorCache.containsKey(validatorKey)) {
+            validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, false, null));
+        } else if (reloadingConfigs) {
+            validatorCache.put(validatorKey, buildValidatorConfigs(clazz, context, true, null));
+        }
+
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        List<ValidatorConfig> configs = validatorCache.get(validatorKey);
+        List<Validator> validators = new ArrayList<>();
+        for (ValidatorConfig config : configs) {
+            if (method == null || method.equals(config.getParams().get("methodName"))) {
+                validators.add(getValidatorFromValidatorConfig(config, stack));
+            }
+        }
+        return validators;
+    }
+
+    @Override
+    public synchronized List<Validator> getValidators(Class clazz, String context) {
+        return getValidators(clazz, context, null);
+    }
+
+    @Override
+    public void validate(Object object, String context, ValidatorContext validatorContext, String method) throws ValidationException {
+        List<Validator> validators = getValidators(object.getClass(), context, method);
+        Set<String> shortcircuitedFields = null;
+
+        for (Validator validator : validators) {
+            validator.setValidatorContext(validatorContext);
+
+            LOG.debug("Running validator: {} for object {} and method {}", validator, object, method);
+
+            FieldValidator fValidator = null;
+            String fullFieldName = null;
+
+            if (validator instanceof FieldValidator) {
+                fValidator = (FieldValidator) validator;
+                fullFieldName = validatorContext.getFullFieldName(fValidator.getFieldName());
+
+                if ((shortcircuitedFields != null) && shortcircuitedFields.contains(fullFieldName)) {
+                    LOG.debug("Short-circuited, skipping");
+                    continue;
+                }
+            }
+
+            if (validator instanceof ShortCircuitableValidator && ((ShortCircuitableValidator) validator).isShortCircuit()) {
+                // get number of existing errors
+                List<String> errs = null;
+
+                if (fValidator != null) {
+                    if (validatorContext.hasFieldErrors()) {
+                        Collection<String> fieldErrors = validatorContext.getFieldErrors().get(fullFieldName);
+
+                        if (fieldErrors != null) {
+                            errs = new ArrayList<>(fieldErrors);
+                        }
+                    }
+                } else if (validatorContext.hasActionErrors()) {
+                    Collection<String> actionErrors = validatorContext.getActionErrors();
+
+                    if (actionErrors != null) {
+                        errs = new ArrayList<>(actionErrors);
+                    }
+                }
+
+                validator.validate(object);
+
+                if (fValidator != null) {
+                    if (validatorContext.hasFieldErrors()) {
+                        Collection<String> errCol = validatorContext.getFieldErrors().get(fullFieldName);
+
+                        if ((errCol != null) && !errCol.equals(errs)) {
+                            LOG.debug("Short-circuiting on field validation");
+
+                            if (shortcircuitedFields == null) {
+                                shortcircuitedFields = new TreeSet<>();
+                            }
+
+                            shortcircuitedFields.add(fullFieldName);
+                        }
+                    }
+                } else if (validatorContext.hasActionErrors()) {
+                    Collection<String> errCol = validatorContext.getActionErrors();
+
+                    if ((errCol != null) && !errCol.equals(errs)) {
+                        LOG.debug("Short-circuiting");
+                        break;
+                    }
+                }
+                continue;
+            }
+            validator.validate(object);
+        }
     }
 
     /**
@@ -276,18 +270,18 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
      * <p>Note that the validation rules for Thing is never looked for because no class in the
      * hierarchy directly implements Thing.</p>
      *
-     * @param clazz the Class to look up validators for.
-     * @param context the context to use when looking up validators.
+     * @param clazz     the Class to look up validators for.
+     * @param context   the context to use when looking up validators.
      * @param checkFile true if the validation config file should be checked to see if it has been
-     *      updated.
-     * @param checked the set of previously checked class-contexts, null if none have been checked
+     *                  updated.
+     * @param checked   the set of previously checked class-contexts, null if none have been checked
      * @return a list of validator configs for the given class and context.
      */
-    private List<ValidatorConfig> buildValidatorConfigs(Class clazz, String context, boolean checkFile, Set<String> checked) {
+    protected List<ValidatorConfig> buildValidatorConfigs(Class clazz, String context, boolean checkFile, Set<String> checked) {
         List<ValidatorConfig> validatorConfigs = new ArrayList<>();
 
         if (checked == null) {
-            checked = new TreeSet<String>();
+            checked = new TreeSet<>();
         } else if (checked.contains(clazz.getName())) {
             return validatorConfigs;
         }
@@ -295,7 +289,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         if (clazz.isInterface()) {
             for (Class anInterface : clazz.getInterfaces()) {
                 validatorConfigs.addAll(buildValidatorConfigs(anInterface, context, checkFile, checked));
-             }
+            }
         } else {
             if (!clazz.equals(Object.class)) {
                 validatorConfigs.addAll(buildValidatorConfigs(clazz.getSuperclass(), context, checkFile, checked));
@@ -307,37 +301,44 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
             if (checked.contains(anInterface1.getName())) {
                 continue;
             }
-
             validatorConfigs.addAll(buildClassValidatorConfigs(anInterface1, checkFile));
-
             if (context != null) {
                 validatorConfigs.addAll(buildAliasValidatorConfigs(anInterface1, context, checkFile));
             }
-
             checked.add(anInterface1.getName());
         }
 
         validatorConfigs.addAll(buildClassValidatorConfigs(clazz, checkFile));
-
         if (context != null) {
             validatorConfigs.addAll(buildAliasValidatorConfigs(clazz, context, checkFile));
         }
-
         checked.add(clazz.getName());
 
         return validatorConfigs;
     }
 
-    private List<ValidatorConfig> loadFile(String fileName, Class clazz, boolean checkFile) {
+    protected List<ValidatorConfig> buildAliasValidatorConfigs(Class aClass, String context, boolean checkFile) {
+        String fileName = aClass.getName().replace('.', '/') + "-" + context + VALIDATION_CONFIG_SUFFIX;
+        return loadFile(fileName, aClass, checkFile);
+    }
+
+    protected List<ValidatorConfig> buildClassValidatorConfigs(Class aClass, boolean checkFile) {
+        String fileName = aClass.getName().replace('.', '/') + VALIDATION_CONFIG_SUFFIX;
+        return loadFile(fileName, aClass, checkFile);
+    }
+
+    protected List<ValidatorConfig> loadFile(String fileName, Class clazz, boolean checkFile) {
         List<ValidatorConfig> retList = Collections.emptyList();
+
         URL fileUrl = ClassLoaderUtil.getResource(fileName, clazz);
+
         if ((checkFile && fileManager.fileNeedsReloading(fileUrl)) || !validatorFileCache.containsKey(fileName)) {
             try (InputStream is = fileManager.loadFile(fileUrl)) {
                 if (is != null) {
                     retList = new ArrayList<>(validatorFileParser.parseActionValidatorConfigs(validatorFactory, is, fileName));
                 }
             } catch (IOException e) {
-                LOG.error("Caught exception while loading file {}", fileName, e);
+                LOG.error("Caught exception while closing file {}", fileName, e);
             }
 
             validatorFileCache.put(fileName, retList);

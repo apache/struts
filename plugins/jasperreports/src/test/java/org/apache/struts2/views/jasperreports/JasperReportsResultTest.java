@@ -25,7 +25,7 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.junit.StrutsTestCase;
 
 import javax.servlet.ServletException;
 import java.net.URL;
@@ -82,7 +82,7 @@ public class JasperReportsResultTest extends StrutsTestCase {
             result.execute(this.invocation);
         } catch (ServletException e) {
             assertEquals("Error building dataSource for excluded or not accepted [getDatasource()]",
-                    e.getMessage());
+                e.getMessage());
         }
 
         // verify that above test has really effect
@@ -242,14 +242,14 @@ public class JasperReportsResultTest extends StrutsTestCase {
 
 
     private static final Map<String, String>[] JR_MAP_ARRAY_DATA_SOURCE = new Map[]{
-            new HashMap<String, String>() {{
-                put("firstName", "Foo");
-                put("lastName", "Bar");
-            }}
+        new HashMap<String, String>() {{
+            put("firstName", "Foo");
+            put("lastName", "Bar");
+        }}
     };
 
     private static final NotExcludedAcceptedPatternsChecker NO_EXCLUSION_ACCEPT_ALL_PATTERNS_CHECKER
-            = new NotExcludedAcceptedPatternsChecker() {
+        = new NotExcludedAcceptedPatternsChecker() {
         @Override
         public IsAllowed isAllowed(String value) {
             return IsAllowed.yes("*");

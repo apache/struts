@@ -22,13 +22,13 @@
 
 <!DOCTYPE struts PUBLIC
     "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-    "http://struts.apache.org/dtds/struts-2.5.dtd">
+    "https://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
     <constant name="struts.enable.DynamicMethodInvocation" value="false" />
     <package name="bundle-admin" namespace="/osgi/admin" extends="osgi-default" strict-method-invocation="true">
         <default-action-ref name="bundles" />
-        
+
         <action name="bundle_*!*" class="org.apache.struts2.osgi.admin.actions.BundlesAction" method="{2}">
             <param name="id">{1}</param>
             <result type="freemarker">viewBundle.ftl</result>

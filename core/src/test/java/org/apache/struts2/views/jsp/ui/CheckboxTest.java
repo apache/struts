@@ -18,18 +18,22 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.Map;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.test.StubConfigurationProvider;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
-/**
- */
 public class CheckboxTest extends AbstractUITagTest {
-
-    public CheckboxTest() {
-    }
 
     /**
      * Initialize a map of {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder} for generic tag
@@ -37,7 +41,7 @@ public class CheckboxTest extends AbstractUITagTest {
      * String, String[])} as properties to verify.<br> This implementation extends testdata from AbstractUITag.
      *
      * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
-     *         as key.
+     * as key.
      */
     @Override
     protected Map<String, PropertyHolder> initializedGenericTagTestProperties() {
@@ -79,7 +83,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testChecked_clearTagStateSet() throws Exception {
@@ -108,7 +112,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCheckedWithTopLabelPosition() throws Exception {
@@ -123,7 +127,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelposition("top");
+        tag.setLabelPosition("top");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -135,10 +139,10 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
-    public void testCheckedWithTopLabelPosition_clearTagStateSet()  throws Exception {
+    public void testCheckedWithTopLabelPosition_clearTagStateSet() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("true");
 
@@ -151,7 +155,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelposition("top");
+        tag.setLabelPosition("top");
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
@@ -165,7 +169,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCheckedWithLeftLabelPosition() throws Exception {
@@ -180,7 +184,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelposition("left");
+        tag.setLabelPosition("left");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -192,7 +196,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCheckedWithLeftLabelPosition_clearTagStateSet() throws Exception {
@@ -208,7 +212,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelposition("left");
+        tag.setLabelPosition("left");
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
@@ -222,7 +226,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCheckedWithError() throws Exception {
@@ -251,7 +255,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCheckedWithError_clearTagStateSet() throws Exception {
@@ -283,7 +287,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCheckedWithErrorStyle() throws Exception {
@@ -312,7 +316,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testCheckedWithErrorStyle_clearTagStateSet() throws Exception {
@@ -344,7 +348,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testUnchecked() throws Exception {
@@ -368,7 +372,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testUnchecked_clearTagStateSet() throws Exception {
@@ -395,7 +399,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDisabled() throws Exception {
@@ -420,7 +424,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testDisabled_clearTagStateSet() throws Exception {
@@ -448,7 +452,7 @@ public class CheckboxTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testSubmitUncheckedAsFalse() throws Exception {
@@ -472,7 +476,6 @@ public class CheckboxTest extends AbstractUITagTest {
         // Test value set
         tag.setSubmitUnchecked("false");
         verify(CheckboxTag.class.getResource("Checkbox-7.txt"));
-
     }
 
     public void testSubmitUncheckedAsTrue() throws Exception {
@@ -485,6 +488,31 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setName("foo");
         tag.setFieldValue("baz");
         tag.setSubmitUnchecked("true");
+        tag.setTitle("mytitle");
+        tag.setDisabled("true");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(CheckboxTag.class.getResource("Checkbox-8.txt"));
+    }
+
+    public void testSubmitUncheckedGlobalAsTrue() throws Exception {
+        initDispatcherWithConfigs("struts-default.xml, struts-checkbox-submit-unchecked.xml");
+        String submitUnchecked = container.getInstance(String.class, StrutsConstants.STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED);
+        assertEquals("true", submitUnchecked);
+
+        createMocks();
+
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("true");
+
+        CheckboxTag tag = new CheckboxTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("foo");
+        tag.setFieldValue("baz");
+        // tag.setSubmitUnchecked("true"); - value should be injected by container
         tag.setTitle("mytitle");
         tag.setDisabled("true");
 

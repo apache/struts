@@ -26,7 +26,7 @@ public class LinkTagTest extends AbstractUITagTest {
 
     private static final String NONCE_VAL = "r4andom";
 
-    public void testLinkTagAttributes() {
+    public void testLinkTagAttributes() throws JspException {
         LinkTag tag = new LinkTag();
 
         tag.setHref("mysrc.js");
@@ -40,6 +40,7 @@ public class LinkTagTest extends AbstractUITagTest {
         tag.setAs("test");
         tag.setDisabled("false");
         tag.setTitle("test");
+        tag.setDynamicAttribute(null, "data-id", "id4test");
 
         doLinkTest(tag);
         String s = writer.toString();
@@ -55,7 +56,8 @@ public class LinkTagTest extends AbstractUITagTest {
         assertTrue("Incorrect as attribute for link tag", s.contains("as=\"test\""));
         assertFalse("Non-existent disabled attribute for link tag", s.contains("disabled"));
         assertTrue("Incorrect title attribute for link tag", s.contains("title=\"test\""));
-        assertTrue("Incorrect nonce attribute for link tag", s.contains("nonce=\"" + NONCE_VAL+"\""));
+        assertTrue("Incorrect nonce attribute for link tag", s.contains("nonce=\"" + NONCE_VAL + "\""));
+        assertTrue("Incorrect data-id dynamic attribute for link tag", s.contains("data-id=\"id4test\""));
     }
 
     private void doLinkTest(LinkTag tag) {

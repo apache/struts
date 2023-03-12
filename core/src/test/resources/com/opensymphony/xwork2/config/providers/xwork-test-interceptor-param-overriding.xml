@@ -21,26 +21,26 @@
 -->
 <!DOCTYPE struts PUBLIC
 		"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
-		"http://struts.apache.org/dtds/struts-2.5.dtd">
+		"https://struts.apache.org/dtds/struts-2.5.dtd">
 <struts>
 	<include file="xwork-test-beans.xml" />
 	<package name="packageOne">
 		<result-types>
 			<result-type name="mock" class="com.opensymphony.xwork2.mock.MockResult" />
 		</result-types>
-	
+
 		<interceptors>
 			<interceptor name="interceptorOne" class="com.opensymphony.xwork2.config.providers.InterceptorForTestPurpose" />
 			<interceptor name="interceptorTwo" class="com.opensymphony.xwork2.config.providers.InterceptorForTestPurpose" />
 			<interceptor name="interceptorThree" class="com.opensymphony.xwork2.config.providers.InterceptorForTestPurpose" />
-			
+
 			<interceptor-stack name="stackOne">
 				<interceptor-ref name="interceptorOne" />
 				<interceptor-ref name="interceptorTwo" />
 				<interceptor-ref name="interceptorThree" />
 			</interceptor-stack>
 		</interceptors>
-		
+
 		<action name="actionOne">
 			<interceptor-ref name="stackOne">
 				<param name="interceptorOne.paramOne">i1p1</param>
@@ -49,7 +49,7 @@
 			</interceptor-ref>
 			<result name="success" type="mock">test1</result>
 		</action>
-		
+
 		<action name="actionTwo">
 			<interceptor-ref name="stackOne">
 				<param name="interceptorThree.paramOne">i3p1</param>
@@ -60,4 +60,3 @@
 		</action>
 	</package>
 </struts>
-    

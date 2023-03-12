@@ -7,8 +7,8 @@ and what potential vulnerability it can have:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 2.5.20  | :white_check_mark: |
-| 2.3.37  | :white_check_mark: |
+| 6.0.0   | :white_check_mark: |
+| 2.5.30  | :white_check_mark: |
 
 ## Reporting New Security Issues with thr Apache Struts
 

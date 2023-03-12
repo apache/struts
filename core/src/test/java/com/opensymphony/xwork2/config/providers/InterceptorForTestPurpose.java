@@ -19,32 +19,31 @@
 package com.opensymphony.xwork2.config.providers;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
-/**
- * 
- * @author tm_jee
- * @version $Date$ $Id$
- */
-public class InterceptorForTestPurpose implements Interceptor {
+public class InterceptorForTestPurpose extends AbstractInterceptor {
 
-	private String paramOne;
-	private String paramTwo;
-	
-	public String getParamOne() { return paramOne; }
-	public void setParamOne(String paramOne) { this.paramOne = paramOne; }
-	
-	public String getParamTwo() { return paramTwo; }
-	public void setParamTwo(String paramTwo) { this.paramTwo = paramTwo; }
-	
-	public void destroy() {
-	}
+    private String paramOne;
+    private String paramTwo;
 
-	public void init() {
-	}
+    public String getParamOne() {
+        return paramOne;
+    }
 
-	public String intercept(ActionInvocation invocation) throws Exception {
-		return invocation.invoke();
-	}
+    public void setParamOne(String paramOne) {
+        this.paramOne = paramOne;
+    }
+
+    public String getParamTwo() {
+        return paramTwo;
+    }
+
+    public void setParamTwo(String paramTwo) {
+        this.paramTwo = paramTwo;
+    }
+
+    public String intercept(ActionInvocation invocation) throws Exception {
+        return invocation.invoke();
+    }
 
 }

@@ -19,12 +19,11 @@
  */
 -->
 
-<#-- 
+<#--
  Code that will add javascript needed for tooltips
 --><#t/>
 <#if (parameters.hasTooltip!false)><#t/>
-	<#lt/><!-- javascript that is needed for tooltips -->
-	<#lt/><script type="text/javascript" src='<@s.url value="${parameters.staticContentPath}/domTT.js" includeParams="none" encode="false" />' <#include "/${parameters.templateDir}/simple/nonce.ftl" /> > </script>
-	<#lt/><link rel="stylesheet" type="text/css" href="<@s.url value="${parameters.staticContentPath}/domTT.css" includeParams="none" encode="false" />" <#include "/${parameters.templateDir}/simple/nonce.ftl" /> />
-	
+    <#lt/><!-- javascript that is needed for tooltips -->
+    <#lt/><@s.script type="text/javascript" src="${base}${parameters.staticContentPath}/domTT.js" />
+    <#lt/><@s.link rel="stylesheet" type="text/css" href="${base}${parameters.staticContentPath}/domTT.css" />
 </#if><#t/>

@@ -47,7 +47,7 @@ public class SecurityMemberAccessTest extends TestCase {
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
         String propertyName = "stringField";
-        Member member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+        Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -61,7 +61,7 @@ public class SecurityMemberAccessTest extends TestCase {
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
         String propertyName = "stringField";
-        Member member = FooBar.class.getDeclaredMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+        Member member = FooBar.class.getDeclaredMethod(formGetterName(propertyName));
 
         Set<Class<?>> excluded = new HashSet<>();
         excluded.add(FooBar.class);
@@ -138,12 +138,34 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("fooLogic() from FooInterface isn't accessible!!!", accessible);
     }
 
+    public void testMiddleOfInheritanceExclusion2() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+
+        String propertyName = "barLogic";
+        Member member = BarInterface.class.getMethod(propertyName);
+
+        Set<Class<?>> excluded = new HashSet<>();
+        excluded.add(BarInterface.class);
+        sma.setExcludedClasses(excluded);
+
+        // when
+        boolean accessible = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
+    }
+
     public void testMiddleOfInheritanceExclusion3() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
+
+        Set<Class<?>> excluded = new HashSet<>();
+        excluded.add(FooInterface.class);
+        sma.setExcludedClasses(excluded);
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -179,13 +201,35 @@ public class SecurityMemberAccessTest extends TestCase {
         sma.setExcludedPackageNamePatterns(excluded);
 
         String propertyName = "stringField";
-        Member member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+        Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
         boolean actual = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertFalse("stringField is accessible!", actual);
+    }
+
+    public void testPackageExclusionExemption() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        Set<Pattern> excluded = new HashSet<>();
+        excluded.add(Pattern.compile("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*"));
+        sma.setExcludedPackageNamePatterns(excluded);
+
+        Set<Class<?>> allowed = new HashSet<>();
+        allowed.add(FooBar.class);
+        sma.setExcludedPackageExemptClasses(allowed);
+
+        String propertyName = "stringField";
+        Member member = FooBar.class.getMethod(formGetterName(propertyName));
+
+        // when
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertTrue("stringField isn't accessible!", actual);
     }
 
     public void testPackageNameExclusion() throws Exception {
@@ -197,13 +241,58 @@ public class SecurityMemberAccessTest extends TestCase {
         sma.setExcludedPackageNames(excluded);
 
         String propertyName = "stringField";
-        Member member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+        Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
         boolean actual = sma.isAccessible(context, target, member, propertyName);
 
         // then
         assertFalse("stringField is accessible!", actual);
+    }
+
+
+    public void testPackageNameExclusionExemption() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        Set<String> excluded = new HashSet<>();
+        excluded.add(FooBar.class.getPackage().getName());
+        sma.setExcludedPackageNames(excluded);
+
+        Set<Class<?>> allowed = new HashSet<>();
+        allowed.add(FooBar.class);
+        sma.setExcludedPackageExemptClasses(allowed);
+
+        String propertyName = "stringField";
+        Member member = FooBar.class.getMethod(formGetterName(propertyName));
+
+        // when
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertTrue("stringField isn't accessible!", actual);
+    }
+
+    public void testPackageNameExclusionExemptionInheritance() throws Exception {
+        // given
+        SecurityMemberAccess sma = new SecurityMemberAccess(false);
+
+        Set<String> excluded = new HashSet<>();
+        excluded.add(FooBar.class.getPackage().getName());
+        sma.setExcludedPackageNames(excluded);
+
+        Set<Class<?>> allowed = new HashSet<>();
+        allowed.add(BarInterface.class);
+        sma.setExcludedPackageExemptClasses(allowed);
+
+        String propertyName = "barLogic";
+        Member member = BarInterface.class.getMethod(propertyName);
+
+        // when
+        boolean actual = sma.isAccessible(context, target, member, propertyName);
+
+        // then
+        assertTrue("barLogic isn't accessible!", actual);
     }
 
     public void testDefaultPackageExclusion() {
@@ -429,7 +518,7 @@ public class SecurityMemberAccessTest extends TestCase {
         sma.setExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang.,ognl,javax"));
 
         String propertyName = "intField";
-        Member member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+        Member member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -473,7 +562,7 @@ public class SecurityMemberAccessTest extends TestCase {
 
         // given
         propertyName = "intField";
-        member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+        member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
         accessible = sma.isAccessible(context, target, member, propertyName);
@@ -482,7 +571,7 @@ public class SecurityMemberAccessTest extends TestCase {
 
         // given
         propertyName = "doubleField";
-        member = FooBar.class.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+        member = FooBar.class.getMethod(formGetterName(propertyName));
 
         // when
         accessible = sma.isAccessible(context, target, member, propertyName);
@@ -547,7 +636,6 @@ public class SecurityMemberAccessTest extends TestCase {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
-
         sma.setExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang."));
 
         // when
@@ -558,6 +646,9 @@ public class SecurityMemberAccessTest extends TestCase {
         assertTrue("package java.lang. is accessible!", actual);
     }
 
+    private static String formGetterName(String propertyName) {
+        return "get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+    }
 }
 
 class FooBar implements FooBarInterface {

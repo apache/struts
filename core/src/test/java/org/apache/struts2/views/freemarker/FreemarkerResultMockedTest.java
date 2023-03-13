@@ -38,7 +38,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.apache.struts2.views.jsp.AbstractUITagTest.normalize;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -260,8 +259,8 @@ public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
         EasyMock.replay(servletContext);
 
         init();
-        // create session
-        request.getSession();
+        // create session and add nonce
+        request.getSession().setAttribute("nonce", "aNonce");
 
         request.setRequestURI("/tutorial/test10.action");
         ActionMapping mapping = container.getInstance(ActionMapper.class).getMapping(request, configurationManager);

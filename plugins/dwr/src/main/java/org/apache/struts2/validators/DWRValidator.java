@@ -76,7 +76,7 @@ public class DWRValidator {
             requestParams = requestParams.withExtraParams(params);
         }
         Map<String, Object> requestMap = new RequestMap(req);
-        Map<String, Object> session = new SessionMap<>(req);
+        Map<String, Object> session = new SessionMap(req);
         Map<String, Object> application = new ApplicationMap(servletContext);
         Dispatcher du = Dispatcher.getInstance();
         Map<String, Object> ctx = du.createContextMap(requestMap,

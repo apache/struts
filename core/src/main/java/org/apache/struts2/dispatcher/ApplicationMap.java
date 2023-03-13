@@ -18,9 +18,13 @@
  */
 package org.apache.struts2.dispatcher;
 
-import javax.servlet.ServletContext;
 import java.io.Serializable;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of attributes and
@@ -28,12 +32,12 @@ import java.util.*;
  * enumerates over all servlet context attributes and init parameters and returns a collection of both.
  * Note, this will occur lazily - only when the entry set is asked for.
  */
-public class ApplicationMap extends AbstractMap implements Serializable {
+public class ApplicationMap extends AbstractMap<String, Object> implements Serializable {
 
     private static final long serialVersionUID = 9136809763083228202L;
 
     private ServletContext context;
-    private Set<Object> entries;
+    private Set<Entry<String, Object>> entries;
 
 
     /**
@@ -41,7 +45,7 @@ public class ApplicationMap extends AbstractMap implements Serializable {
      *
      * @param ctx the servlet context
      */
-    public ApplicationMap(ServletContext ctx) {
+    public ApplicationMap(final ServletContext ctx) {
         this.context = ctx;
     }
 
@@ -49,13 +53,14 @@ public class ApplicationMap extends AbstractMap implements Serializable {
     /**
      * Removes all entries from the Map and removes all attributes from the servlet context.
      */
+    @Override
     public void clear() {
         entries = null;
 
-        Enumeration e = context.getAttributeNames();
+        Enumeration<String> e = context.getAttributeNames();
 
         while (e.hasMoreElements()) {
-            context.removeAttribute(e.nextElement().toString());
+            context.removeAttribute(e.nextElement());
         }
     }
 
@@ -64,39 +69,20 @@ public class ApplicationMap extends AbstractMap implements Serializable {
      *
      * @return a Set of all servlet context attributes as well as context init parameters.
      */
-    public Set entrySet() {
+    @Override
+    public Set<Entry<String, Object>> entrySet() {
         if (entries == null) {
             entries = new HashSet<>();
 
             // Add servlet context attributes
-            Enumeration enumeration = context.getAttributeNames();
+            Enumeration<String> enumeration = context.getAttributeNames();
 
             while (enumeration.hasMoreElements()) {
-                final String key = enumeration.nextElement().toString();
+                final String key = enumeration.nextElement();
                 final Object value = context.getAttribute(key);
-                entries.add(new Map.Entry() {
-                    public boolean equals(Object obj) {
-                        if (!(obj instanceof Map.Entry)) {
-                            return false;
-                        }
-                        Map.Entry entry = (Map.Entry) obj;
-
-                        return ((key == null) ? (entry.getKey() == null) : key.equals(entry.getKey())) && ((value == null) ? (entry.getValue() == null) : value.equals(entry.getValue()));
-                    }
-
-                    public int hashCode() {
-                        return ((key == null) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());
-                    }
-
-                    public Object getKey() {
-                        return key;
-                    }
-
-                    public Object getValue() {
-                        return value;
-                    }
-
-                    public Object setValue(Object obj) {
+                entries.add(new StringObjectEntry(key, value) {
+                    @Override
+                    public Object setValue(final Object obj) {
                         context.setAttribute(key, obj);
 
                         return value;
@@ -108,31 +94,11 @@ public class ApplicationMap extends AbstractMap implements Serializable {
             enumeration = context.getInitParameterNames();
 
             while (enumeration.hasMoreElements()) {
-                final String key = enumeration.nextElement().toString();
+                final String key = enumeration.nextElement();
                 final Object value = context.getInitParameter(key);
-                entries.add(new Map.Entry() {
-                    public boolean equals(Object obj) {
-                        if (!(obj instanceof Map.Entry)) {
-                            return false;
-                        }
-                        Map.Entry entry = (Map.Entry) obj;
-
-                        return ((key == null) ? (entry.getKey() == null) : key.equals(entry.getKey())) && ((value == null) ? (entry.getValue() == null) : value.equals(entry.getValue()));
-                    }
-
-                    public int hashCode() {
-                        return ((key == null) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());
-                    }
-
-                    public Object getKey() {
-                        return key;
-                    }
-
-                    public Object getValue() {
-                        return value;
-                    }
-
-                    public Object setValue(Object obj) {
+                entries.add(new StringObjectEntry(key, value) {
+                    @Override
+                    public Object setValue(final Object obj) {
                         context.setAttribute(key, obj);
 
                         return value;
@@ -151,13 +117,12 @@ public class ApplicationMap extends AbstractMap implements Serializable {
      * @param key the entry key.
      * @return the servlet context attribute or init parameter or <tt>null</tt> if the entry is not found.
      */
-    public Object get(Object key) {
+    public Object get(final String key) {
         // Try context attributes first, then init params
         // This gives the proper shadowing effects
-        String keyString = key.toString();
-        Object value = context.getAttribute(keyString);
+        Object value = context.getAttribute(key);
 
-        return (value == null) ? context.getInitParameter(keyString) : value;
+        return (value == null) ? context.getInitParameter(key) : value;
     }
 
     /**
@@ -167,10 +132,13 @@ public class ApplicationMap extends AbstractMap implements Serializable {
      * @param value the value to set.
      * @return the attribute that was just set.
      */
-    public Object put(Object key, Object value) {
+    @Override
+    public Object put(final String key, final Object value) {
         Object oldValue = get(key);
         entries = null;
-        context.setAttribute(key.toString(), value);
+
+        context.setAttribute(key, value);
+
         return oldValue;
     }
 
@@ -180,11 +148,11 @@ public class ApplicationMap extends AbstractMap implements Serializable {
      * @param key the attribute to remove.
      * @return the entry that was just removed.
      */
-    public Object remove(Object key) {
+    public Object remove(final String key) {
         entries = null;
 
         Object value = get(key);
-        context.removeAttribute(key.toString());
+        context.removeAttribute(key);
 
         return value;
     }

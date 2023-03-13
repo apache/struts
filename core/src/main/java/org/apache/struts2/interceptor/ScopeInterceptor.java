@@ -273,7 +273,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         invocation.addPreResultListener(this);
         Map<String, Object> session = ActionContext.getContext().getSession();
         if (session == null && autoCreateSession) {
-            session = new SessionMap<>(ServletActionContext.getRequest());
+            session = new SessionMap(ServletActionContext.getRequest());
             ActionContext.getContext().withSession(session);
         }
 

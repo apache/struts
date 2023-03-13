@@ -50,12 +50,20 @@ public class SessionMapTest extends TestCase {
         List<String> attributeNames = new ArrayList<String>();
         attributeNames.add("test");
         attributeNames.add("anotherTest");
-        Enumeration attributeNamesEnum = Collections.enumeration(attributeNames);
+        Enumeration<String> attributeNamesEnum = Collections.enumeration(attributeNames);
 
         MockSessionMap sessionMap = new MockSessionMap((HttpServletRequest) requestMock.proxy());
+        sessionMock.expect("getAttribute",
+                new Constraint[] {
+                    new IsEqual("test")
+                });
         sessionMock.expect("setAttribute",
                 new Constraint[] {
                     new IsEqual("test"), new IsEqual("test value")
+                });
+        sessionMock.expect("getAttribute",
+                new Constraint[] {
+                    new IsEqual("anotherTest")
                 });
         sessionMock.expect("setAttribute",
                 new Constraint[] {
@@ -68,6 +76,14 @@ public class SessionMapTest extends TestCase {
                 });
         sessionMock.expect("removeAttribute",
                 new Constraint[]{
+                    new IsEqual("anotherTest")
+                });
+        sessionMock.expect("getAttribute",
+                new Constraint[] {
+                    new IsEqual("test")
+                });
+        sessionMock.expect("getAttribute",
+                new Constraint[] {
                     new IsEqual("anotherTest")
                 });
         sessionMap.put("test", "test value");
@@ -102,7 +118,7 @@ public class SessionMapTest extends TestCase {
     }
 
     public void testGetObjectOnSessionMapUsesWrappedSessionsGetAttributeWithStringValue() throws Exception {
-        Object key = new Object();
+        String key = "theKey";
         Object value = new Object();
         sessionMock.expectAndReturn("getAttribute", new Constraint[]{
                 new IsEqual(key.toString())
@@ -114,7 +130,7 @@ public class SessionMapTest extends TestCase {
     }
 
     public void testPutObjectOnSessionMapUsesWrappedSessionsSetsAttributeWithStringValue() throws Exception {
-        Object key = new Object();
+        String key = "theKey";
         Object value = new Object();
         sessionMock.expect("getAttribute", new Constraint[]{new IsAnything()});
         sessionMock.expect("setAttribute", new Constraint[]{
@@ -130,10 +146,10 @@ public class SessionMapTest extends TestCase {
     	
     	MockHttpServletRequest request = new MockHttpServletRequest();
     	
-        Object key = new Object();
+        String key = "theKey";
         Object value = new Object();
         
-        SessionMap<Object, Object> sessionMap = new SessionMap<Object, Object>(request);
+        SessionMap sessionMap = new SessionMap(request);
         sessionMap.put(key, value);
         assertTrue(sessionMap.containsKey(key));
     }
@@ -142,11 +158,11 @@ public class SessionMapTest extends TestCase {
     	
     	MockHttpServletRequest request = new MockHttpServletRequest();
     	
-        Object key = new Object();
-        Object someOtherKey = new Object();
+        String key = "theKey";
+        Object someOtherKey = "someOtherKey";
         Object value = new Object();
         
-        SessionMap<Object, Object> sessionMap = new SessionMap<Object, Object>(request);
+        SessionMap sessionMap = new SessionMap(request);
         sessionMap.put(key, value);
         
         assertFalse(sessionMap.containsKey(someOtherKey));
@@ -219,7 +235,7 @@ public class SessionMapTest extends TestCase {
 
         private static final long serialVersionUID = 8783604360786273764L;
 
-        private Map map = new HashMap();
+        private Map<String, Object> map = new HashMap<>();
 
         public MockSessionMap(HttpServletRequest request) {
             super(request);
@@ -228,8 +244,8 @@ public class SessionMapTest extends TestCase {
         public Object get(Object key) {
             return map.get(key);
         }
-
-        public Object put(Object key, Object value) {
+        
+        public Object put(String key, Object value) {
             Object originalValue = super.put(key, value);
             map.put(key, value); //put the value into our map after putting it in the superclass map to avoid polluting the get call.
 

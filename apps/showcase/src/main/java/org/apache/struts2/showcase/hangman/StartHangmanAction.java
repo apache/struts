@@ -21,9 +21,10 @@
 package org.apache.struts2.showcase.hangman;
 
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.interceptor.SessionAware;
 
 import java.util.Map;
+
+import org.apache.struts2.action.SessionAware;
 
 import static org.apache.struts2.showcase.hangman.HangmanConstants.HANGMAN_SESSION_KEY;
 
@@ -33,7 +34,7 @@ public class StartHangmanAction extends ActionSupport implements SessionAware {
 
 	private HangmanService service;
 	private Hangman hangman;
-	private Map session;
+	private Map<String, Object> session;
 
 
 	public StartHangmanAction(HangmanService service) {
@@ -53,8 +54,8 @@ public class StartHangmanAction extends ActionSupport implements SessionAware {
 	}
 
 
-	// === SessionAware ===
-	public void setSession(Map session) {
-		this.session = session;
-	}
+    @Override
+    public void withSession(Map<String, Object> session) {
+        this.session = session;
+    }
 }

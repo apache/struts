@@ -19,7 +19,8 @@
 package org.apache.struts2.portlet.dispatcher;
 
 import com.opensymphony.xwork2.Action;
-import org.apache.struts2.interceptor.SessionAware;
+
+import org.apache.struts2.action.SessionAware;
 import org.apache.struts2.portlet.PortletConstants;
 
 import java.io.Serializable;
@@ -67,7 +68,8 @@ public class DirectRenderFromEventAction implements SessionAware, Action, Serial
         return SUCCESS;
     }
 
-	public void setSession(Map session) {
-		location = (String)session.get(PortletConstants.RENDER_DIRECT_LOCATION);
-	}
+    @Override
+    public void withSession(Map<String, Object> session) {
+        location = (String)session.get(PortletConstants.RENDER_DIRECT_LOCATION);
+    }
 }

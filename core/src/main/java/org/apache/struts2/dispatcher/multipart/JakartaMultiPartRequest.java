@@ -75,6 +75,9 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             if (e instanceof FileUploadBase.SizeLimitExceededException) {
                 FileUploadBase.SizeLimitExceededException ex = (FileUploadBase.SizeLimitExceededException) e;
                 errorMessage = buildErrorMessage(e, new Object[]{ex.getPermittedSize(), ex.getActualSize()});
+            } else if (e instanceof FileUploadBase.FileSizeLimitExceededException) {
+                FileUploadBase.FileSizeLimitExceededException ex = (FileUploadBase.FileSizeLimitExceededException) e;
+                errorMessage = buildErrorMessage(e, new Object[]{ex.getFileName(), ex.getPermittedSize(), ex.getActualSize()});
             } else if (e instanceof FileCountLimitExceededException) {
                 FileCountLimitExceededException ex = (FileCountLimitExceededException) e;
                 errorMessage = buildErrorMessage(e, new Object[]{ex.getLimit()});
@@ -165,6 +168,9 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         }
         if (maxFiles != null) {
             upload.setFileCountMax(maxFiles);
+        }
+        if (maxFileSize != null) {
+            upload.setFileSizeMax(maxFileSize);
         }
         return upload;
     }

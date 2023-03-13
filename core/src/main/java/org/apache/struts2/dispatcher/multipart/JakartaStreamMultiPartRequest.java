@@ -29,9 +29,20 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Multi-part form data request adapter for Jakarta Commons FileUpload package that
@@ -215,6 +226,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             if (maxFiles != null) {
                 servletFileUpload.setFileCountMax(maxFiles);
             }
+            if (maxFileSize != null) {
+                servletFileUpload.setFileSizeMax(maxFileSize);
+            }
             FileItemIterator i = servletFileUpload.getItemIterator(request);
 
             // Iterate the file items
@@ -261,10 +275,9 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         // if maxSize is specified as -1, there is no sanity check and it's
         // safe to return true for any request, delegating the failure
         // checks later in the upload process.
-        if ((maxSize != null && maxSize == -1) || request == null) {
+        if (maxSize == null || maxSize == -1 || request == null) {
             return true;
         }
-
         return request.getContentLength() < maxSize;
     }
 
@@ -273,12 +286,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @return the request content length.
      */
     protected long getRequestSize(HttpServletRequest request) {
-        long requestSize = 0;
-        if (request != null) {
-            requestSize = request.getContentLength();
-        }
-
-        return requestSize;
+        return request != null ? request.getContentLength() : 0;
     }
 
     /**

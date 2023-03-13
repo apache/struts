@@ -252,7 +252,6 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_ALLOWED_METHOD_NAMES, Objects.toString(allowedMethodNames, null));
         map.put(StrutsConstants.STRUTS_DEFAULT_METHOD_NAME, defaultMethodName);
         map.put(StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_ENABLED, Objects.toString(mapperActionPrefixEnabled, null));
-        map.put(StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES, Objects.toString(mapperActionPrefixCrossNamespaces, null));
         map.put(StrutsConstants.DEFAULT_TEMPLATE_TYPE_CONFIG_KEY, uiTemplateSuffix);
         map.put(StrutsConstants.STRUTS_DISPATCHER_ERROR_HANDLER, beanConfToString(dispatcherErrorHandler));
         map.put(StrutsConstants.STRUTS_EXCLUDED_CLASSES, classesToString(excludedClasses));

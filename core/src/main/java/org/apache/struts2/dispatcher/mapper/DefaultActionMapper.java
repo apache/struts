@@ -132,7 +132,6 @@ public class DefaultActionMapper implements ActionMapper {
     protected String defaultMethodName = "execute";
 
     private boolean allowActionPrefix = false;
-    private boolean allowActionCrossNamespaceAccess = false;
 
     protected List<String> extensions = new ArrayList<String>() {{
         add("action");
@@ -162,12 +161,12 @@ public class DefaultActionMapper implements ActionMapper {
                             }
                         }
                         String actionName = cleanupActionName(name);
-                        if (allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
+                        if (allowSlashesInActionNames) {
                             if (actionName.startsWith("/")) {
                                 actionName = actionName.substring(1);
                             }
                         }
-                        if (!allowSlashesInActionNames && !allowActionCrossNamespaceAccess) {
+                        if (!allowSlashesInActionNames) {
                             if (actionName.lastIndexOf('/') != -1) {
                                 actionName = actionName.substring(actionName.lastIndexOf('/') + 1);
                             }
@@ -239,16 +238,6 @@ public class DefaultActionMapper implements ActionMapper {
     @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_ENABLED)
     public void setAllowActionPrefix(String allowActionPrefix) {
         this.allowActionPrefix = BooleanUtils.toBoolean(allowActionPrefix);
-    }
-
-    /**
-     * @deprecated since 6.1.0 - please refactor your application to avoid using this functionality
-     * @param allowActionCrossNamespaceAccess true to enable cross namespace action access
-     */
-    @Deprecated
-    @Inject(value = StrutsConstants.STRUTS_MAPPER_ACTION_PREFIX_CROSSNAMESPACES)
-    public void setAllowActionCrossNamespaceAccess(String allowActionCrossNamespaceAccess) {
-        this.allowActionCrossNamespaceAccess = BooleanUtils.toBoolean(allowActionCrossNamespaceAccess);
     }
 
     @Inject

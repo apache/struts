@@ -25,9 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.url.QueryStringBuilder;
-import org.apache.struts2.url.QueryStringParser;
-import org.apache.struts2.url.UrlDecoder;
-import org.apache.struts2.url.UrlEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,9 +44,6 @@ public class DefaultUrlHelper implements UrlHelper {
     private int httpsPort = DEFAULT_HTTPS_PORT;
 
     private QueryStringBuilder queryStringBuilder;
-    private QueryStringParser queryStringParser;
-    private UrlEncoder encoder;
-    private UrlDecoder decoder;
 
     @Inject(StrutsConstants.STRUTS_URL_HTTP_PORT)
     public void setHttpPort(String httpPort) {
@@ -62,23 +56,8 @@ public class DefaultUrlHelper implements UrlHelper {
     }
 
     @Inject
-    public void setEncoder(UrlEncoder encoder) {
-        this.encoder = encoder;
-    }
-
-    @Inject
-    public void setDecoder(UrlDecoder decoder) {
-        this.decoder = decoder;
-    }
-
-    @Inject
     public void setQueryStringBuilder(QueryStringBuilder builder) {
         this.queryStringBuilder = builder;
-    }
-
-    @Inject
-    public void setQueryStringParser(QueryStringParser queryStringParser) {
-        this.queryStringParser = queryStringParser;
     }
 
     public String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
@@ -206,77 +185,8 @@ public class DefaultUrlHelper implements UrlHelper {
         }
     }
 
-    /**
-     * Builds parameters assigned to url - a query string
-     * @param params a set of params to assign
-     * @param link a based url
-     * @param paramSeparator separator used
-     * @deprecated since Struts 6.1.0, use {@link QueryStringBuilder} instead
-     */
-    @Deprecated
-    public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator) {
-        queryStringBuilder.build(params, link, paramSeparator);
-    }
-
-    /**
-     * Builds parameters assigned to url - a query string
-     * @param params a set of params to assign
-     * @param link a based url
-     * @param paramSeparator separator used
-     * @param encode if true, parameters will be encoded - ignored
-     * @deprecated since Struts 6.1.0, use {@link #buildParametersString(Map, StringBuilder, String)}
-     */
-    @Deprecated
-    public void buildParametersString(Map<String, Object> params, StringBuilder link, String paramSeparator, boolean encode) {
-        buildParametersString(params, link, paramSeparator);
-    }
-
     protected boolean isValidScheme(String scheme) {
         return HTTP_PROTOCOL.equals(scheme) || HTTPS_PROTOCOL.equals(scheme);
     }
 
-    /**
-     * Encodes the URL using {@link UrlEncoder#encode} with the encoding specified in the configuration.
-     *
-     * @param input the input to encode
-     * @return the encoded string
-     * @deprecated since 6.1.0, use {@link UrlEncoder} directly, use {@link Inject} to inject a proper instance
-     */
-    @Deprecated
-    public String encode(String input) {
-        return encoder.encode(input);
-    }
-
-    /**
-     * Decodes the URL using {@link UrlDecoder#decode(String, boolean)} with the encoding specified in the configuration.
-     *
-     * @param input the input to decode
-     * @return the encoded string
-     * @deprecated since 6.1.0, use {@link UrlDecoder} directly, use {@link Inject} to inject a proper instance
-     */
-    @Deprecated
-    public String decode(String input) {
-        return decoder.decode(input, false);
-    }
-
-    /**
-     * Decodes the URL using {@link UrlDecoder#decode(String, boolean)} with the encoding specified in the configuration.
-     *
-     * @param input         the input to decode
-     * @param isQueryString whether input is a query string. If <code>true</code> other decoding rules apply.
-     * @return the encoded string
-     * @deprecated since 6.1.0, use {@link UrlDecoder} directly, use {@link Inject} to inject a proper instance
-     */
-    @Deprecated
-    public String decode(String input, boolean isQueryString) {
-        return decoder.decode(input, isQueryString);
-    }
-
-    /**
-     * @deprecated since 6.1.0, use {@link QueryStringParser} directly, use {@link Inject} to inject a proper instance
-     */
-    @Deprecated
-    public Map<String, Object> parseQueryString(String queryString, boolean forceValueArray) {
-        return this.queryStringParser.parse(queryString, forceValueArray);
-    }
 }

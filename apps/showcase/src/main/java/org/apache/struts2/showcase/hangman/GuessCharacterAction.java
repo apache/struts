@@ -21,15 +21,16 @@
 package org.apache.struts2.showcase.hangman;
 
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.interceptor.SessionAware;
 
 import java.util.Map;
+
+import org.apache.struts2.action.SessionAware;
 
 public class GuessCharacterAction extends ActionSupport implements SessionAware {
 
 	private static final long serialVersionUID = 9050915577007590674L;
 
-	private Map session;
+	private Map<String, Object> session;
 	private Character character;
 	private Hangman hangman;
 
@@ -44,10 +45,6 @@ public class GuessCharacterAction extends ActionSupport implements SessionAware 
 		return hangman;
 	}
 
-	public void setSession(Map session) {
-		this.session = session;
-	}
-
 	public void setCharacter(Character character) {
 		this.character = character;
 	}
@@ -55,4 +52,9 @@ public class GuessCharacterAction extends ActionSupport implements SessionAware 
 	public Character getCharacter() {
 		return this.character;
 	}
+
+    @Override
+    public void withSession(Map<String, Object> session) {
+        this.session = session;
+    }
 }

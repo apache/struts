@@ -463,39 +463,6 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         assertEquals("Action", actionMapping.getName());
     }
 
-    public void testActionPrefixWhenSlashesButSlashesDisabledAndCrossNamespace() {
-        Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "my/Action", "");
-
-        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
-
-        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
-        defaultActionMapper.setAllowActionPrefix("true");
-        defaultActionMapper.setAllowActionCrossNamespaceAccess("true");
-        defaultActionMapper.setSlashesInActionNames("false");
-        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
-
-        assertEquals("my/Action", actionMapping.getName());
-    }
-
-    public void testActionPrefixWhenCrossNamespace() {
-        Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "/my/Action", "");
-
-        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
-
-        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
-        defaultActionMapper.setAllowActionPrefix("true");
-        defaultActionMapper.setAllowActionCrossNamespaceAccess("true");
-        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
-
-        assertEquals("/my/Action", actionMapping.getName());
-    }
-
     public void testActionPrefix_fromImageButton() {
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction", "");

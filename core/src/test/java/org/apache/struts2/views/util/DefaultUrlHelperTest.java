@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Scope.Strategy;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.url.StrutsQueryStringBuilder;
-import org.apache.struts2.url.StrutsUrlDecoder;
 import org.apache.struts2.url.StrutsUrlEncoder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -346,8 +345,6 @@ public class DefaultUrlHelperTest extends StrutsInternalTestCase {
         urlHelper = new DefaultUrlHelper();
         StrutsUrlEncoder encoder = new StrutsUrlEncoder();
         urlHelper.setQueryStringBuilder(new StrutsQueryStringBuilder(encoder));
-        urlHelper.setEncoder(encoder);
-        urlHelper.setDecoder(new StrutsUrlDecoder());
     }
 
     static class StubContainer implements Container {

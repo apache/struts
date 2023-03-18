@@ -962,7 +962,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
      * @return A list of Interceptor objects
      * @throws ConfigurationException in case of configuration errors
      */
-    private List<InterceptorMapping> lookupInterceptorReference(PackageConfig.Builder context, Element interceptorRefElement) throws ConfigurationException {
+    protected List<InterceptorMapping> lookupInterceptorReference(PackageConfig.Builder context, Element interceptorRefElement) throws ConfigurationException {
         String refName = interceptorRefElement.getAttribute("name");
         Map<String, String> refParams = XmlHelper.getParams(interceptorRefElement);
 

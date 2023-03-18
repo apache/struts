@@ -67,7 +67,7 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
     private final String configFileName;
     private final Set<String> loadedFileUrls = new HashSet<>();
     private Set<String> includedFileNames;
-    private FileManager fileManager;
+    protected FileManager fileManager;
 
     @Inject
     public void setFileManagerFactory(FileManagerFactory fileManagerFactory) {
@@ -120,7 +120,7 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
         return loadedFileUrls.stream().anyMatch(url -> fileManager.fileNeedsReloading(url));
     }
 
-    private List<Document> parseFile(String configFileName) {
+    protected List<Document> parseFile(String configFileName) {
         try {
             loadedFileUrls.clear();
             return loadConfigurationFiles(configFileName, null);
@@ -131,7 +131,7 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
         }
     }
 
-    private List<Document> loadConfigurationFiles(String fileName, Element includeElement) {
+    protected List<Document> loadConfigurationFiles(String fileName, Element includeElement) {
         if (includedFileNames.contains(fileName)) {
             return emptyList();
         }
@@ -149,7 +149,7 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
         return finalDocs;
     }
 
-    private Iterator<URL> getURLs(String fileName) {
+    protected Iterator<URL> getURLs(String fileName) {
         Iterator<URL> urls = null;
         try {
             urls = getConfigurationUrls(fileName);
@@ -167,7 +167,7 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
         return ClassLoaderUtil.getResources(fileName, XmlConfigurationProvider.class, false);
     }
 
-    private List<Document> getDocs(Iterator<URL> urls, String fileName, Element includeElement) {
+    protected List<Document> getDocs(Iterator<URL> urls, String fileName, Element includeElement) {
         List<Document> docs = new ArrayList<>();
 
         while (urls.hasNext()) {
@@ -204,7 +204,7 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
         return docs;
     }
 
-    private List<Document> getFinalDocs(List<Document> docs) {
+    protected List<Document> getFinalDocs(List<Document> docs) {
         List<Document> finalDocs = new ArrayList<>();
         docs.sort(Comparator.comparing(XmlHelper::getLoadOrder));
         for (Document doc : docs) {

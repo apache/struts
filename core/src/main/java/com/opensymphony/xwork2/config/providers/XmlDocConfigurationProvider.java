@@ -86,9 +86,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     protected boolean throwExceptionOnDuplicateBeans = true;
     protected ValueSubstitutor valueSubstitutor;
 
-    // Store added result types for potential use by subclasses
-    protected List<ResultTypeConfig> addedResultTypes;
-
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
@@ -400,7 +397,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         LOG.debug("Loaded {}", newPackage);
 
         // add result types (and default result) to this package
-        addedResultTypes = addResultTypes(newPackage, packageElement);
+        addResultTypes(newPackage, packageElement);
 
         // load the interceptors and interceptor stacks for this package
         loadInterceptors(newPackage, packageElement);
@@ -455,7 +452,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                     actionElement);
         }
 
-        ActionConfig actionConfig = buildActionConfig(name, className, location, actionElement, packageContext, results);
+        ActionConfig actionConfig = buildActionConfig(actionElement, location, packageContext, results);
         packageContext.addActionConfig(actionConfig.getName(), actionConfig);
 
         LOG.debug("Loaded {}{} in '{}' package: {}",
@@ -463,12 +460,12 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 name, packageContext.getName(), actionConfig);
     }
 
-    protected ActionConfig buildActionConfig(String actionName,
-                                             String className,
+    protected ActionConfig buildActionConfig(Element actionElement,
                                              Location location,
-                                             Element actionElement,
                                              PackageConfig.Builder packageContext,
                                              Map<String, ResultConfig> results) {
+        String actionName = actionElement.getAttribute("name");
+        String className = actionElement.getAttribute("class");
         // methodName should be null if it's not set
         String methodName = trimToNull(actionElement.getAttribute("method"));
 
@@ -527,16 +524,13 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         return true;
     }
 
-    protected List<ResultTypeConfig> addResultTypes(PackageConfig.Builder packageContext, Element element) {
-        List<ResultTypeConfig> addedResultTypes = new ArrayList<>();
-
+    protected void addResultTypes(PackageConfig.Builder packageContext, Element element) {
         iterateChildrenByTagName(element, "result-type", resultTypeElement -> {
             String name = resultTypeElement.getAttribute("name");
             String className = resultTypeElement.getAttribute("class");
             String def = resultTypeElement.getAttribute("default");
 
             Location loc = DomHelper.getLocationObject(resultTypeElement);
-
             Class<?> clazz = verifyResultType(className, loc);
             if (clazz == null) {
                 return;
@@ -547,25 +541,24 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             } catch (Throwable t) {
                 LOG.debug("The result type [{}] doesn't have a default param [DEFAULT_PARAM] defined!", className, t);
             }
-            ResultTypeConfig.Builder resultType = new ResultTypeConfig.Builder(name, className).defaultResultParam(paramName)
-                    .location(DomHelper.getLocationObject(resultTypeElement));
+            packageContext.addResultTypeConfig(buildResultTypeConfig(resultTypeElement, loc, paramName));
 
-            Map<String, String> params = XmlHelper.getParams(resultTypeElement);
-
-            if (!params.isEmpty()) {
-                resultType.addParams(params);
-            }
-            ResultTypeConfig resultTypeConfig = resultType.build();
-            packageContext.addResultTypeConfig(resultTypeConfig);
-            addedResultTypes.add(resultTypeConfig);
-
-            // set the default result type
             if (BooleanUtils.toBoolean(def)) {
                 packageContext.defaultResultType(name);
             }
         });
+    }
 
-        return addedResultTypes;
+    protected ResultTypeConfig buildResultTypeConfig(Element resultTypeElement, Location location, String paramName) {
+        String name = resultTypeElement.getAttribute("name");
+        String className = resultTypeElement.getAttribute("class");
+        ResultTypeConfig.Builder resultType = new ResultTypeConfig.Builder(name,
+                className).defaultResultParam(paramName).location(location);
+        Map<String, String> params = XmlHelper.getParams(resultTypeElement);
+        if (!params.isEmpty()) {
+            resultType.addParams(params);
+        }
+        return resultType.build();
     }
 
     protected Class<?> verifyResultType(String className, Location loc) {
@@ -685,7 +678,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             Location location = DomHelper.getLocationObject(element);
 
             for (String name : resultNamesSet) {
-                ResultConfig resultConfig = buildResultConfig(name, resultClass, params, location, config);
+                ResultConfig resultConfig = buildResultConfig(name, config, location, params);
                 results.put(resultConfig.getName(), resultConfig);
             }
         });
@@ -693,15 +686,11 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         return results;
     }
 
-    /**
-     * @param resultTypeConfig intentionally unused, provided for use by subclasses
-     */
     protected ResultConfig buildResultConfig(String name,
-                                             String resultClass,
-                                             Map<String, String> params,
+                                             ResultTypeConfig config,
                                              Location location,
-                                             ResultTypeConfig resultTypeConfig) {
-        return new ResultConfig.Builder(name, resultClass).addParams(params).location(location).build();
+                                             Map<String, String> params) {
+        return new ResultConfig.Builder(name, config.getClassName()).location(location).addParams(params).build();
     }
 
     protected Map<String, String> buildResultParams(Element resultElement, ResultTypeConfig config) {

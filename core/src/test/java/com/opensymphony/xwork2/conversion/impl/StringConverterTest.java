@@ -18,12 +18,10 @@
  */
 package com.opensymphony.xwork2.conversion.impl;
 
-import com.opensymphony.xwork2.ActionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.StrutsInternalTestCase;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 

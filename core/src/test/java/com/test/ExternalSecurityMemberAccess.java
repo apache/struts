@@ -20,14 +20,14 @@ package com.test;
 
 import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 
-class TestSecurityMemberAccess extends SecurityMemberAccess {
+class ExternalSecurityMemberAccess extends SecurityMemberAccess {
 
-    TestSecurityMemberAccess(boolean allowStaticFieldAccess) {
+    ExternalSecurityMemberAccess(boolean allowStaticFieldAccess) {
         super(allowStaticFieldAccess);
     }
 
     @Override
-    public boolean isPackageExcluded(Package targetPackage, Package memberPackage) {
-        return super.isPackageExcluded(targetPackage, memberPackage);
+    public boolean isPackageExcluded(Class<?> targetClass, Class<?> memberClass) {
+        return super.isPackageExcluded(targetClass, memberClass);
     }
 }

@@ -128,9 +128,11 @@ public class ConstantConfig {
     private Set<Class<?>> excludedClasses;
     private List<Pattern> excludedPackageNamePatterns;
     private Set<String> excludedPackageNames;
+    private Set<Class<?>> excludedPackageExemptClasses;
     private Set<Class<?>> devModeExcludedClasses;
     private List<Pattern> devModeExcludedPackageNamePatterns;
     private Set<String> devModeExcludedPackageNames;
+    private Set<Class<?>> devModeExcludedPackageExemptClasses;
     private BeanConfig excludedPatternsChecker;
     private BeanConfig acceptedPatternsChecker;
     private BeanConfig notExcludedAcceptedPatternsChecker;
@@ -259,9 +261,11 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_EXCLUDED_CLASSES, classesToString(excludedClasses));
         map.put(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, StringUtils.join(excludedPackageNamePatterns, ','));
         map.put(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, StringUtils.join(excludedPackageNames, ','));
+        map.put(StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, classesToString(excludedPackageExemptClasses));
         map.put(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, classesToString(devModeExcludedClasses));
         map.put(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS, StringUtils.join(devModeExcludedPackageNamePatterns, ','));
         map.put(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, StringUtils.join(devModeExcludedPackageNames, ','));
+        map.put(StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, classesToString(devModeExcludedPackageExemptClasses));
         map.put(StrutsConstants.STRUTS_EXCLUDED_PATTERNS_CHECKER, beanConfToString(excludedPatternsChecker));
         map.put(StrutsConstants.STRUTS_ACCEPTED_PATTERNS_CHECKER, beanConfToString(acceptedPatternsChecker));
         map.put(StrutsConstants.STRUTS_NOT_EXCLUDED_ACCEPTED_PATTERNS_CHECKER, beanConfToString(notExcludedAcceptedPatternsChecker));
@@ -1194,6 +1198,14 @@ public class ConstantConfig {
         this.excludedPackageNames = excludedPackageNames;
     }
 
+    public Set<Class<?>> getExcludedPackageExemptClasses() {
+        return excludedPackageExemptClasses;
+    }
+
+    public void setExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
+        this.excludedPackageExemptClasses = excludedPackageExemptClasses;
+    }
+
     public Set<Class<?>> getDevModeExcludedClasses() {
         return devModeExcludedClasses;
     }
@@ -1216,6 +1228,14 @@ public class ConstantConfig {
 
     public void setDevModeExcludedPackageNames(Set<String> devModeExcludedPackageNames) {
         this.devModeExcludedPackageNames = devModeExcludedPackageNames;
+    }
+
+    public Set<Class<?>> getDevModeExcludedPackageExemptClasses() {
+        return devModeExcludedPackageExemptClasses;
+    }
+
+    public void setDevModeExcludedPackageExemptClasses(Set<Class<?>> devModeExcludedPackageExemptClasses) {
+        this.devModeExcludedPackageExemptClasses = devModeExcludedPackageExemptClasses;
     }
 
     public BeanConfig getExcludedPatternsChecker() {

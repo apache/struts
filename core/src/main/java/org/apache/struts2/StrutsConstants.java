@@ -408,10 +408,13 @@ public final class StrutsConstants {
     /** Allows override default DispatcherErrorHandler */
     public static final String STRUTS_DISPATCHER_ERROR_HANDLER = "struts.dispatcher.errorHandler";
 
-    /** Comma delimited set of excluded classes and package names which cannot be accessed via expressions */
+    /** Comma delimited set of excluded classes which cannot be accessed via OGNL expressions. Matching is done on both target and member classes of OGNL expression. Note that superclasses of listed classes are also used for matching. */
     public static final String STRUTS_EXCLUDED_CLASSES = "struts.excludedClasses";
+    /** Comma delimited set of RegEx to match against package names of target and member classes of OGNL expressions. If matched, they cannot be accessed. */
     public static final String STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS = "struts.excludedPackageNamePatterns";
+    /** Comma delimited set of package names, of which all its classes, and all classes in its subpackages, cannot be accessed via OGNL expressions. Matching is done on both target and member classes of OGNL expression. */
     public static final String STRUTS_EXCLUDED_PACKAGE_NAMES = "struts.excludedPackageNames";
+    /** Comma delimited set of exempt classes from matching against excludedPackageNames and excludedPackageNamePatterns. As matching for excluded packages is done on both target and member classes of OGNL expression, an exemption must exist for each match. */
     public static final String STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES = "struts.excludedPackageExemptClasses";
 
     /** Comma delimited set of excluded classes and package names which cannot be accessed via expressions in devMode */

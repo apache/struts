@@ -20,7 +20,7 @@ package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.ActionTag;
 
 import javax.servlet.jsp.tagext.TagSupport;
 import java.lang.reflect.Member;
@@ -51,7 +51,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         Member member = TagSupport.class.getMethod("doStartTag");
 
         // when
-        boolean actual = sma.isAccessible(context, new TestAction(), member, propertyName);
+        boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
 
         // then
         assertTrue("javax.servlet package isn't accessible!", actual);
@@ -61,7 +61,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
-        Set<Pattern> excluded = new HashSet<Pattern>();
+        Set<Pattern> excluded = new HashSet<>();
         excluded.add(Pattern.compile("^javax\\..+"));
         sma.setExcludedPackageNamePatterns(excluded);
 
@@ -69,7 +69,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         Member member = TagSupport.class.getMethod("doStartTag");
 
         // when
-        boolean actual = sma.isAccessible(context, new TestAction(), member, propertyName);
+        boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
 
         // then
         assertFalse("javax.servlet package is accessible!", actual);

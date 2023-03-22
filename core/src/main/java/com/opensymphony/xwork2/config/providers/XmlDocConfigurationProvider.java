@@ -74,6 +74,15 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
+/**
+ * This is a base XWork2 {@link ConfigurationProvider} for loading configuration from a parsed
+ * {@link Document XML document}. By extending this class, configuration can be loaded from any source that an XML
+ * document can be parsed from. Note that this class does not validate the document against any provided DTDs. For
+ * loading configuration from an XML file with DTD validation, please see
+ * {@link org.apache.struts2.config.StrutsXmlConfigurationProvider StrutsXmlConfigurationProvider}.
+ *
+ * @since 6.2.0
+ */
 public abstract class XmlDocConfigurationProvider implements ConfigurationProvider {
 
     private static final Logger LOG = LogManager.getLogger(XmlConfigurationProvider.class);

@@ -197,7 +197,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         this.container = container;
     }
 
-    @Inject(required = false)
+    @Inject
     public void setExecutorProvider(ExecutorProvider executorProvider) {
         this.executor = executorProvider;
     }
@@ -387,7 +387,8 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     public void init() {
         super.init();
         if (executor == null) {
-            executor = new StrutsExecutorProvider();
+            LOG.debug("Using: {} as ExecutorProvider", StrutsExecutorProvider.class.getSimpleName());
+            executor = container.getInstance(StrutsExecutorProvider.class);
         }
     }
 

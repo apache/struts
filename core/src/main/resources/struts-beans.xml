@@ -245,4 +245,7 @@
     <bean type="org.apache.struts2.url.UrlDecoder" name="strutsUrlDecoder"
           class="org.apache.struts2.url.StrutsUrlDecoder" scope="singleton"/>
 
+    <bean type="org.apache.struts2.interceptor.exec.ExecutorProvider" name="struts"
+          class="org.apache.struts2.interceptor.exec.StrutsExecutorProvider"/>
+
 </struts>

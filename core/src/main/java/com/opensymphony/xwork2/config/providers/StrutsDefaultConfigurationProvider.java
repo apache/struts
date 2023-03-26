@@ -118,6 +118,8 @@ import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.interceptor.exec.ExecutorProvider;
+import org.apache.struts2.interceptor.exec.StrutsExecutorProvider;
 import org.apache.struts2.url.QueryStringBuilder;
 import org.apache.struts2.url.QueryStringParser;
 import org.apache.struts2.url.StrutsQueryStringBuilder;
@@ -242,6 +244,8 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
             .factory(QueryStringParser.class, StrutsQueryStringParser.class, Scope.SINGLETON)
             .factory(UrlEncoder.class, StrutsUrlEncoder.class, Scope.SINGLETON)
             .factory(UrlDecoder.class, StrutsUrlDecoder.class, Scope.SINGLETON)
+
+            .factory(ExecutorProvider.class, StrutsExecutorProvider.class, Scope.SINGLETON)
         ;
 
         props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());

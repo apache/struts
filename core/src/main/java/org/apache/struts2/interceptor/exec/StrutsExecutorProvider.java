@@ -31,7 +31,7 @@ public class StrutsExecutorProvider implements ExecutorProvider {
     private final ExecutorService executor;
 
     public StrutsExecutorProvider() {
-        this.executor = Executors.newSingleThreadExecutor();
+        this.executor = Executors.newFixedThreadPool(2);
     }
 
     @Override

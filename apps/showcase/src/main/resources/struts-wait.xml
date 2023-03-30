@@ -25,7 +25,10 @@
 
 <struts>
 
-    <bean type="org.apache.struts2.interceptor.exec.ExecutorProvider" class="org.apache.struts2.showcase.wait.ThreadPoolExecutorProvider"/>
+    <bean type="org.apache.struts2.interceptor.exec.ExecutorProvider" name="threadPool"
+          class="org.apache.struts2.showcase.wait.ThreadPoolExecutorProvider"/>
+
+    <constant name="struts.executor.provider" value="threadPool"/>
 
     <package name="wait" extends="struts-default" namespace="/wait">
         <default-action-ref name="index"/>

@@ -466,4 +466,7 @@ public final class StrutsConstants {
 
     /** A global flag to set property {@link org.apache.struts2.components.Checkbox#setSubmitUnchecked(String)} */
     public static final String STRUTS_UI_CHECKBOX_SUBMIT_UNCHECKED = "struts.ui.checkbox.submitUnchecked";
+
+    /** See {@link org.apache.struts2.interceptor.exec.ExecutorProvider} */
+    public static final String STRUTS_EXECUTOR_PROVIDER = "struts.executor.provider";
 }

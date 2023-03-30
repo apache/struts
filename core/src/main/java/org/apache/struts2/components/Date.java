@@ -308,6 +308,8 @@ public class Date extends ContextBean {
             date = ((LocalDateTime) dateObject).atZone(tz);
         } else if (dateObject instanceof LocalDate) {
             date = ((LocalDate) dateObject).atStartOfDay(tz);
+        } else if (dateObject instanceof LocalTime) {
+            date = ((LocalTime) dateObject).atDate(ZonedDateTime.now(tz).toLocalDate()).atZone(tz);
         } else if (dateObject instanceof Instant) {
             date = ((Instant) dateObject).atZone(tz);
         } else {

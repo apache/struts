@@ -657,7 +657,7 @@ public class Dispatcher {
         }
     }
 
-    private ActionProxy prepareActionProxy(Map<String, Object> extraContext, String actionNamespace, String actionName, String actionMethod) {
+    protected ActionProxy prepareActionProxy(Map<String, Object> extraContext, String actionNamespace, String actionName, String actionMethod) {
         ActionProxy proxy;
         //check if we are probably in an async resuming
         ActionInvocation invocation = ActionContext.getContext().getActionInvocation();
@@ -676,12 +676,12 @@ public class Dispatcher {
         return proxy;
     }
 
-    private ActionProxy createActionProxy(String namespace, String name, String method, Map<String, Object> extraContext) {
+    protected ActionProxy createActionProxy(String namespace, String name, String method, Map<String, Object> extraContext) {
         ActionProxyFactory actionProxyFactory = getContainer().getInstance(ActionProxyFactory.class);
         return actionProxyFactory.createActionProxy(namespace, name, method, extraContext, true, false);
     }
 
-    private boolean isSameAction(ActionProxy actionProxy, String namespace, String actionName, String method) {
+    protected boolean isSameAction(ActionProxy actionProxy, String namespace, String actionName, String method) {
         return Objects.equals(namespace, actionProxy.getNamespace())
             && Objects.equals(actionName, actionProxy.getActionName())
             && Objects.equals(method, actionProxy.getMethod());

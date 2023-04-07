@@ -18,9 +18,8 @@
  */
 package org.apache.struts2.views.velocity;
 
-import org.apache.velocity.VelocityContext;
-
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.velocity.VelocityContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,8 +27,8 @@ import java.util.List;
 
 public class StrutsVelocityContext extends VelocityContext {
 
-    private ValueStack stack;
-    private List<VelocityContext> chainedContexts;
+    private final ValueStack stack;
+    private final List<VelocityContext> chainedContexts;
 
     /**
      * Creates a content with link to the ValueStack and any other Velocity contexts
@@ -44,7 +43,7 @@ public class StrutsVelocityContext extends VelocityContext {
     }
 
     /**
-     * @deprecated please use newly added {@link StrutsVelocityContext(List<VelocityContext)} constructor instead
+     * @deprecated please use {@link #StrutsVelocityContext(List, ValueStack)}
      * and pass {null} or empty list if no chained contexts were defined
      */
     @Deprecated
@@ -53,7 +52,7 @@ public class StrutsVelocityContext extends VelocityContext {
     }
 
     /**
-     * @deprecated please use newly added {@link StrutsVelocityContext(List<VelocityContext)} constructor instead
+     * @deprecated please use {@link #StrutsVelocityContext(List, ValueStack)}
      */
     @Deprecated()
     public StrutsVelocityContext(VelocityContext[] chainedContexts, ValueStack stack) {
@@ -61,71 +60,32 @@ public class StrutsVelocityContext extends VelocityContext {
     }
 
     public boolean internalContainsKey(String key) {
-        boolean contains = super.internalContainsKey(key);
-
-        // first let's check to see if we contain the requested key
-        if (contains) {
-            return true;
-        }
-
-        // if not, let's search for the key in the ognl value stack
-        if (stack != null) {
-            Object o = stack.findValue(key);
-
-            if (o != null) {
-                return true;
-            }
-
-            o = stack.getContext().get(key);
-            if (o != null) {
-                return true;
-            }
-        }
-
-        // if we still haven't found it, le's search through our chained contexts
-        if (chainedContexts != null) {
-            for (VelocityContext chainedContext : chainedContexts) {
-                if (chainedContext.containsKey(key)) {
-                    return true;
-                }
-            }
-        }
-
-        // nope, i guess it's really not here
-        return false;
+        return internalGet(key) != null;
     }
 
     public Object internalGet(String key) {
-        // first, let's check to see if have the requested value
-        if (super.internalContainsKey(key)) {
-            return super.internalGet(key);
+        Object val = super.internalGet(key);
+        if (val != null) {
+            return val;
         }
-
-        // still no luck?  let's look against the value stack
         if (stack != null) {
-            Object object = stack.findValue(key);
-
-            if (object != null) {
-                return object;
+            val = stack.findValue(key);
+            if (val != null) {
+                return val;
             }
-
-            object = stack.getContext().get(key);
-            if (object != null) {
-                return object;
+            val = stack.getContext().get(key);
+            if (val != null) {
+                return val;
             }
-
         }
-
-        // finally, if we're chained to other contexts, let's look in them
         if (chainedContexts != null) {
             for (VelocityContext chainedContext : chainedContexts) {
-                if (chainedContext.containsKey(key)) {
-                    return chainedContext.internalGet(key);
+                val = chainedContext.internalGet(key);
+                if (val != null) {
+                    return val;
                 }
             }
         }
-
-        // nope, i guess it's really not here
         return null;
     }
 }

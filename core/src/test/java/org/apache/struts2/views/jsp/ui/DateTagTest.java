@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -979,6 +980,27 @@ public class DateTagTest extends AbstractTagTest {
         context.put("myDate", now);
 
         tag.setName("myDate");
+        tag.setNice(false);
+        tag.setFormat(format);
+        tag.doStartTag();
+        tag.doEndTag();
+        assertEquals(formatted, writer.toString());
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        DateTag freshTag = new DateTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
+    public void testJavaLocalTime() throws Exception {
+        String format = "hh:mm";
+        LocalTime now = LocalTime.now();
+        String formatted = DateTimeFormatter.ofPattern(format, ActionContext.getContext().getLocale()).format(now);
+        context.put("myTime", now);
+
+        tag.setName("myTime");
         tag.setNice(false);
         tag.setFormat(format);
         tag.doStartTag();

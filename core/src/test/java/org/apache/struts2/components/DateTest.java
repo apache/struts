@@ -28,6 +28,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public class DateTest extends StrutsInternalTestCase {
@@ -118,6 +119,30 @@ public class DateTest extends StrutsInternalTestCase {
 
         // when
         date.setName("myDate");
+        date.setNice(false);
+        date.setFormat(timeFormat);
+        date.start(writer);
+        date.end(writer, "");
+
+        // then
+        assertEquals(expected, writer.toString());
+    }
+
+    public void testJavaLocalTime() {
+        // given
+        Date date = new Date(stack);
+        date.setDateFormatter(new SimpleDateFormatAdapter());
+
+        java.time.LocalTime now = java.time.LocalTime.now();
+
+        String timeFormat = "hh:mm:ss";
+        String expected = DateTimeFormatter.ofPattern(timeFormat).format(now);
+        context.put("myTime", now);
+
+        Writer writer = new StringWriter();
+
+        // when
+        date.setName("myTime");
         date.setNice(false);
         date.setFormat(timeFormat);
         date.start(writer);

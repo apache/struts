@@ -20,12 +20,17 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
 * <!-- START SNIPPET: description -->
@@ -96,15 +101,9 @@ public class ActionChainResult implements Result {
      */
     private static final String CHAIN_HISTORY = "CHAIN_HISTORY";
 
-    /**
-     * The result parameter name to set the name of the action to chain to.
-     */
-    public static final String SKIP_ACTIONS_PARAM = "skipActions";
-
-
     private ActionProxy proxy;
     private String actionName;
-    
+
     private String namespace;
 
     private String methodName;
@@ -132,7 +131,6 @@ public class ActionChainResult implements Result {
         this.methodName = methodName;
         this.skipActions = skipActions;
     }
-
 
     /**
      * @param actionProxyFactory the actionProxyFactory to set
@@ -172,7 +170,6 @@ public class ActionChainResult implements Result {
         this.skipActions = actions;
     }
 
-
     public void setMethod(String method) {
         this.methodName = method;
     }
@@ -206,18 +203,14 @@ public class ActionChainResult implements Result {
             throw new IllegalArgumentException("Invocation cannot be null!");
         }
 
-        ValueStack stack = invocation.getInvocationContext().getValueStack();
-        String finalNamespace = this.namespace != null
-                ? TextParseUtil.translateVariables(namespace, stack)
-                : invocation.getProxy().getNamespace();
-        String finalActionName = TextParseUtil.translateVariables(actionName, stack);
-        String finalMethodName = this.methodName != null
-                ? TextParseUtil.translateVariables(this.methodName, stack)
-                : null;
+        String finalNamespace = namespace != null ? translateVariables(namespace) : invocation.getProxy()
+                .getNamespace();
+        String finalActionName = translateVariables(actionName);
+        String finalMethodName = methodName != null ? translateVariables(methodName) : null;
 
         if (isInChainHistory(finalNamespace, finalActionName, finalMethodName)) {
             addToHistory(finalNamespace, finalActionName, finalMethodName);
-            throw new StrutsException("Infinite recursion detected: " + ActionChainResult.getChainHistory().toString());
+            throw new StrutsException("Infinite recursion detected: " + ActionChainResult.getChainHistory());
         }
 
         if (ActionChainResult.getChainHistory().isEmpty() && invocation.getProxy() != null) {
@@ -237,20 +230,25 @@ public class ActionChainResult implements Result {
         proxy.execute();
     }
 
-    @Override public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        final ActionChainResult that = (ActionChainResult) o;
-
-        if (actionName != null ? !actionName.equals(that.actionName) : that.actionName != null) return false;
-        if (methodName != null ? !methodName.equals(that.methodName) : that.methodName != null) return false;
-        if (namespace != null ? !namespace.equals(that.namespace) : that.namespace != null) return false;
-
-        return true;
+    protected String translateVariables(String text) {
+        return TextParseUtil.translateVariables(text, ActionContext.getContext().getValueStack());
     }
 
-    @Override public int hashCode() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ActionChainResult that = (ActionChainResult) o;
+        return Objects.equals(actionName, that.actionName) && Objects.equals(methodName,
+                that.methodName) && Objects.equals(namespace, that.namespace);
+    }
+
+    @Override
+    public int hashCode() {
         int result;
         result = (actionName != null ? actionName.hashCode() : 0);
         result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
@@ -260,24 +258,15 @@ public class ActionChainResult implements Result {
 
     private boolean isInChainHistory(String namespace, String actionName, String methodName) {
         LinkedList<? extends String> chainHistory = ActionChainResult.getChainHistory();
-
-        if (chainHistory == null) {
-            return false;
-        } else {
-            //  Actions to skip
-            Set<String> skipActionsList = new HashSet<>();
-            if (skipActions != null && skipActions.length() > 0) {
-                ValueStack stack = ActionContext.getContext().getValueStack();
-                String finalSkipActions = TextParseUtil.translateVariables(this.skipActions, stack);
-                skipActionsList.addAll(TextParseUtil.commaDelimitedStringToSet(finalSkipActions));
-            }
-            if (!skipActionsList.contains(actionName)) {
-                //  Get if key is in the chain history
-                return chainHistory.contains(makeKey(namespace, actionName, methodName));
-            }
-
-            return false;
+        Set<String> skipActionsList = new HashSet<>();
+        if (skipActions != null && skipActions.length() > 0) {
+            String finalSkipActions = translateVariables(skipActions);
+            skipActionsList.addAll(TextParseUtil.commaDelimitedStringToSet(finalSkipActions));
         }
+        if (!skipActionsList.contains(actionName)) {
+            return chainHistory.contains(makeKey(namespace, actionName, methodName));
+        }
+        return false;
     }
 
     private void addToHistory(String namespace, String actionName, String methodName) {
@@ -286,10 +275,6 @@ public class ActionChainResult implements Result {
     }
 
     private String makeKey(String namespace, String actionName, String methodName) {
-        if (null == methodName) {
-            return namespace + "/" + actionName;
-        }
-
-        return namespace + "/" + actionName + "!" + methodName;
+        return namespace + "/" + actionName + (methodName != null ? "!" + methodName : "");
     }
 }

@@ -30,7 +30,8 @@ package com.opensymphony.xwork2.interceptor;
  * parameters cannot be set by malicious users.
  * </p>
  *
- * @author Dick Zetterberg (dick@transitor.se)
+ * @deprecated since Struts 6.2.0, use {@link org.apache.struts2.action.NoParameters}
  */
+@Deprecated
 public interface NoParameters {
 }

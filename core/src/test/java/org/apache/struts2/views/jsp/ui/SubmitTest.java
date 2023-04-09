@@ -18,16 +18,15 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import com.opensymphony.xwork2.TestBean;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Unit test for {@link SubmitTag}.
- *
  */
 public class SubmitTest extends AbstractUITagTest {
 
@@ -698,5 +697,41 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-12.txt"));
+    }
+
+    public void testSubmitWithGeneratedId_shouldUseEvaluatedName() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("entryEdit");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setTheme("simple");
+        tag.setPageContext(pageContext);
+        tag.setName("%{foo}!saveDraft");
+        tag.setValue("Save");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-13.txt"));
+    }
+
+    public void testSubmitWithGeneratedId_shouldUseEvaluatedAction() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("entryEdit");
+
+        TestBean bean = new TestBean();
+        bean.setName("mainAction");
+        stack.push(bean);
+
+        SubmitTag tag = new SubmitTag();
+        tag.setTheme("simple");
+        tag.setPageContext(pageContext);
+        tag.setAction("%{name}!saveDraft");
+        tag.setValue("Save");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-14.txt"));
     }
 }

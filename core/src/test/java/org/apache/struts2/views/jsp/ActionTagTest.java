@@ -438,7 +438,7 @@ public class ActionTagTest extends AbstractTagTest {
         tag.setNamespace("");
         tag.setName("testActionTagAction");
         tag.setExecuteResult(true);
-        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInv.proxy());
+        ActionContext.getContext().withActionInvocation((ActionInvocation) mockActionInv.proxy());
 
         ActionInvocation oldInvocation = ActionContext.getContext().getActionInvocation();
         assertNotNull(oldInvocation);
@@ -471,7 +471,7 @@ public class ActionTagTest extends AbstractTagTest {
 
         Map<String, String[]> params = new HashMap<>();
         params.put("user", new String[]{"Santa Claus"});
-        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
+        ActionContext.getContext().withParameters(HttpParameters.create(params).build());
 
         tag.doStartTag();
 
@@ -505,7 +505,7 @@ public class ActionTagTest extends AbstractTagTest {
 
         Map<String, String[]> params = new HashMap<>();
         params.put("user", new String[]{"Santa Claus"});
-        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
+        ActionContext.getContext().withParameters(HttpParameters.create(params).build());
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
@@ -540,7 +540,7 @@ public class ActionTagTest extends AbstractTagTest {
 
         Map<String, String[]> params = new HashMap<>();
         params.put("user", new String[]{"Santa Claus"});
-        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
+        ActionContext.getContext().withParameters(HttpParameters.create(params).build());
 
         tag.doStartTag();
 
@@ -573,7 +573,7 @@ public class ActionTagTest extends AbstractTagTest {
 
         Map<String, String[]> params = new HashMap<>();
         params.put("user", new String[] { "Santa Claus" });
-        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
+        ActionContext.getContext().withParameters(HttpParameters.create(params).build());
 
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).

@@ -462,10 +462,10 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         // When
         testDispatcher.prepare(request, response);
-        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+        ActionContext context = ActionContext.of(createTestContextMap(testDispatcher, request, response));
 
         // Then
-        assertEquals(Locale.GERMANY, contextMap.get(ActionContext.LOCALE));  // Expect the Dispatcher defaultLocale value "de_DE" from the test configuration.
+        assertEquals(Locale.GERMANY, context.getLocale());  // Expect the Dispatcher defaultLocale value "de_DE" from the test configuration.
         mock.verify();
     }
 
@@ -488,10 +488,10 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         // When
         testDispatcher.prepare(request, response);
-        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+        ActionContext context = ActionContext.of(createTestContextMap(testDispatcher, request, response));
 
         // Then
-        assertEquals(Locale.CANADA_FRENCH, contextMap.get(ActionContext.LOCALE));  // Expect the Dispatcher defaultLocale value.
+        assertEquals(Locale.CANADA_FRENCH, context.getLocale());  // Expect the Dispatcher defaultLocale value.
         mock.verify();
     }
 
@@ -516,10 +516,10 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         // When
         testDispatcher.prepare(request, response);
-        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+        ActionContext context = ActionContext.of(createTestContextMap(testDispatcher, request, response));
 
         // Then
-        assertEquals(Locale.UK, contextMap.get(ActionContext.LOCALE));  // Expect the request set value from Mock.
+        assertEquals(Locale.UK, context.getLocale());  // Expect the request set value from Mock.
         mock.verify();
     }
 
@@ -544,10 +544,10 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         // When
         testDispatcher.prepare(request, response);
-        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+        ActionContext context = ActionContext.of(createTestContextMap(testDispatcher, request, response));
 
         // Then
-        assertEquals(Locale.getDefault(), contextMap.get(ActionContext.LOCALE));  // Expect the system default value, when BOTH Dispatcher default Locale AND request access fail.
+        assertEquals(Locale.getDefault(), context.getLocale());  // Expect the system default value, when BOTH Dispatcher default Locale AND request access fail.
         mock.verify();
     }
 
@@ -574,10 +574,10 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         // When
         testDispatcher.prepare(request, response);
-        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+        ActionContext context = ActionContext.of(createTestContextMap(testDispatcher, request, response));
 
         // Then
-        assertEquals(Locale.CANADA_FRENCH, contextMap.get(ActionContext.LOCALE));  // Expect the request set value from Mock.
+        assertEquals(Locale.CANADA_FRENCH, context.getLocale());  // Expect the request set value from Mock.
         mock.verify();
     }
 
@@ -604,10 +604,10 @@ public class DispatcherTest extends StrutsInternalTestCase {
 
         // When
         testDispatcher.prepare(request, response);
-        Map<String, Object> contextMap = createTestContextMap(testDispatcher, request, response);
+        ActionContext context = ActionContext.of(createTestContextMap(testDispatcher, request, response));
 
         // Then
-        assertEquals(Locale.getDefault(), contextMap.get(ActionContext.LOCALE));  // Expect the system default value when Mock request access fails.
+        assertEquals(Locale.getDefault(), context.getLocale());  // Expect the system default value when Mock request access fails.
         mock.verify();
     }
 

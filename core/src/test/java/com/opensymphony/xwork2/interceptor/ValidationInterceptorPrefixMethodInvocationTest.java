@@ -101,7 +101,7 @@ public class ValidationInterceptorPrefixMethodInvocationTest extends XWorkTestCa
         EasyMock.replay(action);
         EasyMock.replay(proxy);
 
-        ActionContext.of(new HashMap<>())
+        ActionContext.of()
             .withActionInvocation(invocation)
             .bind();
     }

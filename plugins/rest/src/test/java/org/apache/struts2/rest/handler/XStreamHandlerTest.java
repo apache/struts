@@ -56,7 +56,7 @@ public class XStreamHandlerTest extends XWorkTestCase {
         handler = new XStreamHandler();
         ai = new MockActionInvocation();
         ActionSupport action = new ActionSupport();
-        ActionContext context = ActionContext.of(new HashMap<>()).withLocale(Locale.US);
+        ActionContext context = ActionContext.of().withLocale(Locale.US);
         ai.setInvocationContext(context);
         ai.setAction(action);
     }

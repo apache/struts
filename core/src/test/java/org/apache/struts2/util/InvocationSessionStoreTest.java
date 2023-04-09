@@ -69,8 +69,9 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
         ActionContext actionContext = ActionContext.getContext();
         InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
 
-        ActionContext actionContext2 = ActionContext.of(new HashMap<>()).bind();
-        actionContext2.setSession(session);
+        ActionContext actionContext2 = ActionContext.of()
+            .withSession(session)
+            .bind();
 
         assertEquals(actionContext2, ActionContext.getContext());
 
@@ -91,7 +92,7 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
         ByteArrayInputStream bais = new ByteArrayInputStream(b);
         ObjectInputStream ois = new ObjectInputStream(bais);
         session = (Map<String, Object>) ois.readObject();
-        ActionContext.getContext().setSession(session);
+        ActionContext.getContext().withSession(session);
         ois.close();
         bais.close();
 
@@ -116,7 +117,7 @@ public class InvocationSessionStoreTest extends StrutsInternalTestCase {
 
         InvocationSessionStore.storeInvocation(INVOCATION_KEY, TOKEN_VALUE, invocation);
 
-        ActionContext actionContext2 = ActionContext.of(new HashMap<>())
+        ActionContext actionContext2 = ActionContext.of()
             .withSession(session)
             .withPageContext(mockPreviousPageContext)
             .bind();

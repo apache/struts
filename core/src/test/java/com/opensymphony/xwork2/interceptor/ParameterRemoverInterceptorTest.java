@@ -24,8 +24,8 @@ import com.opensymphony.xwork2.ActionSupport;
 import junit.framework.TestCase;
 import org.apache.struts2.dispatcher.HttpParameters;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
@@ -38,15 +38,12 @@ import static org.easymock.EasyMock.verify;
  */
 public class ParameterRemoverInterceptorTest extends TestCase {
 
-    protected Map<String, Object> contextMap;
-    protected ActionContext context;
-    protected ActionInvocation actionInvocation;
+    private ActionContext context;
+    private ActionInvocation actionInvocation;
 
     @Override
     protected void setUp() throws Exception {
-        contextMap = new LinkedHashMap<>();
-        context = ActionContext.of(contextMap).bind();
-
+        context = ActionContext.of();
         actionInvocation = createMock(ActionInvocation.class);
         expect(actionInvocation.getAction()).andStubReturn(new SampleAction());
         expect(actionInvocation.getInvocationContext()).andStubReturn(context);
@@ -54,7 +51,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
     }
 
     public void testInterception1() throws Exception {
-        contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(new LinkedHashMap<String, Object>() {
+        context.withParameters(HttpParameters.create(new LinkedHashMap<String, Object>() {
             {
                 put("param1", new String[]{"paramValue1"});
                 put("param2", new String[]{"paramValue2"});
@@ -70,7 +67,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
         interceptor.setParamValues("paramValue1,paramValue2");
         interceptor.intercept(actionInvocation);
 
-        HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
+        HttpParameters params = context.getParameters();
         assertEquals(params.keySet().size(), 2);
         assertTrue(params.contains("param3"));
         assertTrue(params.contains("param"));
@@ -82,7 +79,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 
 
     public void testInterception2() throws Exception {
-        contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(new LinkedHashMap<String, Object>() {
+        context.withParameters(HttpParameters.create(new LinkedHashMap<String, Object>() {
             {
                 put("param1", new String[]{"paramValue2"});
                 put("param2", new String[]{"paramValue1"});
@@ -96,7 +93,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
         interceptor.setParamValues("paramValue1,paramValue2");
         interceptor.intercept(actionInvocation);
 
-        HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
+        HttpParameters params = context.getParameters();
         assertEquals(params.keySet().size(), 0);
 
         verify(actionInvocation);
@@ -104,7 +101,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
 
 
     public void testInterception3() throws Exception {
-        contextMap.put(ActionContext.PARAMETERS, HttpParameters.create(new LinkedHashMap<String, Object>() {
+        context.withParameters(HttpParameters.create(new LinkedHashMap<String, Object>() {
             {
                 put("param1", new String[]{"paramValueOne"});
                 put("param2", new String[]{"paramValueTwo"});
@@ -118,7 +115,7 @@ public class ParameterRemoverInterceptorTest extends TestCase {
         interceptor.setParamValues("paramValue1,paramValue2");
         interceptor.intercept(actionInvocation);
 
-        HttpParameters params = (HttpParameters) contextMap.get(ActionContext.PARAMETERS);
+        HttpParameters params = context.getParameters();
         assertEquals(params.keySet().size(), 2);
         assertTrue(params.contains("param1"));
         assertTrue(params.contains("param2"));

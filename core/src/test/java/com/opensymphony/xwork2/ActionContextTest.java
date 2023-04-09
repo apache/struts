@@ -65,7 +65,7 @@ public class ActionContextTest extends XWorkTestCase {
         assertTrue(ActionContext.getContext().getApplication().containsKey(APPLICATION_KEY));
         assertTrue(ActionContext.getContext().getSession().containsKey(SESSION_KEY));
         assertTrue(ActionContext.getContext().getParameters().contains(PARAMETERS_KEY));
-        assertEquals(ActionContext.getContext().getName(), ACTION_NAME);
+        assertEquals(ActionContext.getContext().getActionName(), ACTION_NAME);
     }
 
     public void testGetContext() {

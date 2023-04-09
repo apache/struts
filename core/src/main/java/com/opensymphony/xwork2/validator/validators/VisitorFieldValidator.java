@@ -138,7 +138,7 @@ public class VisitorFieldValidator extends FieldValidatorSupport {
 
         stack.push(object);
 
-        String visitorContext = (context == null) ? ActionContext.getContext().getName() : context;
+        String visitorContext = (context == null) ? ActionContext.getContext().getActionName() : context;
 
         if (value instanceof Collection) {
             Collection coll = (Collection) value;

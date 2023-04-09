@@ -64,7 +64,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
         ValueStack stack = new StubValueStack();
         stack.push(new StubTextProvider(map));
 
-        ActionContext context = ActionContext.of(new HashMap<>())
+        ActionContext context = ActionContext.of()
             .withLocale(new Locale("es_MX", "MX"))
             .withValueStack(stack);
 
@@ -83,7 +83,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
         Locale locale = new Locale("pl", "PL");
 
-        ActionContext context = ActionContext.of(new HashMap<>())
+        ActionContext context = ActionContext.of()
             .withLocale(locale)
             .withValueStack(stack);
 
@@ -102,7 +102,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
         Locale locale = new Locale("fr", "FR");
 
-        ActionContext context = ActionContext.of(new HashMap<>())
+        ActionContext context = ActionContext.of()
             .withLocale(locale)
             .withValueStack(stack);
 
@@ -121,7 +121,7 @@ public class XWorkBasicConverterTest extends XWorkTestCase {
 
         Locale locale = new Locale("en", "US");
 
-        ActionContext context = ActionContext.of(new HashMap<>())
+        ActionContext context = ActionContext.of()
             .withLocale(locale)
             .withValueStack(stack);
 

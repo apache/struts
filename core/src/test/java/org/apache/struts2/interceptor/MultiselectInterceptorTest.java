@@ -44,7 +44,7 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
         interceptor = new MultiselectInterceptor();
         ai = new MockActionInvocation();
         ai.setInvocationContext(ActionContext.getContext());
-        ActionContext.getContext().setParameters(HttpParameters.create(param).build());
+        ActionContext.getContext().withParameters(HttpParameters.create(param).build());
     }
 
     public void testNoParam() throws Exception {
@@ -81,7 +81,7 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
         param.put("__multiselect_superpower", "");
         assertTrue(param.containsKey("__multiselect_superpower"));
 
-        ai.getInvocationContext().setParameters(HttpParameters.create(param).build());
+        ai.getInvocationContext().withParameters(HttpParameters.create(param).build());
 
         interceptor.init();
         interceptor.intercept(ai);
@@ -99,7 +99,7 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
         param.put("__multiselect_superpower", "");
         assertTrue(param.containsKey("__multiselect_superpower"));
 
-        ai.getInvocationContext().setParameters(HttpParameters.create(param).build());
+        ai.getInvocationContext().withParameters(HttpParameters.create(param).build());
 
         interceptor.init();
         interceptor.intercept(ai);
@@ -120,7 +120,7 @@ public class MultiselectInterceptorTest extends StrutsInternalTestCase {
         assertTrue(param.containsKey("__multiselect_superpower"));
         assertTrue(param.containsKey("__multiselect_cool"));
 
-        ai.getInvocationContext().setParameters(HttpParameters.create(param).build());
+        ai.getInvocationContext().withParameters(HttpParameters.create(param).build());
 
         interceptor.init();
         interceptor.intercept(ai);

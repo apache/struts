@@ -53,8 +53,8 @@ public class ConfigurationTest extends XWorkTestCase {
 
         try {
             ActionProxy proxy = actionProxyFactory.createActionProxy("/nonAbstract", "test", null, null);
-            assertTrue(proxy.getActionName().equals("test"));
-            assertTrue(proxy.getConfig().getClassName().equals(SimpleAction.class.getName()));
+            assertEquals("test", proxy.getActionName());
+            assertEquals(proxy.getConfig().getClassName(), SimpleAction.class.getName());
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -65,11 +65,11 @@ public class ConfigurationTest extends XWorkTestCase {
         HashMap<String, String> params = new HashMap<>();
         params.put("blah", "this is blah");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of()
+                .withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("/does/not/exist", "Foo", null, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("/does/not/exist", "Foo", null, extraContext.getContextMap());
             proxy.execute();
             assertEquals("this is blah", proxy.getInvocation().getStack().findValue("[1].blah"));
         } catch (Exception e) {
@@ -94,13 +94,12 @@ public class ConfigurationTest extends XWorkTestCase {
         ActionConfig config = configuration.getActionConfig("", "WildCard/Simple/input");
 
         assertNotNull(config);
-        assertTrue("Wrong class name, " + config.getClassName(),
-            "com.opensymphony.xwork2.SimpleAction".equals(config.getClassName()));
-        assertTrue("Wrong method name", "input".equals(config.getMethodName()));
+        assertEquals("Wrong class name, " + config.getClassName(), "com.opensymphony.xwork2.SimpleAction", config.getClassName());
+        assertEquals("Wrong method name", "input", config.getMethodName());
 
         Map<String, String> p = config.getParams();
-        assertTrue("Wrong parameter, " + p.get("foo"), "Simple".equals(p.get("foo")));
-        assertTrue("Wrong parameter, " + p.get("bar"), "input".equals(p.get("bar")));
+        assertEquals("Wrong parameter, " + p.get("foo"), "Simple", p.get("foo"));
+        assertEquals("Wrong parameter, " + p.get("bar"), "input", p.get("bar"));
     }
 
     public void testWildcardNamespace() {
@@ -109,12 +108,11 @@ public class ConfigurationTest extends XWorkTestCase {
         ActionConfig config = configuration.getActionConfig("/animals/dog", "commandTest");
 
         assertNotNull(config);
-        assertTrue("Wrong class name, " + config.getClassName(),
-            "com.opensymphony.xwork2.SimpleAction".equals(config.getClassName()));
+        assertEquals("Wrong class name, " + config.getClassName(), "com.opensymphony.xwork2.SimpleAction", config.getClassName());
 
         Map<String, String> p = config.getParams();
-        assertTrue("Wrong parameter, " + p.get("0"), "/animals/dog".equals(p.get("0")));
-        assertTrue("Wrong parameter, " + p.get("1"), "dog".equals(p.get("1")));
+        assertEquals("Wrong parameter, " + p.get("0"), "/animals/dog", p.get("0"));
+        assertEquals("Wrong parameter, " + p.get("1"), "dog", p.get("1"));
     }
 
     public void testGlobalResults() {
@@ -206,7 +204,7 @@ public class ConfigurationTest extends XWorkTestCase {
         assertNotNull(configuration.getActionConfig("", MockConfigurationProvider.FOO_ACTION_NAME));
     }
 
-    public void testMultipleContainerProviders() throws Exception {
+    public void testMultipleContainerProviders() {
         // to start from scratch
         configurationManager.destroyConfiguration();
         // to build basic configuration

@@ -135,11 +135,10 @@ public class ActionsFromSpringTest extends XWorkTestCase {
         params.put("exposeProxy", "true");
         params.put("issueId", "S2-047");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         ActionProxy proxy = actionProxyFactory.createActionProxy(null,
-            "chaintoAOPedTestSubBeanAction", null, extraContext);
+            "chaintoAOPedTestSubBeanAction", null, extraContext.getContextMap());
 
         // when
         proxy.execute();

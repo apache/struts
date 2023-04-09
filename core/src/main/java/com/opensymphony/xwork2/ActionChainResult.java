@@ -218,7 +218,7 @@ public class ActionChainResult implements Result {
         }
         addToHistory(finalNamespace, finalActionName, finalMethodName);
 
-        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+        Map<String, Object> extraContext = ActionContext.of()
             .withValueStack(invocation.getInvocationContext().getValueStack())
             .withParameters(invocation.getInvocationContext().getParameters())
             .with(CHAIN_HISTORY, ActionChainResult.getChainHistory())

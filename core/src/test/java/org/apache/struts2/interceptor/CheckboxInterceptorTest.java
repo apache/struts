@@ -29,25 +29,25 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 /**
- * Unit test for ChecboxInterceptor. 
+ * Unit test for ChecboxInterceptor.
  */
 public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 
     private CheckboxInterceptor interceptor;
     private MockActionInvocation ai;
     private Map<String, Object> param;
-    
+
     protected void setUp() throws Exception {
     	super.setUp();
     	param = new HashMap<>();
-    	
+
     	interceptor = new CheckboxInterceptor();
     	ai = new MockActionInvocation();
     	ai.setInvocationContext(ActionContext.getContext());
     }
 
 	private void prepare(ActionInvocation ai) {
-		ai.getInvocationContext().setParameters(HttpParameters.create(param).build());
+		ai.getInvocationContext().withParameters(HttpParameters.create(param).build());
 	}
 
 	public void testNoParam() throws Exception {
@@ -68,7 +68,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
-		
+
 		assertEquals(1, ai.getInvocationContext().getParameters().keySet().size());
 	}
 
@@ -81,7 +81,7 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		interceptor.init();
 		interceptor.intercept(ai);
 		interceptor.destroy();
-		
+
 		assertEquals(2, ai.getInvocationContext().getParameters().keySet().size());
 	}
 
@@ -204,5 +204,5 @@ public class CheckboxInterceptorTest extends StrutsInternalTestCase {
 		assertEquals("yes", parameters.get("superpower").getValue());
 		assertEquals("no", parameters.get("cool").getValue());
 	}
-	
+
 }

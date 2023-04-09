@@ -104,7 +104,7 @@ public class AnnotationParameterFilterInterceptor extends AbstractInterceptor {
             }
         }
 
-        invocation.getInvocationContext().setParameters(parameters);
+        invocation.getInvocationContext().withParameters(parameters);
 
         return invocation.invoke();
     }

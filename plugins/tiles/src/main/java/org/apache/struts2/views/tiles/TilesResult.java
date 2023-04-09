@@ -76,7 +76,7 @@ import org.apache.tiles.request.servlet.ServletUtil;
  *
  *
  * <!-- START SNIPPET: tilesconfig -->
- * You have to configure tiles itself. Therefore you can add <code>tiles.xml</code> either 
+ * You have to configure tiles itself. Therefore you can add <code>tiles.xml</code> either
  * to resources or WEB-INF. You may also use annotations like {@link TilesDefinition}.
  *
  * <!-- END SNIPPET: tilesconfig -->
@@ -109,7 +109,7 @@ public class TilesResult extends ServletDispatcherResult {
         StrutsTilesAnnotationProcessor annotationProcessor = new StrutsTilesAnnotationProcessor();
         TilesDefinition tilesDefinition = null;
         Object action = invocation.getAction();
-        String actionName = invocation.getInvocationContext().getName();
+        String actionName = invocation.getInvocationContext().getActionName();
 
         if (StringUtils.isEmpty(location)) {
             LOG.trace("location not set -> action must have one @TilesDefinition");

@@ -71,10 +71,9 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         params.put("foo", "5");
         params.put("bar", "7");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasActionErrors());
 
@@ -94,10 +93,9 @@ public class ExpressionValidatorTest extends XWorkTestCase {
         params.put("foo", "10");
         params.put("bar", "7");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
     }

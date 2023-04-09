@@ -294,7 +294,7 @@ public class ServletRedirectResultTest extends StrutsInternalTestCase implements
         ActionInvocation mockInvocation = control.createMock(ActionInvocation.class);
 
         ValueStack mockValueStack = control.createMock(ValueStack.class);
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).withContainer(container);
+        ActionContext actionContext = ActionContext.of().withContainer(container);
 
         expect(mockInvocation.getStack()).andReturn(mockValueStack);
         expect(mockValueStack.getActionContext()).andReturn(actionContext);

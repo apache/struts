@@ -54,7 +54,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         params.put("date", "12/23/2002");
         params.put("percentage", "1.23456789");
 
-        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+        Map<String, Object> extraContext = ActionContext.of()
             .withParameters(HttpParameters.create(params).build())
             .bind()
             .getContextMap();
@@ -67,7 +67,7 @@ public class SimpleActionValidationTest extends XWorkTestCase {
             assertFalse(validationAware.hasFieldErrors());
 
             params.put("bar", "42");
-            extraContext = ActionContext.of(new HashMap<>())
+            extraContext = ActionContext.of()
                 .withParameters(HttpParameters.create(params).build())
                 .bind()
                 .getContextMap();
@@ -106,11 +106,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         //valid values
         params.put("bar", "7");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -131,11 +130,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         HashMap<String, Object> params = new HashMap<>();
         params.put("foo", "200");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
             ValueStack stack = ActionContext.getContext().getValueStack();
             stack.getActionContext().withLocale(Locale.US);
 
@@ -183,11 +181,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         HashMap<String, Object> params = new HashMap<>();
         params.put("bar", "42");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -218,11 +215,10 @@ public class SimpleActionValidationTest extends XWorkTestCase {
         // this should cause a message
         params.put("bean.count", "100");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_SUBPROPERTY_NAME, null, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_SUBPROPERTY_NAME, null, extraContext.getContextMap());
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

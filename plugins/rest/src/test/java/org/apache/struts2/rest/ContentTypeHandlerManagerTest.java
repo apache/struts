@@ -58,7 +58,7 @@ public class ContentTypeHandlerManagerTest extends TestCase {
         mockResponse = new MockHttpServletResponse();
         mockRequest = new MockHttpServletRequest();
         mockRequest.setMethod("GET");
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
+        ActionContext actionContext = ActionContext.of().bind();
         actionContext.withServletRequest(mockRequest);
         actionContext.withServletResponse(mockResponse);
 
@@ -135,7 +135,7 @@ public class ContentTypeHandlerManagerTest extends TestCase {
                 C.eq(ContentTypeHandlerManager.STRUTS_REST_HANDLER_OVERRIDE_PREFIX+"xml")), "xmlOverride");
         mockContainer.expectAndReturn("getInstance", C.args(C.eq(String.class),
                 C.eq(ContentTypeHandlerManager.STRUTS_REST_HANDLER_OVERRIDE_PREFIX+"json")), null);
-        
+
         DefaultContentTypeHandlerManager mgr = new DefaultContentTypeHandlerManager();
         mgr.setContainer((Container) mockContainer.proxy());
 

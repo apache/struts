@@ -110,7 +110,7 @@ public class ActionAutowiringInterceptorTest extends XWorkTestCase {
     }
 
     public void testIfApplicationContextIsNullThenBeanWillNotBeWiredUp() throws Exception {
-        ActionContext.of(new HashMap<>())
+        ActionContext.of()
             .withApplication(new HashMap<>())
             .bind();
 

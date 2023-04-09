@@ -75,7 +75,7 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
 
     /**
      * Get the parameter map from ActionMapping associated with the provided ActionContext.
-     * 
+     *
      * @param ac The action context
      * @return the parameters from the action mapping in the context.  If none found, returns an empty map.
      */
@@ -102,6 +102,6 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
         HttpParameters previousParams = ac.getParameters();
         HttpParameters.Builder combinedParams = HttpParameters.create().withParent(previousParams).withExtraParams(newParams);
 
-        ac.setParameters(combinedParams.buildNoNestedWrapping());
+        ac.withParameters(combinedParams.buildNoNestedWrapping());
     }
 }

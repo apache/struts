@@ -64,64 +64,64 @@ public class ParameterFilterInterceptorTest extends XWorkTestCase {
         runFilterTest(null,null,true,new String[] {"blah", "bladeblah", "bladebladeblah"});
         assertEquals(0, getParameterNames().size());
     }
-    
+
     public void testBasicAllowed() throws Exception {
         runFilterTest("blah",null,true,new String[] {"blah"});
-        assertEquals(1, getParameterNames().size()); 
+        assertEquals(1, getParameterNames().size());
     }
-    
+
     public void testBasicBlocked() throws Exception {
         runFilterTest(null,"blah",false,new String[] {"blah"});
-        assertEquals(0, getParameterNames().size()); 
-    }      
+        assertEquals(0, getParameterNames().size());
+    }
     public void testAllSubpropertiesBlocked() throws Exception {
         runFilterTest(null,"blah",false,new String[] {"blah.deblah", "blah.somethingelse", "blah(22)"});
-        assertEquals(0, getParameterNames().size()); 
+        assertEquals(0, getParameterNames().size());
     }
 
     public void testAllSubpropertiesAllowed() throws Exception {
         runFilterTest("blah",null,true,
                 new String[] {"blah.deblah", "blah.somethingelse", "blah(22)"});
-        assertEquals(3, getParameterNames().size()); 
+        assertEquals(3, getParameterNames().size());
     }
-    
+
     public void testTreeBlocking() throws Exception {
         runFilterTest("blah.deblah","blah,blah.deblah.deblah",false,
                 new String[] {"blah", "blah.deblah", "blah.deblah.deblah"});
         assertEquals(1, getParameterNames().size());
         assertEquals(getParameterNames().iterator().next(),"blah.deblah");
     }
-    
+
     public void testEnsureOnlyPropsBlocked() throws Exception {
         runFilterTest(null,"blah",false,new String[] {"blahdeblah"});
-        assertEquals(1, getParameterNames().size()); 
+        assertEquals(1, getParameterNames().size());
     }
-  
-    
+
+
     private void runFilterTest(String allowed, String blocked, boolean defaultBlocked, String[] paramNames) throws Exception {
         interceptor.setAllowed(allowed);
         interceptor.setBlocked(blocked);
         interceptor.setDefaultBlock(defaultBlocked);
         setUpParameters(paramNames);
         runAction();
-        
+
     }
-    
+
     private void setUpParameters(String [] paramNames) {
         Map<String, String> params = new HashMap<>();
         for (String paramName : paramNames) {
             params.put(paramName, "irrelevant what this is");
 
         }
-        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
+        ActionContext.getContext().withParameters(HttpParameters.create(params).build());
     }
-    
+
     private Collection<String> getParameterNames() {
         return ActionContext.getContext().getParameters().keySet();
     }
-    
+
     public void runAction() throws Exception  {
         interceptor.intercept(invocation);
     }
-    
+
 }

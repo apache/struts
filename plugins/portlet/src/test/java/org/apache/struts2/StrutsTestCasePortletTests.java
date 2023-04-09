@@ -45,7 +45,7 @@ import org.springframework.mock.web.MockServletContext;
  * Changes:  This is a copy of org.apache.struts2.StrutsTestCase from the Struts 2 junit-plugin, kept in
  *           in the same package org.apache.struts2 and renamed.  Removed some unused imports, made
  *           imports alphabetical and made some whitespace changes and modified a comment.
- *           The StrutsTestCasePortletTests is needed in order to break a dependency-cycle between the 
+ *           The StrutsTestCasePortletTests is needed in order to break a dependency-cycle between the
  *           portlet-plugin and junit-plugin with respect to StrutsTestCase.
  *
  * Note:     If the junit-plugin StrutsTestCase is updated/modified, it may be appropriate to update
@@ -130,7 +130,7 @@ public abstract class StrutsTestCasePortletTests extends XWorkTestCase {
     }
 
     protected void initActionContext(ActionContext actionContext) {
-        actionContext.setParameters(HttpParameters.create(request.getParameterMap()).build());
+        actionContext.withParameters(HttpParameters.create(request.getParameterMap()).build());
         initSession(actionContext);
         applyAdditionalParams(actionContext);
         // set the action context to the one used by the proxy
@@ -139,7 +139,7 @@ public abstract class StrutsTestCasePortletTests extends XWorkTestCase {
 
     protected void initSession(ActionContext actionContext) {
         if (actionContext.getSession() == null) {
-            actionContext.setSession(new HashMap<>());
+            actionContext.withSession(new HashMap<>());
             request.setSession(new MockHttpSession(servletContext));
         }
     }

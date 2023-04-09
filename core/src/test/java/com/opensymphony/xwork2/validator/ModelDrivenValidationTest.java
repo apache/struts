@@ -44,13 +44,12 @@ public class ModelDrivenValidationTest extends XWorkTestCase {
         Map<String, Object> params = new HashMap<>();
         params.put("count", new String[]{"11"});
 
-        Map<String, Object> context = new HashMap<>();
-        context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext context = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
-        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "TestModelDrivenValidation", null, context);
+        ActionProxy proxy = actionProxyFactory.createActionProxy(null, "TestModelDrivenValidation", null, context.getContextMap());
         assertEquals(Action.SUCCESS, proxy.execute());
 
         ModelDrivenAction action = (ModelDrivenAction) proxy.getAction();

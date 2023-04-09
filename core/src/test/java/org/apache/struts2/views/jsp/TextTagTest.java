@@ -397,8 +397,9 @@ public class TextTagTest extends AbstractTagTest {
         final StringBuffer buffer = writer.getBuffer();
         buffer.delete(0, buffer.length());
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack();
-        newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
-        newStack.getContext().put(ActionContext.CONTAINER, container);
+        ActionContext.of(newStack.getContext())
+            .withLocale(foreignLocale)
+                .withContainer(container);
         newStack.push(container.inject(TestAction1.class));
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertNotSame(ActionContext.getContext().getValueStack().peek(), newStack.peek());
@@ -466,7 +467,7 @@ public class TextTagTest extends AbstractTagTest {
         Locale foreignLocale = getForeignLocale();
         assertNotSame(defaultLocale, foreignLocale);
 
-        ActionContext.getContext().setLocale(defaultLocale);
+        ActionContext.getContext().withLocale(defaultLocale);
         String key = "simpleKey";
         String value_default = getLocalizedMessage(defaultLocale);
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -489,9 +490,9 @@ public class TextTagTest extends AbstractTagTest {
         String value_int = getLocalizedMessage(foreignLocale);
         assertFalse(value_default.equals(value_int));
         ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack(stack);
-        newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
-        newStack.getContext().put(ActionContext.CONTAINER, container);
-        assertNotSame(newStack.getContext().get(ActionContext.LOCALE), ActionContext.getContext().getLocale());
+        ActionContext.of(newStack.getContext())
+            .withLocale(foreignLocale)
+                .withContainer(container);
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertEquals(ActionContext.getContext().getValueStack().peek(), newStack.peek());
         tag.setName(key);  // Required as WW-5124 fix clears tag state.

@@ -89,7 +89,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         MockActionInvocation mai = createActionInvocation(mock);
 
         HttpParameters params = HttpParameters.create().build();
-        mai.getInvocationContext().setParameters(params);
+        mai.getInvocationContext().withParameters(params);
 
         mock.withParameters(params);
         expectLastCall().times(1);
@@ -105,7 +105,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         MockActionInvocation mai = createActionInvocation(mock);
 
         Map<String, Object> session = new HashMap<String, Object>();
-        mai.getInvocationContext().setSession(session);
+        mai.getInvocationContext().withSession(session);
 
         mock.withSession(session);
         expectLastCall().times(1);

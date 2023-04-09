@@ -42,10 +42,9 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
         params.put("foo", "5");
         params.put("bar", "7");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext.getContextMap());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
 
@@ -54,11 +53,9 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     }
 
     public void testNotAnnotatedMethodSuccess2() throws Exception {
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create().build());
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create().build());
-
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "notAnnotatedMethod", null, extraContext.getContextMap());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
 
@@ -67,11 +64,9 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
     }
 
     public void testAnnotatedMethodFailure() throws Exception {
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create().build());
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create().build());
-
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getContextMap());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasActionErrors());
         Collection errors = ((ValidationAware) proxy.getAction()).getActionErrors();
@@ -88,10 +83,9 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
         params.put("param1", "key1");
         params.put("param2", "key2");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getContextMap());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
     }
@@ -102,10 +96,9 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
         //make it not fail
         params.put("param2", "key2");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getContextMap());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
     }
@@ -116,10 +109,9 @@ public class ValidatorAnnotationTest extends XWorkTestCase {
         //make it not fail
         params.put("param1", "key1");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "annotatedMethod", null, extraContext.getContextMap());
         proxy.execute();
         assertFalse(((ValidationAware) proxy.getAction()).hasActionErrors());
     }

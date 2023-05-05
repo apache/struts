@@ -18,6 +18,4 @@
  * under the License.
  */
 -->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlheader.ftl" />
-<#include "/${parameters.templateDir}/simple/datetext.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/controlfooter.ftl" />
+<#lt/><div>Tag <pre style="display: inline-block">&lt;s:datetextfield/&gt;</pre> works only with the JavaTemplates Plugin!</div><#rt/>

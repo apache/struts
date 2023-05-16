@@ -53,6 +53,26 @@ public class NamedVariablePatternMatcherTest {
         assertEquals("bob", pattern.getVariableNames().get(1));
         assertTrue(pattern.getPattern().matcher("foostar/jie").matches());
         assertFalse(pattern.getPattern().matcher("foo/star/jie").matches());
+
+        pattern = matcher.compilePattern("{urlLocale}/eula_cz");
+        assertEquals("([^/]+)\\Q/eula_cz\\E", pattern.getPattern().pattern());
+        assertEquals("urlLocale", pattern.getVariableNames().get(0));
+        assertTrue(pattern.getPattern().matcher("foostar/eula_cz").matches());
+        assertFalse(pattern.getPattern().matcher("foo/star/eula_cz").matches());
+
+        pattern = matcher.compilePattern("{test1}/path/{test2}");
+        assertEquals("([^/]+)\\Q/path/\\E([^/]+)", pattern.getPattern().pattern());
+        assertEquals("test1", pattern.getVariableNames().get(0));
+        assertEquals("test2", pattern.getVariableNames().get(1));
+        assertTrue(pattern.getPattern().matcher("test1/path/test2").matches());
+        assertFalse(pattern.getPattern().matcher("test/1/path/test2").matches());
+
+        pattern = matcher.compilePattern("path1/{test1}/path2/{test2}");
+        assertEquals("\\Qpath1/\\E([^/]+)\\Q/path2/\\E([^/]+)", pattern.getPattern().pattern());
+        assertEquals("test1", pattern.getVariableNames().get(0));
+        assertEquals("test2", pattern.getVariableNames().get(1));
+        assertTrue(pattern.getPattern().matcher("path1/test1/path2/test2").matches());
+        assertFalse(pattern.getPattern().matcher("path1/test/1/path2/test2").matches());
     }
 
     @Test(expected = IllegalArgumentException.class)

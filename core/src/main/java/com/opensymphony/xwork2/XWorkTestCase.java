@@ -101,7 +101,7 @@ public abstract class XWorkTestCase extends TestCase {
     }
 
     protected Map<String, Object> createContextWithLocale(Locale locale) {
-        return ActionContext.of(new HashMap<>())
+        return ActionContext.of()
             .withLocale(locale)
             .getContextMap();
     }

@@ -52,12 +52,11 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
 
     public void testRangeValidationWithError() throws Exception {
         //Explicitly set an out-of-range double for DoubleRangeValidatorTest
-        Map<String, Object> context = new HashMap<>();
         HashMap<String, Object> params = new HashMap<>();
         params.put("percentage", 100.12);
-        context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext context = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context.getContextMap());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -73,12 +72,11 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
     }
 
     public void testRangeValidationNoError() throws Exception {
-        Map<String, Object> context = new HashMap<>();
         HashMap<String, Object> params = new HashMap<>();
         params.put("percentage", 1.234567d);
-        context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext context = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "percentage", null, context);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "percentage", null, context.getContextMap());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -200,12 +198,11 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
 
     public void testRangeValidationWithExpressionsFail() throws Exception {
         //Explicitly set an out-of-range double for DoubleRangeValidatorTest
-        Map<String, Object> context = new HashMap<>();
         HashMap<String, Object> params = new HashMap<>();
         params.put("percentage", 100.12);
-        context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext context = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.EXPRESSION_VALIDATION_ACTION, null, context);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.EXPRESSION_VALIDATION_ACTION, null, context.getContextMap());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 
@@ -311,7 +308,7 @@ public class DoubleRangeFieldValidatorTest extends XWorkTestCase {
         loadConfigurationProviders(provider, new MockConfigurationProvider());
         val = new DoubleRangeFieldValidator();
         val.setValueStack(ActionContext.getContext().getValueStack());
-        ActionContext.getContext().setParameters(HttpParameters.create().build());
+        ActionContext.getContext().withParameters(HttpParameters.create().build());
         tpf = container.getInstance(TextProviderFactory.class);
     }
 

@@ -164,15 +164,15 @@ public class AliasInterceptorTest extends XWorkTestCase {
     }
 
     public void testNotExisting() throws Exception {
-        Map<String, Object> params = new HashMap<>();
         Map<String, Object> httpParams = new HashMap<>();
         httpParams.put("notExisting", "from http parameter");
-        params.put(ActionContext.PARAMETERS, HttpParameters.create(httpParams).build());
+        ActionContext context = ActionContext.of()
+            .withParameters(HttpParameters.create(httpParams).build());
 
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasTest", null, params);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", "aliasTest", null, context.getContextMap());
         SimpleAction actionOne = (SimpleAction) proxy.getAction();
 
         // prevent ERROR result

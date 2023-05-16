@@ -278,7 +278,7 @@ public class I18nInterceptorTest extends TestCase {
         Map<String, Serializable> params = new HashMap<>();
         params.put(key, value);
 
-        mai.getInvocationContext().setParameters(HttpParameters.create(params).build());
+        mai.getInvocationContext().withParameters(HttpParameters.create(params).build());
     }
 
     public void setUp() throws Exception {
@@ -287,7 +287,7 @@ public class I18nInterceptorTest extends TestCase {
         interceptor.init();
         session = new HashMap<>();
 
-        ac = ActionContext.of(new HashMap<>())
+        ac = ActionContext.of()
             .bind()
             .withSession(session)
             .withParameters(HttpParameters.create().build());

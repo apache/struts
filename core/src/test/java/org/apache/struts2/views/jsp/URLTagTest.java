@@ -294,22 +294,22 @@ public class URLTagTest extends AbstractUITagTest {
      */
     public void testIterableParameters() throws Exception {
         tag.setValue("/TestAction.action?p0=z");
-        
+
         tag.doStartTag();
         //Iterable
         List<ValueHolder> list = new ArrayList<>();
         list.add(new ValueHolder("a"));
         list.add(new ValueHolder("b"));
         tag.component.addParameter("p1", list);
-        
+
         //String[]
         tag.component.addParameter("p2", new String[] { "d", "e" });
         //ValueHolder[]
         tag.component.addParameter("p3", new ValueHolder[] {
                 new ValueHolder("f"), new ValueHolder("g") });
-        
+
         tag.doEndTag();
-        
+
         assertEquals("/TestAction.action?p0=z&amp;p1=a&amp;p1=b&amp;p2=d&amp;p2=e&amp;p3=f&amp;p3=g", writer.toString());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
@@ -1524,11 +1524,11 @@ public class URLTagTest extends AbstractUITagTest {
     public void testEmptyActionCustomMapper() throws Exception {
         Map<String,String> props = new HashMap<>();
         props.put("config", "struts-default.xml,struts-plugin.xml,struts.xml,org/apache/struts2/views/jsp/WW3090-struts.xml");
-        
+
         this.tearDown();
-        
+
         Dispatcher du = this.initDispatcher(props);
-        
+
         /**
          * create our standard mock objects
          */
@@ -1565,7 +1565,7 @@ public class URLTagTest extends AbstractUITagTest {
                 response);
         // let's not set the locale -- there is a test that checks if Dispatcher actually picks this up...
         // ... but generally we want to just use no locale (let it stay system default)
-        extraContext.remove(ActionContext.LOCALE);
+        ActionContext.of(extraContext).withLocale(null);
         stack.getContext().putAll(extraContext);
 
         context.put(ServletActionContext.HTTP_REQUEST, request);
@@ -1577,7 +1577,7 @@ public class URLTagTest extends AbstractUITagTest {
             .withServletResponse(response)
             .withServletContext(servletContext)
             .bind();
-        
+
         // Make sure we have an action invocation available
         ActionContext.getContext().withActionInvocation(new DefaultActionInvocation(null, true));
         DefaultActionProxyFactory apFactory = new DefaultActionProxyFactory();
@@ -1593,9 +1593,9 @@ public class URLTagTest extends AbstractUITagTest {
         tag.setPageContext(pageContext);
         JspWriter jspWriter = new StrutsMockJspWriter(writer);
         pageContext.setJspWriter(jspWriter);
-        
+
         request.setRequestURI("/context/someAction.action");
-        
+
         tag.setAction(null);
         tag.setValue(null);
         tag.doStartTag();
@@ -1610,14 +1610,14 @@ public class URLTagTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
-        
+
         writer = new StringWriter();
         jspWriter = new StrutsMockJspWriter(writer);
         pageContext.setJspWriter(jspWriter);
-        
+
         tag.doStartTag();
         tag.doEndTag();
-        
+
         assertEquals("/hello.action-blue", writer.toString());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
@@ -1625,16 +1625,16 @@ public class URLTagTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
-        
+
         writer = new StringWriter();
         jspWriter = new StrutsMockJspWriter(writer);
         pageContext.setJspWriter(jspWriter);
-        
+
         tag.doStartTag();
         tag.doEndTag();
-        
+
         assertEquals("/hello.action-red", writer.toString());
-        
+
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         // URLTag clears component in doEndTag and has no additional state set here, so it compares as equal with the default tag clear state as well.
         assertTrue("Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  " +
@@ -1645,11 +1645,11 @@ public class URLTagTest extends AbstractUITagTest {
     public void testEmptyActionCustomMapper_clearTagStateSet() throws Exception {
         Map<String,String> props = new HashMap<String, String>();
         props.put("config", "struts-default.xml,struts-plugin.xml,struts.xml,org/apache/struts2/views/jsp/WW3090-struts.xml");
-        
+
         this.tearDown();
-        
+
         Dispatcher du = this.initDispatcher(props);
-        
+
         action = this.getAction();
         stack = ActionContext.getContext().getValueStack();
         context = stack.getContext();
@@ -1708,9 +1708,9 @@ public class URLTagTest extends AbstractUITagTest {
         tag.setPageContext(pageContext);
         JspWriter jspWriter = new StrutsMockJspWriter(writer);
         pageContext.setJspWriter(jspWriter);
-        
+
         request.setRequestURI("/context/someAction.action");
-        
+
         tag.setAction(null);
         tag.setValue(null);
         tag.doStartTag();
@@ -1726,32 +1726,32 @@ public class URLTagTest extends AbstractUITagTest {
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
-        
+
         writer = new StringWriter();
         jspWriter = new StrutsMockJspWriter(writer);
         pageContext.setJspWriter(jspWriter);
-        
+
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();
-        
+
         assertEquals("/hello.action-blue", writer.toString());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
-        
+
         writer = new StringWriter();
         jspWriter = new StrutsMockJspWriter(writer);
         pageContext.setJspWriter(jspWriter);
-        
+
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();
-        
+
         assertEquals("/hello.action-red", writer.toString());
-        
+
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
@@ -2135,7 +2135,7 @@ public class URLTagTest extends AbstractUITagTest {
             return "Foo is: " + title;
         }
     }
-    
+
     public static class ValueHolder {
         private String value;
 
@@ -2147,13 +2147,13 @@ public class URLTagTest extends AbstractUITagTest {
         public String toString() {
             return value;
         }
-        
-        
+
+
     }
 
     @SuppressWarnings("unused")
     public static class RedBlueActionMapper extends DefaultActionMapper {
-        
+
         @Override
         public String getUriFromActionMapping(ActionMapping mapping) {
             String baseUri = super.getUriFromActionMapping(mapping);
@@ -2168,6 +2168,6 @@ public class URLTagTest extends AbstractUITagTest {
                 return baseUri + "-blue";
             }
         }
-        
+
     }
 }

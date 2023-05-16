@@ -89,7 +89,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        ActionContext.of(new HashMap<>())
+        ActionContext.of()
             .withContainer(new DummyContainer())
             .bind();
     }

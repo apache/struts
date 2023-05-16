@@ -20,6 +20,7 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,9 +54,9 @@ public class ProxyInvocationTest extends XWorkTestCase {
     private Map<String, Object> createDummyContext() {
         Map<String, Object> params = new HashMap<>();
         params.put("blah", "this is blah");
-        Map<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, params);
-        return extraContext;
+        return ActionContext.of()
+            .withParameters(HttpParameters.create(params).build())
+            .getContextMap();
     }
 
     @Override

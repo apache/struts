@@ -30,25 +30,25 @@ import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 /**
- * Unit test for DateTextFieldInterceptor. 
+ * Unit test for DateTextFieldInterceptor.
  */
 public class DateTextFieldInterceptorTest extends StrutsInternalTestCase {
 
     private DateTextFieldInterceptor interceptor;
     private MockActionInvocation ai;
     private Map<String, Object> param;
-    
+
     protected void setUp() throws Exception {
     	super.setUp();
     	param = new HashMap<>();
-    	
+
     	interceptor = new DateTextFieldInterceptor();
     	ai = new MockActionInvocation();
     	ai.setInvocationContext(ActionContext.getContext());
     }
-	
+
 	public void testNoParam() throws Exception {
-		ActionContext.getContext().setParameters(HttpParameters.create(param).build());
+		ActionContext.getContext().withParameters(HttpParameters.create(param).build());
 
 		interceptor.init();
 		interceptor.intercept(ai);
@@ -62,7 +62,7 @@ public class DateTextFieldInterceptorTest extends StrutsInternalTestCase {
 		param.put("__month_name", new String[]{"06"});
 		param.put("__day_name", new String[]{"15"});
 
-		ActionContext.getContext().setParameters(HttpParameters.create(param).build());
+		ActionContext.getContext().withParameters(HttpParameters.create(param).build());
 
 		interceptor.init();
 		interceptor.intercept(ai);
@@ -74,7 +74,7 @@ public class DateTextFieldInterceptorTest extends StrutsInternalTestCase {
 		assertFalse(parameters.contains("__day_name"));
 		assertTrue(parameters.contains("name"));
 		assertEquals(1, parameters.keySet().size());
-		Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2000-06-15"); 
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2000-06-15");
 		assertEquals(date, parameters.get("name").getObject());
 	}
 

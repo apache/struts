@@ -87,7 +87,7 @@ public class ValidationErrorAwareTest extends XWorkTestCase {
         EasyMock.replay(action);
         EasyMock.replay(proxy);
 
-        ActionContext.of(new HashMap<>())
+        ActionContext.of()
             .withActionInvocation(invocation)
             .bind();
     }

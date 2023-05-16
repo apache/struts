@@ -293,7 +293,7 @@ public class ExceptionMappingInterceptorTest extends XWorkTestCase {
         stack = ActionContext.getContext().getValueStack();
         mockInvocation = new Mock(ActionInvocation.class);
         mockInvocation.expectAndReturn("getStack", stack);
-        mockInvocation.expectAndReturn("getInvocationContext", ActionContext.of(new HashMap<>()).bind());
+        mockInvocation.expectAndReturn("getInvocationContext", ActionContext.of().bind());
         interceptor = new ExceptionMappingInterceptor();
         interceptor.init();
     }

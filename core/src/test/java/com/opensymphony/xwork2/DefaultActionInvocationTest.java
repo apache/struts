@@ -367,13 +367,13 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         HashMap<String, Object> params = new HashMap<>();
         params.put("blah", "this is blah");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of()
+                .withParameters(HttpParameters.create(params).build());
 
-        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext, true);
+        DefaultActionInvocation defaultActionInvocation = new DefaultActionInvocation(extraContext.getContextMap(), true);
         container.inject(defaultActionInvocation);
 
-        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFoo", null, extraContext);
+        ActionProxy actionProxy = actionProxyFactory.createActionProxy("", "LazyFoo", null, extraContext.getContextMap());
         defaultActionInvocation.init(actionProxy);
         defaultActionInvocation.invoke();
 

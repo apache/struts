@@ -136,11 +136,9 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
 
     /**
      * Creates a new empty ActionContext instance and binds it to the current thread.
-     * 
-     * @return 
      */
     protected ActionContext createActionContext() {
-        return ActionContext.of(new HashMap<>()).bind();
+        return ActionContext.of().bind();
     }
 
     /**

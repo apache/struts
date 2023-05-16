@@ -41,11 +41,10 @@ public class IntRangeValidatorTest extends XWorkTestCase {
         HashMap<String, String> params = new HashMap<>();
         params.put("bar", "5");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, extraContext.getContextMap());
             proxy.execute();
             assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

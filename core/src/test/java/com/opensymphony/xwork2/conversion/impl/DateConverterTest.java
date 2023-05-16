@@ -59,7 +59,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     public void testSqlTimeType() {
         DateConverter converter = new DateConverter();
 
-        ActionContext context = ActionContext.of(new HashMap<>()).withLocale(mxLocale);
+        ActionContext context = ActionContext.of().withLocale(mxLocale);
 
         Object value = converter.convertValue(context.getContextMap(), null, null, null, TIME_01_59_10, Time.class);
         assertEquals("01:59:10", value.toString());
@@ -68,7 +68,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     public void testSqlTimestampType() {
         DateConverter converter = new DateConverter();
 
-        ActionContext context = ActionContext.of(new HashMap<>()).withLocale(mxLocale);
+        ActionContext context = ActionContext.of().withLocale(mxLocale);
 
         Object value = converter.convertValue(context.getContextMap(), null, null, null, INPUT_TIME_STAMP_STR,
                 Timestamp.class);
@@ -83,8 +83,9 @@ public class DateConverterTest extends StrutsInternalTestCase {
         ValueStack stack = new StubValueStack();
         stack.push(new StubTextProvider(map));
 
-        ActionContext context = ActionContext.of(new HashMap<>()).withLocale(new Locale("es_MX", "MX"))
-                .withValueStack(stack);
+        ActionContext context = ActionContext.of()
+            .withLocale(new Locale("es_MX", "MX"))
+            .withValueStack(stack);
 
         Object value = converter.convertValue(context.getContextMap(), null, null, null, DATE_STR, Date.class);
         assertTrue(value.toString().startsWith(DATE_CONVERTED));
@@ -98,7 +99,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
         ValueStack stack = new StubValueStack();
         stack.push(new StubTextProvider(map));
 
-        ActionContext context = ActionContext.of(new HashMap<>()).withLocale(new Locale("es_MX", "MX"))
+        ActionContext context = ActionContext.of().withLocale(new Locale("es_MX", "MX"))
                 .withValueStack(stack);
 
         try {
@@ -113,7 +114,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     public void testTypeConversionExceptionWhenUsingLongConstructor() {
         DateConverter converter = new DateConverter();
 
-        ActionContext context = ActionContext.of(new HashMap<>()).withLocale(mxLocale);
+        ActionContext context = ActionContext.of().withLocale(mxLocale);
 
         try {
             converter.convertValue(context.getContextMap(), null, null, null, INPUT_WHEN_LONG_CONSTRUCTOR_STR, null);
@@ -127,7 +128,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     public void testLocalDateTimeType() {
         DateConverter converter = new DateConverter();
 
-        ActionContext context = ActionContext.of(new HashMap<>());
+        ActionContext context = ActionContext.of();
 
         Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALDATETIME_STR,
                 LocalDateTime.class);
@@ -142,7 +143,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
         ValueStack stack = new StubValueStack();
         stack.push(new StubTextProvider(map));
 
-        ActionContext context = ActionContext.of(new HashMap<>()).withLocale(mxLocale)
+        ActionContext context = ActionContext.of().withLocale(mxLocale)
                 .withValueStack(stack);
 
         Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALDATETIME1_STR,
@@ -153,7 +154,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     public void testLocalDateTimeTypeConversionExceptionWhenParseError() {
         DateConverter converter = new DateConverter();
 
-        ActionContext context = ActionContext.of(new HashMap<>());
+        ActionContext context = ActionContext.of();
 
         try {
             converter.convertValue(context.getContextMap(), null, null, null, INVALID_LOCALDATETIME,
@@ -168,7 +169,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     public void testLocalDateType() {
         DateConverter converter = new DateConverter();
 
-        ActionContext context = ActionContext.of(new HashMap<>());
+        ActionContext context = ActionContext.of();
 
         Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALDATE_STR,
                 LocalDate.class);
@@ -178,7 +179,7 @@ public class DateConverterTest extends StrutsInternalTestCase {
     public void testLocalTimeType() {
         DateConverter converter = new DateConverter();
 
-        ActionContext context = ActionContext.of(new HashMap<>());
+        ActionContext context = ActionContext.of();
 
         Object value = converter.convertValue(context.getContextMap(), null, null, null, LOCALTIME_STR,
                 LocalTime.class);

@@ -98,7 +98,7 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
         request.getParameterMap().put(TokenHelper.DEFAULT_TOKEN_NAME, new String[]{
             token
         });
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext.of(extraContext).withParameters(HttpParameters.create(params).build());
     }
 
     protected void setUp() throws Exception {
@@ -125,7 +125,7 @@ public class TokenInterceptorTest extends StrutsInternalTestCase {
         oldContext = ActionContext.of(stack.getContext()).bind();
     }
 
-    protected ActionProxy buildProxy(String actionName) throws Exception {
+    protected ActionProxy buildProxy(String actionName) {
         return actionProxyFactory.createActionProxy("", actionName, null, extraContext);
     }
 }

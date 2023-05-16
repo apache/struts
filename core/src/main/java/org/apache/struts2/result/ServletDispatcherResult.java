@@ -143,7 +143,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
                 Map<String, Object> queryParams = queryStringParser.parse(queryString, true);
                 if (queryParams != null && !queryParams.isEmpty()) {
                     parameters = HttpParameters.create(queryParams).withParent(parameters).build();
-                    invocation.getInvocationContext().setParameters(parameters);
+                    invocation.getInvocationContext().withParameters(parameters);
                     // put to extraContext, see Dispatcher#createContextMap
                     invocation.getInvocationContext().getContextMap().put("parameters", parameters);
                 }

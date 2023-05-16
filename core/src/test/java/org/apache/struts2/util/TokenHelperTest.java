@@ -71,7 +71,7 @@ public class TokenHelperTest extends TestCase {
         params.put(TokenHelper.TOKEN_NAME_FIELD, new String[]{tokenName});
         params.put(tokenName, new String[]{token});
 
-        ActionContext.getContext().setParameters(HttpParameters.create(params).build());
+        ActionContext.getContext().withParameters(HttpParameters.create(params).build());
 
         assertTrue(TokenHelper.validToken());
     }
@@ -87,9 +87,10 @@ public class TokenHelperTest extends TestCase {
     protected void setUp() throws Exception {
         session = new HashMap<>();
         Map<String, Object> ctxMap = new TreeMap<>();
-        ActionContext ctx = ActionContext.of(ctxMap).bind();
-        ctx.setSession(session);
-        ctx.setParameters(HttpParameters.create().build());
+        ActionContext ctx = ActionContext.of(ctxMap)
+            .withSession(session)
+            .withParameters(HttpParameters.create().build())
+            .bind();
     }
 
     protected void tearDown() {

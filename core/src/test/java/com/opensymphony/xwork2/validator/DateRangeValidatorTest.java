@@ -44,13 +44,12 @@ public class DateRangeValidatorTest extends XWorkTestCase {
     public void testRangeValidation() throws Exception {
         Calendar date = Calendar.getInstance();
         date.set(2002, Calendar.NOVEMBER, 20);
-        Map<String, Object> context = new HashMap<>();
         HashMap<String, Object> params = new HashMap<>();
         params.put("date", date.getTime());
-        context.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
-        context.put(ActionContext.LOCALE, Locale.US);  // Force US Locale for date conversion tests on JDK9+
+        ActionContext context = ActionContext.of().withParameters(HttpParameters.create(params).build())
+                .withLocale(Locale.US);  // Force US Locale for date conversion tests on JDK9+
 
-        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context);
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.VALIDATION_ACTION_NAME, null, context.getContextMap());
         proxy.execute();
         assertTrue(((ValidationAware) proxy.getAction()).hasFieldErrors());
 

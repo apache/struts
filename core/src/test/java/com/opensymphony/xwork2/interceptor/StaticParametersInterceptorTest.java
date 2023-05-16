@@ -130,7 +130,7 @@ public class StaticParametersInterceptorTest extends XWorkTestCase {
 
         User user = new User();
         ActionContext.getContext().getValueStack().push(user);
-        ActionContext.getContext().setParameters(HttpParameters.create().build());
+        ActionContext.getContext().withParameters(HttpParameters.create().build());
         int before = ActionContext.getContext().getValueStack().size();
         interceptor.setMerge("false");
         interceptor.intercept(mai);
@@ -152,7 +152,7 @@ public class StaticParametersInterceptorTest extends XWorkTestCase {
 
         Map<String, String> existingParams = new HashMap<>();
         existingParams.put("name", "Akash");
-        ActionContext.getContext().setParameters(HttpParameters.create(existingParams).build());
+        ActionContext.getContext().withParameters(HttpParameters.create(existingParams).build());
         int before = ActionContext.getContext().getValueStack().size();
 
         interceptor.setOverwrite("true");
@@ -175,7 +175,7 @@ public class StaticParametersInterceptorTest extends XWorkTestCase {
 
         Map<String, String> existingParams = new HashMap<>();
         existingParams.put("name", "Akash");
-        ActionContext.getContext().setParameters(HttpParameters.create(existingParams).build());
+        ActionContext.getContext().withParameters(HttpParameters.create(existingParams).build());
         int before = ActionContext.getContext().getValueStack().size();
 
         interceptor.setOverwrite("false");

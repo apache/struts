@@ -757,7 +757,7 @@ public class Dispatcher {
                                                 Map<String, Object> applicationMap,
                                                 HttpServletRequest request,
                                                 HttpServletResponse response) {
-        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+        Map<String, Object> extraContext = ActionContext.of()
             .withParameters(parameters)
             .withSession(sessionMap)
             .withApplication(applicationMap)

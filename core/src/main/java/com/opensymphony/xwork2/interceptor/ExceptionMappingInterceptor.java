@@ -52,9 +52,9 @@ import java.util.Map;
  * <ul>
  *
  * <li>logEnabled (optional) - Should exceptions also be logged? (boolean true|false)</li>
- * 
+ *
  * <li>logLevel (optional) - what log level should we use (<code>trace, debug, info, warn, error, fatal</code>)? - defaut is <code>debug</code></li>
- * 
+ *
  * <li>logCategory (optional) - If provided we would use this category (eg. <code>com.mycompany.app</code>).
  * Default is to use <code>com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor</code>.</li>
  *
@@ -102,7 +102,7 @@ import java.util.Map;
  * &lt;/xwork&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- * 
+ *
  * <p>
  * This second example will also log the exceptions using our own category
  * <code>com.mycompany.app.unhandled</code> at WARN level.
@@ -117,8 +117,8 @@ import java.util.Map;
  *              &lt;interceptor-ref name="exception"&gt;
  *                  &lt;param name="logEnabled"&gt;true&lt;/param&gt;
  *                  &lt;param name="logCategory"&gt;com.mycompany.app.unhandled&lt;/param&gt;
- *                  &lt;param name="logLevel"&gt;WARN&lt;/param&gt;	        		
- *              &lt;/interceptor-ref&gt;	
+ *                  &lt;param name="logLevel"&gt;WARN&lt;/param&gt;
+ *              &lt;/interceptor-ref&gt;
  *              &lt;interceptor-ref name="i18n"/&gt;
  *              &lt;interceptor-ref name="staticParams"/&gt;
  *              &lt;interceptor-ref name="params"/&gt;
@@ -129,7 +129,7 @@ import java.util.Map;
  *      &lt;/interceptors&gt;
  *
  *      &lt;default-interceptor-ref name="exceptionmappingStack"/&gt;
- *    
+ *
  *      &lt;global-results&gt;
  *           &lt;result name="unhandledException"&gt;/unhandled-exception.jsp&lt;/result&gt;
  *      &lt;/global-results&gt;
@@ -137,12 +137,12 @@ import java.util.Map;
  *      &lt;global-exception-mappings&gt;
  *           &lt;exception-mapping exception="java.lang.Exception" result="unhandledException"/&gt;
  *      &lt;/global-exception-mappings&gt;
- *        
+ *
  *      &lt;action name="exceptionDemo" class="org.apache.struts2.showcase.exceptionmapping.ExceptionMappingAction"&gt;
  *          &lt;exception-mapping exception="org.apache.struts2.showcase.exceptionmapping.ExceptionMappingException"
  *                             result="damm"/&gt;
  *          &lt;result name="input"&gt;index.jsp&lt;/result&gt;
- *          &lt;result name="success"&gt;success.jsp&lt;/result&gt;            
+ *          &lt;result name="success"&gt;success.jsp&lt;/result&gt;
  *          &lt;result name="damm"&gt;damm.jsp&lt;/result&gt;
  *      &lt;/action&gt;
  *
@@ -151,18 +151,18 @@ import java.util.Map;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *
- * @author Matthew E. Porter (matthew dot porter at metissian dot com) 
+ * @author Matthew E. Porter (matthew dot porter at metissian dot com)
  * @author Claus Ibsen
  */
 public class ExceptionMappingInterceptor extends AbstractInterceptor {
-    
+
     private static final Logger LOG = LogManager.getLogger(ExceptionMappingInterceptor.class);
 
     protected Logger categoryLogger;
     protected boolean logEnabled = false;
     protected String logCategory;
     protected String logLevel;
-    
+
 
     public boolean isLogEnabled() {
         return logEnabled;
@@ -204,7 +204,7 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
                 Map<String, String> mappingParams = mappingConfig.getParams();
                 // create a mutable HashMap since some interceptors will remove parameters, and parameterMap is immutable
                 HttpParameters parameters = HttpParameters.create(mappingParams).build();
-                invocation.getInvocationContext().setParameters(parameters);
+                invocation.getInvocationContext().withParameters(parameters);
                 result = mappingConfig.getResult();
                 publishException(invocation, new ExceptionHolder(e));
             } else {
@@ -217,7 +217,7 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
 
     /**
      * Handles the logging of the exception.
-     * 
+     *
      * @param e the exception to log.
      */
     protected void handleLogging(Exception e) {
@@ -231,10 +231,10 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
     		doLog(LOG, e);
     	}
     }
-    
+
     /**
      * Performs the actual logging.
-     * 
+     *
      * @param logger  the provided logger to use.
      * @param e  the exception to log.
      */
@@ -243,7 +243,7 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
     		logger.debug(e.getMessage(), e);
     		return;
     	}
-    	
+
     	if ("trace".equalsIgnoreCase(logLevel)) {
     		logger.trace(e.getMessage(), e);
     	} else if ("debug".equalsIgnoreCase(logLevel)) {

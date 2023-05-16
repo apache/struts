@@ -93,7 +93,7 @@ public class ActionNestingTest extends XWorkTestCase {
         ValueStack stack = ActionContext.getContext().getValueStack();
         assertEquals(VALUE, stack.findValue(KEY));
 
-        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
+        Map<String, Object> extraContext = ActionContext.of()
             .withValueStack(stack)
             .getContextMap();
 

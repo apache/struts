@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.util.Bar;
 import com.opensymphony.xwork2.util.Cat;
 import com.opensymphony.xwork2.util.Foo;
 import com.opensymphony.xwork2.util.FurColor;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlRuntime;
 import ognl.TypeConverter;
@@ -46,42 +47,11 @@ import static org.junit.Assert.assertArrayEquals;
 import java.util.Date;
 import java.util.Set;
 
-/**
- * @author $Author$
- * @version $Revision$
- */
 public class XWorkConverterTest extends XWorkTestCase {
 
     Map<String, Object> context;
     XWorkConverter converter;
     OgnlValueStack stack;
-
-//    public void testConversionToSetKeepsOriginalSetAndReplacesContents() {
-//        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
-//
-//        Map stackContext = stack.getContext();
-//        stackContext.put(InstantiatingNullHandler.CREATE_NULL_OBJECTS, Boolean.TRUE);
-//        stackContext.put(XWorkMethodAccessor.DENY_METHOD_EXECUTION, Boolean.TRUE);
-//        stackContext.put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-//
-//        String[] param = new String[] {"abc", "def", "ghi"};
-//        List paramList = Arrays.asList(param);
-//
-//        List originalList = new ArrayList();
-//        originalList.add("jkl");
-//        originalList.add("mno");
-//
-//        User user = new User();
-//        user.setList(originalList);
-//        stack.push(user);
-//
-//        stack.setValue("list", param);
-//
-//        List userList = user.getList();
-//        assertEquals(3,userList.size());
-//        assertEquals(paramList,userList);
-//        assertSame(originalList,userList);
-//    }
 
     public void testArrayToNumberConversion() {
         String[] value = new String[]{"12345"};
@@ -131,7 +101,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         TextProvider tp = new StubTextProvider(lookupMap);
         StubValueStack valueStack = new StubValueStack();
         valueStack.push(tp);
-        context.put(ActionContext.VALUE_STACK, valueStack);
+        context.put(ValueStack.VALUE_STACK, valueStack);
 
         String dateToFormat = "2017---06--15";
         Object unparseableDate = converter.convertValue(context, null, null, null, dateToFormat, Date.class);
@@ -477,7 +447,7 @@ public class XWorkConverterTest extends XWorkTestCase {
     }
 
     public void testStringToCustomTypeUsingCustomConverter() {
-        // the converter needs to be registered as the Bar.class converter 
+        // the converter needs to be registered as the Bar.class converter
         // it won't be detected from the Foo-conversion.properties
         // because the Foo-conversion.properties file is only used when converting a property of Foo
         converter.registerConverter(Bar.class.getName(), new FooBarConverter());
@@ -658,7 +628,7 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "aa123", Double.class));
         assertEquals(1234d, converter.convertValue(context, null, null, null, "1,234", Double.class));
         assertEquals(1234.12, converter.convertValue(context, null, null, null, "1,234.12", Double.class));
-        // WRONG: locale separator is wrongly placed 
+        // WRONG: locale separator is wrongly placed
         assertEquals(123d, converter.convertValue(context, null, null, null, "1,23", Double.class));
         assertEquals(1.234, converter.convertValue(context, null, null, null, "1.234", Double.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "1.234,12", Double.class));
@@ -675,14 +645,14 @@ public class XWorkConverterTest extends XWorkTestCase {
         assertEquals(1234.12, converter.convertValue(context, null, null, null, "1.234,12", Double.class));
 
     }
-    
+
     public void testStringToEnum() {
         assertEquals(FurColor.BLACK, converter.convertValue(context, null, null, null, "BLACK", FurColor.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "black", FurColor.class));
         assertEquals(OgnlRuntime.NoConversionPossible, converter.convertValue(context, null, null, null, "red", FurColor.class));
     }
 
-    // Testing for null result on non-primitive Number types supplied as empty String or 
+    // Testing for null result on non-primitive Number types supplied as empty String or
     public void testNotPrimitiveDefaultsToNull() {
         assertNull(converter.convertValue(context, null, null, null, null, Double.class));
         assertNull(converter.convertValue(context, null, null, null, "", Double.class));

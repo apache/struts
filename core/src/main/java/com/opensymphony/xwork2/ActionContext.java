@@ -58,79 +58,52 @@ import java.util.Map;
  */
 public class ActionContext implements Serializable {
 
-    static ThreadLocal<ActionContext> actionContext = new ThreadLocal<>();
+    private static final ThreadLocal<ActionContext> actionContext = new ThreadLocal<>();
 
     /**
      * Constant for the name of the action being executed.
-     *
-     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
-    @Deprecated
-    public static final String ACTION_NAME = "com.opensymphony.xwork2.ActionContext.name";
+    private static final String ACTION_NAME = "org.apache.struts2.ActionContext.name";
 
     /**
      * Constant for the {@link com.opensymphony.xwork2.util.ValueStack OGNL value stack}.
-     *
-     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
-    @Deprecated
-    public static final String VALUE_STACK = ValueStack.VALUE_STACK;
+    private static final String VALUE_STACK = ValueStack.VALUE_STACK;
 
     /**
      * Constant for the action's session.
-     *
-     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
-    @Deprecated
-    public static final String SESSION = "com.opensymphony.xwork2.ActionContext.session";
+    private static final String SESSION = "org.apache.struts2.ActionContext.session";
 
     /**
      * Constant for the action's application context.
-     *
-     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
-    @Deprecated
-    public static final String APPLICATION = "com.opensymphony.xwork2.ActionContext.application";
+    private static final String APPLICATION = "org.apache.struts2.ActionContext.application";
 
     /**
      * Constant for the action's parameters.
-     *
-     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
-    @Deprecated
-    public static final String PARAMETERS = "com.opensymphony.xwork2.ActionContext.parameters";
+    private static final String PARAMETERS = "org.apache.struts2.ActionContext.parameters";
 
     /**
      * Constant for the action's locale.
-     *
-     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
-    @Deprecated
-    public static final String LOCALE = "com.opensymphony.xwork2.ActionContext.locale";
+    private static final String LOCALE = "org.apache.struts2.ActionContext.locale";
 
     /**
      * Constant for the action's {@link com.opensymphony.xwork2.ActionInvocation invocation} context.
-     *
-     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
-    @Deprecated
-    public static final String ACTION_INVOCATION = "com.opensymphony.xwork2.ActionContext.actionInvocation";
+    private static final String ACTION_INVOCATION = "org.apache.struts2.ActionContext.actionInvocation";
 
     /**
      * Constant for the map of type conversion errors.
-     *
-     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
-    @Deprecated
-    public static final String CONVERSION_ERRORS = "com.opensymphony.xwork2.ActionContext.conversionErrors";
+    private static final String CONVERSION_ERRORS = "org.apache.struts2.ActionContext.conversionErrors";
 
     /**
      * Constant for the container
-     *
-     * @deprecated scope will be narrowed to "private", use helper methods instead
      */
-    @Deprecated
-    public static final String CONTAINER = "com.opensymphony.xwork2.ActionContext.container";
+    private static final String CONTAINER = "org.apache.struts2.ActionContext.container";
 
     private final Map<String, Object> context;
 
@@ -145,7 +118,6 @@ public class ActionContext implements Serializable {
 
     /**
      * Creates a new ActionContext based on passed in Map
-     * and assign this instance to the current thread
      *
      * @param context a map with context values
      * @return new ActionContext
@@ -155,6 +127,15 @@ public class ActionContext implements Serializable {
             throw new IllegalArgumentException("Context cannot be null!");
         }
         return new ActionContext(context);
+    }
+
+    /**
+     * Creates a new ActionContext based on empty Map
+     *
+     * @return new ActionContext
+     */
+    public static ActionContext of() {
+        return of(new HashMap<>());
     }
 
     /**
@@ -211,13 +192,7 @@ public class ActionContext implements Serializable {
      * Sets the action invocation (the execution state).
      *
      * @param actionInvocation the action execution state.
-     * @deprecated use {@link #withActionInvocation(ActionInvocation)} instead
      */
-    @Deprecated
-    public void setActionInvocation(ActionInvocation actionInvocation) {
-        put(ACTION_INVOCATION, actionInvocation);
-    }
-
     public ActionContext withActionInvocation(ActionInvocation actionInvocation) {
         put(ACTION_INVOCATION, actionInvocation);
         return this;
@@ -236,13 +211,7 @@ public class ActionContext implements Serializable {
      * Sets the action's application context.
      *
      * @param application the action's application context.
-     * @deprecated use {@link #withApplication(Map)} instead
      */
-    @Deprecated
-    public void setApplication(Map<String, Object> application) {
-        put(APPLICATION, application);
-    }
-
     public ActionContext withApplication(Map<String, Object> application) {
         put(APPLICATION, application);
         return this;
@@ -271,13 +240,7 @@ public class ActionContext implements Serializable {
      * Sets conversion errors which occurred when executing the action.
      *
      * @param conversionErrors a Map of errors which occurred when executing the action.
-     * @deprecated use {@link #withConversionErrors(Map)} instead
      */
-    @Deprecated
-    public void setConversionErrors(Map<String, ConversionData> conversionErrors) {
-        put(CONVERSION_ERRORS, conversionErrors);
-    }
-
     public ActionContext withConversionErrors(Map<String, ConversionData> conversionErrors) {
         put(CONVERSION_ERRORS, conversionErrors);
         return this;
@@ -304,13 +267,7 @@ public class ActionContext implements Serializable {
      * Sets the Locale for the current action.
      *
      * @param locale the Locale for the current action.
-     * @deprecated use {@link #withLocale(Locale)} instead
      */
-    @Deprecated
-    public void setLocale(Locale locale) {
-        put(LOCALE, locale);
-    }
-
     public ActionContext withLocale(Locale locale) {
         put(LOCALE, locale);
         return this;
@@ -327,7 +284,7 @@ public class ActionContext implements Serializable {
 
         if (locale == null) {
             locale = Locale.getDefault();
-            setLocale(locale);
+            withLocale(locale);
         }
 
         return locale;
@@ -336,26 +293,11 @@ public class ActionContext implements Serializable {
     /**
      * Sets the name of the current Action in the ActionContext.
      *
-     * @param name the name of the current action.
-     * @deprecated use {@link #withActionName(String)} instead
+     * @param actionName the name of the current action.
      */
-    @Deprecated
-    public void setName(String name) {
-        put(ACTION_NAME, name);
-    }
-
     public ActionContext withActionName(String actionName) {
         put(ACTION_NAME, actionName);
         return this;
-    }
-
-    /**
-     * Gets the name of the current Action.
-     *
-     * @return the name of the current action.
-     */
-    public String getName() {
-        return (String) get(ACTION_NAME);
     }
 
     /**
@@ -372,10 +314,6 @@ public class ActionContext implements Serializable {
      *
      * @param parameters the parameters for the current action.
      */
-    public void setParameters(HttpParameters parameters) {
-        put(PARAMETERS, parameters);
-    }
-
     public ActionContext withParameters(HttpParameters parameters) {
         put(PARAMETERS, parameters);
         return this;
@@ -396,13 +334,7 @@ public class ActionContext implements Serializable {
      * Sets a map of action session values.
      *
      * @param session the session values.
-     * @deprecated use {@link #withSession(Map)} instead
      */
-    @Deprecated
-    public void setSession(Map<String, Object> session) {
-        put(SESSION, session);
-    }
-
     public ActionContext withSession(Map<String, Object> session) {
         put(SESSION, session);
         return this;
@@ -421,14 +353,8 @@ public class ActionContext implements Serializable {
     /**
      * Sets the OGNL value stack.
      *
-     * @param stack the OGNL value stack.
-     * @deprecated Use {@link #withValueStack(ValueStack)} instead
+     * @param valueStack the OGNL value stack.
      */
-    @Deprecated
-    public void setValueStack(ValueStack stack) {
-        put(VALUE_STACK, stack);
-    }
-
     public ActionContext withValueStack(ValueStack valueStack) {
         put(VALUE_STACK, valueStack);
         return this;
@@ -446,14 +372,8 @@ public class ActionContext implements Serializable {
     /**
      * Gets the container for this request
      *
-     * @param cont The container
-     * @deprecated use {@link #withContainer(Container)} instead
+     * @param container The container
      */
-    @Deprecated
-    public void setContainer(Container cont) {
-        put(CONTAINER, cont);
-    }
-
     public ActionContext withContainer(Container container) {
         put(CONTAINER, container);
         return this;

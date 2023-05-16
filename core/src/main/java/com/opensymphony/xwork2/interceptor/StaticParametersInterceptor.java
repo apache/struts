@@ -236,6 +236,6 @@ public class StaticParametersInterceptor extends AbstractInterceptor {
             combinedParams = HttpParameters.create(newParams);
             combinedParams = combinedParams.withExtraParams(previousParams);
         }
-        ac.setParameters(combinedParams.build());
+        ac.withParameters(combinedParams.build());
     }
 }

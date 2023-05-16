@@ -42,11 +42,10 @@ public class MyBeanActionTest extends XWorkTestCase {
         params.put("annotatedBeanList(1234567890).name", "This is the bla bean by annotation");
         params.put("annotatedBeanList(1234567891).name", "This is the 2nd bla bean by annotation");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", null, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", null, extraContext.getContextMap());
             proxy.execute();
             assertEquals(2, Integer.parseInt(proxy.getInvocation().getStack().findValue("beanList.size").toString()));
             assertEquals(MyBean.class.getName(), proxy.getInvocation().getStack().findValue("beanList.get(0)").getClass().getName());
@@ -85,11 +84,10 @@ public class MyBeanActionTest extends XWorkTestCase {
         params.put("annotatedBeanMap[1234567890].name", "This is the bla bean by annotation");
         params.put("annotatedBeanMap[1234567891].name", "This is the 2nd bla bean by annotation");
 
-        HashMap<String, Object> extraContext = new HashMap<>();
-        extraContext.put(ActionContext.PARAMETERS, HttpParameters.create(params).build());
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
 
         try {
-            ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", null, extraContext);
+            ActionProxy proxy = actionProxyFactory.createActionProxy("", "MyBean", null, extraContext.getContextMap());
             proxy.execute();
             MyBeanAction action = (MyBeanAction) proxy.getInvocation().getAction();
 

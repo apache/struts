@@ -124,7 +124,7 @@ public class ScopedModelDrivenInterceptorTest extends XWorkTestCase {
         User user = new User();
         user.setName("King George");
         Map session = new HashMap();
-        ActionContext.getContext().setSession(session);
+        ActionContext.getContext().withSession(session);
         ActionContext.getContext().getSession().put("king", user);
 
         ScopedModelDriven action = new MyUserScopedModelDrivenAction();

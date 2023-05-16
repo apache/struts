@@ -55,8 +55,8 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
         parameterMap.put("job", "Baker");
         parameterMap.put("name", "Martin");
 
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.setParameters(HttpParameters.create(parameterMap).build());
+        ActionContext actionContext = ActionContext.of().bind();
+        actionContext.withParameters(HttpParameters.create(parameterMap).build());
 
         Action action = new BlockingByDefaultAction();
         stack.push(action);
@@ -92,8 +92,8 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
         parameterMap.put("job", "Baker");
         parameterMap.put("name", "Martin");
 
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.setParameters(HttpParameters.create(parameterMap).build());
+        ActionContext actionContext = ActionContext.of().bind();
+        actionContext.withParameters(HttpParameters.create(parameterMap).build());
 
         Action action = new AllowingByDefaultAction();
         stack.push(action);
@@ -131,8 +131,8 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
         parameterMap.put("m1", "s1");
         parameterMap.put("m2", "s2");
 
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.setParameters(HttpParameters.create(parameterMap).build());
+        ActionContext actionContext = ActionContext.of().bind();
+        actionContext.withParameters(HttpParameters.create(parameterMap).build());
         stack.push(new BlockingByDefaultModel());
 
         Mock mockInvocation = new Mock(ActionInvocation.class);
@@ -170,8 +170,8 @@ public class AnnotationParameterFilterInterceptorTest extends TestCase {
         parameterMap.put("m1", "s1");
         parameterMap.put("m2", "s2");
 
-        ActionContext actionContext = ActionContext.of(new HashMap<>()).bind();
-        actionContext.setParameters(HttpParameters.create(parameterMap).build());
+        ActionContext actionContext = ActionContext.of().bind();
+        actionContext.withParameters(HttpParameters.create(parameterMap).build());
         stack.push(new AllowingByDefaultModel());
 
         Mock mockInvocation = new Mock(ActionInvocation.class);

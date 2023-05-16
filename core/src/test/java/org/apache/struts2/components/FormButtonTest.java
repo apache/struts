@@ -136,4 +136,22 @@ public class FormButtonTest extends StrutsInternalTestCase {
 
         assertEquals("secondAction", submit.getParameters().get("id"));
     }
+
+    public void testPopulateComponentHtmlId8() {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        TestBean bean = new TestBean();
+        bean.setName("boo");
+        bean.setSubName("foo");
+        stack.push(bean);
+
+        Submit submit = new Submit(stack, req, res);
+        submit.setAction("%{name}");
+        submit.setMethod("%{subName}");
+
+        submit.populateComponentHtmlId(null);
+
+        assertEquals("boo_foo", submit.getParameters().get("id"));
+    }
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.interceptor;
+package org.apache.struts2.action;
 
 /**
  * This marker interface should be implemented by actions that do not want any parameters set on

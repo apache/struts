@@ -96,33 +96,33 @@ public abstract class FormButton extends ClosingUIBean {
      * </ol>
      */
     protected void populateComponentHtmlId(Form form) {
-        String _tmp_id = "";
+        String tmpId = "";
         if (id != null) {
             // this check is needed for backwards compatibility with 2.1.x
-            _tmp_id = findString(id);
+            tmpId = findString(id);
         } else {
             if (form != null && form.getParameters().get("id") != null) {
-                _tmp_id = _tmp_id + form.getParameters().get("id").toString() + "_";
+                tmpId = tmpId + form.getParameters().get("id").toString() + "_";
             }
             if (name != null) {
-                _tmp_id = _tmp_id + escape(name);
+                tmpId = tmpId + escape(findString(name));
             } else if (action != null || method != null) {
                 if (action != null) {
-                    _tmp_id = _tmp_id + escape(action);
+                    tmpId = tmpId + escape(findString(action));
                 }
                 if (method != null) {
-                    _tmp_id = _tmp_id + "_" + escape(method);
+                    tmpId = tmpId + "_" + escape(findString(method));
                 }
             } else {
                 // if form is null, this component is used, without a form, i guess
                 // there's not much we could do then.
                 if (form != null) {
-                    _tmp_id = _tmp_id + form.getSequence();
+                    tmpId = tmpId + form.getSequence();
                 }
             }
         }
-        addParameter("id", _tmp_id);
-        addParameter("escapedId", escape(_tmp_id));
+        addParameter("id", tmpId);
+        addParameter("escapedId", escape(tmpId));
     }
 
     /**

@@ -87,8 +87,8 @@ public class NamedVariablePatternMatcher implements PatternMatcher<NamedVariable
         int s = 0;
         while (s < len) {
             int e = data.indexOf('{', s);
-            if (e < 0 && data.indexOf('}') > -1) {
-                throw new IllegalArgumentException("Missing openning '{' in [" + data + "]!");
+            if (e < 0 && data.indexOf('}', s) > -1) {
+                throw new IllegalArgumentException("Missing opening '{' in [" + data + "]!");
             }
             if (e < 0) {
                 regex.append(Pattern.quote(data.substring(s)));

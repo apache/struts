@@ -78,7 +78,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -108,6 +107,8 @@ public class Dispatcher {
     public static final String REQUEST_POST_METHOD = "POST";
 
     public static final String MULTIPART_FORM_DATA_REGEX = "^multipart/form-data(?:\\s*;\\s*boundary=[0-9a-zA-Z'()+_,\\-./:=?]{1,70})?(?:\\s*;\\s*charset=[a-zA-Z\\-0-9]{3,14})?";
+
+    private static final String CONFIG_SPLIT_REGEX = "\\s*,\\s*";
 
     /**
      * Provide a thread local instance.
@@ -427,10 +428,14 @@ public class Dispatcher {
         if (configPaths == null) {
             configPaths = DEFAULT_CONFIGURATION_PATHS;
         }
-        String[] files = configPaths.split("\\s*[,]\\s*");
+        loadConfigPaths(configPaths);
+    }
+
+    private void loadConfigPaths(String configPaths) {
+        String[] files = configPaths.split(CONFIG_SPLIT_REGEX);
         for (String file : files) {
             if (file.endsWith(".xml")) {
-                configurationManager.addContainerProvider(createStrutsXmlConfigurationProvider(file, false, servletContext));
+                configurationManager.addContainerProvider(createStrutsXmlConfigurationProvider(file, servletContext));
             } else {
                 throw new IllegalArgumentException("Invalid configuration file name");
             }
@@ -452,7 +457,7 @@ public class Dispatcher {
     private void init_JavaConfigurations() {
         String configClasses = initParams.get("javaConfigClasses");
         if (configClasses != null) {
-            String[] classes = configClasses.split("\\s*[,]\\s*");
+            String[] classes = configClasses.split(CONFIG_SPLIT_REGEX);
             for (String cname : classes) {
                 try {
                     Class<?> cls = ClassLoaderUtil.loadClass(cname, this.getClass());
@@ -476,7 +481,7 @@ public class Dispatcher {
     private void init_CustomConfigurationProviders() {
         String configProvs = initParams.get("configProviders");
         if (configProvs != null) {
-            String[] classes = configProvs.split("\\s*[,]\\s*");
+            String[] classes = configProvs.split(CONFIG_SPLIT_REGEX);
             for (String cname : classes) {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(cname, this.getClass());
@@ -521,6 +526,13 @@ public class Dispatcher {
         configurationManager.addContainerProvider(new StrutsBeanSelectionProvider());
     }
 
+    /**
+     * `struts-deferred.xml` can be used to load configuration which is sensitive to loading order such as 'bean-selection' elements
+     */
+    private void init_DeferredXmlConfigurations() {
+        loadConfigPaths("struts-deferred.xml");
+    }
+
     private Container init_PreloadConfiguration() {
         return getContainer();
     }
@@ -554,6 +566,7 @@ public class Dispatcher {
             init_CustomConfigurationProviders(); // [5]
             init_FilterInitParameters(); // [6]
             init_AliasStandardObjects(); // [7]
+            init_DeferredXmlConfigurations();
 
             Container container = init_PreloadConfiguration();
             container.inject(this);

@@ -42,7 +42,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
 
 
     /**
-     * Creates a new session map given a http servlet request. Note, ths enumeration of request
+     * Creates a new session map given a http servlet request. Note, the enumeration of request
      * attributes will occur when the map entries are asked for.
      *
      * @param request the http servlet request object.
@@ -82,7 +82,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
 
         synchronized (session.getId().intern()) {
             entries = null;
-            Enumeration<String> attributeNamesEnum = session.getAttributeNames();
+            final Enumeration<String> attributeNamesEnum = session.getAttributeNames();
             while (attributeNamesEnum.hasMoreElements()) {
                 session.removeAttribute(attributeNamesEnum.nextElement());
             }
@@ -105,7 +105,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             if (entries == null) {
                 entries = new HashSet<>();
 
-                Enumeration<String> enumeration = session.getAttributeNames();
+                final Enumeration<String> enumeration = session.getAttributeNames();
 
                 while (enumeration.hasMoreElements()) {
                     final String key = enumeration.nextElement();
@@ -127,17 +127,21 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
 
     /**
      * Returns the session attribute associated with the given key or <tt>null</tt> if it doesn't exist.
+     * 
+     * <b>Note:</b> Must use the same signature as {@link java.util.AbstractMap#get(java.lang.Object)} to ensure the
+     *   expected specialized behaviour is performed here (and not the generic ancestor behaviour).
      *
      * @param key the name of the session attribute.
      * @return the session attribute or <tt>null</tt> if it doesn't exist.
      */
-    public Object get(final String key) {
+    @Override
+    public Object get(final Object key) {
         if (session == null) {
             return null;
         }
 
         synchronized (session.getId().intern()) {
-            return session.getAttribute(key);
+            return session.getAttribute(key != null ? key.toString() : null);
         }
     }
 
@@ -156,7 +160,7 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
             }
         }
         synchronized (session.getId().intern()) {
-            Object oldValue = get(key);
+            final Object oldValue = get(key);
             entries = null;
             session.setAttribute(key, value);
             return oldValue;
@@ -166,10 +170,14 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
     /**
      * Removes the specified session attribute.
      *
+     * <b>Note:</b> Must use the same signature as {@link java.util.AbstractMap#remove(java.lang.Object)} to ensure the
+     *   expected specialized behaviour is performed here (and not the generic ancestor behaviour).
+     * 
      * @param key the name of the attribute to remove.
      * @return the value that was removed or <tt>null</tt> if the value was not found (and hence, not removed).
      */
-    public Object remove(final String key) {
+    @Override
+    public Object remove(final Object key) {
         if (session == null) {
             return null;
         }
@@ -177,8 +185,9 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
         synchronized (session.getId().intern()) {
             entries = null;
 
-            Object value = get(key);
-            session.removeAttribute(key);
+            final String keyAsString = (key != null ? key.toString() : null);
+            final Object value = get(keyAsString);
+            session.removeAttribute(keyAsString);
 
             return value;
         }
@@ -188,16 +197,21 @@ public class SessionMap extends AbstractMap<String, Object> implements Serializa
     /**
      * Checks if the specified session attribute with the given key exists.
      *
+     * <b>Note:</b> Must use the same signature as {@link java.util.AbstractMap#containsKey(java.lang.Object)} to ensure the
+     *   expected specialized behaviour is performed here (and not the generic ancestor behaviour).
+     * 
      * @param key the name of the session attribute.
      * @return <tt>true</tt> if the session attribute exits or <tt>false</tt> if it doesn't exist.
      */
-    public boolean containsKey(final String key) {
+    @Override
+    public boolean containsKey(final Object key) {
         if (session == null) {
             return false;
         }
 
         synchronized (session.getId().intern()) {
-            return (session.getAttribute(key.toString()) != null);
+            final String keyAsString = (key != null ? key.toString() : null);
+            return (session.getAttribute(keyAsString) != null);
         }
     }
 }

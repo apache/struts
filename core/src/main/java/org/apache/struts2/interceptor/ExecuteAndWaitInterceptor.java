@@ -228,6 +228,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
      */
+    @Override
     protected String doIntercept(ActionInvocation actionInvocation) throws Exception {
         ActionProxy proxy = actionInvocation.getProxy();
         String name = getBackgroundProcessName(proxy);
@@ -235,34 +236,40 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         Map<String, Object> session = context.getSession();
         HttpSession httpSession = ServletActionContext.getRequest().getSession(true);
 
-        Boolean secondTime = true;
-        if (executeAfterValidationPass) {
-            secondTime = (Boolean) context.get(KEY);
-            if (secondTime == null) {
-                context.put(KEY, true);
-                secondTime = false;
-            } else {
-                secondTime = true;
-                context.put(KEY, null);
-            }
-        }
-
         //sync on the real HttpSession as the session from the context is a wrap that is created
         //on every request
         synchronized (httpSession) {
-            BackgroundProcess bp = (BackgroundProcess) session.get(KEY + name);
+            // State flag processing moved within the synchronization block, to ensure consistency.
+            Boolean secondTime = true;
+            if (executeAfterValidationPass) {
+                secondTime = (Boolean) context.get(KEY);
+                if (secondTime == null) {
+                    context.put(KEY, true);
+                    secondTime = false;
+                } else {
+                    secondTime = true;
+                    context.put(KEY, null);
+                }
+            }
+
+            final String bp_SessionKey = KEY + name;
+            BackgroundProcess bp = (BackgroundProcess) session.get(bp_SessionKey);
+
+            LOG.debug("Intercepting invocation for BackgroundProcess - session key: {}, value: {}", bp_SessionKey, bp);
 
             //WW-4900 Checks if from a de-serialized session? so background thread missed, let's start a new one.
             if (bp != null && bp.getInvocation() == null) {
-                session.remove(KEY + name);
+                LOG.trace("BackgroundProcess invocation is null (remove key, clear instance)");
+                session.remove(bp_SessionKey);
                 bp = null;
             }
 
             if ((!executeAfterValidationPass || secondTime) && bp == null) {
+                LOG.trace("BackgroundProcess instance is null (create new instance) - executeAfterValidationPass: {}, secondTime: {}.", executeAfterValidationPass, secondTime);
                 bp = getNewBackgroundProcess(name, actionInvocation, threadPriority).prepare();
-                session.put(KEY + name, bp);
-                if (executor.isShutdown()) {
-                    LOG.warn("Executor is shutting down, cannot execute a new process");
+                session.put(bp_SessionKey, bp);
+                if (executor == null || executor.isShutdown()) {
+                    LOG.warn("Executor is shutting down (or null), cannot execute a new process, invoke next ActionInvocation step and return.");
                     return actionInvocation.invoke();
                 }
                 executor.execute(bp);
@@ -271,6 +278,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
             }
 
             if ((!executeAfterValidationPass || !secondTime) && bp != null && !bp.isDone()) {
+                LOG.trace("BackgroundProcess instance is not done (wait processing) - executeAfterValidationPass: {}, secondTime: {}.", executeAfterValidationPass, secondTime);
                 actionInvocation.getStack().push(bp.getAction());
 
                 final String token = TokenHelper.getToken();
@@ -297,7 +305,8 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
                 return WAIT;
             } else if ((!executeAfterValidationPass || !secondTime) && bp != null && bp.isDone()) {
-                session.remove(KEY + name);
+                LOG.trace("BackgroundProcess instance is done (remove key, return result) - executeAfterValidationPass: {}, secondTime: {}.", executeAfterValidationPass, secondTime);
+                session.remove(bp_SessionKey);
                 actionInvocation.getStack().push(bp.getAction());
 
                 // if an exception occurred during action execution, throw it here
@@ -307,6 +316,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
                 return bp.getResult();
             } else {
+                LOG.trace("BackgroundProcess state fall-through (first instance, pass through), invoke next ActionInvocation step and return - executeAfterValidationPass: {}, secondTime: {}.", executeAfterValidationPass, secondTime);
                 // this is the first instance of the interceptor and there is no existing action
                 // already run in the background, so let's just let this pass through. We assume
                 // the action invocation will be run in the background on the subsequent pass through
@@ -394,7 +404,10 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
     @Override
     public void destroy() {
-        super.destroy();
-        executor.shutdown();
+        try {
+          executor.shutdown();
+        } finally {
+          super.destroy();
+        }
     }
 }

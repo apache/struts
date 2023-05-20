@@ -33,10 +33,10 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
     private final String threadName;
     private final int threadPriority;
 
-    private transient  Thread processThread;
+    private transient Thread processThread;
     //WW-4900 transient since 2.5.15
     protected transient ActionInvocation invocation;
-    protected transient  Exception exception;
+    protected transient Exception exception;
 
     protected String result;
     protected boolean done;
@@ -64,9 +64,9 @@ public class StrutsBackgroundProcess implements BackgroundProcess, Serializable 
                     afterInvocation();
                 } catch (Exception e) {
                     exception = e;
+                } finally {
+                  done = true;
                 }
-
-                done = true;
             });
             processThread.setName(threadName);
             processThread.setPriority(threadPriority);

@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Test case for Dispatcher.
@@ -230,12 +231,13 @@ public class DispatcherTest extends StrutsInternalTestCase {
         du.init();
         Configuration config = du.getConfigurationManager().getConfiguration();
         assertNotNull(config);
-        HashSet<String> expected = new HashSet<>();
+        Set<String> expected = new HashSet<>();
         expected.add("struts-default.xml");
         expected.add("struts-beans.xml");
         expected.add("struts-excluded-classes.xml");
         expected.add("struts-plugin.xml");
         expected.add("struts.xml");
+        expected.add("struts-deferred.xml");
         assertEquals(expected, config.getLoadedFileNames());
         assertTrue(config.getPackageConfigs().size() > 0);
         PackageConfig packageConfig = config.getPackageConfig("struts-default");

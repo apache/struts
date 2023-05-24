@@ -76,6 +76,33 @@ public class StrutsQueryStringParserTest {
         assertEquals("value with space", queryParameters.get("name"));
     }
 
+    @Test
+    public void shouldProperlySplitParamsWithDoubleEqualSign() {
+        Map<String, Object> queryParameters = parser.parse("id1=n123=&id2=n3456", false);
+
+        assertTrue(queryParameters.containsKey("id1"));
+        assertTrue(queryParameters.containsKey("id2"));
+        assertEquals("n123=", queryParameters.get("id1"));
+        assertEquals("n3456", queryParameters.get("id2"));
+    }
+
+    @Test
+    public void shouldHandleParamWithNoValue1() {
+        Map<String, Object> queryParameters = parser.parse("paramNoValue", false);
+
+        assertTrue(queryParameters.containsKey("paramNoValue"));
+        assertEquals("", queryParameters.get("paramNoValue"));
+    }
+
+    @Test
+    public void shouldHandleParamWithNoValue2() {
+        Map<String, Object> queryParameters = parser.parse("paramNoValue&param1=1234", false);
+
+        assertTrue(queryParameters.containsKey("paramNoValue"));
+        assertTrue(queryParameters.containsKey("param1"));
+        assertEquals("1234", queryParameters.get("param1"));
+    }
+
     @Before
     public void setUp() throws Exception {
         this.parser = new StrutsQueryStringParser(new StrutsUrlDecoder());

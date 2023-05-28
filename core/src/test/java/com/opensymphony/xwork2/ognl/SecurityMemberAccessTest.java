@@ -29,11 +29,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class SecurityMemberAccessTest {
 
@@ -383,8 +385,9 @@ public class SecurityMemberAccessTest {
     }
 
     @Test
-    public void testBlockedStaticFieldWhenFlagIsFalse() throws Exception {
+    public void testBlockedStaticFieldWhenFlagIsTrue() throws Exception {
         // given
+        assignNewSma(true);
         sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
         // when
@@ -480,6 +483,104 @@ public class SecurityMemberAccessTest {
     }
 
     @Test
+    public void testBlockedStaticFieldWhenFlagIsFalse() throws Exception {
+        // given
+        assignNewSma(false);
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+
+        // when
+        Member method = StaticTester.class.getField("MAX_VALUE");
+        boolean actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to public static field is allowed when flag false?", actual);
+
+        // public static final test
+        // given
+        assignNewSma(false);
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.class.getField("MIN_VALUE");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to public final static field is allowed when flag is false?", actual);
+
+        // package static test
+        // given
+        assignNewSma(false);
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("PACKAGE_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to package static field is allowed?", actual);
+
+        // package final static test
+        // given
+        assignNewSma(false);
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("FINAL_PACKAGE_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to package final static field is allowed?", actual);
+
+        // protected static test
+        // given
+        assignNewSma(false);
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("PROTECTED_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to protected static field is allowed?", actual);
+
+        // protected final static test
+        // given
+        assignNewSma(false);
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("FINAL_PROTECTED_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to protected final static field is allowed?", actual);
+
+        // private static test
+        // given
+        assignNewSma(false);
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("PRIVATE_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to private static field is allowed?", actual);
+
+        // private final static test
+        // given
+        assignNewSma(false);
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+
+        // when
+        method = StaticTester.getFieldByName("FINAL_PRIVATE_STRING");
+        actual = sma.isAccessible(context, null, method, null);
+
+        // then
+        assertFalse("Access to private final static field is allowed?", actual);
+    }
+
+    @Test
     public void testBlockedStaticFieldWhenClassIsExcluded() throws Exception {
         // given
         sma.setExcludedClasses(new HashSet<>(Arrays.asList(Class.class, StaticTester.class)));
@@ -506,7 +607,7 @@ public class SecurityMemberAccessTest {
     }
 
     @Test
-    public void testBlockStaticAccessIfClassIsExcluded() throws Exception {
+    public void testBlockAccessIfClassIsExcluded() throws Exception {
         // given
         sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
@@ -515,11 +616,25 @@ public class SecurityMemberAccessTest {
         boolean actual = sma.isAccessible(context, Class.class, method, null);
 
         // then
-        assertFalse("Access to static method of excluded class isn't blocked!", actual);
+        assertFalse("Access to method of excluded class isn't blocked!", actual);
+    }
+
+   @Test
+    public void testBlockAccessIfClassIsExcluded_2() throws Exception {
+        // given
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(ClassLoader.class)));
+
+        // when
+        Member method = ClassLoader.class.getMethod("loadClass", String.class);
+        ClassLoader classLoaderTarget = this.getClass().getClassLoader();
+        boolean actual = sma.isAccessible(context, classLoaderTarget, method, null);
+
+        // then
+        assertFalse("Invalid test! Access to method of excluded class isn't blocked!", actual);
     }
 
     @Test
-    public void testAllowStaticAccessIfClassIsNotExcluded() throws Exception {
+    public void testAllowAccessIfClassIsNotExcluded() throws Exception {
         // given
         sma.setExcludedClasses(new HashSet<>(Collections.singletonList(ClassLoader.class)));
 
@@ -528,7 +643,26 @@ public class SecurityMemberAccessTest {
         boolean actual = sma.isAccessible(context, Class.class, method, null);
 
         // then
-        assertTrue("Invalid test! Access to static method of excluded class is blocked!", actual);
+        assertTrue("Invalid test! Access to method of non-excluded class is blocked!", actual);
+    }
+
+   @Test
+    public void testIllegalArgumentExceptionExpectedForTargetMemberMismatch() throws Exception {
+        // given
+        sma.setExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+
+        // when
+        Member method = ClassLoader.class.getMethod("loadClass", String.class);
+        String mismatchTarget = "misMatchTargetObject";
+        try {
+            boolean actual = sma.isAccessible(context, mismatchTarget, method, null);
+
+            // then
+            assertFalse("Invalid test! Access to method of excluded class isn't blocked!", actual);
+            fail("Mismatch between target and member did not cause IllegalArgumentException?");
+        } catch (IllegalArgumentException iex) {
+            // Expected result is this exception
+        }
     }
 
     @Test
@@ -686,10 +820,12 @@ class FooBar implements FooBarInterface {
         this.stringField = stringField;
     }
 
+    @Override
     public String fooLogic() {
         return "fooLogic";
     }
 
+    @Override
     public String barLogic() {
         return "barLogic";
     }
@@ -697,6 +833,27 @@ class FooBar implements FooBarInterface {
     @Override
     public int hashCode() {
         return 1;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FooBar other = (FooBar) obj;
+        if (this.intField != other.intField) {
+            return false;
+        }
+        if (!Objects.equals(this.stringField, other.stringField)) {
+            return false;
+        }
+        return Objects.equals(this.doubleField, other.doubleField);
     }
 
     public int getIntField() {

@@ -36,6 +36,7 @@ import com.mockobjects.constraint.Constraint;
 import com.mockobjects.constraint.IsAnything;
 import com.mockobjects.constraint.IsEqual;
 import com.mockobjects.dynamic.Mock;
+import java.util.AbstractMap;
 
 
 /**
@@ -47,23 +48,17 @@ public class SessionMapTest extends TestCase {
 
 
     public void testClearInvalidatesTheSession() throws Exception {
-        List<String> attributeNames = new ArrayList<String>();
+        List<String> attributeNames = new ArrayList<>();
         attributeNames.add("test");
         attributeNames.add("anotherTest");
         Enumeration<String> attributeNamesEnum = Collections.enumeration(attributeNames);
 
         MockSessionMap sessionMap = new MockSessionMap((HttpServletRequest) requestMock.proxy());
-        sessionMock.expect("getAttribute",
-                new Constraint[] {
-                    new IsEqual("test")
-                });
+        // Note: getAttribute() calls no longer expected after fix to ensure descendant (not ancestor) calls are made for
+        //   the SessionMap Map methods (i.e. the overrides are called, as expected).
         sessionMock.expect("setAttribute",
                 new Constraint[] {
                     new IsEqual("test"), new IsEqual("test value")
-                });
-        sessionMock.expect("getAttribute",
-                new Constraint[] {
-                    new IsEqual("anotherTest")
                 });
         sessionMock.expect("setAttribute",
                 new Constraint[] {
@@ -76,14 +71,6 @@ public class SessionMapTest extends TestCase {
                 });
         sessionMock.expect("removeAttribute",
                 new Constraint[]{
-                    new IsEqual("anotherTest")
-                });
-        sessionMock.expect("getAttribute",
-                new Constraint[] {
-                    new IsEqual("test")
-                });
-        sessionMock.expect("getAttribute",
-                new Constraint[] {
                     new IsEqual("anotherTest")
                 });
         sessionMap.put("test", "test value");
@@ -121,7 +108,7 @@ public class SessionMapTest extends TestCase {
         String key = "theKey";
         Object value = new Object();
         sessionMock.expectAndReturn("getAttribute", new Constraint[]{
-                new IsEqual(key.toString())
+                new IsEqual(key)
         }, value);
 
         SessionMap sessionMap = new SessionMap((HttpServletRequest) requestMock.proxy());
@@ -134,7 +121,7 @@ public class SessionMapTest extends TestCase {
         Object value = new Object();
         sessionMock.expect("getAttribute", new Constraint[]{new IsAnything()});
         sessionMock.expect("setAttribute", new Constraint[]{
-                new IsEqual(key.toString()), new IsEqual(value)
+                new IsEqual(key), new IsEqual(value)
         });
 
         SessionMap sessionMap = new SessionMap((HttpServletRequest) requestMock.proxy());
@@ -159,7 +146,7 @@ public class SessionMapTest extends TestCase {
     	MockHttpServletRequest request = new MockHttpServletRequest();
     	
         String key = "theKey";
-        Object someOtherKey = "someOtherKey";
+        String someOtherKey = "someOtherKey";
         Object value = new Object();
         
         SessionMap sessionMap = new SessionMap(request);
@@ -218,6 +205,79 @@ public class SessionMapTest extends TestCase {
         sessionMock.verify();
     }
 
+    /** 
+     * Attempt to detect any changes that would make the attribute handling for puts produce different results
+     * for the SessionMap and underlying HttpSession attributes.
+     * 
+     * @throws Exception 
+     */
+    public void testPutResultInSessionAttributes() throws Exception {
+        Object value = new Object();
+
+        //HttpSession httpSessionMock = ((HttpServletRequest) requestMock.proxy()).getSession(false);
+        HttpSession httpSessionMock = (HttpSession) sessionMock.proxy();
+        sessionMock.expectAndReturn("getAttribute", new Constraint[]{
+                new IsEqual("KEY")
+        }, null);
+        sessionMock.expect("setAttribute", new Constraint[]{
+                new IsEqual("KEY"), new IsEqual(value)
+        });
+        sessionMock.expectAndReturn("getAttribute", new Constraint[]{
+                new IsEqual("KEY")
+        }, value);
+        sessionMock.expectAndReturn("getAttribute", new Constraint[]{
+                new IsEqual("KEY")
+        }, value);
+
+        SessionMap sessionMap = new SessionMap((HttpServletRequest) requestMock.proxy());
+        AbstractMap<String, Object> abstractMap = (AbstractMap<String, Object>) sessionMap;
+        abstractMap.put("KEY", value);
+        assertEquals("Underlying HttpSession attribute does not match after SessionMap put ?", abstractMap.get("KEY"), httpSessionMock.getAttribute("KEY"));
+        sessionMock.verify();
+    }
+
+    /**
+     * Attempt to detect any changes that would make the attribute handling for removes produce different results
+     * for the SessionMap and underlying HttpSession attributes.
+     * 
+     * @throws Exception 
+     */
+    public void testRemoveResultInSessionAttributes() throws Exception {
+        Object value = new Object();
+        Object removedValue;
+
+        //HttpSession httpSessionMock = ((HttpServletRequest) requestMock.proxy()).getSession(false);
+        HttpSession httpSessionMock = (HttpSession) sessionMock.proxy();
+        sessionMock.expectAndReturn("getAttribute", new Constraint[]{
+                new IsEqual("KEY")
+        }, null);
+        sessionMock.expect("setAttribute", new Constraint[]{
+                new IsEqual("KEY"), new IsEqual(value)
+        });
+        sessionMock.expectAndReturn("getAttribute", new Constraint[]{
+                new IsEqual("KEY")
+        }, value);
+        sessionMock.expect("removeAttribute", new Constraint[]{
+                new IsEqual("KEY")
+        });
+        sessionMock.expectAndReturn("getAttribute", new Constraint[]{
+                new IsEqual("KEY")
+        }, null);
+        sessionMock.expectAndReturn("getAttribute", new Constraint[]{
+                new IsEqual("KEY")
+        }, null);
+
+        SessionMap sessionMap = new SessionMap((HttpServletRequest) requestMock.proxy());
+        AbstractMap<String, Object> abstractMap = (AbstractMap<String, Object>) sessionMap;
+        abstractMap.put("KEY", value);
+        removedValue = abstractMap.remove("KEY");
+        assertEquals("Removed attribute not equal to put attribute ?", value, removedValue);
+        assertNull("Removed attribute still present in SessionMap ?", abstractMap.get("KEY"));
+        assertNull("Removed attribute still present in HttpSessionMock ?", httpSessionMock.getAttribute("KEY"));
+        sessionMock.verify();
+    }
+
+    @Override
     protected void setUp() throws Exception {
         sessionMock = new Mock(HttpSession.class);
         sessionMock.matchAndReturn("getId", "1");
@@ -235,16 +295,19 @@ public class SessionMapTest extends TestCase {
 
         private static final long serialVersionUID = 8783604360786273764L;
 
-        private Map<String, Object> map = new HashMap<>();
+        private final Map<String, Object> map;
 
         public MockSessionMap(HttpServletRequest request) {
             super(request);
+            this.map = new HashMap<>();
         }
 
+        @Override
         public Object get(Object key) {
             return map.get(key);
         }
         
+        @Override
         public Object put(String key, Object value) {
             Object originalValue = super.put(key, value);
             map.put(key, value); //put the value into our map after putting it in the superclass map to avoid polluting the get call.
@@ -252,6 +315,7 @@ public class SessionMapTest extends TestCase {
             return originalValue;
         }
 
+        @Override
         public void clear() {
             super.clear();
             map.clear();

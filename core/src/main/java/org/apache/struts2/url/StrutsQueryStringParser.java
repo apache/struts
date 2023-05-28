@@ -55,19 +55,16 @@ public class StrutsQueryStringParser implements QueryStringParser {
                 LOG.debug("Param [{}] is blank, skipping", param);
                 continue;
             }
-
-            String[] tmpParams = param.split("=");
-            String paramName = null;
+            String paramName;
             String paramValue = "";
-            if (tmpParams.length > 0) {
-                paramName = tmpParams[0];
+            int index = param.indexOf("=");
+            if (index > -1) {
+                paramName = param.substring(0, index);
+                paramValue = param.substring(index + 1);
+            } else {
+                paramName = param;
             }
-            if (tmpParams.length > 1) {
-                paramValue = tmpParams[1];
-            }
-            if (paramName != null) {
-                extractParam(paramName, paramValue, queryParams, forceValueArray);
-            }
+            extractParam(paramName, paramValue, queryParams, forceValueArray);
         }
         return queryParams;
     }

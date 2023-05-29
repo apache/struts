@@ -129,7 +129,8 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        if (isClassExcluded(targetClass)) {
+        if (targetClass != memberClass && isClassExcluded(targetClass)) {
+            // Optimization: Already checked memberClass exclusion, so if-and-only-if targetClass == memberClass, this check is redundant.
             LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
             return false;
         }

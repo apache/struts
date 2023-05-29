@@ -49,7 +49,7 @@ public class StrutsQueryStringParser implements QueryStringParser {
         }
 
         Map<String, Object> queryParams = new LinkedHashMap<>();
-        String[] params = queryString.split("&");
+        String[] params = extractParams(queryString);
         for (String param : params) {
             if (StringUtils.isBlank(param)) {
                 LOG.debug("Param [{}] is blank, skipping", param);
@@ -67,6 +67,18 @@ public class StrutsQueryStringParser implements QueryStringParser {
             extractParam(paramName, paramValue, queryParams, forceValueArray);
         }
         return queryParams;
+    }
+
+    private String[] extractParams(String queryString) {
+        LOG.trace("Extracting params from query string: {}", queryString);
+        String[] params = queryString.split("&");
+
+        int fragmentIndex = queryString.lastIndexOf("#");
+        if (fragmentIndex > -1) {
+            LOG.trace("Stripping fragment at index: {}", fragmentIndex);
+            params = queryString.substring(0, fragmentIndex).split("&");
+        }
+        return params;
     }
 
     private void extractParam(String paramName, String paramValue, Map<String, Object> queryParams, boolean forceValueArray) {

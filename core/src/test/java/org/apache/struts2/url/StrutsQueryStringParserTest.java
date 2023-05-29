@@ -103,6 +103,14 @@ public class StrutsQueryStringParserTest {
         assertEquals("1234", queryParameters.get("param1"));
     }
 
+    @Test
+    public void shouldHandleParamAndFragment() {
+        Map<String, Object> queryParameters = parser.parse("param1=1234#test", false);
+
+        assertTrue(queryParameters.containsKey("param1"));
+        assertEquals("1234", queryParameters.get("param1"));
+    }
+
     @Before
     public void setUp() throws Exception {
         this.parser = new StrutsQueryStringParser(new StrutsUrlDecoder());

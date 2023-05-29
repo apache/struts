@@ -21,7 +21,11 @@ package org.apache.struts2.views.jsp;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.struts2.ServletActionContext;
@@ -46,6 +50,7 @@ import java.util.Map;
  */
 public abstract class AbstractTagTest extends StrutsInternalTestCase {
     protected Action action;
+    protected ActionProxy actionProxy;
     protected Map<String, Object> context;
     protected Map<String, Object> session;
     protected ValueStack stack;
@@ -57,6 +62,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
     protected StrutsMockHttpServletRequest request;
     protected StrutsMockPageContext pageContext;
     protected HttpServletResponse response;
+    protected ActionInvocation actionInvocation;
 
     protected Mock mockContainer;
 
@@ -78,6 +84,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
 
     protected void createMocks() {
         action = this.getAction();
+        actionProxy = new MockActionProxy();
         container.inject(action);
 
         stack = ActionContext.getContext().getValueStack();
@@ -119,11 +126,35 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         extraContext = ActionContext.of(extraContext).withLocale(null).getContextMap();
         stack.getContext().putAll(extraContext);
 
-        ActionContext.of(context)
+        actionInvocation = new MockActionInvocation();
+        ((MockActionInvocation) actionInvocation).setAction(action);
+
+        ((MockActionProxy) actionProxy).setAction(action);
+        ((MockActionProxy) actionProxy).setInvocation(actionInvocation);
+        ((MockActionInvocation) actionInvocation).setProxy(actionProxy);
+
+        request.setRequestURI("/");
+        withRequestPath(request.getRequestURI());
+
+        ActionContext ac = ActionContext.of(context)
             .withServletRequest(request)
             .withServletResponse(response)
             .withServletContext(servletContext)
+            .withActionInvocation(actionInvocation)
             .bind();
+
+        ((MockActionInvocation) actionInvocation).setInvocationContext(ac);
+    }
+
+    protected void withRequestPath(String path) {
+        request.setRequestURI(path);
+        String namespace = path.substring(0, path.lastIndexOf('/'));
+        String actionName = path.substring(path.lastIndexOf('/') + 1);
+        if (namespace.equals("") && !actionName.contains(".action")) {
+            actionName = path;
+        }
+        ((MockActionProxy) actionProxy).setNamespace(namespace);
+        ((MockActionProxy) actionProxy).setActionName(actionName);
     }
 
     @Override

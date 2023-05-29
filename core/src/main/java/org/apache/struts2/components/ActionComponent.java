@@ -31,20 +31,18 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.views.jsp.TagUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,7 +51,7 @@ import java.util.Map;
  * namespace.  The body content of the tag is used to render the results from the Action.  Any result processor defined
  * for this action in struts.xml will be ignored, <i>unless</i> the executeResult parameter is specified.</p>
  * <!-- END SNIPPET: javadoc -->
- *
+ * <p>
  * <!-- START SNIPPET: params -->
  * <ul>
  *      <li>id (String) - the id (if specified) to put the action under stack's context.
@@ -111,9 +109,8 @@ import java.util.Map;
  *  &lt;s:property value=&quot;#attr.stringByAction&quot; /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- *
  */
-@StrutsTag(name="action", tldTagClass="org.apache.struts2.views.jsp.ActionTag", description="Execute an action from within a view")
+@StrutsTag(name = "action", tldTagClass = "org.apache.struts2.views.jsp.ActionTag", description = "Execute an action from within a view")
 public class ActionComponent extends ContextBean {
     private static final Logger LOG = LogManager.getLogger(ActionComponent.class);
 
@@ -143,7 +140,7 @@ public class ActionComponent extends ContextBean {
     public void setActionProxyFactory(ActionProxyFactory actionProxyFactory) {
         this.actionProxyFactory = actionProxyFactory;
     }
-    
+
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
@@ -163,7 +160,7 @@ public class ActionComponent extends ContextBean {
                 try {
                     writer.flush();
                 } catch (IOException e) {
-                	LOG.warn("error while trying to flush writer ", e);
+                    LOG.warn("error while trying to flush writer ", e);
                 }
             }
             executeAction();
@@ -188,11 +185,11 @@ public class ActionComponent extends ContextBean {
         Dispatcher du = Dispatcher.getInstance();
         Map<String, Object> extraContext = du.createContextMap(
             new RequestMap(req),
-                newParams,
-                session,
-                application,
-                req,
-                res);
+            newParams,
+            session,
+            application,
+            req,
+            res);
 
         ValueStack newStack = valueStackFactory.createValueStack(stack);
 
@@ -206,7 +203,7 @@ public class ActionComponent extends ContextBean {
     /**
      * Creates parameters map using parameters from the value stack and component parameters.  Any non-String array
      * values will be converted into a single-value String array.
-     * 
+     *
      * @return A map of String[] parameters
      */
     protected HttpParameters createParametersForContext() {
@@ -233,8 +230,6 @@ public class ActionComponent extends ContextBean {
      * attempt to derive a namespace using buildNamespace().  The ActionProxy
      * and the namespace will be saved into the instance variables proxy and
      * namespace respectively.
-     *
-     * @see org.apache.struts2.views.jsp.TagUtils#buildNamespace
      */
     protected void executeAction() {
         String actualName = findString(name, "name", "Action name is required. Example: updatePerson");
@@ -254,7 +249,7 @@ public class ActionComponent extends ContextBean {
         String namespace;
 
         if (this.namespace == null) {
-            namespace = TagUtils.buildNamespace(actionMapper, getStack(), req);
+            namespace = getNamespace(getStack());
         } else {
             namespace = findString(this.namespace);
         }
@@ -291,32 +286,32 @@ public class ActionComponent extends ContextBean {
         }
     }
 
-    @StrutsTagAttribute(required=true,description="Name of the action to be executed (without the extension suffix eg. .action)")
+    @StrutsTagAttribute(required = true, description = "Name of the action to be executed (without the extension suffix eg. .action)")
     public void setName(String name) {
         this.name = name;
     }
 
-    @StrutsTagAttribute(description="Namespace for action to call", defaultValue="namespace from where tag is used")
+    @StrutsTagAttribute(description = "Namespace for action to call", defaultValue = "namespace from where tag is used")
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    @StrutsTagAttribute(description="Whether the result of this action (probably a view) should be executed/rendered", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether the result of this action (probably a view) should be executed/rendered", type = "Boolean", defaultValue = "false")
     public void setExecuteResult(boolean executeResult) {
         this.executeResult = executeResult;
     }
 
-    @StrutsTagAttribute(description="Whether the request parameters are to be included when the action is invoked", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether the request parameters are to be included when the action is invoked", type = "Boolean", defaultValue = "false")
     public void setIgnoreContextParams(boolean ignoreContextParams) {
         this.ignoreContextParams = ignoreContextParams;
     }
 
-    @StrutsTagAttribute(description="Whether the writer should be flush upon end of action component tag, default to true", type="Boolean", defaultValue="true")
+    @StrutsTagAttribute(description = "Whether the writer should be flush upon end of action component tag, default to true", type = "Boolean", defaultValue = "true")
     public void setFlush(boolean flush) {
         this.flush = flush;
     }
 
-    @StrutsTagAttribute(description="Whether an exception should be rethrown, if the target action throws an exception", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether an exception should be rethrown, if the target action throws an exception", type = "Boolean", defaultValue = "false")
     public void setRethrowException(boolean rethrowException) {
         this.rethrowException = rethrowException;
     }

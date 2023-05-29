@@ -18,18 +18,17 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.io.StringWriter;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.text.MessageFormat;
+import org.apache.struts2.views.jsp.ui.AnchorTag;
+import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-
-import org.apache.struts2.views.jsp.ui.AnchorTag;
-import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
+import java.io.StringWriter;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -55,7 +54,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testActionURL_clearTagStateSet() {
@@ -77,7 +76,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testAddParameters() {
@@ -100,7 +99,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testAddParameters_clearTagStateSet() {
@@ -126,7 +125,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -206,14 +205,14 @@ public class AnchorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         assertEquals(wrapWithAnchor("testAction.action?id1=paramId1&amp;id2=tagId2&" +
-                "amp;tagId=tagValue&amp;urlParam1=urlValue1&amp;urlParam2=urlValue2&amp;param1=param1value&amp;param2=param2value"), writer.toString());
+            "amp;tagId=tagValue&amp;urlParam1=urlValue1&amp;urlParam2=urlValue2&amp;param1=param1value&amp;param2=param2value"), writer.toString());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -298,7 +297,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         assertEquals(wrapWithAnchor("testAction.action?id1=paramId1&amp;id2=tagId2&" +
-                "amp;tagId=tagValue&amp;urlParam1=urlValue1&amp;urlParam2=urlValue2&amp;param1=param1value&amp;param2=param2value"), writer.toString());
+            "amp;tagId=tagValue&amp;urlParam1=urlValue1&amp;urlParam2=urlValue2&amp;param1=param1value&amp;param2=param2value"), writer.toString());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -306,7 +305,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -336,7 +335,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
 
         //String[]
         stack.getContext().put("param2value", new String[]{"d", "e"});
@@ -350,11 +349,11 @@ public class AnchorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
 
         //ValueHolder[]
         stack.getContext().put("param3value", new URLTagTest.ValueHolder[]{
-                new URLTagTest.ValueHolder("f"), new URLTagTest.ValueHolder("g")});
+            new URLTagTest.ValueHolder("f"), new URLTagTest.ValueHolder("g")});
         ParamTag param3 = new ParamTag();
         param3.setPageContext(pageContext);
         param3.setName("p3");
@@ -365,11 +364,11 @@ public class AnchorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param3, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param3, freshParamTag));
 
         tag.doEndTag();
-        
-        String result =  writer.toString();
+
+        String result = writer.toString();
         assertTrue(result.contains("p1=a"));
         assertTrue(result.contains("p1=b"));
         assertTrue(result.contains("p2=d"));
@@ -383,7 +382,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -418,7 +417,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
 
         //String[]
         stack.getContext().put("param2value", new String[]{"d", "e"});
@@ -434,11 +433,11 @@ public class AnchorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
 
         //ValueHolder[]
         stack.getContext().put("param3value", new URLTagTest.ValueHolder[]{
-                new URLTagTest.ValueHolder("f"), new URLTagTest.ValueHolder("g")});
+            new URLTagTest.ValueHolder("f"), new URLTagTest.ValueHolder("g")});
         ParamTag param3 = new ParamTag();
         param3.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         param3.setPageContext(pageContext);
@@ -451,11 +450,11 @@ public class AnchorTagTest extends AbstractUITagTest {
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         assertTrue("Tag state after doEndTag() inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param3, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param3, freshParamTag));
 
         tag.doEndTag();
 
-        String result =  writer.toString();
+        String result = writer.toString();
         assertTrue(result.contains("p1=a"));
         assertTrue(result.contains("p1=b"));
         assertTrue(result.contains("p2=d"));
@@ -470,7 +469,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     /**
@@ -478,7 +477,7 @@ public class AnchorTagTest extends AbstractUITagTest {
      * To test priority of parameter passed in to url component though
      * various way, with includeParams="NONE"
      * </p>
-     *
+     * <p>
      * - current request url<br>
      * - tag's value attribute<br>
      * - tag's nested param tag<br>
@@ -488,6 +487,7 @@ public class AnchorTagTest extends AbstractUITagTest {
      * Those from request will not count, only those in tag's value attribute
      * and nested param tag.
      * </p>
+     *
      * @throws Exception
      */
     public void testParametersPriorityWithIncludeParamsAsNONE() throws Exception {
@@ -528,28 +528,28 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param3, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param3, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
-   /**
+    /**
      * <p>
      * To test priority of parameter passed in to url component though
      * various way, with includeParams="NONE"
      * </p>
-     *
+     * <p>
      * - current request url<br>
      * - tag's value attribute<br>
      * - tag's nested param tag<br>
@@ -559,6 +559,7 @@ public class AnchorTagTest extends AbstractUITagTest {
      * Those from request will not count, only those in tag's value attribute
      * and nested param tag.
      * </p>
+     *
      * @throws Exception
      */
     public void testParametersPriorityWithIncludeParamsAsNONE_clearTagStateSet() throws Exception {
@@ -608,13 +609,13 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param3, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param3, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -622,7 +623,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeParamsDefaultToGET() throws Exception {
@@ -648,7 +649,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeParamsDefaultToGET_clearTagStateSet() throws Exception {
@@ -677,7 +678,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testActionURL2() throws Exception {
@@ -689,7 +690,7 @@ public class AnchorTagTest extends AbstractUITagTest {
     }
 
     public void testAddParameters2() throws Exception {
-        request.setAttribute("struts.request_uri", "/TestAction.action");
+        withRequestPath("/TestAction.action");
         request.setQueryString("param0=value0");
 
         tag.doStartTag();
@@ -719,21 +720,21 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  " +
                 "For this test, tag only has pageContext set, so it should still be equal.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testAddParameters2_clearTagStateSet() throws Exception {
-        request.setAttribute("struts.request_uri", "/TestAction.action");
+        withRequestPath("/TestAction.action");
         request.setQueryString("param0=value0");
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -770,10 +771,10 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param1, freshParamTag));
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(param2, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -781,7 +782,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testEvaluateValue() throws Exception {
@@ -799,7 +800,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testEvaluateValue_clearTagStateSet() throws Exception {
@@ -820,7 +821,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testHttps() throws Exception {
@@ -839,7 +840,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testHttps_clearTagStateSet() throws Exception {
@@ -861,7 +862,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testAnchor() throws Exception {
@@ -881,7 +882,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testAnchor_clearTagStateSet() throws Exception {
@@ -904,11 +905,11 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testParamPrecedence() throws Exception {
-        request.setRequestURI("/context/someAction.action");
+        withRequestPath("/context/someAction.action");
         request.setQueryString("id=22&name=John");
 
         AnchorTag anchor = new AnchorTag();
@@ -933,18 +934,18 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(anchor, freshTag));
+            strutsBodyTagsAreReflectionEqual(anchor, freshTag));
     }
 
     public void testParamPrecedence_clearTagStateSet() throws Exception {
-        request.setRequestURI("/context/someAction.action");
+        withRequestPath("/context/someAction.action");
         request.setQueryString("id=22&name=John");
 
         AnchorTag anchor = new AnchorTag();
@@ -974,7 +975,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -982,11 +983,11 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(anchor, freshTag));
+            strutsBodyTagsAreReflectionEqual(anchor, freshTag));
     }
 
     public void testParamPrecedenceWithAnchor() throws Exception {
-        request.setRequestURI("/context/someAction.action");
+        withRequestPath("/context/someAction.action");
         request.setQueryString("id=22&name=John");
 
         AnchorTag anchorTag = new AnchorTag();
@@ -1012,18 +1013,18 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(anchorTag, freshTag));
+            strutsBodyTagsAreReflectionEqual(anchorTag, freshTag));
     }
 
     public void testParamPrecedenceWithAnchor_clearTagStateSet() throws Exception {
-        request.setRequestURI("/context/someAction.action");
+        withRequestPath("/context/someAction.action");
         request.setQueryString("id=22&name=John");
 
         AnchorTag anchorTag = new AnchorTag();
@@ -1054,7 +1055,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -1062,7 +1063,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(anchorTag, freshTag));
+            strutsBodyTagsAreReflectionEqual(anchorTag, freshTag));
     }
 
     public void testUsingValueOnly() throws Exception {
@@ -1076,7 +1077,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testUsingValueOnly_clearTagStateSet() throws Exception {
@@ -1093,7 +1094,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURIActionIncludeNone() throws Exception {
@@ -1112,7 +1113,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURIActionIncludeNone_clearTagStateSet() throws Exception {
@@ -1134,7 +1135,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURIActionIncludeGet() throws Exception {
@@ -1153,7 +1154,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURIActionIncludeGet_clearTagStateSet() throws Exception {
@@ -1175,7 +1176,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURIActionIncludeGetDoNotEscapeAmp() throws Exception {
@@ -1195,7 +1196,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURIActionIncludeGetDoNotEscapeAmp_clearTagStateSet() throws Exception {
@@ -1218,11 +1219,11 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURINoActionIncludeNone() throws Exception {
-        request.setRequestURI("/public/about");
+        withRequestPath("/public/about.action");
         request.setQueryString("section=team&company=acme inc");
 
         tag.setAction(null);
@@ -1230,18 +1231,18 @@ public class AnchorTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals(wrapWithAnchor("/public/about"), writer.toString());
+        assertEquals(wrapWithAnchor("/public/about.action"), writer.toString());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURINoActionIncludeNone_clearTagStateSet() throws Exception {
-        request.setRequestURI("/public/about");
+        withRequestPath("/public/about.action");
         request.setQueryString("section=team&company=acme inc");
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -1251,7 +1252,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();
 
-        assertEquals(wrapWithAnchor("/public/about"), writer.toString());
+        assertEquals(wrapWithAnchor("/public/about.action"), writer.toString());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -1259,11 +1260,11 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testNoActionIncludeGet() throws Exception {
-        request.setRequestURI("/public/about");
+        withRequestPath("/public/about.action");
         request.setQueryString("section=team&company=acme inc");
 
         tag.setAction(null);
@@ -1271,18 +1272,18 @@ public class AnchorTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals(wrapWithAnchor("/public/about?section=team&amp;company=acme+inc"), writer.toString());
+        assertEquals(wrapWithAnchor("/public/about.action?section=team&amp;company=acme+inc"), writer.toString());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testNoActionIncludeGet_clearTagStateSet() throws Exception {
-        request.setRequestURI("/public/about");
+        withRequestPath("/public/about.action");
         request.setQueryString("section=team&company=acme inc");
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -1292,7 +1293,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();
 
-        assertEquals(wrapWithAnchor("/public/about?section=team&amp;company=acme+inc"), writer.toString());
+        assertEquals(wrapWithAnchor("/public/about.action?section=team&amp;company=acme+inc"), writer.toString());
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -1300,7 +1301,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURIActionIncludeAll() throws Exception {
@@ -1333,14 +1334,14 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURIActionIncludeAll_clearTagStateSet() throws Exception {
@@ -1374,11 +1375,11 @@ public class AnchorTagTest extends AbstractUITagTest {
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         ParamTag freshParamTag = new ParamTag();
-        freshParamTag.setPerformClearTagStateForTagPoolingServers(true); 
+        freshParamTag.setPerformClearTagStateForTagPoolingServers(true);
         freshParamTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -1386,11 +1387,11 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURINoActionIncludeAll() throws Exception {
-        request.setRequestURI("/public/about");
+        withRequestPath("/public/about.action");
         request.setQueryString("section=team&company=acme inc");
 
         tag.setAction(null);
@@ -1409,7 +1410,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         String result = writer.toString();
-        assertTrue(result.contains("/public/about?"));
+        assertTrue(result.contains("/public/about.action?"));
         assertTrue(result.contains("section=team"));
         assertTrue(result.contains("company=acme+inc"));
         assertTrue(result.contains("year=2006"));
@@ -1419,18 +1420,18 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURINoActionIncludeAll_clearTagStateSet() throws Exception {
-        request.setRequestURI("/public/about");
+        withRequestPath("/public/about.action");
         request.setQueryString("section=team&company=acme inc");
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -1453,7 +1454,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         tag.doEndTag();
 
         String result = writer.toString();
-        assertTrue(result.contains("/public/about?"));
+        assertTrue(result.contains("/public/about.action?"));
         assertTrue(result.contains("section=team"));
         assertTrue(result.contains("company=acme+inc"));
         assertTrue(result.contains("year=2006"));
@@ -1464,7 +1465,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshParamTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
+            strutsBodyTagsAreReflectionEqual(paramTag, freshParamTag));
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -1472,28 +1473,28 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testUnknownIncludeParam() throws Exception {
-        request.setRequestURI("/public/about");
+        withRequestPath("/public/about.action");
         request.setQueryString("section=team");
 
         tag.setIncludeParams("unknown"); // will log at WARN level
         tag.doStartTag();
         tag.doEndTag();
-        assertEquals(wrapWithAnchor("/public/about"), writer.toString()); // should not add any request parameters
+        assertEquals(wrapWithAnchor("/public/about.action"), writer.toString()); // should not add any request parameters
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testUnknownIncludeParam_clearTagStateSet() throws Exception {
-        request.setRequestURI("/public/about");
+        withRequestPath("/public/about.action");
         request.setQueryString("section=team");
 
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
@@ -1501,7 +1502,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         tag.doStartTag();
         setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         tag.doEndTag();
-        assertEquals(wrapWithAnchor("/public/about"), writer.toString()); // should not add any request parameters
+        assertEquals(wrapWithAnchor("/public/about.action"), writer.toString()); // should not add any request parameters
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         AnchorTag freshTag = new AnchorTag();
@@ -1509,7 +1510,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testRequestURIWithAnchor() throws Exception {
@@ -1528,10 +1529,10 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
-        public void testRequestURIWithAnchor_clearTagStateSet() throws Exception {
+    public void testRequestURIWithAnchor_clearTagStateSet() throws Exception {
         request.setRequestURI("/public/about");
         request.setQueryString("company=acme inc#canada");
 
@@ -1550,7 +1551,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeContext() throws Exception {
@@ -1568,7 +1569,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIncludeContext_clearTagStateSet() throws Exception {
@@ -1589,7 +1590,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testForceAddSchemeHostAndPort() throws Exception {
@@ -1605,7 +1606,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testForceAddSchemeHostAndPort_clearTagStateSet() throws Exception {
@@ -1624,7 +1625,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
                 "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
-                strutsBodyTagsAreReflectionEqual(tag, freshTag));
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     private String wrapWithAnchor(String href) {

@@ -55,6 +55,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     protected boolean maxSizeProvided;
 
     /**
+     * Specifies the maximum length of a string parameter in a multipart request.
+     */
+    protected Long maxStringLength;
+
+    /**
      * Specifies the buffer size to use during streaming.
      */
     protected int bufferSize = BUFFER_SIZE;
@@ -86,6 +91,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     public void setMaxSize(String maxSize) {
         this.maxSizeProvided = true;
         this.maxSize = Long.parseLong(maxSize);
+    }
+
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAX_STRING_LENGTH)
+    public void setMaxStringLength(String maxStringLength) {
+        this.maxStringLength = Long.parseLong(maxStringLength);
     }
 
     @Inject
@@ -134,9 +144,9 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
         int forwardSlash = fileName.lastIndexOf('/');
         int backwardSlash = fileName.lastIndexOf('\\');
         if (forwardSlash != -1 && forwardSlash > backwardSlash) {
-            fileName = fileName.substring(forwardSlash + 1, fileName.length());
+            fileName = fileName.substring(forwardSlash + 1);
         } else {
-            fileName = fileName.substring(backwardSlash + 1, fileName.length());
+            fileName = fileName.substring(backwardSlash + 1);
         }
         return fileName;
     }

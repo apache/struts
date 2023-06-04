@@ -96,13 +96,13 @@ public final class StrutsConstants {
 
     /** Update freemarker templates cache in seconds */
     public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY = "struts.freemarker.templatesCache.updateDelay";
-    
+
     /** Cache model instances at BeanWrapper level */
     public static final String STRUTS_FREEMARKER_BEANWRAPPER_CACHE = "struts.freemarker.beanwrapperCache";
-    
+
     /** Maximum strong sizing for MruCacheStorage for freemarker */
     public static final String STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE = "struts.freemarker.mru.max.strong.size";
-    
+
     /** org.apache.struts2.views.velocity.VelocityManager implementation class */
     public static final String STRUTS_VELOCITY_MANAGER_CLASSNAME = "struts.velocity.manager.classname";
 
@@ -126,6 +126,9 @@ public final class StrutsConstants {
 
     /** The maximize size of a multipart request (file upload) */
     public static final String STRUTS_MULTIPART_MAXSIZE = "struts.multipart.maxSize";
+
+    /** The maximum length of a string parameter in a multipart request. */
+    public static final String STRUTS_MULTIPART_MAX_STRING_LENGTH = "struts.multipart.maxStringLength";
 
     /** The directory to use for storing uploaded files */
     public static final String STRUTS_MULTIPART_SAVEDIR = "struts.multipart.saveDir";
@@ -180,7 +183,7 @@ public final class StrutsConstants {
      * You can specify different prefixes that will be handled by different mappers
      */
     public static final String PREFIX_BASED_MAPPER_CONFIGURATION = "struts.mapper.prefixMapping";
-    
+
     /** Whether the Struts filter should serve static content or not */
     public static final String STRUTS_SERVE_STATIC_CONTENT = "struts.serve.static";
 

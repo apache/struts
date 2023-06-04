@@ -25,6 +25,7 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
@@ -55,9 +56,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      *
      * @param saveDir the directory to save off the file
      * @param request the request containing the multipart
-     * @throws java.io.IOException is thrown if encoding fails.
      */
-    public void parse(HttpServletRequest request, String saveDir) throws IOException {
+    public void parse(HttpServletRequest request, String saveDir) {
         try {
             setLocale(request);
             processUpload(request, saveDir);
@@ -126,13 +126,26 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             values = new ArrayList<>();
         }
 
-        // note: see http://jira.opensymphony.com/browse/WW-633
-        // basically, in some cases the charset may be null, so
-        // we're just going to try to "other" method (no idea if this
-        // will work)
-        if (charset != null) {
+        long size = item.getSize();
+        if (size == 0) {
+            values.add(StringUtils.EMPTY);
+        } else if (size > maxStringLength) {
+            String errorKey = "struts.messages.upload.error.parameter.too.long";
+            LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
+                    new Object[] { item.getFieldName(), maxStringLength, size });
+
+            if (!errors.contains(localizedMessage)) {
+                errors.add(localizedMessage);
+            }
+            return;
+
+        } else if (charset != null) {
             values.add(item.getString(charset));
         } else {
+            // note: see http://jira.opensymphony.com/browse/WW-633
+            // basically, in some cases the charset may be null, so
+            // we're just going to try to "other" method (no idea if this
+            // will work)
             values.add(item.getString());
         }
         params.put(item.getFieldName(), values);
@@ -183,7 +196,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             contentTypes.add(fileItem.getContentType());
         }
 
-        return contentTypes.toArray(new String[contentTypes.size()]);
+        return contentTypes.toArray(new String[0]);
     }
 
     /* (non-Javadoc)
@@ -209,7 +222,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             fileList.add(new StrutsUploadedFile(storeLocation));
         }
 
-        return fileList.toArray(new UploadedFile[fileList.size()]);
+        return fileList.toArray(new UploadedFile[0]);
     }
 
     /* (non-Javadoc)
@@ -227,7 +240,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             fileNames.add(getCanonicalName(fileItem.getName()));
         }
 
-        return fileNames.toArray(new String[fileNames.size()]);
+        return fileNames.toArray(new String[0]);
     }
 
     /* (non-Javadoc)
@@ -245,7 +258,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             fileNames.add(((DiskFileItem) fileItem).getStoreLocation().getName());
         }
 
-        return fileNames.toArray(new String[fileNames.size()]);
+        return fileNames.toArray(new String[0]);
     }
 
     /* (non-Javadoc)
@@ -253,7 +266,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      */
     public String getParameter(String name) {
         List<String> v = params.get(name);
-        if (v != null && v.size() > 0) {
+        if (v != null && !v.isEmpty()) {
             return v.get(0);
         }
 
@@ -272,8 +285,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      */
     public String[] getParameterValues(String name) {
         List<String> v = params.get(name);
-        if (v != null && v.size() > 0) {
-            return v.toArray(new String[v.size()]);
+        if (v != null && !v.isEmpty()) {
+            return v.toArray(new String[0]);
         }
 
         return null;

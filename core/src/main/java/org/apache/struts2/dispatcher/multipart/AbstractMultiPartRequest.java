@@ -59,6 +59,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     protected Long maxFiles;
 
     /**
+     * Specifies the maximum length of a string parameter in a multipart request.
+     */
+    protected Long maxStringLength;
+
+    /**
      * Specifies the maximum size per file in the request.
      */
     protected Long maxFileSize;
@@ -104,6 +109,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     @Inject(value = StrutsConstants.STRUTS_MULTIPART_MAXFILESIZE, required = false)
     public void setMaxFileSize(String maxFileSize) {
         this.maxFileSize = Long.parseLong(maxFileSize);
+    }
+
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAX_STRING_LENGTH)
+    public void setMaxStringLength(String maxStringLength) {
+        this.maxStringLength = Long.parseLong(maxStringLength);
     }
 
     @Inject

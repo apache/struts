@@ -66,6 +66,7 @@ public class ConstantConfig {
     private Long multipartMaxSize;
     private Long multipartMaxFiles;
     private Long multipartMaxFileSize;
+    private Long multipartMaxStringLength;
     private String multipartSaveDir;
     private Integer multipartBufferSize;
     private BeanConfig multipartParser;
@@ -201,6 +202,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_MULTIPART_MAXSIZE, Objects.toString(multipartMaxSize, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_MAXFILES, Objects.toString(multipartMaxFiles, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_MAXFILESIZE, Objects.toString(multipartMaxFileSize, null));
+        map.put(StrutsConstants.STRUTS_MULTIPART_MAX_STRING_LENGTH, Objects.toString(multipartMaxStringLength, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_SAVEDIR, multipartSaveDir);
         map.put(StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE, Objects.toString(multipartBufferSize, null));
         map.put(StrutsConstants.STRUTS_MULTIPART_PARSER, beanConfToString(multipartParser));
@@ -600,6 +602,14 @@ public class ConstantConfig {
 
     public void setMultipartMaxFileSize(Long multipartMaxFileSize) {
         this.multipartMaxFileSize = multipartMaxFileSize;
+    }
+
+    public Long getMultipartMaxStringLength() {
+        return multipartMaxStringLength;
+    }
+
+    public void setMultipartMaxStringLength(Long multipartMaxStringLength) {
+        this.multipartMaxStringLength = multipartMaxStringLength;
     }
 
     public String getMultipartSaveDir() {

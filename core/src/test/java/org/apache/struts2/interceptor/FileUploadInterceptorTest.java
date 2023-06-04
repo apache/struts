@@ -452,6 +452,55 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 msg);
     }
 
+    public void testMultipartRequestMaxStringLength() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setMethod("post");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
+                "Content-Type: text/html\r\n" +
+                "\r\n" +
+                "Unit test of FileUploadInterceptor" +
+                "\r\n" +
+                "-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"normalFormField1\"\r\n" +
+                "\r\n" +
+                "it works" +
+                "\r\n" +
+                "-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"normalFormField2\"\r\n" +
+                "\r\n" +
+                "long string should not work" +
+                "\r\n" +
+                "-----1234--\r\n");
+        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileupAction action = container.inject(MyFileupAction.class);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        Map<String, Object> param = new HashMap<>();
+        ActionContext.getContext()
+                .withParameters(HttpParameters.create(param).build())
+                .withServletRequest(createMultipartRequestMaxStringLength(req, 20));
+
+        interceptor.intercept(mai);
+
+        assertTrue(action.hasActionErrors());
+
+        Collection<String> errors = action.getActionErrors();
+        assertEquals(1, errors.size());
+        String msg = errors.iterator().next();
+        assertEquals(
+                "The request parameter \"normalFormField2\" was too long.  Max length allowed is 20, but found 27!",
+                msg);
+    }
+
     public void testMultipartRequestLocalizedError() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setCharacterEncoding(StandardCharsets.UTF_8.name());
@@ -512,22 +561,29 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     private MultiPartRequestWrapper createMultipartRequestMaxFileSize(HttpServletRequest req, int maxfilesize) throws IOException {
-        return createMultipartRequest(req, -1, maxfilesize, -1);
+        return createMultipartRequest(req, -1, maxfilesize, -1, -1);
     }
 
     private MultiPartRequestWrapper createMultipartRequestMaxFiles(HttpServletRequest req, int maxfiles) throws IOException {
-        return createMultipartRequest(req, -1, -1, maxfiles);
+        return createMultipartRequest(req, -1, -1, maxfiles, -1);
     }
 
     private MultiPartRequestWrapper createMultipartRequestMaxSize(HttpServletRequest req, int maxsize) throws IOException {
-        return createMultipartRequest(req, maxsize, -1, -1);
+        return createMultipartRequest(req, maxsize, -1, -1, -1);
     }
 
-    private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize, int maxfilesize, int maxfiles) throws IOException {
+    private MultiPartRequestWrapper createMultipartRequestMaxStringLength(HttpServletRequest req, int maxStringLength) throws IOException {
+        return createMultipartRequest(req, -1, -1, -1, maxStringLength);
+    }
+
+    private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize, int maxfilesize,
+                                                           int maxfiles, int maxStringLength) throws IOException {
+
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
         jak.setMaxSize(String.valueOf(maxsize));
         jak.setMaxFileSize(String.valueOf(maxfilesize));
         jak.setMaxFiles(String.valueOf(maxfiles));
+        jak.setMaxStringLength(String.valueOf(maxStringLength));
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 

@@ -22,7 +22,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ListHolder;
 import com.opensymphony.xwork2.util.ValueStack;
-import ognl.ListPropertyAccessor;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.PropertyAccessor;
 
 import java.util.ArrayList;
@@ -42,11 +42,11 @@ public class XWorkListPropertyAccessorTest extends XWorkTestCase {
 
         assertNotNull(listHolder.getLongs());
         assertEquals(3, listHolder.getLongs().size());
-        assertEquals(new Long(1), (Long) listHolder.getLongs().get(0));
-        assertEquals(new Long(2), (Long) listHolder.getLongs().get(1));
-        assertEquals(new Long(3), (Long) listHolder.getLongs().get(2));
+        assertEquals(new Long(1), listHolder.getLongs().get(0));
+        assertEquals(new Long(2), listHolder.getLongs().get(1));
+        assertEquals(new Long(3), listHolder.getLongs().get(2));
 
-        assertTrue(((Boolean) vs.findValue("longs.contains(1)")).booleanValue());
+        assertTrue((Boolean) vs.findValue("longs.contains(1)"));
     }
 
     public void testCanAccessListSizeProperty() {
@@ -60,8 +60,8 @@ public class XWorkListPropertyAccessorTest extends XWorkTestCase {
 
         vs.push(listHolder);
 
-        assertEquals(new Integer(myList.size()), vs.findValue("strings.size()"));
-        assertEquals(new Integer(myList.size()), vs.findValue("strings.size"));
+        assertEquals(myList.size(), vs.findValue("strings.size()"));
+        assertEquals(myList.size(), vs.findValue("strings.size"));
     }
 
     public void testAutoGrowthCollectionLimit() {
@@ -73,12 +73,14 @@ public class XWorkListPropertyAccessorTest extends XWorkTestCase {
         listHolder.setStrings(myList);
 
         ValueStack vs = ActionContext.getContext().getValueStack();
+        ReflectionContextState.setCreatingNullObjects(vs.getContext(), true);
         vs.push(listHolder);
 
         vs.setValue("strings[0]", "a");
         vs.setValue("strings[1]", "b");
         vs.setValue("strings[2]", "c");
         vs.setValue("strings[3]", "d");
+        vs.findValue("strings[3]");
 
         assertEquals(3, vs.findValue("strings.size()"));
     }

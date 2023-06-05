@@ -59,6 +59,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     protected Long maxFiles;
 
     /**
+     * Specifies the maximum length of a string parameter in a multipart request.
+     */
+    protected Long maxStringLength;
+
+    /**
      * Specifies the buffer size to use during streaming.
      */
     protected int bufferSize = BUFFER_SIZE;
@@ -94,6 +99,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAXFILES)
     public void setMaxFiles(String maxFiles) {
         this.maxFiles = Long.parseLong(maxFiles);
+    }
+
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAX_STRING_LENGTH)
+    public void setMaxStringLength(String maxStringLength) {
+        this.maxStringLength = Long.parseLong(maxStringLength);
     }
 
     @Inject

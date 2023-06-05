@@ -137,8 +137,19 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             values = new ArrayList<>();
         }
 
-        if (item.getSize() == 0) {
+        long size = item.getSize();
+        if (size == 0) {
             values.add(StringUtils.EMPTY);
+        } else if (size > maxStringLength) {
+          String errorKey = "struts.messages.upload.error.parameter.too.long";
+          LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
+                  new Object[] { item.getFieldName(), maxStringLength, size });
+
+          if (!errors.contains(localizedMessage)) {
+              errors.add(localizedMessage);
+          }
+          return;
+
         } else if (charset != null) {
             values.add(item.getString(charset));
         } else {

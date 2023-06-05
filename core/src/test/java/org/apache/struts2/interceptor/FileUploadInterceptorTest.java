@@ -235,7 +235,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
 
         ActionContext.getContext().setParameters(HttpParameters.create().build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000, -1));
 
         interceptor.intercept(mai);
 
@@ -257,7 +257,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
 
         ActionContext.getContext().setParameters(HttpParameters.create().build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000, -1));
 
         interceptor.intercept(mai);
 
@@ -288,7 +288,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext().setParameters(HttpParameters.create(param).build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000, -1));
 
         interceptor.intercept(mai);
 
@@ -349,7 +349,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<String, Object>();
         ActionContext.getContext().setParameters(HttpParameters.create(param).build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000, -1));
 
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
@@ -402,7 +402,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext().setParameters(HttpParameters.create(param).build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000));
+        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequest(req, 2000, -1));
 
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
@@ -411,6 +411,55 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertEquals(0, parameters.keySet().size());
         assertEquals(1, action.getActionErrors().size());
         assertEquals("Request exceeded allowed number of files! Max allowed files number is: 3!", action.getActionErrors().iterator().next());
+    }
+
+    public void testMultipartRequestMaxStringLength() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setMethod("post");
+        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
+                "Content-Type: text/html\r\n" +
+                "\r\n" +
+                "Unit test of FileUploadInterceptor" +
+                "\r\n" +
+                "-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"normalFormField1\"\r\n" +
+                "\r\n" +
+                "it works" +
+                "\r\n" +
+                "-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"normalFormField2\"\r\n" +
+                "\r\n" +
+                "long string should not work" +
+                "\r\n" +
+                "-----1234--\r\n");
+        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileupAction action = container.inject(MyFileupAction.class);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setAction(action);
+        mai.setResultCode("success");
+        mai.setInvocationContext(ActionContext.getContext());
+        Map<String, Object> param = new HashMap<>();
+        ActionContext.getContext()
+                .withParameters(HttpParameters.create(param).build())
+                .withServletRequest(createMultipartRequest(req, -1, 20));
+
+        interceptor.intercept(mai);
+
+        assertTrue(action.hasActionErrors());
+
+        Collection<String> errors = action.getActionErrors();
+        assertEquals(1, errors.size());
+        String msg = errors.iterator().next();
+        assertEquals(
+                "The request parameter \"normalFormField2\" was too long.  Max length allowed is 20, but found 27!",
+                msg);
     }
 
     public void testMultipartRequestLocalizedError() throws Exception {
@@ -439,7 +488,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext()
             .withParameters(HttpParameters.create(param).build())
             .withLocale(Locale.GERMAN)
-            .withServletRequest(createMultipartRequest(req, 10));
+            .withServletRequest(createMultipartRequest(req, 10, -1));
 
         interceptor.intercept(mai);
 
@@ -472,10 +521,11 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         return sb.toString();
     }
 
-    private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize) throws IOException {
+    private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize, int maxStringLength) throws IOException {
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
         jak.setMaxSize(String.valueOf(maxsize));
         jak.setMaxFiles("3");
+        jak.setMaxStringLength(String.valueOf(maxStringLength));
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 

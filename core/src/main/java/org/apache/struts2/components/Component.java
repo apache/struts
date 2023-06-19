@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.TextParseUtil;
@@ -34,7 +36,6 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.views.jsp.TagUtils;
 import org.apache.struts2.views.util.UrlHelper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -372,8 +373,8 @@ public class Component {
      * evaluating to String.class, else the whole <code>expression</code> is evaluated
      * against the stack.
      *
-     * @param expression   OGNL expression.
-     * @param toType the type expected to find.
+     * @param expression OGNL expression.
+     * @param toType     the type expected to find.
      * @return the Object found, or <tt>null</tt> if not found.
      */
     protected Object findValue(String expression, Class<?> toType) {
@@ -429,7 +430,7 @@ public class Component {
         String result;
 
         if (namespace == null) {
-            result = TagUtils.buildNamespace(actionMapper, stack, req);
+            result = getNamespace(stack);
         } else {
             result = findString(namespace);
         }
@@ -439,6 +440,12 @@ public class Component {
         }
 
         return result;
+    }
+
+    protected String getNamespace(ValueStack stack) {
+        ActionContext context = ActionContext.of(stack.getContext());
+        ActionInvocation invocation = context.getActionInvocation();
+        return invocation.getProxy().getNamespace();
     }
 
     /**
@@ -581,12 +588,12 @@ public class Component {
      * <em>Note:</em> All Tag classes that extend {@link org.apache.struts2.views.jsp.StrutsBodyTagSupport} must implement a setter for
      * this attribute (same name), and it must be defined at the Tag class level.
      * Defining a setter in the superclass alone is insufficient (results in "Cannot find a setter method for the attribute").
-     *
+     * <p>
      * See {@link org.apache.struts2.views.jsp.StrutsBodyTagSupport#clearTagStateForTagPoolingServers()  for additional details.
      *
      * @param performClearTagStateForTagPoolingServers true if tag state should be cleared, false otherwise.
      */
-    @StrutsTagAttribute(description="Whether to clear all tag state during doEndTag() processing (if applicable)", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description = "Whether to clear all tag state during doEndTag() processing (if applicable)", type = "Boolean", defaultValue = "false")
     public void setPerformClearTagStateForTagPoolingServers(boolean performClearTagStateForTagPoolingServers) {
         this.performClearTagStateForTagPoolingServers = performClearTagStateForTagPoolingServers;
     }
@@ -609,7 +616,7 @@ public class Component {
         }
 
         LOG.warn("Expression [{}] isn't allowed by pattern [{}]! See Accepted / Excluded patterns at\n" +
-                "https://struts.apache.org/security/", expression, isAllowed.getAllowedPattern());
+            "https://struts.apache.org/security/", expression, isAllowed.getAllowedPattern());
 
         return false;
     }

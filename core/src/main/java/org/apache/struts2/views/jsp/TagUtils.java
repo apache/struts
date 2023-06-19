@@ -19,97 +19,40 @@
 package org.apache.struts2.views.jsp;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.ApplicationMap;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.dispatcher.RequestMap;
-import org.apache.struts2.dispatcher.SessionMap;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.AttributeMap;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
-import java.util.Map;
 
 public class TagUtils {
 
     private static final Logger LOG = LogManager.getLogger(TagUtils.class);
 
     public static ValueStack getStack(PageContext pageContext) {
+        LOG.trace("Reading ValueStack out of page context: {}", pageContext);
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         ValueStack stack = ServletActionContext.getValueStack(req);
+        stack = stack != null ? stack : ActionContext.getContext().getValueStack();
 
         if (stack == null) {
-
-            HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
-            Dispatcher du = Dispatcher.getInstance();
-            if (du == null) {
-                throw new ConfigurationException("The Struts dispatcher cannot be found.  This is usually caused by "+
-                        "using Struts tags without the associated filter. Struts tags are only usable when the request "+
-                        "has passed through its servlet filter, which initializes the Struts dispatcher needed for this tag.");
-            }
-            stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-
-            HttpParameters params = HttpParameters.create(req.getParameterMap()).build();
-
-            Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
-                    params,
-                    new SessionMap(req),
-                    new ApplicationMap(pageContext.getServletContext()),
-                    req,
-                    res);
-            extraContext.put(ServletActionContext.PAGE_CONTEXT, pageContext);
-            stack.getContext().putAll(extraContext);
-            req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
-
-            // also tie this stack/context to the ThreadLocal
-            ActionContext.of(stack.getContext()).bind();
+            LOG.warn("No ValueStack in ActionContext!");
+            throw new ConfigurationException("Rendering tag out of Action scope, accessing directly JSPs is not recommended! " +
+                "Please read https://struts.apache.org/security/#never-expose-jsp-files-directly");
         } else {
-            // let's make sure that the current page context is in the action context
-            // TODO: refactor this to stop using put()
-            Map<String, Object> context = stack.getContext();
-            context.put(ServletActionContext.PAGE_CONTEXT, pageContext);
+            LOG.trace("Adds the current PageContext to ActionContext");
+            AttributeMap attrMap = new AttributeMap(stack.getContext());
 
-            AttributeMap attrMap = new AttributeMap(context);
-            context.put("attr", attrMap);
+            stack.getActionContext()
+                .withPageContext(pageContext)
+                .with("attr", attrMap);
         }
 
         return stack;
     }
 
-    public static String buildNamespace(ActionMapper mapper, ValueStack stack, HttpServletRequest request) {
-        ActionContext context = ActionContext.of(stack.getContext());
-        ActionInvocation invocation = context.getActionInvocation();
-
-        if (invocation == null) {
-            TagUtils.LOG.warn("ActionInvocation is null, tag has been executed out of the Action and this can lead " +
-                "to a security vulnerability, please read http://struts.apache.org/security/#never-expose-jsp-files-directly !");
-
-            ActionMapping mapping = mapper.getMapping(request,
-                    Dispatcher.getInstance().getConfigurationManager());
-
-            if (mapping != null) {
-                return mapping.getNamespace();
-            } else {
-                // well, if the ActionMapper can't tell us, and there is no existing action invocation,
-                // let's just go with a default guess that the namespace is the last the path minus the
-                // last part (/foo/bar/baz.xyz -> /foo/bar)
-
-                String path = RequestUtils.getServletPath(request);
-                return path.substring(0, path.lastIndexOf('/'));
-            }
-        } else {
-            return invocation.getProxy().getNamespace();
-        }
-    }
 }

@@ -159,10 +159,10 @@ public class ServletUrlRenderer implements UrlRenderer {
             }
         }
 
-        Map<String, Object> actionParams = null;
+        QueryStringParser.Result queryStringResult = queryStringParser.empty();
         if (action != null && action.indexOf('?') > 0) {
             String queryString = action.substring(action.indexOf('?') + 1);
-            actionParams = queryStringParser.parse(queryString, false);
+            queryStringResult = queryStringParser.parse(queryString);
             action = action.substring(0, action.indexOf('?'));
         }
 
@@ -176,7 +176,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 
             ActionMapping mapping = new ActionMapping(actionName, namespace, actionMethod, formComponent.parameters);
             String result = urlHelper.buildUrl(formComponent.actionMapper.getUriFromActionMapping(mapping),
-                formComponent.request, formComponent.response, actionParams, scheme, formComponent.includeContext, true, false, false);
+                formComponent.request, formComponent.response, queryStringResult.getQueryParams(), scheme, formComponent.includeContext, true, false, false);
             formComponent.addParameter("action", result);
 
             // let's try to get the actual action class and name
@@ -213,7 +213,7 @@ public class ServletUrlRenderer implements UrlRenderer {
                 LOG.warn("No configuration found for the specified action: '{}' in namespace: '{}'. Form action defaulting to 'action' attribute's literal value.", actionName, namespace);
             }
 
-            String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, actionParams, scheme, formComponent.includeContext, true);
+            String result = urlHelper.buildUrl(action, formComponent.request, formComponent.response, queryStringResult.getQueryParams(), scheme, formComponent.includeContext, true);
             formComponent.addParameter("action", result);
 
             // namespace: cut out anything between the start and the last /
@@ -291,7 +291,11 @@ public class ServletUrlRenderer implements UrlRenderer {
 
     private void includeGetParameters(UrlProvider urlComponent) {
         String query = extractQueryString(urlComponent);
-        mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), queryStringParser.parse(query, false));
+        QueryStringParser.Result result = queryStringParser.parse(query);
+        mergeRequestParameters(urlComponent.getValue(), urlComponent.getParameters(), result.getQueryParams());
+        if (!result.getQueryFragment().isEmpty()) {
+            urlComponent.setAnchor(result.getQueryFragment());
+        }
     }
 
     private String extractQueryString(UrlProvider urlComponent) {
@@ -339,7 +343,7 @@ public class ServletUrlRenderer implements UrlRenderer {
         if (StringUtils.contains(value, "?")) {
             String queryString = value.substring(value.indexOf('?') + 1);
 
-            mergedParams = queryStringParser.parse(queryString, false);
+            mergedParams = new LinkedHashMap<>(queryStringParser.parse(queryString).getQueryParams());
             for (Map.Entry<String, ?> entry : contextParameters.entrySet()) {
                 if (!mergedParams.containsKey(entry.getKey())) {
                     mergedParams.put(entry.getKey(), entry.getValue());

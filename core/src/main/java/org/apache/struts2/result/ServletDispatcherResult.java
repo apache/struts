@@ -33,7 +33,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
-import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -140,9 +139,9 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             if (StringUtils.isNotEmpty(finalLocation) && finalLocation.indexOf('?') > 0) {
                 String queryString = finalLocation.substring(finalLocation.indexOf('?') + 1);
                 HttpParameters parameters = getParameters(invocation);
-                Map<String, Object> queryParams = queryStringParser.parse(queryString, true);
-                if (queryParams != null && !queryParams.isEmpty()) {
-                    parameters = HttpParameters.create(queryParams).withParent(parameters).build();
+                QueryStringParser.Result queryParams = queryStringParser.parse(queryString);
+                if (!queryParams.isEmpty()) {
+                    parameters = HttpParameters.create(queryParams.getQueryParams()).withParent(parameters).build();
                     invocation.getInvocationContext().withParameters(parameters);
                     // put to extraContext, see Dispatcher#createContextMap
                     invocation.getInvocationContext().getContextMap().put("parameters", parameters);

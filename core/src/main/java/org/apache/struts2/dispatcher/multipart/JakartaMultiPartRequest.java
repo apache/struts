@@ -70,7 +70,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             setLocale(request);
             processUpload(request, saveDir);
         } catch (FileUploadException e) {
-            LOG.warn("Request exceeded size limit!", e);
+            LOG.debug("Request exceeded size limit!", e);
             LocalizedMessage errorMessage;
             if (e instanceof FileUploadBase.SizeLimitExceededException) {
                 FileUploadBase.SizeLimitExceededException ex = (FileUploadBase.SizeLimitExceededException) e;
@@ -89,7 +89,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                 errors.add(errorMessage);
             }
         } catch (Exception e) {
-            LOG.warn("Unable to parse request", e);
+            LOG.debug("Unable to parse request", e);
             LocalizedMessage errorMessage = buildErrorMessage(e, new Object[]{});
             if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);

@@ -35,7 +35,7 @@ public class StrutsQueryStringParserTest {
 
     @Test
     public void testParseQuery() {
-        Map<String, Object> result = parser.parse("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E", false);
+        Map<String, Object> result = parser.parse("aaa=aaaval&bbb=bbbval&ccc=&%3Ca%22%3E=%3Cval%3E").getQueryParams();
 
         assertEquals("aaaval", result.get("aaa"));
         assertEquals("bbbval", result.get("bbb"));
@@ -45,7 +45,7 @@ public class StrutsQueryStringParserTest {
 
     @Test
     public void testParseQueryIntoArray() {
-        Map<String, Object> result = parser.parse("a=1&a=2&a=3", true);
+        Map<String, Object> result = parser.parse("a=1&a=2&a=3").getQueryParams();
 
         Object actual = result.get("a");
         assertThat(actual).isInstanceOf(String[].class);
@@ -54,7 +54,7 @@ public class StrutsQueryStringParserTest {
 
     @Test
     public void testParseEmptyQuery() {
-        Map<String, Object> result = parser.parse("", false);
+        Map<String, Object> result = parser.parse("").getQueryParams();
 
         assertNotNull(result);
         assertEquals(0, result.size());
@@ -62,7 +62,7 @@ public class StrutsQueryStringParserTest {
 
     @Test
     public void testParseNullQuery() {
-        Map<String, Object> result = parser.parse(null, false);
+        Map<String, Object> result = parser.parse(null).getQueryParams();
 
         assertNotNull(result);
         assertEquals(0, result.size());
@@ -70,7 +70,7 @@ public class StrutsQueryStringParserTest {
 
     @Test
     public void testDecodeSpacesInQueryString() {
-        Map<String, Object> queryParameters = parser.parse("name=value+with+space", false);
+        Map<String, Object> queryParameters = parser.parse("name=value+with+space").getQueryParams();
 
         assertTrue(queryParameters.containsKey("name"));
         assertEquals("value with space", queryParameters.get("name"));
@@ -78,7 +78,7 @@ public class StrutsQueryStringParserTest {
 
     @Test
     public void shouldProperlySplitParamsWithDoubleEqualSign() {
-        Map<String, Object> queryParameters = parser.parse("id1=n123=&id2=n3456", false);
+        Map<String, Object> queryParameters = parser.parse("id1=n123=&id2=n3456").getQueryParams();
 
         assertTrue(queryParameters.containsKey("id1"));
         assertTrue(queryParameters.containsKey("id2"));
@@ -88,7 +88,7 @@ public class StrutsQueryStringParserTest {
 
     @Test
     public void shouldHandleParamWithNoValue1() {
-        Map<String, Object> queryParameters = parser.parse("paramNoValue", false);
+        Map<String, Object> queryParameters = parser.parse("paramNoValue").getQueryParams();
 
         assertTrue(queryParameters.containsKey("paramNoValue"));
         assertEquals("", queryParameters.get("paramNoValue"));
@@ -96,11 +96,20 @@ public class StrutsQueryStringParserTest {
 
     @Test
     public void shouldHandleParamWithNoValue2() {
-        Map<String, Object> queryParameters = parser.parse("paramNoValue&param1=1234", false);
+        Map<String, Object> queryParameters = parser.parse("paramNoValue&param1=1234").getQueryParams();
 
         assertTrue(queryParameters.containsKey("paramNoValue"));
         assertTrue(queryParameters.containsKey("param1"));
         assertEquals("1234", queryParameters.get("param1"));
+    }
+
+    @Test
+    public void shouldHandleParamAndFragment() {
+        QueryStringParser.Result queryParameters = parser.parse("param1=1234#test");
+
+        assertTrue(queryParameters.getQueryParams().containsKey("param1"));
+        assertEquals("1234", queryParameters.getQueryParams().get("param1"));
+        assertEquals("test", queryParameters.getQueryFragment());
     }
 
     @Before

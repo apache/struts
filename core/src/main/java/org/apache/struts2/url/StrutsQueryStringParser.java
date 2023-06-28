@@ -43,13 +43,18 @@ public class StrutsQueryStringParser implements QueryStringParser {
 
     @Override
     public Map<String, Object> parse(String queryString, boolean forceValueArray) {
+        return parse(queryString).getQueryParams();
+    }
+
+    @Override
+    public Result parse(String queryString) {
         if (StringUtils.isEmpty(queryString)) {
             LOG.debug("Query String is empty, returning an empty map");
-            return Collections.emptyMap();
+            return this.empty();
         }
 
-        Map<String, Object> queryParams = new LinkedHashMap<>();
-        String[] params = queryString.split("&");
+        Result queryParams = StrutsQueryStringParserResult.create();
+        String[] params = extractParams(queryString);
         for (String param : params) {
             if (StringUtils.isBlank(param)) {
                 LOG.debug("Param [{}] is blank, skipping", param);
@@ -64,32 +69,98 @@ public class StrutsQueryStringParser implements QueryStringParser {
             } else {
                 paramName = param;
             }
-            extractParam(paramName, paramValue, queryParams, forceValueArray);
+            queryParams = extractParam(paramName, paramValue, queryParams);
         }
-        return queryParams;
+        return queryParams.withQueryFragment(extractFragment(queryString));
     }
 
-    private void extractParam(String paramName, String paramValue, Map<String, Object> queryParams, boolean forceValueArray) {
+    @Override
+    public Result empty() {
+        return new StrutsQueryStringParserResult(Collections.emptyMap(), "");
+    }
+
+    private String[] extractParams(String queryString) {
+        LOG.trace("Extracting params from query string: {}", queryString);
+        String[] params = queryString.split("&");
+
+        int fragmentIndex = queryString.lastIndexOf("#");
+        if (fragmentIndex > -1) {
+            LOG.trace("Stripping fragment at index: {}", fragmentIndex);
+            params = queryString.substring(0, fragmentIndex).split("&");
+        }
+        return params;
+    }
+
+    private Result extractParam(String paramName, String paramValue, Result queryParams) {
         String decodedParamName = decoder.decode(paramName, true);
         String decodedParamValue = decoder.decode(paramValue, true);
+        return queryParams.addParam(decodedParamName, decodedParamValue);
+    }
 
-        if (queryParams.containsKey(decodedParamName) || forceValueArray) {
-            // WW-1619 append new param value to existing value(s)
-            Object currentParam = queryParams.get(decodedParamName);
-            if (currentParam instanceof String) {
-                queryParams.put(decodedParamName, new String[]{(String) currentParam, decodedParamValue});
-            } else {
-                String[] currentParamValues = (String[]) currentParam;
-                if (currentParamValues != null) {
-                    List<String> paramList = new ArrayList<>(Arrays.asList(currentParamValues));
-                    paramList.add(decodedParamValue);
-                    queryParams.put(decodedParamName, paramList.toArray(new String[0]));
+    private String extractFragment(String queryString) {
+        int fragmentIndex = queryString.lastIndexOf("#");
+        if (fragmentIndex > -1) {
+            return queryString.substring(fragmentIndex + 1);
+        }
+        return "";
+    }
+
+    public static class StrutsQueryStringParserResult implements Result {
+
+        private final Map<String, Object> queryParams;
+        private String queryFragment;
+
+        static Result create() {
+            return new StrutsQueryStringParserResult(new LinkedHashMap<>(), "");
+        }
+
+        private StrutsQueryStringParserResult(Map<String, Object> queryParams, String queryFragment) {
+            this.queryParams = queryParams;
+            this.queryFragment = queryFragment;
+        }
+
+        public Result addParam(String name, String value) {
+            if (queryParams.containsKey(name)) {
+                // WW-1619 append new param value to existing value(s)
+                Object currentParam = queryParams.get(name);
+                if (currentParam instanceof String) {
+                    queryParams.put(name, new String[]{(String) currentParam, value});
                 } else {
-                    queryParams.put(decodedParamName, new String[]{decodedParamValue});
+                    String[] currentParamValues = (String[]) currentParam;
+                    if (currentParamValues != null) {
+                        List<String> paramList = new ArrayList<>(Arrays.asList(currentParamValues));
+                        paramList.add(value);
+                        queryParams.put(name, paramList.toArray(new String[0]));
+                    } else {
+                        queryParams.put(name, new String[]{value});
+                    }
                 }
+            } else {
+                queryParams.put(name, value);
             }
-        } else {
-            queryParams.put(decodedParamName, decodedParamValue);
+
+            return this;
+        }
+
+        public Result withQueryFragment(String queryFragment) {
+            this.queryFragment = queryFragment;
+            return this;
+        }
+
+        public Map<String, Object> getQueryParams() {
+            return Collections.unmodifiableMap(queryParams);
+        }
+
+        public String getQueryFragment() {
+            return queryFragment;
+        }
+
+        public boolean contains(String name) {
+            return queryParams.containsKey(name);
+        }
+
+        public boolean isEmpty() {
+            return queryParams.isEmpty();
         }
     }
 }

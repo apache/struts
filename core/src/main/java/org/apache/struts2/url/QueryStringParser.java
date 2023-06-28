@@ -22,11 +22,47 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Used to parse Http Query String into a Map of parameters
+ * Used to parse Http Query String into a map of parameters with support for fragment
+ *
  * @since Struts 6.1.0
  */
 public interface QueryStringParser extends Serializable {
 
+    /**
+     * @deprecated since Struts 6.2.0, use {@link #parse(String)} instead
+     */
+    @Deprecated
     Map<String, Object> parse(String queryString, boolean forceValueArray);
+
+    /**
+     * @param queryString a query string to parse
+     * @return a {@link Result} of parsing the query string
+     * @since Struts 6.2.0
+     */
+    Result parse(String queryString);
+
+    /**
+     * Return an empty {@link Result}
+     * @return empty result
+     */
+    Result empty();
+
+    /**
+     * Represents result of parsing query string by implementation of {@link QueryStringParser}
+     */
+    interface Result {
+
+        Result addParam(String name, String value);
+
+        Result withQueryFragment(String queryFragment);
+
+        Map<String, Object> getQueryParams();
+
+        String getQueryFragment();
+
+        boolean contains(String name);
+
+        boolean isEmpty();
+    }
 
 }

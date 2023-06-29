@@ -16,3 +16,5 @@ github:
     master: { }
   autolink_jira:
     - WW
+  dependabot_alerts:  true
+  dependabot_updates: true

@@ -22,7 +22,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.apache.struts</groupId>
+        <groupId>io.github.hugomario</groupId>
         <artifactId>struts2-parent</artifactId>
         <version>6.3.0-SNAPSHOT</version>
     </parent>
@@ -103,6 +103,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.1</version>
                         <configuration>
                             <compilerArgs>
                                 <arg>-Auri=/struts-tags</arg>
@@ -177,7 +178,6 @@
         </profile>
     </profiles>
 
-
     <dependencies>
         <dependency>
             <groupId>org.freemarker</groupId>
@@ -185,14 +185,14 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -209,8 +209,9 @@
 
         <!-- File upload -->
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
+            <groupId>io.github.hugomario</groupId>
+            <artifactId>jakarta-fileupload</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -229,6 +230,10 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

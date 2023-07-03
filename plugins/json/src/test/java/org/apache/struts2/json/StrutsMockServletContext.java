@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.json;
 
-import javax.servlet.*;
-import javax.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.*;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -176,6 +176,16 @@ public class StrutsMockServletContext implements ServletContext {
         return null;
     }
 
+    /**
+     * @param s
+     * @param s1
+     * @return
+     */
+    @Override
+    public ServletRegistration.Dynamic addJspFile(String s, String s1) {
+        return null;
+    }
+
     @Override
     public <T extends Servlet> T createServlet(Class<T> aClass) throws ServletException {
         return null;
@@ -279,6 +289,54 @@ public class StrutsMockServletContext implements ServletContext {
     @Override
     public String getVirtualServerName() {
         return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public int getSessionTimeout() {
+        return 0;
+    }
+
+    /**
+     * @param i
+     */
+    @Override
+    public void setSessionTimeout(int i) {
+
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public String getRequestCharacterEncoding() {
+        return null;
+    }
+
+    /**
+     * @param s
+     */
+    @Override
+    public void setRequestCharacterEncoding(String s) {
+
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public String getResponseCharacterEncoding() {
+        return null;
+    }
+
+    /**
+     * @param s
+     */
+    @Override
+    public void setResponseCharacterEncoding(String s) {
+
     }
 
     public void setServletInfo(String servletInfo) {

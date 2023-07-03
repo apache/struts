@@ -28,6 +28,7 @@ import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.tiles.request.servlet.ServletUtil;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
@@ -36,10 +37,9 @@ import org.apache.tiles.freemarker.template.TilesFMModelRepository;
 import org.apache.tiles.impl.InvalidTemplateException;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.render.Renderer;
-import org.apache.tiles.request.servlet.ServletUtil;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class StrutsFreeMarkerAttributeRenderer implements Renderer {

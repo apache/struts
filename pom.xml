@@ -912,15 +912,11 @@
                 <version>6.0.0</version>
                 <scope>provided</scope>
             </dependency>
-
-            <!--
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.el</artifactId>
                 <version>5.0.0-M1</version>
             </dependency>
-            -->
-
             <dependency>
                 <groupId>org.glassfish.expressly</groupId>
                 <artifactId>expressly</artifactId>
@@ -1328,6 +1324,16 @@
             <dependency>
                 <groupId>io.github.hugomario</groupId>
                 <artifactId>struts2-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.hugomario</groupId>
+                <artifactId>struts2-spring-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.hugomario</groupId>
+                <artifactId>struts2-convention-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

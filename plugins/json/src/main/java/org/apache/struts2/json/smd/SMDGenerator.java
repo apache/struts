@@ -27,7 +27,7 @@ import org.apache.struts2.json.annotations.SMD;
 import org.apache.struts2.json.annotations.SMDMethod;
 import org.apache.struts2.json.annotations.SMDMethodParameter;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;

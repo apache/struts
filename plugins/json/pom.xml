@@ -49,7 +49,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.struts</groupId>
+            <groupId>io.github.hugomario</groupId>
             <artifactId>struts2-junit-plugin</artifactId>
             <scope>test</scope>
         </dependency>
@@ -65,8 +65,8 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
 

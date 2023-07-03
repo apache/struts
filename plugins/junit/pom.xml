@@ -45,13 +45,13 @@
             <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.struts</groupId>
+            <groupId>io.github.hugomario</groupId>
             <artifactId>struts2-spring-plugin</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -61,7 +61,7 @@
 
         <!-- Convention Plugin tests -->
         <dependency>
-            <groupId>org.apache.struts</groupId>
+            <groupId>io.github.hugomario</groupId>
             <artifactId>struts2-convention-plugin</artifactId>
             <scope>test</scope>
         </dependency>
@@ -71,18 +71,6 @@
             <groupId>javax.portlet</groupId>
             <artifactId>portlet-api</artifactId>
             <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-portlet-plugin</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-portlet-mocks-plugin</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>

@@ -26,7 +26,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.junit.Test;
 
 import javax.portlet.PortletContext;
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import java.io.UnsupportedEncodingException;
 
 public class StrutsTestCaseTest extends StrutsSpringTestCase {

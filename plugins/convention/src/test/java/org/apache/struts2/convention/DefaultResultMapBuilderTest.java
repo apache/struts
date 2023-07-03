@@ -31,7 +31,7 @@ import org.apache.struts2.result.ServletDispatcherResult;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

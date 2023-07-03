@@ -21,9 +21,9 @@ package org.apache.struts2.dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.RequestUtils;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

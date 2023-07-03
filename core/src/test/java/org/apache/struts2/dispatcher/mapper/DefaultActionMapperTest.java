@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
@@ -29,6 +28,7 @@ import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.inject.Container;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.views.jsp.MockHttpServletRequest;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
 import java.util.Arrays;

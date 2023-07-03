@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.servlet.MockBodyContent;
-import com.mockobjects.servlet.MockJspWriter;
+//import com.mockobjects.servlet.MockBodyContent;
+//import com.mockobjects.servlet.MockJspWriter;
 import org.apache.commons.collections.ListUtils;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.TagSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

@@ -22,7 +22,7 @@ import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.ActionTag;
 
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.tagext.TagSupport;
 import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,12 +39,12 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         context = new HashMap();
     }
 
-    public void testJavaxServletPackageAccess() throws Exception {
+    public void testJakartaServletPackageAccess() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
         Set<Pattern> excluded = new HashSet<Pattern>();
-        excluded.add(Pattern.compile("^(?!javax\\.servlet\\..+)(javax\\..+)"));
+        excluded.add(Pattern.compile("^(?!jakarta\\.servlet\\..+)(jakarta\\..+)"));
         sma.setExcludedPackageNamePatterns(excluded);
 
         String propertyName = "value";
@@ -54,25 +54,27 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
 
         // then
-        assertTrue("javax.servlet package isn't accessible!", actual);
+        assertTrue("jakarta.servlet package isn't accessible!", actual);
     }
 
-    public void testJavaxServletPackageExclusion() throws Exception {
+    public void testJakartaServletPackageExclusion() throws Exception {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
         Set<Pattern> excluded = new HashSet<>();
-        excluded.add(Pattern.compile("^javax\\..+"));
+        excluded.add(Pattern.compile("^jakarta\\..+"));
         sma.setExcludedPackageNamePatterns(excluded);
 
         String propertyName = "value";
         Member member = TagSupport.class.getMethod("doStartTag");
 
+        System.out.println(member.getName());
+
         // when
         boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
 
         // then
-        assertFalse("javax.servlet package is accessible!", actual);
+        assertFalse("jakarta.servlet package is accessible!", actual);
     }
 
 }

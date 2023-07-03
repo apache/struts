@@ -29,7 +29,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -343,28 +343,32 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             new Cookie(pollution1, "pollution1");
             fail("It shouldn't be possible to create cookie: " + pollution1);
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "Cookie name \"" + pollution1 + "\" is a reserved token");
+            System.out.println("pollution1: " + e.getMessage());
+            assertEquals(e.getMessage(), "Cookie name \"" + pollution1 + "\" is a reserved token or contains an invalid character for a cookie name");
         }
 
         try {
             new Cookie(pollution4, "pollution4");
             fail("It shouldn't be possible to create cookie: " + pollution4);
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "Cookie name \"" + pollution4 + "\" is a reserved token");
+            System.out.println("pollution4: " + e.getMessage());
+            assertEquals(e.getMessage(), "Cookie name \"" + pollution4 + "\" is a reserved token or contains an invalid character for a cookie name");
         }
 
         try {
             new Cookie(pollution5, "pollution5");
             fail("It shouldn't be possible to create cookie: " + pollution5);
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "Cookie name \"" + pollution5 + "\" is a reserved token");
+            System.out.println("pollution5: " + e.getMessage());
+            assertEquals(e.getMessage(), "Cookie name \"" + pollution5 + "\" is a reserved token or contains an invalid character for a cookie name");
         }
 
         try {
             new Cookie(pollution6, "pollution6");
             fail("It shouldn't be possible to create cookie: " + pollution6);
         } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "Cookie name \"" + pollution6 + "\" is a reserved token");
+            System.out.println("pollution6: " + e.getMessage());
+            assertEquals(e.getMessage(), "Cookie name \"" + pollution6 + "\" is a reserved token or contains an invalid character for a cookie name");
         }
 
         request.setCookies(

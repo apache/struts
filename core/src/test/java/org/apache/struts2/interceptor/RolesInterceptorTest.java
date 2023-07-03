@@ -22,9 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.struts2.StrutsInternalTestCase;
-
-import com.mockobjects.servlet.MockHttpServletRequest;
-import com.mockobjects.servlet.MockHttpServletResponse;
+import org.apache.struts2.views.jsp.MockHttpServletRequest;
+import org.apache.struts2.views.jsp.MockHttpServletResponse;
 
 public class RolesInterceptorTest extends StrutsInternalTestCase {
 

@@ -197,7 +197,7 @@
                 <interceptor-ref name="httpMethod"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="csp">
-                    <param name="disabled">false</param>
+                    <param name="disabled">true</param>
                     <param name="enforcingMode">false</param>
                 </interceptor-ref>
                 <interceptor-ref name="prepare"/>

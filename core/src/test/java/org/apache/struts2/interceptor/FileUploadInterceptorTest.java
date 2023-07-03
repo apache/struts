@@ -24,7 +24,7 @@ import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import jakarta.fileupload.servlet.ServletFileUpload;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
@@ -35,7 +35,7 @@ import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -188,7 +188,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
     public void testAcceptFileWithMaxSize() throws Exception {
         interceptor.setAllowedTypes("text/plain");
-        interceptor.setMaximumSize(new Long(10));
+        interceptor.setMaximumSize(10L);
 
         // when file is not of allowed types
         ValidationAwareSupport validation = new ValidationAwareSupport();
@@ -525,9 +525,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext()
-            .withParameters(HttpParameters.create(param).build())
-            .withLocale(Locale.GERMAN)
-            .withServletRequest(createMultipartRequestMaxSize(req, 10));
+                .withParameters(HttpParameters.create(param).build())
+                .withLocale(Locale.GERMAN)
+                .withServletRequest(createMultipartRequestMaxSize(req, 10));
 
         interceptor.intercept(mai);
 

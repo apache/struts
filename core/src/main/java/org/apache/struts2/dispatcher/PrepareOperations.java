@@ -29,9 +29,9 @@ import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -264,7 +264,7 @@ public class PrepareOperations {
     /**
      * Clear any override of the static devMode value being applied to the current thread.
      * This can be useful for any situation where {@link #overrideDevMode(boolean)} might be called
-     * in a flow where {@link #cleanupRequest(javax.servlet.http.HttpServletRequest)} does not get called.
+     * in a flow where {@link #cleanupRequest(jakarta.servlet.http.HttpServletRequest)} does not get called.
      * May be very situational (such as some unit tests), but may have other utility as well.
      */
     public static void clearDevModeOverride() {

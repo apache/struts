@@ -22,17 +22,18 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import freemarker.template.Configuration;
+
 import freemarker.template.TemplateExceptionHandler;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.freemarker.template.Configuration;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.easymock.EasyMock;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -46,7 +47,6 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class FreemarkerResultMockedTest extends StrutsInternalTestCase {
-
     ValueStack stack;
     MockActionInvocation invocation;
     ActionContext context;

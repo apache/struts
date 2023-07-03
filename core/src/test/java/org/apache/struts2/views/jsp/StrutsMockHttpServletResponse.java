@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Locale;
 
-import com.mockobjects.servlet.MockHttpServletResponse;
-
-
 /**
  * StrutsMockHttpServletResponse
  *

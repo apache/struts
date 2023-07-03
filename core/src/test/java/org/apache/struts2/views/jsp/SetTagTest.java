@@ -18,9 +18,8 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.servlet.MockJspWriter;
 import java.io.IOException;
-import javax.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspException;
 
 
 /**

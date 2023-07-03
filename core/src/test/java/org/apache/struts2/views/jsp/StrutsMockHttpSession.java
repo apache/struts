@@ -22,9 +22,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.UUID;
 
-import com.mockobjects.servlet.MockHttpSession;
-
-
 /**
  * StrutsMockHttpSession
  *

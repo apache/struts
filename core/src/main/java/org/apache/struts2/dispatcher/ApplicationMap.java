@@ -24,11 +24,11 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of attributes and
- * init parameters in a {@link javax.servlet.ServletContext} object. The {@link #entrySet()} method
+ * init parameters in a {@link jakarta.servlet.ServletContext} object. The {@link #entrySet()} method
  * enumerates over all servlet context attributes and init parameters and returns a collection of both.
  * Note, this will occur lazily - only when the entry set is asked for.
  */

@@ -18,17 +18,17 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.util.Streams;
+import jakarta.fileupload.FileItemIterator;
+import jakarta.fileupload.FileItemStream;
+import jakarta.fileupload.FileUploadBase;
+import jakarta.fileupload.FileUploadBase.FileSizeLimitExceededException;
+import jakarta.fileupload.servlet.ServletFileUpload;
+import jakarta.fileupload.util.Streams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -399,7 +399,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     protected boolean streamFileToDisk(FileItemStream itemStream, File file) throws IOException {
         boolean result;
         try (InputStream input = itemStream.openStream();
-                OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
+             OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
             byte[] buffer = new byte[bufferSize];
             LOG.debug("Streaming file using buffer size {}.", bufferSize);
             for (int length; ((length = input.read(buffer)) > 0); ) {
@@ -440,7 +440,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      *
      * @since 7.0.0
      */
-     public static class FileInfo implements Serializable {
+    public static class FileInfo implements Serializable {
 
         private static final long serialVersionUID = 1083158552766906037L;
 

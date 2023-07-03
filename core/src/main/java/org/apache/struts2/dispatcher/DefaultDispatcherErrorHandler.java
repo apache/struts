@@ -29,9 +29,9 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -41,7 +41,7 @@ import java.util.List;
 
 /**
  * Default implementation of {@link org.apache.struts2.dispatcher.DispatcherErrorHandler}
- * which sends Error Report in devMode or {@link javax.servlet.http.HttpServletResponse#sendError} otherwise.
+ * which sends Error Report in devMode or {@link jakarta.servlet.http.HttpServletResponse#sendError} otherwise.
  */
 public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
 

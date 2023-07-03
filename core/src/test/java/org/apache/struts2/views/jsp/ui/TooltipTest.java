@@ -22,10 +22,9 @@ import java.util.HashMap;
 
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
+import org.apache.struts2.views.jsp.MockJspWriter;
 import org.apache.struts2.views.jsp.ParamTag;
 import org.apache.struts2.views.jsp.StrutsMockBodyContent;
-
-import com.mockobjects.servlet.MockJspWriter;
 
 /**
  * UI components Tooltip test case.

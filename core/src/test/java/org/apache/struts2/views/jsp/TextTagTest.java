@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.servlet.MockJspWriter;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -30,8 +29,8 @@ import org.apache.struts2.components.Text;
 import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
 import org.apache.struts2.views.jsp.ui.TestAction1;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTag;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.BodyTag;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -245,7 +244,7 @@ public class TextTagTest extends AbstractTagTest {
     public void testMessageFormatWorks_clearTagStateSet() throws Exception {
         String key = "messageFormatKey";
         String pattern = "Params are {0} {1} {2}";
-        Object param1 = new Integer(12);
+        Object param1 = 12;
         Object param2 = new Date();
         Object param3 = "StringVal";
         List params = new ArrayList();

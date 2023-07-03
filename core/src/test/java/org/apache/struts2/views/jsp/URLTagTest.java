@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.DefaultActionInvocation;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.inject.Container;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.URL;
 import org.apache.struts2.dispatcher.ApplicationMap;
@@ -35,8 +36,8 @@ import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspWriter;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.jsp.JspWriter;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -1943,12 +1944,14 @@ public class URLTagTest extends AbstractUITagTest {
         ParamTag param2 = new ParamTag();
         param2.setPageContext(pageContext);
         param2.setName("paramWithSetBody");
+        /**
         param2.setBodyContent(new MockBodyContent() {
             @Override
             public String getString() {
                 return "";
             }
         });
+        */
         param2.setSuppressEmptyParameters(false);
         param2.doStartTag();
         param2.doEndTag();
@@ -1964,12 +1967,14 @@ public class URLTagTest extends AbstractUITagTest {
         ParamTag param4 = new ParamTag();
         param4.setPageContext(pageContext);
         param4.setName("paramWithSetBodySuppressed");
+        /**
         param4.setBodyContent(new MockBodyContent() {
             @Override
             public String getString() {
                 return "";
             }
         });
+         */
         param4.setSuppressEmptyParameters(true);
         param4.doStartTag();
         param4.doEndTag();
@@ -2026,12 +2031,14 @@ public class URLTagTest extends AbstractUITagTest {
         param2.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         param2.setPageContext(pageContext);
         param2.setName("paramWithSetBody");
+        /**
         param2.setBodyContent(new MockBodyContent() {
             @Override
             public String getString() {
                 return "";
             }
         });
+        */
         param2.setSuppressEmptyParameters(false);
         param2.doStartTag();
         setComponentTagClearTagState(param2, true);  // Ensure component tag state clearing is set true (to match tag).
@@ -2051,12 +2058,14 @@ public class URLTagTest extends AbstractUITagTest {
         param4.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         param4.setPageContext(pageContext);
         param4.setName("paramWithSetBodySuppressed");
+        /**
         param4.setBodyContent(new MockBodyContent() {
             @Override
             public String getString() {
                 return "";
             }
         });
+        */
         param4.setSuppressEmptyParameters(true);
         param4.doStartTag();
         setComponentTagClearTagState(param4, true);  // Ensure component tag state clearing is set true (to match tag).

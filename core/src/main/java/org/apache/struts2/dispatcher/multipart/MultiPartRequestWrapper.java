@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
@@ -176,14 +176,14 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     }
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getParameter(String)
+     * @see jakarta.servlet.http.HttpServletRequest#getParameter(String)
      */
     public String getParameter(String name) {
         return ((multi == null) || (multi.getParameter(name) == null)) ? super.getParameter(name) : multi.getParameter(name);
     }
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getParameterMap()
+     * @see jakarta.servlet.http.HttpServletRequest#getParameterMap()
      */
     public Map getParameterMap() {
         Map<String, String[]> map = new HashMap<>();
@@ -198,7 +198,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     }
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getParameterNames()
+     * @see jakarta.servlet.http.HttpServletRequest#getParameterNames()
      */
     public Enumeration getParameterNames() {
         if (multi == null) {
@@ -209,7 +209,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     }
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getParameterValues(String)
+     * @see jakarta.servlet.http.HttpServletRequest#getParameterValues(String)
      */
     public String[] getParameterValues(String name) {
         return ((multi == null) || (multi.getParameterValues(name) == null)) ? super.getParameterValues(name) : multi.getParameterValues(name);

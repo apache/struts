@@ -20,14 +20,12 @@ package org.apache.struts2.views.jsp;
 
 import static org.easymock.EasyMock.*;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.Include;
-
-import com.mockobjects.servlet.MockRequestDispatcher;
 
 /**
  * Unit test of {@link IncludeTag}.

@@ -18,15 +18,13 @@
  */
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.components.If;
 
-import com.mockobjects.servlet.MockJspWriter;
-import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -41,7 +39,7 @@ public class ElseTagTest extends StrutsInternalTestCase {
 
 
     public void testTestFalse() {
-        stack.getContext().put(If.ANSWER, new Boolean(false));
+        stack.getContext().put(If.ANSWER, Boolean.FALSE);
 
         int result = 0;
 
@@ -65,7 +63,7 @@ public class ElseTagTest extends StrutsInternalTestCase {
     }
 
     public void testTestFalse_clearTagStateSet() {
-        stack.getContext().put(If.ANSWER, new Boolean(false));
+        stack.getContext().put(If.ANSWER, Boolean.FALSE);
 
         int result = 0;
 

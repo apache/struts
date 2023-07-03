@@ -1325,6 +1325,17 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>io.github.hugomario</groupId>
+                <artifactId>struts2-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.hugomario</groupId>
+                <artifactId>struts2-junit-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

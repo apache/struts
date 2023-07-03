@@ -211,7 +211,6 @@
         <dependency>
             <groupId>io.github.hugomario</groupId>
             <artifactId>jakarta-fileupload</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

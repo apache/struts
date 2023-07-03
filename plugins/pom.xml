@@ -22,7 +22,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.apache.struts</groupId>
+        <groupId>io.github.hugomario</groupId>
         <artifactId>struts2-parent</artifactId>
         <version>6.3.0-SNAPSHOT</version>
     </parent>
@@ -32,19 +32,24 @@
     <name>Struts 2 Plugins</name>
 
     <modules>
+        <!--
         <module>async</module>
         <module>bean-validation</module>
         <module>cdi</module>
         <module>config-browser</module>
+        -->
         <module>convention</module>
+        <!--
         <module>dwr</module>
         <module>embeddedjsp</module>
         <module>gxp</module>
         <module>jasperreports</module>
         <module>javatemplates</module>
         <module>jfreechart</module>
+        -->
         <module>json</module>
         <module>junit</module>
+        <!--
         <module>osgi</module>
         <module>oval</module>
         <module>pell-multipart</module>
@@ -52,19 +57,26 @@
         <module>portlet</module>
         <module>portlet-mocks</module>
         <module>portlet-tiles</module>
+        -->
         <module>rest</module>
+        <!--
         <module>sitemesh</module>
+        -->
         <module>spring</module>
+        <!--
         <module>testng</module>
+        -->
         <module>tiles</module>
+        <!--
         <module>velocity</module>
+        -->
         <module>xslt</module>
     </modules>
 
     <dependencies>
 
         <dependency>
-            <groupId>org.apache.struts</groupId>
+            <groupId>io.github.hugomario</groupId>
             <artifactId>struts2-core</artifactId>
         </dependency>
 
@@ -76,8 +88,8 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 

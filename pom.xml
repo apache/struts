@@ -21,71 +21,317 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
-    <parent>
-        <groupId>org.apache.struts</groupId>
-        <artifactId>struts-master</artifactId>
-        <version>14</version>
-    </parent>
-
     <modelVersion>4.0.0</modelVersion>
+    <groupId>io.github.hugomario</groupId>
     <artifactId>struts2-parent</artifactId>
     <version>6.3.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <name>Struts 2</name>
-    <url>https://struts.apache.org/</url>
-    <description>Apache Struts 2</description>
+    <description>
+        The goal of the Apache Struts project is to encourage application
+        architectures based on the "Model 2" approach, a variation of the classic
+        Model-View-Controller (MVC) design paradigm. Under Model 2, a servlet (or
+        equivalent) manages business logic execution, and presentation logic
+        resides mainly in server pages.
+    </description>
+    <url>https://github.com/HugoMario/struts/</url>
+
+    <developers>
+        <developer>
+            <name>Ted Husted</name>
+            <id>husted</id>
+            <email>husted at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Cedric Dumoulin</name>
+            <id>cedric</id>
+            <email>cedric.dumoulin at lifl.fr</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Martin Cooper</name>
+            <id>martinc</id>
+            <email>martinc at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>James Holmes</name>
+            <id>jholmes</id>
+            <email>jholmes at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>James Mitchell</name>
+            <id>jmitchell</id>
+            <email>jmitchell at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Don Brown</name>
+            <id>mrdon</id>
+            <email>mrdon at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Niall Pemberton</name>
+            <id>niallp</id>
+            <email>niallp at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Wendy Smoak</name>
+            <id>wsmoak</id>
+            <email>wsmoak at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Laurie Harper</name>
+            <id>laurieh</id>
+            <email>laurieh at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Alexandru Popescu</name>
+            <id>apopescu</id>
+            <email>apopescu at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Rene Gielen</name>
+            <id>rgielen</id>
+            <email>rgielen at apache.org</email>
+            <roles>
+                <role>PMC Chair</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Rainer Hermanns</name>
+            <id>hermanns</id>
+            <email>hermanns at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Toby Jee</name>
+            <id>tmjee</id>
+            <email>tmjee at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Paul Benedict</name>
+            <id>pbenedict</id>
+            <email>pbenedict at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Michael Jouravlev</name>
+            <id>mikus</id>
+            <email>mikus at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Bob Lee</name>
+            <id>crazybob</id>
+            <email>crazybob at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>David H. DeWolf</name>
+            <id>ddewolf</id>
+            <email>ddewolf at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Wes Wannemacher</name>
+            <id>wesw</id>
+            <email>wesw at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Dave Newton</name>
+            <id>daven</id>
+            <email>davenewton at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Nils-Helge Garli Hegvik</name>
+            <id>nilsga</id>
+            <email>nilsga at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Jeromy Evans</name>
+            <id>jeromy</id>
+            <email>jeromy at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Matt Raible</name>
+            <id>mraible</id>
+            <email>mraible at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Mathias Bogaert</name>
+            <id>pathos</id>
+            <email>pathos at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Lukasz Lenart</name>
+            <id>lukaszlenart</id>
+            <email>lukaszlenart at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Maurizio Cucchiara</name>
+            <id>mcucchiara</id>
+            <email>mcucchiara at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Johannes Geppert</name>
+            <id>jogep</id>
+            <email>jogep at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Christian Grobmeier</name>
+            <id>grobmeier</id>
+            <email>grobmeier at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Christoph Nenning</name>
+            <id>cnenning</id>
+            <email>cnenning at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>John Lindal</name>
+            <id>jafl</id>
+            <email>jafl at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Bruce A. Phillips</name>
+            <id>bphillips</id>
+            <email>bphillips at apache.org</email>
+            <roles>
+                <role>Committer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Greg Huber</name>
+            <id>ghuber</id>
+            <email>ghuber at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Aleksandr Mashchenko</name>
+            <id>amashchenko</id>
+            <email>amashchenko at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Stefaan Dutry</name>
+            <id>sdutry</id>
+            <email>sdutry at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Yasser Zamani</name>
+            <id>yasserzamani</id>
+            <email>yasserzamani at apache.org</email>
+            <roles>
+                <role>PMC Member</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Hugo Mario</name>
+            <id>HugoMario</id>
+            <email>hugo.mario.mercado@gmail.com</email>
+            <roles>
+                <role>Commiter</role>
+            </roles>
+        </developer>
+    </developers>
 
     <inceptionYear>2000</inceptionYear>
 
-    <!--
-    <description>
-        Apache Struts 2 is an elegant, extensible framework,
-        well suited for creating moderate to large-scale Java web
-        applications. The framework is designed to streamline the
-        full development cycle, from building, to deploying,
-        to maintaining applications over time.
-    </description>
-    -->
-
-    <scm>
-        <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
-        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
-        <url>https://github.com/apache/struts/</url>
-        <tag>HEAD</tag>
-    </scm>
-
-    <issueManagement>
-        <system>JIRA</system>
-        <url>https://issues.apache.org/jira/projects/WW</url>
-    </issueManagement>
-
-    <ciManagement>
-        <system>Jenkins</system>
-        <url>https://builds.apache.org/job/Struts/</url>
-        <notifiers>
-            <notifier>
-                <type>mail</type>
-                <configuration>
-                    <address>dev@struts.apache.org</address>
-                </configuration>
-            </notifier>
-        </notifiers>
-    </ciManagement>
-
-    <distributionManagement>
-        <site>
-            <id>struts-site</id>
-            <name>Apache Struts</name>
-            <url>https://struts.apache.org/maven/</url>
-        </site>
-    </distributionManagement>
-
     <modules>
+        <!--
         <module>bom</module>
+        -->
         <module>core</module>
         <module>plugins</module>
+        <!--
         <module>bundles</module>
         <module>apps</module>
+        -->
     </modules>
 
     <licenses>
@@ -97,16 +343,28 @@
         </license>
     </licenses>
 
-    <organization>
-        <name>Apache Software Foundation</name>
-        <url>https://www.apache.org</url>
-    </organization>
+    <scm>
+        <connection>scm:git:git://github.com/HugoMario/struts.git</connection>
+        <developerConnection>scm:git:ssh://github.com:HugoMario/struts.git</developerConnection>
+        <url>http://github.com/HugoMario/struts/tree/main</url>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2023-06-28T07:13:15Z</project.build.outputTimestamp>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.outputTimestamp>2023-07-03T01:29:14Z</project.build.outputTimestamp>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.2</asm.version>
@@ -115,75 +373,18 @@
         <log4j2.version>2.19.0</log4j2.version>
         <ognl.version>3.3.4</ognl.version>
         <slf4j.version>1.7.32</slf4j.version>
-        <spring.platformVersion>5.3.27</spring.platformVersion>
+        <spring.platformVersion>6.0.9</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-        <hibernate-validator.version>6.2.4.Final</hibernate-validator.version>
+        <hibernate-validator.version>8.0.0.Final</hibernate-validator.version>
         <freemarker.version>2.3.32</freemarker.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>
-
-        <!-- Sonar -->
-        <sonar.organization>apache</sonar.organization>
-        <sonar.projectKey>apache_struts</sonar.projectKey>
-        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-
-        <argLine>-Duser.language=en -Duser.country=US -Duser.region=US</argLine>
     </properties>
 
     <profiles>
-        <profile>
-            <id>includeAssembly</id>
-            <activation>
-                <property>
-                    <name>!skipAssembly</name>
-                </property>
-            </activation>
-            <modules>
-                <module>assembly</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>dependency-check</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <configuration>
-                                <doclint>none</doclint>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
         <profile>
             <id>jdk17</id>
             <activation>
@@ -207,39 +408,6 @@
                         </plugin>
                     </plugins>
                 </pluginManagement>
-            </build>
-        </profile>
-        <profile>
-            <id>coverage</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.8</version>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                    <goal>prepare-agent-integration</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>report</id>
-                                <goals>
-                                    <goal>report</goal>
-                                    <goal>report-integration</goal>
-                                </goals>
-                                <configuration>
-                                    <formats>
-                                        <format>XML</format>
-                                    </formats>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
             </build>
         </profile>
     </profiles>
@@ -316,10 +484,10 @@
                         <useDefaultExcludes>true</useDefaultExcludes>
                         <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
                         <licenses>
-                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20" />
+                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20"/>
                         </licenses>
                         <licenseFamilies>
-                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily" />
+                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily"/>
                         </licenseFamilies>
                         <includes>
                             <include>pom.xml</include>
@@ -394,6 +562,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
                 <configuration>
                     <archive>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
@@ -416,108 +585,54 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.9.0</version>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
                 <configuration>
-                    <relativizeDecorationLinks>false</relativizeDecorationLinks>
+                    <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-core</artifactId>
-                        <version>1.9.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.9.1</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.rat</groupId>
-                <artifactId>apache-rat-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>prepare-package</phase>
+                        <id>attach-javadocs</id>
                         <goals>
-                            <goal>check</goal>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.13</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-wrapper-plugin</artifactId>
+                <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
         <defaultGoal>install</defaultGoal>
 
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <configuration>
-                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>javadoc</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <configuration>
-                    <failOnError>false</failOnError>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.rat</groupId>
-                <artifactId>apache-rat-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <configuration>
-                    <name>Dependency Check</name>
-                    <failBuildOnCVSS>11</failBuildOnCVSS>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>2.7</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>dependency-updates-report</report>
-                            <report>plugin-updates-report</report>
-                            <report>property-updates-report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <dependencyManagement>
         <dependencies>
@@ -687,6 +802,12 @@
             </dependency>
 
             <dependency>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
+                <version>5.0.1</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
                 <version>6.0.3</version>
@@ -781,21 +902,29 @@
             <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
-                <version>4.2</version>
+                <version>5.1.0</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.1.0</version>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>6.0.0</version>
                 <scope>provided</scope>
             </dependency>
 
+            <!--
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
-                <version>3.0.1-b12</version>
+                <artifactId>jakarta.el</artifactId>
+                <version>5.0.0-M1</version>
+            </dependency>
+            -->
+
+            <dependency>
+                <groupId>org.glassfish.expressly</groupId>
+                <artifactId>expressly</artifactId>
+                <version>5.0.0</version>
             </dependency>
 
             <dependency>
@@ -806,9 +935,9 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>jstl</artifactId>
-                <version>1.2</version>
+                <groupId>jakarta.servlet.jsp.jstl</groupId>
+                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+                <version>3.0.0</version>
                 <scope>test</scope>
             </dependency>
 
@@ -883,9 +1012,9 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.servlet.jsp</groupId>
-                <artifactId>jsp-api</artifactId>
-                <version>2.1</version>
+                <groupId>jakarta.servlet.jsp</groupId>
+                <artifactId>jakarta.servlet.jsp-api</artifactId>
+                <version>3.1.1</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -914,9 +1043,9 @@
                 <version>4.4</version>
             </dependency>
             <dependency>
-                <groupId>commons-fileupload</groupId>
-                <artifactId>commons-fileupload</artifactId>
-                <version>1.5</version>
+                <groupId>io.github.hugomario</groupId>
+                <artifactId>jakarta-fileupload</artifactId>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -1117,9 +1246,9 @@
                 <version>1.2.1</version>
             </dependency>
             <dependency>
-                <groupId>javax.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
-                <version>1.0.2</version>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>3.1.0</version>
             </dependency>
 
             <dependency>
@@ -1172,9 +1301,9 @@
 
             <!-- CDI & Weld -->
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>1.2</version>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <version>4.0.1</version>
             </dependency>
 
             <dependency>

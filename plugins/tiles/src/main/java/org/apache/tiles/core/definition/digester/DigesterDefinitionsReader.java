@@ -21,6 +21,7 @@ package org.apache.tiles.core.definition.digester;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.Rule;
+import org.apache.struts2.StrutsException;
 import org.apache.tiles.api.Attribute;
 import org.apache.tiles.api.Definition;
 import org.apache.tiles.api.Expression;
@@ -30,8 +31,11 @@ import org.apache.tiles.core.definition.DefinitionsReader;
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -256,6 +260,17 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         digester.setNamespaceAware(true);
         digester.setUseContextClassLoader(true);
         digester.setErrorHandler(new ThrowingErrorHandler());
+        try {
+            //OWASP
+            //https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html
+            digester.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            digester.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            // Disable external DTDs as well
+            digester.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            digester.setXIncludeAware(false);
+        } catch (ParserConfigurationException | SAXNotRecognizedException | SAXNotSupportedException e) {
+            throw new StrutsException("Unable to disable external XML entity parsing", e);
+        }
 
         // Register our local copy of the DTDs that we can find
         String[] registrations = getRegistrations();

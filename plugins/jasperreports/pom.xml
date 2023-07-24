@@ -39,7 +39,7 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>6.19.1</version>
+            <version>6.20.5</version>
             <scope>provided</scope>
             <exclusions>
                 <!-- not necessary to compile and it force dependency convergence issues -->

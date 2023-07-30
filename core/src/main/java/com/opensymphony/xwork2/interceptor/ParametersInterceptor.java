@@ -217,8 +217,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             //block or allow access to properties
             //see WW-2761 for more details
             MemberAccessValueStack accessValueStack = (MemberAccessValueStack) newStack;
-            accessValueStack.setAcceptProperties(acceptedPatterns.getAcceptedPatterns());
-            accessValueStack.setExcludeProperties(excludedPatterns.getExcludedPatterns());
+            accessValueStack.useAcceptProperties(acceptedPatterns.getAcceptedPatterns());
+            accessValueStack.useExcludeProperties(excludedPatterns.getExcludedPatterns());
         }
 
         for (Map.Entry<String, Parameter> entry : acceptableParameters.entrySet()) {

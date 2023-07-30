@@ -27,8 +27,20 @@ import java.util.regex.Pattern;
  */
 public interface MemberAccessValueStack {
 
+    /**
+     * @deprecated please use {@link #useExcludeProperties(Set)}
+     */
+    @Deprecated
     void setExcludeProperties(Set<Pattern> excludeProperties);
 
+    void useExcludeProperties(Set<Pattern> excludeProperties);
+
+    /**
+     * @deprecated please use {@link #useAcceptProperties(Set)}
+     */
+    @Deprecated
     void setAcceptProperties(Set<Pattern> acceptedProperties);
+
+    void useAcceptProperties(Set<Pattern> acceptedProperties);
 
 }

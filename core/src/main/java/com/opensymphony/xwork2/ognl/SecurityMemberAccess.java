@@ -299,31 +299,87 @@ public class SecurityMemberAccess implements MemberAccess {
         return false;
     }
 
+    /**
+     * @deprecated please use {@link #useExcludeProperties(Set)}
+     */
+    @Deprecated
     public void setExcludeProperties(Set<Pattern> excludeProperties) {
+        throw new UnsupportedOperationException("Please use #useExcludeProperties() instead!");
+    }
+
+    public void useExcludeProperties(Set<Pattern> excludeProperties) {
         this.excludeProperties = excludeProperties;
     }
 
+    /**
+     * @deprecated please use {@link #useAcceptProperties(Set)}
+     */
+    @Deprecated
     public void setAcceptProperties(Set<Pattern> acceptedProperties) {
+        throw new UnsupportedOperationException("Please use #useAcceptProperties() instead!");
+    }
+
+    public void useAcceptProperties(Set<Pattern> acceptedProperties) {
         this.acceptProperties = acceptedProperties;
     }
 
+    /**
+     * @deprecated please use {@link #useExcludedClasses(Set)}
+     */
+    @Deprecated
     public void setExcludedClasses(Set<Class<?>> excludedClasses) {
+        throw new UnsupportedOperationException("Please use #useExcludedClasses() instead!");
+    }
+
+    public void useExcludedClasses(Set<Class<?>> excludedClasses) {
         this.excludedClasses = excludedClasses;
     }
 
+    /**
+     * @deprecated please use {@link #useExcludedPackageNamePatterns(Set)}
+     */
+    @Deprecated
     public void setExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
+        throw new UnsupportedOperationException("Please use #useExcludedPackageNamePatterns() instead!");
+    }
+
+    public void useExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
         this.excludedPackageNamePatterns = excludedPackageNamePatterns;
     }
 
+    /**
+     * @deprecated please use {@link #useExcludedPackageNames(Set)}
+     */
+    @Deprecated
     public void setExcludedPackageNames(Set<String> excludedPackageNames) {
+        throw new UnsupportedOperationException("Please use #useExcludedPackageNames() instead!");
+    }
+
+    public void useExcludedPackageNames(Set<String> excludedPackageNames) {
         this.excludedPackageNames = excludedPackageNames;
     }
 
+    /**
+     * @deprecated please use {@link #useExcludedPackageExemptClasses(Set)}
+     */
+    @Deprecated
     public void setExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
+        throw new UnsupportedOperationException("Please use #useExcludedPackageExemptClasses() instead!");
+    }
+
+    public void useExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
         this.excludedPackageExemptClasses = excludedPackageExemptClasses;
     }
 
+    /**
+     * @deprecated please use {@link #disallowProxyMemberAccess(boolean)}
+     */
+    @Deprecated
     public void setDisallowProxyMemberAccess(boolean disallowProxyMemberAccess) {
+        throw new UnsupportedOperationException("Please use #disallowProxyMemberAccess() instead!");
+    }
+
+    public void disallowProxyMemberAccess(boolean disallowProxyMemberAccess) {
         this.disallowProxyMemberAccess = disallowProxyMemberAccess;
     }
 }

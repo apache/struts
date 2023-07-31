@@ -304,7 +304,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludeProperties(Set<Pattern> excludeProperties) {
-        throw new UnsupportedOperationException("Please use #useExcludeProperties() instead!");
+        this.excludeProperties = excludeProperties;
     }
 
     public void useExcludeProperties(Set<Pattern> excludeProperties) {
@@ -316,7 +316,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setAcceptProperties(Set<Pattern> acceptedProperties) {
-        throw new UnsupportedOperationException("Please use #useAcceptProperties() instead!");
+        this.acceptProperties = acceptedProperties;
     }
 
     public void useAcceptProperties(Set<Pattern> acceptedProperties) {
@@ -328,7 +328,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludedClasses(Set<Class<?>> excludedClasses) {
-        throw new UnsupportedOperationException("Please use #useExcludedClasses() instead!");
+        this.excludedClasses = excludedClasses;
     }
 
     public void useExcludedClasses(Set<Class<?>> excludedClasses) {
@@ -340,7 +340,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
-        throw new UnsupportedOperationException("Please use #useExcludedPackageNamePatterns() instead!");
+        this.excludedPackageNamePatterns = excludedPackageNamePatterns;
     }
 
     public void useExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
@@ -352,7 +352,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludedPackageNames(Set<String> excludedPackageNames) {
-        throw new UnsupportedOperationException("Please use #useExcludedPackageNames() instead!");
+        this.excludedPackageNames = excludedPackageNames;
     }
 
     public void useExcludedPackageNames(Set<String> excludedPackageNames) {
@@ -364,7 +364,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
-        throw new UnsupportedOperationException("Please use #useExcludedPackageExemptClasses() instead!");
+        this.excludedPackageExemptClasses = excludedPackageExemptClasses;
     }
 
     public void useExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
@@ -376,7 +376,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setDisallowProxyMemberAccess(boolean disallowProxyMemberAccess) {
-        throw new UnsupportedOperationException("Please use #disallowProxyMemberAccess() instead!");
+        this.disallowProxyMemberAccess = disallowProxyMemberAccess;
     }
 
     public void disallowProxyMemberAccess(boolean disallowProxyMemberAccess) {

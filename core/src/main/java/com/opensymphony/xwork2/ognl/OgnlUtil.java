@@ -194,7 +194,7 @@ public class OgnlUtil {
             try {
                 classes.add(Class.forName(className));
             } catch (ClassNotFoundException e) {
-                LOG.warn("Class: {} doesn't exist, ignoring it!", className);
+                throw new ConfigurationException("Cannot load class for exclusion/exemption configuration: " + className, e);
             }
         }
 

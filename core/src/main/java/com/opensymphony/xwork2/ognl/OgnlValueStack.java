@@ -484,7 +484,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     @Deprecated
     public void setAcceptProperties(Set<Pattern> acceptedProperties) {
-        throw new UnsupportedOperationException("Please use #useAcceptProperties instead!");
+        securityMemberAccess.useAcceptProperties(acceptedProperties);
     }
 
     public void useAcceptProperties(Set<Pattern> acceptedProperties) {
@@ -493,7 +493,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     @Deprecated
     public void setExcludeProperties(Set<Pattern> excludeProperties) {
-        throw new UnsupportedOperationException("Please use #useExcludeProperties instead!");
+        securityMemberAccess.useExcludeProperties(excludeProperties);
     }
 
     public void useExcludeProperties(Set<Pattern> excludeProperties) {

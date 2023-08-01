@@ -35,7 +35,6 @@ import com.opensymphony.xwork2.util.Owner;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import java.beans.BeanInfo;
 import ognl.InappropriateExpressionException;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
@@ -48,6 +47,7 @@ import ognl.SimpleNode;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 
+import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -875,6 +875,33 @@ public class OgnlUtilTest extends XWorkTestCase {
         foo.setALong(0);
         ognlUtil.setProperties(props, foo, context);
         assertEquals(123, foo.getALong());
+    }
+
+    public void testBeanMapExpressions() throws OgnlException {
+        Foo foo = new Foo();
+        ognlUtil.setExcludedClasses(
+                "com.opensymphony.xwork2.ognl.SecurityMemberAccess"
+        );
+
+        Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+
+        String expression = "%{\n" +
+            "(#request.a=#@org.apache.commons.collections.BeanMap@{}) +\n" +
+            "(#request.a.setBean(#request.get('struts.valueStack')) == true) +\n" +
+            "(#request.b=#@org.apache.commons.collections.BeanMap@{}) +\n" +
+            "(#request.b.setBean(#request.get('a').get('context'))) +\n" +
+            "(#request.c=#@org.apache.commons.collections.BeanMap@{}) +\n" +
+            "(#request.c.setBean(#request.get('b').get('memberAccess'))) +\n" +
+            "(#request.get('c').put('excluded'+'PackageNames',#@org.apache.commons.collections.BeanMap@{}.keySet())) +\n" +
+            "(#request.get('c').put('excludedClasses',#@org.apache.commons.collections.BeanMap@{}.keySet()))\n" +
+            "}";
+
+        ognlUtil.setValue("title", context, foo, expression);
+
+        assertEquals(foo.getTitle(), expression);
+
+        SecurityMemberAccess sma = (SecurityMemberAccess) ((OgnlContext) context).getMemberAccess();
+        assertTrue(sma.isClassExcluded(SecurityMemberAccess.class));
     }
 
     public void testNullProperties() {
@@ -1834,19 +1861,19 @@ public class OgnlUtilTest extends XWorkTestCase {
         defaultOgnlCacheFactory.setUseLRUCache("false");
         ognlCache = defaultOgnlCacheFactory.buildOgnlCache();
         assertNotNull("No param build method result null ?", ognlCache);
-        assertEquals("Eviction limit for cache mismatches limit for factory ?", 12, ognlCache.getEvictionLimit() );
+        assertEquals("Eviction limit for cache mismatches limit for factory ?", 12, ognlCache.getEvictionLimit());
         ognlCache = defaultOgnlCacheFactory.buildOgnlCache(6, 6, 0.75f, false);
         assertNotNull("No param build method result null ?", ognlCache);
-        assertEquals("Eviction limit for cache mismatches limit for factory ?", 6, ognlCache.getEvictionLimit() );
+        assertEquals("Eviction limit for cache mismatches limit for factory ?", 6, ognlCache.getEvictionLimit());
         // LRU cache
         defaultOgnlCacheFactory.setCacheMaxSize("30");
         defaultOgnlCacheFactory.setUseLRUCache("true");
         ognlCache = defaultOgnlCacheFactory.buildOgnlCache();
         assertNotNull("No param build method result null ?", ognlCache);
-        assertEquals("Eviction limit for cache mismatches limit for factory ?", 30, ognlCache.getEvictionLimit() );
+        assertEquals("Eviction limit for cache mismatches limit for factory ?", 30, ognlCache.getEvictionLimit());
         ognlCache = defaultOgnlCacheFactory.buildOgnlCache(15, 15, 0.75f, false);
         assertNotNull("No param build method result null ?", ognlCache);
-        assertEquals("Eviction limit for cache mismatches limit for factory ?", 15, ognlCache.getEvictionLimit() );
+        assertEquals("Eviction limit for cache mismatches limit for factory ?", 15, ognlCache.getEvictionLimit());
     }
 
     /**

@@ -872,22 +872,22 @@ public class OgnlUtil {
         }
 
         SecurityMemberAccess memberAccess = new SecurityMemberAccess(allowStaticFieldAccess);
-        memberAccess.setDisallowProxyMemberAccess(disallowProxyMemberAccess);
+        memberAccess.disallowProxyMemberAccess(disallowProxyMemberAccess);
 
         if (devMode) {
             if (!warnReported.get()) {
                 warnReported.set(true);
                 LOG.warn("Working in devMode, using devMode excluded classes and packages!");
             }
-            memberAccess.setExcludedClasses(devModeExcludedClasses);
-            memberAccess.setExcludedPackageNamePatterns(devModeExcludedPackageNamePatterns);
-            memberAccess.setExcludedPackageNames(devModeExcludedPackageNames);
-            memberAccess.setExcludedPackageExemptClasses(devModeExcludedPackageExemptClasses);
+            memberAccess.useExcludedClasses(devModeExcludedClasses);
+            memberAccess.useExcludedPackageNamePatterns(devModeExcludedPackageNamePatterns);
+            memberAccess.useExcludedPackageNames(devModeExcludedPackageNames);
+            memberAccess.useExcludedPackageExemptClasses(devModeExcludedPackageExemptClasses);
         } else {
-            memberAccess.setExcludedClasses(excludedClasses);
-            memberAccess.setExcludedPackageNamePatterns(excludedPackageNamePatterns);
-            memberAccess.setExcludedPackageNames(excludedPackageNames);
-            memberAccess.setExcludedPackageExemptClasses(excludedPackageExemptClasses);
+            memberAccess.useExcludedClasses(excludedClasses);
+            memberAccess.useExcludedPackageNamePatterns(excludedPackageNamePatterns);
+            memberAccess.useExcludedPackageNames(excludedPackageNames);
+            memberAccess.useExcludedPackageExemptClasses(excludedPackageExemptClasses);
         }
 
         return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);

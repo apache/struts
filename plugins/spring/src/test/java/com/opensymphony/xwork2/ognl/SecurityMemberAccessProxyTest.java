@@ -46,7 +46,7 @@ public class SecurityMemberAccessProxyTest extends XWorkTestCase {
             "chaintoAOPedTestSubBeanAction", null, context);
 
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
-        sma.setDisallowProxyMemberAccess(true);
+        sma.disallowProxyMemberAccess(true);
 
         Member member = proxy.getAction().getClass().getMethod("isExposeProxy");
 

@@ -45,7 +45,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
         Set<Pattern> excluded = new HashSet<Pattern>();
         excluded.add(Pattern.compile("^(?!javax\\.servlet\\..+)(javax\\..+)"));
-        sma.setExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns(excluded);
 
         String propertyName = "value";
         Member member = TagSupport.class.getMethod("doStartTag");
@@ -63,7 +63,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
         Set<Pattern> excluded = new HashSet<>();
         excluded.add(Pattern.compile("^javax\\..+"));
-        sma.setExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns(excluded);
 
         String propertyName = "value";
         Member member = TagSupport.class.getMethod("doStartTag");

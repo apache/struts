@@ -89,11 +89,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     @Inject
     protected void setOgnlUtil(OgnlUtil ognlUtil) {
         this.ognlUtil = ognlUtil;
-        securityMemberAccess.setExcludedClasses(ognlUtil.getExcludedClasses());
-        securityMemberAccess.setExcludedPackageNamePatterns(ognlUtil.getExcludedPackageNamePatterns());
-        securityMemberAccess.setExcludedPackageNames(ognlUtil.getExcludedPackageNames());
-        securityMemberAccess.setExcludedPackageExemptClasses(ognlUtil.getExcludedPackageExemptClasses());
-        securityMemberAccess.setDisallowProxyMemberAccess(ognlUtil.isDisallowProxyMemberAccess());
+        securityMemberAccess.useExcludedClasses(ognlUtil.getExcludedClasses());
+        securityMemberAccess.useExcludedPackageNamePatterns(ognlUtil.getExcludedPackageNamePatterns());
+        securityMemberAccess.useExcludedPackageNames(ognlUtil.getExcludedPackageNames());
+        securityMemberAccess.useExcludedPackageExemptClasses(ognlUtil.getExcludedPackageExemptClasses());
+        securityMemberAccess.disallowProxyMemberAccess(ognlUtil.isDisallowProxyMemberAccess());
     }
 
     protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, boolean allowStaticFieldAccess) {
@@ -482,12 +482,22 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         ((OgnlContext) context).getValues().clear();
     }
 
+    @Deprecated
     public void setAcceptProperties(Set<Pattern> acceptedProperties) {
-        securityMemberAccess.setAcceptProperties(acceptedProperties);
+        securityMemberAccess.useAcceptProperties(acceptedProperties);
     }
 
+    public void useAcceptProperties(Set<Pattern> acceptedProperties) {
+        securityMemberAccess.useAcceptProperties(acceptedProperties);
+    }
+
+    @Deprecated
     public void setExcludeProperties(Set<Pattern> excludeProperties) {
-        securityMemberAccess.setExcludeProperties(excludeProperties);
+        securityMemberAccess.useExcludeProperties(excludeProperties);
+    }
+
+    public void useExcludeProperties(Set<Pattern> excludeProperties) {
+        securityMemberAccess.useExcludeProperties(excludeProperties);
     }
 
     @Inject

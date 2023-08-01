@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<taglib
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+  xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  version="2.1">
+   <description>
+   <![CDATA[
+   <p>This tag library provides Tiles tags.</p>
+   ]]>
+   </description>
+   <tlib-version>1.2</tlib-version>
+   <short-name>tilesx</short-name>
+   <uri>http://tiles.apache.org/tags-tiles-extras</uri>
+   <tag>
+      <description>
+      <![CDATA[
+      <p>Use attribute value inside page.</p>
+      <p>Declare a Java variable, and an attribute in the specified scope, using its attribute
+      value.</p>
+      <p>Java variable and attribute will have the name specified by 'id', or the original name
+      if not specified.</p>
+      ]]>
+      </description>
+      <name>useAttribute</name>
+      <tag-class>org.apache.tiles.web.jsp.taglib.UseAttributeTag</tag-class>
+      <tei-class>org.apache.tiles.web.jsp.taglib.UseAttributeTag$Tei</tei-class>
+      <body-content>empty</body-content>
+      <attribute>
+         <description>
+         <![CDATA[
+         <p>Declared attribute and variable name.</p>
+         ]]>
+         </description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <description>
+         <![CDATA[
+         <p>Class of the declared variable.</p>
+         ]]>
+         </description>
+         <name>classname</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <description>
+         <![CDATA[
+         <p>Scope of the declared attribute. Default to 'page'.</p>
+         ]]>
+         </description>
+         <name>scope</name>
+         <required>false</required>
+         <rtexprvalue>false</rtexprvalue>
+      </attribute>
+      <attribute>
+         <description>
+         <![CDATA[
+         <p>Attribute name.</p>
+         ]]>
+         </description>
+         <name>name</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <description>
+         <![CDATA[
+         <p>
+         If this attribute is set to true, and the attribute specified by the name does not exist,
+         simply return without error. The default value is false, which will cause a runtime
+         exception to be thrown.
+         </p>
+         ]]>
+         </description>
+         <name>ignore</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         <type>boolean</type>
+      </attribute>
+   </tag>
+</taglib>
+

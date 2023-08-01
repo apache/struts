@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<!-- Definitions for Tiles documentation   -->
+
+<tiles-definitions>
+  <definition name="doc.cascaded.test" template="/layout/classicLayout.jsp">
+    <put-attribute name="title" value="Test title" cascade="false" />
+    <put-attribute name="title2" value="Test title two" cascade="true" />
+    <put-list-attribute name="items1" cascade="false">
+        <add-attribute value="value1" type="string" />
+    </put-list-attribute>
+    <put-list-attribute name="items2" cascade="true">
+        <add-attribute value="value2" type="string" />
+    </put-list-attribute>
+  </definition>
+
+  <definition name="test.nesting.definitions" template="/layout.jsp">
+      <put-attribute name="body">
+          <definition template="/layout.jsp">
+              <put-attribute name="title"  value="This is a nested definition."/>
+          </definition>
+      </put-attribute>
+  </definition>
+
+  <definition name="test.nesting.list.definitions" template="/layout.jsp">
+      <put-list-attribute name="list">
+          <add-attribute>
+              <definition template="/layout.jsp">
+                  <put-attribute name="title"  value="This is a nested definition."/>
+              </definition>
+          </add-attribute>
+      </put-list-attribute>
+  </definition>
+
+  <definition name="test.inherit.list.base" template="/layout.jsp">
+      <put-list-attribute name="list">
+          <add-attribute value="first" />
+      </put-list-attribute>
+  </definition>
+
+  <definition name="test.inherit.list" extends="test.inherit.list.base">
+      <put-list-attribute name="list" inherit="true">
+          <add-attribute value="second" />
+      </put-list-attribute>
+  </definition>
+
+  <definition name="test.noinherit.list" extends="test.inherit.list.base">
+      <put-list-attribute name="list">
+          <add-attribute value="second" />
+      </put-list-attribute>
+  </definition>
+
+  <definition name="test.new.attributes" templateExpression="${my.expression}"
+          templateType="mytype" >
+      <put-attribute name="body" expression="${my.attribute.expression}" />
+  </definition>
+
+  <definition name="test.inherit.othertype.base" template="/layout.ftl" templateType="freemarker">
+      <put-attribute name="body" value="/jsp/body.jsp" />
+  </definition>
+
+  <definition name="test.inherit.othertype" extends="test.inherit.othertype.base">
+  </definition>
+</tiles-definitions>

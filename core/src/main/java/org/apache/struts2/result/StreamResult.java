@@ -47,7 +47,7 @@ import java.io.OutputStream;
  * <li><b>bufferSize</b> - the size of the buffer to copy from input to output
  * (default = <code>1024</code>).</li>
  * <li><b>allowCaching</b> if set to 'false' it will set the headers 'Pragma' and 'Cache-Control'
- * to 'no-cahce', and prevent client from caching the content. (default = <code>true</code>)
+ * to 'no-cache', and prevent client from caching the content. (default = <code>true</code>)
  * <li><b>contentCharSet</b> if set to a string, ';charset=value' will be added to the
  * content-type header, where value is the string set. If set to an expression, the result
  * of evaluating the expression will be used. If not set, then no charset will be set on

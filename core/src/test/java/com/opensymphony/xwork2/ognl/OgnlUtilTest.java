@@ -64,6 +64,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertThrows;
+
 public class OgnlUtilTest extends XWorkTestCase {
 
     // Fields for static field access test
@@ -1712,6 +1714,11 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertSame(that, root);
     }
 
+    public void testSetExcludedPackageNames() {
+        ConfigurationException e = assertThrows(ConfigurationException.class, () -> ognlUtil.setExcludedPackageNames("java.lang java.awt"));
+        assertTrue(e.getMessage().contains("erroneous whitespace characters"));
+    }
+
     public void testGetExcludedPackageNames() {
         // Getter should return an immutable collection
         OgnlUtil util = new OgnlUtil();
@@ -1728,7 +1735,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetExcludedPackageNamesAlternateConstructorPopulated() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<String, Object>(), new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
+        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>());
         util.setExcludedPackageNames("java.lang,java.awt");
         assertEquals(util.getExcludedPackageNames().size(), 2);
         try {

@@ -96,8 +96,8 @@ public class OgnlUtil {
     @Deprecated
     public OgnlUtil() {
         // Instantiate default Expression and BeanInfo caches (factories must be non-null).
-        this(new DefaultOgnlExpressionCacheFactory<String, Object>(),
-             new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
+        this(new DefaultOgnlExpressionCacheFactory<>(),
+                new DefaultOgnlBeanInfoCacheFactory<>());
     }
 
     /**
@@ -261,7 +261,11 @@ public class OgnlUtil {
     }
 
     private Set<String> parseExcludedPackageNames(String commaDelimitedPackageNames) {
-        return TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
+        Set<String> parsedSet = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
+        if (parsedSet.stream().anyMatch(s -> s.matches("(.*?)\\s(.*?)"))) {
+            throw new ConfigurationException("Excluded package names could not be parsed due to erroneous whitespace characters: " + commaDelimitedPackageNames);
+        }
+        return parsedSet;
     }
 
     public Set<Class<?>> getExcludedClasses() {

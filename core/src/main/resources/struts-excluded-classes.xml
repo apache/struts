@@ -37,8 +37,7 @@
                 java.lang.ProcessBuilder,
                 java.lang.Thread,
                 sun.misc.Unsafe,
-                com.opensymphony.xwork2.ActionContext,
-                com.opensymphony.xwork2.ognl.SecurityMemberAccess"/>
+                com.opensymphony.xwork2.ActionContext"/>
 
     <constant name="struts.devMode.excludedClasses"
               value="

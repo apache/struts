@@ -47,12 +47,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
+
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static org.apache.struts2.views.util.ContextUtil.STRUTS;
 
 /**
  * Manages the environment for Velocity result types
@@ -60,8 +64,6 @@ import java.util.StringTokenizer;
 public class VelocityManager {
 
     private static final Logger LOG = LogManager.getLogger(VelocityManager.class);
-
-    public static final String STRUTS = "struts";
 
     private ObjectFactory objectFactory;
 
@@ -93,11 +95,8 @@ public class VelocityManager {
 
     @Inject
     public void setContainer(Container container) {
-        List<TagLibraryDirectiveProvider> list = new ArrayList<>();
-        Set<String> prefixes = container.getInstanceNames(TagLibraryDirectiveProvider.class);
-        for (String prefix : prefixes) {
-            list.add(container.getInstance(TagLibraryDirectiveProvider.class, prefix));
-        }
+        List<TagLibraryDirectiveProvider> list = container.getInstanceNames(TagLibraryDirectiveProvider.class).stream()
+                .map(prefix -> container.getInstance(TagLibraryDirectiveProvider.class, prefix)).collect(toList());
         this.tagLibraries = Collections.unmodifiableList(list);
     }
 
@@ -130,33 +129,38 @@ public class VelocityManager {
      * @return a new StrutsVelocityContext
      */
     public Context createContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
-        List<VelocityContext> chainedContexts = prepareChainedContexts(req, res, stack.getContext());
-        StrutsVelocityContext context = new StrutsVelocityContext(chainedContexts, stack);
-        Map<String, Object> standardMap = ContextUtil.getStandardContext(stack, req, res);
-        for (Map.Entry<String, Object> entry : standardMap.entrySet()) {
-            context.put(entry.getKey(), entry.getValue());
+        Context context = buildToolContext();
+        if (context == null) {
+            context = buildContext(stack, req, res);
         }
-        context.put(STRUTS, new VelocityStrutsUtil(velocityEngine, context, stack, req, res));
+        req.setAttribute(KEY_VELOCITY_STRUTS_CONTEXT, context);
+        return context;
+    }
 
-        ServletContext ctx = null;
+    protected Context buildContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        List<VelocityContext> chainedContexts = prepareChainedContexts(req, res, stack.getContext());
+        Context context = new StrutsVelocityContext(chainedContexts, stack);
+        ContextUtil.getStandardContext(stack, req, res).forEach(context::put);
+        context.put(STRUTS, new VelocityStrutsUtil(velocityEngine, context, stack, req, res));
+        return context;
+    }
+
+    protected Context buildToolContext() {
+        if (toolboxManager == null) {
+            return null;
+        }
+        ServletContext ctx;
         try {
             ctx = ServletActionContext.getServletContext();
-        } catch (NullPointerException npe) {
-            // in case this was used outside the lifecycle of struts servlet
-            LOG.debug("internal toolbox context ignored");
+        } catch (NullPointerException e) {
+            return null;
         }
-
-        Context result;
-        if (toolboxManager != null && ctx != null) {
-            ToolContext chained = new ToolContext(velocityEngine);
-            chained.addToolbox(toolboxManager.getToolboxFactory().createToolbox(ToolboxFactory.DEFAULT_SCOPE));
-            result = chained;
-        } else {
-            result = context;
+        if (ctx == null) {
+            return null;
         }
-
-        req.setAttribute(KEY_VELOCITY_STRUTS_CONTEXT, result);
-        return result;
+        ToolContext toolContext = new ToolContext(velocityEngine);
+        toolContext.addToolbox(toolboxManager.getToolboxFactory().createToolbox(ToolboxFactory.DEFAULT_SCOPE));
+        return toolContext;
     }
 
     /**
@@ -171,14 +175,15 @@ public class VelocityManager {
      */
     protected List<VelocityContext> prepareChainedContexts(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Map<String, Object> extraContext) {
         List<VelocityContext> contextList = new ArrayList<>();
-        if (this.chainedContextNames != null) {
-            for (String className : chainedContextNames) {
-                try {
-                    VelocityContext velocityContext = (VelocityContext) objectFactory.buildBean(className, extraContext);
-                    contextList.add(velocityContext);
-                } catch (Exception e) {
-                    LOG.warn("Warning. {} caught while attempting to instantiate a chained VelocityContext, {} -- skipping", e.getClass().getName(), className);
-                }
+        if (chainedContextNames == null) {
+            return contextList;
+        }
+        for (String className : chainedContextNames) {
+            try {
+                VelocityContext velocityContext = (VelocityContext) objectFactory.buildBean(className, extraContext);
+                contextList.add(velocityContext);
+            } catch (Exception e) {
+                LOG.warn(format("Unable to instantiate chained VelocityContext %s, skipping", className), e);
             }
         }
         return contextList;
@@ -220,7 +225,6 @@ public class VelocityManager {
         // now apply our systemic defaults, then allow user to override
         applyDefaultConfiguration(context, properties);
 
-
         String defaultUserDirective = properties.getProperty("userdirective");
 
         /*
@@ -238,7 +242,6 @@ public class VelocityManager {
         } else {
             configfile = "velocity.properties";
         }
-
         configfile = configfile.trim();
 
         InputStream in = null;
@@ -294,23 +297,20 @@ public class VelocityManager {
         }
 
         // overide with programmatically set properties
-        if (this.velocityProperties != null) {
-            for (Object o : this.velocityProperties.keySet()) {
+        if (velocityProperties != null) {
+            for (Object o : velocityProperties.keySet()) {
                 String key = (String) o;
                 properties.setProperty(key, this.velocityProperties.getProperty(key));
             }
         }
 
         String userdirective = properties.getProperty("userdirective");
-
-        if ((userdirective == null) || userdirective.trim().equals("")) {
+        if (userdirective == null || userdirective.trim().isEmpty()) {
             userdirective = defaultUserDirective;
         } else {
             userdirective = userdirective.trim() + "," + defaultUserDirective;
         }
-
         properties.setProperty("userdirective", userdirective);
-
 
         // for debugging purposes, allows users to dump out the properties that have been configured
         if (LOG.isDebugEnabled()) {
@@ -350,19 +350,7 @@ public class VelocityManager {
      */
     @Inject(StrutsConstants.STRUTS_VELOCITY_CONTEXTS)
     public void setChainedContexts(String contexts) {
-        // we expect contexts to be a comma separated list of classnames
-        StringTokenizer st = new StringTokenizer(contexts, ",");
-        List<String> contextList = new ArrayList<>();
-
-        while (st.hasMoreTokens()) {
-            String classname = st.nextToken();
-            contextList.add(classname);
-        }
-        if (contextList.size() > 0) {
-            String[] chainedContexts = new String[contextList.size()];
-            contextList.toArray(chainedContexts);
-            this.chainedContextNames = chainedContexts;
-        }
+        this.chainedContextNames = contexts.split(",");
     }
 
     /**
@@ -370,13 +358,13 @@ public class VelocityManager {
      * toolbox (if any).
      */
     protected void initToolbox(ServletContext servletContext) {
-        if (StringUtils.isNotBlank(toolBoxLocation)) {
-            LOG.debug("Configuring Velocity ToolManager with {}", toolBoxLocation);
-            toolboxManager = new ToolManager();
-            toolboxManager.configure(toolBoxLocation);
-        } else {
+        if (StringUtils.isBlank(toolBoxLocation)) {
             LOG.debug("Skipping ToolManager initialisation, [{}] was not defined", StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION);
+            return;
         }
+        LOG.debug("Configuring Velocity ToolManager with {}", toolBoxLocation);
+        toolboxManager = new ToolManager();
+        toolboxManager.configure(toolBoxLocation);
     }
 
     /**
@@ -409,22 +397,14 @@ public class VelocityManager {
      */
     protected VelocityEngine newVelocityEngine(ServletContext context) {
         if (context == null) {
-            String gripe = "Error attempting to create a new VelocityEngine from a null ServletContext!";
-            LOG.error(gripe);
-            throw new IllegalArgumentException(gripe);
+            throw new IllegalArgumentException("Error attempting to create a new VelocityEngine from a null ServletContext!");
         }
 
-        Properties p = loadConfiguration(context);
-
         VelocityEngine velocityEngine = new VelocityEngine();
-
-        //  Set the velocity attribute for the servlet context
-        //  if this is not set the webapp loader WILL NOT WORK
-        velocityEngine.setApplicationAttribute(ServletContext.class.getName(),
-            context);
-
+        // Set the velocity attribute for the servlet context, if this is not set the webapp loader WILL NOT WORK
+        velocityEngine.setApplicationAttribute(ServletContext.class.getName(), context);
         try {
-            velocityEngine.init(p);
+            velocityEngine.init(loadConfiguration(context));
         } catch (Exception e) {
             throw new StrutsException("Unable to instantiate VelocityEngine!", e);
         }

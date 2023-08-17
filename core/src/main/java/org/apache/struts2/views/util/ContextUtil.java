@@ -18,10 +18,8 @@
  */
 package org.apache.struts2.views.util;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.StrutsUtil;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 

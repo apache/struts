@@ -160,12 +160,15 @@ public class PortletApplicationMap extends AbstractMap<String, Object> implement
      * @return the portlet context attribute or init parameter or <tt>null</tt>
      *         if the entry is not found.
      */
-    public Object get(String key) {
+    public Object get(Object key) {
+        if (key == null) {
+            return null;
+        }
         // Try context attributes first, then init params
         // This gives the proper shadowing effects
-        Object value = context.getAttribute(key);
+        Object value = context.getAttribute(key.toString());
 
-        return (value == null) ? context.getInitParameter(key) : value;
+        return (value == null) ? context.getInitParameter(key.toString()) : value;
     }
 
     /**

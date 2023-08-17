@@ -44,12 +44,22 @@ pipeline {
         }
         stage('Test') {
           steps {
-            sh './mvnw -B test'
+            sh './mvnw -B verify -Pcoverage -DskipAssembly'
           }
           post {
             always {
               junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
               junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
+            }
+          }
+        }
+        stage('Code Quality') {
+          when {
+            branch 'master'
+          }
+          steps {
+            withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
+              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
             }
           }
         }
@@ -79,22 +89,12 @@ pipeline {
         }
         stage('Test') {
           steps {
-            sh './mvnw -B verify -Pcoverage -DskipAssembly'
+            sh './mvnw -B test'
           }
           post {
             always {
               junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
               junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
-            }
-          }
-        }
-        stage('Code Quality') {
-          when {
-            branch 'master'
-          }
-          steps {
-            withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
             }
           }
         }

@@ -94,6 +94,7 @@ public class RequestMap extends AbstractMap<String, Object> implements Serializa
      * @param key the name of the request attribute.
      * @return the request attribute or <tt>null</tt> if it doesn't exist.
      */
+    @Override
     public Object get(final Object key) {
         if (key == null) {
             return null;

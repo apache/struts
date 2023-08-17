@@ -1715,6 +1715,8 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testSetExcludedPackageNames() {
+        assertThrows(ConfigurationException.class, () -> ognlUtil.setExcludedPackageNames("java.lang\njava.awt"));
+        assertThrows(ConfigurationException.class, () -> ognlUtil.setExcludedPackageNames("java.lang\tjava.awt"));
         ConfigurationException e = assertThrows(ConfigurationException.class, () -> ognlUtil.setExcludedPackageNames("java.lang java.awt"));
         assertTrue(e.getMessage().contains("erroneous whitespace characters"));
     }

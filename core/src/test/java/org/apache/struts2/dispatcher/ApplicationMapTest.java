@@ -19,24 +19,24 @@
 package org.apache.struts2.dispatcher;
 
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletContext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class RequestMapTest {
+public class ApplicationMapTest {
 
     @Test
-    public void shouldRetrieveRequestAttribute() {
+    public void shouldRetrieveAttribute() {
         // given
-        HttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("attr", "value");
+        ServletContext context = new MockServletContext();
+        context.setAttribute("attr", "value");
 
         // when
-        RequestMap rm = new RequestMap(request);
-        Object value = rm.get("attr");
+        ApplicationMap am = new ApplicationMap(context);
+        Object value = am.get("attr");
 
         // then
         assertEquals("value", value);
@@ -45,49 +45,49 @@ public class RequestMapTest {
     @Test
     public void shouldReturnNullIfKeyIsNull() {
         // given
-        HttpServletRequest request = new MockHttpServletRequest();
+        ServletContext context = new MockServletContext();
 
         // when
-        RequestMap rm = new RequestMap(request);
-        Object value = rm.get(null);
+        ApplicationMap am = new ApplicationMap(context);
+        Object value = am.get(null);
 
         // then
         assertNull(value);
     }
 
     @Test
-    public void shouldRemoveAttributeFromRequest() {
+    public void shouldRemoveAttributeFromServletContext() {
         // given
-        HttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("attr", "value");
+        ServletContext context = new MockServletContext();
+        context.setAttribute("attr", "value");
 
         // when
-        RequestMap rm = new RequestMap(request);
-        Object value = rm.remove("attr");
+        ApplicationMap am = new ApplicationMap(context);
+        Object value = am.remove("attr");
 
         // then
         assertEquals("value", value);
-        assertNull(request.getAttribute("attr"));
+        assertNull(context.getAttribute("attr"));
     }
 
     @Test
     public void shouldClearAttributes() {
         // given
-        HttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("attr", "value");
+        ServletContext context = new MockServletContext();
+        context.setAttribute("attr", "value");
 
         // when
-        RequestMap rm = new RequestMap(request);
-        Object value = rm.get("attr");
+        ApplicationMap am = new ApplicationMap(context);
+        Object value = am.get("attr");
 
         // then
         assertEquals("value", value);
 
         // when
-        rm.clear();
+        am.clear();
 
         // then
-        assertNull(request.getAttribute("attr"));
+        assertNull(context.getAttribute("attr"));
     }
 
 }

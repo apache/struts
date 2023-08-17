@@ -49,7 +49,8 @@ jobs:
           distribution: adopt
           java-version: ${{ matrix.java }}
       - name: Build with Maven on Java ${{ matrix.java }}
-        run: mvn -B -V -DskipAssembly test --no-transfer-progress
+        if: matrix.java != '17'
+        run: mvn -B -V -DskipAssembly verify --no-transfer-progress
       - name: Code coverage on Java ${{ matrix.java }}
         if: matrix.java == '17'
         env:

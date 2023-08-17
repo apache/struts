@@ -89,7 +89,7 @@ pipeline {
         }
         stage('Test') {
           steps {
-            sh './mvnw -B test'
+            sh './mvnw -B verify'
           }
           post {
             always {
@@ -124,7 +124,7 @@ pipeline {
         }
         stage('Test') {
           steps {
-            sh './mvnw -B test'
+            sh './mvnw -B verify'
             // step([$class: 'JiraIssueUpdater', issueSelector: [$class: 'DefaultIssueSelector'], scm: scm])
           }
           post {

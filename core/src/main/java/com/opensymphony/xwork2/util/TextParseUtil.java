@@ -20,9 +20,12 @@ package com.opensymphony.xwork2.util;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Container;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -241,13 +244,13 @@ public class TextParseUtil {
     /**
      * Tests if given string is not null and not empty when excluding of empty
      * elements is requested.
-     * 
+     *
      * @param str String to check.
      * @param excludeEmptyElements Whether empty elements shall be excluded.
      * @return True if given string can be included in collection.
      */
     private static boolean shallBeIncluded(String str, boolean excludeEmptyElements) {
-        return !excludeEmptyElements || ((str != null) && (str.length() > 0));
+        return !excludeEmptyElements || str != null && !str.isEmpty();
     }
 
     /**
@@ -256,14 +259,7 @@ public class TextParseUtil {
      * @return A set from comma delimited Strings.
      */
     public static Set<String> commaDelimitedStringToSet(String s) {
-        Set<String> set = new HashSet<>();
-        String[] split = s.split(",");
-        for (String aSplit : split) {
-            String trimmed = aSplit.trim();
-            if (trimmed.length() > 0)
-                set.add(trimmed);
-        }
-        return set;
+        return Arrays.stream(s.split(",")).map(String::trim).filter(s1 -> !s1.isEmpty()).collect(Collectors.toSet());
     }
 
 
@@ -287,7 +283,7 @@ public class TextParseUtil {
      *
      * @author tm_jee
      */
-    public static interface ParsedValueEvaluator {
+    public interface ParsedValueEvaluator {
 
     	/**
     	 * Evaluated the value parsed by Ognl value stack.

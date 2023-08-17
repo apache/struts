@@ -877,10 +877,10 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(123, foo.getALong());
     }
 
-    public void testBeanMapExpressions() throws OgnlException {
+    public void testBeanMapExpressions() throws OgnlException, NoSuchMethodException {
         Foo foo = new Foo();
-        ognlUtil.setExcludedClasses(
-                "com.opensymphony.xwork2.ognl.SecurityMemberAccess"
+        ognlUtil.setExcludedPackageNames(
+                "com.opensymphony.xwork2.ognl."
         );
 
         Map<String, Object> context = ognlUtil.createDefaultContext(foo);
@@ -901,7 +901,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(foo.getTitle(), expression);
 
         SecurityMemberAccess sma = (SecurityMemberAccess) ((OgnlContext) context).getMemberAccess();
-        assertTrue(sma.isClassExcluded(SecurityMemberAccess.class));
+        assertFalse(sma.isAccessible(context, sma, sma.getClass().getDeclaredMethod("setExcludedClasses", Set.class), "excludedClasses"));
     }
 
     public void testNullProperties() {

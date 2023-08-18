@@ -27,43 +27,28 @@
         <version>6.3.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>struts2-junit-plugin</artifactId>
+    <artifactId>struts2-portlet-junit-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>Struts 2 JUnit Plugin</name>
+    <name>DEPRECATED: Struts 2 Portlet JUnit Plugin - since 6.4.0</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-spring-plugin</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <scope>provided</scope>
+            <artifactId>struts2-junit-plugin</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
 
-        <!-- Convention Plugin tests -->
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-convention-plugin</artifactId>
-            <scope>test</scope>
+            <artifactId>struts2-portlet-plugin</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-portlet-mocks-plugin</artifactId>
         </dependency>
     </dependencies>
 

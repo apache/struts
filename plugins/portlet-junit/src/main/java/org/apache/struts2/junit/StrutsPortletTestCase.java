@@ -35,19 +35,6 @@ import javax.portlet.PortletMode;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
- * Changes:  This is a copy of org.apache.struts2.StrutsPortletTestCase from the Struts 2 portlet-plugin, moved
- *           into the junit-plugin (same package org.apache.struts2).
- *           The import order above was changed to alphabetical.
- *
- * Note:     The assumption is that anyone utilizing StrutsPortletTestCase currently from the portlet-plugin will almost
- *           certainly be using the junit-plugin.  Under that assumption, the refactored-move of StrutsPortletTestCase
- *           should not cause issues for pre-existing usage of StrutsPortletTestCase.
- */
-
-/**
- * Base class used to test action in portlet environment
- */
 public abstract class StrutsPortletTestCase extends StrutsTestCase {
 
     private static final Logger LOG = LogManager.getLogger(StrutsPortletTestCase.class);
@@ -95,7 +82,7 @@ public abstract class StrutsPortletTestCase extends StrutsTestCase {
      * @return Map with session parameters
      */
     private Map<String, Object> createSession() {
-        return new HashMap<String, Object>(portletRequest.getPortletSession().getAttributeMap());
+        return new HashMap<>(portletRequest.getPortletSession().getAttributeMap());
     }
 
 }

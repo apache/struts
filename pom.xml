@@ -1000,15 +1000,6 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>4.3.1</version>
-                <exclusions>
-                    <!-- The mockito-core artifact and easymock artifact use different versions of objenesis (2.6 vs 3.1).
-                         Excluding the older version here to pass enforcer. When next upgrading mockito-core,
-                         confirm whether this exclusion is still required. -->
-                    <exclusion>
-                        <groupId>org.objenesis</groupId>
-                        <artifactId>objenesis</artifactId>
-                    </exclusion>
-                </exclusions>
                 <scope>test</scope>
             </dependency>
 

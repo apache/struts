@@ -32,24 +32,15 @@
     <name>DEPRECATED: Struts 2 Portlet Plugin - since 6.0.0</name>
 
     <dependencies>
-        <!-- junit and related JARs are needed for 'compile'! -->
-
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-portlet-mocks-plugin</artifactId>
             <scope>test</scope>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-velocity-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <!-- spring-core is required for javadoc of jdk8 -->

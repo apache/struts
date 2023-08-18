@@ -18,93 +18,100 @@
  */
 package org.apache.struts2.views.velocity.result;
 
-import com.opensymphony.xwork2.XWorkTestCase;
-import junit.framework.TestCase;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.junit.XWorkJUnit4TestCase;
 import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
+public class VelocityResultTest extends XWorkJUnit4TestCase {
 
-/**
- *
- */
-public class VelocityResultTest extends XWorkTestCase {
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
+    @Mock
     ActionInvocation actionInvocation;
-    Mock mockActionProxy;
+    @Mock
+    ActionProxy actionProxy;
     ValueStack stack;
     String namespace;
     TestVelocityEngine velocity;
-    VelocityResult result;
+    VelocityResult velocityResult;
 
+    @Before
+    public void init() throws Exception {
+        namespace = "/html";
+        velocityResult = new VelocityResult();
+        stack = ActionContext.getContext().getValueStack();
+        velocity = new TestVelocityEngine();
+        when(actionProxy.getNamespace()).thenReturn(namespace);
+        when(actionInvocation.getProxy()).thenReturn(actionProxy);
+        when(actionInvocation.getStack()).thenReturn(stack);
+    }
 
+    @Test
     public void testCanResolveLocationUsingOgnl() throws Exception {
-        TestResult result = new TestResult();
+        TestResult testResult = new TestResult();
 
         String location = "/myaction.action";
         Bean bean = new Bean();
         bean.setLocation(location);
 
-        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(bean);
 
-        TestCase.assertEquals(location, stack.findValue("location"));
+        assertEquals(location, stack.findValue("location"));
 
-        result.setLocation("${location}");
-        result.execute(actionInvocation);
-        TestCase.assertEquals(location, result.finalLocation);
+        testResult.setLocation("${location}");
+        testResult.execute(actionInvocation);
+        assertEquals(location, testResult.finalLocation);
     }
 
+    @Test
     public void testCanResolveLocationUsingStaticExpression() throws Exception {
         TestResult result = new TestResult();
         String location = "/any.action";
         result.setLocation("${'" + location + "'}");
         result.execute(actionInvocation);
-        TestCase.assertEquals(location, result.finalLocation);
+        assertEquals(location, result.finalLocation);
     }
 
+    @Test
     public void testResourcesFoundUsingAbsolutePath() throws Exception {
         String location = "/WEB-INF/views/registration.vm";
 
-        Template template = result.getTemplate(stack, velocity, actionInvocation, location, "UTF-8");
-        TestCase.assertNotNull(template);
-        TestCase.assertEquals("expect absolute locations to be handled as is", location, velocity.templateName);
+        Template template = velocityResult.getTemplate(stack, velocity, actionInvocation, location, "UTF-8");
+        assertNotNull(template);
+        assertEquals("expect absolute locations to be handled as is", location, velocity.templateName);
     }
 
+    @Test
     public void testResourcesFoundUsingNames() throws Exception {
         String location = "Registration.vm";
         String expectedTemplateName = namespace + "/" + location;
 
-        Template template = result.getTemplate(stack, velocity, actionInvocation, location, "UTF-8");
-        TestCase.assertNotNull(template);
-        TestCase.assertEquals("expect the prefix to be appended to the path when the location is not absolute", expectedTemplateName, velocity.templateName);
+        Template template = velocityResult.getTemplate(stack, velocity, actionInvocation, location, "UTF-8");
+        assertNotNull(template);
+        assertEquals("expect the prefix to be appended to the path when the location is not absolute",
+                expectedTemplateName,
+                velocity.templateName);
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        namespace = "/html";
-        result = new VelocityResult();
-        stack = ActionContext.getContext().getValueStack();
-        velocity = new TestVelocityEngine();
-        mockActionProxy = new Mock(ActionProxy.class);
-        mockActionProxy.expectAndReturn("getNamespace", "/html");
-
-        Mock mockActionInvocation = new Mock(ActionInvocation.class);
-        mockActionInvocation.expectAndReturn("getProxy", mockActionProxy.proxy());
-        mockActionInvocation.expectAndReturn("getStack", stack);
-        actionInvocation = (ActionInvocation) mockActionInvocation.proxy();
-    }
-
-
-    class Bean {
+    static class Bean {
         private String location;
 
         public void setLocation(String location) {
@@ -116,7 +123,7 @@ public class VelocityResultTest extends XWorkTestCase {
         }
     }
 
-    class TestResult extends StrutsResultSupport {
+    static class TestResult extends StrutsResultSupport {
 
         private static final long serialVersionUID = -1512206785088317315L;
 
@@ -127,18 +134,17 @@ public class VelocityResultTest extends XWorkTestCase {
         }
     }
 
-    class TestVelocityEngine extends VelocityEngine {
+    static class TestVelocityEngine extends VelocityEngine {
         public String templateName;
 
         public Template getTemplate(String templateName) throws ResourceNotFoundException, ParseErrorException {
             this.templateName = templateName;
-
             return new Template();
         }
 
-        public Template getTemplate(String templateName, String charSet) throws ResourceNotFoundException, ParseErrorException {
+        public Template getTemplate(String templateName,
+                                    String charSet) throws ResourceNotFoundException, ParseErrorException {
             this.templateName = templateName;
-
             return new Template();
         }
     }

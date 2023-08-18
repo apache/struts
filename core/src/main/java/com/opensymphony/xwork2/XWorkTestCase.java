@@ -22,14 +22,17 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.inject.*;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Context;
+import com.opensymphony.xwork2.inject.Factory;
+import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.ClassUtils;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 

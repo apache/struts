@@ -60,6 +60,13 @@
             <artifactId>struts2-convention-plugin</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.23.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <properties>

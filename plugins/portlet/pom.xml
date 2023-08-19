@@ -32,24 +32,15 @@
     <name>DEPRECATED: Struts 2 Portlet Plugin - since 6.0.0</name>
 
     <dependencies>
-        <!-- junit and related JARs are needed for 'compile'! -->
-
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-portlet-mocks-plugin</artifactId>
             <scope>test</scope>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-velocity-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <!-- spring-core is required for javadoc of jdk8 -->
@@ -60,22 +51,10 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
         <!-- Portlet -->
         <dependency>
             <groupId>javax.portlet</groupId>
             <artifactId>portlet-api</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -116,29 +95,15 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j2.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- Mocks for unit testing (by Spring) -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <optional>true</optional>
         </dependency>
-
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <properties>
-        <spring.platformVersion>4.3.30.RELEASE</spring.platformVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

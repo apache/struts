@@ -33,10 +33,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-velocity-plugin</artifactId>
         </dependency>
@@ -63,11 +59,6 @@
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>request</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

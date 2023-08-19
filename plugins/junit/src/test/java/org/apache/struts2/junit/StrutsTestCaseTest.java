@@ -19,7 +19,6 @@
 package org.apache.struts2.junit;
 
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
@@ -60,10 +59,5 @@ public class StrutsTestCaseTest extends StrutsSpringTestCase {
         executeAction("/test/testAction.action");
         String name = (String) findValueAfterExecute("name");
         assertEquals("FD", name);
-    }
-
-    @Override
-    protected void applyAdditionalParams(ActionContext context) {
-        context.put("my-param", new Object());
     }
 }

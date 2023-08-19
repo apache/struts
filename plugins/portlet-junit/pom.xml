@@ -29,7 +29,7 @@
 
     <artifactId>struts2-portlet-junit-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>DEPRECATED: Struts 2 Portlet JUnit Plugin - since 6.4.0</name>
+    <name>DEPRECATED: Struts 2 Portlet JUnit Plugin - since 6.3.0</name>
 
     <dependencies>
         <dependency>

@@ -20,9 +20,12 @@ package org.apache.struts2.views.velocity;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.junit.StrutsJUnit4TestCase;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.velocity.context.Context;
+import org.apache.velocity.tools.ToolContext;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,18 +33,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Properties;
 
+import static org.apache.struts2.views.velocity.VelocityManager.KEY_VELOCITY_STRUTS_CONTEXT;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 public class VelocityManagerTest extends StrutsJUnit4TestCase {
 
     VelocityManager velocityManager = new VelocityManager();
 
     @Before
-    public void inject() throws Exception {
+    public void inject() {
         container.inject(velocityManager);
+        ServletActionContext.setServletContext(servletContext);
+    }
+
+    @After
+    public void reset() {
+        ServletActionContext.setServletContext(null);
     }
 
     @Test
@@ -60,24 +70,47 @@ public class VelocityManagerTest extends StrutsJUnit4TestCase {
     }
 
     @Test
+    public void testInitWithToolbox() {
+        velocityManager.setToolBoxLocation("tools.xml");
+
+        velocityManager.init(servletContext);
+
+        assertNotNull(velocityManager.getVelocityEngine());
+        assertNotNull(velocityManager.getToolboxManager());
+    }
+
+    @Test
+    public void testInitFailsWithInvalidToolBoxLocation() {
+        velocityManager.setToolBoxLocation("invalid.xml");
+
+        Exception e = assertThrows(Exception.class, () -> velocityManager.init(servletContext));
+        assertThat(e).hasMessageContaining("Could not find any configuration at invalid.xml");
+    }
+
+    @Test
     public void testCreateContext() {
         velocityManager.init(servletContext);
 
         Context context = velocityManager.createContext(ActionContext.getContext().getValueStack(), request, response);
 
         assertNotNull(context);
-        assertTrue(context.get("struts") instanceof VelocityStrutsUtil);
-        assertTrue(context.get("ognl") instanceof OgnlTool);
-        assertTrue(context.get("stack") instanceof ValueStack);
-        assertTrue(context.get("request") instanceof HttpServletRequest);
-        assertTrue(context.get("response") instanceof HttpServletResponse);
+        assertThat(context.get("struts")).isInstanceOf(VelocityStrutsUtil.class);
+        assertThat(context.get("ognl")).isInstanceOf(OgnlTool.class);
+        assertThat(context.get("stack")).isInstanceOf(ValueStack.class);
+        assertThat(context.get("request")).isInstanceOf(HttpServletRequest.class);
+        assertThat(context.get("response")).isInstanceOf(HttpServletResponse.class);
+        assertEquals(context, request.getAttribute(KEY_VELOCITY_STRUTS_CONTEXT));
     }
 
     @Test
-    public void testInitFailsWithInvalidToolBoxLocation() {
-        velocityManager.setToolBoxLocation("nonexistent");
+    public void testCreateToolboxContext() {
+        velocityManager.setToolBoxLocation("tools.xml");
+        velocityManager.init(servletContext);
 
-        Exception e = assertThrows(Exception.class, () -> velocityManager.init(servletContext));
-        assertTrue(e.getMessage().contains("Could not find any configuration at nonexistent"));
+        Context context = velocityManager.createContext(ActionContext.getContext().getValueStack(), request, response);
+
+        assertNotNull(context);
+        assertThat(context).isInstanceOf(ToolContext.class);
+        assertEquals(context, request.getAttribute(KEY_VELOCITY_STRUTS_CONTEXT));
     }
 }

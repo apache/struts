@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.junit.convention;
+package org.apache.struts2.convention;
 
-import actions.ViewAction;
+import actions.MessageAction;
 import org.apache.struts2.junit.StrutsJUnit4TestCase;
 import org.junit.Test;
 
@@ -28,17 +28,17 @@ import static org.junit.Assert.assertTrue;
 /**
  * Uses the convention plugin to execute actions
  */
-public class StrutsJUnit4ConventionTestCaseTest extends StrutsJUnit4TestCase<ViewAction> {
+public class ConventionJUnit4Test extends StrutsJUnit4TestCase<MessageAction> {
 
     @Test
     public void testConventionUrl() throws Exception {
         // Output is filled out only for FreeMarker and Velocity templates
         // If you wanna use JSP check response.getForwardedUrl()
-        String output = executeAction("/view.action");
+        String output = executeAction("/message.action");
 
         assertTrue(output.contains("This is the view Hello World"));
 
-        ViewAction action = this.getAction();
+        MessageAction action = this.getAction();
         assertEquals("Hello World", action.getMessage());
     }
 
@@ -48,6 +48,5 @@ public class StrutsJUnit4ConventionTestCaseTest extends StrutsJUnit4TestCase<Vie
         // struts-convention-configuration.xml overrides some settings from plugin to allow work in limited environment
         return "struts-plugin.xml,struts-convention-configuration.xml";
     }
-
 }
 

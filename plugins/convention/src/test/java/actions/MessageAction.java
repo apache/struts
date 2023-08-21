@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,21 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
+package actions;
 
-<!DOCTYPE struts PUBLIC
-        "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
-        "https://struts.apache.org/dtds/struts-6.0.dtd">
+import com.opensymphony.xwork2.ActionSupport;
 
-<struts>
+/**
+ * Example action, called by {@link org.apache.struts2.convention.ConventionJUnit4Test}.
+ * Result defined by message-success.ftl.
+ */
+public class MessageAction extends ActionSupport {
+    private String message;
 
-    <!-- result is defined in test/resources -->
-    <constant name="struts.convention.result.path" value="/"/>
+    public String getMessage() {
+        return message;
+    }
 
-    <!-- This is needed as there is struts2-spring-plugin on classpath -->
-    <constant name="struts.objectFactory" value="struts"/>
 
-    <package name="convention-default" extends="struts-default">
-    </package>
-
-</struts>
+    public String execute() {
+        message = "Hello World";
+        return SUCCESS;
+    }
+}

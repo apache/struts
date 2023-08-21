@@ -29,7 +29,7 @@ import org.springframework.mock.web.MockRequestDispatcher;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -147,12 +147,9 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
     }
 
 
-    public void testMakeSelectListMethod() {
+    public void testMakeSelectList() {
         String[] selectedList = new String[]{"Car", "Airplane", "Bus"};
-        List<String> list = new ArrayList<>();
-        list.add("Lorry");
-        list.add("Car");
-        list.add("Helicopter");
+        List<String> list = Arrays.asList("Lorry", "Car", "Helicopter");
 
         stack.getContext().put("mySelectedList", selectedList);
         stack.getContext().put("myList", list);
@@ -169,6 +166,32 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         assertEquals(listMade.get(2).getKey(), "Helicopter");
         assertEquals(listMade.get(2).getValue(), "Helicopter");
         assertFalse(listMade.get(2).getIsSelected());
+    }
+
+    public void testMakeSelectListCollection() {
+        List<String> selectedList = Arrays.asList("Car", "Airplane", "Bus");
+        List<String> list = Arrays.asList("Lorry", "Car", "Helicopter");
+
+        stack.getContext().put("mySelectedList", selectedList);
+        stack.getContext().put("myList", list);
+
+        List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
+
+        assertEquals(listMade.size(), 3);
+        assertEquals(listMade.get(0).getKey(), "Lorry");
+        assertEquals(listMade.get(0).getValue(), "Lorry");
+        assertFalse(listMade.get(0).getIsSelected());
+        assertEquals(listMade.get(1).getKey(), "Car");
+        assertEquals(listMade.get(1).getValue(), "Car");
+        assertTrue(listMade.get(1).getIsSelected());
+        assertEquals(listMade.get(2).getKey(), "Helicopter");
+        assertEquals(listMade.get(2).getValue(), "Helicopter");
+        assertFalse(listMade.get(2).getIsSelected());
+    }
+
+    public void testMakeSelectListNonExistent() {
+        List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#nonexistent", null, null);
+        assertThat(listMade).isEmpty();
     }
 
     public void testToInt() {

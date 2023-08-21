@@ -174,40 +174,42 @@ public class StrutsUtil {
             return selectList;
         }
 
-        Collection selectedItems = null;
-
-        Object i = stack.findValue(selectedList);
-
-        if (i != null) {
-            if (i.getClass().isArray()) {
-                selectedItems = Arrays.asList((Object[]) i);
-            } else if (i instanceof Collection) {
-                selectedItems = (Collection) i;
-            } else {
-                selectedItems = singletonList(i);
-            }
-        }
-
+        Collection selectedItems = getSelectedItems(selectedList);
         for (Object element : items) {
-            Object key;
-            if (listKey == null || listKey.isEmpty()) {
-                key = element;
-            } else {
-                key = findValue(listKey, element);
-            }
-
-            Object value;
-            if (listValue == null || listValue.isEmpty()) {
-                value = element;
-            } else {
-                value = findValue(listValue, element);
-            }
-            boolean isSelected = value != null && selectedItems != null && selectedItems.contains(value);
-
+            Object key = computeKey(listKey, element);
+            Object value = computeValue(listValue, element);
+            boolean isSelected = value != null && selectedItems.contains(value);
             selectList.add(new ListEntry(key, value, isSelected));
         }
 
         return selectList;
+    }
+
+    private Collection getSelectedItems(String selectedListName) {
+        Object i = stack.findValue(selectedListName);
+        if (i == null) {
+            return emptyList();
+        }
+        if (i.getClass().isArray()) {
+            return Arrays.asList((Object[]) i);
+        } else if (i instanceof Collection) {
+            return (Collection) i;
+        }
+        return singletonList(i);
+    }
+
+    private Object computeKey(String listKey, Object element) {
+        if (listKey == null || listKey.isEmpty()) {
+            return element;
+        }
+        return findValue(listKey, element);
+    }
+
+    private Object computeValue(String listValue, Object element) {
+        if (listValue == null || listValue.isEmpty()) {
+            return element;
+        }
+        return findValue(listValue, element);
     }
 
     public int toInt(long aLong) {

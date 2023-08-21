@@ -773,7 +773,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testPackageNameExclusionAsCommaDelimited() {
         // given
-        sma.useExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang."));
+        sma.useExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang"));
 
         // when
         boolean actual = sma.isPackageExcluded(String.class, String.class);

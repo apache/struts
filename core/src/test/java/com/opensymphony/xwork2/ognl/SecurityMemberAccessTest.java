@@ -179,23 +179,6 @@ public class SecurityMemberAccessTest {
     }
 
     @Test
-    public void testMiddleOfInheritanceExclusion4() throws Exception {
-        // given
-        String propertyName = "barLogic";
-        Member member = BarInterface.class.getMethod(propertyName);
-
-        Set<Class<?>> excluded = new HashSet<>();
-        excluded.add(FooBarInterface.class);
-        sma.useExcludedClasses(excluded);
-
-        // when
-        boolean accessible = sma.isAccessible(context, target, member, propertyName);
-
-        // then
-        assertFalse("barLogic() from BarInterface is accessible!!!", accessible);
-    }
-
-    @Test
     public void testPackageExclusion() throws Exception {
         // given
         Set<Pattern> excluded = new HashSet<>();

@@ -19,16 +19,16 @@
 package org.apache.struts2.views.jsp.ui;
 
 import com.opensymphony.xwork2.ActionContext;
-import ognl.OgnlException;
-
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
+import ognl.OgnlException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * FIXME: remove?
+ * @deprecated since 6.3.0. Use {@link org.apache.struts2.util.StrutsUtil} instead.
  */
+@Deprecated
 public class OgnlTool {
 
     private static final Logger LOG = LogManager.getLogger(OgnlTool.class);
@@ -43,6 +43,10 @@ public class OgnlTool {
         this.ognlUtil = ognlUtil;
     }
 
+    /**
+     * @deprecated since 6.3.0. Use {@link org.apache.struts2.util.StrutsUtil#findValue(String, Object)} instead.
+     */
+    @Deprecated
     public Object findValue(String expr, Object context) {
         try {
             return ognlUtil.getValue(expr, ActionContext.getContext().getContextMap(), context);

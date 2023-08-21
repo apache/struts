@@ -52,6 +52,7 @@ public class StrutsUtil {
     protected HttpServletResponse response;
     protected Map<String, Class> classes = new Hashtable<>();
     protected OgnlTool ognl;
+    protected OgnlUtil ognl;
     protected ValueStack stack;
 
     private UrlHelper urlHelper;
@@ -61,7 +62,7 @@ public class StrutsUtil {
         this.stack = stack;
         this.request = request;
         this.response = response;
-        this.ognl = stack.getActionContext().getContainer().getInstance(OgnlTool.class);
+        this.ognl = stack.getActionContext().getContainer().getInstance(OgnlUtil.class);
         this.urlHelper = stack.getActionContext().getContainer().getInstance(UrlHelper.class);
         this.objectFactory = stack.getActionContext().getContainer().getInstance(ObjectFactory.class);
     }
@@ -122,6 +123,17 @@ public class StrutsUtil {
 
     public Object findValue(String expression, String className) throws ClassNotFoundException {
         return stack.findValue(expression, Class.forName(className));
+    }
+
+    public Object findValue(String expr, Object context) {
+        try {
+            return ognl.getValue(expr, ActionContext.getContext().getContextMap(), context);
+        } catch (OgnlException e) {
+            if (e.getReason() instanceof SecurityException) {
+                LOG.error(format("Could not evaluate this expression due to security constraints: [{0}]", expr), e);
+            }
+            return null;
+        }
     }
 
     public String getText(String text) {
@@ -186,6 +198,7 @@ public class StrutsUtil {
                 } else {
                     key = ognl.findValue(listKey, element);
                 }
+                key = findValue(listKey, element);
 
                 Object value = null;
 
@@ -200,6 +213,7 @@ public class StrutsUtil {
                 if ((value != null) && (selectedItems != null) && selectedItems.contains(value)) {
                     isSelected = true;
                 }
+                value = findValue(listValue, element);
 
                 selectList.add(new ListEntry(key, value, isSelected));
             }

@@ -251,14 +251,14 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {
-        if (clazz == Object.class || (clazz == Class.class && !allowStaticFieldAccess)) {
+        if (clazz == Class.class && !allowStaticFieldAccess) {
             return true;
         }
-        return excludedClasses.stream().anyMatch(clazz::isAssignableFrom);
+        return excludedClasses.contains(clazz);
     }
 
     protected boolean isExcludedPackageExempt(Class<?> clazz) {
-        return excludedPackageExemptClasses.stream().anyMatch(clazz::equals);
+        return excludedPackageExemptClasses.contains(clazz);
     }
 
     protected boolean isAcceptableProperty(String name) {

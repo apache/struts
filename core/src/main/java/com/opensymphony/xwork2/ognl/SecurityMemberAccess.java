@@ -28,13 +28,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * Allows access decisions to be made on the basis of whether a member is static or not.
@@ -45,12 +47,12 @@ public class SecurityMemberAccess implements MemberAccess {
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
     private final boolean allowStaticFieldAccess;
-    private Set<Pattern> excludeProperties = Collections.emptySet();
-    private Set<Pattern> acceptProperties = Collections.emptySet();
-    private Set<Class<?>> excludedClasses = Collections.emptySet();
-    private Set<Pattern> excludedPackageNamePatterns = Collections.emptySet();
-    private Set<String> excludedPackageNames = Collections.emptySet();
-    private Set<Class<?>> excludedPackageExemptClasses = Collections.emptySet();
+    private Set<Pattern> excludeProperties = emptySet();
+    private Set<Pattern> acceptProperties = emptySet();
+    private Set<Class<?>> excludedClasses = emptySet();
+    private Set<Pattern> excludedPackageNamePatterns = emptySet();
+    private Set<String> excludedPackageNames = emptySet();
+    private Set<Class<?>> excludedPackageExemptClasses = emptySet();
     private boolean disallowProxyMemberAccess;
 
     /**
@@ -62,6 +64,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     public SecurityMemberAccess(boolean allowStaticFieldAccess) {
         this.allowStaticFieldAccess = allowStaticFieldAccess;
+        useExcludedClasses(excludedClasses); // Initialise default exclusions
     }
 
     @Override
@@ -255,9 +258,6 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {
-        if (clazz == Object.class || clazz == Class.class && !allowStaticFieldAccess) {
-            return true;
-        }
         return excludedClasses.contains(clazz);
     }
 
@@ -327,11 +327,16 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludedClasses(Set<Class<?>> excludedClasses) {
-        this.excludedClasses = excludedClasses;
+        useExcludedClasses(excludedClasses);
     }
 
     public void useExcludedClasses(Set<Class<?>> excludedClasses) {
-        this.excludedClasses = excludedClasses;
+        Set<Class<?>> newExcludedClasses = new HashSet<>(excludedClasses);
+        newExcludedClasses.add(Object.class);
+        if (!allowStaticFieldAccess) {
+            newExcludedClasses.add(Class.class);
+        }
+        this.excludedClasses = unmodifiableSet(newExcludedClasses);
     }
 
     /**

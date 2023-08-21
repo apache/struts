@@ -53,6 +53,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
+import static java.util.stream.Collectors.toSet;
+import static org.apache.commons.lang3.StringUtils.strip;
 
 
 /**
@@ -260,7 +262,8 @@ public class OgnlUtil {
     }
 
     private Set<String> parseExcludedPackageNames(String commaDelimitedPackageNames) {
-        Set<String> parsedSet = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
+        Set<String> parsedSet = commaDelimitedStringToSet(commaDelimitedPackageNames)
+                .stream().map(s -> strip(s, ".")).collect(toSet());
         if (parsedSet.stream().anyMatch(s -> s.matches("(.*?)\\s(.*?)"))) {
             throw new ConfigurationException("Excluded package names could not be parsed due to erroneous whitespace characters: " + commaDelimitedPackageNames);
         }

@@ -36,9 +36,8 @@ public class ApplicationMap extends AbstractMap<String, Object> implements Seria
 
     private static final long serialVersionUID = 9136809763083228202L;
 
-    private ServletContext context;
+    private final ServletContext context;
     private Set<Entry<String, Object>> entries;
-
 
     /**
      * Creates a new map object given the servlet context.
@@ -117,12 +116,16 @@ public class ApplicationMap extends AbstractMap<String, Object> implements Seria
      * @param key the entry key.
      * @return the servlet context attribute or init parameter or <tt>null</tt> if the entry is not found.
      */
-    public Object get(final String key) {
+    @Override
+    public Object get(final Object key) {
+        if (key == null) {
+            return null;
+        }
         // Try context attributes first, then init params
         // This gives the proper shadowing effects
-        Object value = context.getAttribute(key);
+        Object value = context.getAttribute(key.toString());
 
-        return (value == null) ? context.getInitParameter(key) : value;
+        return (value == null) ? context.getInitParameter(key.toString()) : value;
     }
 
     /**

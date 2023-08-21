@@ -45,11 +45,9 @@ public class TagUtils {
                 "Please read https://struts.apache.org/security/#never-expose-jsp-files-directly");
         } else {
             LOG.trace("Adds the current PageContext to ActionContext");
-            AttributeMap attrMap = new AttributeMap(stack.getContext());
-
             stack.getActionContext()
                 .withPageContext(pageContext)
-                .with("attr", attrMap);
+                .with("attr", new AttributeMap(stack.getContext()));
         }
 
         return stack;

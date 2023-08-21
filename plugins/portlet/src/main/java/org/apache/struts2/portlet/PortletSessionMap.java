@@ -104,7 +104,7 @@ public class PortletSessionMap extends AbstractMap<String, Object> {
      */
     public Object get(Object key) {
         synchronized (session) {
-            return session.getAttribute(key.toString());
+            return session.getAttribute(key != null ? key.toString() : null);
         }
     }
 

@@ -35,8 +35,7 @@ public class PortletApplicationMap extends AbstractMap<String, Object> implement
 
     private static final long serialVersionUID = 2296107511063504414L;
 
-    private PortletContext context;
-
+    private final PortletContext context;
     private Set<Entry<String, Object>> entries;
 
     /**
@@ -52,6 +51,7 @@ public class PortletApplicationMap extends AbstractMap<String, Object> implement
      * Removes all entries from the Map and removes all attributes from the
      * portlet context.
      */
+    @Override
     public void clear() {
         entries = null;
 
@@ -69,6 +69,7 @@ public class PortletApplicationMap extends AbstractMap<String, Object> implement
      * @return a Set of all portlet context attributes as well as context init
      *         parameters.
      */
+    @Override
     public Set<Entry<String, Object>> entrySet() {
         if (entries == null) {
             entries = new HashSet<Entry<String, Object>>();
@@ -160,12 +161,16 @@ public class PortletApplicationMap extends AbstractMap<String, Object> implement
      * @return the portlet context attribute or init parameter or <tt>null</tt>
      *         if the entry is not found.
      */
-    public Object get(String key) {
+    @Override
+    public Object get(Object key) {
+        if (key == null) {
+            return null;
+        }
         // Try context attributes first, then init params
         // This gives the proper shadowing effects
-        Object value = context.getAttribute(key);
+        Object value = context.getAttribute(key.toString());
 
-        return (value == null) ? context.getInitParameter(key) : value;
+        return (value == null) ? context.getInitParameter(key.toString()) : value;
     }
 
     /**
@@ -177,6 +182,7 @@ public class PortletApplicationMap extends AbstractMap<String, Object> implement
      *            the value to set.
      * @return the attribute that was just set.
      */
+    @Override
     public Object put(String key, Object value) {
         entries = null;
         context.setAttribute(key, value);

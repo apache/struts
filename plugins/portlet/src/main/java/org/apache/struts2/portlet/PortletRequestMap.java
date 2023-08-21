@@ -119,6 +119,9 @@ public class PortletRequestMap extends AbstractMap<String, Object> {
      * @return the request attribute or <tt>null</tt> if it doesn't exist.
      */
     public Object get(Object key) {
+        if (key == null) {
+            return null;
+        }
         return request.getAttribute(key.toString());
     }
 

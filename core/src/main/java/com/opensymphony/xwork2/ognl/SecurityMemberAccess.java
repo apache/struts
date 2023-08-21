@@ -27,8 +27,10 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -241,9 +243,11 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isExcludedPackageNames(Class<?> clazz) {
-        String suffixedPackageName = toPackageName(clazz) + ".";
-        for (String excludedPackageName : excludedPackageNames) {
-            if (suffixedPackageName.startsWith(excludedPackageName)) {
+        String packageName = toPackageName(clazz);
+        List<String> packageParts = Arrays.asList(packageName.split("\\."));
+        for (int i = 0; i < packageParts.size(); i++) {
+            String parentPackage = String.join(".", packageParts.subList(0, i + 1));
+            if (excludedPackageNames.contains(parentPackage)) {
                 return true;
             }
         }

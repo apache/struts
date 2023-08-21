@@ -58,6 +58,8 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apache.struts2.views.util.ContextUtil.STRUTS;
 
+import static org.apache.struts2.views.util.ContextUtil.OGNL;
+
 /**
  * Manages the environment for Velocity result types
  */
@@ -141,7 +143,9 @@ public class VelocityManager {
         List<VelocityContext> chainedContexts = prepareChainedContexts(req, res, stack.getContext());
         Context context = new StrutsVelocityContext(chainedContexts, stack);
         ContextUtil.getStandardContext(stack, req, res).forEach(context::put);
-        context.put(STRUTS, new VelocityStrutsUtil(velocityEngine, context, stack, req, res));
+        VelocityStrutsUtil util = new VelocityStrutsUtil(velocityEngine, context, stack, req, res);
+        context.put(STRUTS, util);
+        context.put(OGNL, util); // Deprecated since 6.3.0
         return context;
     }
 

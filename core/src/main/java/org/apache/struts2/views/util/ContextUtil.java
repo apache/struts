@@ -21,7 +21,6 @@ package org.apache.struts2.views.util;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.util.StrutsUtil;
-import org.apache.struts2.views.jsp.ui.OgnlTool;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,8 +47,9 @@ public class ContextUtil {
         map.put(SESSION, req.getSession(false));
         map.put(BASE, req.getContextPath());
         map.put(STACK, stack);
-        map.put(OGNL, stack.getActionContext().getContainer().getInstance(OgnlTool.class));
-        map.put(STRUTS, new StrutsUtil(stack, req, res));
+        StrutsUtil util = new StrutsUtil(stack, req, res);
+        map.put(STRUTS, util);
+        map.put(OGNL, util); // Deprecated since 6.3.0
 
         ActionInvocation invocation = stack.getActionContext().getActionInvocation();
         if (invocation != null) {

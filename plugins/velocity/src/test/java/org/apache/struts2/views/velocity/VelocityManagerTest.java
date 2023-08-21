@@ -22,7 +22,6 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.junit.StrutsJUnit4TestCase;
-import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.ToolContext;
 import org.junit.After;
@@ -95,7 +94,7 @@ public class VelocityManagerTest extends StrutsJUnit4TestCase {
 
         assertNotNull(context);
         assertThat(context.get("struts")).isInstanceOf(VelocityStrutsUtil.class);
-        assertThat(context.get("ognl")).isInstanceOf(OgnlTool.class);
+        assertThat(context.get("ognl")).isInstanceOf(VelocityStrutsUtil.class); // Deprecated since 6.3.0
         assertThat(context.get("stack")).isInstanceOf(ValueStack.class);
         assertThat(context.get("request")).isInstanceOf(HttpServletRequest.class);
         assertThat(context.get("response")).isInstanceOf(HttpServletResponse.class);

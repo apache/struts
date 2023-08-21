@@ -237,12 +237,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     protected boolean isExcludedPackageNamePatterns(Class<?> clazz) {
         String packageName = toPackageName(clazz);
-        for (Pattern pattern : excludedPackageNamePatterns) {
-            if (pattern.matcher(packageName).matches()) {
-                return true;
-            }
-        }
-        return false;
+        return excludedPackageNamePatterns.stream().anyMatch(pattern -> pattern.matcher(packageName).matches());
     }
 
     protected boolean isExcludedPackageNames(Class<?> clazz) {

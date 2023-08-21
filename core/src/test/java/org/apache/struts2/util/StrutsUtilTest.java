@@ -32,6 +32,8 @@ import javax.servlet.ServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Test case for StrutsUtil.
  *
@@ -146,8 +148,8 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
 
 
     public void testMakeSelectListMethod() {
-        String[] selectedList = new String[] { "Car", "Airplane", "Bus" };
-        List list = new ArrayList();
+        String[] selectedList = new String[]{"Car", "Airplane", "Bus"};
+        List<String> list = new ArrayList<>();
         list.add("Lorry");
         list.add("Car");
         list.add("Helicopter");
@@ -155,18 +157,18 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         stack.getContext().put("mySelectedList", selectedList);
         stack.getContext().put("myList", list);
 
-        List listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
+        List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
 
         assertEquals(listMade.size(), 3);
-        assertEquals(((ListEntry)listMade.get(0)).getKey(), "Lorry");
-        assertEquals(((ListEntry)listMade.get(0)).getValue(), "Lorry");
-        assertFalse(((ListEntry) listMade.get(0)).getIsSelected());
-        assertEquals(((ListEntry)listMade.get(1)).getKey(), "Car");
-        assertEquals(((ListEntry)listMade.get(1)).getValue(), "Car");
-        assertTrue(((ListEntry) listMade.get(1)).getIsSelected());
-        assertEquals(((ListEntry)listMade.get(2)).getKey(), "Helicopter");
-        assertEquals(((ListEntry)listMade.get(2)).getValue(), "Helicopter");
-        assertFalse(((ListEntry) listMade.get(2)).getIsSelected());
+        assertEquals(listMade.get(0).getKey(), "Lorry");
+        assertEquals(listMade.get(0).getValue(), "Lorry");
+        assertFalse(listMade.get(0).getIsSelected());
+        assertEquals(listMade.get(1).getKey(), "Car");
+        assertEquals(listMade.get(1).getValue(), "Car");
+        assertTrue(listMade.get(1).getIsSelected());
+        assertEquals(listMade.get(2).getKey(), "Helicopter");
+        assertEquals(listMade.get(2).getValue(), "Helicopter");
+        assertFalse(listMade.get(2).getIsSelected());
     }
 
     public void testToInt() {
@@ -178,10 +180,20 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         assertEquals(strutsUtil.toLong(11), 11L);
     }
 
+    public void testStringToLong() {
+        assertEquals(11L, strutsUtil.toLong("11"));
+        assertEquals(0L, strutsUtil.toLong(null));
+        assertEquals(0L, strutsUtil.toLong(""));
+    }
 
     public void testToString() {
         assertEquals(strutsUtil.toString(1), "1");
         assertEquals(strutsUtil.toString(11L), "11");
+    }
+
+    public void testToStringSafe() {
+        assertEquals("1", strutsUtil.toStringSafe(1));
+        assertEquals("", strutsUtil.toStringSafe(null));
     }
 
     public void testTranslateVariables() {

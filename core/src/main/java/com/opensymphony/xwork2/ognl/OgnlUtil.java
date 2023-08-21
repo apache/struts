@@ -51,6 +51,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
 
 
 /**
@@ -218,14 +221,13 @@ public class OgnlUtil {
     }
 
     private Set<Pattern> parseExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
-        Set<Pattern> packageNamePatterns = new HashSet<>();
-
-        for (String pattern : packagePatterns) {
-            packageNamePatterns.add(Pattern.compile(pattern));
+        try {
+            return commaDelimitedStringToSet(commaDelimitedPackagePatterns)
+                    .stream().map(Pattern::compile).collect(toSet());
+        } catch (PatternSyntaxException e) {
+            throw new ConfigurationException(
+                    "Excluded package name patterns could not be parsed due to invalid regex: " + commaDelimitedPackagePatterns, e);
         }
-
-        return packageNamePatterns;
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)

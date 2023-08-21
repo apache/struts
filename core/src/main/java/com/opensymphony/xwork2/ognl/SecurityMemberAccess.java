@@ -255,7 +255,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {
-        if (clazz == Class.class && !allowStaticFieldAccess) {
+        if (clazz == Object.class || clazz == Class.class && !allowStaticFieldAccess) {
             return true;
         }
         return excludedClasses.contains(clazz);

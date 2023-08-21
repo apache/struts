@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import ognl.ClassResolver;
 import ognl.Ognl;
@@ -190,9 +189,8 @@ public class OgnlUtil {
     }
 
     private Set<Class<?>> parseClasses(String commaDelimitedClasses) {
-        Set<String> classNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
+        Set<String> classNames = commaDelimitedStringToSet(commaDelimitedClasses);
         Set<Class<?>> classes = new HashSet<>();
-
         for (String className : classNames) {
             try {
                 classes.add(Class.forName(className));
@@ -200,7 +198,6 @@ public class OgnlUtil {
                 throw new ConfigurationException("Cannot load class for exclusion/exemption configuration: " + className, e);
             }
         }
-
         return classes;
     }
 

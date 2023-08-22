@@ -198,6 +198,7 @@
     <bean type="ognl.MethodAccessor" name="com.opensymphony.xwork2.util.CompoundRoot"
           class="com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor"/>
 
+    <!-- Deprecated since 6.3.0, inject OgnlUtil directly instead, or use StrutsUtil -->
     <bean class="org.apache.struts2.views.jsp.ui.OgnlTool"/>
 
     <bean type="org.apache.struts2.dispatcher.StaticContentLoader"

@@ -29,8 +29,11 @@ import org.springframework.mock.web.MockRequestDispatcher;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test case for StrutsUtil.
@@ -145,28 +148,63 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
     }
 
 
-    public void testMakeSelectListMethod() {
-        String[] selectedList = new String[] { "Car", "Airplane", "Bus" };
-        List list = new ArrayList();
-        list.add("Lorry");
-        list.add("Car");
-        list.add("Helicopter");
+    public void testMakeSelectList() {
+        String[] selectedList = new String[]{"Car", "Airplane", "Bus"}; // Array
+        List<String> list = Arrays.asList("Lorry", "Car", "Helicopter");
 
         stack.getContext().put("mySelectedList", selectedList);
         stack.getContext().put("myList", list);
 
-        List listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
+        List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
 
-        assertEquals(listMade.size(), 3);
-        assertEquals(((ListEntry)listMade.get(0)).getKey(), "Lorry");
-        assertEquals(((ListEntry)listMade.get(0)).getValue(), "Lorry");
-        assertFalse(((ListEntry) listMade.get(0)).getIsSelected());
-        assertEquals(((ListEntry)listMade.get(1)).getKey(), "Car");
-        assertEquals(((ListEntry)listMade.get(1)).getValue(), "Car");
-        assertTrue(((ListEntry) listMade.get(1)).getIsSelected());
-        assertEquals(((ListEntry)listMade.get(2)).getKey(), "Helicopter");
-        assertEquals(((ListEntry)listMade.get(2)).getValue(), "Helicopter");
-        assertFalse(((ListEntry) listMade.get(2)).getIsSelected());
+        LinkedHashMap<String, Boolean> expectedItems = new LinkedHashMap<>();
+        expectedItems.put("Lorry", false);
+        expectedItems.put("Car", true);
+        expectedItems.put("Helicopter", false);
+        makeSelectListCommonAssertions(listMade, expectedItems);
+    }
+
+    public void testMakeSelectListCollection() {
+        List<String> selectedList = Arrays.asList("Airplane", "Helicopter", "Bus"); // Collection
+        List<String> list = Arrays.asList("Lorry", "Car", "Helicopter");
+
+        stack.getContext().put("mySelectedList", selectedList);
+        stack.getContext().put("myList", list);
+
+        List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
+
+        LinkedHashMap<String, Boolean> expectedItems = new LinkedHashMap<>();
+        expectedItems.put("Lorry", false);
+        expectedItems.put("Car", false);
+        expectedItems.put("Helicopter", true);
+        makeSelectListCommonAssertions(listMade, expectedItems);
+    }
+
+    public void testMakeSelectListSingleton() {
+        String selectedItem = "Lorry"; // Singleton
+        List<String> list = Arrays.asList("Lorry", "Car", "Helicopter");
+
+        stack.getContext().put("mySelectedList", selectedItem);
+        stack.getContext().put("myList", list);
+
+        List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
+
+        LinkedHashMap<String, Boolean> expectedItems = new LinkedHashMap<>();
+        expectedItems.put("Lorry", true);
+        expectedItems.put("Car", false);
+        expectedItems.put("Helicopter", false);
+        makeSelectListCommonAssertions(listMade, expectedItems);
+    }
+
+    private void makeSelectListCommonAssertions(List<ListEntry> listMade, LinkedHashMap<String, Boolean> expectedItems) {
+        assertThat(listMade).extracting("key").containsExactly(expectedItems.keySet().toArray());
+        assertThat(listMade).extracting("value").containsExactly(expectedItems.keySet().toArray());
+        assertThat(listMade).extracting("isSelected").containsExactly(expectedItems.values().toArray());
+    }
+
+    public void testMakeSelectListNonExistent() {
+        List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#nonexistent", null, null);
+        assertThat(listMade).isEmpty();
     }
 
     public void testToInt() {
@@ -178,10 +216,20 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         assertEquals(strutsUtil.toLong(11), 11L);
     }
 
+    public void testStringToLong() {
+        assertEquals(11L, strutsUtil.toLong("11"));
+        assertEquals(0L, strutsUtil.toLong(null));
+        assertEquals(0L, strutsUtil.toLong(""));
+    }
 
     public void testToString() {
         assertEquals(strutsUtil.toString(1), "1");
         assertEquals(strutsUtil.toString(11L), "11");
+    }
+
+    public void testToStringSafe() {
+        assertEquals("1", strutsUtil.toStringSafe(1));
+        assertEquals("", strutsUtil.toStringSafe(null));
     }
 
     public void testTranslateVariables() {
@@ -233,7 +281,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
 
     // === internal class to assist in testing
 
-    static class InternalMockHttpServletRequest extends MockHttpServletRequest {
+    protected static class InternalMockHttpServletRequest extends MockHttpServletRequest {
         InternalMockRequestDispatcher dispatcher = null;
         public RequestDispatcher getRequestDispatcher(String path) {
             dispatcher = new InternalMockRequestDispatcher(path);
@@ -245,8 +293,8 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         }
     }
 
-    static class InternalMockRequestDispatcher extends MockRequestDispatcher {
-        private String url;
+    protected static class InternalMockRequestDispatcher extends MockRequestDispatcher {
+        private final String url;
         boolean included = false;
         public InternalMockRequestDispatcher(String url) {
             super(url);

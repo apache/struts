@@ -33,5 +33,5 @@
 #end
 
 #macro(property $object $property)
-$!{ognl.findValue($property, $object)}
+$!{struts.findValue($property, $object)}
 #end

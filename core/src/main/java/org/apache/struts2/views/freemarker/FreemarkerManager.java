@@ -24,16 +24,24 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import freemarker.cache.*;
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.cache.WebappTemplateLoader;
 import freemarker.core.HTMLOutputFormat;
-import freemarker.core.OutputFormat;
 import freemarker.core.TemplateClassResolver;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.TemplateModel;
+import freemarker.template.Version;
 import freemarker.template.utility.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +59,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * <p>
@@ -176,27 +190,27 @@ public class FreemarkerManager {
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_FREEMARKER_WRAPPER_ALT_MAP)
     public void setWrapperAltMap(String val) {
         altMapWrapper = "true".equals(val);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_FREEMARKER_BEANWRAPPER_CACHE)
     public void setCacheBeanWrapper(String val) {
         cacheBeanWrapper = "true".equals(val);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE)
     public void setMruMaxStrongSize(String size) {
         mruMaxStrongSize = Integer.parseInt(size);
     }
-    
+
     @Inject(value = StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY, required = false)
     public void setTemplateUpdateDelay(String delay) {
     	templateUpdateDelay = delay;
     }
-    
+
     @Inject
     public void setContainer(Container container) {
         Map<String, TagLibraryModelProvider> map = new HashMap<>();
@@ -281,8 +295,8 @@ public class FreemarkerManager {
         loadSettings(servletContext);
     }
 
-    /** 
-     * Sets the Freemarker Configuration's template loader with the FreemarkerThemeTemplateLoader 
+    /**
+     * Sets the Freemarker Configuration's template loader with the FreemarkerThemeTemplateLoader
      * at the top.
      *
      * @param templateLoader the template loader
@@ -293,7 +307,7 @@ public class FreemarkerManager {
         themeTemplateLoader.init(templateLoader);
         config.setTemplateLoader(themeTemplateLoader);
     }
-    
+
     /**
      * Create the instance of the freemarker Configuration object.
      * <p>
@@ -543,7 +557,7 @@ public class FreemarkerManager {
 
     protected void populateContext(ScopesHashModel model, ValueStack stack, Object action, HttpServletRequest request, HttpServletResponse response) {
         // put the same objects into the context that the velocity result uses
-        Map standard = ContextUtil.getStandardContext(stack, request, response);
+        Map<String, Object> standard = ContextUtil.getStandardContext(stack, request, response);
         model.putAll(standard);
 
         // support for JSP exception pages, exposing the servlet or JSP exception

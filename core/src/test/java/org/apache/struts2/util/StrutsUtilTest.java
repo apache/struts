@@ -30,6 +30,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -148,7 +149,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
 
 
     public void testMakeSelectList() {
-        String[] selectedList = new String[]{"Car", "Airplane", "Bus"};
+        String[] selectedList = new String[]{"Car", "Airplane", "Bus"}; // Array
         List<String> list = Arrays.asList("Lorry", "Car", "Helicopter");
 
         stack.getContext().put("mySelectedList", selectedList);
@@ -156,20 +157,15 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
 
         List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
 
-        assertEquals(listMade.size(), 3);
-        assertEquals(listMade.get(0).getKey(), "Lorry");
-        assertEquals(listMade.get(0).getValue(), "Lorry");
-        assertFalse(listMade.get(0).getIsSelected());
-        assertEquals(listMade.get(1).getKey(), "Car");
-        assertEquals(listMade.get(1).getValue(), "Car");
-        assertTrue(listMade.get(1).getIsSelected());
-        assertEquals(listMade.get(2).getKey(), "Helicopter");
-        assertEquals(listMade.get(2).getValue(), "Helicopter");
-        assertFalse(listMade.get(2).getIsSelected());
+        LinkedHashMap<String, Boolean> expectedItems = new LinkedHashMap<>();
+        expectedItems.put("Lorry", false);
+        expectedItems.put("Car", true);
+        expectedItems.put("Helicopter", false);
+        makeSelectListCommonAssertions(listMade, expectedItems);
     }
 
     public void testMakeSelectListCollection() {
-        List<String> selectedList = Arrays.asList("Car", "Airplane", "Bus");
+        List<String> selectedList = Arrays.asList("Airplane", "Helicopter", "Bus"); // Collection
         List<String> list = Arrays.asList("Lorry", "Car", "Helicopter");
 
         stack.getContext().put("mySelectedList", selectedList);
@@ -177,16 +173,33 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
 
         List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
 
-        assertEquals(listMade.size(), 3);
-        assertEquals(listMade.get(0).getKey(), "Lorry");
-        assertEquals(listMade.get(0).getValue(), "Lorry");
-        assertFalse(listMade.get(0).getIsSelected());
-        assertEquals(listMade.get(1).getKey(), "Car");
-        assertEquals(listMade.get(1).getValue(), "Car");
-        assertTrue(listMade.get(1).getIsSelected());
-        assertEquals(listMade.get(2).getKey(), "Helicopter");
-        assertEquals(listMade.get(2).getValue(), "Helicopter");
-        assertFalse(listMade.get(2).getIsSelected());
+        LinkedHashMap<String, Boolean> expectedItems = new LinkedHashMap<>();
+        expectedItems.put("Lorry", false);
+        expectedItems.put("Car", false);
+        expectedItems.put("Helicopter", true);
+        makeSelectListCommonAssertions(listMade, expectedItems);
+    }
+
+    public void testMakeSelectListSingleton() {
+        String selectedItem = "Lorry"; // Singleton
+        List<String> list = Arrays.asList("Lorry", "Car", "Helicopter");
+
+        stack.getContext().put("mySelectedList", selectedItem);
+        stack.getContext().put("myList", list);
+
+        List<ListEntry> listMade = strutsUtil.makeSelectList("#mySelectedList", "#myList", null, null);
+
+        LinkedHashMap<String, Boolean> expectedItems = new LinkedHashMap<>();
+        expectedItems.put("Lorry", true);
+        expectedItems.put("Car", false);
+        expectedItems.put("Helicopter", false);
+        makeSelectListCommonAssertions(listMade, expectedItems);
+    }
+
+    private void makeSelectListCommonAssertions(List<ListEntry> listMade, LinkedHashMap<String, Boolean> expectedItems) {
+        assertThat(listMade).extracting("key").containsExactly(expectedItems.keySet().toArray());
+        assertThat(listMade).extracting("value").containsExactly(expectedItems.keySet().toArray());
+        assertThat(listMade).extracting("isSelected").containsExactly(expectedItems.values().toArray());
     }
 
     public void testMakeSelectListNonExistent() {

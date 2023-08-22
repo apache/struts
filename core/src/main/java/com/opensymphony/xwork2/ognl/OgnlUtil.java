@@ -24,7 +24,6 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
-import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import ognl.ClassResolver;
 import ognl.Ognl;
@@ -51,6 +50,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
+import static java.util.stream.Collectors.toSet;
+import static org.apache.commons.lang3.StringUtils.strip;
 
 
 /**
@@ -187,9 +191,8 @@ public class OgnlUtil {
     }
 
     private Set<Class<?>> parseClasses(String commaDelimitedClasses) {
-        Set<String> classNames = TextParseUtil.commaDelimitedStringToSet(commaDelimitedClasses);
+        Set<String> classNames = commaDelimitedStringToSet(commaDelimitedClasses);
         Set<Class<?>> classes = new HashSet<>();
-
         for (String className : classNames) {
             try {
                 classes.add(Class.forName(className));
@@ -197,7 +200,6 @@ public class OgnlUtil {
                 throw new ConfigurationException("Cannot load class for exclusion/exemption configuration: " + className, e);
             }
         }
-
         return classes;
     }
 
@@ -218,14 +220,13 @@ public class OgnlUtil {
     }
 
     private Set<Pattern> parseExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        Set<String> packagePatterns = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackagePatterns);
-        Set<Pattern> packageNamePatterns = new HashSet<>();
-
-        for (String pattern : packagePatterns) {
-            packageNamePatterns.add(Pattern.compile(pattern));
+        try {
+            return commaDelimitedStringToSet(commaDelimitedPackagePatterns)
+                    .stream().map(Pattern::compile).collect(toSet());
+        } catch (PatternSyntaxException e) {
+            throw new ConfigurationException(
+                    "Excluded package name patterns could not be parsed due to invalid regex: " + commaDelimitedPackagePatterns, e);
         }
-
-        return packageNamePatterns;
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
@@ -261,7 +262,8 @@ public class OgnlUtil {
     }
 
     private Set<String> parseExcludedPackageNames(String commaDelimitedPackageNames) {
-        Set<String> parsedSet = TextParseUtil.commaDelimitedStringToSet(commaDelimitedPackageNames);
+        Set<String> parsedSet = commaDelimitedStringToSet(commaDelimitedPackageNames)
+                .stream().map(s -> strip(s, ".")).collect(toSet());
         if (parsedSet.stream().anyMatch(s -> s.matches("(.*?)\\s(.*?)"))) {
             throw new ConfigurationException("Excluded package names could not be parsed due to erroneous whitespace characters: " + commaDelimitedPackageNames);
         }

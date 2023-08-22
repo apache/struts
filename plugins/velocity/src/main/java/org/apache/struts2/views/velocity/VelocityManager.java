@@ -29,7 +29,6 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.views.TagLibraryDirectiveProvider;
-import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.ContextUtil;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -56,9 +55,8 @@ import java.util.Properties;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.apache.struts2.views.util.ContextUtil.STRUTS;
-
 import static org.apache.struts2.views.util.ContextUtil.OGNL;
+import static org.apache.struts2.views.util.ContextUtil.STRUTS;
 
 /**
  * Manages the environment for Velocity result types
@@ -103,27 +101,15 @@ public class VelocityManager {
     }
 
     /**
-     * @return a reference to the VelocityEngine used by <b>all</b> struts velocity thingies with the exception of
-     * directly accessed *.vm pages
+     * @return a reference to the VelocityEngine used by <strong>all</strong> Struts Velocity results except directly
+     * accessed *.vm pages (unless otherwise configured)
      */
     public VelocityEngine getVelocityEngine() {
         return velocityEngine;
     }
 
     /**
-     * <p>
-     * This method is responsible for creating the standard VelocityContext used by all WW2 velocity views.  The
-     * following context parameters are defined:
-     * </p>
-     *
-     * <ul>
-     * <li><strong>request</strong> - the current HttpServletRequest</li>
-     * <li><strong>response</strong> - the current HttpServletResponse</li>
-     * <li><strong>stack</strong> - the current {@link ValueStack}</li>
-     * <li><strong>ognl</strong> - an {@link OgnlTool}</li>
-     * <li><strong>struts</strong> - an instance of {@link org.apache.struts2.util.StrutsUtil}</li>
-     * <li><strong>action</strong> - the current Struts action</li>
-     * </ul>
+     * This method is responsible for creating the standard VelocityContext used by all Struts Velocity views.
      *
      * @param stack the current {@link ValueStack}
      * @param req   the current HttpServletRequest

@@ -44,7 +44,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +61,7 @@ public class StrutsUtil {
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
-    protected Map<String, Class<?>> classes = new Hashtable<>();
+    protected Map<String, Class<?>> classes = new HashMap<>();
     protected OgnlUtil ognl;
     protected ValueStack stack;
 

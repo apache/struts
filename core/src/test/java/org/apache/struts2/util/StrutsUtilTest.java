@@ -268,7 +268,7 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
 
     // === internal class to assist in testing
 
-    static class InternalMockHttpServletRequest extends MockHttpServletRequest {
+    protected static class InternalMockHttpServletRequest extends MockHttpServletRequest {
         InternalMockRequestDispatcher dispatcher = null;
         public RequestDispatcher getRequestDispatcher(String path) {
             dispatcher = new InternalMockRequestDispatcher(path);
@@ -280,8 +280,8 @@ public class StrutsUtilTest extends StrutsInternalTestCase {
         }
     }
 
-    static class InternalMockRequestDispatcher extends MockRequestDispatcher {
-        private String url;
+    protected static class InternalMockRequestDispatcher extends MockRequestDispatcher {
+        private final String url;
         boolean included = false;
         public InternalMockRequestDispatcher(String url) {
             super(url);

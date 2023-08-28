@@ -84,16 +84,17 @@ public class SecurityMemberAccess implements MemberAccess {
 
     @Override
     public void restore(Map context, Object target, Member member, String propertyName, Object state) {
-        if (state != null) {
-            final AccessibleObject accessible = (AccessibleObject) member;
-            final boolean stateBoolean = ((Boolean) state).booleanValue();  // Using twice (avoid unboxing)
-            if (!stateBoolean) {
-                accessible.setAccessible(stateBoolean);
-            } else {
-                throw new IllegalArgumentException("Improper restore state [" + stateBoolean + "] for target [" + target +
-                    "], member [" + member + "], propertyName [" + propertyName + "]");
-            }
+        if (state == null) {
+            return;
         }
+        if ((Boolean) state) {
+            throw new IllegalArgumentException(format(
+                    "Improper restore state [true] for target [{0}], member [{1}], propertyName [{2}]",
+                    target,
+                    member,
+                    propertyName));
+        }
+        ((AccessibleObject) member).setAccessible(false);
     }
 
     @Override

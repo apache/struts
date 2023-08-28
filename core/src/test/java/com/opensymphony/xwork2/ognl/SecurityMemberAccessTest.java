@@ -309,7 +309,7 @@ public class SecurityMemberAccessTest {
         Class<?> clazz = Class.forName("PackagelessAction");
 
         // when
-        boolean actual = sma.isPackageExcluded(clazz, clazz);
+        boolean actual = sma.isPackageExcluded(clazz);
 
         // then
         assertFalse("default package is excluded!", actual);
@@ -325,7 +325,7 @@ public class SecurityMemberAccessTest {
         Class<?> clazz = Class.forName("PackagelessAction");
 
         // when
-        boolean actual = sma.isPackageExcluded(clazz, clazz);
+        boolean actual = sma.isPackageExcluded(clazz);
 
         // then
         assertTrue("default package isn't excluded!", actual);
@@ -768,7 +768,7 @@ public class SecurityMemberAccessTest {
         sma.useExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang"));
 
         // when
-        boolean actual = sma.isPackageExcluded(String.class, String.class);
+        boolean actual = sma.isPackageExcluded(String.class);
 
         // then
         assertTrue("package java.lang. is accessible!", actual);

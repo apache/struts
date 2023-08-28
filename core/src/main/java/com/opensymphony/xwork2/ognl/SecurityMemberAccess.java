@@ -152,19 +152,16 @@ public class SecurityMemberAccess implements MemberAccess {
             LOG.warn("The use of the default (unnamed) package is discouraged!");
         }
 
-        if (isPackageExcluded(targetClass, memberClass)) {
-            LOG.warn(
-                    "Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!",
+        if (isPackageExcluded(targetClass)) {
+            LOG.warn("Package [{}] of target class [{}] of target [{}] is excluded!",
                     targetClass.getPackage(),
                     targetClass,
-                    target,
-                    memberClass.getPackage(),
-                    member);
+                    target);
             return false;
         }
 
-        if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
-            LOG.warn("Access to proxy is blocked! Target class [{}] of target [{}], member [{}]", targetClass, target, member);
+        if (isPackageExcluded(memberClass)) {
+            LOG.warn("Package [{}] of member [{}] are excluded!", memberClass.getPackage(), member);
             return false;
         }
 
@@ -222,19 +219,8 @@ public class SecurityMemberAccess implements MemberAccess {
         return false;
     }
 
-    protected boolean isPackageExcluded(Class<?> targetClass, Class<?> memberClass) {
-        if (targetClass == null || memberClass == null) {
-            throw new IllegalArgumentException(
-                    "Parameters should never be null - if member is static, targetClass should be the same as memberClass.");
-        }
-
-        List<Class<?>> classesToCheck = Arrays.asList(targetClass, memberClass);
-        for (Class<?> clazz : classesToCheck) {
-            if (!excludedPackageExemptClasses.contains(clazz.getName()) && (isExcludedPackageNames(clazz) || isExcludedPackageNamePatterns(clazz))) {
-                return true;
-            }
-        }
-        return false;
+    protected boolean isPackageExcluded(Class<?> clazz) {
+        return !excludedPackageExemptClasses.contains(clazz.getName()) && (isExcludedPackageNames(clazz) || isExcludedPackageNamePatterns(clazz));
     }
 
     public static String toPackageName(Class<?> clazz) {

@@ -22,7 +22,15 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
-import ognl.*;
+import ognl.ClassResolver;
+import ognl.MethodAccessor;
+import ognl.MethodFailedException;
+import ognl.NoSuchPropertyException;
+import ognl.Ognl;
+import ognl.OgnlContext;
+import ognl.OgnlException;
+import ognl.OgnlRuntime;
+import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +39,12 @@ import org.apache.struts2.StrutsException;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.String.format;
@@ -62,7 +75,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
     private final static Logger LOG = LogManager.getLogger(CompoundRootAccessor.class);
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
-    private static Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
+    private static final Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
     private boolean devMode;
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -127,7 +140,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
             return root.cutStack(index);
         } else if (name instanceof String) {
             if ("top".equals(name)) {
-                if (root.size() > 0) {
+                if (!root.isEmpty()) {
                     return root.get(0);
                 } else {
                     return null;
@@ -190,26 +203,23 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
                 }
 
                 SortedSet<String> set = new TreeSet<>();
-                StringBuffer sb = new StringBuffer();
-                for (PropertyDescriptor pd : descriptors.values()) {
 
+                for (PropertyDescriptor pd : descriptors.values()) {
+                    StringBuilder sb = new StringBuilder();
                     sb.append(pd.getName()).append(": ");
+
                     int padding = maxSize - pd.getName().length();
                     for (int i = 0; i < padding; i++) {
                         sb.append(" ");
                     }
                     sb.append(pd.getPropertyType().getName());
                     set.add(sb.toString());
-
-                    sb = new StringBuffer();
                 }
 
-                sb = new StringBuffer();
-                for (Object aSet : set) {
-                    String s = (String) aSet;
-                    sb.append(s).append("\n");
+                StringBuilder sb = new StringBuilder();
+                for (String aSet : set) {
+                    sb.append(aSet).append("\n");
                 }
-
                 return sb.toString();
             } catch (IntrospectionException | OgnlException e) {
                 LOG.debug("Got exception in callMethod", e);
@@ -321,9 +331,14 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
         @Override
         public boolean equals(Object obj) {
-            MethodCall mc = (CompoundRootAccessor.MethodCall) obj;
-
-            return (mc.clazz.equals(clazz) && mc.name.equals(name) && Arrays.equals(mc.args, args));
+            if (this == obj) {
+                return true;
+            }
+            if (!(obj instanceof MethodCall)) {
+                return false;
+            }
+            MethodCall mc = (MethodCall) obj;
+            return mc.clazz.equals(clazz) && mc.name.equals(name) && Arrays.equals(mc.args, args);
         }
 
         @Override

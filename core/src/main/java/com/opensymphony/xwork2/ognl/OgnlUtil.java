@@ -102,8 +102,7 @@ public class OgnlUtil {
     @Deprecated
     public OgnlUtil() {
         // Instantiate default Expression and BeanInfo caches (factories must be non-null).
-        this(new DefaultOgnlExpressionCacheFactory<>(),
-                new DefaultOgnlBeanInfoCacheFactory<>());
+        this(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>());
     }
 
     /**

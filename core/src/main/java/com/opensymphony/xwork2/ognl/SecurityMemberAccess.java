@@ -111,6 +111,11 @@ public class SecurityMemberAccess implements MemberAccess {
             throw new IllegalArgumentException("Target does not match member!");
         }
 
+        if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
+            LOG.warn("Access to proxy is blocked! Target class [{}] of target [{}], member [{}]", targetClass, target, member);
+            return false;
+        }
+
         if (!checkPublicMemberAccess(memberModifiers)) {
             LOG.warn("Access to non-public [{}] is blocked!", member);
             return false;

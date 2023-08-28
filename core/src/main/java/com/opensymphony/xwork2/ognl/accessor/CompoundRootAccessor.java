@@ -19,6 +19,7 @@
 package com.opensymphony.xwork2.ognl.accessor;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -46,8 +47,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
+import static com.opensymphony.xwork2.ognl.SecurityMemberAccess.isExcludedPackageNamesStatic;
+import static com.opensymphony.xwork2.ognl.SecurityMemberAccess.toPackageName;
 import static java.lang.String.format;
+import static java.util.Collections.emptySet;
 import static org.apache.commons.lang3.BooleanUtils.toBoolean;
 
 /**
@@ -77,10 +82,22 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
     private static final Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
     private boolean devMode;
+    private Set<String> excludedClasses = emptySet();
+    private Set<Pattern> excludedPackageNamePatterns = emptySet();
+    private Set<String> excludedPackageNames = emptySet();
+    private Set<String> excludedPackageExemptClasses = emptySet();
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
+    }
+
+    @Inject
+    protected void setOgnlUtil(OgnlUtil ognlUtil) {
+        this.excludedClasses = ognlUtil.getExcludedClasses();
+        this.excludedPackageNamePatterns = ognlUtil.getExcludedPackageNamePatterns();
+        this.excludedPackageNames = ognlUtil.getExcludedPackageNames();
+        this.excludedPackageExemptClasses = ognlUtil.getExcludedPackageExemptClasses();
     }
 
     public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
@@ -272,9 +289,28 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
         return null;
     }
 
+    protected boolean isInaccessibleClass(Class<?> clazz) {
+        return isClassExcluded(clazz) || isPackageExcluded(clazz);
+    }
+
+    protected boolean isPackageExcluded(Class<?> clazz) {
+        return !excludedPackageExemptClasses.contains(clazz.getName()) && (isExcludedPackageNames(clazz) || isExcludedPackageNamePatterns(clazz));
+    }
+
+    protected boolean isExcludedPackageNames(Class<?> clazz) {
+        return isExcludedPackageNamesStatic(clazz, excludedPackageNames);
+    }
+
+    protected boolean isExcludedPackageNamePatterns(Class<?> clazz) {
+        return excludedPackageNamePatterns.stream().anyMatch(pattern -> pattern.matcher(toPackageName(clazz)).matches());
+    }
+
+    protected boolean isClassExcluded(Class<?> clazz) {
+        return excludedClasses.contains(clazz.getName());
+    }
+
     public Class classForName(String className, Map context) throws ClassNotFoundException {
         Object root = Ognl.getRoot(context);
-
         try {
             if (root instanceof CompoundRoot) {
                 if (className.startsWith("vs")) {
@@ -292,8 +328,12 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
         } catch (Exception e) {
             LOG.debug("Got exception when tried to get class for name [{}]", className, e);
         }
-
-        return Thread.currentThread().getContextClassLoader().loadClass(className);
+        Class loadedClass = Thread.currentThread().getContextClassLoader().loadClass(className);
+        if (isInaccessibleClass(loadedClass)) {
+            LOG.warn("Blocked attempt to access class [{}] which is excluded", className);
+            return null;
+        }
+        return loadedClass;
     }
 
     private Class[] getArgTypes(Object[] args) {

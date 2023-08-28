@@ -25,7 +25,6 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,6 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -73,8 +73,8 @@ public class SecurityMemberAccessTest {
         String propertyName = "stringField";
         Member member = FooBar.class.getDeclaredMethod(formGetterName(propertyName));
 
-        Set<Class<?>> excluded = new HashSet<>();
-        excluded.add(FooBar.class);
+        Set<String> excluded = new HashSet<>();
+        excluded.add(FooBar.class.getName());
         sma.useExcludedClasses(excluded);
 
         // when
@@ -116,8 +116,8 @@ public class SecurityMemberAccessTest {
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
 
-        Set<Class<?>> excluded = new HashSet<>();
-        excluded.add(BarInterface.class);
+        Set<String> excluded = new HashSet<>();
+        excluded.add(BarInterface.class.getName());
         sma.useExcludedClasses(excluded);
 
         // when
@@ -133,8 +133,8 @@ public class SecurityMemberAccessTest {
         String propertyName = "fooLogic";
         Member member = FooBar.class.getMethod(propertyName);
 
-        Set<Class<?>> excluded = new HashSet<>();
-        excluded.add(BarInterface.class);
+        Set<String> excluded = new HashSet<>();
+        excluded.add(BarInterface.class.getName());
         sma.useExcludedClasses(excluded);
 
         // when
@@ -150,8 +150,8 @@ public class SecurityMemberAccessTest {
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
 
-        Set<Class<?>> excluded = new HashSet<>();
-        excluded.add(BarInterface.class);
+        Set<String> excluded = new HashSet<>();
+        excluded.add(BarInterface.class.getName());
         sma.useExcludedClasses(excluded);
 
         // when
@@ -167,8 +167,8 @@ public class SecurityMemberAccessTest {
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
 
-        Set<Class<?>> excluded = new HashSet<>();
-        excluded.add(FooInterface.class);
+        Set<String> excluded = new HashSet<>();
+        excluded.add(FooInterface.class.getName());
         sma.useExcludedClasses(excluded);
 
         // when
@@ -202,8 +202,8 @@ public class SecurityMemberAccessTest {
         excluded.add(Pattern.compile("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*"));
         sma.useExcludedPackageNamePatterns(excluded);
 
-        Set<Class<?>> allowed = new HashSet<>();
-        allowed.add(FooBar.class);
+        Set<String> allowed = new HashSet<>();
+        allowed.add(FooBar.class.getName());
         sma.useExcludedPackageExemptClasses(allowed);
 
         String propertyName = "stringField";
@@ -240,8 +240,8 @@ public class SecurityMemberAccessTest {
         excluded.add(FooBar.class.getPackage().getName());
         sma.useExcludedPackageNames(excluded);
 
-        Set<Class<?>> allowed = new HashSet<>();
-        allowed.add(FooBar.class);
+        Set<String> allowed = new HashSet<>();
+        allowed.add(FooBar.class.getName());
         sma.useExcludedPackageExemptClasses(allowed);
 
         String propertyName = "stringField";
@@ -262,8 +262,8 @@ public class SecurityMemberAccessTest {
         sma.useExcludedPackageNames(excluded);
 
         // Exemption must exist for both classes (target and member) if they both match a banned package
-        Set<Class<?>> allowed = new HashSet<>();
-        allowed.add(BarInterface.class);
+        Set<String> allowed = new HashSet<>();
+        allowed.add(BarInterface.class.getName());
         sma.useExcludedPackageExemptClasses(allowed);
 
         String propertyName = "barLogic";
@@ -284,9 +284,9 @@ public class SecurityMemberAccessTest {
         sma.useExcludedPackageNames(excluded);
 
         // Exemption must exist for both classes (target and member) if they both match a banned package
-        Set<Class<?>> allowed = new HashSet<>();
-        allowed.add(BarInterface.class);
-        allowed.add(FooBar.class);
+        Set<String> allowed = new HashSet<>();
+        allowed.add(BarInterface.class.getName());
+        allowed.add(FooBar.class.getName());
         sma.useExcludedPackageExemptClasses(allowed);
 
         String propertyName = "barLogic";
@@ -344,7 +344,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessStaticMethod() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
@@ -357,7 +357,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessStaticField() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
@@ -371,7 +371,7 @@ public class SecurityMemberAccessTest {
     public void testBlockedStaticFieldWhenFlagIsTrue() throws Exception {
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
@@ -383,7 +383,7 @@ public class SecurityMemberAccessTest {
         // public static final test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         method = StaticTester.class.getField("MIN_VALUE");
@@ -395,7 +395,7 @@ public class SecurityMemberAccessTest {
         // package static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         method = StaticTester.getFieldByName("PACKAGE_STRING");
@@ -407,7 +407,7 @@ public class SecurityMemberAccessTest {
         // package final static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         method = StaticTester.getFieldByName("FINAL_PACKAGE_STRING");
@@ -419,7 +419,7 @@ public class SecurityMemberAccessTest {
         // protected static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         method = StaticTester.getFieldByName("PROTECTED_STRING");
@@ -431,7 +431,7 @@ public class SecurityMemberAccessTest {
         // protected final static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         method = StaticTester.getFieldByName("FINAL_PROTECTED_STRING");
@@ -443,7 +443,7 @@ public class SecurityMemberAccessTest {
         // private static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         method = StaticTester.getFieldByName("PRIVATE_STRING");
@@ -455,7 +455,7 @@ public class SecurityMemberAccessTest {
         // private final static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         method = StaticTester.getFieldByName("FINAL_PRIVATE_STRING");
@@ -469,7 +469,6 @@ public class SecurityMemberAccessTest {
     public void testBlockedStaticFieldWhenFlagIsFalse() throws Exception {
         // given
         assignNewSma(false);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
@@ -481,7 +480,6 @@ public class SecurityMemberAccessTest {
         // public static final test
         // given
         assignNewSma(false);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
         // when
         method = StaticTester.class.getField("MIN_VALUE");
@@ -493,7 +491,6 @@ public class SecurityMemberAccessTest {
         // package static test
         // given
         assignNewSma(false);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
         // when
         method = StaticTester.getFieldByName("PACKAGE_STRING");
@@ -505,7 +502,6 @@ public class SecurityMemberAccessTest {
         // package final static test
         // given
         assignNewSma(false);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
         // when
         method = StaticTester.getFieldByName("FINAL_PACKAGE_STRING");
@@ -517,7 +513,6 @@ public class SecurityMemberAccessTest {
         // protected static test
         // given
         assignNewSma(false);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
         // when
         method = StaticTester.getFieldByName("PROTECTED_STRING");
@@ -529,7 +524,6 @@ public class SecurityMemberAccessTest {
         // protected final static test
         // given
         assignNewSma(false);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
         // when
         method = StaticTester.getFieldByName("FINAL_PROTECTED_STRING");
@@ -541,7 +535,6 @@ public class SecurityMemberAccessTest {
         // private static test
         // given
         assignNewSma(false);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
         // when
         method = StaticTester.getFieldByName("PRIVATE_STRING");
@@ -553,7 +546,6 @@ public class SecurityMemberAccessTest {
         // private final static test
         // given
         assignNewSma(false);
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
 
         // when
         method = StaticTester.getFieldByName("FINAL_PRIVATE_STRING");
@@ -566,7 +558,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testBlockedStaticFieldWhenClassIsExcluded() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(Arrays.asList(Class.class, StaticTester.class)));
+        sma.useExcludedClasses(new HashSet<>(Arrays.asList(Class.class.getName(), StaticTester.class.getName())));
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
@@ -579,7 +571,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testBlockStaticMethodAccess() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
@@ -592,7 +584,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testBlockAccessIfClassIsExcluded() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         Member method = Class.class.getMethod("getClassLoader");
@@ -605,7 +597,7 @@ public class SecurityMemberAccessTest {
    @Test
     public void testBlockAccessIfClassIsExcluded_2() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(ClassLoader.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(ClassLoader.class.getName())));
 
         // when
         Member method = ClassLoader.class.getMethod("loadClass", String.class);
@@ -619,7 +611,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAllowAccessIfClassIsNotExcluded() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(ClassLoader.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(ClassLoader.class.getName())));
 
         // when
         Member method = Class.class.getMethod("getClassLoader");
@@ -632,7 +624,7 @@ public class SecurityMemberAccessTest {
    @Test
     public void testIllegalArgumentExceptionExpectedForTargetMemberMismatch() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(Collections.singletonList(Class.class)));
+        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         Member method = ClassLoader.class.getMethod("loadClass", String.class);
@@ -669,12 +661,12 @@ public class SecurityMemberAccessTest {
         sma.useExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("ognl.,javax."));
 
 
-        Set<Class<?>> excluded = new HashSet<>();
-        excluded.add(Object.class);
-        excluded.add(Runtime.class);
-        excluded.add(System.class);
-        excluded.add(Class.class);
-        excluded.add(ClassLoader.class);
+        Set<String> excluded = new HashSet<>();
+        excluded.add(Object.class.getName());
+        excluded.add(Runtime.class.getName());
+        excluded.add(System.class.getName());
+        excluded.add(Class.class.getName());
+        excluded.add(ClassLoader.class.getName());
         sma.useExcludedClasses(excluded);
 
         String propertyName = "doubleValue";
@@ -737,8 +729,8 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessMemberAccessIsAccessible() throws Exception {
         // given
-        Set<Class<?>> excluded = new HashSet<>();
-        excluded.add(ognl.MemberAccess.class);
+        Set<String> excluded = new HashSet<>();
+        excluded.add(ognl.MemberAccess.class.getName());
         sma.useExcludedClasses(excluded);
 
         String propertyName = "excludedClasses";
@@ -755,8 +747,8 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessMemberAccessIsBlocked() throws Exception {
         // given
-        Set<Class<?>> excluded = new HashSet<>();
-        excluded.add(SecurityMemberAccess.class);
+        Set<String> excluded = new HashSet<>();
+        excluded.add(SecurityMemberAccess.class.getName());
         sma.useExcludedClasses(excluded);
 
         String propertyName = "excludedClasses";

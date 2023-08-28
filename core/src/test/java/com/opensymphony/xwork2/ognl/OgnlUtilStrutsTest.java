@@ -35,8 +35,8 @@ public class OgnlUtilStrutsTest extends StrutsInternalTestCase {
         ognlUtil.setExcludedClasses("");
         ognlUtil.setExcludedPackageNames("");
         ognlUtil.setExcludedPackageNamePatterns("");
-        assertTrue(ognlUtil.getExcludedClasses().size() > 0);
-        assertTrue(ognlUtil.getExcludedPackageNames().size() > 0);
+        assertFalse(ognlUtil.getExcludedClasses().isEmpty());
+        assertFalse(ognlUtil.getExcludedPackageNames().isEmpty());
 
         try {
             ognlUtil.getExcludedClasses().clear();

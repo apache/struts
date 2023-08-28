@@ -35,8 +35,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Allows access decisions to be made on the basis of whether a member is static or not.
@@ -49,10 +51,10 @@ public class SecurityMemberAccess implements MemberAccess {
     private final boolean allowStaticFieldAccess;
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
-    private Set<Class<?>> excludedClasses = emptySet();
+    private Set<String> excludedClasses = emptySet();
     private Set<Pattern> excludedPackageNamePatterns = emptySet();
     private Set<String> excludedPackageNames = emptySet();
-    private Set<Class<?>> excludedPackageExemptClasses = emptySet();
+    private Set<String> excludedPackageExemptClasses = emptySet();
     private boolean disallowProxyMemberAccess;
 
     /**
@@ -223,7 +225,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
         List<Class<?>> classesToCheck = Arrays.asList(targetClass, memberClass);
         for (Class<?> clazz : classesToCheck) {
-            if (!excludedPackageExemptClasses.contains(clazz) && (isExcludedPackageNames(clazz) || isExcludedPackageNamePatterns(clazz))) {
+            if (!excludedPackageExemptClasses.contains(clazz.getName()) && (isExcludedPackageNames(clazz) || isExcludedPackageNamePatterns(clazz))) {
                 return true;
             }
         }
@@ -257,7 +259,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {
-        return excludedClasses.contains(clazz);
+        return excludedClasses.contains(clazz.getName());
     }
 
     protected boolean isAcceptableProperty(String name) {
@@ -322,14 +324,14 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludedClasses(Set<Class<?>> excludedClasses) {
-        useExcludedClasses(excludedClasses);
+        useExcludedClasses(excludedClasses.stream().map(Class::getName).collect(toSet()));
     }
 
-    public void useExcludedClasses(Set<Class<?>> excludedClasses) {
-        Set<Class<?>> newExcludedClasses = new HashSet<>(excludedClasses);
-        newExcludedClasses.add(Object.class);
+    public void useExcludedClasses(Set<String> excludedClasses) {
+        Set<String> newExcludedClasses = new HashSet<>(excludedClasses);
+        newExcludedClasses.add(Object.class.getName());
         if (!allowStaticFieldAccess) {
-            newExcludedClasses.add(Class.class);
+            newExcludedClasses.add(Class.class.getName());
         }
         this.excludedClasses = unmodifiableSet(newExcludedClasses);
     }
@@ -363,10 +365,10 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
-        this.excludedPackageExemptClasses = excludedPackageExemptClasses;
+        useExcludedPackageExemptClasses(excludedPackageExemptClasses.stream().map(Class::getName).collect(toSet()));
     }
 
-    public void useExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
+    public void useExcludedPackageExemptClasses(Set<String> excludedPackageExemptClasses) {
         this.excludedPackageExemptClasses = excludedPackageExemptClasses;
     }
 

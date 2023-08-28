@@ -220,34 +220,32 @@ public class SecurityMemberAccess implements MemberAccess {
                     "Parameters should never be null - if member is static, targetClass should be the same as memberClass.");
         }
 
-        Set<Class<?>> classesToCheck = new HashSet<>();
-        classesToCheck.add(targetClass);
-        classesToCheck.add(memberClass);
-
+        List<Class<?>> classesToCheck = Arrays.asList(targetClass, memberClass);
         for (Class<?> clazz : classesToCheck) {
-            if (!isExcludedPackageExempt(clazz) && (isExcludedPackageNamePatterns(clazz) || isExcludedPackageNames(clazz))) {
+            if (!excludedPackageExemptClasses.contains(clazz) && (isExcludedPackageNames(clazz) || isExcludedPackageNamePatterns(clazz))) {
                 return true;
             }
         }
         return false;
     }
 
-    protected String toPackageName(Class<?> clazz) {
+    public static String toPackageName(Class<?> clazz) {
         if (clazz.getPackage() == null) {
             return "";
-        } else {
-            return clazz.getPackage().getName();
         }
+        return clazz.getPackage().getName();
     }
 
     protected boolean isExcludedPackageNamePatterns(Class<?> clazz) {
-        String packageName = toPackageName(clazz);
-        return excludedPackageNamePatterns.stream().anyMatch(pattern -> pattern.matcher(packageName).matches());
+        return excludedPackageNamePatterns.stream().anyMatch(pattern -> pattern.matcher(toPackageName(clazz)).matches());
     }
 
     protected boolean isExcludedPackageNames(Class<?> clazz) {
-        String packageName = toPackageName(clazz);
-        List<String> packageParts = Arrays.asList(packageName.split("\\."));
+        return isExcludedPackageNamesStatic(clazz, excludedPackageNames);
+    }
+
+    public static boolean isExcludedPackageNamesStatic(Class<?> clazz, Set<String> excludedPackageNames) {
+        List<String> packageParts = Arrays.asList(toPackageName(clazz).split("\\."));
         for (int i = 0; i < packageParts.size(); i++) {
             String parentPackage = String.join(".", packageParts.subList(0, i + 1));
             if (excludedPackageNames.contains(parentPackage)) {
@@ -259,10 +257,6 @@ public class SecurityMemberAccess implements MemberAccess {
 
     protected boolean isClassExcluded(Class<?> clazz) {
         return excludedClasses.contains(clazz);
-    }
-
-    protected boolean isExcludedPackageExempt(Class<?> clazz) {
-        return excludedPackageExemptClasses.contains(clazz);
     }
 
     protected boolean isAcceptableProperty(String name) {

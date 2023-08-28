@@ -1763,6 +1763,10 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
+    public void testInvalidExcludedPackageNamePatterns() {
+        assertThrows(ConfigurationException.class, () -> ognlUtil.setExcludedPackageNamePatterns("["));
+    }
+
     public void testGetExcludedPackageNamePatternsAlternateConstructorPopulated() {
         // Getter should return an immutable collection
         OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>());

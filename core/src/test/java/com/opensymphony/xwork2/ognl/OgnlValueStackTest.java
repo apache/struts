@@ -980,6 +980,14 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertNull(vs.findValue("@com.nothing.here.Nothing@BLAH"));
     }
 
+    public void testExclusionList() {
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider("test-exclusion.xml"));
+
+        vs = createValueStack(true);
+
+        assertNull(vs.findValue("@java.math.RoundingMode@HALF_DOWN"));
+    }
+
     /**
      * Fails on 2.5.20 and earlier - tested on 2.5 (5/5/2016) and failed
      *

@@ -238,7 +238,7 @@ public class OgnlUtil {
     private static Set<String> toNewPackageNamesSet(Set<String> oldPackageNames, String newDelimitedPackageNames) throws ConfigurationException {
         Set<String> packageNames = commaDelimitedStringToSet(newDelimitedPackageNames)
                 .stream().map(s -> strip(s, ".")).collect(toSet());
-        if (packageNames.stream().anyMatch(s -> s.matches("(.*?)\\s(.*?)"))) {
+        if (packageNames.stream().anyMatch(s -> Pattern.compile("\\s").matcher(s).find())) {
             throw new ConfigurationException("Excluded package names could not be parsed due to erroneous whitespace characters: " + newDelimitedPackageNames);
         }
         Set<String> newPackageNames = new HashSet<>(oldPackageNames);

@@ -986,6 +986,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         vs = createValueStack(true);
 
         assertNull(vs.findValue("@java.math.RoundingMode@HALF_DOWN"));
+        assertNull(vs.findValue("#@java.util.HashMap@{}"));
     }
 
     /**

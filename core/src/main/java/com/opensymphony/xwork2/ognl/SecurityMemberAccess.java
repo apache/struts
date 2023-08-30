@@ -149,7 +149,8 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         if (targetClass.getPackage() == null || memberClass.getPackage() == null) {
-            LOG.warn("The use of the default (unnamed) package is discouraged!");
+            LOG.warn("The use of the default package is blocked!");
+            return false;
         }
 
         if (isPackageExcluded(targetClass)) {
@@ -225,7 +226,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     public static String toPackageName(Class<?> clazz) {
         if (clazz.getPackage() == null) {
-            return "";
+            throw new IllegalArgumentException("The use of the default package is blocked!");
         }
         return clazz.getPackage().getName();
     }

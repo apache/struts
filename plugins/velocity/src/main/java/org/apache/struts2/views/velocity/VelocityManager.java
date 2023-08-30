@@ -46,6 +46,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -53,6 +54,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apache.struts2.views.util.ContextUtil.OGNL;
@@ -80,7 +82,7 @@ public class VelocityManager {
     /**
      * Names of contexts that will be chained on every request
      */
-    private String[] chainedContextNames;
+    private List<String> chainedContextNames = emptyList();
 
     private Properties velocityProperties;
 
@@ -165,9 +167,6 @@ public class VelocityManager {
      */
     protected List<VelocityContext> prepareChainedContexts(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Map<String, Object> extraContext) {
         List<VelocityContext> contextList = new ArrayList<>();
-        if (chainedContextNames == null) {
-            return contextList;
-        }
         for (String className : chainedContextNames) {
             try {
                 VelocityContext velocityContext = (VelocityContext) objectFactory.buildBean(className, extraContext);
@@ -340,7 +339,7 @@ public class VelocityManager {
      */
     @Inject(StrutsConstants.STRUTS_VELOCITY_CONTEXTS)
     public void setChainedContexts(String contexts) {
-        this.chainedContextNames = contexts.split(",");
+        this.chainedContextNames = Arrays.stream(contexts.split(",")).filter(StringUtils::isNotBlank).collect(toList());
     }
 
     /**

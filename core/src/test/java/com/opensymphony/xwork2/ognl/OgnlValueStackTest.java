@@ -48,13 +48,14 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.config.DefaultPropertiesProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -84,14 +85,13 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     private OgnlUtil ognlUtil;
 
+    private OgnlValueStack vs;
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
         ognlUtil = container.getInstance(OgnlUtil.class);
-    }
-
-    private OgnlValueStack createValueStack() {
-        return createValueStack(true);
+        vs = createValueStack(true);
     }
 
     private OgnlValueStack createValueStack(boolean allowStaticFieldAccess) {
@@ -134,7 +134,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
         Map expr1 = new LinkedHashMap();
         expr1.put("expr1", "'expr1value'");
 
-        OgnlValueStack vs = createValueStack();
         vs.setExprOverrides(expr1);
 
         assertEquals(vs.findValue("expr1"), "expr1value");
@@ -150,8 +149,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
 
     public void testArrayAsString() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setAge(12);
         dog.setName("Rover");
@@ -167,7 +164,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     private void testValuesFromContextAreConverted(String propertyName) {
-        final OgnlValueStack vs = createValueStack();
         final String propertyValue = "Rover";
         vs.getContext().put(propertyName, new String[]{propertyValue});
 
@@ -180,7 +176,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     private void testNullValueFromContextGetsConverted(String propertyName) {
-        final OgnlValueStack vs = createValueStack();
         final String propertyValue = null;
         vs.getContext().put(propertyName, propertyValue);
 
@@ -188,8 +183,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testFailOnException() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         vs.push(dog);
         try {
@@ -202,8 +195,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testFailOnErrorOnInheritedProperties() {
         //this shuld not fail as the property is defined on a parent class
-        OgnlValueStack vs = createValueStack();
-
         Foo foo = new Foo();
         BarJunior barjr = new BarJunior();
         foo.setBarJunior(barjr);
@@ -215,8 +206,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testSuccessFailOnErrorOnInheritedPropertiesWithMethods() {
         //this shuld not fail as the property is defined on a parent class
-        OgnlValueStack vs = createValueStack();
-
         Foo foo = new Foo();
         BarJunior barjr = new BarJunior();
         foo.setBarJunior(barjr);
@@ -227,8 +216,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testFailFailOnErrorOnInheritedPropertiesWithMethods() {
-        OgnlValueStack vs = createValueStack();
-
         Foo foo = new Foo();
         BarJunior barjr = new BarJunior();
         foo.setBarJunior(barjr);
@@ -243,8 +230,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testFailOnMissingProperty() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         vs.push(dog);
         try {
@@ -266,7 +251,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     private void testLogMissingProperties(boolean logMissingProperties) {
-        OgnlValueStack vs = createValueStack();
         vs.setLogMissingProperties("" + logMissingProperties);
 
         Dog dog = new Dog();
@@ -305,7 +289,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * @since 2.5.21
      */
     public void testNotLogUserExceptionsAsMissingProperties() {
-        OgnlValueStack vs = createValueStack();
         vs.setLogMissingProperties("true");
 
         Dog dog = new Dog();
@@ -347,8 +330,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testFailOnMissingMethod() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         vs.push(dog);
         try {
@@ -368,10 +349,9 @@ public class OgnlValueStackTest extends XWorkTestCase {
                     props.setProperty(StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH, "192");
                 }
             });
-            Integer repeat = Integer.parseInt(
+            int repeat = Integer.parseInt(
                 container.getInstance(String.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_MAX_LENGTH));
 
-            OgnlValueStack vs = createValueStack();
             try {
                 vs.findValue(StringUtils.repeat('.', repeat + 1), true);
                 fail("Failed to throw exception on too long expression");
@@ -393,7 +373,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         int defaultValue = 256;
 
-        OgnlValueStack vs = createValueStack();
         try {
             vs.findValue(StringUtils.repeat('.', defaultValue + 1), true);
             fail("findValue did not throw any exception (should either fail as invalid expression syntax or security exception) ?");
@@ -412,8 +391,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         int defaultValue = 256;
 
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         vs.push(dog);
 
@@ -426,12 +403,11 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testFailsOnMethodThatThrowsException() {
         SimpleAction action = new SimpleAction();
-        OgnlValueStack stack = createValueStack();
-        stack.push(action);
+        vs.push(action);
 
         action.setThrowException(true);
         try {
-            stack.findValue("exceptionMethod12()", true);
+            vs.findValue("exceptionMethod12()", true);
             fail("Failed to throw exception on EL method exception");
         } catch (Exception ex) {
             //ok
@@ -442,8 +418,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     public void testDoesNotFailOnNonActionObjects() {
         //if a value is not found, then it will check for missing properties
         //it needs to check in all objects in the stack, not only actions, see WW-3306
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setHates(null);
         vs.push(dog);
@@ -452,8 +426,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
 
     public void testFailOnMissingNestedProperty() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setHates(new Cat());
         vs.push(dog);
@@ -466,8 +438,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testBasic() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setAge(12);
         dog.setName("Rover");
@@ -477,8 +447,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testStatic() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setDeity("fido");
         vs.push(dog);
@@ -489,16 +457,12 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * Allow access Enums without enabling access to static methods
      */
     public void testEnum() throws Exception {
-        OgnlValueStack vs = createValueStack();
-
         assertEquals("ONE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[0]", String.class));
         assertEquals("TWO", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[1]", String.class));
         assertEquals("THREE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[2]", String.class));
     }
 
     public void testStaticMethodDisallow() {
-        OgnlValueStack vs = createValueStack(true);
-
         Dog dog = new Dog();
         dog.setDeity("fido");
         vs.push(dog);
@@ -506,8 +470,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testBasicSet() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setAge(12);
         dog.setName("Rover");
@@ -517,38 +479,34 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testCallMethodOnNullObject() {
-        OgnlValueStack stack = createValueStack();
-        assertNull(stack.findValue("foo.size()"));
+        assertNull(vs.findValue("foo.size()"));
     }
 
     public void testCallMethodThatThrowsExceptionTwice() {
         SimpleAction action = new SimpleAction();
-        OgnlValueStack stack = createValueStack();
-        stack.push(action);
+        vs.push(action);
 
         action.setThrowException(true);
-        assertNull(stack.findValue("exceptionMethod1()"));
+        assertNull(vs.findValue("exceptionMethod1()"));
         action.setThrowException(false);
-        assertEquals("OK", stack.findValue("exceptionMethod()"));
+        assertEquals("OK", vs.findValue("exceptionMethod()"));
     }
 
 
     public void testCallMethodWithNullArg() {
         SimpleAction action = new SimpleAction();
-        OgnlValueStack stack = createValueStack();
-        stack.push(action);
+        vs.push(action);
 
-        stack.findValue("setName(blah)");
+        vs.findValue("setName(blah)");
         assertNull(action.getName());
 
         action.setBlah("blah");
-        stack.findValue("setName(blah)");
+        vs.findValue("setName(blah)");
         assertEquals("blah", action.getName());
     }
 
     public void testConvertStringArrayToList() {
         Foo foo = new Foo();
-        OgnlValueStack vs = createValueStack();
         vs.push(foo);
 
         vs.setValue("strings", new String[]{"one", "two"});
@@ -563,9 +521,8 @@ public class OgnlValueStackTest extends XWorkTestCase {
         // register converter
         TestBean2 tb2 = new TestBean2();
 
-        OgnlValueStack stack = createValueStack();
-        stack.push(tb2);
-        Map myContext = stack.getContext();
+        vs.push(tb2);
+        Map myContext = vs.getContext();
 
         Map props = new HashMap();
         props.put("cat", "Kitty");
@@ -574,12 +531,12 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals("Kitty", tb2.getCat().getName());
 
         // findValue should be able to access the name
-        Object value = stack.findValue("cat.name == 'Kitty'", Boolean.class);
+        Object value = vs.findValue("cat.name == 'Kitty'", Boolean.class);
         assertNotNull(value);
         assertEquals(Boolean.class, value.getClass());
         assertEquals(Boolean.TRUE, value);
 
-        value = stack.findValue("cat == null", Boolean.class);
+        value = vs.findValue("cat == null", Boolean.class);
         assertNotNull(value);
         assertEquals(Boolean.class, value.getClass());
         assertEquals(Boolean.FALSE, value);
@@ -587,8 +544,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
 
     public void testDeepProperties() {
-        OgnlValueStack vs = createValueStack();
-
         Cat cat = new Cat();
         cat.setName("Smokey");
 
@@ -603,7 +558,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testFooBarAsString() {
-        OgnlValueStack vs = createValueStack();
         Foo foo = new Foo();
         Bar bar = new Bar();
         bar.setTitle("blah");
@@ -621,7 +575,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
         bar.setSomethingElse(123);
         foo.setBar(bar);
 
-        OgnlValueStack vs = createValueStack();
         vs.push(foo);
 
         String output = (String) vs.findValue("bar", String.class);
@@ -660,7 +613,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
         fooB.setBar(bar);
         fooC.setBar(bar);
 
-        OgnlValueStack vs = createValueStack();
         vs.push(foo);
 
         vs.getContext().put("foo", foo);
@@ -682,9 +634,8 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testGetNullValue() {
         Dog dog = new Dog();
-        OgnlValueStack stack = createValueStack();
-        stack.push(dog);
-        assertNull(stack.findValue("name"));
+        vs.push(dog);
+        assertNull(vs.findValue("name"));
     }
 
     public void testMapEntriesAvailableByKey() {
@@ -692,7 +643,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
         String title = "a title";
         foo.setTitle(title);
 
-        OgnlValueStack vs = createValueStack();
         vs.push(foo);
 
         Map map = new HashMap();
@@ -712,8 +662,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testMethodCalls() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog1 = new Dog();
         dog1.setAge(12);
         dog1.setName("Rover");
@@ -744,8 +692,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testMismatchedGettersAndSettersCauseExceptionInSet() {
-        OgnlValueStack vs = createValueStack();
-
         BadJavaBean bean = new BadJavaBean();
         vs.push(bean);
 
@@ -762,8 +708,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testNoExceptionInSetForDefault() {
-        OgnlValueStack vs = createValueStack();
-
         BadJavaBean bean = new BadJavaBean();
         vs.push(bean);
 
@@ -780,8 +724,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testNullEntry() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setName("Rover");
 
@@ -794,10 +736,9 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testNullMethod() {
         Dog dog = new Dog();
-        OgnlValueStack stack = createValueStack();
-        stack.push(dog);
-        assertNull(stack.findValue("nullMethod()"));
-        assertNull(stack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticNullMethod()"));
+        vs.push(dog);
+        assertNull(vs.findValue("nullMethod()"));
+        assertNull(vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticNullMethod()"));
     }
 
     public void testPetSoarBug() {
@@ -809,7 +750,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
         bar.setSomethingElse(123);
         cat.getFoo().setBar(bar);
 
-        OgnlValueStack vs = createValueStack();
         vs.push(cat);
 
         assertEquals("bar:123", vs.findValue("foo.bar", String.class));
@@ -817,31 +757,29 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testPrimitiveSettingWithInvalidValueAddsFieldErrorInDevMode() throws Exception {
         SimpleAction action = new SimpleAction();
-        OgnlValueStack stack = createValueStack();
-        stack.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-        stack.setDevMode("true");
-        stack.push(action);
+        vs.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        vs.setDevMode("true");
+        vs.push(action);
 
         try {
-            stack.setValue("bar", "3x");
+            vs.setValue("bar", "3x");
             fail("Attempt to set 'bar' int property to '3x' should result in RuntimeException");
         } catch (RuntimeException re) {
             assertTrue(true);
         }
 
-        Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
+        Map<String, ConversionData> conversionErrors = vs.getActionContext().getConversionErrors();
         assertTrue(conversionErrors.containsKey("bar"));
     }
 
     public void testPrimitiveSettingWithInvalidValueAddsFieldErrorInNonDevMode() {
         SimpleAction action = new SimpleAction();
-        OgnlValueStack stack = createValueStack();
-        stack.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-        stack.setDevMode("false");
-        stack.push(action);
-        stack.setValue("bar", "3x");
+        vs.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        vs.setDevMode("false");
+        vs.push(action);
+        vs.setValue("bar", "3x");
 
-        Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
+        Map<String, ConversionData> conversionErrors = vs.getActionContext().getConversionErrors();
         assertTrue(conversionErrors.containsKey("bar"));
     }
 
@@ -849,25 +787,22 @@ public class OgnlValueStackTest extends XWorkTestCase {
     public void testObjectSettingWithInvalidValueDoesNotCauseSetCalledWithNull() {
         SimpleAction action = new SimpleAction();
         action.setBean(new TestBean());
-        OgnlValueStack stack = createValueStack();
-        stack.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
-        stack.push(action);
+        vs.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        vs.push(action);
         try {
-            stack.setValue("bean", "foobar", true);
+            vs.setValue("bean", "foobar", true);
             fail("Should have thrown a type conversion exception");
         } catch (StrutsException e) {
             // expected
         }
 
-        Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
+        Map<String, ConversionData> conversionErrors = vs.getActionContext().getConversionErrors();
         assertTrue(conversionErrors.containsKey("bean"));
         assertNotNull(action.getBean());
     }
 
 
     public void testSerializable() throws IOException, ClassNotFoundException {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setAge(12);
         dog.setName("Rover");
@@ -889,8 +824,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testSetAfterPush() {
-        OgnlValueStack vs = createValueStack();
-
         Dog d = new Dog();
         d.setName("Rover");
         vs.push(d);
@@ -904,7 +837,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     public void testSetBarAsString() {
         Foo foo = new Foo();
 
-        OgnlValueStack vs = createValueStack();
         vs.push(foo);
 
         vs.setValue("bar", "bar:123");
@@ -914,8 +846,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testSetBeforePush() {
-        OgnlValueStack vs = createValueStack();
-
         vs.set("name", "Bill");
         Dog d = new Dog();
         d.setName("Rover");
@@ -930,7 +860,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
         Foo foo2 = new Foo();
         foo.setChild(foo2);
 
-        OgnlValueStack vs = createValueStack();
         vs.push(foo);
 
         vs.setValue("child.bar", "bar:123");
@@ -941,7 +870,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testSetNullList() {
         Foo foo = new Foo();
-        OgnlValueStack vs = createValueStack();
         vs.getContext().put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.TRUE);
         vs.push(foo);
 
@@ -982,7 +910,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testSetMultiple() {
-        OgnlValueStack vs = createValueStack();
         int origSize = vs.getRoot().size();
         vs.set("something", new Object());
         vs.set("somethingElse", new Object());
@@ -993,7 +920,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testSetNullMap() {
         Foo foo = new Foo();
-        OgnlValueStack vs = createValueStack();
         vs.getContext().put(ReflectionContextState.CREATE_NULL_OBJECTS, Boolean.TRUE);
         vs.push(foo);
 
@@ -1020,7 +946,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
         Foo foo3 = new Foo();
         foo2.setChild(foo3);
 
-        OgnlValueStack vs = createValueStack();
         vs.push(foo);
 
         vs.setValue("child.child.bar", "bar:123");
@@ -1030,8 +955,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testSettingDogGender() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         vs.push(dog);
 
@@ -1041,8 +964,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testStatics() {
-        OgnlValueStack vs = createValueStack();
-
         Cat cat = new Cat();
         vs.push(cat);
 
@@ -1054,7 +975,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals("Canine", vs.findValue("@vs@SCIENTIFIC_NAME"));
         assertEquals("Canine", vs.findValue("@vs1@SCIENTIFIC_NAME"));
         assertEquals("Feline", vs.findValue("@vs2@SCIENTIFIC_NAME"));
-        assertEquals(BigDecimal.ROUND_HALF_DOWN, vs.findValue("@java.math.BigDecimal@ROUND_HALF_DOWN"));
+        assertEquals(RoundingMode.HALF_DOWN, vs.findValue("@java.math.RoundingMode@HALF_DOWN"));
         assertNull(vs.findValue("@vs3@BLAH"));
         assertNull(vs.findValue("@com.nothing.here.Nothing@BLAH"));
     }
@@ -1065,8 +986,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * @since 2.5.21
      */
     public void testNotThrowExceptionOnTopMissingProperty() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setName("Rover");
         vs.push(dog);
@@ -1088,8 +1007,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * @since 2.5.21
      */
     public void testNotSkipUserReturnedNullValues() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog = new Dog();
         dog.setName("Rover");
         vs.push(dog);
@@ -1105,8 +1022,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testTop() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog1 = new Dog();
         dog1.setAge(12);
         dog1.setName("Rover");
@@ -1122,14 +1037,10 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     public void testTopIsDefaultTextProvider() {
-        OgnlValueStack vs = createValueStack();
-
         assertEquals(container.getInstance(TextProvider.class, "system"), vs.findValue("top"));
     }
 
     public void testTwoDogs() {
-        OgnlValueStack vs = createValueStack();
-
         Dog dog1 = new Dog();
         dog1.setAge(12);
         dog1.setName("Rover");
@@ -1149,96 +1060,90 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
     public void testTypeConversionError() {
         TestBean bean = new TestBean();
-        OgnlValueStack stack = createValueStack();
-        stack.push(bean);
-        stack.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
+        vs.push(bean);
+        vs.getContext().put(XWorkConverter.REPORT_CONVERSION_ERRORS, Boolean.TRUE);
         try {
-            stack.setValue("count", "a", true);
+            vs.setValue("count", "a", true);
             fail("Should have thrown a type conversion exception");
         } catch (StrutsException e) {
             // expected
         }
 
-        Map<String, ConversionData> conversionErrors = stack.getActionContext().getConversionErrors();
+        Map<String, ConversionData> conversionErrors = vs.getActionContext().getConversionErrors();
         assertTrue(conversionErrors.containsKey("count"));
     }
 
     public void testConstructorWithAStack() {
-        OgnlValueStack stack = createValueStack();
-        stack.push("Hello World");
+        vs.push("Hello World");
 
-        OgnlValueStack stack2 = new OgnlValueStack(stack,
+        OgnlValueStack stack2 = new OgnlValueStack(vs,
             container.getInstance(XWorkConverter.class),
             (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()), true);
         container.inject(stack2);
 
-        assertEquals(stack.getRoot(), stack2.getRoot());
-        assertEquals(stack.peek(), stack2.peek());
+        assertEquals(vs.getRoot(), stack2.getRoot());
+        assertEquals(vs.peek(), stack2.peek());
         assertEquals("Hello World", stack2.pop());
 
     }
 
     public void testDefaultType() {
-        OgnlValueStack stack = createValueStack();
-        stack.setDefaultType(String.class);
-        stack.push("Hello World");
+        vs.setDefaultType(String.class);
+        vs.push("Hello World");
 
-        assertEquals("Hello World", stack.findValue("top"));
-        assertNull(stack.findValue(null));
+        assertEquals("Hello World", vs.findValue("top"));
+        assertNull(vs.findValue(null));
 
-        stack.setDefaultType(Integer.class);
-        stack.push(123);
-        assertEquals(123, stack.findValue("top"));
+        vs.setDefaultType(Integer.class);
+        vs.push(123);
+        assertEquals(123, vs.findValue("top"));
     }
 
     public void testFindString() {
-        OgnlValueStack stack = createValueStack();
-        stack.setDefaultType(Integer.class);
-        stack.push("Hello World");
+        vs.setDefaultType(Integer.class);
+        vs.push("Hello World");
 
-        assertEquals("Hello World", stack.findString("top"));
-        assertNull(stack.findString(null));
+        assertEquals("Hello World", vs.findString("top"));
+        assertNull(vs.findString(null));
     }
 
     public void testExpOverrides() {
         Map<Object, Object> overrides = new HashMap<>();
         overrides.put("claus", "top");
 
-        OgnlValueStack stack = createValueStack();
-        stack.setExprOverrides(overrides);
-        stack.push("Hello World");
+        vs.setExprOverrides(overrides);
+        vs.push("Hello World");
 
-        assertEquals("Hello World", stack.findValue("claus"));
-        assertEquals("Hello World", stack.findString("claus"));
-        assertEquals("Hello World", stack.findValue("top"));
-        assertEquals("Hello World", stack.findString("top"));
+        assertEquals("Hello World", vs.findValue("claus"));
+        assertEquals("Hello World", vs.findString("claus"));
+        assertEquals("Hello World", vs.findValue("top"));
+        assertEquals("Hello World", vs.findString("top"));
 
-        assertEquals("Hello World", stack.findValue("claus", String.class));
-        assertEquals("Hello World", stack.findValue("top", String.class));
+        assertEquals("Hello World", vs.findValue("claus", String.class));
+        assertEquals("Hello World", vs.findValue("top", String.class));
 
-        stack.getContext().put("santa", "Hello Santa");
-        assertEquals("Hello Santa", stack.findValue("santa", String.class));
-        assertNull(stack.findValue("unknown", String.class));
+        vs.getContext().put("santa", "Hello Santa");
+        assertEquals("Hello Santa", vs.findValue("santa", String.class));
+        assertNull(vs.findValue("unknown", String.class));
     }
 
     public void testWarnAboutInvalidProperties() {
-        OgnlValueStack stack = createValueStack();
         MyAction action = new MyAction();
         action.setName("Don");
-        stack.push(action);
+        vs.push(action);
 
         // how to test the warning was logged?
-        assertEquals("Don", stack.findValue("name", String.class));
-        assertNull(stack.findValue("address", String.class));
+        assertEquals("Don", vs.findValue("name", String.class));
+        assertNull(vs.findValue("address", String.class));
         // should log warning
-        assertNull(stack.findValue("address.invalidProperty", String.class));
+        assertNull(vs.findValue("address.invalidProperty", String.class));
 
         // if country is null, OGNL throws an exception
         /*action.setAddress(new Address());
         stack.push(action);*/
         // should log warning
-        assertNull(stack.findValue("address.country.id", String.class));
-        assertNull(stack.findValue("address.country.name", String.class));
+        assertNull(vs.findValue("address.country.id", String.class));
+        assertNull(vs.findValue("address.country.name", String.class));
     }
 
     /**

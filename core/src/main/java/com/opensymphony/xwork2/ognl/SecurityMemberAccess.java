@@ -56,6 +56,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
     private boolean disallowProxyMemberAccess;
+    private boolean disallowDefaultPackageAccess;
 
     /**
      * SecurityMemberAccess
@@ -148,9 +149,15 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        if (targetClass.getPackage() == null || memberClass.getPackage() == null) {
-            LOG.warn("The use of the default package is blocked!");
-            return false;
+        if (disallowDefaultPackageAccess) {
+            if (targetClass.getPackage() == null || targetClass.getPackage().getName().isEmpty()) {
+                LOG.warn("Class [{}] from the default package is excluded!", targetClass);
+                return false;
+            }
+            if (memberClass.getPackage() == null || memberClass.getPackage().getName().isEmpty()) {
+                LOG.warn("Class [{}] from the default package is excluded!", memberClass);
+                return false;
+            }
         }
 
         if (isPackageExcluded(targetClass)) {
@@ -226,7 +233,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     public static String toPackageName(Class<?> clazz) {
         if (clazz.getPackage() == null) {
-            throw new IllegalArgumentException("The use of the default package is blocked!");
+            return "";
         }
         return clazz.getPackage().getName();
     }
@@ -374,5 +381,9 @@ public class SecurityMemberAccess implements MemberAccess {
 
     public void disallowProxyMemberAccess(boolean disallowProxyMemberAccess) {
         this.disallowProxyMemberAccess = disallowProxyMemberAccess;
+    }
+
+    public void disallowDefaultPackageAccess(boolean disallowDefaultPackageAccess) {
+        this.disallowDefaultPackageAccess = disallowDefaultPackageAccess;
     }
 }

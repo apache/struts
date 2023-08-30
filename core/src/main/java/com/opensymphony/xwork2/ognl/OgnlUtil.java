@@ -25,7 +25,6 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
-import jdk.internal.reflect.Reflection;
 import ognl.ClassResolver;
 import ognl.Ognl;
 import ognl.OgnlContext;
@@ -187,7 +186,7 @@ public class OgnlUtil {
 
     private static Set<String> toNewClassesSet(Set<String> oldClasses, String newDelimitedClasses) throws ConfigurationException {
         Set<String> classNames = commaDelimitedStringToSet(newDelimitedClasses);
-        validateClasses(classNames, Reflection.getCallerClass().getClassLoader());
+        validateClasses(classNames, OgnlUtil.class.getClassLoader());
         Set<String> excludedClasses = new HashSet<>(oldClasses);
         excludedClasses.addAll(classNames);
         return unmodifiableSet(excludedClasses);

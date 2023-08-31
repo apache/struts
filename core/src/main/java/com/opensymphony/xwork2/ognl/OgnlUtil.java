@@ -539,7 +539,7 @@ public class OgnlUtil {
      * @throws OgnlException in case of ognl errors
      */
     public void setValue(final String name, final Map<String, Object> context, final Object root, final Object value) throws OgnlException {
-        ognlSet(name, context, root, value, context, this::checkEnableEvalExpression, this::checkEvalExpression, this::checkArithmeticExpression);
+        ognlSet(name, context, root, value, context, this::checkEvalExpression, this::checkArithmeticExpression);
     }
 
     private boolean isEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {

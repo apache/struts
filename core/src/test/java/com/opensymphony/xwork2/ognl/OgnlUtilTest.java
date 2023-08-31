@@ -1312,7 +1312,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
         assertNotNull(expected);
         assertSame(OgnlException.class, expected.getClass());
-        assertEquals(expected.getMessage(), "Eval expressions/chained expressions have been disabled!");
+        assertEquals("Eval expression/chained expressions cannot be used as parameter name", expected.getMessage());
     }
 
     public void testCallMethod() {

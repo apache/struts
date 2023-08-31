@@ -88,7 +88,7 @@ public class DefaultOgnlGuard implements OgnlGuard {
             return true;
         } else {
             for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-                if (containsExcludedNodeType(node.jjtGetChild(i))) {
+                if (recurseExcludedNodeType(node.jjtGetChild(i))) {
                     return true;
                 }
             }

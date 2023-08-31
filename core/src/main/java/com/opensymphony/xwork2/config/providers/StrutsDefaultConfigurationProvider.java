@@ -68,8 +68,10 @@ import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
+import com.opensymphony.xwork2.ognl.DefaultOgnlGuard;
 import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
 import com.opensymphony.xwork2.ognl.ObjectProxy;
+import com.opensymphony.xwork2.ognl.OgnlGuard;
 import com.opensymphony.xwork2.ognl.OgnlReflectionContextFactory;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
@@ -227,6 +229,7 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
             .factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
             .factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
             .factory(OgnlUtil.class, Scope.SINGLETON)
+            .factory(OgnlGuard.class, DefaultOgnlGuard.class, Scope.SINGLETON)
             .factory(CollectionConverter.class, Scope.SINGLETON)
             .factory(ArrayConverter.class, Scope.SINGLETON)
             .factory(DateConverter.class, Scope.SINGLETON)

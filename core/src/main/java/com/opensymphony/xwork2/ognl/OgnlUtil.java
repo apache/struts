@@ -54,6 +54,7 @@ import java.util.regex.PatternSyntaxException;
 import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.strip;
 
@@ -74,6 +75,7 @@ public class OgnlUtil {
     private final OgnlCache<String, Object> expressionCache;
     private final OgnlCache<Class<?>, BeanInfo> beanInfoCache;
     private TypeConverter defaultConverter;
+    private final OgnlGuard ognlGuard;
 
     private boolean devMode;
     private boolean enableExpressionCache = true;
@@ -97,36 +99,27 @@ public class OgnlUtil {
     /**
      * Construct a new OgnlUtil instance for use with the framework
      *
-     * @deprecated It is recommended to utilize the {@link OgnlUtil#OgnlUtil(com.opensymphony.xwork2.ognl.ExpressionCacheFactory, com.opensymphony.xwork2.ognl.BeanInfoCacheFactory) method instead.
+     * @deprecated since 6.0.0. Use {@link #OgnlUtil(ExpressionCacheFactory, BeanInfoCacheFactory, OgnlGuard) instead.
      */
     @Deprecated
     public OgnlUtil() {
-        // Instantiate default Expression and BeanInfo caches (factories must be non-null).
-        this(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>());
+        this(new DefaultOgnlExpressionCacheFactory<>(),
+                new DefaultOgnlBeanInfoCacheFactory<>(),
+                new DefaultOgnlGuard());
     }
 
     /**
-     * Construct a new OgnlUtil instance for use with the framework, with optional
-     * cache factories for OGNL Expression and BeanInfo caches.
+     * Construct a new OgnlUtil instance for use with the framework, with optional cache factories for OGNL Expression
+     * and BeanInfo caches.
      *
-     * NOTE: Although the extension points are defined for the optional cache factories, developer-defined overrides do
-     *       do not appear to function at this time (it always appears to instantiate the default factories).
-     *       Construction injectors do not allow the optional flag, so the definitions must be defined.
-     *
-     * @param ognlExpressionCacheFactory factory for Expression cache instance.  If null, it uses a default
-     * @param ognlBeanInfoCacheFactory factory for BeanInfo cache instance.  If null, it uses a default
+     * @param ognlExpressionCacheFactory factory for Expression cache instance
+     * @param ognlBeanInfoCacheFactory   factory for BeanInfo cache instance
+     * @param ognlGuard                  OGNL Guard instance
      */
     @Inject
-    public OgnlUtil(
-            @Inject ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
-            @Inject BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory
-    ) {
-        if (ognlExpressionCacheFactory == null) {
-            throw new IllegalArgumentException("ExpressionCacheFactory parameter cannot be null");
-        }
-        if (ognlBeanInfoCacheFactory == null) {
-            throw new IllegalArgumentException("BeanInfoCacheFactory parameter cannot be null");
-        }
+    public OgnlUtil(@Inject ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
+                    @Inject BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory,
+                    @Inject OgnlGuard ognlGuard) {
         excludedClasses = emptySet();
         excludedPackageNamePatterns = emptySet();
         excludedPackageNames = emptySet();
@@ -137,8 +130,9 @@ public class OgnlUtil {
         devModeExcludedPackageNames = emptySet();
         devModeExcludedPackageExemptClasses = emptySet();
 
-        expressionCache = ognlExpressionCacheFactory.buildOgnlCache();
-        beanInfoCache = ognlBeanInfoCacheFactory.buildOgnlCache();
+        this.expressionCache =  requireNonNull(ognlExpressionCacheFactory).buildOgnlCache();
+        this.beanInfoCache =  requireNonNull(ognlBeanInfoCacheFactory).buildOgnlCache();
+        this.ognlGuard = requireNonNull(ognlGuard);
     }
 
     @Inject
@@ -619,6 +613,9 @@ public class OgnlUtil {
             if (enableExpressionCache) {
                 expressionCache.put(expr, tree);
             }
+        }
+        if (ognlGuard.isBlocked(expr, tree)) {
+            throw new OgnlException("Expression blocked by OgnlGuard: " + expr);
         }
         return tree;
     }

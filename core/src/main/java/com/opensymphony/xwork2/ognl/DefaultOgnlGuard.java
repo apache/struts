@@ -18,6 +18,7 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import ognl.Node;
 import org.apache.logging.log4j.LogManager;
@@ -45,9 +46,22 @@ public class DefaultOgnlGuard implements OgnlGuard {
     @Inject(value = StrutsConstants.STRUTS_OGNL_EXCLUDED_NODE_TYPES, required = false)
     public void useExcludedNodeTypes(String excludedNodeTypes) {
         Set<String> incomingExcludedNodeTypes = commaDelimitedStringToSet(excludedNodeTypes);
+        validateExcludedNodeTypes(incomingExcludedNodeTypes);
         Set<String> newExcludeNodeTypes = new HashSet<>(this.excludedNodeTypes);
         newExcludeNodeTypes.addAll(incomingExcludedNodeTypes);
         this.excludedNodeTypes = unmodifiableSet(newExcludeNodeTypes);
+    }
+
+    protected void validateExcludedNodeTypes(Set<String> incomingExcludedNodeTypes) throws ConfigurationException {
+        for (String excludedNodeType : incomingExcludedNodeTypes) {
+            try {
+                if (!Node.class.isAssignableFrom(Class.forName(excludedNodeType))) {
+                    throw new ConfigurationException("Excluded node type [" + excludedNodeType + "] is not a subclass of " + Node.class.getName());
+                }
+            } catch (ClassNotFoundException e) {
+                throw new ConfigurationException("Excluded node type [" + excludedNodeType + "] does not exist or cannot be loaded");
+            }
+        }
     }
 
     @Override

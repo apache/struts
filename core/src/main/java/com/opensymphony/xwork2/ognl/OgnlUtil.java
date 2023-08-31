@@ -72,6 +72,7 @@ public class OgnlUtil {
     // Flag used to reduce flooding logs with WARNs about using DevMode excluded packages
     private final AtomicBoolean warnReported = new AtomicBoolean(false);
 
+    private static final String GUARD_BLOCKED = "_ognl_guard_blocked";
     private final OgnlCache<String, Object> expressionCache;
     private final OgnlCache<Class<?>, BeanInfo> beanInfoCache;
     private TypeConverter defaultConverter;
@@ -610,11 +611,14 @@ public class OgnlUtil {
         }
         if (tree == null) {
             tree = Ognl.parseExpression(expr);
+            if (ognlGuard.isBlocked(expr, tree)) {
+                tree = GUARD_BLOCKED;
+            }
             if (enableExpressionCache) {
                 expressionCache.put(expr, tree);
             }
         }
-        if (ognlGuard.isBlocked(expr, tree)) {
+        if (GUARD_BLOCKED.equals(tree)) {
             throw new OgnlException("Expression blocked by OgnlGuard: " + expr);
         }
         return tree;

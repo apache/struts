@@ -21,7 +21,6 @@ package com.opensymphony.xwork2.ognl;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.ClearableValueStack;
@@ -34,7 +33,6 @@ import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
-import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,13 +75,26 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private boolean devMode;
     private boolean logMissingProperties;
 
+    protected OgnlValueStack(ValueStack vs,
+                             XWorkConverter xworkConverter,
+                             CompoundRootAccessor accessor,
+                             TextProvider prov,
+                             boolean allowStaticFieldAccess) {
+        setRoot(xworkConverter,
+                accessor,
+                vs != null ? new CompoundRoot(vs.getRoot()) : new CompoundRoot(),
+                allowStaticFieldAccess);
+        if (prov != null) {
+            push(prov);
+        }
+    }
+
     protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticFieldAccess) {
-        setRoot(xworkConverter, accessor, new CompoundRoot(), allowStaticFieldAccess);
-        push(prov);
+        this(null, xworkConverter, accessor, prov, allowStaticFieldAccess);
     }
 
     protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticFieldAccess) {
-        setRoot(xworkConverter, accessor, new CompoundRoot(vs.getRoot()), allowStaticFieldAccess);
+        this(vs, xworkConverter, accessor, null, allowStaticFieldAccess);
     }
 
     @Inject
@@ -462,21 +473,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      */
     public int size() {
         return root.size();
-    }
-
-    private Object readResolve() {
-        // TODO: this should be done better
-        ActionContext ac = ActionContext.getContext();
-        Container cont = ac.getContainer();
-        XWorkConverter xworkConverter = cont.getInstance(XWorkConverter.class);
-        CompoundRootAccessor accessor = (CompoundRootAccessor) cont.getInstance(PropertyAccessor.class, CompoundRoot.class.getName());
-        TextProvider prov = cont.getInstance(TextProvider.class, "system");
-        final boolean allowStaticField = BooleanUtils.toBoolean(cont.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS));
-        OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, allowStaticField);
-        aStack.setOgnlUtil(cont.getInstance(OgnlUtil.class));
-        aStack.setRoot(xworkConverter, accessor, this.root, allowStaticField);
-
-        return aStack;
     }
 
 

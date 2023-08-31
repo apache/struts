@@ -597,18 +597,18 @@ public class OgnlUtil {
         return compile(expression, null);
     }
 
-    private void ognlSet(String expr, Map<String, Object> context, Object root, Object value, Map<String, Object> checkContext, TreeCheck ...treeChecks) throws OgnlException {
+    private void ognlSet(String expr, Map<String, Object> context, Object root, Object value, Map<String, Object> checkContext, TreeValidator... treeValidators) throws OgnlException {
         Object tree = toTree(expr);
-        for (TreeCheck check : treeChecks) {
-            check.consume(tree, checkContext);
+        for (TreeValidator validator : treeValidators) {
+            validator.validate(tree, checkContext);
         }
         Ognl.setValue(tree, context, root, value);
     }
 
-    private <T> T ognlGet(String expr, Map<String, Object> context, Object root, Class<T> resultType, Map<String, Object> checkContext, TreeCheck ...treeChecks) throws OgnlException {
+    private <T> T ognlGet(String expr, Map<String, Object> context, Object root, Class<T> resultType, Map<String, Object> checkContext, TreeValidator... treeValidators) throws OgnlException {
         Object tree = toTree(expr);
-        for (TreeCheck check : treeChecks) {
-            check.consume(tree, checkContext);
+        for (TreeValidator validator : treeValidators) {
+            validator.validate(tree, checkContext);
         }
         return (T) Ognl.getValue(tree, context, root, resultType);
     }
@@ -895,7 +895,7 @@ public class OgnlUtil {
     }
 
     @FunctionalInterface
-    private interface TreeCheck {
-        void consume(Object tree, Map<String, Object> context) throws OgnlException;
+    private interface TreeValidator {
+        void validate(Object tree, Map<String, Object> context) throws OgnlException;
     }
 }

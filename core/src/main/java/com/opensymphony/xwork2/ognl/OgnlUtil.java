@@ -529,8 +529,7 @@ public class OgnlUtil {
     }
 
     /**
-     * Wrapper around Ognl.setValue() to handle type conversion for collection elements.
-     * Ideally, this should be handled by OGNL directly.
+     * Wrapper around Ognl#setValue
      *
      * @param name  the name
      * @param context context map
@@ -540,16 +539,7 @@ public class OgnlUtil {
      * @throws OgnlException in case of ognl errors
      */
     public void setValue(final String name, final Map<String, Object> context, final Object root, final Object value) throws OgnlException {
-        compileAndExecute(name, context, (OgnlTask<Void>) tree -> {
-            if (isEvalExpression(tree, context)) {
-                throw new OgnlException("Eval expression/chained expressions cannot be used as parameter name");
-            }
-            if (isArithmeticExpression(tree, context)) {
-                throw new OgnlException("Arithmetic expressions cannot be used as parameter name");
-            }
-            Ognl.setValue(tree, context, root, value);
-            return null;
-        });
+        ognlSet(name, context, root, value, context, this::checkEnableEvalExpression, this::checkEvalExpression, this::checkArithmeticExpression);
     }
 
     private boolean isEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
@@ -592,58 +582,55 @@ public class OgnlUtil {
     }
 
     public Object getValue(final String name, final Map<String, Object> context, final Object root) throws OgnlException {
-        return compileAndExecute(name, context, tree -> Ognl.getValue(tree, context, root));
+        return getValue(name, context, root, null);
     }
 
     public Object callMethod(final String name, final Map<String, Object> context, final Object root) throws OgnlException {
-        return compileAndExecuteMethod(name, context, tree -> Ognl.getValue(tree, context, root));
+        return ognlGet(name, context, root, null, context, this::checkSimpleMethod);
     }
 
     public Object getValue(final String name, final Map<String, Object> context, final Object root, final Class<?> resultType) throws OgnlException {
-        return compileAndExecute(name, context, tree -> Ognl.getValue(tree, context, root, resultType));
+        return ognlGet(name, context, root, resultType, context, this::checkEnableEvalExpression);
     }
-
 
     public Object compile(String expression) throws OgnlException {
         return compile(expression, null);
     }
 
-    private <T> Object compileAndExecute(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
-        Object tree;
-        if (enableExpressionCache) {
-            tree = expressionCache.get(expression);
-            if (tree == null) {
-                tree = Ognl.parseExpression(expression);
-                checkEnableEvalExpression(tree, context);
-                expressionCache.putIfAbsent(expression, tree);
-            }
-        } else {
-            tree = Ognl.parseExpression(expression);
-            checkEnableEvalExpression(tree, context);
+    private void ognlSet(String expr, Map<String, Object> context, Object root, Object value, Map<String, Object> checkContext, TreeCheck ...treeChecks) throws OgnlException {
+        Object tree = toTree(expr);
+        for (TreeCheck check : treeChecks) {
+            check.consume(tree, checkContext);
         }
-
-        return task.execute(tree);
+        Ognl.setValue(tree, context, root, value);
     }
 
-    private <T> Object compileAndExecuteMethod(String expression, Map<String, Object> context, OgnlTask<T> task) throws OgnlException {
-        Object tree;
-        if (enableExpressionCache) {
-            tree = expressionCache.get(expression);
-            if (tree == null) {
-                tree = Ognl.parseExpression(expression);
-                checkSimpleMethod(tree, context);
-                expressionCache.putIfAbsent(expression, tree);
-            }
-        } else {
-            tree = Ognl.parseExpression(expression);
-            checkSimpleMethod(tree, context);
+    private <T> T ognlGet(String expr, Map<String, Object> context, Object root, Class<T> resultType, Map<String, Object> checkContext, TreeCheck ...treeChecks) throws OgnlException {
+        Object tree = toTree(expr);
+        for (TreeCheck check : treeChecks) {
+            check.consume(tree, checkContext);
         }
+        return (T) Ognl.getValue(tree, context, root, resultType);
+    }
 
-        return task.execute(tree);
+    private Object toTree(String expr) throws OgnlException {
+        Object tree = null;
+        if (enableExpressionCache) {
+            tree = expressionCache.get(expr);
+        }
+        if (tree == null) {
+            tree = Ognl.parseExpression(expr);
+            if (enableExpressionCache) {
+                expressionCache.put(expr, tree);
+            }
+        }
+        return tree;
     }
 
     public Object compile(String expression, Map<String, Object> context) throws OgnlException {
-        return compileAndExecute(expression, context, tree -> tree);
+        Object tree = toTree(expression);
+        checkEnableEvalExpression(tree, context);
+        return tree;
     }
 
     private void checkEnableEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
@@ -655,6 +642,18 @@ public class OgnlUtil {
     private void checkSimpleMethod(Object tree, Map<String, Object> context) throws OgnlException {
         if (!isSimpleMethod(tree, context)) {
             throw new OgnlException("It isn't a simple method which can be called!");
+        }
+    }
+
+    private void checkEvalExpression(Object tree, Map<String, Object> context) throws OgnlException {
+        if (isEvalExpression(tree, context)) {
+            throw new OgnlException("Eval expression/chained expressions cannot be used as parameter name");
+        }
+    }
+
+    private void checkArithmeticExpression(Object tree, Map<String, Object> context) throws OgnlException {
+        if (isArithmeticExpression(tree, context)) {
+            throw new OgnlException("Arithmetic expressions cannot be used as parameter name");
         }
     }
 
@@ -732,12 +731,8 @@ public class OgnlUtil {
                     PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
                     if ((toPd != null) && (toPd.getWriteMethod() != null)) {
                         try {
-                            compileAndExecute(fromPd.getName(), context, expr -> {
-                                Object value = Ognl.getValue(expr, contextFrom, from);
-                                Ognl.setValue(expr, contextTo, to, value);
-                                return null;
-                            });
-
+                            Object value = ognlGet(fromPd.getName(), contextFrom, from, null, context, this::checkEnableEvalExpression);
+                            ognlSet(fromPd.getName(), contextTo, to, value, context);
                         } catch (OgnlException e) {
                             LOG.debug("Got OGNL exception", e);
                         }
@@ -809,7 +804,7 @@ public class OgnlUtil {
             final String propertyName = propertyDescriptor.getDisplayName();
             Method readMethod = propertyDescriptor.getReadMethod();
             if (readMethod != null) {
-                final Object value = compileAndExecute(propertyName, null, expr -> Ognl.getValue(expr, sourceMap, source));
+                final Object value = ognlGet(propertyName, sourceMap, source, null, null, this::checkEnableEvalExpression);
                 beanMap.put(propertyName, value);
             } else {
                 beanMap.put(propertyName, "There is no read method for " + propertyName);
@@ -899,8 +894,8 @@ public class OgnlUtil {
         return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);
     }
 
-    private interface OgnlTask<T> {
-        T execute(Object tree) throws OgnlException;
+    @FunctionalInterface
+    private interface TreeCheck {
+        void consume(Object tree, Map<String, Object> context) throws OgnlException;
     }
-
 }

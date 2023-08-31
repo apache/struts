@@ -18,6 +18,9 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import ognl.Ognl;
+import ognl.OgnlException;
+
 /**
  * Guards all expressions parsed by Struts Core. It is evaluated by {@link OgnlUtil} immediately after parsing any
  * expression.
@@ -26,12 +29,51 @@ package com.opensymphony.xwork2.ognl;
  */
 public interface OgnlGuard {
 
+    String GUARD_BLOCKED = "_ognl_guard_blocked";
+
     /**
-     * It is imperative that the parsed tree matches the expression.
+     * Determines whether an OGNL expression should be blocked based on validation done on both the raw expression and
+     * the parsed tree.
      *
      * @param expr OGNL expression
-     * @param tree parsed tree of expression
      * @return whether the expression should be blocked
      */
-    boolean isBlocked(String expr, Object tree);
+    default boolean isBlocked(String expr) throws OgnlException {
+        return GUARD_BLOCKED.equals(parseExpression(expr));
+    }
+
+    /**
+     * Parses an OGNL expression and returns the resulting tree only if the expression is not blocked as per defined
+     * validation rules in {@link #isRawExpressionBlocked} and {@link #isParsedTreeBlocked}.
+     *
+     * @param expr OGNL expression
+     * @return parsed expression or {@link #GUARD_BLOCKED} if the expression should be blocked
+     */
+    default Object parseExpression(String expr) throws OgnlException {
+        if (isRawExpressionBlocked(expr)) {
+            return GUARD_BLOCKED;
+        }
+        Object tree = Ognl.parseExpression(expr);
+        if (isParsedTreeBlocked(tree)) {
+            return GUARD_BLOCKED;
+        }
+        return tree;
+    }
+
+    /**
+     * Determines whether an OGNL expression should be blocked based on validation done on only the raw expression,
+     * without parsing the tree.
+     *
+     * @param expr OGNL expression
+     * @return whether the expression should be blocked
+     */
+    boolean isRawExpressionBlocked(String expr);
+
+    /**
+     * Determines whether a parsed OGNL tree should be blocked based on some validation rules.
+     *
+     * @param tree parsed OGNL tree
+     * @return whether the parsed tree should be blocked
+     */
+    boolean isParsedTreeBlocked(Object tree);
 }

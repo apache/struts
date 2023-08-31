@@ -65,7 +65,12 @@ public class DefaultOgnlGuard implements OgnlGuard {
     }
 
     @Override
-    public boolean isBlocked(String expr, Object tree) {
+    public boolean isRawExpressionBlocked(String expr) {
+        return false;
+    }
+
+    @Override
+    public boolean isParsedTreeBlocked(Object tree) {
         return containsExcludedNodeType(tree);
     }
 

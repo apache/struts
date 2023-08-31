@@ -19,8 +19,6 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
-import ognl.Ognl;
-import ognl.OgnlException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,19 +36,15 @@ public class DefaultOgnlGuardTest {
         defaultOgnlGuard = new DefaultOgnlGuard();
     }
 
-    private boolean exec(String expr) throws OgnlException {
-        return defaultOgnlGuard.isBlocked(expr, Ognl.parseExpression(expr));
-    }
-
     @Test
     public void notConfigured() throws Exception {
         String expr = "1+1";
-        assertFalse(exec(expr));
+        assertFalse(defaultOgnlGuard.isBlocked(expr));
     }
 
     @Test
     public void nonNodeTree() throws Exception {
-        assertFalse(defaultOgnlGuard.isBlocked("1+1", "String"));
+        assertFalse(defaultOgnlGuard.isParsedTreeBlocked("String"));
     }
 
     @Test
@@ -68,18 +62,18 @@ public class DefaultOgnlGuardTest {
     @Test
     public void addBlocked() throws Exception {
         String expr = "1+1";
-        assertFalse(exec(expr));
+        assertFalse(defaultOgnlGuard.isBlocked(expr));
 
         defaultOgnlGuard.useExcludedNodeTypes("ognl.ASTAdd");
-        assertTrue(exec(expr));
+        assertTrue(defaultOgnlGuard.isBlocked(expr));
     }
 
     @Test
     public void nestedAddBlocked() throws Exception {
         String expr = "{'a',1+1}";
-        assertFalse(exec(expr));
+        assertFalse(defaultOgnlGuard.isBlocked(expr));
 
         defaultOgnlGuard.useExcludedNodeTypes("ognl.ASTAdd");
-        assertTrue(exec(expr));
+        assertTrue(defaultOgnlGuard.isBlocked(expr));
     }
 }

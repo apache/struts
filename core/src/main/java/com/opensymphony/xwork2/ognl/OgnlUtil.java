@@ -51,6 +51,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import static com.opensymphony.xwork2.ognl.OgnlGuard.GUARD_BLOCKED;
 import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
@@ -72,7 +73,6 @@ public class OgnlUtil {
     // Flag used to reduce flooding logs with WARNs about using DevMode excluded packages
     private final AtomicBoolean warnReported = new AtomicBoolean(false);
 
-    private static final String GUARD_BLOCKED = "_ognl_guard_blocked";
     private final OgnlCache<String, Object> expressionCache;
     private final OgnlCache<Class<?>, BeanInfo> beanInfoCache;
     private TypeConverter defaultConverter;
@@ -610,10 +610,7 @@ public class OgnlUtil {
             tree = expressionCache.get(expr);
         }
         if (tree == null) {
-            tree = Ognl.parseExpression(expr);
-            if (ognlGuard.isBlocked(expr, tree)) {
-                tree = GUARD_BLOCKED;
-            }
+            tree = ognlGuard.parseExpression(expr);
             if (enableExpressionCache) {
                 expressionCache.put(expr, tree);
             }

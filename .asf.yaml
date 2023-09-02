@@ -3,7 +3,7 @@ notifications:
   commits: commits@struts.apache.org
   # Send all issue emails (new, closed, comments) to issues@
   issues: issues@struts.apache.org
-  # Send new/closed PR notifications to @commits
+  # Send new/closed PR notifications to commits@
   pullrequests_status: commits@struts.apache.org
   # Send individual PR comments/reviews to issues@
   pullrequests_comment: issues@struts.apache.org

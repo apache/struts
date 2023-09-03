@@ -52,9 +52,6 @@ jobs:
       - name: Build with Maven on Java ${{ matrix.java }}
         if: matrix.java != '17'
         run: mvn -B -V -DskipAssembly verify --no-transfer-progress
-      - name: Compile and Run FooTest
-        run: |
-          mvn -B -V compile test -Dtest=com.opensymphony.xwork2.FooTest
       - name: Code coverage on Java ${{ matrix.java }}
         if: matrix.java == '17'
         env:

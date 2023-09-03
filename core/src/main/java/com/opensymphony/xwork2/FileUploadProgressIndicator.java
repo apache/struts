@@ -17,6 +17,6 @@
  * under the License.
  */
 package com.opensymphony.xwork2;
-public class fileUploadProgressIndicator {
+public class FileUploadProgressIndicator {
 
 }

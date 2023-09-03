@@ -18,5 +18,5 @@
  */
 package com.opensymphony.xwork2;
 public class FileUploadProgressIndicator {
-
+/* this class is used to add a progress indicator for file uploads to provide visual feedback to users during lengthy uploads */
 }

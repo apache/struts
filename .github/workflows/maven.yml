@@ -58,4 +58,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
         run: mvn -B -V -Pcoverage -DskipAssembly verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --no-transfer-progress
+      - name: Build Successful
+        if: success() # Only execute on successful build
+        run: |
+          echo "Build Successful."
 

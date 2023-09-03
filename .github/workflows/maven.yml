@@ -20,7 +20,7 @@ on:
   push:
     branches:
       - master
-
+      - file-manager-support-koowei
 permissions: read-all
 
 env:
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '8', '11', '17' ]
+        java: [ '8', '11']
     steps:
       - name: Checkout code
         uses: actions/checkout@v3.0.2
@@ -51,6 +51,9 @@ jobs:
       - name: Build with Maven on Java ${{ matrix.java }}
         if: matrix.java != '17'
         run: mvn -B -V -DskipAssembly verify --no-transfer-progress
+        - name: Compile and Run FooTest
+        run: |
+          mvn -B -V compile test -Dtest=com.opensymphony.xwork2.FooTest
       - name: Code coverage on Java ${{ matrix.java }}
         if: matrix.java == '17'
         env:

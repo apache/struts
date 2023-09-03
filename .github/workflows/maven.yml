@@ -21,6 +21,7 @@ on:
     branches:
       - master
       - file-manager-support-koowei
+      - dashboard-enhance-yongyaowen
 
 permissions: read-all
 

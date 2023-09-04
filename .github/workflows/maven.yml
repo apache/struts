@@ -22,6 +22,7 @@ on:
       - master
       - file-manager-support-koowei
       - dashboard-enhance-yongyaowen
+      - file-upload-progress-indicator-elvin
 
 permissions: read-all
 

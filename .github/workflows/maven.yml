@@ -23,6 +23,10 @@ on:
       - file-manager-support-koowei
       - dashboard-enhance-yongyaowen
       - file-upload-progress-indicator-elvin
+<<<<<<< HEAD
+=======
+      
+>>>>>>> bc8dccd129535865da85a95e60a1b55fd8000f65
 
 permissions: read-all
 

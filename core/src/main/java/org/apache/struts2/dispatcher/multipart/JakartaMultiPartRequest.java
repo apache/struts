@@ -114,7 +114,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         LOG.debug("Item is a file upload");
 
         // Skip file uploads that don't have a file name - meaning that no file was selected.
-        if (item.getName() == null || item.getName().trim().length() < 1) {
+        if (item.getName() == null || item.getName().trim().isEmpty()) {
             LOG.debug("No file has been uploaded for the field: {}", item.getFieldName());
             return;
         }
@@ -131,39 +131,42 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
-        LOG.debug("Item is a normal form field");
+        try {
+            LOG.debug("Item is a normal form field");
 
-        List<String> values;
-        if (params.get(item.getFieldName()) != null) {
-            values = params.get(item.getFieldName());
-        } else {
-            values = new ArrayList<>();
+            List<String> values;
+            if (params.get(item.getFieldName()) != null) {
+                values = params.get(item.getFieldName());
+            } else {
+                values = new ArrayList<>();
+            }
+
+            long size = item.getSize();
+            if (size == 0) {
+                values.add(StringUtils.EMPTY);
+            } else if (size > maxStringLength) {
+                String errorKey = "struts.messages.upload.error.parameter.too.long";
+                LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
+                    new Object[]{item.getFieldName(), maxStringLength, size});
+
+                if (!errors.contains(localizedMessage)) {
+                    errors.add(localizedMessage);
+                }
+                return;
+
+            } else if (charset != null) {
+                values.add(item.getString(charset));
+            } else {
+                // note: see https://issues.apache.org/jira/browse/WW-633
+                // basically, in some cases the charset may be null, so
+                // we're just going to try to "other" method (no idea if this
+                // will work)
+                values.add(item.getString());
+            }
+            params.put(item.getFieldName(), values);
+        } finally {
+            item.delete();
         }
-
-        long size = item.getSize();
-        if (size == 0) {
-            values.add(StringUtils.EMPTY);
-        } else if (size > maxStringLength) {
-          String errorKey = "struts.messages.upload.error.parameter.too.long";
-          LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
-                  new Object[] { item.getFieldName(), maxStringLength, size });
-
-          if (!errors.contains(localizedMessage)) {
-              errors.add(localizedMessage);
-          }
-          return;
-
-        } else if (charset != null) {
-            values.add(item.getString(charset));
-        } else {
-            // note: see https://issues.apache.org/jira/browse/WW-633
-            // basically, in some cases the charset may be null, so
-            // we're just going to try to "other" method (no idea if this
-            // will work)
-            values.add(item.getString());
-        }
-        params.put(item.getFieldName(), values);
-        item.delete();
     }
 
     protected List<FileItem> parseRequest(HttpServletRequest servletRequest, String saveDir) throws FileUploadException {
@@ -218,7 +221,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             contentTypes.add(fileItem.getContentType());
         }
 
-        return contentTypes.toArray(new String[contentTypes.size()]);
+        return contentTypes.toArray(new String[0]);
     }
 
     /* (non-Javadoc)
@@ -247,7 +250,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             fileList.add(new StrutsUploadedFile(storeLocation));
         }
 
-        return fileList.toArray(new UploadedFile[fileList.size()]);
+        return fileList.toArray(new UploadedFile[0]);
     }
 
     /* (non-Javadoc)
@@ -265,7 +268,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             fileNames.add(getCanonicalName(fileItem.getName()));
         }
 
-        return fileNames.toArray(new String[fileNames.size()]);
+        return fileNames.toArray(new String[0]);
     }
 
     /* (non-Javadoc)
@@ -283,7 +286,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             fileNames.add(((DiskFileItem) fileItem).getStoreLocation().getName());
         }
 
-        return fileNames.toArray(new String[fileNames.size()]);
+        return fileNames.toArray(new String[0]);
     }
 
     /* (non-Javadoc)
@@ -291,7 +294,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      */
     public String getParameter(String name) {
         List<String> v = params.get(name);
-        if (v != null && v.size() > 0) {
+        if (v != null && !v.isEmpty()) {
             return v.get(0);
         }
 
@@ -310,8 +313,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
      */
     public String[] getParameterValues(String name) {
         List<String> v = params.get(name);
-        if (v != null && v.size() > 0) {
-            return v.toArray(new String[v.size()]);
+        if (v != null && !v.isEmpty()) {
+            return v.toArray(new String[0]);
         }
 
         return null;

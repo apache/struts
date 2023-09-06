@@ -10,7 +10,7 @@ pipeline {
   }
   tools {
     jdk 'jdk_1.7_latest'
-    maven 'maven_3_8_7'
+    maven 'maven_3.8.7'
   }
   triggers {
     pollSCM 'H/15 * * * *'

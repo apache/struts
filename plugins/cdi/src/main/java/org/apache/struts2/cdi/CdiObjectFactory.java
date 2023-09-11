@@ -26,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
+import javax.enterprise.inject.spi.InjectionTargetFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -173,7 +174,9 @@ public class CdiObjectFactory extends ObjectFactory {
         InjectionTarget<?> result;
         result = injectionTargetCache.get(clazz);
         if (result == null) {
-            result = beanManager.createInjectionTarget(beanManager.createAnnotatedType(clazz));
+			final InjectionTargetFactory<?> injectionTargetFactory =
+					beanManager.getInjectionTargetFactory(beanManager.createAnnotatedType(clazz));
+			result = injectionTargetFactory.createInjectionTarget(null);
             injectionTargetCache.put(clazz, result);
         }
 

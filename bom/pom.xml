@@ -25,11 +25,11 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>6.3.0.1</version>
+        <version>6.4.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-bom</artifactId>
-    <version>6.3.0.1</version>
+    <version>6.4.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Struts 2 Bill of Materials</name>
@@ -44,7 +44,7 @@
     </licenses>
 
     <properties>
-        <struts-version.version>6.3.0.1</struts-version.version>
+        <struts-version.version>6.4.0-SNAPSHOT</struts-version.version>
         <maven.site.skip>true</maven.site.skip>
         <maven.site.deploy.skip>true</maven.site.deploy.skip>
     </properties>

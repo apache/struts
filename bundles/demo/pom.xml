@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-osgi-bundles</artifactId>
-        <version>6.1.2.2</version>
+        <version>6.1.2.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>struts2-osgi-demo-bundle</artifactId>

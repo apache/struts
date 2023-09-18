@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '8', '11', '17' ]
+        java: [ '8', '11', '17', '21' ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

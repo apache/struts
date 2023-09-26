@@ -21,7 +21,6 @@ package com.opensymphony.xwork2.ognl;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
-import ognl.Ognl;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
 
@@ -33,9 +32,9 @@ import java.util.Collection;
 import java.util.Map;
 
 public class OgnlReflectionProvider implements ReflectionProvider {
-    
+
     private OgnlUtil ognlUtil;
-    
+
     @Inject
     public void setOgnlUtil(OgnlUtil ognlUtil) {
         this.ognlUtil = ognlUtil;
@@ -69,7 +68,6 @@ public class OgnlReflectionProvider implements ReflectionProvider {
 
     public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws ReflectionException{
         ognlUtil.setProperties(props, o, context, throwPropertyExceptions);
-        
     }
 
     public void setProperties(Map<String, ?> properties, Object o) {
@@ -134,7 +132,7 @@ public class OgnlReflectionProvider implements ReflectionProvider {
     public void setValue(String expression, Map<String, Object> context, Object root,
             Object value) throws ReflectionException {
         try {
-            Ognl.setValue(expression, context, root, value);
+            ognlUtil.setValue(expression, context, root, value);
         } catch (OgnlException e) {
             throw new ReflectionException(e);
         }

@@ -80,7 +80,7 @@ import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
-import com.opensymphony.xwork2.ognl.DefaultOgnlGuard;
+import com.opensymphony.xwork2.ognl.StrutsOgnlGuard;
 import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlGuard;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
@@ -365,7 +365,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON);
         builder.factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON);
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
-        builder.factory(OgnlGuard.class, DefaultOgnlGuard.class, Scope.SINGLETON);
+        builder.factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON);
 
         builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
 

@@ -1363,7 +1363,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testDefaultOgnlUtilExclusionsAlternateConstructorPopulated() {
         OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(),
                 new DefaultOgnlBeanInfoCacheFactory<>(),
-                new DefaultOgnlGuard());
+                new StrutsOgnlGuard());
 
         internalTestInitialEmptyOgnlUtilExclusions(basicOgnlUtil);
         internalTestOgnlUtilExclusionsImmutable(basicOgnlUtil);
@@ -1710,7 +1710,9 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetExcludedPackageNamesAlternateConstructorPopulated() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>(), new DefaultOgnlGuard());
+        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(),
+                new DefaultOgnlBeanInfoCacheFactory<>(),
+                new StrutsOgnlGuard());
         util.setExcludedPackageNames("java.lang,java.awt");
         assertEquals(util.getExcludedPackageNames().size(), 2);
         try {
@@ -1740,7 +1742,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         // Getter should return an immutable collection
         OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(),
                 new DefaultOgnlBeanInfoCacheFactory<>(),
-                new DefaultOgnlGuard());
+                new StrutsOgnlGuard());
         util.setExcludedClasses("java.lang.Runtime,java.lang.ProcessBuilder,java.net.URL");
         assertEquals(util.getExcludedClasses().size(), 3);
         try {
@@ -1774,7 +1776,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         // Getter should return an immutable collection
         OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(),
                 new DefaultOgnlBeanInfoCacheFactory<>(),
-                new DefaultOgnlGuard());
+                new StrutsOgnlGuard());
         util.setExcludedPackageNamePatterns("java.lang.");
         assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
         try {
@@ -1880,7 +1882,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         expressionFactory.setCacheMaxSize("25");
         beanInfoFactory.setUseLRUCache("true");
         beanInfoFactory.setCacheMaxSize("25");
-        result = new OgnlUtil(expressionFactory, beanInfoFactory, new DefaultOgnlGuard());
+        result = new OgnlUtil(expressionFactory, beanInfoFactory, new StrutsOgnlGuard());
         return result;
     }
 

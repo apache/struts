@@ -27,53 +27,53 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-public class DefaultOgnlGuardTest {
+public class StrutsOgnlGuardTest {
 
-    private DefaultOgnlGuard defaultOgnlGuard;
+    private StrutsOgnlGuard strutsOgnlGuard;
 
     @Before
     public void setUp() throws Exception {
-        defaultOgnlGuard = new DefaultOgnlGuard();
+        strutsOgnlGuard = new StrutsOgnlGuard();
     }
 
     @Test
     public void notConfigured() throws Exception {
         String expr = "1+1";
-        assertFalse(defaultOgnlGuard.isBlocked(expr));
+        assertFalse(strutsOgnlGuard.isBlocked(expr));
     }
 
     @Test
     public void nonNodeTree() throws Exception {
-        assertFalse(defaultOgnlGuard.isParsedTreeBlocked("String"));
+        assertFalse(strutsOgnlGuard.isParsedTreeBlocked("String"));
     }
 
     @Test
     public void nonExistentClass() throws Exception {
-        ConfigurationException e = assertThrows(ConfigurationException.class, () -> defaultOgnlGuard.useExcludedNodeTypes("ognl.Kusal"));
+        ConfigurationException e = assertThrows(ConfigurationException.class, () -> strutsOgnlGuard.useExcludedNodeTypes("ognl.Kusal"));
         assertThat(e).hasMessageContaining("does not exist or cannot be loaded");
     }
 
     @Test
     public void invalidClass() throws Exception {
-        ConfigurationException e = assertThrows(ConfigurationException.class, () -> defaultOgnlGuard.useExcludedNodeTypes("ognl.ElementsAccessor"));
+        ConfigurationException e = assertThrows(ConfigurationException.class, () -> strutsOgnlGuard.useExcludedNodeTypes("ognl.ElementsAccessor"));
         assertThat(e).hasMessageContaining("is not a subclass of ognl.Node");
     }
 
     @Test
     public void addBlocked() throws Exception {
         String expr = "1+1";
-        assertFalse(defaultOgnlGuard.isBlocked(expr));
+        assertFalse(strutsOgnlGuard.isBlocked(expr));
 
-        defaultOgnlGuard.useExcludedNodeTypes("ognl.ASTAdd");
-        assertTrue(defaultOgnlGuard.isBlocked(expr));
+        strutsOgnlGuard.useExcludedNodeTypes("ognl.ASTAdd");
+        assertTrue(strutsOgnlGuard.isBlocked(expr));
     }
 
     @Test
     public void nestedAddBlocked() throws Exception {
         String expr = "{'a',1+1}";
-        assertFalse(defaultOgnlGuard.isBlocked(expr));
+        assertFalse(strutsOgnlGuard.isBlocked(expr));
 
-        defaultOgnlGuard.useExcludedNodeTypes("ognl.ASTAdd");
-        assertTrue(defaultOgnlGuard.isBlocked(expr));
+        strutsOgnlGuard.useExcludedNodeTypes("ognl.ASTAdd");
+        assertTrue(strutsOgnlGuard.isBlocked(expr));
     }
 }

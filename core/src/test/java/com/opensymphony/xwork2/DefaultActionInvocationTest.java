@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.mock.MockInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
 import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
-import com.opensymphony.xwork2.ognl.DefaultOgnlGuard;
+import com.opensymphony.xwork2.ognl.StrutsOgnlGuard;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -535,7 +535,7 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         return new OgnlUtil(
                 new DefaultOgnlExpressionCacheFactory<>(),
                 new DefaultOgnlBeanInfoCacheFactory<>(),
-                new DefaultOgnlGuard()
+                new StrutsOgnlGuard()
         );
     }
 

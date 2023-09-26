@@ -82,15 +82,15 @@ public class OgnlUtil {
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
 
-    private Set<String> excludedClasses;
-    private Set<Pattern> excludedPackageNamePatterns;
-    private Set<String> excludedPackageNames;
-    private Set<String> excludedPackageExemptClasses;
+    private Set<String> excludedClasses = emptySet();
+    private Set<Pattern> excludedPackageNamePatterns = emptySet();
+    private Set<String> excludedPackageNames = emptySet();
+    private Set<String> excludedPackageExemptClasses = emptySet();
 
-    private Set<String> devModeExcludedClasses;
-    private Set<Pattern> devModeExcludedPackageNamePatterns;
-    private Set<String> devModeExcludedPackageNames;
-    private Set<String> devModeExcludedPackageExemptClasses;
+    private Set<String> devModeExcludedClasses = emptySet();
+    private Set<Pattern> devModeExcludedPackageNamePatterns = emptySet();
+    private Set<String> devModeExcludedPackageNames = emptySet();
+    private Set<String> devModeExcludedPackageExemptClasses = emptySet();
 
     private Container container;
     private boolean allowStaticFieldAccess = true;
@@ -106,7 +106,7 @@ public class OgnlUtil {
     public OgnlUtil() {
         this(new DefaultOgnlExpressionCacheFactory<>(),
                 new DefaultOgnlBeanInfoCacheFactory<>(),
-                new DefaultOgnlGuard());
+                new StrutsOgnlGuard());
     }
 
     /**
@@ -121,16 +121,6 @@ public class OgnlUtil {
     public OgnlUtil(@Inject ExpressionCacheFactory<String, Object> ognlExpressionCacheFactory,
                     @Inject BeanInfoCacheFactory<Class<?>, BeanInfo> ognlBeanInfoCacheFactory,
                     @Inject OgnlGuard ognlGuard) {
-        excludedClasses = emptySet();
-        excludedPackageNamePatterns = emptySet();
-        excludedPackageNames = emptySet();
-        excludedPackageExemptClasses = emptySet();
-
-        devModeExcludedClasses = emptySet();
-        devModeExcludedPackageNamePatterns = emptySet();
-        devModeExcludedPackageNames = emptySet();
-        devModeExcludedPackageExemptClasses = emptySet();
-
         this.expressionCache =  requireNonNull(ognlExpressionCacheFactory).buildOgnlCache();
         this.beanInfoCache =  requireNonNull(ognlBeanInfoCacheFactory).buildOgnlCache();
         this.ognlGuard = requireNonNull(ognlGuard);

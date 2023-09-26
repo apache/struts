@@ -37,9 +37,9 @@ import static java.util.Collections.unmodifiableSet;
  *
  * @since 6.4.0
  */
-public class DefaultOgnlGuard implements OgnlGuard {
+public class StrutsOgnlGuard implements OgnlGuard {
 
-    private static final Logger LOG = LogManager.getLogger(DefaultOgnlGuard.class);
+    private static final Logger LOG = LogManager.getLogger(StrutsOgnlGuard.class);
 
     private Set<String> excludedNodeTypes = emptySet();
 

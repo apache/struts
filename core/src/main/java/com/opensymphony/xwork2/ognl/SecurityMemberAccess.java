@@ -35,8 +35,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Allows access decisions to be made on the basis of whether a member is static or not.
@@ -49,10 +51,10 @@ public class SecurityMemberAccess implements MemberAccess {
     private final boolean allowStaticFieldAccess;
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
-    private Set<Class<?>> excludedClasses = emptySet();
+    private Set<String> excludedClasses = emptySet();
     private Set<Pattern> excludedPackageNamePatterns = emptySet();
     private Set<String> excludedPackageNames = emptySet();
-    private Set<Class<?>> excludedPackageExemptClasses = emptySet();
+    private Set<String> excludedPackageExemptClasses = emptySet();
     private boolean disallowProxyMemberAccess;
 
     /**
@@ -84,16 +86,17 @@ public class SecurityMemberAccess implements MemberAccess {
 
     @Override
     public void restore(Map context, Object target, Member member, String propertyName, Object state) {
-        if (state != null) {
-            final AccessibleObject accessible = (AccessibleObject) member;
-            final boolean stateBoolean = ((Boolean) state).booleanValue();  // Using twice (avoid unboxing)
-            if (!stateBoolean) {
-                accessible.setAccessible(stateBoolean);
-            } else {
-                throw new IllegalArgumentException("Improper restore state [" + stateBoolean + "] for target [" + target +
-                    "], member [" + member + "], propertyName [" + propertyName + "]");
-            }
+        if (state == null) {
+            return;
         }
+        if ((Boolean) state) {
+            throw new IllegalArgumentException(format(
+                    "Improper restore state [true] for target [{0}], member [{1}], propertyName [{2}]",
+                    target,
+                    member,
+                    propertyName));
+        }
+        ((AccessibleObject) member).setAccessible(false);
     }
 
     @Override
@@ -106,6 +109,11 @@ public class SecurityMemberAccess implements MemberAccess {
         final Class<?> targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
         if (!memberClass.isAssignableFrom(targetClass)) {
             throw new IllegalArgumentException("Target does not match member!");
+        }
+
+        if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
+            LOG.warn("Access to proxy is blocked! Target class [{}] of target [{}], member [{}]", targetClass, target, member);
+            return false;
         }
 
         if (!checkPublicMemberAccess(memberModifiers)) {
@@ -144,19 +152,16 @@ public class SecurityMemberAccess implements MemberAccess {
             LOG.warn("The use of the default (unnamed) package is discouraged!");
         }
 
-        if (isPackageExcluded(targetClass, memberClass)) {
-            LOG.warn(
-                    "Package [{}] of target class [{}] of target [{}] or package [{}] of member [{}] are excluded!",
+        if (isPackageExcluded(targetClass)) {
+            LOG.warn("Package [{}] of target class [{}] of target [{}] is excluded!",
                     targetClass.getPackage(),
                     targetClass,
-                    target,
-                    memberClass.getPackage(),
-                    member);
+                    target);
             return false;
         }
 
-        if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
-            LOG.warn("Access to proxy is blocked! Target class [{}] of target [{}], member [{}]", targetClass, target, member);
+        if (isPackageExcluded(memberClass)) {
+            LOG.warn("Package [{}] of member [{}] are excluded!", memberClass.getPackage(), member);
             return false;
         }
 
@@ -214,40 +219,27 @@ public class SecurityMemberAccess implements MemberAccess {
         return false;
     }
 
-    protected boolean isPackageExcluded(Class<?> targetClass, Class<?> memberClass) {
-        if (targetClass == null || memberClass == null) {
-            throw new IllegalArgumentException(
-                    "Parameters should never be null - if member is static, targetClass should be the same as memberClass.");
-        }
-
-        Set<Class<?>> classesToCheck = new HashSet<>();
-        classesToCheck.add(targetClass);
-        classesToCheck.add(memberClass);
-
-        for (Class<?> clazz : classesToCheck) {
-            if (!isExcludedPackageExempt(clazz) && (isExcludedPackageNamePatterns(clazz) || isExcludedPackageNames(clazz))) {
-                return true;
-            }
-        }
-        return false;
+    protected boolean isPackageExcluded(Class<?> clazz) {
+        return !excludedPackageExemptClasses.contains(clazz.getName()) && (isExcludedPackageNames(clazz) || isExcludedPackageNamePatterns(clazz));
     }
 
-    protected String toPackageName(Class<?> clazz) {
+    public static String toPackageName(Class<?> clazz) {
         if (clazz.getPackage() == null) {
             return "";
-        } else {
-            return clazz.getPackage().getName();
         }
+        return clazz.getPackage().getName();
     }
 
     protected boolean isExcludedPackageNamePatterns(Class<?> clazz) {
-        String packageName = toPackageName(clazz);
-        return excludedPackageNamePatterns.stream().anyMatch(pattern -> pattern.matcher(packageName).matches());
+        return excludedPackageNamePatterns.stream().anyMatch(pattern -> pattern.matcher(toPackageName(clazz)).matches());
     }
 
     protected boolean isExcludedPackageNames(Class<?> clazz) {
-        String packageName = toPackageName(clazz);
-        List<String> packageParts = Arrays.asList(packageName.split("\\."));
+        return isExcludedPackageNamesStatic(clazz, excludedPackageNames);
+    }
+
+    public static boolean isExcludedPackageNamesStatic(Class<?> clazz, Set<String> excludedPackageNames) {
+        List<String> packageParts = Arrays.asList(toPackageName(clazz).split("\\."));
         for (int i = 0; i < packageParts.size(); i++) {
             String parentPackage = String.join(".", packageParts.subList(0, i + 1));
             if (excludedPackageNames.contains(parentPackage)) {
@@ -258,11 +250,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isClassExcluded(Class<?> clazz) {
-        return excludedClasses.contains(clazz);
-    }
-
-    protected boolean isExcludedPackageExempt(Class<?> clazz) {
-        return excludedPackageExemptClasses.contains(clazz);
+        return excludedClasses.contains(clazz.getName());
     }
 
     protected boolean isAcceptableProperty(String name) {
@@ -327,14 +315,14 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludedClasses(Set<Class<?>> excludedClasses) {
-        useExcludedClasses(excludedClasses);
+        useExcludedClasses(excludedClasses.stream().map(Class::getName).collect(toSet()));
     }
 
-    public void useExcludedClasses(Set<Class<?>> excludedClasses) {
-        Set<Class<?>> newExcludedClasses = new HashSet<>(excludedClasses);
-        newExcludedClasses.add(Object.class);
+    public void useExcludedClasses(Set<String> excludedClasses) {
+        Set<String> newExcludedClasses = new HashSet<>(excludedClasses);
+        newExcludedClasses.add(Object.class.getName());
         if (!allowStaticFieldAccess) {
-            newExcludedClasses.add(Class.class);
+            newExcludedClasses.add(Class.class.getName());
         }
         this.excludedClasses = unmodifiableSet(newExcludedClasses);
     }
@@ -368,10 +356,10 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     @Deprecated
     public void setExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
-        this.excludedPackageExemptClasses = excludedPackageExemptClasses;
+        useExcludedPackageExemptClasses(excludedPackageExemptClasses.stream().map(Class::getName).collect(toSet()));
     }
 
-    public void useExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
+    public void useExcludedPackageExemptClasses(Set<String> excludedPackageExemptClasses) {
         this.excludedPackageExemptClasses = excludedPackageExemptClasses;
     }
 

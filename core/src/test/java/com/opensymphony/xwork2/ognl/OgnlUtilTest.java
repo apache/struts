@@ -238,7 +238,9 @@ public class OgnlUtilTest extends XWorkTestCase {
         // Method expression which executes with success
         try {
             ognlUtil.callMethod("getBar()", context, foo);
-            assertTrue("Successfully executed method expression must have been cached", ognlUtil.expressionCacheSize() == 1);
+            assertEquals("Successfully executed method expression must have been cached",
+                    1,
+                    ognlUtil.expressionCacheSize());
         } catch (Exception ex) {
             fail("Method expression execution should have succeeded here. Exception: " + ex);
         }
@@ -541,7 +543,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(b1.getSomethingElse(), b2.getSomethingElse());
 
         // id properties did not
-        assertEquals(b2.getId(), new Long(2));
+        assertEquals(b2.getId(), Long.valueOf(2));
 
     }
 
@@ -903,7 +905,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals(foo.getTitle(), expression);
 
         SecurityMemberAccess sma = (SecurityMemberAccess) ((OgnlContext) context).getMemberAccess();
-        assertFalse(sma.isAccessible(context, sma, sma.getClass().getDeclaredMethod("setExcludedClasses", Set.class), "excludedClasses"));
+        assertFalse(sma.isAccessible(context, sma, sma.getClass().getDeclaredMethod("useExcludedClasses", Set.class), "excludedClasses"));
     }
 
     public void testNullProperties() {
@@ -959,8 +961,8 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertNotNull(beans);
         assertEquals(22, beans.size());
         assertEquals("Hello Santa", beans.get("title"));
-        assertEquals(new Long("123"), beans.get("ALong"));
-        assertEquals(new Integer("44"), beans.get("number"));
+        assertEquals(Long.valueOf("123"), beans.get("ALong"));
+        assertEquals(Integer.valueOf("44"), beans.get("number"));
         assertEquals(bar, beans.get("bar"));
         assertEquals(Boolean.TRUE, beans.get("useful"));
     }
@@ -971,7 +973,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         Map<String, Object> beans = ognlUtil.getBeanMap(bar);
         assertEquals(2, beans.size());
-        assertEquals(new Integer("1"), beans.get("id"));
+        assertEquals(Integer.valueOf("1"), beans.get("id"));
         assertEquals("There is no read method for bar", beans.get("bar"));
     }
 
@@ -1345,13 +1347,13 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testDefaultOgnlUtilAlternateConstructorArguments() {
         // Code coverage test for the OgnlUtil alternate constructor method, and verify expected behaviour.
         try {
-            OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<String, Object>(), null);
+            OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), null);
             fail("null beanInfoCacheFactory should result in exception");
         } catch (IllegalArgumentException iaex) {
             // expected result
         }
         try {
-            OgnlUtil basicOgnlUtil = new OgnlUtil(null, new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
+            OgnlUtil basicOgnlUtil = new OgnlUtil(null, new DefaultOgnlBeanInfoCacheFactory<>());
             fail("null expressionCacheFactory should result in exception");
         } catch (IllegalArgumentException iaex) {
             // expected result
@@ -1359,14 +1361,15 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testDefaultOgnlUtilExclusionsAlternateConstructorPopulated() {
-        OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<String, Object>(), new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
+        OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(),
+                new DefaultOgnlBeanInfoCacheFactory<>());
 
         internalTestInitialEmptyOgnlUtilExclusions(basicOgnlUtil);
         internalTestOgnlUtilExclusionsImmutable(basicOgnlUtil);
     }
 
     public void testOgnlUtilExcludedAdditivity() {
-        Set<Class<?>> excludedClasses;
+        Set<String> excludedClasses;
         Set<Pattern> excludedPackageNamePatterns;
         Iterator<Pattern> excludedPackageNamePatternsIterator;
         Set<String> excludedPackageNames;
@@ -1376,17 +1379,17 @@ public class OgnlUtilTest extends XWorkTestCase {
         excludedClasses = ognlUtil.getExcludedClasses();
         assertNotNull("initial excluded classes null?", excludedClasses);
         assertEquals("initial excluded classes size not 2 after adds?", 2, excludedClasses.size());
-        assertTrue("String not in exclusions?", excludedClasses.contains(String.class));
-        assertTrue("Integer not in exclusions?", excludedClasses.contains(Integer.class));
+        assertTrue("String not in exclusions?", excludedClasses.contains(String.class.getName()));
+        assertTrue("Integer not in exclusions?", excludedClasses.contains(Integer.class.getName()));
         ognlUtil.setExcludedClasses("java.lang.Boolean,java.lang.Double");
         internalTestOgnlUtilExclusionsImmutable(ognlUtil);
         excludedClasses = ognlUtil.getExcludedClasses();
         assertNotNull("updated excluded classes null?", excludedClasses);
         assertEquals("updated excluded classes size not 4 after adds?", 4, excludedClasses.size());
-        assertTrue("String not in exclusions?", excludedClasses.contains(String.class));
-        assertTrue("Integer not in exclusions?", excludedClasses.contains(Integer.class));
-        assertTrue("String not in exclusions?", excludedClasses.contains(Boolean.class));
-        assertTrue("Integer not in exclusions?", excludedClasses.contains(Double.class));
+        assertTrue("String not in exclusions?", excludedClasses.contains(String.class.getName()));
+        assertTrue("Integer not in exclusions?", excludedClasses.contains(Integer.class.getName()));
+        assertTrue("String not in exclusions?", excludedClasses.contains(Boolean.class.getName()));
+        assertTrue("Integer not in exclusions?", excludedClasses.contains(Double.class.getName()));
 
         ognlUtil.setExcludedPackageNamePatterns("fakepackage1.*,fakepackage2.*");
         internalTestOgnlUtilExclusionsImmutable(ognlUtil);
@@ -1617,7 +1620,7 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     private void internalTestInitialEmptyOgnlUtilExclusions(OgnlUtil ognlUtilParam) {
-        Set<Class<?>> excludedClasses = ognlUtilParam.getExcludedClasses();
+        Set<String> excludedClasses = ognlUtilParam.getExcludedClasses();
         assertNotNull("parameter (default) exluded classes null?", excludedClasses);
         assertTrue("parameter (default) exluded classes not empty?", excludedClasses.isEmpty());
 
@@ -1632,65 +1635,34 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     private void internalTestOgnlUtilExclusionsImmutable(OgnlUtil ognlUtilParam) {
         Pattern somePattern = Pattern.compile("SomeRegexPattern");
-        Set<Class<?>> excludedClasses = ognlUtilParam.getExcludedClasses();
-        assertNotNull("parameter exluded classes null?", excludedClasses);
-        try {
-            excludedClasses.clear();
-            fail("parameter excluded classes modifiable?");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected failure
-        }
-        try {
-            excludedClasses.add(Integer.class);
-            fail("parameter excluded classes modifiable?");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected failure
-        }
-        try {
-            excludedClasses.remove(Integer.class);
-            fail("parameter excluded classes modifiable?");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected failure
-        }
+        assertImmutability(ognlUtilParam.getExcludedClasses(), Integer.class.getName());
+        assertImmutability(ognlUtilParam.getExcludedPackageNamePatterns(), somePattern);
+        assertImmutability(ognlUtilParam.getExcludedPackageNames(), "somepackagename");
+        assertImmutability(ognlUtilParam.getExcludedPackageExemptClasses(), Integer.class.getName());
+    }
 
-        Set<Pattern> excludedPackageNamePatterns = ognlUtilParam.getExcludedPackageNamePatterns();
-        assertNotNull("parameter exluded package name patterns null?", excludedPackageNamePatterns);
+    public static <T> void assertImmutability(Collection<T> collection, T item) {
+        assertNotNull("Collection is null", collection);
         try {
-            excludedPackageNamePatterns.clear();
-            fail("parameter excluded package name patterns modifiable?");
+            if (!collection.isEmpty()) {
+                collection.clear();
+                fail("Collection could be cleared");
+            }
         } catch (UnsupportedOperationException uoe) {
             // Expected failure
         }
         try {
-            excludedPackageNamePatterns.add(somePattern);
-            fail("parameter excluded package name patterns modifiable?");
+            collection.add(item);
+            fail("Collection could be added to");
         } catch (UnsupportedOperationException uoe) {
             // Expected failure
         }
         try {
-            excludedPackageNamePatterns.remove(somePattern);
-            fail("parameter excluded package name patterns modifiable?");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected failure
-        }
-
-        Set<String> excludedPackageNames = ognlUtilParam.getExcludedPackageNames();
-        assertNotNull("parameter exluded package names null?", excludedPackageNames);
-        try {
-            excludedPackageNames.clear();
-            fail("parameter excluded package names modifiable?");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected failure
-        }
-        try {
-            excludedPackageNames.add("somepackagename");
-            fail("parameter excluded package names modifiable?");
-        } catch (UnsupportedOperationException uoe) {
-            // Expected failure
-        }
-        try {
-            excludedPackageNames.remove("somepackagename");
-            fail("parameter excluded package names modifiable?");
+            int prevSize = collection.size();
+            collection.remove(item);
+            if (prevSize != collection.size()) {
+                fail("Collection could be removed from");
+            }
         } catch (UnsupportedOperationException uoe) {
             // Expected failure
         }
@@ -1765,7 +1737,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetExcludedClassesAlternateConstructorPopulated() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<String, Object>(), new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
+        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>());
         util.setExcludedClasses("java.lang.Runtime,java.lang.ProcessBuilder,java.net.URL");
         assertEquals(util.getExcludedClasses().size(), 3);
         try {
@@ -1791,9 +1763,13 @@ public class OgnlUtilTest extends XWorkTestCase {
         }
     }
 
+    public void testInvalidExcludedPackageNamePatterns() {
+        assertThrows(ConfigurationException.class, () -> ognlUtil.setExcludedPackageNamePatterns("["));
+    }
+
     public void testGetExcludedPackageNamePatternsAlternateConstructorPopulated() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<String, Object>(), new DefaultOgnlBeanInfoCacheFactory<Class<?>, BeanInfo>());
+        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>());
         util.setExcludedPackageNamePatterns("java.lang.");
         assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
         try {
@@ -1810,24 +1786,24 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals("Initial evictionLimit did not match initial value", 2, defaultCache.getEvictionLimit());
         defaultCache.setEvictionLimit(3);
         assertEquals("Updated evictionLimit did not match updated value", 3, defaultCache.getEvictionLimit());
-        String lookupResult = defaultCache.get(Integer.valueOf(0));
+        String lookupResult = defaultCache.get(0);
         assertNull("Lookup of empty cache returned non-null value ?", lookupResult);
-        defaultCache.put(Integer.valueOf(0), "Zero");
-        lookupResult = defaultCache.get(Integer.valueOf(0));
+        defaultCache.put(0, "Zero");
+        lookupResult = defaultCache.get(0);
         assertEquals("Retrieved value does not match put value ?", "Zero", lookupResult);
-        defaultCache.put(Integer.valueOf(1), "One");
-        defaultCache.put(Integer.valueOf(2), "Two");
+        defaultCache.put(1, "One");
+        defaultCache.put(2, "Two");
         assertEquals("Default cache not size evictionlimit after adding three values ?", defaultCache.getEvictionLimit(), defaultCache.size());
-        lookupResult = defaultCache.get(Integer.valueOf(2));
+        lookupResult = defaultCache.get(2);
         assertEquals("Retrieved value does not match put value ?", "Two", lookupResult);
-        defaultCache.put(Integer.valueOf(3), "Three");
+        defaultCache.put(3, "Three");
         assertEquals("Default cache not size zero after an add that exceeded the evection limit ?", 0, defaultCache.size());
-        lookupResult = defaultCache.get(Integer.valueOf(0));
+        lookupResult = defaultCache.get(0);
         assertNull("Lookup of value 0 (should have been evicted with everything) returned non-null value ?", lookupResult);
-        lookupResult = defaultCache.get(Integer.valueOf(3));
+        lookupResult = defaultCache.get(3);
         assertNull("Lookup of value 3 (should have been evicted with everything) returned non-null value ?", lookupResult);
-        defaultCache.putIfAbsent(Integer.valueOf(2), "Two");
-        lookupResult = defaultCache.get(Integer.valueOf(2));
+        defaultCache.putIfAbsent(2, "Two");
+        lookupResult = defaultCache.get(2);
         assertEquals("Retrieved value does not match put value ?", "Two", lookupResult);
         defaultCache.clear();
         assertEquals("Default cache not empty after clear ?", 0, defaultCache.size());
@@ -1838,22 +1814,22 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertEquals("Initial evictionLimit did not match initial value", 2, lruCache.getEvictionLimit());
         lruCache.setEvictionLimit(3);
         assertEquals("Updated evictionLimit did not match updated value", 3, lruCache.getEvictionLimit());
-        String lookupResult = lruCache.get(Integer.valueOf(0));
+        String lookupResult = lruCache.get(0);
         assertNull("Lookup of empty cache returned non-null value ?", lookupResult);
-        lruCache.put(Integer.valueOf(0), "Zero");
-        lookupResult = lruCache.get(Integer.valueOf(0));
+        lruCache.put(0, "Zero");
+        lookupResult = lruCache.get(0);
         assertEquals("Retrieved value does not match put value ?", "Zero", lookupResult);
-        lruCache.put(Integer.valueOf(1), "One");
-        lruCache.put(Integer.valueOf(2), "Two");
+        lruCache.put(1, "One");
+        lruCache.put(2, "Two");
         assertEquals("LRU cache not size evictionlimit after adding three values ?", lruCache.getEvictionLimit(), lruCache.size());
-        lookupResult = lruCache.get(Integer.valueOf(2));
+        lookupResult = lruCache.get(2);
         assertEquals("Retrieved value does not match put value ?", "Two", lookupResult);
-        lruCache.put(Integer.valueOf(3), "Three");
+        lruCache.put(3, "Three");
         assertEquals("LRU cache not size evictionlimit after adding  values ?", lruCache.getEvictionLimit(), lruCache.size());
-        lookupResult = lruCache.get(Integer.valueOf(0));
+        lookupResult = lruCache.get(0);
         assertNull("Lookup of value 0 (should have dropped off LRU cache) returned non-null value ?", lookupResult);
-        lruCache.putIfAbsent(Integer.valueOf(2), "Two");
-        lookupResult = lruCache.get(Integer.valueOf(2));
+        lruCache.putIfAbsent(2, "Two");
+        lookupResult = lruCache.get(2);
         assertEquals("Retrieved value does not match put value ?", "Two", lookupResult);
         lruCache.clear();
         assertEquals("LRU cache not empty after clear ?", 0, lruCache.size());

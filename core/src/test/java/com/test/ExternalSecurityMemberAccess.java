@@ -27,7 +27,7 @@ class ExternalSecurityMemberAccess extends SecurityMemberAccess {
     }
 
     @Override
-    public boolean isPackageExcluded(Class<?> targetClass, Class<?> memberClass) {
-        return super.isPackageExcluded(targetClass, memberClass);
+    public boolean isPackageExcluded(Class<?> clazz) {
+        return super.isPackageExcluded(clazz);
     }
 }

@@ -92,6 +92,7 @@ public class OgnlUtil {
     private Container container;
     private boolean allowStaticFieldAccess = true;
     private boolean disallowProxyMemberAccess;
+    private boolean disallowDefaultPackageAccess;
 
     /**
      * Construct a new OgnlUtil instance for use with the framework
@@ -287,6 +288,11 @@ public class OgnlUtil {
         this.disallowProxyMemberAccess = BooleanUtils.toBoolean(disallowProxyMemberAccess);
     }
 
+    @Inject(value = StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, required = false)
+    protected void setDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
+        this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
+    }
+
     /**
      * @param maxLength Injects the Struts OGNL expression maximum length.
      */
@@ -308,6 +314,10 @@ public class OgnlUtil {
 
     public boolean isDisallowProxyMemberAccess() {
         return disallowProxyMemberAccess;
+    }
+
+    public boolean isDisallowDefaultPackageAccess() {
+        return disallowDefaultPackageAccess;
     }
 
     /**

@@ -94,6 +94,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         securityMemberAccess.useExcludedPackageNames(ognlUtil.getExcludedPackageNames());
         securityMemberAccess.useExcludedPackageExemptClasses(ognlUtil.getExcludedPackageExemptClasses());
         securityMemberAccess.disallowProxyMemberAccess(ognlUtil.isDisallowProxyMemberAccess());
+        securityMemberAccess.disallowDefaultPackageAccess(ognlUtil.isDisallowDefaultPackageAccess());
     }
 
     protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, boolean allowStaticFieldAccess) {

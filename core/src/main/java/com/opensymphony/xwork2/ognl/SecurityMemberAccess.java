@@ -56,6 +56,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
     private boolean disallowProxyMemberAccess;
+    private boolean disallowDefaultPackageAccess;
 
     /**
      * SecurityMemberAccess
@@ -143,13 +144,19 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         if (targetClass != memberClass && isClassExcluded(targetClass)) {
-            // Optimization: Already checked memberClass exclusion, so if-and-only-if targetClass == memberClass, this check is redundant.
             LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
             return false;
         }
 
-        if (targetClass.getPackage() == null || memberClass.getPackage() == null) {
-            LOG.warn("The use of the default (unnamed) package is discouraged!");
+        if (disallowDefaultPackageAccess) {
+            if (targetClass.getPackage() == null || targetClass.getPackage().getName().isEmpty()) {
+                LOG.warn("Class [{}] from the default package is excluded!", targetClass);
+                return false;
+            }
+            if (memberClass.getPackage() == null || memberClass.getPackage().getName().isEmpty()) {
+                LOG.warn("Class [{}] from the default package is excluded!", memberClass);
+                return false;
+            }
         }
 
         if (isPackageExcluded(targetClass)) {
@@ -160,7 +167,7 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
-        if (isPackageExcluded(memberClass)) {
+        if (targetClass != memberClass && isPackageExcluded(memberClass)) {
             LOG.warn("Package [{}] of member [{}] are excluded!", memberClass.getPackage(), member);
             return false;
         }
@@ -373,5 +380,9 @@ public class SecurityMemberAccess implements MemberAccess {
 
     public void disallowProxyMemberAccess(boolean disallowProxyMemberAccess) {
         this.disallowProxyMemberAccess = disallowProxyMemberAccess;
+    }
+
+    public void disallowDefaultPackageAccess(boolean disallowDefaultPackageAccess) {
+        this.disallowDefaultPackageAccess = disallowDefaultPackageAccess;
     }
 }

@@ -316,6 +316,16 @@ public class SecurityMemberAccessTest {
     }
 
     @Test
+    public void testDefaultPackageExclusionSetting() throws Exception {
+        sma.disallowDefaultPackageAccess(true);
+
+        Class<?> clazz = Class.forName("PackagelessAction");
+        boolean actual = sma.isAccessible(null, clazz.getConstructor().newInstance(), clazz.getMethod("execute"), null);
+
+        assertFalse("default package isn't excluded!", actual);
+    }
+
+    @Test
     public void testDefaultPackageExclusion2() throws Exception {
         // given
         Set<Pattern> excluded = new HashSet<>();

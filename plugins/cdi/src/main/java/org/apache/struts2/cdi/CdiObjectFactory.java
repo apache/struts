@@ -26,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
+import javax.enterprise.inject.spi.InjectionTargetFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -45,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CdiObjectFactory extends ObjectFactory {
 
-	private static final Logger LOG = LogManager.getLogger(CdiObjectFactory.class);
+    private static final Logger LOG = LogManager.getLogger(CdiObjectFactory.class);
 
     /**
      * The key under which the BeanManager can be found according to CDI API docs
@@ -55,21 +56,21 @@ public class CdiObjectFactory extends ObjectFactory {
      * The key under which the BeanManager can be found according to JBoss Weld docs
      */
     public static final String CDI_JNDIKEY_BEANMANAGER_APP = "java:app/BeanManager";
-	/**
-	 * The key under which the BeanManager can be found in pure Servlet containers according to JBoss Weld docs.
-	 */
-	public static final String CDI_JNDIKEY_BEANMANAGER_COMP_ENV = "java:comp/env/BeanManager";
+    /**
+     * The key under which the BeanManager can be found in pure Servlet containers according to JBoss Weld docs.
+     */
+    public static final String CDI_JNDIKEY_BEANMANAGER_COMP_ENV = "java:comp/env/BeanManager";
 
-	public static final String STRUTS_OBJECT_FACTORY_CDI_JNDI_KEY = "struts.objectFactory.cdi.jndiKey";
+    public static final String STRUTS_OBJECT_FACTORY_CDI_JNDI_KEY = "struts.objectFactory.cdi.jndiKey";
 
-	private String jndiKey;
+    private String jndiKey;
 
-	@Inject(value = STRUTS_OBJECT_FACTORY_CDI_JNDI_KEY, required = false)
-	public void setJndiKey( String jndiKey ) {
-		this.jndiKey = jndiKey;
-	}
+    @Inject(value = STRUTS_OBJECT_FACTORY_CDI_JNDI_KEY, required = false)
+    public void setJndiKey( String jndiKey ) {
+        this.jndiKey = jndiKey;
+    }
 
-	protected BeanManager beanManager;
+    protected BeanManager beanManager;
 
     Map<Class<?>, InjectionTarget<?>> injectionTargetCache = new ConcurrentHashMap<Class<?>, InjectionTarget<?>>();
 
@@ -83,64 +84,64 @@ public class CdiObjectFactory extends ObjectFactory {
         }
     }
 
-	/**
-	 * Try to find the CDI BeanManager from JNDI context. First, if provided, the key given by
-	 * struts.objectFactory.cdi.jndiKey will be checked. Then, if nothing was found or no explicit configuration was
-	 * given, the key {@link #CDI_JNDIKEY_BEANMANAGER_COMP} will be tested. If nothing is found there, the key {@link
-	 * #CDI_JNDIKEY_BEANMANAGER_APP} will be checked. If still nothing is found there, the key {@link
-	 * #CDI_JNDIKEY_BEANMANAGER_COMP_ENV} will be checked.
-	 *
-	 * @return the BeanManager, if found. <tt>null</tt> otherwise.
-	 */
-	protected BeanManager findBeanManager() {
-		BeanManager bm = null;
-		try {
-			Context initialContext = new InitialContext();
-			if (jndiKey != null && jndiKey.trim().length() > 0) {
-				// Check explicit configuration first, if given
-				bm = lookup(initialContext, jndiKey);
-			}
-			if (bm == null) {
-				// Check CDI default
-				bm = lookup(initialContext, CDI_JNDIKEY_BEANMANAGER_COMP);
-			}
-			if (bm == null) {
-				// Check WELD default
-				bm = lookup(initialContext, CDI_JNDIKEY_BEANMANAGER_APP);
-			}
-			if (bm == null) {
-				// Check Tomcat / Jetty default
-				bm = lookup(initialContext, CDI_JNDIKEY_BEANMANAGER_COMP_ENV);
-			}
-			if (bm == null) {
-				LOG.error("[findBeanManager]: Could not find BeanManager instance for any given JNDI key, giving up");
-			}
-		} catch ( NamingException e ) {
-			LOG.error("[findBeanManager]: Unable to get InitialContext for BeanManager lookup", e);
-		}
-		return bm;
-	}
+    /**
+     * Try to find the CDI BeanManager from JNDI context. First, if provided, the key given by
+     * struts.objectFactory.cdi.jndiKey will be checked. Then, if nothing was found or no explicit configuration was
+     * given, the key {@link #CDI_JNDIKEY_BEANMANAGER_COMP} will be tested. If nothing is found there, the key {@link
+     * #CDI_JNDIKEY_BEANMANAGER_APP} will be checked. If still nothing is found there, the key {@link
+     * #CDI_JNDIKEY_BEANMANAGER_COMP_ENV} will be checked.
+     *
+     * @return the BeanManager, if found. <tt>null</tt> otherwise.
+     */
+    protected BeanManager findBeanManager() {
+        BeanManager bm = null;
+        try {
+            Context initialContext = new InitialContext();
+            if (jndiKey != null && jndiKey.trim().length() > 0) {
+                // Check explicit configuration first, if given
+                bm = lookup(initialContext, jndiKey);
+            }
+            if (bm == null) {
+                // Check CDI default
+                bm = lookup(initialContext, CDI_JNDIKEY_BEANMANAGER_COMP);
+            }
+            if (bm == null) {
+                // Check WELD default
+                bm = lookup(initialContext, CDI_JNDIKEY_BEANMANAGER_APP);
+            }
+            if (bm == null) {
+                // Check Tomcat / Jetty default
+                bm = lookup(initialContext, CDI_JNDIKEY_BEANMANAGER_COMP_ENV);
+            }
+            if (bm == null) {
+                LOG.error("[findBeanManager]: Could not find BeanManager instance for any given JNDI key, giving up");
+            }
+        } catch ( NamingException e ) {
+            LOG.error("[findBeanManager]: Unable to get InitialContext for BeanManager lookup", e);
+        }
+        return bm;
+    }
 
-	/**
-	 * Lookup the given JNDI key in the given context.
-	 *
-	 * @param context the context to use for lookup.
-	 * @param jndiKeyToCheck the key to lookup.
-	 *
-	 * @return the BeanManager, if found; <tt>null</tt> if not found or {@link javax.naming.NamingException} was thrown.
-	 */
-	protected BeanManager lookup( Context context, String jndiKeyToCheck ) {
-		LOG.info("[lookup]: Checking for BeanManager under JNDI key {}", jndiKeyToCheck);
-		BeanManager result = null;
-		try {
-			result = (BeanManager) context.lookup(jndiKeyToCheck);
-		} catch ( NamingException e ) {
-			LOG.debug("[lookup]: BeanManager lookup failed for JNDI key {}", jndiKeyToCheck, e);
-		}
-		return result;
-	}
+    /**
+     * Lookup the given JNDI key in the given context.
+     *
+     * @param context the context to use for lookup.
+     * @param jndiKeyToCheck the key to lookup.
+     *
+     * @return the BeanManager, if found; <tt>null</tt> if not found or {@link javax.naming.NamingException} was thrown.
+     */
+    protected BeanManager lookup( Context context, String jndiKeyToCheck ) {
+        LOG.info("[lookup]: Checking for BeanManager under JNDI key {}", jndiKeyToCheck);
+        BeanManager result = null;
+        try {
+            result = (BeanManager) context.lookup(jndiKeyToCheck);
+        } catch ( NamingException e ) {
+            LOG.debug("[lookup]: BeanManager lookup failed for JNDI key {}", jndiKeyToCheck, e);
+        }
+        return result;
+    }
 
-	@Override
+    @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Object buildBean(String className, Map<String, Object> extraContext, boolean injectInternal)
             throws Exception {
@@ -173,7 +174,9 @@ public class CdiObjectFactory extends ObjectFactory {
         InjectionTarget<?> result;
         result = injectionTargetCache.get(clazz);
         if (result == null) {
-            result = beanManager.createInjectionTarget(beanManager.createAnnotatedType(clazz));
+            final InjectionTargetFactory<?> injectionTargetFactory =
+                    beanManager.getInjectionTargetFactory(beanManager.createAnnotatedType(clazz));
+            result = injectionTargetFactory.createInjectionTarget(null);
             injectionTargetCache.put(clazz, result);
         }
 

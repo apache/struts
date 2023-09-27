@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.ognl;
+package org.apache.struts2.ognl;
 
+import com.opensymphony.xwork2.ognl.OgnlUtil;
 import ognl.Ognl;
 import ognl.OgnlException;
 

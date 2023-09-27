@@ -46,6 +46,7 @@ import ognl.OgnlRuntime;
 import ognl.SimpleNode;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.ognl.StrutsOgnlGuard;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;

@@ -36,6 +36,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.ognl.OgnlGuard;
+import org.apache.struts2.ognl.StrutsOgnlGuard;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -51,13 +53,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import static com.opensymphony.xwork2.ognl.OgnlGuard.GUARD_BLOCKED;
 import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.strip;
+import static org.apache.struts2.ognl.OgnlGuard.GUARD_BLOCKED;
 
 
 /**

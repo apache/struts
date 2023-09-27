@@ -166,8 +166,8 @@
           class="com.opensymphony.xwork2.validator.DefaultValidatorFileParser"/>
 
     <bean class="com.opensymphony.xwork2.ognl.OgnlUtil"/>
-    <bean type="com.opensymphony.xwork2.ognl.OgnlGuard" name="struts"
-          class="com.opensymphony.xwork2.ognl.StrutsOgnlGuard" />
+    <bean type="org.apache.struts2.ognl.OgnlGuard" name="struts"
+          class="org.apache.struts2.ognl.StrutsOgnlGuard" />
 
     <bean type="com.opensymphony.xwork2.util.TextParser" name="struts"
           class="com.opensymphony.xwork2.util.OgnlTextParser" scope="singleton"/>

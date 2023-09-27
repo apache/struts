@@ -80,9 +80,7 @@ import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
-import com.opensymphony.xwork2.ognl.StrutsOgnlGuard;
 import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
-import com.opensymphony.xwork2.ognl.OgnlGuard;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
@@ -106,6 +104,8 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
+import org.apache.struts2.ognl.OgnlGuard;
+import org.apache.struts2.ognl.StrutsOgnlGuard;
 
 import java.util.ArrayList;
 import java.util.Collections;

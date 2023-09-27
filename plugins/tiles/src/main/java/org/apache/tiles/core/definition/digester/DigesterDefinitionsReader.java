@@ -19,8 +19,8 @@
 
 package org.apache.tiles.core.definition.digester;
 
-import org.apache.commons.digester.Digester;
-import org.apache.commons.digester.Rule;
+import org.apache.commons.digester3.Digester;
+import org.apache.commons.digester3.Rule;
 import org.apache.struts2.StrutsException;
 import org.apache.tiles.api.Attribute;
 import org.apache.tiles.api.Definition;
@@ -67,13 +67,6 @@ import java.util.Map;
  * </p>
  */
 public class DigesterDefinitionsReader implements DefinitionsReader {
-
-    /**
-     * Digester validation parameter name.
-     */
-    public static final String PARSER_VALIDATE_PARAMETER_NAME = "org.apache.tiles.definition.digester.DigesterDefinitionsReader.PARSER_VALIDATE";
-
-    // Digester rules constants for tag interception.
 
     /**
      * Intercepts a &lt;definition&gt; tag.
@@ -138,119 +131,22 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         ListAttribute.class.getName();
 
     /**
-     * Digester rule to manage definition filling.
-     *
-     * @since 2.1.2
+     * The set of public identifiers, and corresponding resource names for
+     * the versions of the configuration file DTDs we know about.  There
+     * <strong>MUST</strong> be an even number of Strings in this list!
      */
-    public static class FillDefinitionRule extends Rule {
-
-        /** {@inheritDoc} */
-        @Override
-        public void begin(String namespace, String name, Attributes attributes) {
-            Definition definition = (Definition) digester.peek();
-            definition.setName(attributes.getValue("name"));
-            definition.setPreparer(attributes.getValue("preparer"));
-            String extendsAttribute = attributes.getValue("extends");
-            definition.setExtends(extendsAttribute);
-
-            String template = attributes.getValue("template");
-            Attribute attribute = Attribute.createTemplateAttribute(template);
-            attribute.setExpressionObject(Expression
-                    .createExpressionFromDescribedExpression(attributes
-                            .getValue("templateExpression")));
-            attribute.setRole(attributes.getValue("role"));
-            String templateType = attributes.getValue("templateType");
-            if (templateType != null) {
-                attribute.setRenderer(templateType);
-            } else if (extendsAttribute != null) {
-                attribute.setRenderer(null);
-            }
-            definition.setTemplateAttribute(attribute);
-        }
-    }
-
-    /**
-     * Digester rule to manage attribute filling.
-     *
-     * @since 2.1.0
-     */
-    public static class FillAttributeRule extends Rule {
-
-        /** {@inheritDoc} */
-        @Override
-        public void begin(String namespace, String name, Attributes attributes) {
-            Attribute attribute = (Attribute) digester.peek();
-            attribute.setValue(attributes.getValue("value"));
-            String expression = attributes.getValue("expression");
-            attribute.setExpressionObject(Expression
-                    .createExpressionFromDescribedExpression(expression));
-            attribute.setRole(attributes.getValue("role"));
-            attribute.setRenderer(attributes.getValue("type"));
-        }
-    }
-
-    /**
-     * Digester rule to manage assignment of the attribute to the parent
-     * element.
-     *
-     * @since 2.1.0
-     */
-    public static class PutAttributeRule extends Rule {
-
-        /** {@inheritDoc} */
-        @Override
-        public void begin(String namespace, String name, Attributes attributes) {
-            Attribute attribute = (Attribute) digester.peek(0);
-            Definition definition = (Definition) digester.peek(1);
-            definition.putAttribute(attributes.getValue("name"), attribute,
-                    "true".equals(attributes.getValue("cascade")));
-        }
-    }
-
-    /**
-     * Digester rule to manage assignment of a nested definition in an attribute
-     * value.
-     *
-     * @since 2.1.0
-     */
-    public class AddNestedDefinitionRule extends Rule {
-
-        /** {@inheritDoc} */
-        @Override
-        public void begin(String namespace, String name, Attributes attributes) {
-            Definition definition = (Definition) digester.peek(0);
-            if (definition.getName() == null) {
-                definition.setName(getNextUniqueDefinitionName(definitions));
-            }
-            Attribute attribute = (Attribute) digester.peek(1);
-            attribute.setValue(definition.getName());
-            attribute.setRenderer("definition");
-        }
-    }
+    private String[] registrations;
 
     /**
      * <code>Digester</code> object used to read Definition data
      * from the source.
      */
-    protected Digester digester;
-
-    /**
-     * The set of public identifiers, and corresponding resource names for
-     * the versions of the configuration file DTDs we know about.  There
-     * <strong>MUST</strong> be an even number of Strings in this list!
-     */
-    protected String[] registrations;
+    protected final Digester digester;
 
     /**
      * Stores Definition objects.
      */
-    private Map<String, Definition> definitions;
-
-    /**
-     * Index to be used to create unique definition names for anonymous
-     * (nested) definitions.
-     */
-    private int anonymousDefinitionIndex = 1;
+    protected Map<String, Definition> definitions;
 
     /**
      * Creates a new instance of DigesterDefinitionsReader.
@@ -289,7 +185,7 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      * Sets the validation of XML files.
      *
      * @param validating <code>true</code> means that XML validation is turned
-     * on. <code>false</code> otherwise.
+     *                   on. <code>false</code> otherwise.
      * @since 3.3.0
      */
     public void setValidating(boolean validating) {
@@ -304,9 +200,9 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      * @param source The <code>InputStream</code> source from which definitions
      *               will be read.
      * @return a Map of <code>Definition</code> objects read from
-     *         the source.
+     * the source.
      * @throws DefinitionsFactoryException If the source is invalid or
-     *          an error occurs when reading definitions.
+     *                                     an error occurs when reading definitions.
      */
     public Map<String, Definition> read(Object source) {
         // This is an instance variable instead of a local variable because
@@ -366,18 +262,18 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
     private void initDigesterForTilesDefinitionsSyntax(Digester digester) {
         // syntax rules
         digester.addObjectCreate(DEFINITION_TAG, DEFINITION_HANDLER_CLASS);
-        digester.addRule(DEFINITION_TAG, new FillDefinitionRule());
+        digester.addRule(DEFINITION_TAG, new FillDefinitionRule(digester));
         digester.addSetNext(DEFINITION_TAG, "addDefinition", DEFINITION_HANDLER_CLASS);
 
         // nested definition rules
         digester.addObjectCreate(PUT_DEFINITION_TAG, DEFINITION_HANDLER_CLASS);
-        digester.addRule(PUT_DEFINITION_TAG, new FillDefinitionRule());
+        digester.addRule(PUT_DEFINITION_TAG, new FillDefinitionRule(digester));
         digester.addSetRoot(PUT_DEFINITION_TAG, "addDefinition");
-        digester.addRule(PUT_DEFINITION_TAG, new AddNestedDefinitionRule());
+        digester.addRule(PUT_DEFINITION_TAG, new AddNestedDefinitionRule(this));
         digester.addObjectCreate(ADD_DEFINITION_TAG, DEFINITION_HANDLER_CLASS);
-        digester.addRule(ADD_DEFINITION_TAG, new FillDefinitionRule());
+        digester.addRule(ADD_DEFINITION_TAG, new FillDefinitionRule(digester));
         digester.addSetRoot(ADD_DEFINITION_TAG, "addDefinition");
-        digester.addRule(ADD_DEFINITION_TAG, new AddNestedDefinitionRule());
+        digester.addRule(ADD_DEFINITION_TAG, new AddNestedDefinitionRule(this));
 
         // put / putAttribute rules
         // Rules for a same pattern are called in order, but rule.end() are called
@@ -385,18 +281,18 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
         // SetNext and CallMethod use rule.end() method. So, placing SetNext in
         // first position ensure it will be called last (sic).
         digester.addObjectCreate(PUT_TAG, PUT_ATTRIBUTE_HANDLER_CLASS);
-        digester.addRule(PUT_TAG, new FillAttributeRule());
-        digester.addRule(PUT_TAG, new PutAttributeRule());
+        digester.addRule(PUT_TAG, new FillAttributeRule(digester));
+        digester.addRule(PUT_TAG, new PutAttributeRule(digester));
         // Definition level list rules
         // This is rules for lists nested in a definition
         digester.addObjectCreate(DEF_LIST_TAG, LIST_HANDLER_CLASS);
         digester.addSetProperties(DEF_LIST_TAG);
-        digester.addRule(DEF_LIST_TAG, new PutAttributeRule());
+        digester.addRule(DEF_LIST_TAG, new PutAttributeRule(digester));
         // list elements rules
         // We use Attribute class to avoid rewriting a new class.
         // Name part can't be used in listElement attribute.
         digester.addObjectCreate(ADD_LIST_ELE_TAG, PUT_ATTRIBUTE_HANDLER_CLASS);
-        digester.addRule(ADD_LIST_ELE_TAG, new FillAttributeRule());
+        digester.addRule(ADD_LIST_ELE_TAG, new FillAttributeRule(digester));
         digester.addSetNext(ADD_LIST_ELE_TAG, "add", PUT_ATTRIBUTE_HANDLER_CLASS);
 
         // nested list elements rules
@@ -422,27 +318,6 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
     }
 
     /**
-     * Error Handler that throws every exception it receives.
-     */
-    private static class ThrowingErrorHandler implements ErrorHandler {
-
-        /** {@inheritDoc} */
-        public void warning(SAXParseException exception) throws SAXException {
-            throw exception;
-        }
-
-        /** {@inheritDoc} */
-        public void error(SAXParseException exception) throws SAXException {
-            throw exception;
-        }
-
-        /** {@inheritDoc} */
-        public void fatalError(SAXParseException exception) throws SAXException {
-            throw exception;
-        }
-    }
-
-    /**
      * Returns the registrations for local DTDs.
      *
      * @return An array containing the locations for registrations of local
@@ -451,11 +326,141 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      */
     protected String[] getRegistrations() {
         if (registrations == null) {
-            registrations = new String[] {
+            registrations = new String[]{
                 "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN",
                 "/org/apache/tiles/resources/tiles-config_3_0.dtd"};
         }
         return registrations;
+    }
+
+}
+
+/**
+ * Digester rule to manage definition filling.
+ *
+ * @since 2.1.2
+ */
+class FillDefinitionRule extends Rule {
+
+    private final Digester digester;
+
+    public FillDefinitionRule(Digester digester) {
+        this.digester = digester;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void begin(String namespace, String name, Attributes attributes) {
+        Definition definition = digester.peek();
+        definition.setName(attributes.getValue("name"));
+        definition.setPreparer(attributes.getValue("preparer"));
+        String extendsAttribute = attributes.getValue("extends");
+        definition.setExtends(extendsAttribute);
+
+        String template = attributes.getValue("template");
+        Attribute attribute = Attribute.createTemplateAttribute(template);
+        attribute.setExpressionObject(Expression
+            .createExpressionFromDescribedExpression(attributes
+                .getValue("templateExpression")));
+        attribute.setRole(attributes.getValue("role"));
+        String templateType = attributes.getValue("templateType");
+        if (templateType != null) {
+            attribute.setRenderer(templateType);
+        } else if (extendsAttribute != null) {
+            attribute.setRenderer(null);
+        }
+        definition.setTemplateAttribute(attribute);
+    }
+}
+
+/**
+ * Digester rule to manage attribute filling.
+ *
+ * @since 2.1.0
+ */
+class FillAttributeRule extends Rule {
+
+    private final Digester digester;
+
+    public FillAttributeRule(Digester digester) {
+        this.digester = digester;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void begin(String namespace, String name, Attributes attributes) {
+        Attribute attribute = digester.peek();
+        attribute.setValue(attributes.getValue("value"));
+        String expression = attributes.getValue("expression");
+        attribute.setExpressionObject(Expression
+            .createExpressionFromDescribedExpression(expression));
+        attribute.setRole(attributes.getValue("role"));
+        attribute.setRenderer(attributes.getValue("type"));
+    }
+}
+
+/**
+ * Digester rule to manage assignment of the attribute to the parent
+ * element.
+ *
+ * @since 2.1.0
+ */
+class PutAttributeRule extends Rule {
+
+    private final Digester digester;
+
+    public PutAttributeRule(Digester digester) {
+        this.digester = digester;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void begin(String namespace, String name, Attributes attributes) {
+        Attribute attribute = digester.peek(0);
+        Definition definition = digester.peek(1);
+        definition.putAttribute(attributes.getValue("name"), attribute,
+            "true".equals(attributes.getValue("cascade")));
+    }
+}
+
+/**
+ * Digester rule to manage assignment of a nested definition in an attribute
+ * value.
+ *
+ * @since 2.1.0
+ */
+class AddNestedDefinitionRule extends Rule {
+
+    /**
+     * Index to be used to create unique definition names for anonymous
+     * (nested) definitions.
+     */
+    private int anonymousDefinitionIndex = 1;
+
+    private final DigesterDefinitionsReader definitionsReader;
+
+    public AddNestedDefinitionRule(DigesterDefinitionsReader definitionsReader) {
+        this.definitionsReader = definitionsReader;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void begin(String namespace, String name, Attributes attributes) {
+        Definition definition = definitionsReader.digester.peek(0);
+        if (definition.getName() == null) {
+            definition.setName(getNextUniqueDefinitionName(definitionsReader.definitions));
+        }
+        Attribute attribute = definitionsReader.digester.peek(1);
+        attribute.setValue(definition.getName());
+        attribute.setRenderer("definition");
     }
 
     /**
@@ -466,7 +471,7 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
      * @since 2.1.0
      */
     protected String getNextUniqueDefinitionName(
-            Map<String, Definition> definitions) {
+        Map<String, Definition> definitions) {
         String candidate;
 
         do {
@@ -476,4 +481,32 @@ public class DigesterDefinitionsReader implements DefinitionsReader {
 
         return candidate;
     }
+}
+
+/**
+ * Error Handler that throws every exception it receives.
+ */
+class ThrowingErrorHandler implements ErrorHandler {
+
+    /**
+     * {@inheritDoc}
+     */
+    public void warning(SAXParseException exception) throws SAXException {
+        throw exception;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void error(SAXParseException exception) throws SAXException {
+        throw exception;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void fatalError(SAXParseException exception) throws SAXException {
+        throw exception;
+    }
+
 }

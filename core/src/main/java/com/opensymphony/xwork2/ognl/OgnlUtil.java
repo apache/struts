@@ -59,7 +59,7 @@ import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.strip;
-import static org.apache.struts2.ognl.OgnlGuard.GUARD_BLOCKED;
+import static org.apache.struts2.ognl.OgnlGuard.EXPR_BLOCKED;
 
 
 /**
@@ -607,7 +607,7 @@ public class OgnlUtil {
                 expressionCache.put(expr, tree);
             }
         }
-        if (GUARD_BLOCKED.equals(tree)) {
+        if (EXPR_BLOCKED.equals(tree)) {
             throw new OgnlException("Expression blocked by OgnlGuard: " + expr);
         }
         return tree;

@@ -30,7 +30,7 @@ import ognl.OgnlException;
  */
 public interface OgnlGuard {
 
-    String GUARD_BLOCKED = "_ognl_guard_blocked";
+    String EXPR_BLOCKED = "_ognl_guard_blocked";
 
     /**
      * Determines whether an OGNL expression should be blocked based on validation done on both the raw expression and
@@ -40,7 +40,7 @@ public interface OgnlGuard {
      * @return whether the expression should be blocked
      */
     default boolean isBlocked(String expr) throws OgnlException {
-        return GUARD_BLOCKED.equals(parseExpression(expr));
+        return EXPR_BLOCKED.equals(parseExpression(expr));
     }
 
     /**
@@ -48,15 +48,15 @@ public interface OgnlGuard {
      * validation rules in {@link #isRawExpressionBlocked} and {@link #isParsedTreeBlocked}.
      *
      * @param expr OGNL expression
-     * @return parsed expression or {@link #GUARD_BLOCKED} if the expression should be blocked
+     * @return parsed expression or {@link #EXPR_BLOCKED} if the expression should be blocked
      */
     default Object parseExpression(String expr) throws OgnlException {
         if (isRawExpressionBlocked(expr)) {
-            return GUARD_BLOCKED;
+            return EXPR_BLOCKED;
         }
         Object tree = Ognl.parseExpression(expr);
         if (isParsedTreeBlocked(tree)) {
-            return GUARD_BLOCKED;
+            return EXPR_BLOCKED;
         }
         return tree;
     }

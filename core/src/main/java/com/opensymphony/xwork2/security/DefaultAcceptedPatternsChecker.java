@@ -43,7 +43,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
             "\\w+([:]?\\w+)?((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w-?|[\\u4e00-\\u9fa5]-?)+'])|(\\('(\\w-?|[\\u4e00-\\u9fa5]-?)+'\\)))*([!]?\\w+)?"
     };
 
-    private Set<Pattern> acceptedPatterns;
+    protected Set<Pattern> acceptedPatterns;
 
     public DefaultAcceptedPatternsChecker() {
         setAcceptedPatterns(ACCEPTED_PATTERNS);
@@ -62,28 +62,19 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
 
     @Inject(value = StrutsConstants.STRUTS_OVERRIDE_ACCEPTED_PATTERNS, required = false)
     protected void setOverrideAcceptedPatterns(String acceptablePatterns) {
-        LOG.warn("Overriding accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
-                acceptedPatterns, acceptablePatterns);
-        acceptedPatterns = new HashSet<>();
-        try {
-            for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {
-                acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
-            }
-        } finally {
-            acceptedPatterns = Collections.unmodifiableSet(acceptedPatterns);
-        }
+        setAcceptedPatterns(acceptablePatterns);
     }
 
     @Inject(value = StrutsConstants.STRUTS_ADDITIONAL_ACCEPTED_PATTERNS, required = false)
     protected void setAdditionalAcceptedPatterns(String acceptablePatterns) {
         LOG.warn("Adding additional global patterns [{}] to accepted patterns!", acceptablePatterns);
-        acceptedPatterns = new HashSet<>(acceptedPatterns);  // Make mutable before adding
+        Set<Pattern> newAcceptedPatterns = new HashSet<>(acceptedPatterns);
         try {
             for (String pattern : TextParseUtil.commaDelimitedStringToSet(acceptablePatterns)) {
-                acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+                newAcceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
             }
         } finally {
-            acceptedPatterns = Collections.unmodifiableSet(acceptedPatterns);
+            acceptedPatterns = Collections.unmodifiableSet(newAcceptedPatterns);
         }
     }
 
@@ -99,20 +90,24 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
 
     @Override
     public void setAcceptedPatterns(Set<String> patterns) {
-        if (acceptedPatterns == null) {
-            // Limit unwanted log entries (for 1st call, acceptedPatterns null)
-            LOG.debug("Sets accepted patterns to [{}], note this impacts the safety of your application!", patterns);
-        } else {
-            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
-                    acceptedPatterns, patterns);
-        }
-        acceptedPatterns = new HashSet<>(patterns.size());
+        logPatternChange(patterns);
+        Set<Pattern> newAcceptedPatterns = new HashSet<>(patterns.size());
         try {
             for (String pattern : patterns) {
-                acceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
+                newAcceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
             }
         } finally {
-            acceptedPatterns = Collections.unmodifiableSet(acceptedPatterns);
+            acceptedPatterns = Collections.unmodifiableSet(newAcceptedPatterns);
+        }
+    }
+
+    protected void logPatternChange(Set<String> newPatterns) {
+        if (acceptedPatterns == null) {
+            // No need to warn on class initialisation
+            LOG.debug("Sets accepted patterns to [{}], note this impacts the safety of your application!", newPatterns);
+        } else {
+            LOG.warn("Replacing accepted patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
+                    acceptedPatterns, newPatterns);
         }
     }
 

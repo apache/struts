@@ -41,7 +41,7 @@ public class StrutsOgnlGuard implements OgnlGuard {
 
     private static final Logger LOG = LogManager.getLogger(StrutsOgnlGuard.class);
 
-    private Set<String> excludedNodeTypes = emptySet();
+    protected Set<String> excludedNodeTypes = emptySet();
 
     @Inject(value = StrutsConstants.STRUTS_OGNL_EXCLUDED_NODE_TYPES, required = false)
     public void useExcludedNodeTypes(String excludedNodeTypes) {

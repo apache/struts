@@ -22,14 +22,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A basic OGNL LRU cache implementation.
- * 
+ *
  * The implementation utilizes a {@link Collections#synchronizedMap(java.util.Map)}
  * backed by a {@link LinkedHashMap}.  May be replaced by a more efficient implementation in the future.
- * 
+ *
  * Setting too low an eviction limit will produce more overhead than value.
  * Setting too high an eviction limit may also produce more overhead than value.
  * An appropriate eviction limit will need to be determined on an individual application basis.
- * 
+ *
  * @param <Key> The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */

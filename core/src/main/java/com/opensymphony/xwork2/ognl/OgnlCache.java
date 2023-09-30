@@ -19,23 +19,23 @@ package com.opensymphony.xwork2.ognl;
  * A basic cache interface for use with OGNL processing (such as Expression, BeanInfo).
  * All OGNL caches will have an eviction limit, but setting an extremely high value can
  * simulate an "effectively unlimited" cache.
- * 
+ *
  * @param <Key> The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */
 public interface OgnlCache<Key, Value> {
 
-    public Value get(Key key);
+    Value get(Key key);
 
-    public void put(Key key, Value value);
+    void put(Key key, Value value);
 
-    public void putIfAbsent(Key key, Value value);
+    void putIfAbsent(Key key, Value value);
 
-    public int size();
+    int size();
 
-    public void clear();
+    void clear();
 
-    public int getEvictionLimit();
+    int getEvictionLimit();
 
-    public void setEvictionLimit(int cacheEvictionLimit);
+    void setEvictionLimit(int cacheEvictionLimit);
 }

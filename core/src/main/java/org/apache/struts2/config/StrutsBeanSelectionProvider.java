@@ -19,18 +19,13 @@
 package org.apache.struts2.config;
 
 import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.LocaleProviderFactory;
-import com.opensymphony.xwork2.LocalizedTextProvider;
-import com.opensymphony.xwork2.TextProviderFactory;
-import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
-import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
-import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
-import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
-import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.LocaleProviderFactory;
+import com.opensymphony.xwork2.LocalizedTextProvider;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.UnknownHandlerManager;
 import com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor;
 import com.opensymphony.xwork2.conversion.ConversionFileProcessor;
@@ -48,9 +43,14 @@ import com.opensymphony.xwork2.factory.ActionFactory;
 import com.opensymphony.xwork2.factory.ConverterFactory;
 import com.opensymphony.xwork2.factory.InterceptorFactory;
 import com.opensymphony.xwork2.factory.ResultFactory;
+import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
 import com.opensymphony.xwork2.factory.ValidatorFactory;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
+import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
+import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
+import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParser;
@@ -67,6 +67,7 @@ import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.interceptor.exec.ExecutorProvider;
+import org.apache.struts2.ognl.OgnlGuard;
 import org.apache.struts2.url.QueryStringBuilder;
 import org.apache.struts2.url.QueryStringParser;
 import org.apache.struts2.url.UrlDecoder;
@@ -433,6 +434,8 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
 
         alias(ExpressionCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, builder, props, Scope.SINGLETON);
         alias(BeanInfoCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, builder, props, Scope.SINGLETON);
+
+        alias(OgnlGuard.class, StrutsConstants.STRUTS_OGNL_GUARD, builder, props, Scope.SINGLETON);
 
         alias(QueryStringBuilder.class, StrutsConstants.STRUTS_URL_QUERY_STRING_BUILDER, builder, props, Scope.SINGLETON);
         alias(QueryStringParser.class, StrutsConstants.STRUTS_URL_QUERY_STRING_PARSER, builder, props, Scope.SINGLETON);

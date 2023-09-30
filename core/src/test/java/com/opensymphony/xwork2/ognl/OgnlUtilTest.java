@@ -46,6 +46,7 @@ import ognl.OgnlRuntime;
 import ognl.SimpleNode;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.ognl.StrutsOgnlGuard;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -1347,22 +1348,23 @@ public class OgnlUtilTest extends XWorkTestCase {
     public void testDefaultOgnlUtilAlternateConstructorArguments() {
         // Code coverage test for the OgnlUtil alternate constructor method, and verify expected behaviour.
         try {
-            OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), null);
+            OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), null, null);
             fail("null beanInfoCacheFactory should result in exception");
-        } catch (IllegalArgumentException iaex) {
+        } catch (NullPointerException iaex) {
             // expected result
         }
         try {
-            OgnlUtil basicOgnlUtil = new OgnlUtil(null, new DefaultOgnlBeanInfoCacheFactory<>());
+            OgnlUtil basicOgnlUtil = new OgnlUtil(null, new DefaultOgnlBeanInfoCacheFactory<>(), null);
             fail("null expressionCacheFactory should result in exception");
-        } catch (IllegalArgumentException iaex) {
+        } catch (NullPointerException iaex) {
             // expected result
         }
     }
 
     public void testDefaultOgnlUtilExclusionsAlternateConstructorPopulated() {
         OgnlUtil basicOgnlUtil = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(),
-                new DefaultOgnlBeanInfoCacheFactory<>());
+                new DefaultOgnlBeanInfoCacheFactory<>(),
+                new StrutsOgnlGuard());
 
         internalTestInitialEmptyOgnlUtilExclusions(basicOgnlUtil);
         internalTestOgnlUtilExclusionsImmutable(basicOgnlUtil);
@@ -1709,7 +1711,9 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetExcludedPackageNamesAlternateConstructorPopulated() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>());
+        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(),
+                new DefaultOgnlBeanInfoCacheFactory<>(),
+                new StrutsOgnlGuard());
         util.setExcludedPackageNames("java.lang,java.awt");
         assertEquals(util.getExcludedPackageNames().size(), 2);
         try {
@@ -1737,7 +1741,9 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetExcludedClassesAlternateConstructorPopulated() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>());
+        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(),
+                new DefaultOgnlBeanInfoCacheFactory<>(),
+                new StrutsOgnlGuard());
         util.setExcludedClasses("java.lang.Runtime,java.lang.ProcessBuilder,java.net.URL");
         assertEquals(util.getExcludedClasses().size(), 3);
         try {
@@ -1769,7 +1775,9 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testGetExcludedPackageNamePatternsAlternateConstructorPopulated() {
         // Getter should return an immutable collection
-        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(), new DefaultOgnlBeanInfoCacheFactory<>());
+        OgnlUtil util = new OgnlUtil(new DefaultOgnlExpressionCacheFactory<>(),
+                new DefaultOgnlBeanInfoCacheFactory<>(),
+                new StrutsOgnlGuard());
         util.setExcludedPackageNamePatterns("java.lang.");
         assertEquals(util.getExcludedPackageNamePatterns().size(), 1);
         try {
@@ -1875,7 +1883,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         expressionFactory.setCacheMaxSize("25");
         beanInfoFactory.setUseLRUCache("true");
         beanInfoFactory.setCacheMaxSize("25");
-        result = new OgnlUtil(expressionFactory, beanInfoFactory);
+        result = new OgnlUtil(expressionFactory, beanInfoFactory, new StrutsOgnlGuard());
         return result;
     }
 

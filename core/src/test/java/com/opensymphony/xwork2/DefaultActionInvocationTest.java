@@ -33,6 +33,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.ognl.StrutsOgnlGuard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -532,8 +533,9 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
 
     private OgnlUtil createOgnlUtil() {
         return new OgnlUtil(
-            new DefaultOgnlExpressionCacheFactory<>(),
-            new DefaultOgnlBeanInfoCacheFactory<>()
+                new DefaultOgnlExpressionCacheFactory<>(),
+                new DefaultOgnlBeanInfoCacheFactory<>(),
+                new StrutsOgnlGuard()
         );
     }
 

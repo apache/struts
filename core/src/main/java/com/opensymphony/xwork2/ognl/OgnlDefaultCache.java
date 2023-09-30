@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Default OGNL cache implementation.
- * 
+ *
  * Setting a very high eviction limit simulates an unlimited cache.
  * Setting too low an eviction limit will make the cache ineffective.
- * 
+ *
  * @param <Key> The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */

@@ -234,6 +234,8 @@ public final class StrutsConstants {
     /** The name of the parameter to determine whether static field access will be allowed in OGNL expressions or not */
     public static final String STRUTS_ALLOW_STATIC_FIELD_ACCESS = "struts.ognl.allowStaticFieldAccess";
 
+    public static final String STRUTS_OGNL_GUARD = "struts.ognlGuard";
+
     /** The com.opensymphony.xwork2.validator.ActionValidatorManager implementation class */
     public static final String STRUTS_ACTIONVALIDATORMANAGER = "struts.actionValidatorManager";
 
@@ -363,6 +365,9 @@ public final class StrutsConstants {
 
     /** The maximum length of an expression (OGNL) */
     public static final String STRUTS_OGNL_EXPRESSION_MAX_LENGTH = "struts.ognl.expressionMaxLength";
+
+    /** Parsed OGNL expressions which contain these node types will be blocked */
+    public static final String STRUTS_OGNL_EXCLUDED_NODE_TYPES = "struts.ognl.excludedNodeTypes";
 
     /** Disables {@link org.apache.struts2.dispatcher.StrutsRequestWrapper} request attribute value stack lookup (JSTL accessibility) */
     public static final String STRUTS_DISABLE_REQUEST_ATTRIBUTE_VALUE_STACK_LOOKUP = "struts.disableRequestAttributeValueStackLookup";

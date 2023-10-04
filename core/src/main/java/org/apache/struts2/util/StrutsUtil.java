@@ -119,8 +119,8 @@ public class StrutsUtil {
     }
 
     public Object findValue(String expr, Object context) {
+        stack.push(context);
         try {
-            stack.push(context);
             return stack.findValue(expr, true);
         } finally {
             stack.pop();

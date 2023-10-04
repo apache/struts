@@ -57,7 +57,6 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.apache.struts2.views.util.ContextUtil.OGNL;
 import static org.apache.struts2.views.util.ContextUtil.STRUTS;
 
 /**
@@ -133,7 +132,6 @@ public class VelocityManager {
         ContextUtil.getStandardContext(stack, req, res).forEach(context::put);
         VelocityStrutsUtil util = new VelocityStrutsUtil(velocityEngine, context, stack, req, res);
         context.put(STRUTS, util);
-        context.put(OGNL, util); // Deprecated since 6.3.0
         return context;
     }
 

@@ -94,7 +94,6 @@ public class VelocityManagerTest extends StrutsJUnit4TestCase {
 
         assertNotNull(context);
         assertThat(context.get("struts")).isInstanceOf(VelocityStrutsUtil.class);
-        assertThat(context.get("ognl")).isInstanceOf(VelocityStrutsUtil.class); // Deprecated since 6.3.0
         assertThat(context.get("stack")).isInstanceOf(ValueStack.class);
         assertThat(context.get("request")).isInstanceOf(HttpServletRequest.class);
         assertThat(context.get("response")).isInstanceOf(HttpServletResponse.class);

@@ -36,7 +36,6 @@ public class ContextUtil {
     public static final String SESSION = "session";
     public static final String BASE = "base";
     public static final String STACK = "stack";
-    public static final String OGNL = "ognl";
     public static final String STRUTS = "struts";
     public static final String ACTION = "action";
 
@@ -49,7 +48,6 @@ public class ContextUtil {
         map.put(STACK, stack);
         StrutsUtil util = new StrutsUtil(stack, req, res);
         map.put(STRUTS, util);
-        map.put(OGNL, util); // Deprecated since 6.3.0
 
         ActionInvocation invocation = stack.getActionContext().getActionInvocation();
         if (invocation != null) {

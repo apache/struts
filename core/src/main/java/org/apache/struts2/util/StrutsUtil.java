@@ -18,13 +18,10 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import ognl.OgnlException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsException;
@@ -62,7 +59,6 @@ public class StrutsUtil {
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected Map<String, Class<?>> classes = new HashMap<>();
-    protected OgnlUtil ognl;
     protected ValueStack stack;
 
     private final UrlHelper urlHelper;
@@ -72,7 +68,6 @@ public class StrutsUtil {
         this.stack = stack;
         this.request = request;
         this.response = response;
-        this.ognl = stack.getActionContext().getContainer().getInstance(OgnlUtil.class);
         this.urlHelper = stack.getActionContext().getContainer().getInstance(UrlHelper.class);
         this.objectFactory = stack.getActionContext().getContainer().getInstance(ObjectFactory.class);
     }
@@ -125,12 +120,10 @@ public class StrutsUtil {
 
     public Object findValue(String expr, Object context) {
         try {
-            return ognl.getValue(expr, ActionContext.getContext().getContextMap(), context);
-        } catch (OgnlException e) {
-            if (e.getReason() instanceof SecurityException) {
-                LOG.error(format("Could not evaluate this expression due to security constraints: [{0}]", expr), e);
-            }
-            return null;
+            stack.push(context);
+            return stack.findValue(expr, true);
+        } finally {
+            stack.pop();
         }
     }
 

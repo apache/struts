@@ -29,7 +29,7 @@
 
     <artifactId>struts2-sitemesh-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>DEPRECATED: Struts 2 Sitemesh Plugin - since 6.0.0</name>
+    <name>Struts 2 Sitemesh Plugin</name>
 
     <dependencies>
         <dependency>

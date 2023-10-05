@@ -71,7 +71,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
     public PortletFreemarkerResult(String location) {
         super(location);
     }
-    
+
     @Inject
     public void setFreemarkerManager(FreemarkerManager mgr) {
         this.freemarkerManager = mgr;
@@ -157,7 +157,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
             }
         }
     }
-    
+
     private void executeResourceResult(String location, ActionInvocation invocation)
              throws TemplateException, IOException, PortletException {
          this.location = location;
@@ -243,7 +243,6 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * <li>request - the HttpServletRequst object for direct access
      * <li>response - the HttpServletResponse object for direct access
      * <li>stack - the OgnLValueStack instance for direct access
-     * <li>ognl - the instance of the OgnlTool
      * <li>action - the action itself
      * <li>exception - optional : the JSP or Servlet exception as per the
      * servlet spec (for JSP Exception pages)
@@ -255,11 +254,10 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * @throws TemplateModelException in case of template model errors
      */
     protected TemplateModel createModel() throws TemplateModelException {
-        ServletContext servletContext = ServletActionContext
-                .getServletContext();
+        ServletContext servletContext = ServletActionContext.getServletContext();
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
-        ValueStack stack = ServletActionContext.getContext().getValueStack();
+        ValueStack stack = ServletActionContext.getActionContext().getValueStack();
         return freemarkerManager.buildTemplateModel(stack, invocation.getAction(), servletContext, request, response, wrapper);
     }
 

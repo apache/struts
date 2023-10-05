@@ -142,26 +142,22 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             }
 
             long size = item.getSize();
-            if (size == 0) {
-                values.add(StringUtils.EMPTY);
-            } else if (size > maxStringLength) {
+            if (size > maxStringLength) {
+                LOG.debug("Form field {} of size {} bytes exceeds limit of {}.", item.getFieldName(), size, maxStringLength);
                 String errorKey = "struts.messages.upload.error.parameter.too.long";
                 LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
-                    new Object[]{item.getFieldName(), maxStringLength, size});
-
+                        new Object[]{item.getFieldName(), maxStringLength, size});
                 if (!errors.contains(localizedMessage)) {
                     errors.add(localizedMessage);
                 }
                 return;
-
-            } else if (charset != null) {
-                values.add(item.getString(charset));
+            }
+            if (size == 0) {
+                values.add(StringUtils.EMPTY);
+            } else if (charset == null) {
+                values.add(item.getString()); // WW-633
             } else {
-                // note: see https://issues.apache.org/jira/browse/WW-633
-                // basically, in some cases the charset may be null, so
-                // we're just going to try to "other" method (no idea if this
-                // will work)
-                values.add(item.getString());
+                values.add(item.getString(charset));
             }
             params.put(item.getFieldName(), values);
         } finally {

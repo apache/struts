@@ -71,28 +71,38 @@ public class StrutsOgnlGuard implements OgnlGuard {
 
     @Override
     public boolean isParsedTreeBlocked(Object tree) {
-        return containsExcludedNodeType(tree);
-    }
-
-    protected boolean containsExcludedNodeType(Object tree) {
-        if (!(tree instanceof Node) || excludedNodeTypes.isEmpty()) {
+        if (!(tree instanceof Node) || skipTreeCheck((Node) tree)) {
             return false;
         }
-        return recurseExcludedNodeType((Node) tree);
+        return recurseNodes((Node) tree);
     }
 
-    protected boolean recurseExcludedNodeType(Node node) {
+    protected boolean skipTreeCheck(Node tree) {
+        return excludedNodeTypes.isEmpty();
+    }
+
+    protected boolean recurseNodes(Node node) {
+        if (checkNode(node)) {
+            return true;
+        }
+        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+            if (recurseNodes(node.jjtGetChild(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean checkNode(Node node) {
+        return containsExcludedNodeType(node);
+    }
+
+    protected boolean containsExcludedNodeType(Node node) {
         String nodeClassName = node.getClass().getName();
         if (excludedNodeTypes.contains(nodeClassName)) {
             LOG.warn("Expression contains blocked node type [{}]", nodeClassName);
             return true;
-        } else {
-            for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-                if (recurseExcludedNodeType(node.jjtGetChild(i))) {
-                    return true;
-                }
-            }
-            return false;
         }
+        return false;
     }
 }

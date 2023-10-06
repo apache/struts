@@ -100,7 +100,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
         if (ServletFileUpload.isMultipartContent(request)) {
             for (FileItem item : parseRequest(request, saveDir)) {
-                LOG.debug("Found file item: [{}]", item.getFieldName());
+                LOG.debug("Found file item: [{}]", sanitizeNewlines(item.getFieldName()));
                 if (item.isFormField()) {
                     processNormalFormField(item, request.getCharacterEncoding());
                 } else {
@@ -115,7 +115,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().isEmpty()) {
-            LOG.debug("No file has been uploaded for the field: {}", item.getFieldName());
+            LOG.debug("No file has been uploaded for the field: {}", sanitizeNewlines(item.getFieldName()));
             return;
         }
 
@@ -143,7 +143,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
             long size = item.getSize();
             if (size > maxStringLength) {
-                LOG.debug("Form field {} of size {} bytes exceeds limit of {}.", item.getFieldName(), size, maxStringLength);
+                LOG.debug("Form field {} of size {} bytes exceeds limit of {}.", sanitizeNewlines(item.getFieldName()), size, maxStringLength);
                 String errorKey = "struts.messages.upload.error.parameter.too.long";
                 LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
                         new Object[]{item.getFieldName(), maxStringLength, size});
@@ -362,4 +362,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         }
     }
 
+    private String sanitizeNewlines(String before) {
+        return before.replaceAll("[\n\r]", "_");
+    }
 }

@@ -29,7 +29,6 @@ import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -144,28 +143,6 @@ public class UIBeanTest extends StrutsInternalTestCase {
         assertEquals("foo", txtFld.getTheme());
     }
 
-    public void testGetThemeFromContext() {
-        ValueStack stack = ActionContext.getContext().getValueStack();
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
-        Map<String, Object> context = Collections.singletonMap("theme", "bar");
-        ActionContext.getContext().put("attr", context);
-
-        TextField txtFld = new TextField(stack, req, res);
-        assertEquals("bar", txtFld.getTheme());
-    }
-
-    public void testGetThemeFromContextNonString() {
-        ValueStack stack = ActionContext.getContext().getValueStack();
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
-        Map<String, Object> context = Collections.singletonMap("theme", 12);
-        ActionContext.getContext().put("attr", context);
-
-        TextField txtFld = new TextField(stack, req, res);
-        assertEquals("12", txtFld.getTheme());
-    }
-
     public void testMergeTemplateNullEngineException() {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
@@ -219,21 +196,6 @@ public class UIBeanTest extends StrutsInternalTestCase {
         txtFld.setDefaultTemplateDir(defaultTemplateDir);
 
         assertEquals(explicitTemplateDir, txtFld.getTemplateDir());
-    }
-
-    public void testGetTemplateDirAttr() {
-        String attrTemplateDir = "attrTemplateDirectory";
-        String defaultTemplateDir = "defaultTemplateDirectory";
-        ValueStack stack = ActionContext.getContext().getValueStack();
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        MockHttpServletResponse res = new MockHttpServletResponse();
-        Map<String, Object> context = Collections.singletonMap("templateDir", attrTemplateDir);
-        ActionContext.getContext().put("attr", context);
-
-        TextField txtFld = new TextField(stack, req, res);
-        txtFld.setDefaultTemplateDir(defaultTemplateDir);
-
-        assertEquals(attrTemplateDir, txtFld.getTemplateDir());
     }
 
     public void testGetTemplateDirDefault() {

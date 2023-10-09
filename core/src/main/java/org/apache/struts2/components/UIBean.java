@@ -601,12 +601,6 @@ public abstract class UIBean extends Component {
             result = findString(this.templateDir);
         }
 
-        // If templateDir is not explicitly given,
-        // try to find attribute which states the dir set to use
-        if (StringUtils.isBlank(result)) {
-            result = stack.findString("#attr.templateDir");
-        }
-
         // Default template set
         if (StringUtils.isBlank(result)) {
             result = defaultTemplateDir;
@@ -632,12 +626,6 @@ public abstract class UIBean extends Component {
             if (form != null) {
                 result = form.getTheme();
             }
-        }
-
-        // If theme set is not explicitly given,
-        // try to find attribute which states the theme set to use
-        if (StringUtils.isBlank(result)) {
-            result = stack.findString("#attr.theme");
         }
 
         // Default theme set

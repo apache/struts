@@ -20,11 +20,17 @@ package com.opensymphony.xwork2.inject;
 
 import org.apache.commons.lang3.JavaVersion;
 import org.apache.commons.lang3.SystemUtils;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.security.Permission;
 import java.util.concurrent.Callable;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -34,15 +40,12 @@ import static org.junit.Assume.assumeTrue;
  * @version 1.0
  * @since <pre>11/26/2008</pre>
  */
-public class ContainerImplTest extends TestCase {
+public class ContainerImplTest {
 
     private Container c;
 
-    @Override
-    protected void setUp() throws Exception {
-        System.setSecurityManager(null);
-
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         ContainerBuilder cb = new ContainerBuilder();
         cb.constant("methodCheck.name", "Lukasz");
         cb.constant("fieldCheck.name", "Lukasz");
@@ -61,72 +64,43 @@ public class ContainerImplTest extends TestCase {
         Class.forName(ContainerImpl.FieldInjector.class.getName());
     }
 
-    /**
-     * Inject values into field
-     */
-    public void testFieldInjector() throws Exception {
-
+    @Test
+    public void fieldInjector() throws Exception {
         FieldCheck fieldCheck = new FieldCheck();
-
-        try {
-            c.inject(fieldCheck);
-            assertTrue(true);
-        } catch (DependencyException expected) {
-            fail("No exception expected!");
-        }
-
+        c.inject(fieldCheck);
         assertEquals(fieldCheck.getName(), "Lukasz");
     }
 
-    /**
-     * Inject values into method
-     */
-    public void testMethodInjector() throws Exception {
-
-        MethodCheck methodCheck = new MethodCheck();
-
-        try {
-            c.inject(methodCheck);
-            assertTrue(true);
-        } catch (DependencyException expected) {
-            fail("No exception expected!");
-        }
+    @Test
+    public void methodInjector() throws Exception {
+        c.inject(new MethodCheck());
     }
 
     /**
      * Inject values into field under SecurityManager
      */
+    @Test
     public void testFieldInjectorWithSecurityEnabled() throws Exception {
         assumeTrue(SystemUtils.isJavaVersionAtMost(JavaVersion.JAVA_20));
         System.setSecurityManager(new TestSecurityManager());
+        assertThrows(DependencyException.class, () -> c.inject(new FieldCheck()));
 
-        FieldCheck fieldCheck = new FieldCheck();
-
-        try {
-            c.inject(fieldCheck);
-            fail("Exception should be thrown!");
-        } catch (Error | DependencyException expected) {
-            assertTrue(true);
-        }
+        System.setSecurityManager(null);
     }
 
     /**
      * Inject values into method under SecurityManager
      */
+    @Test
     public void testMethodInjectorWithSecurityEnabled() throws Exception {
         assumeTrue(SystemUtils.isJavaVersionAtMost(JavaVersion.JAVA_20));
         System.setSecurityManager(new TestSecurityManager());
+        assertThrows(DependencyException.class, () -> c.inject(new MethodCheck()));
 
-        MethodCheck methodCheck = new MethodCheck();
-
-        try {
-            c.inject(methodCheck);
-            fail("Exception should be thrown!");
-        } catch (DependencyException | Error expected) {
-            assertTrue(true);
-        }
+        System.setSecurityManager(null);
     }
 
+    @Test
     public void testEarlyInitializable() throws Exception {
         assertTrue("should being initialized already", EarlyInitializableBean.initializedEarly);
 
@@ -147,6 +121,7 @@ public class ContainerImplTest extends TestCase {
                 earlyInitializableCheck.getPrototypeEarlyInitializable(), earlyInitializableCheck2.getPrototypeEarlyInitializable());
     }
 
+    @Test
     public void testInitializable() throws Exception {
         assertFalse("should not being initialized already", InitializableBean.initialized);
 

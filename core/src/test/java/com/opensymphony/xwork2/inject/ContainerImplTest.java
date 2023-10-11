@@ -18,10 +18,14 @@
  */
 package com.opensymphony.xwork2.inject;
 
+import org.apache.commons.lang3.JavaVersion;
+import org.apache.commons.lang3.SystemUtils;
 import junit.framework.TestCase;
 
 import java.security.Permission;
 import java.util.concurrent.Callable;
+
+import static org.junit.Assume.assumeTrue;
 
 /**
  * ContainerImpl Tester.
@@ -93,6 +97,7 @@ public class ContainerImplTest extends TestCase {
      * Inject values into field under SecurityManager
      */
     public void testFieldInjectorWithSecurityEnabled() throws Exception {
+        assumeTrue(SystemUtils.isJavaVersionAtMost(JavaVersion.JAVA_20));
         System.setSecurityManager(new TestSecurityManager());
 
         FieldCheck fieldCheck = new FieldCheck();
@@ -109,6 +114,7 @@ public class ContainerImplTest extends TestCase {
      * Inject values into method under SecurityManager
      */
     public void testMethodInjectorWithSecurityEnabled() throws Exception {
+        assumeTrue(SystemUtils.isJavaVersionAtMost(JavaVersion.JAVA_20));
         System.setSecurityManager(new TestSecurityManager());
 
         MethodCheck methodCheck = new MethodCheck();

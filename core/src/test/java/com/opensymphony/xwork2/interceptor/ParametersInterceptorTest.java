@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.interceptor;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDrivenAction;
 import com.opensymphony.xwork2.SimpleAction;
 import com.opensymphony.xwork2.TestBean;
@@ -300,7 +301,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
             }
         };
 
-        final Map<String, Boolean> excluded = new HashMap<String, Boolean>();
+        final Map<String, Boolean> excluded = new HashMap<>();
         ParametersInterceptor pi = new ParametersInterceptor() {
 
             @Override
@@ -362,6 +363,19 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
         proxy.execute();
         assertEquals("This is blah", ((SimpleAction) proxy.getAction()).getBlah());
+    }
+
+    public void testActionSupportParametersBlocked() throws Exception {
+        Map<String, Object> params = new HashMap<>();
+        params.put("actionErrors", "fakeError");
+        params.put("actionMessages", "fakeMessage");
+
+        ActionContext extraContext = ActionContext.of().withParameters(HttpParameters.create(params).build());
+
+        ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
+        proxy.execute();
+        assertEquals(0, ((ActionSupport) proxy.getAction()).getActionMessages().size());
+        assertEquals(0, ((ActionSupport) proxy.getAction()).getActionErrors().size());
     }
 
     public void testParametersWithSpacesInTheName() throws Exception {

@@ -30,10 +30,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class OgnlDefaultCache<Key, Value> implements OgnlCache<Key, Value> {
 
     private final ConcurrentHashMap<Key, Value> ognlCache;
-    private final AtomicInteger cacheEvictionLimit = new AtomicInteger(25000);
+    private final AtomicInteger cacheEvictionLimit = new AtomicInteger();
 
     public OgnlDefaultCache(int evictionLimit, int initialCapacity, float loadFactor) {
-        this.cacheEvictionLimit.set(evictionLimit);
+        cacheEvictionLimit.set(evictionLimit);
         ognlCache = new ConcurrentHashMap<>(initialCapacity, loadFactor);
     }
 

@@ -36,8 +36,9 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
     private static final Logger LOG = LogManager.getLogger(DefaultExcludedPatternsChecker.class);
 
     public static final String[] EXCLUDED_PATTERNS = {
-        "(^|\\%\\{)((#?)(top(\\.|\\['|\\[\")|\\[\\d\\]\\.)?)(dojo|struts|session|request|response|application|servlet(Request|Response|Context)|parameters|context|_memberAccess)(\\.|\\[).*",
-        ".*(^|\\.|\\[|\\'|\"|get)class(\\(\\.|\\[|\\'|\").*"
+            "(^|\\%\\{)((#?)(top(\\.|\\['|\\[\")|\\[\\d\\]\\.)?)(dojo|struts|session|request|response|application|servlet(Request|Response|Context)|parameters|context|_memberAccess)(\\.|\\[).*",
+            ".*(^|\\.|\\[|\\'|\"|get)class(\\(\\.|\\[|\\'|\").*",
+            "actionErrors|actionMessages|fieldErrors"
     };
 
     private Set<Pattern> excludedPatterns;
@@ -48,21 +49,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     @Inject(value = StrutsConstants.STRUTS_OVERRIDE_EXCLUDED_PATTERNS, required = false)
     protected void setOverrideExcludePatterns(String excludePatterns) {
-        if (excludedPatterns != null && excludedPatterns.size() > 0) {
-            LOG.warn("Overriding excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
-                        excludedPatterns, excludePatterns);
-        } else {
-            // Limit unwanted log entries (when excludedPatterns null/empty - usually 1st call)
-            LOG.debug("Overriding excluded patterns with [{}]", excludePatterns);
-        }
-        excludedPatterns = new HashSet<>();
-        try {
-            for (String pattern : TextParseUtil.commaDelimitedStringToSet(excludePatterns)) {
-                excludedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
-            }
-        } finally {
-            excludedPatterns = Collections.unmodifiableSet(excludedPatterns);
-        }
+        setExcludedPatterns(excludePatterns);
     }
 
     @Inject(value = StrutsConstants.STRUTS_ADDITIONAL_EXCLUDED_PATTERNS, required = false)
@@ -98,7 +85,7 @@ public class DefaultExcludedPatternsChecker implements ExcludedPatternsChecker {
 
     @Override
     public void setExcludedPatterns(Set<String> patterns) {
-        if (excludedPatterns != null && excludedPatterns.size() > 0) {
+        if (excludedPatterns != null && !excludedPatterns.isEmpty()) {
             LOG.warn("Replacing excluded patterns [{}] with [{}], be aware that this affects all instances and safety of your application!",
                         excludedPatterns, patterns);
         } else {

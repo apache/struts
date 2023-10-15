@@ -27,4 +27,9 @@ interface OgnlCacheFactory<Key, Value> {
     OgnlCache<Key, Value> buildOgnlCache(int evictionLimit, int initialCapacity, float loadFactor, boolean lruCache);
     int getCacheMaxSize();
     boolean getUseLRUCache();
+    enum CacheType {
+        CONCURRENT_BASIC,
+        SYNC_LINKED_LRU,
+        CAFFEINE_WTLFU
+    }
 }

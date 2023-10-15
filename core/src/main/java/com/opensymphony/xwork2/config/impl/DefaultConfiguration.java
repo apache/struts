@@ -81,6 +81,7 @@ import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
 import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
+import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
@@ -109,6 +110,7 @@ import org.apache.struts2.ognl.StrutsOgnlGuard;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -369,16 +371,27 @@ public class DefaultConfiguration implements Configuration {
 
         builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
 
-        builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
-        builder.constant(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, "false");
-        builder.constant(StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, "false");
-        builder.constant(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, "true");
-        builder.constant(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "false");
-        builder.constant(StrutsConstants.STRUTS_I18N_RELOAD, "false");
-
-        builder.constant(StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS, "true");
+        for (Map.Entry<String, Object> entry : bootstrapsConstants().entrySet()) {
+            builder.constant(entry.getKey(), String.valueOf(entry.getValue()));
+        }
 
         return builder.create(true);
+    }
+
+    public static Map<String, Object> bootstrapsConstants() {
+        Map<String, Object> constants = new HashMap<>();
+        constants.put(StrutsConstants.STRUTS_DEVMODE, Boolean.FALSE);
+        constants.put(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, Boolean.FALSE);
+        constants.put(StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, Boolean.FALSE);
+        constants.put(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, Boolean.TRUE);
+        constants.put(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, Boolean.FALSE);
+        constants.put(StrutsConstants.STRUTS_I18N_RELOAD, Boolean.FALSE);
+        constants.put(StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS, Boolean.TRUE);
+        constants.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_TYPE, OgnlCacheFactory.CacheType.CAFFEINE_WTLFU);
+        constants.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, 10000);
+        constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_TYPE, OgnlCacheFactory.CacheType.CAFFEINE_WTLFU);
+        constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, 10000);
+        return Collections.unmodifiableMap(constants);
     }
 
     /**

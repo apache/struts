@@ -109,8 +109,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- dependency versions in alphanumeric order -->
-        <asm.version>9.5</asm.version>
-        <jackson.version>2.15.2</jackson.version>
+        <asm.version>9.6</asm.version>
+        <jackson.version>2.15.3</jackson.version>
         <log4j2.version>2.20.0</log4j2.version>
         <ognl.version>3.3.4</ognl.version>
         <slf4j.version>2.0.7</slf4j.version>
@@ -765,6 +765,10 @@
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>asm</groupId>
+                        <artifactId>asm</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -969,6 +973,13 @@
             </dependency>
 
             <dependency>
+                <groupId>net.sourceforge.htmlunit</groupId>
+                <artifactId>htmlunit</artifactId>
+                <version>2.70.0</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>jmock</groupId>
                 <artifactId>jmock</artifactId>
                 <version>1.2.0</version>
@@ -1100,14 +1111,6 @@
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${jackson.version}</version>
-            </dependency>
-
-            <!-- FIXME: Workaround for jackson-dataformat-xml issue #340 of forgetting to update stax2-api  -->
-            <!-- https://github.com/FasterXML/jackson-dataformat-xml/issues/340 -->
-            <dependency>
-                <groupId>org.codehaus.woodstox</groupId>
-                <artifactId>stax2-api</artifactId>
-                <version>4.2.1</version>
             </dependency>
 
             <dependency>

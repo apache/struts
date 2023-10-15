@@ -81,15 +81,6 @@
         </dependency>
 
         <dependency>
-            <!-- Requires ASM 3.3.1 for testing, as jmock-cglib apparently overrides a method made final in later ASM versions
-                 (and apparently jmock-cglib still requires ASM, despite no visible tree dependency). -->
-            <groupId>asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>3.3.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-core</artifactId>
             <scope>test</scope>

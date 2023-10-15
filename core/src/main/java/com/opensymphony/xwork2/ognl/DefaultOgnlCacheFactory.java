@@ -27,6 +27,9 @@ import org.apache.commons.lang3.BooleanUtils;
  */
 public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key, Value> {
 
+    private static final int DEFAULT_INIT_CAPACITY = 16;
+    private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
     private CacheType defaultCacheType;
     private int cacheMaxSize;
 
@@ -45,7 +48,7 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
 
     @Override
     public OgnlCache<Key, Value> buildOgnlCache() {
-        return buildOgnlCache(getCacheMaxSize(), 16, 0.75f, defaultCacheType);
+        return buildOgnlCache(getCacheMaxSize(), DEFAULT_INIT_CAPACITY, DEFAULT_LOAD_FACTOR, defaultCacheType);
     }
 
     @Override

@@ -36,10 +36,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class OgnlLRUCache<Key, Value> implements OgnlCache<Key, Value> {
 
     private final Map<Key, Value> ognlLRUCache;
-    private final AtomicInteger cacheEvictionLimit = new AtomicInteger();
+    private final AtomicInteger cacheEvictionLimit;
 
     public OgnlLRUCache(int evictionLimit, int initialCapacity, float loadFactor) {
-        cacheEvictionLimit.set(evictionLimit);
+        cacheEvictionLimit = new AtomicInteger(evictionLimit);
         // Access-order mode selected (order mode true in LinkedHashMap constructor).
         ognlLRUCache = Collections.synchronizedMap (new LinkedHashMap<Key, Value>(initialCapacity, loadFactor, true) {
             @Override

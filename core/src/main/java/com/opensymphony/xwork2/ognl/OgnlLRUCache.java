@@ -81,7 +81,9 @@ public class OgnlLRUCache<Key, Value> implements OgnlCache<Key, Value> {
 
     @Override
     public void setEvictionLimit(int cacheEvictionLimit) {
+        if (cacheEvictionLimit < size()) {
+            clear();
+        }
         this.cacheEvictionLimit.set(cacheEvictionLimit);
     }
-
 }

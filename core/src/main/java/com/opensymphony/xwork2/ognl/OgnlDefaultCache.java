@@ -19,12 +19,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Default OGNL cache implementation.
+ * <p>Basic OGNL cache implementation.</p>
  *
- * Setting a very high eviction limit simulates an unlimited cache.
- * Setting too low an eviction limit will make the cache ineffective.
+ * <p>This implementation is backed by a {@link ConcurrentHashMap} that is cleared whenever the eviction limit is
+ * surpassed.</p>
  *
- * @param <Key> The type for the cache key entries
+ * <p>Setting a very high eviction limit simulates an unlimited cache.</p>
+ * <p>Setting too low an eviction limit will make the cache ineffective.</p>
+ *
+ * @param <Key>   The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */
 public class OgnlDefaultCache<Key, Value> implements OgnlCache<Key, Value> {

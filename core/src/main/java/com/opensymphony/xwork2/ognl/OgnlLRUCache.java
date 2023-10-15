@@ -30,37 +30,37 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>Setting too high an eviction limit may also produce more overhead than value.</p>
  * <p>An appropriate eviction limit will need to be determined on an individual application basis.</p>
  *
- * @param <Key>   The type for the cache key entries
- * @param <Value> The type for the cache value entries
+ * @param <K> The type for the cache key entries
+ * @param <V> The type for the cache value entries
  */
-public class OgnlLRUCache<Key, Value> implements OgnlCache<Key, Value> {
+public class OgnlLRUCache<K, V> implements OgnlCache<K, V> {
 
-    private final Map<Key, Value> ognlLRUCache;
+    private final Map<K, V> ognlLRUCache;
     private final AtomicInteger cacheEvictionLimit;
 
     public OgnlLRUCache(int evictionLimit, int initialCapacity, float loadFactor) {
         cacheEvictionLimit = new AtomicInteger(evictionLimit);
         // Access-order mode selected (order mode true in LinkedHashMap constructor).
-        ognlLRUCache = Collections.synchronizedMap(new LinkedHashMap<Key, Value>(initialCapacity, loadFactor, true) {
+        ognlLRUCache = Collections.synchronizedMap(new LinkedHashMap<K, V>(initialCapacity, loadFactor, true) {
             @Override
-            protected boolean removeEldestEntry(Map.Entry<Key, Value> eldest) {
+            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
                 return size() > cacheEvictionLimit.get();
             }
         });
     }
 
     @Override
-    public Value get(Key key) {
+    public V get(K key) {
         return ognlLRUCache.get(key);
     }
 
     @Override
-    public void put(Key key, Value value) {
+    public void put(K key, V value) {
         ognlLRUCache.put(key, value);
     }
 
     @Override
-    public void putIfAbsent(Key key, Value value) {
+    public void putIfAbsent(K key, V value) {
         ognlLRUCache.putIfAbsent(key, value);
     }
 

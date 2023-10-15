@@ -27,12 +27,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>Setting a very high eviction limit simulates an unlimited cache.</p>
  * <p>Setting too low an eviction limit will make the cache ineffective.</p>
  *
- * @param <Key>   The type for the cache key entries
- * @param <Value> The type for the cache value entries
+ * @param <K> The type for the cache key entries
+ * @param <V> The type for the cache value entries
  */
-public class OgnlDefaultCache<Key, Value> implements OgnlCache<Key, Value> {
+public class OgnlDefaultCache<K, V> implements OgnlCache<K, V> {
 
-    private final ConcurrentHashMap<Key, Value> ognlCache;
+    private final ConcurrentHashMap<K, V> ognlCache;
     private final AtomicInteger cacheEvictionLimit;
 
     public OgnlDefaultCache(int evictionLimit, int initialCapacity, float loadFactor) {
@@ -41,18 +41,18 @@ public class OgnlDefaultCache<Key, Value> implements OgnlCache<Key, Value> {
     }
 
     @Override
-    public Value get(Key key) {
+    public V get(K key) {
         return ognlCache.get(key);
     }
 
     @Override
-    public void put(Key key, Value value) {
+    public void put(K key, V value) {
         ognlCache.put(key, value);
         this.clearIfEvictionLimitExceeded();
     }
 
     @Override
-    public void putIfAbsent(Key key, Value value) {
+    public void putIfAbsent(K key, V value) {
         ognlCache.putIfAbsent(key, value);
         this.clearIfEvictionLimitExceeded();
     }

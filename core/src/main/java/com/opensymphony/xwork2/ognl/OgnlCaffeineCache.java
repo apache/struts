@@ -30,31 +30,31 @@ import com.github.benmanes.caffeine.cache.Caffeine;
  *     <li>Memory constraints</li>
  * </ul>
  *
- * @param <Key>   The type for the cache key entries
- * @param <Value> The type for the cache value entries
+ * @param <K> The type for the cache key entries
+ * @param <V> The type for the cache value entries
  */
-public class OgnlCaffeineCache<Key, Value> implements OgnlCache<Key, Value> {
+public class OgnlCaffeineCache<K, V> implements OgnlCache<K, V> {
 
-    private final Cache<Key, Value> cache;
+    private final Cache<K, V> cache;
     private final int evictionLimit;
 
-    public OgnlCaffeineCache(int evictionLimit, int initialCapacity, float loadFactor) {
+    public OgnlCaffeineCache(int evictionLimit, int initialCapacity) {
         this.evictionLimit = evictionLimit;
         this.cache = Caffeine.newBuilder().initialCapacity(initialCapacity).maximumSize(evictionLimit).build();
     }
 
     @Override
-    public Value get(Key key) {
+    public V get(K key) {
         return cache.getIfPresent(key);
     }
 
     @Override
-    public void put(Key key, Value value) {
+    public void put(K key, V value) {
         cache.put(key, value);
     }
 
     @Override
-    public void putIfAbsent(Key key, Value value) {
+    public void putIfAbsent(K key, V value) {
         if (cache.getIfPresent(key) == null) {
             cache.put(key, value);
         }

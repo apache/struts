@@ -60,7 +60,7 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
             case SYNC_LINKED_LRU:
                 return new OgnlLRUCache<>(evictionLimit, initialCapacity, loadFactor);
             case CAFFEINE_WTLFU:
-                return new OgnlCaffeineCache<>(evictionLimit, initialCapacity, loadFactor);
+                return new OgnlCaffeineCache<>(evictionLimit, initialCapacity);
             default:
                 throw new IllegalArgumentException("Unknown cache type: " + cacheType);
         }

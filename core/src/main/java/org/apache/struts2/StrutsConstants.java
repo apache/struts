@@ -294,6 +294,7 @@ public final class StrutsConstants {
      * @since 6.0.0
      * @deprecated since 6.4.0, use {@link StrutsConstants#STRUTS_OGNL_BEANINFO_CACHE_TYPE} instead.
      */
+    @Deprecated
     public static final String STRUTS_OGNL_BEANINFO_CACHE_LRU_MODE = "struts.ognl.beanInfoCacheLRUMode";
 
     /**

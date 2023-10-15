@@ -278,6 +278,7 @@ public final class StrutsConstants {
 
     /**
      * Specifies the type of cache to use for BeanInfo objects.
+     * @since 6.4.0
      * @see StrutsConstants#STRUTS_OGNL_EXPRESSION_CACHE_TYPE
      */
     public static final String STRUTS_OGNL_BEANINFO_CACHE_TYPE = "struts.ognl.beanInfoCacheType";
@@ -332,6 +333,7 @@ public final class StrutsConstants {
      *     <li>For the LRU cache, once the maximum cache size is reached, the least-recently-used entry will be removed.
      *     </li>
      * </ul>
+     * @since 6.4.0
      */
     public static final String STRUTS_OGNL_EXPRESSION_CACHE_TYPE = "struts.ognl.expressionCacheType";
 

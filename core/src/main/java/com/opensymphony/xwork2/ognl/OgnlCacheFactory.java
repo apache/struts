@@ -35,14 +35,10 @@ public interface OgnlCacheFactory<Key, Value> {
                                                  int initialCapacity,
                                                  float loadFactor,
                                                  boolean lruCache) {
-        if (lruCache) {
-            return buildOgnlCache(evictionLimit, initialCapacity, loadFactor, CacheType.SYNC_LINKED_LRU);
-        } else {
-            return buildOgnlCache(evictionLimit,
-                    initialCapacity,
-                    loadFactor,
-                    lruCache ? CacheType.SYNC_LINKED_LRU : getDefaultCacheType());
-        }
+        return buildOgnlCache(evictionLimit,
+                initialCapacity,
+                loadFactor,
+                lruCache ? CacheType.SYNC_LINKED_LRU : getDefaultCacheType());
     }
 
     /**

@@ -1870,7 +1870,7 @@ public class OgnlUtilTest extends XWorkTestCase {
         ognlCache = defaultOgnlCacheFactory.buildOgnlCache();
         assertNotNull("No param build method result null ?", ognlCache);
         assertEquals("Eviction limit for cache mismatches limit for factory ?", 30, ognlCache.getEvictionLimit());
-        ognlCache = defaultOgnlCacheFactory.buildOgnlCache(15, 15, 0.75f, false);
+        ognlCache = defaultOgnlCacheFactory.buildOgnlCache(15, 15, 0.75f, true);
         assertNotNull("No param build method result null ?", ognlCache);
         assertEquals("Eviction limit for cache mismatches limit for factory ?", 15, ognlCache.getEvictionLimit());
     }

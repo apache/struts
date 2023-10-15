@@ -252,7 +252,7 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
             .factory(ExecutorProvider.class, StrutsExecutorProvider.class, Scope.SINGLETON)
         ;
 
-        for (Map.Entry<String, Object> entry : DefaultConfiguration.bootstrapsConstants().entrySet()) {
+        for (Map.Entry<String, Object> entry : DefaultConfiguration.BOOTSTRAP_CONSTANTS.entrySet()) {
             props.setProperty(entry.getKey(), String.valueOf(entry.getValue()));
         }
 

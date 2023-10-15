@@ -59,7 +59,7 @@ public class MockConfiguration implements Configuration {
         builder.factory(Configuration.class, MockConfiguration.class, Scope.SINGLETON);
         LocatableProperties props = new LocatableProperties();
         new StrutsDefaultConfigurationProvider().register(builder, props);
-        for (Map.Entry<String, Object> entry : DefaultConfiguration.bootstrapsConstants().entrySet()) {
+        for (Map.Entry<String, Object> entry : DefaultConfiguration.BOOTSTRAP_CONSTANTS.entrySet()) {
             builder.constant(entry.getKey(), String.valueOf(entry.getValue()));
         }
         builder.constant(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, "false");

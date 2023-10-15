@@ -16,29 +16,30 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.struts2.StrutsConstants;
 
 /**
  * Default OGNL Expression Cache factory implementation.
- *
+ * <p>
  * Currently used for Expression cache creation.
  *
- * @param <Key> The type for the cache key entries
+ * @param <Key>   The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */
 public class DefaultOgnlExpressionCacheFactory<Key, Value> extends DefaultOgnlCacheFactory<Key, Value>
-    implements ExpressionCacheFactory<Key, Value> {
+        implements ExpressionCacheFactory<Key, Value> {
 
-    @Override
-    @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, required = false)
-    protected void setCacheMaxSize(String maxSize) {
-        super.setCacheMaxSize(maxSize);
+    /**
+     * @deprecated since 6.4.0, use {@link #DefaultOgnlExpressionCacheFactory(String, String)}
+     */
+    @Deprecated
+    public DefaultOgnlExpressionCacheFactory() {
     }
 
-    @Override
-    @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_LRU_MODE, required = false)
-    protected void setUseLRUCache(String useLRUMode) {
-        super.setUseLRUCache(useLRUMode);
+    @Inject
+    public DefaultOgnlExpressionCacheFactory(@Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE) String cacheMaxSize,
+                                             @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_TYPE) String defaultCacheType) {
+        super(Integer.parseInt(cacheMaxSize), EnumUtils.getEnumIgnoreCase(CacheType.class, defaultCacheType));
     }
-
 }

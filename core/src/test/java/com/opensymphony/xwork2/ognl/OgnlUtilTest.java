@@ -134,13 +134,19 @@ public class OgnlUtilTest extends XWorkTestCase {
     }
 
     public void testCacheEnabledMaxSize() throws OgnlException {
-        ognlUtil.setEnableExpressionCache("true");
-        ognlUtil.setExpressionCacheMaxSize("1");
+        super.loadConfigurationProviders(new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+                props.setProperty(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_TYPE, "concurrent_basic");
+                props.setProperty(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, "1");
+            }
+        });
+        ognlUtil = container.getInstance(OgnlUtil.class);
         Object expr0 = ognlUtil.compile("test");
         Object expr2 = ognlUtil.compile("test");
         assertSame(expr0, expr2);
         assertEquals("Expression cache size should be at its limit", 1, ognlUtil.expressionCacheSize());
-        // Next epxression cached should cause the cache to clear (exceeding maximum sized).
+        // Next expression cached should cause the cache to clear (exceeding maximum sized).
         Object expr3 = ognlUtil.compile("test1");
         assertEquals("Expression cache should be empty", 0, ognlUtil.expressionCacheSize());
         Object expr4 = ognlUtil.compile("test1");

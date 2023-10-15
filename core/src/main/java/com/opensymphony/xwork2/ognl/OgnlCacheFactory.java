@@ -19,14 +19,53 @@ package com.opensymphony.xwork2.ognl;
  * Used by {@link com.opensymphony.xwork2.ognl.OgnlUtil} to create appropriate OGNL
  * caches based on configuration.
  *
- * @param <Key> The type for the cache key entries
+ * @param <Key>   The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */
 public interface OgnlCacheFactory<Key, Value> {
     OgnlCache<Key, Value> buildOgnlCache();
-    OgnlCache<Key, Value> buildOgnlCache(int evictionLimit, int initialCapacity, float loadFactor, boolean lruCache);
+
+    /**
+     * Note that if {@code lruCache} is {@code false}, the cache type could still be LRU if the default cache type is
+     * configured as such.
+     * @deprecated since 6.4.0, use {@link #buildOgnlCache(int, int, float, CacheType)}
+     */
+    @Deprecated
+    default OgnlCache<Key, Value> buildOgnlCache(int evictionLimit,
+                                                 int initialCapacity,
+                                                 float loadFactor,
+                                                 boolean lruCache) {
+        if (lruCache) {
+            return buildOgnlCache(evictionLimit, initialCapacity, loadFactor, CacheType.SYNC_LINKED_LRU);
+        } else {
+            return buildOgnlCache(evictionLimit,
+                    initialCapacity,
+                    loadFactor,
+                    lruCache ? CacheType.SYNC_LINKED_LRU : getDefaultCacheType());
+        }
+    }
+
+    /**
+     * @param evictionLimit   maximum capacity of the cache where applicable for cache type chosen
+     * @param initialCapacity initial capacity of the cache where applicable for cache type chosen
+     * @param loadFactor      load factor of the cache where applicable for cache type chosen
+     * @param cacheType       type of cache to build
+     * @return a new cache instance
+     */
+    OgnlCache<Key, Value> buildOgnlCache(int evictionLimit, int initialCapacity, float loadFactor, CacheType cacheType);
+
     int getCacheMaxSize();
-    boolean getUseLRUCache();
+
+    /**
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
+    default boolean getUseLRUCache() {
+        return CacheType.SYNC_LINKED_LRU.equals(getDefaultCacheType());
+    }
+
+    CacheType getDefaultCacheType();
+
     enum CacheType {
         CONCURRENT_BASIC,
         SYNC_LINKED_LRU,

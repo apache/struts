@@ -15,52 +15,84 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang3.BooleanUtils;
 
 /**
- * Default OGNL Cache factory implementation.
+ * <p>Default OGNL Cache factory implementation.</p>
  *
- * Currently used for Expression cache and BeanInfo cache creation.
+ * <p>Currently used for Expression cache and BeanInfo cache creation.</p>
  *
- * @param <Key> The type for the cache key entries
+ * @param <Key>   The type for the cache key entries
  * @param <Value> The type for the cache value entries
  */
 public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key, Value> {
 
-    private final AtomicBoolean useLRUCache = new AtomicBoolean(false);
-    private final AtomicInteger cacheMaxSize = new AtomicInteger(25000);
+    private CacheType defaultCacheType;
+    private int cacheMaxSize;
 
-    @Override
-    public OgnlCache<Key, Value> buildOgnlCache() {
-        return buildOgnlCache(getCacheMaxSize(), 16, 0.75f, getUseLRUCache());
+    /**
+     * @deprecated since 6.4.0, use {@link #DefaultOgnlCacheFactory(int, CacheType)}
+     */
+    @Deprecated
+    public DefaultOgnlCacheFactory() {
+        this.cacheMaxSize = 25000;
+        this.defaultCacheType = CacheType.CAFFEINE_WTLFU;
+    }
+
+    public DefaultOgnlCacheFactory(int cacheMaxSize, CacheType defaultCacheType) {
+        this.cacheMaxSize = cacheMaxSize;
+        this.defaultCacheType = defaultCacheType;
     }
 
     @Override
-    public OgnlCache<Key, Value> buildOgnlCache(int evictionLimit, int initialCapacity, float loadFactor, boolean lruCache) {
-        if (lruCache) {
-            return new OgnlLRUCache<>(evictionLimit, initialCapacity, loadFactor);
-        } else {
-            return new OgnlDefaultCache<>(evictionLimit, initialCapacity, loadFactor);
+    public OgnlCache<Key, Value> buildOgnlCache() {
+        return buildOgnlCache(getCacheMaxSize(), 16, 0.75f, defaultCacheType);
+    }
+
+    @Override
+    public OgnlCache<Key, Value> buildOgnlCache(int evictionLimit,
+                                                int initialCapacity,
+                                                float loadFactor,
+                                                CacheType cacheType) {
+        switch (cacheType) {
+            case CONCURRENT_BASIC:
+                return new OgnlDefaultCache<>(evictionLimit, initialCapacity, loadFactor);
+            case SYNC_LINKED_LRU:
+                return new OgnlLRUCache<>(evictionLimit, initialCapacity, loadFactor);
+            case CAFFEINE_WTLFU:
+                return new OgnlCaffeineCache<>(evictionLimit, initialCapacity, loadFactor);
+            default:
+                throw new IllegalArgumentException("Unknown cache type: " + cacheType);
         }
     }
 
     @Override
     public int getCacheMaxSize() {
-        return cacheMaxSize.get();
+        return cacheMaxSize;
     }
 
+    /**
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
     protected void setCacheMaxSize(String maxSize) {
-        cacheMaxSize.set(Integer.parseInt(maxSize));
+        cacheMaxSize = Integer.parseInt(maxSize);
     }
 
     @Override
-    public boolean getUseLRUCache() {
-        return useLRUCache.get();
+    public CacheType getDefaultCacheType() {
+        return defaultCacheType;
     }
 
+    /**
+     * No effect when {@code useLRUMode} is {@code false}
+     *
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
     protected void setUseLRUCache(String useLRUMode) {
-        useLRUCache.set(BooleanUtils.toBoolean(useLRUMode));
+        if (BooleanUtils.toBoolean(useLRUMode)) {
+            defaultCacheType = CacheType.SYNC_LINKED_LRU;
+        }
     }
 }

@@ -144,7 +144,7 @@ public class OgnlUtil {
     }
 
     /**
-     * @deprecated since 6.4.0, changing eviction limit after initialisation is not supported.
+     * @deprecated since 6.4.0, changing maximum cache size after initialisation is not necessary.
      */
     @Deprecated
     protected void setExpressionCacheMaxSize(String maxSize) {
@@ -152,7 +152,7 @@ public class OgnlUtil {
     }
 
     /**
-     * @deprecated since 6.4.0, changing eviction limit after initialisation is not supported.
+     * @deprecated since 6.4.0, changing maximum cache size after initialisation is not necessary.
      */
     @Deprecated
     protected void setBeanInfoCacheMaxSize(String maxSize) {

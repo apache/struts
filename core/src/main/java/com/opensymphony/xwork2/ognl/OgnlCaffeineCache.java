@@ -36,10 +36,8 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 public class OgnlCaffeineCache<K, V> implements OgnlCache<K, V> {
 
     private final Cache<K, V> cache;
-    private final int evictionLimit;
 
     public OgnlCaffeineCache(int evictionLimit, int initialCapacity) {
-        this.evictionLimit = evictionLimit;
         this.cache = Caffeine.newBuilder().initialCapacity(initialCapacity).maximumSize(evictionLimit).build();
     }
 
@@ -55,14 +53,12 @@ public class OgnlCaffeineCache<K, V> implements OgnlCache<K, V> {
 
     @Override
     public void putIfAbsent(K key, V value) {
-        if (cache.getIfPresent(key) == null) {
-            cache.put(key, value);
-        }
+        cache.asMap().putIfAbsent(key, value);
     }
 
     @Override
     public int size() {
-        return Math.toIntExact(cache.estimatedSize());
+        return cache.asMap().size();
     }
 
     @Override
@@ -72,11 +68,11 @@ public class OgnlCaffeineCache<K, V> implements OgnlCache<K, V> {
 
     @Override
     public int getEvictionLimit() {
-        return evictionLimit;
+        return Math.toIntExact(cache.policy().eviction().orElseThrow(IllegalStateException::new).getMaximum());
     }
 
     @Override
     public void setEvictionLimit(int cacheEvictionLimit) {
-        throw new UnsupportedOperationException("Cannot change eviction limit on a Caffeine cache after initialisation");
+        cache.policy().eviction().orElseThrow(IllegalStateException::new).setMaximum(cacheEvictionLimit);
     }
 }

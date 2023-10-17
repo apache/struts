@@ -38,7 +38,7 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
      */
     @Deprecated
     public DefaultOgnlCacheFactory() {
-        this(10000, CacheType.CAFFEINE_WTLFU);
+        this(10000, CacheType.BASIC);
     }
 
     public DefaultOgnlCacheFactory(int cacheMaxSize, CacheType defaultCacheType) {

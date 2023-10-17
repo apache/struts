@@ -138,9 +138,9 @@ public class DefaultConfiguration implements Configuration {
         constants.put(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, Boolean.FALSE);
         constants.put(StrutsConstants.STRUTS_I18N_RELOAD, Boolean.FALSE);
         constants.put(StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS, Boolean.TRUE);
-        constants.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_TYPE, OgnlCacheFactory.CacheType.CAFFEINE_WTLFU);
+        constants.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_TYPE, OgnlCacheFactory.CacheType.BASIC);
         constants.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, 10000);
-        constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_TYPE, OgnlCacheFactory.CacheType.CAFFEINE_WTLFU);
+        constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_TYPE, OgnlCacheFactory.CacheType.BASIC);
         constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, 10000);
         BOOTSTRAP_CONSTANTS = Collections.unmodifiableMap(constants);
     }

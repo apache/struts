@@ -137,7 +137,6 @@ public class OgnlUtilTest extends XWorkTestCase {
         super.loadConfigurationProviders(new StubConfigurationProvider() {
             @Override
             public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-                props.setProperty(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_TYPE, "concurrent_basic");
                 props.setProperty(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, "1");
             }
         });

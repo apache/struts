@@ -57,11 +57,11 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
                                                 float loadFactor,
                                                 CacheType cacheType) {
         switch (cacheType) {
-            case CONCURRENT_BASIC:
+            case BASIC:
                 return new OgnlDefaultCache<>(evictionLimit, initialCapacity, loadFactor);
-            case SYNC_LINKED_LRU:
+            case LRU:
                 return new OgnlLRUCache<>(evictionLimit, initialCapacity, loadFactor);
-            case CAFFEINE_WTLFU:
+            case WTLFU:
                 return new OgnlCaffeineCache<>(evictionLimit, initialCapacity);
             default:
                 throw new IllegalArgumentException("Unknown cache type: " + cacheType);
@@ -94,7 +94,7 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
     @Deprecated
     protected void setUseLRUCache(String useLRUMode) {
         if (BooleanUtils.toBoolean(useLRUMode)) {
-            defaultCacheType = CacheType.SYNC_LINKED_LRU;
+            defaultCacheType = CacheType.LRU;
         }
     }
 }

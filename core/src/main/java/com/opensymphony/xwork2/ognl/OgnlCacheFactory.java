@@ -38,7 +38,7 @@ public interface OgnlCacheFactory<Key, Value> {
         return buildOgnlCache(evictionLimit,
                 initialCapacity,
                 loadFactor,
-                lruCache ? CacheType.SYNC_LINKED_LRU : getDefaultCacheType());
+                lruCache ? CacheType.LRU : getDefaultCacheType());
     }
 
     /**
@@ -57,14 +57,14 @@ public interface OgnlCacheFactory<Key, Value> {
      */
     @Deprecated
     default boolean getUseLRUCache() {
-        return CacheType.SYNC_LINKED_LRU.equals(getDefaultCacheType());
+        return CacheType.LRU.equals(getDefaultCacheType());
     }
 
     CacheType getDefaultCacheType();
 
     enum CacheType {
-        CONCURRENT_BASIC,
-        SYNC_LINKED_LRU,
-        CAFFEINE_WTLFU
+        BASIC,
+        LRU,
+        WTLFU
     }
 }

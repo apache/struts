@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Interface for the resource isolation policies to be used for fetch metadata checks.

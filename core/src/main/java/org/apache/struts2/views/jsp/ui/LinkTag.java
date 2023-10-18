@@ -23,8 +23,8 @@ import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Link;
 import org.apache.struts2.components.Script;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @see Link

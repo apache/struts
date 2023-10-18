@@ -30,8 +30,8 @@ import org.apache.struts2.components.Text;
 import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
 import org.apache.struts2.views.jsp.ui.TestAction1;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTag;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.BodyTag;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;

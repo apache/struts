@@ -35,10 +35,10 @@ import org.apache.struts2.compiler.MemoryJavaFileObject;
 import org.apache.struts2.jasper.JasperException;
 import org.apache.struts2.jasper.JspC;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.jsp.JspPage;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.jsp.JspPage;
 import javax.tools.DiagnosticCollector;
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;

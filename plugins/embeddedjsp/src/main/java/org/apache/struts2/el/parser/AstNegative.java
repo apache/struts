@@ -21,7 +21,7 @@ package org.apache.struts2.el.parser;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import javax.el.ELException;
+import jakarta.el.ELException;
 
 import org.apache.struts2.el.lang.EvaluationContext;
 

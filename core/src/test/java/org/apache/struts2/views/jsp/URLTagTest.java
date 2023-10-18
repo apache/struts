@@ -35,8 +35,8 @@ import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspWriter;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.jsp.JspWriter;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;

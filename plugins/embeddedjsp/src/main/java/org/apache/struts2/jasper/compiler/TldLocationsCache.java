@@ -30,7 +30,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.xml.sax.InputSource;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.struts2.jasper.Constants;
 import org.apache.struts2.jasper.JasperException;

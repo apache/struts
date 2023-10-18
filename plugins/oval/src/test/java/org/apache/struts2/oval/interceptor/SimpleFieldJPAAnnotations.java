@@ -20,7 +20,7 @@ package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import javax.persistence.Basic;
+import jakarta.persistence.Basic;
 
 public class SimpleFieldJPAAnnotations extends ActionSupport {
     @Basic(optional = false)

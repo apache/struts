@@ -22,10 +22,10 @@ import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.url.QueryStringParser;
 
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.HttpJspPage;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.HttpJspPage;
 import java.util.HashMap;
 import java.util.Map;
 

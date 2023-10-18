@@ -29,7 +29,7 @@ import org.apache.tiles.core.evaluator.AbstractAttributeEvaluator;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class I18NAttributeEvaluator extends AbstractAttributeEvaluator {
 

@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.inject.Container;
 import junit.framework.TestCase;
 import org.apache.struts2.result.ServletDispatcherResult;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;

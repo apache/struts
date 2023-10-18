@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.jasper.el;
 
-import javax.el.ELContext;
-import javax.el.ValueExpression;
-import javax.servlet.jsp.el.ELException;
-import javax.servlet.jsp.el.Expression;
-import javax.servlet.jsp.el.VariableResolver;
+import jakarta.el.ELContext;
+import jakarta.el.ValueExpression;
+import jakarta.servlet.jsp.el.ELException;
+import jakarta.servlet.jsp.el.Expression;
+import jakarta.servlet.jsp.el.VariableResolver;
 
 public final class ExpressionImpl extends Expression {
 

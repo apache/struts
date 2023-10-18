@@ -22,15 +22,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.SingleThreadModel;
-import javax.servlet.UnavailableException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.tagext.TagInfo;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.UnavailableException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.tagext.TagInfo;
 
 import org.apache.struts2.jasper.JasperException;
 import org.apache.struts2.jasper.JspCompilationContext;
@@ -365,15 +364,7 @@ public class JspServletWrapper {
             /*
              * (3) Service request
              */
-            if (theServlet instanceof SingleThreadModel) {
-               // sync on the wrapper so that the freshness
-               // of the page is determined right before servicing
-               synchronized (this) {
-                   theServlet.service(request, response);
-                }
-            } else {
-                theServlet.service(request, response);
-            }
+            theServlet.service(request, response);
 
         } catch (UnavailableException ex) {
             String includeRequestUri = (String)

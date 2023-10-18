@@ -71,8 +71,8 @@
             <artifactId>commons-digester3</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
+           <groupId>org.glassfish</groupId>
+			<artifactId>jakarta.el</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

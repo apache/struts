@@ -24,7 +24,7 @@ package org.apache.struts2.jasper;
  *
  * @author Anil K. Vijendran
  */
-public class JasperException extends javax.servlet.ServletException {
+public class JasperException extends jakarta.servlet.ServletException {
     
     public JasperException(String reason) {
 	super(reason);

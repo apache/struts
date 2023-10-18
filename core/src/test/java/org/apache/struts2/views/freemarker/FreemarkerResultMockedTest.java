@@ -32,7 +32,7 @@ import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.easymock.EasyMock;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -22,7 +22,7 @@ import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.ActionTag;
 
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.tagext.TagSupport;
 import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.HashSet;

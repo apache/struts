@@ -34,7 +34,7 @@ import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.apache.struts2.junit.StrutsTestCase;
 import org.apache.struts2.junit.util.TestUtils;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;

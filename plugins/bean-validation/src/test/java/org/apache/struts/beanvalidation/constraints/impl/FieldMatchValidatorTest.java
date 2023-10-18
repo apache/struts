@@ -22,7 +22,7 @@ import org.apache.struts.beanvalidation.constraints.FieldMatch;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

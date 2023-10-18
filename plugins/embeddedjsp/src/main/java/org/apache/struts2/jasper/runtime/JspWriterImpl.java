@@ -23,8 +23,8 @@ import java.io.Writer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import javax.servlet.ServletResponse;
-import javax.servlet.jsp.JspWriter;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.jsp.JspWriter;
 
 import org.apache.struts2.jasper.Constants;
 import org.apache.struts2.jasper.compiler.Localizer;

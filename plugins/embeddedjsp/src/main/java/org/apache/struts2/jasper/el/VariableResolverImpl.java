@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.jasper.el;
 
-import javax.el.ELContext;
-import javax.servlet.jsp.el.ELException;
-import javax.servlet.jsp.el.VariableResolver;
+import jakarta.el.ELContext;
+import jakarta.servlet.jsp.el.ELException;
+import jakarta.servlet.jsp.el.VariableResolver;
 
 public final class VariableResolverImpl implements VariableResolver {
 

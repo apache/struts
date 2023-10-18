@@ -26,8 +26,8 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.url.StrutsQueryStringBuilder;
 import org.apache.struts2.url.StrutsUrlEncoder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

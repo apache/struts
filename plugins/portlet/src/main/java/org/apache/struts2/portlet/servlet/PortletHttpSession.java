@@ -23,9 +23,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.portlet.PortletSession;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Wrapper object exposing a {@link PortletSession} as a {@link HttpSession} instance.
@@ -101,15 +100,6 @@ public class PortletHttpSession implements HttpSession {
 	 */
 	public ServletContext getServletContext() {
 		return new PortletServletContext(portletSession.getPortletContext());
-	}
-
-	/**
-	 * @see javax.servlet.http.HttpSession#getSessionContext()
-	 * @throws IllegalStateException
-	 *             Not supported in a portlet.
-	 */
-	public HttpSessionContext getSessionContext() {
-		throw new IllegalStateException("Not supported in a portlet");
 	}
 
 	/*

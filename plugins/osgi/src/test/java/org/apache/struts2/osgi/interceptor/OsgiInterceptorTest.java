@@ -24,7 +24,7 @@ import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import junit.framework.TestCase;

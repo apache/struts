@@ -21,10 +21,10 @@ package org.apache.struts2.el.parser;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import javax.el.ELException;
-import javax.el.ELResolver;
-import javax.el.MethodInfo;
-import javax.el.PropertyNotFoundException;
+import jakarta.el.ELException;
+import jakarta.el.ELResolver;
+import jakarta.el.MethodInfo;
+import jakarta.el.PropertyNotFoundException;
 
 import org.apache.struts2.el.lang.ELSupport;
 import org.apache.struts2.el.lang.EvaluationContext;

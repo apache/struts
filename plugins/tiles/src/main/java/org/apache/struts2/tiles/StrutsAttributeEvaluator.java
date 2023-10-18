@@ -30,7 +30,7 @@ import org.apache.tiles.core.evaluator.EvaluationException;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class StrutsAttributeEvaluator extends AbstractAttributeEvaluator {
 

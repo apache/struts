@@ -29,8 +29,8 @@ import org.apache.struts2.el.ExpressionFactoryImpl;
 import org.apache.struts2.jasper.Constants;
 import org.apache.struts2.jasper.JasperException;
 
-import javax.el.ExpressionFactory;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
+import jakarta.el.ExpressionFactory;
+import jakarta.servlet.jsp.tagext.TagLibraryInfo;
 
 /**
  * A repository for various info about the translation unit under compilation.

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * <p>

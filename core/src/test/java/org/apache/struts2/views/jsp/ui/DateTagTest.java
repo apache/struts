@@ -25,7 +25,7 @@ import org.apache.struts2.components.DateTextField;
 import org.apache.struts2.views.jsp.AbstractTagTest;
 import org.apache.struts2.views.jsp.DateTag;
 
-import javax.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspException;
 import java.text.DateFormat;
 import java.time.Instant;
 import java.time.LocalDate;

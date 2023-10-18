@@ -35,8 +35,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -55,6 +55,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <!-- org.springframework.mock.jndi.SimpleNamingContextBuilder removed from newer version -->
+            <version>4.3.0.RELEASE</version>
             <scope>test</scope>
         </dependency>
 

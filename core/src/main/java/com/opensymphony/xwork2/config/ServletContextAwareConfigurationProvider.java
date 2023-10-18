@@ -18,7 +18,7 @@
  */
 package com.opensymphony.xwork2.config;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * Dedicated interface to allow inject {@link ServletContext} and perform initialisation based in it

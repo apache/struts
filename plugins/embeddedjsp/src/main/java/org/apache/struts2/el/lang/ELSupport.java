@@ -23,8 +23,8 @@ import java.beans.PropertyEditorManager;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import javax.el.ELException;
-import javax.el.PropertyNotFoundException;
+import jakarta.el.ELException;
+import jakarta.el.PropertyNotFoundException;
 
 import org.apache.struts2.el.util.MessageFactory;
 

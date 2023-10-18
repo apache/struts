@@ -28,8 +28,8 @@ import org.apache.struts2.jasper.security.SecurityClassLoad;
 import org.apache.struts2.jasper.servlet.JspCServletContext;
 import org.apache.struts2.jasper.servlet.JspServletWrapper;
 
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.JspFactory;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.jsp.JspFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilePermission;

@@ -21,7 +21,7 @@ package org.apache.struts2.views.jsp;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.HttpParameters;
 
-import javax.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspException;
 import java.util.HashMap;
 import java.util.Map;
 

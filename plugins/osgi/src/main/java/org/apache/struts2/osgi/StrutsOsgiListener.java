@@ -23,9 +23,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.osgi.host.OsgiHost;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 /**
  * ServletContextListener that starts OSGi host

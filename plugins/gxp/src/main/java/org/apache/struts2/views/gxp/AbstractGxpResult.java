@@ -21,7 +21,7 @@ package org.apache.struts2.views.gxp;
 import com.opensymphony.xwork2.Result;
 import org.apache.struts2.ServletActionContext;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;

@@ -20,7 +20,7 @@ package org.apache.struts2.util;
 
 import org.apache.struts2.ServletActionContext;
 
-import javax.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.PageContext;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;

@@ -21,7 +21,7 @@ package org.apache.struts2.views.jsp;
 import java.io.File;
 import java.net.URL;
 
-import javax.servlet.jsp.tagext.DynamicAttributes;
+import jakarta.servlet.jsp.tagext.DynamicAttributes;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 

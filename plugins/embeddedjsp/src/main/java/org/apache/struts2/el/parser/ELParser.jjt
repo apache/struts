@@ -38,7 +38,7 @@ options
 PARSER_BEGIN( ELParser )
 package org.apache.el.parser;
 import java.io.StringReader;
-import javax.el.ELException;
+import jakarta.el.ELException;
 public class ELParser
 {
     public static Node parse(String ref) throws ELException

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.oval.interceptor.domain;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 
 import net.sf.oval.constraint.AssertValid;
 import net.sf.oval.constraint.NotNull;

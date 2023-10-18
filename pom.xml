@@ -114,11 +114,11 @@
         <log4j2.version>2.20.0</log4j2.version>
         <ognl.version>3.3.4</ognl.version>
         <slf4j.version>2.0.7</slf4j.version>
-        <spring.platformVersion>5.3.27</spring.platformVersion>
+        <spring.platformVersion>6.0.13</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-        <hibernate-validator.version>6.2.4.Final</hibernate-validator.version>
+        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <freemarker.version>2.3.32</freemarker.version>
 
         <!-- Site generation -->
@@ -792,16 +792,16 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.1.0</version>
+                <groupId>jakarta.servlet</groupId>
+				<artifactId>jakarta.servlet-api</artifactId> 
+				<version>6.0.0</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
-                <version>3.0.1-b12</version>
+			    <groupId>org.glassfish</groupId>
+			    <artifactId>jakarta.el</artifactId>
+			    <version>5.0.0-M1</version>
             </dependency>
 
             <dependency>
@@ -812,30 +812,30 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>jstl</artifactId>
-                <version>1.2</version>
+                <groupId>jakarta.servlet.jsp.jstl</groupId>
+				<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+                <version>3.0.0</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-jasper</artifactId>
-                <version>8.5.53</version>
+                <version>11.0.0-M13</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-api</artifactId>
-                <version>8.5.53</version>
+                <version>11.0.0-M13</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
-                <groupId>javax.servlet.jsp</groupId>
-                <artifactId>jsp-api</artifactId>
-                <version>2.1</version>
+                <groupId>jakarta.servlet.jsp</groupId>
+				<artifactId>jakarta.servlet.jsp-api</artifactId> 
+				<version>3.1.0</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -849,7 +849,7 @@
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-juli</artifactId>
-                <version>8.5.53</version>
+                <version>11.0.0-M13</version>
             </dependency>
 
             <!-- Commons -->
@@ -1080,9 +1080,9 @@
                 <version>1.2.1</version>
             </dependency>
             <dependency>
-                <groupId>javax.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
-                <version>1.0.2</version>
+                <groupId>jakarta.persistence</groupId>
+				<artifactId>jakarta.persistence-api</artifactId> 
+				<version>3.1.0</version>
             </dependency>
 
             <dependency>
@@ -1127,9 +1127,9 @@
 
             <!-- CDI & Weld -->
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>1.2</version>
+               <groupId>jakarta.enterprise</groupId>
+               <artifactId>jakarta.enterprise.cdi-api</artifactId>
+               <version>4.0.0</version>
             </dependency>
 
             <dependency>

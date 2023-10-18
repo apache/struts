@@ -20,8 +20,8 @@ package org.apache.tiles.el;
 
 import org.apache.tiles.request.Request;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
 import java.beans.FeatureDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;

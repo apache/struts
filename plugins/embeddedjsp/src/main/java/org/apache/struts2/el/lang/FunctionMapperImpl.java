@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.el.FunctionMapper;
+import jakarta.el.FunctionMapper;
 
 import org.apache.struts2.el.util.ReflectionUtil;
 

@@ -38,7 +38,6 @@ import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
-import org.junit.Ignore;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.opensymphony.xwork2.ActionContext;

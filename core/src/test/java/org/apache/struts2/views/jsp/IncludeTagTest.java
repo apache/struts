@@ -26,7 +26,6 @@ import static org.easymock.EasyMock.verify;
 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.Include;
-import org.springframework.mock.web.MockRequestDispatcher;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletRequest;

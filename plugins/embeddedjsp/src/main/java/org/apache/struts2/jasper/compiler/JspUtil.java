@@ -26,8 +26,8 @@ import org.apache.struts2.jasper.JspCompilationContext;
 import org.apache.struts2.jasper.el.ExpressionEvaluatorImpl;
 import org.xml.sax.Attributes;
 
-import javax.el.FunctionMapper;
-import javax.servlet.jsp.el.ExpressionEvaluator;
+import jakarta.el.FunctionMapper;
+import jakarta.servlet.jsp.el.ExpressionEvaluator;
 import java.io.*;
 import java.util.Vector;
 import java.util.jar.JarFile;

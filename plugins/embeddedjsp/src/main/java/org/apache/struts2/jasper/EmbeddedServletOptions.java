@@ -21,8 +21,8 @@ package org.apache.struts2.jasper;
 import java.io.File;
 import java.util.*;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
 
 import org.apache.struts2.jasper.compiler.TldLocationsCache;
 import org.apache.struts2.jasper.compiler.JspConfig;

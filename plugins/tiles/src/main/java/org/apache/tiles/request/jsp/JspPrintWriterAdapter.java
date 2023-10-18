@@ -21,7 +21,7 @@ package org.apache.tiles.request.jsp;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.jsp.JspWriter;
+import jakarta.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 

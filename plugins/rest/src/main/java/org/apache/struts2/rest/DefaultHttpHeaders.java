@@ -20,11 +20,11 @@ package org.apache.struts2.rest;
 
 import org.apache.struts2.RequestUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Date;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static jakarta.servlet.http.HttpServletResponse.*;
 
 /**
  * Default implementation of rest info that uses fluent-style construction

@@ -20,13 +20,13 @@ package org.apache.struts2.el;
 
 import java.io.Externalizable;
 import java.io.IOException;
-import javax.el.ELContext;
-import javax.el.PropertyNotWritableException;
+import jakarta.el.ELContext;
+import jakarta.el.PropertyNotWritableException;
 
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import javax.el.ValueExpression;
+import jakarta.el.ValueExpression;
 
 import org.apache.struts2.el.lang.ELSupport;
 import org.apache.struts2.el.util.MessageFactory;

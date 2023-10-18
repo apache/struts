@@ -18,9 +18,9 @@
  */
 package org.apache.struts2.el.parser;
 
-import javax.el.ELException;
-import javax.el.MethodInfo;
-import javax.el.PropertyNotWritableException;
+import jakarta.el.ELException;
+import jakarta.el.MethodInfo;
+import jakarta.el.PropertyNotWritableException;
 
 import org.apache.struts2.el.lang.ELSupport;
 import org.apache.struts2.el.lang.EvaluationContext;

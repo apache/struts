@@ -18,7 +18,7 @@
  */
 package org.apache.struts2;
 
-import javax.servlet.Servlet;
+import jakarta.servlet.Servlet;
 import java.util.concurrent.*;
 
 /**

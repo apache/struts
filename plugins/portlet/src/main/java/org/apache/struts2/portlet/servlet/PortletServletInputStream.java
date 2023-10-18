@@ -21,8 +21,8 @@ package org.apache.struts2.portlet.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
 
 /**
  * Wrapper object exposing a {@link InputStream} from a portlet as a {@link ServletInputStream} instance.

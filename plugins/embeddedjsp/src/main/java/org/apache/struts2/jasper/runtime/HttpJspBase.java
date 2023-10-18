@@ -20,13 +20,13 @@ package org.apache.struts2.jasper.runtime;
 
 import java.io.IOException;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.HttpJspPage;
-import javax.servlet.jsp.JspFactory;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.HttpJspPage;
+import jakarta.servlet.jsp.JspFactory;
 
 import org.apache.struts2.jasper.compiler.Localizer;
 

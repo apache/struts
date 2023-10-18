@@ -20,8 +20,8 @@ package org.apache.struts2.el.parser;
 
 import org.apache.struts2.el.lang.EvaluationContext;
 
-import javax.el.ELException;
-import javax.el.MethodInfo;
+import jakarta.el.ELException;
+import jakarta.el.MethodInfo;
 
 /* All AST nodes must implement this interface.  It provides basic
    machinery for constructing the parent and child relationships

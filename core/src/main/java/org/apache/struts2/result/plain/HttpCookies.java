@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.result.plain;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

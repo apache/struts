@@ -29,7 +29,7 @@ import org.apache.struts2.osgi.loaders.FreeMarkerBundleResourceLoader;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.StrutsClassTemplateLoader;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;

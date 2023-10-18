@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.json;
 
-import com.mockobjects.servlet.MockHttpSession;
+import org.springframework.mock.web.MockHttpSession;
 
 import java.util.Enumeration;
 import java.util.Hashtable;

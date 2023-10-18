@@ -24,7 +24,7 @@ import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 import java.lang.reflect.Method;
-import javax.servlet.jsp.el.FunctionMapper;
+import jakarta.servlet.jsp.el.FunctionMapper;
 
 import org.apache.struts2.jasper.security.SecurityUtil;
 
@@ -35,7 +35,7 @@ import org.apache.struts2.jasper.security.SecurityUtil;
  * @author Mark Roth
  * @author Kin-man Chung
  */
-public final class ProtectedFunctionMapper extends javax.el.FunctionMapper
+public final class ProtectedFunctionMapper extends jakarta.el.FunctionMapper
         implements FunctionMapper {
 
     /**

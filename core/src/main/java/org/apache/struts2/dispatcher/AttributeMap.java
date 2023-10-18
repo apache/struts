@@ -20,7 +20,7 @@ package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.StrutsStatics;
 
-import javax.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.PageContext;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;

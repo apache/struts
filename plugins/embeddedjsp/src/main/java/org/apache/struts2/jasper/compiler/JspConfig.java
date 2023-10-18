@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.net.URL;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.struts2.jasper.JasperException;
 import org.apache.struts2.jasper.xmlparser.ParserUtils;

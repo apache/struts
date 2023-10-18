@@ -23,8 +23,8 @@ import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.util.ComponentUtils;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTagSupport;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.BodyTagSupport;
 import java.io.PrintWriter;
 
 /**

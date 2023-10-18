@@ -23,8 +23,8 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletSession;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
+import jakarta.servlet.http.HttpSessionBindingEvent;
+import jakarta.servlet.http.HttpSessionBindingListener;
 
 import org.springframework.mock.web.MockHttpSession;
 

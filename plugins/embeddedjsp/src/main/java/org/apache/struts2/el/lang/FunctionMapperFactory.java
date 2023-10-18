@@ -20,7 +20,7 @@ package org.apache.struts2.el.lang;
 
 import java.lang.reflect.Method;
 
-import javax.el.FunctionMapper;
+import jakarta.el.FunctionMapper;
 
 /**
  * @author Jacob Hookom [jacob@hookom.net]

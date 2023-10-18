@@ -25,7 +25,7 @@ import com.opensymphony.xwork2.inject.Container;
 import junit.framework.TestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *

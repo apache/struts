@@ -18,14 +18,14 @@
  */
 package org.apache.struts2.jasper.el;
 
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
-import javax.servlet.jsp.el.ELException;
-import javax.servlet.jsp.el.ELParseException;
-import javax.servlet.jsp.el.Expression;
-import javax.servlet.jsp.el.ExpressionEvaluator;
-import javax.servlet.jsp.el.FunctionMapper;
-import javax.servlet.jsp.el.VariableResolver;
+import jakarta.el.ExpressionFactory;
+import jakarta.el.ValueExpression;
+import jakarta.servlet.jsp.el.ELException;
+import jakarta.servlet.jsp.el.ELParseException;
+import jakarta.servlet.jsp.el.Expression;
+import jakarta.servlet.jsp.el.ExpressionEvaluator;
+import jakarta.servlet.jsp.el.FunctionMapper;
+import jakarta.servlet.jsp.el.VariableResolver;
 
 
 public final class ExpressionEvaluatorImpl extends ExpressionEvaluator {
@@ -45,7 +45,7 @@ public final class ExpressionEvaluatorImpl extends ExpressionEvaluator {
             }
 			ValueExpression ve = this.factory.createValueExpression(ctx, expression, expectedType);
 			return new ExpressionImpl(ve);
-		} catch (javax.el.ELException e) {
+		} catch (jakarta.el.ELException e) {
 			throw new ELParseException(e.getMessage());
 		}
 	}

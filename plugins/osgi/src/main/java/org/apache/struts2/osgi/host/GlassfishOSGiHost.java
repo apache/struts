@@ -26,7 +26,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.BundleReference;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;

@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.jasper.el;
 
-import javax.el.MethodNotFoundException;
+import jakarta.el.MethodNotFoundException;
 
 public class JspMethodNotFoundException extends MethodNotFoundException {
 

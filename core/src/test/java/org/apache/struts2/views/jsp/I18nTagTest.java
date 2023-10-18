@@ -26,8 +26,8 @@ import com.mockobjects.servlet.MockJspWriter;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.ActionContext;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 public class I18nTagTest extends StrutsInternalTestCase {
 

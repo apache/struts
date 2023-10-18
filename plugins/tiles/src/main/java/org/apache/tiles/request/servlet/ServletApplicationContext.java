@@ -26,7 +26,7 @@ import org.apache.tiles.request.locale.URLApplicationResource;
 import org.apache.tiles.request.servlet.extractor.ApplicationScopeExtractor;
 import org.apache.tiles.request.servlet.extractor.InitParameterExtractor;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;

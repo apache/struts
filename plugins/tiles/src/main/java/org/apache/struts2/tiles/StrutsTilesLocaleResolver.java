@@ -28,7 +28,7 @@ import org.apache.tiles.core.locale.LocaleResolver;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 public class StrutsTilesLocaleResolver implements LocaleResolver {

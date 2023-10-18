@@ -28,8 +28,8 @@ import org.apache.struts2.jasper.compiler.ServletWriter;
 import org.apache.struts2.jasper.servlet.JasperLoader;
 import org.apache.struts2.jasper.servlet.JspServletWrapper;
 
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.tagext.TagInfo;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.jsp.tagext.TagInfo;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

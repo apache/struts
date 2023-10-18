@@ -32,7 +32,7 @@ import org.apache.struts2.action.ServletContextAware;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

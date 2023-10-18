@@ -24,7 +24,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of attributes and

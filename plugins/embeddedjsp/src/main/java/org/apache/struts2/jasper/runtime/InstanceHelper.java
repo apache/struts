@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import javax.naming.NamingException;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
 
 import org.apache.tomcat.InstanceManager;
 import org.apache.tomcat.SimpleInstanceManager;

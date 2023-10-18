@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.jasper.el;
 
-import javax.el.PropertyNotWritableException;
+import jakarta.el.PropertyNotWritableException;
 
 public class JspPropertyNotWritableException extends
         PropertyNotWritableException {

@@ -23,7 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ListIterator;
-import javax.servlet.jsp.tagext.PageData;
+import jakarta.servlet.jsp.tagext.PageData;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 import org.apache.struts2.jasper.JasperException;

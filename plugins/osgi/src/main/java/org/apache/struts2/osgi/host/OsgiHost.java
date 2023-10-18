@@ -21,7 +21,7 @@ package org.apache.struts2.osgi.host;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.util.Map;
 
 /**

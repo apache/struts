@@ -21,7 +21,7 @@ package org.apache.struts2.views.jsp;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import javax.servlet.jsp.JspWriter;
+import jakarta.servlet.jsp.JspWriter;
 
 
 /**

@@ -20,7 +20,7 @@ package org.apache.struts2.jasper.compiler;
 
 import java.util.*;
 import java.io.*;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.struts2.jasper.JasperException;
 import org.apache.struts2.jasper.xmlparser.ParserUtils;

@@ -18,12 +18,12 @@
  */
 package org.apache.struts2.el.parser;
 
-import javax.el.ELException;
-import javax.el.MethodExpression;
-import javax.el.MethodInfo;
-import javax.el.MethodNotFoundException;
-import javax.el.ValueExpression;
-import javax.el.VariableMapper;
+import jakarta.el.ELException;
+import jakarta.el.MethodExpression;
+import jakarta.el.MethodInfo;
+import jakarta.el.MethodNotFoundException;
+import jakarta.el.ValueExpression;
+import jakarta.el.VariableMapper;
 
 import org.apache.struts2.el.lang.EvaluationContext;
 

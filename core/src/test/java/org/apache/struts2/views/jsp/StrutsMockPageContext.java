@@ -21,9 +21,9 @@ package org.apache.struts2.views.jsp;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import com.mockobjects.servlet.MockPageContext;
 

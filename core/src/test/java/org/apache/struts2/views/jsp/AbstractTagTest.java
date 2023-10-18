@@ -38,8 +38,8 @@ import org.apache.struts2.dispatcher.MockDispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspWriter;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.JspWriter;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.HashMap;

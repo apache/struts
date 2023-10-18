@@ -20,9 +20,9 @@ package org.apache.tiles.request.jsp.autotag;
 
 import org.apache.tiles.autotag.core.runtime.AbstractModelBody;
 
-import javax.servlet.jsp.JspContext;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.JspFragment;
+import jakarta.servlet.jsp.JspContext;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.JspFragment;
 import java.io.IOException;
 import java.io.Writer;
 

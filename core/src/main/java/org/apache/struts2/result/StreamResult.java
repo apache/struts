@@ -24,7 +24,7 @@ import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.io.OutputStream;
 

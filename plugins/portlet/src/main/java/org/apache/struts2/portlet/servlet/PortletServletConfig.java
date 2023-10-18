@@ -22,8 +22,8 @@ import java.util.Enumeration;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
 
 /**
  * Wrapper object exposing a {@link PortletConfig} as a {@link ServletConfig} instance.

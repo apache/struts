@@ -23,7 +23,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspException;
 
 import org.apache.struts2.views.jsp.iterator.SortIteratorTag;
 

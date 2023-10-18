@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.jasper.el;
 
-import javax.el.PropertyNotFoundException;
+import jakarta.el.PropertyNotFoundException;
 
 public final class JspPropertyNotFoundException extends
         PropertyNotFoundException {

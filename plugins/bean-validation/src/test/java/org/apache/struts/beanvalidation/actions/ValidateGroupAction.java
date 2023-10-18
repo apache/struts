@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.ModelDriven;
 import org.apache.struts.beanvalidation.constraints.ValidationGroup;
 import org.apache.struts.beanvalidation.models.Person;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 public class ValidateGroupAction extends ActionSupport implements ModelDriven<Person> {
 

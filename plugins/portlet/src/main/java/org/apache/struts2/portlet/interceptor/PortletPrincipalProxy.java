@@ -21,7 +21,7 @@ package org.apache.struts2.portlet.interceptor;
 import org.apache.struts2.interceptor.PrincipalProxy;
 
 import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 /**

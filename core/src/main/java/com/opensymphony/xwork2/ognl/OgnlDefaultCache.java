@@ -19,37 +19,40 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Default OGNL cache implementation.
+ * <p>Basic OGNL cache implementation.</p>
  *
- * Setting a very high eviction limit simulates an unlimited cache.
- * Setting too low an eviction limit will make the cache ineffective.
+ * <p>This implementation is backed by a {@link ConcurrentHashMap} that is cleared whenever the eviction limit is
+ * surpassed.</p>
  *
- * @param <Key> The type for the cache key entries
- * @param <Value> The type for the cache value entries
+ * <p>Setting a very high eviction limit simulates an unlimited cache.</p>
+ * <p>Setting too low an eviction limit will make the cache ineffective.</p>
+ *
+ * @param <K> The type for the cache key entries
+ * @param <V> The type for the cache value entries
  */
-public class OgnlDefaultCache<Key, Value> implements OgnlCache<Key, Value> {
+public class OgnlDefaultCache<K, V> implements OgnlCache<K, V> {
 
-    private final ConcurrentHashMap<Key, Value> ognlCache;
-    private final AtomicInteger cacheEvictionLimit = new AtomicInteger(25000);
+    private final ConcurrentHashMap<K, V> ognlCache;
+    private final AtomicInteger cacheEvictionLimit;
 
     public OgnlDefaultCache(int evictionLimit, int initialCapacity, float loadFactor) {
-        this.cacheEvictionLimit.set(evictionLimit);
+        cacheEvictionLimit = new AtomicInteger(evictionLimit);
         ognlCache = new ConcurrentHashMap<>(initialCapacity, loadFactor);
     }
 
     @Override
-    public Value get(Key key) {
+    public V get(K key) {
         return ognlCache.get(key);
     }
 
     @Override
-    public void put(Key key, Value value) {
+    public void put(K key, V value) {
         ognlCache.put(key, value);
         this.clearIfEvictionLimitExceeded();
     }
 
     @Override
-    public void putIfAbsent(Key key, Value value) {
+    public void putIfAbsent(K key, V value) {
         ognlCache.putIfAbsent(key, value);
         this.clearIfEvictionLimitExceeded();
     }

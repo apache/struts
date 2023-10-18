@@ -35,6 +35,7 @@ import com.opensymphony.xwork2.UnknownHandlerManager;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.conversion.ConversionAnnotationProcessor;
 import com.opensymphony.xwork2.conversion.ConversionFileProcessor;
 import com.opensymphony.xwork2.conversion.ConversionPropertiesProcessor;
@@ -251,15 +252,11 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
             .factory(ExecutorProvider.class, StrutsExecutorProvider.class, Scope.SINGLETON)
         ;
 
-        props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());
-        props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, Boolean.FALSE.toString());
-        props.setProperty(StrutsConstants.STRUTS_DEVMODE, Boolean.FALSE.toString());
-        props.setProperty(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, Boolean.FALSE.toString());
-        props.setProperty(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, Boolean.TRUE.toString());
-        props.setProperty(StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, Boolean.FALSE.toString());
-        props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, Boolean.FALSE.toString());
-        props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Boolean.TRUE.toString());
-        props.setProperty(StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS, Boolean.TRUE.toString());
-    }
+        for (Map.Entry<String, Object> entry : DefaultConfiguration.BOOTSTRAP_CONSTANTS.entrySet()) {
+            props.setProperty(entry.getKey(), String.valueOf(entry.getValue()));
+        }
 
+        props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Boolean.TRUE.toString());
+        props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());
+    }
 }

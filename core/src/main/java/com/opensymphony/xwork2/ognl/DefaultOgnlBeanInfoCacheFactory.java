@@ -16,6 +16,7 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.inject.Inject;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.struts2.StrutsConstants;
 
 /**
@@ -29,16 +30,16 @@ import org.apache.struts2.StrutsConstants;
 public class DefaultOgnlBeanInfoCacheFactory<Key, Value> extends DefaultOgnlCacheFactory<Key, Value>
     implements BeanInfoCacheFactory<Key, Value> {
 
-    @Override
-    @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, required = false)
-    protected void setCacheMaxSize(String maxSize) {
-        super.setCacheMaxSize(maxSize);
+    /**
+     * @deprecated since 6.4.0, use {@link #DefaultOgnlBeanInfoCacheFactory(String, String)}
+     */
+    @Deprecated
+    public DefaultOgnlBeanInfoCacheFactory() {
     }
 
-    @Override
-    @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_LRU_MODE, required = false)
-    protected void setUseLRUCache(String useLRUMode) {
-        super.setUseLRUCache(useLRUMode);
+    @Inject
+    public DefaultOgnlBeanInfoCacheFactory(@Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE) String cacheMaxSize,
+                                           @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_TYPE) String defaultCacheType) {
+        super(Integer.parseInt(cacheMaxSize), EnumUtils.getEnumIgnoreCase(CacheType.class, defaultCacheType));
     }
-
 }

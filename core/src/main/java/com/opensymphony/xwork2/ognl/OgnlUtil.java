@@ -143,12 +143,18 @@ public class OgnlUtil {
         enableExpressionCache = BooleanUtils.toBoolean(cache);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, required = false)
+    /**
+     * @deprecated since 6.4.0, changing maximum cache size after initialisation is not necessary.
+     */
+    @Deprecated
     protected void setExpressionCacheMaxSize(String maxSize) {
         expressionCache.setEvictionLimit(Integer.parseInt(maxSize));
     }
 
-    @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, required = false)
+    /**
+     * @deprecated since 6.4.0, changing maximum cache size after initialisation is not necessary.
+     */
+    @Deprecated
     protected void setBeanInfoCacheMaxSize(String maxSize) {
         beanInfoCache.setEvictionLimit(Integer.parseInt(maxSize));
     }
@@ -673,9 +679,15 @@ public class OgnlUtil {
      *                   note if exclusions AND inclusions are supplied and not null nothing will get copied.
      * @param editable the class (or interface) to restrict property setting to
      */
-    public void copy(final Object from, final Object to, final Map<String, Object> context, Collection<String> exclusions, Collection<String> inclusions, Class<?> editable) {
+    public void copy(final Object from,
+                     final Object to,
+                     final Map<String, Object> context,
+                     Collection<String> exclusions,
+                     Collection<String> inclusions,
+                     Class<?> editable) {
         if (from == null || to == null) {
-            LOG.warn("Attempting to copy from or to a null source. This is illegal and is bein skipped. This may be due to an error in an OGNL expression, action chaining, or some other event.");
+            LOG.warn(
+                    "Skipping attempt to copy from, or to, a null source.", new RuntimeException());
             return;
         }
 
@@ -689,8 +701,7 @@ public class OgnlUtil {
             fromPds = getPropertyDescriptors(from);
             if (editable != null) {
                 toPds = getPropertyDescriptors(editable);
-            }
-            else {
+            } else {
                 toPds = getPropertyDescriptors(to);
             }
         } catch (IntrospectionException e) {
@@ -705,29 +716,31 @@ public class OgnlUtil {
         }
 
         for (PropertyDescriptor fromPd : fromPds) {
-            if (fromPd.getReadMethod() != null) {
-                boolean copy = true;
-                if (exclusions != null && exclusions.contains(fromPd.getName())) {
-                    copy = false;
-                } else if (inclusions != null && !inclusions.contains(fromPd.getName())) {
-                    copy = false;
-                }
-
-                if (copy) {
-                    PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
-                    if ((toPd != null) && (toPd.getWriteMethod() != null)) {
-                        try {
-                            Object value = ognlGet(fromPd.getName(), contextFrom, from, null, context, this::checkEnableEvalExpression);
-                            ognlSet(fromPd.getName(), contextTo, to, value, context);
-                        } catch (OgnlException e) {
-                            LOG.debug("Got OGNL exception", e);
-                        }
-                    }
-
-                }
-
+            if (fromPd.getReadMethod() == null) {
+                continue;
             }
 
+            if (exclusions != null && exclusions.contains(fromPd.getName()) ||
+                    inclusions != null && !inclusions.contains(fromPd.getName())) {
+                continue;
+            }
+
+            PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
+            if (toPd == null || toPd.getWriteMethod() == null) {
+                continue;
+            }
+
+            try {
+                Object value = ognlGet(fromPd.getName(),
+                        contextFrom,
+                        from,
+                        null,
+                        context,
+                        this::checkEnableEvalExpression);
+                ognlSet(fromPd.getName(), contextTo, to, value, context);
+            } catch (OgnlException e) {
+                LOG.debug("Got OGNL exception", e);
+            }
         }
     }
 
@@ -746,7 +759,7 @@ public class OgnlUtil {
     }
 
     /**
-     * Get's the java beans property descriptors for the given source.
+     * Gets the java beans property descriptors for the given source.
      *
      * @param source the source object.
      * @return property descriptors.

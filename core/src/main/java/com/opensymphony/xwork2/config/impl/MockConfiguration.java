@@ -18,7 +18,11 @@
  */
 package com.opensymphony.xwork2.config.impl;
 
-import com.opensymphony.xwork2.config.*;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ContainerProvider;
+import com.opensymphony.xwork2.config.PackageProvider;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.UnknownHandlerConfig;
 import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
@@ -28,7 +32,11 @@ import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import org.apache.struts2.StrutsConstants;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -51,9 +59,9 @@ public class MockConfiguration implements Configuration {
         builder.factory(Configuration.class, MockConfiguration.class, Scope.SINGLETON);
         LocatableProperties props = new LocatableProperties();
         new StrutsDefaultConfigurationProvider().register(builder, props);
-        builder.constant(StrutsConstants.STRUTS_DEVMODE, "false");
-        builder.constant(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
-        builder.constant(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, "true");
+        for (Map.Entry<String, Object> entry : DefaultConfiguration.BOOTSTRAP_CONSTANTS.entrySet()) {
+            builder.constant(entry.getKey(), String.valueOf(entry.getValue()));
+        }
         builder.constant(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, "false");
         container = builder.create(true);
     }

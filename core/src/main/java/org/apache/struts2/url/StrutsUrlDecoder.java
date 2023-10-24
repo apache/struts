@@ -110,7 +110,7 @@ public class StrutsUrlDecoder implements UrlDecoder {
     }
 
     private Charset getCharset(String encoding) throws UnsupportedEncodingException {
-        for (Charset charset : AVAILAVLE_CHARSETS) {
+        for (Charset charset : AVAILABLE_CHARSETS) {
             if (encoding.equalsIgnoreCase(charset.name())) {
                 return charset;
             }

@@ -33,7 +33,7 @@ public class StrutsUrlDecoder implements UrlDecoder {
 
     private static final Logger LOG = LogManager.getLogger(StrutsUrlDecoder.class);
 
-    private static final Collection<Charset> AVAILAVLE_CHARSETS = Charset.availableCharsets().values();
+    private static final Collection<Charset> AVAILABLE_CHARSETS = Charset.availableCharsets().values();
 
     private String encoding = "UTF-8";
 

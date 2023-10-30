@@ -28,27 +28,40 @@
 
     <constant name="struts.excludedClasses"
               value="
-                java.lang.Object,
-                java.lang.Runtime,
-                java.lang.System,
+                com.opensymphony.xwork2.ActionContext,
                 java.lang.Class,
                 java.lang.ClassLoader,
-                java.lang.Shutdown,
+                java.lang.InheritableThreadLocal,
+                java.lang.Object,
+                java.lang.Package,
+                java.lang.Process,
                 java.lang.ProcessBuilder,
+                java.lang.Runtime,
+                java.lang.RuntimePermission,
+                java.lang.SecurityManager,
+                java.lang.Shutdown,
+                java.lang.System,
                 java.lang.Thread,
-                sun.misc.Unsafe,
-                com.opensymphony.xwork2.ActionContext"/>
+                java.lang.ThreadGroup,
+                java.lang.ThreadLocal"/>
 
     <constant name="struts.devMode.excludedClasses"
               value="
-                java.lang.Object,
-                java.lang.Runtime,
-                java.lang.System,
                 java.lang.Class,
                 java.lang.ClassLoader,
-                java.lang.Shutdown,
+                java.lang.InheritableThreadLocal,
+                java.lang.Object,
+                java.lang.Package,
+                java.lang.Process,
                 java.lang.ProcessBuilder,
-                sun.misc.Unsafe"/>
+                java.lang.Runtime,
+                java.lang.RuntimePermission,
+                java.lang.SecurityManager,
+                java.lang.Shutdown,
+                java.lang.System,
+                java.lang.Thread,
+                java.lang.ThreadGroup,
+                java.lang.ThreadLocal"/>
 
     <!-- this must be valid regex, each '.' in package name must be escaped! -->
     <!-- it's more flexible but slower than simple string comparison -->
@@ -58,50 +71,64 @@
     <!-- All classes within the following packages and their sub-packages are excluded -->
     <constant name="struts.excludedPackageNames"
               value="
-                ognl,
-                java.io,
-                java.net,
-                java.nio,
-                javax,
-                freemarker.core,
-                freemarker.template,
-                freemarker.ext.jsp,
-                freemarker.ext.rhino,
-                sun.misc,
-                sun.reflect,
-                javassist,
-                org.apache.velocity,
-                org.objectweb.asm,
-                org.springframework.context,
+                antlr.build,
+                com.opensymphony.xwork2.config,
                 com.opensymphony.xwork2.inject,
                 com.opensymphony.xwork2.ognl,
                 com.opensymphony.xwork2.security,
                 com.opensymphony.xwork2.util,
-                org.apache.struts2.ognl,
-                org.apache.tomcat,
-                org.apache.catalina.core,
-                org.wildfly.extension.undertow.deployment"/>
-
-    <constant name="struts.devMode.excludedPackageNames"
-              value="
-                ognl,
+                freemarker.core,
+                freemarker.ext.jsp,
+                freemarker.ext.rhino,
+                freemarker.template,
                 java.io,
                 java.net,
                 java.nio,
-                javax,
-                freemarker.core,
-                freemarker.template,
-                freemarker.ext.jsp,
-                freemarker.ext.rhino,
-                sun.misc,
-                sun.reflect,
                 javassist,
+                javax,
+                ognl,
+                org.apache.catalina.core,
+                org.apache.commons.beanutils,
+                org.apache.commons.collections,
+                org.apache.struts2.ognl,
+                org.apache.tomcat,
                 org.apache.velocity,
                 org.objectweb.asm,
                 org.springframework.context,
+                org.wildfly.extension.undertow.deployment,
+                org.yaml.snakeyaml,
+                sun.misc,
+                sun.reflect"/>
+
+    <constant name="struts.devMode.excludedPackageNames"
+              value="
+                antlr.build,
+                com.opensymphony.xwork2.config,
                 com.opensymphony.xwork2.inject,
                 com.opensymphony.xwork2.ognl,
                 com.opensymphony.xwork2.security,
-                com.opensymphony.xwork2.util"/>
+                com.opensymphony.xwork2.util,
+                freemarker.core,
+                freemarker.ext.jsp,
+                freemarker.ext.rhino,
+                freemarker.template,
+                java.io,
+                java.net,
+                java.nio,
+                javassist,
+                javax,
+                ognl,
+                org.apache.catalina.core,
+                org.apache.commons.beanutils,
+                org.apache.commons.collections,
+                org.apache.struts2.ognl,
+                org.apache.tomcat,
+                org.apache.velocity,
+                org.objectweb.asm,
+                org.springframework.context,
+                org.wildfly.extension.undertow.deployment,
+                org.yaml.snakeyaml,
+                sun.misc,
+                sun.reflect"/>
 
 </struts>

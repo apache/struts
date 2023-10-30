@@ -105,8 +105,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputTimestamp>2023-09-11T07:49:50Z</project.build.outputTimestamp>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.6</asm.version>
@@ -790,14 +789,14 @@
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-jasper</artifactId>
-                <version>11.0.0-M13</version>
+                <version>10.1.15</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-api</artifactId>
-                <version>11.0.0-M13</version>
+                <version>10.1.15</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -818,7 +817,7 @@
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-juli</artifactId>
-                <version>11.0.0-M13</version>
+                <version>10.1.15</version>
             </dependency>
 
             <!-- Commons -->

@@ -785,6 +785,13 @@
                 <version>3.0.0</version>
                 <scope>test</scope>
             </dependency>
+            
+            <dependency>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
+                <version>5.0.0</version>
+                <scope>test</scope>
+        	</dependency>
 
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
@@ -913,37 +920,6 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
                 <version>${spring.platformVersion}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>mockobjects</groupId>
-                <artifactId>mockobjects-core</artifactId>
-                <version>0.09</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>mockobjects</groupId>
-                <artifactId>mockobjects-jdk1.3</artifactId>
-                <version>0.09</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>mockobjects</groupId>
-                <artifactId>mockobjects-alt-jdk1.3</artifactId>
-                <version>0.09</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>mockobjects</groupId>
-                <artifactId>mockobjects-alt-jdk1.3-j2ee1.3</artifactId>
-                <version>0.09</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>mockobjects</groupId>
-                <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
-                <version>0.09</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>

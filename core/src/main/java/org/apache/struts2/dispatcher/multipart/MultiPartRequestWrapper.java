@@ -37,7 +37,7 @@ import java.util.*;
  *
  * <p>
  * The <tt>struts.multipart.parser</tt> property should be set to <tt>jakarta</tt> for the
- * Jakarta implementation, <tt>pell</tt> for the Pell implementation and <tt>cos</tt> for the Jason Hunter
+ * Jakarta implementation, and <tt>cos</tt> for the Jason Hunter
  * implementation.
  * </p>
  *

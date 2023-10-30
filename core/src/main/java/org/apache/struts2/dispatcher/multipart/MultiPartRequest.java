@@ -18,14 +18,13 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import jakarta.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.dispatcher.LocalizedMessage;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
+
+import org.apache.struts2.dispatcher.LocalizedMessage;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * <p>Abstract wrapper class HTTP requests to handle multi-part data. </p>
@@ -105,7 +104,7 @@ public interface MultiPartRequest {
     /**
      * Returns a list of error messages that may have occurred while processing the request.
      * If there are no errors, an empty list is returned. If the underlying implementation
-     * (ie: pell, cos, jakarta, etc) cannot support providing these errors, an empty list is
+     * (ie: cos, jakarta, etc) cannot support providing these errors, an empty list is
      * also returned. This list of errors is reported back to the
      * {@link MultiPartRequestWrapper}'s errors field.
      *

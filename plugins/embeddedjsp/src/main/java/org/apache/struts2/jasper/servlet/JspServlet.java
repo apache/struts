@@ -225,10 +225,10 @@ public class JspServlet extends HttpServlet implements PeriodicEventListener {
                 /*
 		 * Requested JSP has been target of
                  * RequestDispatcher.include(). Its path is assembled from the
-                 * relevant javax.servlet.include.* request attributes
+                 * relevant jakarta.servlet.include.* request attributes
                  */
                 String pathInfo = (String) request.getAttribute(
-                                    "javax.servlet.include.path_info");
+                                    "jakarta.servlet.include.path_info");
                 if (pathInfo != null) {
                     jspUri += pathInfo;
                 }
@@ -308,7 +308,7 @@ public class JspServlet extends HttpServlet implements PeriodicEventListener {
                     if (null == context.getResource(jspUri)) {
                         String includeRequestUri = (String)
                         request.getAttribute(
-                                "javax.servlet.include.request_uri");
+                                "jakarta.servlet.include.request_uri");
                         if (includeRequestUri != null) {
                             // This file was included. Throw an exception as
                             // a response.sendError() will be ignored

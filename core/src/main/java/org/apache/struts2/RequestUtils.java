@@ -89,7 +89,7 @@ public class RequestUtils {
      */
     public static String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
-        String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
+        String uri = (String) request.getAttribute("jakarta.servlet.include.servlet_path");
         if (uri != null) {
             return uri;
         }

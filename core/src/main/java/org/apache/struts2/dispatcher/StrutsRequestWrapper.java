@@ -71,8 +71,8 @@ public class StrutsRequestWrapper extends HttpServletRequestWrapper {
             throw new NullPointerException("You must specify a key value");
         }
 
-        if (disableRequestAttributeValueStackLookup || key.startsWith("javax.servlet")) {
-            // don't bother with the standard javax.servlet attributes, we can short-circuit this
+        if (disableRequestAttributeValueStackLookup || key.startsWith("jakarta.servlet")) {
+            // don't bother with the standard jakarta.servlet attributes, we can short-circuit this
             // see WW-953 and the forums post linked in that issue for more info
             return super.getAttribute(key);
         }

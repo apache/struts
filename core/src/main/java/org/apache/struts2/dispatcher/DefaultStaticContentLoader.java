@@ -151,7 +151,7 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.struts2.dispatcher.StaticResourceLoader#setHostConfig(javax.servlet.FilterConfig)
+     * @see org.apache.struts2.dispatcher.StaticResourceLoader#setHostConfig(jakarta.servlet.FilterConfig)
      */
     public void setHostConfig(HostConfig filterConfig) {
         String param = filterConfig.getInitParameter("packages");
@@ -203,8 +203,8 @@ public class DefaultStaticContentLoader implements StaticContentLoader {
      * (non-Javadoc)
      *
      * @see org.apache.struts2.dispatcher.StaticResourceLoader#findStaticResource(java.lang.String,
-     *      javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse)
+     *      jakarta.servlet.http.HttpServletRequest,
+     *      jakarta.servlet.http.HttpServletResponse)
      */
     public void findStaticResource(String path, HttpServletRequest request, HttpServletResponse response)
         throws IOException {

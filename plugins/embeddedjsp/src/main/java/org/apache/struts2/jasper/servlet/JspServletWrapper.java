@@ -368,7 +368,7 @@ public class JspServletWrapper {
 
         } catch (UnavailableException ex) {
             String includeRequestUri = (String)
-                request.getAttribute("javax.servlet.include.request_uri");
+                request.getAttribute("jakarta.servlet.include.request_uri");
             if (includeRequestUri != null) {
                 // This file was included. Throw an exception as
                 // a response.sendError() will be ignored by the

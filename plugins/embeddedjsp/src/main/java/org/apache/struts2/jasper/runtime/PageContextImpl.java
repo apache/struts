@@ -171,7 +171,7 @@ public class PageContextImpl extends PageContext {
 		setAttribute(PAGECONTEXT, this);
 		setAttribute(APPLICATION, context);
 
-		isIncluded = request.getAttribute("javax.servlet.include.servlet_path") != null;
+		isIncluded = request.getAttribute("jakarta.servlet.include.servlet_path") != null;
 	}
 
 	public void release() {
@@ -607,7 +607,7 @@ public class PageContextImpl extends PageContext {
 
 		if (!path.startsWith("/")) {
 			String uri = (String) request
-					.getAttribute("javax.servlet.include.servlet_path");
+					.getAttribute("jakarta.servlet.include.servlet_path");
 			if (uri == null)
 				uri = ((HttpServletRequest) request).getServletPath();
 			String baseURI = uri.substring(0, uri.lastIndexOf('/'));
@@ -801,19 +801,19 @@ public class PageContextImpl extends PageContext {
 
 			/*
 			 * Set request attributes. Do not set the
-			 * javax.servlet.error.exception attribute here (instead, set in the
+			 * jakarta.servlet.error.exception attribute here (instead, set in the
 			 * generated servlet code for the error page) in order to prevent
 			 * the ErrorReportValve, which is invoked as part of forwarding the
 			 * request to the error page, from throwing it if the response has
 			 * not been committed (the response will have been committed if the
 			 * error page is a JSP page).
 			 */
-			request.setAttribute("javax.servlet.jsp.jspException", t);
-			request.setAttribute("javax.servlet.error.status_code",
+			request.setAttribute("jakarta.servlet.jsp.jspException", t);
+			request.setAttribute("jakarta.servlet.error.status_code",
 					new Integer(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
-			request.setAttribute("javax.servlet.error.request_uri",
+			request.setAttribute("jakarta.servlet.error.request_uri",
 					((HttpServletRequest) request).getRequestURI());
-			request.setAttribute("javax.servlet.error.servlet_name", config
+			request.setAttribute("jakarta.servlet.error.servlet_name", config
 					.getServletName());
 			try {
 				forward(errorPageURL);
@@ -824,18 +824,18 @@ public class PageContextImpl extends PageContext {
 			// The error page could be inside an include.
 
 			Object newException = request
-					.getAttribute("javax.servlet.error.exception");
+					.getAttribute("jakarta.servlet.error.exception");
 
 			// t==null means the attribute was not set.
 			if ((newException != null) && (newException == t)) {
-				request.removeAttribute("javax.servlet.error.exception");
+				request.removeAttribute("jakarta.servlet.error.exception");
 			}
 
 			// now clear the error code - to prevent double handling.
-			request.removeAttribute("javax.servlet.error.status_code");
-			request.removeAttribute("javax.servlet.error.request_uri");
-			request.removeAttribute("javax.servlet.error.status_code");
-			request.removeAttribute("javax.servlet.jsp.jspException");
+			request.removeAttribute("jakarta.servlet.error.status_code");
+			request.removeAttribute("jakarta.servlet.error.request_uri");
+			request.removeAttribute("jakarta.servlet.error.status_code");
+			request.removeAttribute("jakarta.servlet.jsp.jspException");
 
 		} else {
 			// Otherwise throw the exception wrapped inside a ServletException.

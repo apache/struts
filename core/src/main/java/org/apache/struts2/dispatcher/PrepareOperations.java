@@ -264,7 +264,7 @@ public class PrepareOperations {
     /**
      * Clear any override of the static devMode value being applied to the current thread.
      * This can be useful for any situation where {@link #overrideDevMode(boolean)} might be called
-     * in a flow where {@link #cleanupRequest(javax.servlet.http.HttpServletRequest)} does not get called.
+     * in a flow where {@link #cleanupRequest(jakarta.servlet.http.HttpServletRequest)} does not get called.
      * May be very situational (such as some unit tests), but may have other utility as well.
      */
     public static void clearDevModeOverride() {

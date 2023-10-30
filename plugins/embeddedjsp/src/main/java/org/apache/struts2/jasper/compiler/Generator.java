@@ -1718,7 +1718,7 @@ class Generator {
                 out.print(tagMethod);
                 out.print("(");
                 if (parent != null) {
-                    out.print("javax.servlet.jsp.tagext.JspTag ");
+                    out.print("jakarta.servlet.jsp.tagext.JspTag ");
                     out.print(parent);
                     out.print(", ");
                 }
@@ -2248,7 +2248,7 @@ class Generator {
             if (!n.hasEmptyBody()) {
                 out.printin("if (");
                 out.print(tagEvalVar);
-                out.println(" != javax.servlet.jsp.tagext.Tag.SKIP_BODY) {");
+                out.println(" != jakarta.servlet.jsp.tagext.Tag.SKIP_BODY) {");
                 out.pushIndent();
 
                 // Declare NESTED scripting variables
@@ -2259,7 +2259,7 @@ class Generator {
                     out.printin("if (");
                     out.print(tagEvalVar);
                     out
-                            .println(" != javax.servlet.jsp.tagext.Tag.EVAL_BODY_INCLUDE) {");
+                            .println(" != jakarta.servlet.jsp.tagext.Tag.EVAL_BODY_INCLUDE) {");
                     // Assume EVAL_BODY_BUFFERED
                     out.pushIndent();
                     out.printil("out = _jspx_page_context.pushBody();");
@@ -2272,7 +2272,7 @@ class Generator {
                     }
                     out.printin(tagHandlerVar);
                     out
-                            .println(".setBodyContent((javax.servlet.jsp.tagext.BodyContent) out);");
+                            .println(".setBodyContent((jakarta.servlet.jsp.tagext.BodyContent) out);");
                     out.printin(tagHandlerVar);
                     out.println(".doInitBody();");
 
@@ -2312,7 +2312,7 @@ class Generator {
                     syncScriptingVars(n, VariableInfo.NESTED);
 
                     out
-                            .printil("if (evalDoAfterBody != javax.servlet.jsp.tagext.BodyTag.EVAL_BODY_AGAIN)");
+                            .printil("if (evalDoAfterBody != jakarta.servlet.jsp.tagext.BodyTag.EVAL_BODY_AGAIN)");
                     out.pushIndent();
                     out.printil("break;");
                     out.popIndent();
@@ -2327,7 +2327,7 @@ class Generator {
                     out.printin("if (");
                     out.print(tagEvalVar);
                     out
-                            .println(" != javax.servlet.jsp.tagext.Tag.EVAL_BODY_INCLUDE) {");
+                            .println(" != jakarta.servlet.jsp.tagext.Tag.EVAL_BODY_INCLUDE) {");
                     out.pushIndent();
                     out.printil("out = _jspx_page_context.popBody();");
                     if (n.implementsTryCatchFinally()) {
@@ -2348,7 +2348,7 @@ class Generator {
             out.printin("if (");
             out.print(tagHandlerVar);
             out
-                    .println(".doEndTag() == javax.servlet.jsp.tagext.Tag.SKIP_PAGE) {");
+                    .println(".doEndTag() == jakarta.servlet.jsp.tagext.Tag.SKIP_PAGE) {");
             out.pushIndent();
             if (!n.implementsTryCatchFinally()) {
                 if (isPoolingEnabled && !(n.implementsJspIdConsumer())) {
@@ -2974,19 +2974,19 @@ class Generator {
             if (isTagFile && parent == null) {
                 out.printin(tagHandlerVar);
                 out.print(".setParent(");
-                out.print("new javax.servlet.jsp.tagext.TagAdapter(");
-                out.print("(javax.servlet.jsp.tagext.SimpleTag) this ));");
+                out.print("new jakarta.servlet.jsp.tagext.TagAdapter(");
+                out.print("(jakarta.servlet.jsp.tagext.SimpleTag) this ));");
             } else if (!simpleTag) {
                 out.printin(tagHandlerVar);
                 out.print(".setParent(");
                 if (parent != null) {
                     if (isSimpleTagParent) {
-                        out.print("new javax.servlet.jsp.tagext.TagAdapter(");
-                        out.print("(javax.servlet.jsp.tagext.SimpleTag) ");
+                        out.print("new jakarta.servlet.jsp.tagext.TagAdapter(");
+                        out.print("(jakarta.servlet.jsp.tagext.SimpleTag) ");
                         out.print(parent);
                         out.println("));");
                     } else {
-                        out.print("(javax.servlet.jsp.tagext.Tag) ");
+                        out.print("(jakarta.servlet.jsp.tagext.Tag) ");
                         out.print(parent);
                         out.println(");");
                     }
@@ -3210,7 +3210,7 @@ class Generator {
                     out.printil("out = _jspx_page_context.pushBody();");
                     visitBody(n);
                     out.printil("String " + varName + " = "
-                            + "((javax.servlet.jsp.tagext.BodyContent)"
+                            + "((jakarta.servlet.jsp.tagext.BodyContent)"
                             + "out).getString();");
                     out.printil("out = _jspx_page_context.popBody();");
                 }
@@ -3237,7 +3237,7 @@ class Generator {
                 String tagHandlerVar) throws JasperException {
             String varName = n.getTemporaryVariableName();
 
-            out.printin("javax.servlet.jsp.tagext.JspFragment " + varName
+            out.printin("jakarta.servlet.jsp.tagext.JspFragment " + varName
                     + " = ");
             generateJspFragment(n, tagHandlerVar);
             out.println(";");
@@ -3446,7 +3446,7 @@ class Generator {
         out.printin("    implements org.apache.struts2.jasper.runtime.JspSourceDependent");
         if (tagInfo.hasDynamicAttributes()) {
             out.println(",");
-            out.printin("               javax.servlet.jsp.tagext.DynamicAttributes");
+            out.printin("               jakarta.servlet.jsp.tagext.DynamicAttributes");
         }
         out.println(" {");
         out.println();
@@ -3587,7 +3587,7 @@ class Generator {
         for (int i = 0; i < attrInfos.length; i++) {
             out.printin("private ");
             if (attrInfos[i].isFragment()) {
-                out.print("javax.servlet.jsp.tagext.JspFragment ");
+                out.print("jakarta.servlet.jsp.tagext.JspFragment ");
             } else {
                 out.print(JspUtil.toJavaSourceType(attrInfos[i].getTypeName()));
                 out.print(" ");
@@ -3603,7 +3603,7 @@ class Generator {
                 // getter method
                 out.printin("public ");
                 if (attrInfos[i].isFragment()) {
-                    out.print("javax.servlet.jsp.tagext.JspFragment ");
+                    out.print("jakarta.servlet.jsp.tagext.JspFragment ");
                 } else {
                     out.print(JspUtil.toJavaSourceType(attrInfos[i]
                             .getTypeName()));
@@ -3623,7 +3623,7 @@ class Generator {
                 out.printin("public void ");
                 out.print(toSetterMethodName(attrInfos[i].getName()));
                 if (attrInfos[i].isFragment()) {
-                    out.print("(javax.servlet.jsp.tagext.JspFragment ");
+                    out.print("(jakarta.servlet.jsp.tagext.JspFragment ");
                 } else {
                     out.print("(");
                     out.print(JspUtil.toJavaSourceType(attrInfos[i]
@@ -3738,7 +3738,7 @@ class Generator {
 
     /*
      * Generates implementation of
-     * javax.servlet.jsp.tagext.DynamicAttributes.setDynamicAttribute() method,
+     * jakarta.servlet.jsp.tagext.DynamicAttributes.setDynamicAttribute() method,
      * which saves each dynamic attribute that is passed in so that a scoped
      * variable can later be created for it.
      */
@@ -4048,12 +4048,12 @@ class Generator {
             out.printil("{");
             out.pushIndent();
             out
-                    .printil("private javax.servlet.jsp.tagext.JspTag _jspx_parent;");
+                    .printil("private jakarta.servlet.jsp.tagext.JspTag _jspx_parent;");
             out.printil("private int[] _jspx_push_body_count;");
             out.println();
             out.printil("public " + className
                     + "( int discriminator, JspContext jspContext, "
-                    + "javax.servlet.jsp.tagext.JspTag _jspx_parent, "
+                    + "jakarta.servlet.jsp.tagext.JspTag _jspx_parent, "
                     + "int[] _jspx_push_body_count ) {");
             out.pushIndent();
             out.printil("super( discriminator, jspContext, _jspx_parent );");

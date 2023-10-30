@@ -572,10 +572,10 @@ class TagLibraryInfoImpl extends TagLibraryInfo implements TagConstants {
              * 'type' and 'rtexprvalue' must not be specified if 'fragment' has
              * been specified (this will be enforced by validating parser).
              * Also, if 'fragment' is TRUE, 'type' is fixed at
-             * javax.servlet.jsp.tagext.JspFragment, and 'rtexprvalue' is fixed
+             * jakarta.servlet.jsp.tagext.JspFragment, and 'rtexprvalue' is fixed
              * at true. See also JSP.8.5.2.
              */
-            type = "javax.servlet.jsp.tagext.JspFragment";
+            type = "jakarta.servlet.jsp.tagext.JspFragment";
             rtexprvalue = true;
         }
 
@@ -732,7 +732,7 @@ class TagLibraryInfoImpl extends TagLibraryInfo implements TagConstants {
     }
 
     // *********************************************************************
-    // Until javax.servlet.jsp.tagext.TagLibraryInfo is fixed
+    // Until jakarta.servlet.jsp.tagext.TagLibraryInfo is fixed
 
     /**
      * The instance (if any) for the TagLibraryValidator class.

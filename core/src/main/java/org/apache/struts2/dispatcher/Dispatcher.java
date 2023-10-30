@@ -826,8 +826,8 @@ public class Dispatcher {
         String saveDir = multipartSaveDir.trim();
 
         if (saveDir.equals("")) {
-            File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
+            File tempdir = (File) servletContext.getAttribute("jakarta.servlet.context.tempdir");
+            LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to jakarta.servlet.context.tempdir");
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
@@ -1022,7 +1022,7 @@ public class Dispatcher {
      *
      * @param request  the HttpServletRequest object.
      * @param response the HttpServletResponse object.
-     * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
+     * @param code     the HttpServletResponse error code (see {@link jakarta.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
      * @since 2.3.17
      */

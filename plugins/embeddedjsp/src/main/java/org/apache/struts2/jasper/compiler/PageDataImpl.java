@@ -29,7 +29,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.apache.struts2.jasper.JasperException;
 
 /**
- * An implementation of <tt>javax.servlet.jsp.tagext.PageData</tt> which
+ * An implementation of <tt>jakarta.servlet.jsp.tagext.PageData</tt> which
  * builds the XML view of a given page.
  *
  * The XML view is built in two passes:

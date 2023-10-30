@@ -25,12 +25,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
+import org.springframework.mock.web.MockHttpServletRequest;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpSession;
-
 import junit.framework.AssertionFailedError;
-
-import com.mockobjects.servlet.MockHttpServletRequest;
 
 
 /**

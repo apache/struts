@@ -174,14 +174,6 @@
         <outputDirectory>docs/struts2-plugins/struts2-plexus-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/portlet/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-portlet-plugin/apidocs</outputDirectory>
-      </fileSet>
-      <fileSet>
-        <directory>../plugins/portlet-tiles/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-portlet-tiles-plugin/apidocs</outputDirectory>
-      </fileSet>
-      <fileSet>
         <directory>../plugins/rest/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-rest-plugin/apidocs</outputDirectory>
       </fileSet>

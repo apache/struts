@@ -54,11 +54,6 @@ public interface StrutsStatics {
     String PAGE_CONTEXT = "com.opensymphony.xwork2.dispatcher.PageContext";
 
     /**
-     * Constant for the PortletContext object
-     */
-    String STRUTS_PORTLET_CONTEXT = "struts.portlet.context";
-
-    /**
      * Set as an attribute in the request to let other parts of the framework know that the invocation is happening inside an
      * action tag
      */

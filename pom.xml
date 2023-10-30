@@ -790,7 +790,6 @@
                 <groupId>jakarta.el</groupId>
                 <artifactId>jakarta.el-api</artifactId>
                 <version>5.0.0</version>
-                <scope>test</scope>
         	</dependency>
 
             <dependency>

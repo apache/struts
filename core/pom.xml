@@ -274,29 +274,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-jdk1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-alt-jdk1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-alt-jdk1.3-j2ee1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>jmock</groupId>
@@ -316,11 +293,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-core</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>

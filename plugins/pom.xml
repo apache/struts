@@ -47,7 +47,6 @@
         <module>junit</module>
         <module>osgi</module>
         <module>oval</module>
-        <module>pell-multipart</module>
         <module>plexus</module>
         <module>rest</module>
         <module>sitemesh</module>

@@ -210,9 +210,11 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @throws Exception
      */
     protected void processUpload(HttpServletRequest request, String saveDir) throws Exception {
+    	
+    	//TODO:  commons-upload upgrade
 
         // Sanity check that the request is a multi-part/form-data request.
-        if (ServletFileUpload.isMultipartContent(request)) {
+        /*if (ServletFileUpload.isMultipartContent(request)) {
 
             // Sanity check on request size.
             boolean requestSizePermitted = isRequestSizePermitted(request);
@@ -261,7 +263,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
                     LOG.warn("Error occurred during process upload", e);
                 }
             }
-        }
+        }*/
     }
 
     /**

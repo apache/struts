@@ -98,7 +98,9 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
-        if (ServletFileUpload.isMultipartContent(request)) {
+      //TODO: commons-upload upgrade
+    	
+    	/* if (ServletFileUpload.isMultipartContent(request)) {
             for (FileItem item : parseRequest(request, saveDir)) {
                 LOG.debug("Found file item: [{}]", sanitizeNewlines(item.getFieldName()));
                 if (item.isFormField()) {
@@ -107,7 +109,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                     processFileField(item);
                 }
             }
-        }
+        }*/
     }
 
     protected void processFileField(FileItem item) {
@@ -168,7 +170,10 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected List<FileItem> parseRequest(HttpServletRequest servletRequest, String saveDir) throws FileUploadException {
         DiskFileItemFactory fac = createDiskFileItemFactory(saveDir);
         ServletFileUpload upload = createServletFileUpload(fac);
-        return upload.parseRequest(createRequestContext(servletRequest));
+        
+        //TODO:  commons-upload upgrade
+        
+        return Collections.emptyList(); //upload.parseRequest(createRequestContext(servletRequest));
     }
 
     protected ServletFileUpload createServletFileUpload(DiskFileItemFactory fac) {

@@ -46,8 +46,7 @@ public class Category {
 						new Category(15, "Dojo"),
 						new Category(16, "Prototype"),
 						new Category(17, "Scriptaculous"),
-						new Category(18, "OpenRico"),
-						new Category(19, "DWR")));
+						new Category(18, "OpenRico")));
 	}
 
 	public static Category getById(long id) {

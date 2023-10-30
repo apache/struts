@@ -371,7 +371,9 @@ public class FreemarkerManager {
 
     protected ScopesHashModel buildScopesHashModel(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper, ValueStack stack) {
         ScopesHashModel model = new ScopesHashModel(wrapper, servletContext, request, stack);
-
+        
+        // TODO:  HashModel's require javax
+/*
         // Create hash model wrapper for servlet context (the application). We need one thread, once per servlet context
         synchronized (servletContext) {
             ServletContextHashModel servletContextModel = (ServletContextHashModel) servletContext.getAttribute(ATTR_APPLICATION_MODEL);
@@ -419,7 +421,7 @@ public class FreemarkerManager {
         }
         model.put(ATTR_REQUEST_PARAMETERS_MODEL, reqParametersModel);
         model.put(KEY_REQUEST_PARAMETERS_STRUTS,reqParametersModel);
-
+*/
         return model;
     }
 
@@ -459,14 +461,17 @@ public class FreemarkerManager {
 
          // presume that most apps will require the class and webapp template loader
          // if people wish to
+         
+         //TODO: WebappTemplateLoader requires javax
+         
          return templatePathLoader != null ?
                  new MultiTemplateLoader(new TemplateLoader[]{
                          templatePathLoader,
-                         new WebappTemplateLoader(servletContext),
+                        // new WebappTemplateLoader(servletContext),
                          new StrutsClassTemplateLoader()
                  })
                  : new MultiTemplateLoader(new TemplateLoader[]{
-                 new WebappTemplateLoader(servletContext),
+                 //new WebappTemplateLoader(servletContext),
                  new StrutsClassTemplateLoader()
          });
      }

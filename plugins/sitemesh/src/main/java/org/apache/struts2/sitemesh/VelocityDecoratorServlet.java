@@ -19,8 +19,8 @@
 package org.apache.struts2.sitemesh;
 
 
-import com.opensymphony.module.sitemesh.*;
-import com.opensymphony.module.sitemesh.util.OutputConverter;
+//import com.opensymphony.module.sitemesh.*;
+//import com.opensymphony.module.sitemesh.util.OutputConverter;
 import com.opensymphony.xwork2.ActionContext;
 
 import org.apache.logging.log4j.LogManager;
@@ -51,7 +51,7 @@ import java.io.StringWriter;
  * Velocity Manager in Struts instead of creating it's
  * own manager</p>
  */
-public class VelocityDecoratorServlet extends VelocityViewServlet {
+public class VelocityDecoratorServlet { /*extends VelocityViewServlet {
 
     private static final Logger LOG = LogManager.getLogger(VelocityDecoratorServlet.class);
             
@@ -59,7 +59,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
     
     protected VelocityManager velocityManager;
     protected String defaultContentType;
-
+*/
     /**
      * <p>Initializes servlet, toolbox and Velocity template engine.
      * Called by the servlet container on loading.</p>
@@ -71,7 +71,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
      * servlet.</p>
      *
      * @param config servlet configuration
-     */
+     
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         Dispatcher dispatcher = Dispatcher.getInstance(getServletContext());
@@ -151,14 +151,14 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
     private DecoratorMapper getDecoratorMapper() {
         Factory factory = Factory.getInstance(new Config(getServletConfig()));
         return factory.getDecoratorMapper();
-    }
+    }*/
 
     /**
      * <p>Creates and returns an initialized Velocity context.</p>
      *
      * @param request  servlet request from client
      * @param response servlet reponse to client
-     */
+     
     protected Context createContext(HttpServletRequest request, HttpServletResponse response) {
         Context context = (Context) request.getAttribute(VelocityManager.KEY_VELOCITY_STRUTS_CONTEXT);
         if (context == null) {
@@ -166,7 +166,7 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
             context = velocityManager.createContext(ctx.getValueStack(), request, response);
         }
         return context;
-    }
+    }*/
 
     /**
      * <p>
@@ -185,9 +185,9 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
      *
      * @param request  servlet request from client
      * @param response servlet reponse to client
-     */
+     
     protected void setContentType(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType(defaultContentType);
-    }
+    }*/
 
 }

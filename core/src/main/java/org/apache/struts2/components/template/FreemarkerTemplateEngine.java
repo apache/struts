@@ -48,7 +48,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
 
     static {
         try {
-            bodyContent = ClassLoaderUtil.loadClass("javax.servlet.jsp.tagext.BodyContent",
+            bodyContent = ClassLoaderUtil.loadClass("jakarta.servlet.jsp.tagext.BodyContent",
                     FreemarkerTemplateEngine.class);
         } catch (ClassNotFoundException e) {
             // this is OK -- this just means JSP isn't even being used here, which is perfectly fine.

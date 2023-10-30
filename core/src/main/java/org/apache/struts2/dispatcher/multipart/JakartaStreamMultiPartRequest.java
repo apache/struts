@@ -187,7 +187,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#parse(javax.servlet.http.HttpServletRequest, java.lang.String)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#parse(jakarta.servlet.http.HttpServletRequest, java.lang.String)
      */
     public void parse(HttpServletRequest request, String saveDir) throws IOException {
         try {

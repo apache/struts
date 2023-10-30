@@ -302,7 +302,7 @@ public class ServletUrlRenderer implements UrlRenderer {
         // Parse the query string to make sure that the parameters come from the query, and not some posted data
         String query = urlComponent.getHttpServletRequest().getQueryString();
         if (query == null) {
-            query = (String) urlComponent.getHttpServletRequest().getAttribute("javax.servlet.forward.query_string");
+            query = (String) urlComponent.getHttpServletRequest().getAttribute("jakarta.servlet.forward.query_string");
         }
 
         if (query != null) {

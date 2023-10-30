@@ -50,7 +50,7 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+     * @see jakarta.servlet.ServletContextListener#contextInitialized(jakarta.servlet.ServletContextEvent)
      */
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         loaded = true;
@@ -69,7 +69,7 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+     * @see jakarta.servlet.ServletContextListener#contextDestroyed(jakarta.servlet.ServletContextEvent)
      */
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         try {
@@ -82,7 +82,7 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
+     * @see jakarta.servlet.http.HttpSessionListener#sessionCreated(jakarta.servlet.http.HttpSessionEvent)
      */
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
         try {
@@ -100,7 +100,7 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet.http.HttpSessionEvent)
+     * @see jakarta.servlet.http.HttpSessionListener#sessionDestroyed(jakarta.servlet.http.HttpSessionEvent)
      */
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
         try {

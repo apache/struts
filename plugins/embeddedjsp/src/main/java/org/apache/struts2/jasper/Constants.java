@@ -52,9 +52,9 @@ public class Constants {
      * generated code. 
      */
     public static final String[] STANDARD_IMPORTS = { 
-	"javax.servlet.*", 
-	"javax.servlet.http.*", 
-	"javax.servlet.jsp.*"
+	"jakarta.servlet.*", 
+	"jakarta.servlet.http.*", 
+	"jakarta.servlet.jsp.*"
     };
 
     /**
@@ -113,8 +113,8 @@ public class Constants {
      * Servlet context and request attributes that the JSP engine
      * uses. 
      */
-    public static final String INC_SERVLET_PATH = "javax.servlet.include.servlet_path";
-    public static final String TMP_DIR = "javax.servlet.context.tempdir";
+    public static final String INC_SERVLET_PATH = "jakarta.servlet.include.servlet_path";
+    public static final String TMP_DIR = "jakarta.servlet.context.tempdir";
 
     // Must be kept in sync with org/apache/catalina/Globals.java
     public static final String ALT_DD_ATTR = 

@@ -113,7 +113,7 @@ public class TilesDispatchServlet extends HttpServlet {
      * @return The definition name to render.
      */
     protected String getDefinitionName(HttpServletRequest request) {
-        String path = (String) request.getAttribute("javax.servlet.include.servlet_path");
+        String path = (String) request.getAttribute("jakarta.servlet.include.servlet_path");
         if (path == null) {
             path = request.getServletPath();
         }
@@ -141,7 +141,7 @@ public class TilesDispatchServlet extends HttpServlet {
         /**
          * {@inheritDoc}
          */
-        public void mutate(AttributeContext context, javax.servlet.ServletRequest request) {
+        public void mutate(AttributeContext context, jakarta.servlet.ServletRequest request) {
             // noop;
         }
     }

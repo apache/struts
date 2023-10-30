@@ -55,7 +55,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
     /*
     * (non-Javadoc)
     *
-    * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
+    * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(jakarta.servlet.http.HttpServletRequest)
     */
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
     	if (!isSlashesInActionNames()) {

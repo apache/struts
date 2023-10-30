@@ -273,7 +273,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
      * @param response the actual HTTP response
      * @param template the template that will get executed
      * @return true to process the template, false to suppress template processing.
-     * @see freemarker.ext.servlet.FreemarkerServlet#preTemplateProcess(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, freemarker.template.Template, freemarker.template.TemplateModel)
+     * @see freemarker.ext.servlet.FreemarkerServlet#preTemplateProcess(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, freemarker.template.Template, freemarker.template.TemplateModel)
      */
     protected boolean preTemplateProcess(HttpServletRequest request, HttpServletResponse response, Template template, TemplateModel templateModel) throws ServletException, IOException {
         boolean result = super.preTemplateProcess(request, response, template, templateModel);

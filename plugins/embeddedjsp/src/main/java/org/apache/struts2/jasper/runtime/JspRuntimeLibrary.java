@@ -60,9 +60,9 @@ import java.util.Enumeration;
 public class JspRuntimeLibrary {
 
     private static final String SERVLET_EXCEPTION
-            = "javax.servlet.error.exception";
+            = "jakarta.servlet.error.exception";
     private static final String JSP_EXCEPTION
-            = "javax.servlet.jsp.jspException";
+            = "jakarta.servlet.jsp.jspException";
 
     protected static class PrivilegedIntrospectHelper
             implements PrivilegedExceptionAction {
@@ -98,9 +98,9 @@ public class JspRuntimeLibrary {
      * variable is initialized.
      *
      * @param request servlet request
-     * @return the value of the javax.servlet.error.exception request
+     * @return the value of the jakarta.servlet.error.exception request
      * attribute value, if present, otherwise the value of the
-     * javax.servlet.jsp.jspException request attribute value.
+     * jakarta.servlet.jsp.jspException request attribute value.
      */
     public static Throwable getThrowable(ServletRequest request) {
         Throwable error = (Throwable) request.getAttribute(SERVLET_EXCEPTION);
@@ -926,10 +926,10 @@ public class JspRuntimeLibrary {
             return (relativePath);
         HttpServletRequest hrequest = (HttpServletRequest) request;
         String uri = (String)
-                request.getAttribute("javax.servlet.include.servlet_path");
+                request.getAttribute("jakarta.servlet.include.servlet_path");
         if (uri != null) {
             String pathInfo = (String)
-                    request.getAttribute("javax.servlet.include.path_info");
+                    request.getAttribute("jakarta.servlet.include.path_info");
             if (pathInfo == null) {
                 if (uri.lastIndexOf('/') >= 0)
                     uri = uri.substring(0, uri.lastIndexOf('/'));

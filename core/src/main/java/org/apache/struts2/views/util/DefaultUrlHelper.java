@@ -126,7 +126,7 @@ public class DefaultUrlHelper implements UrlHelper {
 
                 // (Applicable to Servlet 2.4 containers)
                 // If the request was forwarded, the attribute below will be set with the original URL
-                String uri = (String) request.getAttribute("javax.servlet.forward.request_uri");
+                String uri = (String) request.getAttribute("jakarta.servlet.forward.request_uri");
 
                 // If the attribute wasn't found, default to the value in the request object
                 if (uri == null) {
@@ -145,7 +145,7 @@ public class DefaultUrlHelper implements UrlHelper {
             // (Applicable to Servlet 2.4 containers)
             // If the request was forwarded, the attribute below will be set with the original URL
             if (requestURI == null) {
-                requestURI = (String) request.getAttribute("javax.servlet.forward.request_uri");
+                requestURI = (String) request.getAttribute("jakarta.servlet.forward.request_uri");
             }
 
             // If neither request attributes were found, default to the value in the request object

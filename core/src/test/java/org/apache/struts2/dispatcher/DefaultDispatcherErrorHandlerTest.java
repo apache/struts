@@ -47,9 +47,9 @@ public class DefaultDispatcherErrorHandlerTest extends StrutsInternalTestCase {
         defaultDispatcherErrorHandler.init(dispatcher.servletContext);
         Exception fakeException = new Exception("Fake Exception, devMode false");
         try {
-            requestMock.setAttribute("javax.servlet.error.exception", fakeException);
+            requestMock.setAttribute("jakarta.servlet.error.exception", fakeException);
             expectLastCall();
-            requestMock.setAttribute("javax.servlet.jsp.jspException", fakeException);
+            requestMock.setAttribute("jakarta.servlet.jsp.jspException", fakeException);
             expectLastCall();
             responseMock.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, fakeException.getMessage());
             expectLastCall().andStubThrow(new IOException("Fake IO Exception (SC_INTERNAL_SERVER_ERROR, devMode false)"));
@@ -93,9 +93,9 @@ public class DefaultDispatcherErrorHandlerTest extends StrutsInternalTestCase {
         defaultDispatcherErrorHandler.init(dispatcher.servletContext);
         Exception fakeException = new Exception("Fake Exception, devMode false");
         try {
-            requestMock.setAttribute("javax.servlet.error.exception", fakeException);
+            requestMock.setAttribute("jakarta.servlet.error.exception", fakeException);
             expectLastCall();
-            requestMock.setAttribute("javax.servlet.jsp.jspException", fakeException);
+            requestMock.setAttribute("jakarta.servlet.jsp.jspException", fakeException);
             expectLastCall();
             expect(responseMock.isCommitted()).andStubReturn(Boolean.TRUE);
             responseMock.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, fakeException.getMessage());

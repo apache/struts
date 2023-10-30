@@ -54,7 +54,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
 
         // then
-        assertTrue("javax.servlet package isn't accessible!", actual);
+        assertTrue("jakarta.servlet package isn't accessible!", actual);
     }
 
     public void testJavaxServletPackageExclusion() throws Exception {
@@ -72,7 +72,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         boolean actual = sma.isAccessible(context, new ActionTag(), member, propertyName);
 
         // then
-        assertFalse("javax.servlet package is accessible!", actual);
+        assertFalse("jakarta.servlet package is accessible!", actual);
     }
 
 }

@@ -19,6 +19,6 @@
  * under the License.
  */
 /**
- * Extractors to get scopes from {@link javax.servlet.jsp.PageContext}.
+ * Extractors to get scopes from {@link jakarta.servlet.jsp.PageContext}.
  */
 package org.apache.tiles.request.jsp.extractor;

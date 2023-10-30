@@ -561,10 +561,10 @@ public class FreemarkerManager {
         model.putAll(standard);
 
         // support for JSP exception pages, exposing the servlet or JSP exception
-        Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
+        Throwable exception = (Throwable) request.getAttribute("jakarta.servlet.error.exception");
 
         if (exception == null) {
-            exception = (Throwable) request.getAttribute("javax.servlet.error.JspException");
+            exception = (Throwable) request.getAttribute("jakarta.servlet.error.JspException");
         }
 
         if (exception != null) {

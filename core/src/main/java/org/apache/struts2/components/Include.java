@@ -190,7 +190,7 @@ public class Include extends Component {
             returnValue = relativePath;
         } else {
             HttpServletRequest hrequest = (HttpServletRequest) request;
-            String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
+            String uri = (String) request.getAttribute("jakarta.servlet.include.servlet_path");
 
             if (uri == null) {
                 uri = RequestUtils.getServletPath(hrequest);
@@ -248,7 +248,7 @@ public class Include extends Component {
     /**
      * Include a resource in a response.
      *
-     * @param relativePath the relative path of the resource to include; resolves to {@link #getContextRelativePath(javax.servlet.ServletRequest,
+     * @param relativePath the relative path of the resource to include; resolves to {@link #getContextRelativePath(jakarta.servlet.ServletRequest,
      *                     String)}
      * @param writer       the Writer to write output to
      * @param request      the current request

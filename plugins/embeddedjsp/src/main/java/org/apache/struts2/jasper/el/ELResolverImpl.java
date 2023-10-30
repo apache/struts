@@ -18,6 +18,8 @@
  */
 package org.apache.struts2.jasper.el;
 
+import java.util.Iterator;
+
 import jakarta.el.ArrayELResolver;
 import jakarta.el.BeanELResolver;
 import jakarta.el.CompositeELResolver;
@@ -129,6 +131,10 @@ public final class ELResolverImpl extends ELResolver {
 		}
 
 		return DefaultResolver.isReadOnly(context, base, property);
+	}
+
+	public Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
+		return DefaultResolver.getFeatureDescriptors(context, base);
 	}
 
 	public Class<?> getCommonPropertyType(ELContext context, Object base) {

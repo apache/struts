@@ -49,10 +49,6 @@
         <module>oval</module>
         <module>pell-multipart</module>
         <module>plexus</module>
-        <module>portlet</module>
-        <module>portlet-junit</module>
-        <module>portlet-mocks</module>
-        <module>portlet-tiles</module>
         <module>rest</module>
         <module>sitemesh</module>
         <module>spring</module>

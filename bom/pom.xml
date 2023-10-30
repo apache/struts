@@ -143,16 +143,6 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-portlet-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-portlet-tiles-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-rest-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>

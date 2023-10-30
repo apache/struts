@@ -26,9 +26,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.struts2.jasper.compiler.Localizer;
-import org.apache.struts2.jasper.util.Enumerator;
-
 import jakarta.el.ELContext;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletConfig;
@@ -41,9 +38,13 @@ import jakarta.servlet.jsp.JspContext;
 import jakarta.servlet.jsp.JspWriter;
 import jakarta.servlet.jsp.PageContext;
 import jakarta.servlet.jsp.el.ELException;
+import jakarta.servlet.jsp.el.ExpressionEvaluator;
 import jakarta.servlet.jsp.el.VariableResolver;
 import jakarta.servlet.jsp.tagext.BodyContent;
 import jakarta.servlet.jsp.tagext.VariableInfo;
+
+import org.apache.struts2.jasper.compiler.Localizer;
+import org.apache.struts2.jasper.util.Enumerator;
 
 /**
  * Implementation of a JSP Context Wrapper.
@@ -293,6 +294,10 @@ public class JspContextWrapper extends PageContext implements VariableResolver {
 
 	public JspWriter popBody() {
 		return invokingJspCtxt.popBody();
+	}
+
+	public ExpressionEvaluator getExpressionEvaluator() {
+		return invokingJspCtxt.getExpressionEvaluator();
 	}
 
 	public void handlePageException(Exception ex) throws IOException,

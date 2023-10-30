@@ -19,6 +19,7 @@
 package org.apache.struts2.json;
 
 import jakarta.servlet.*;
+import jakarta.servlet.ServletRegistration.Dynamic;
 import jakarta.servlet.descriptor.JspConfigDescriptor;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -292,4 +293,40 @@ public class StrutsMockServletContext implements ServletContext {
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
     }
+
+	@Override
+	public Dynamic addJspFile(String servletName, String jspFile) {		
+		return null;
+	}
+
+	@Override
+	public int getSessionTimeout() {		
+		return 0;
+	}
+
+	@Override
+	public void setSessionTimeout(int sessionTimeout) {
+		
+		
+	}
+
+	@Override
+	public String getRequestCharacterEncoding() {		
+		return null;
+	}
+
+	@Override
+	public void setRequestCharacterEncoding(String encoding) {		
+		
+	}
+
+	@Override
+	public String getResponseCharacterEncoding() {		
+		return null;
+	}
+
+	@Override
+	public void setResponseCharacterEncoding(String encoding) {		
+		
+	}
 }

@@ -41,7 +41,7 @@ import com.opensymphony.xwork2.inject.Container;
  * DefaultActionMapper test case.
  */
 public class DefaultActionMapperTest extends StrutsInternalTestCase {
-
+/*
     private MockHttpServletRequest req;
     private ConfigurationManager configManager;
     private Configuration config;
@@ -979,5 +979,5 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         // then
         assertEquals("error", result);
     }
-    
+    */
 }

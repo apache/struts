@@ -352,6 +352,16 @@ public class SecurityMemberAccessTest {
     }
 
     @Test
+    public void testAccessEnum_alternateValues() throws Exception {
+        // when
+        Member alternateValues = MyValues.class.getMethod("values", String.class);
+        boolean actual = sma.isAccessible(context, MyValues.class, alternateValues, null);
+
+        // then
+        assertFalse("Access to unrelated #values method not blocked!", actual);
+    }
+
+    @Test
     public void testAccessStaticMethod() throws Exception {
         // given
         sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
@@ -875,7 +885,11 @@ interface FooBarInterface extends FooInterface, BarInterface {
 }
 
 enum MyValues {
-    ONE, TWO, THREE
+    ONE, TWO, THREE;
+
+    public static MyValues[] values(String notUsed) {
+        return new MyValues[] {ONE, TWO, THREE};
+    }
 }
 
 class StaticTester {

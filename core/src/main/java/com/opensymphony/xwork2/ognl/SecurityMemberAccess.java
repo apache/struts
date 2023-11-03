@@ -26,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -104,89 +105,130 @@ public class SecurityMemberAccess implements MemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
-        final int memberModifiers = member.getModifiers();
-        final Class<?> memberClass = member.getDeclaringClass();
-        // target can be null in case of accessing static fields, since OGNL 3.2.8
-        final Class<?> targetClass = Modifier.isStatic(memberModifiers) ? memberClass : target.getClass();
-        if (!memberClass.isAssignableFrom(targetClass)) {
-            throw new IllegalArgumentException("Target does not match member!");
+        if (target instanceof Class) { // Target may be of type Class for static members
+            if (!member.getDeclaringClass().equals(target)) {
+                throw new IllegalArgumentException("Target class does not match static member!");
+            }
+            target = null;
+        } else {
+            if (target != null && !member.getDeclaringClass().isAssignableFrom(target.getClass())) {
+                throw new IllegalArgumentException("Target does not match member!");
+            }
         }
 
-        if (disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target)) {
-            LOG.warn("Access to proxy is blocked! Target class [{}] of target [{}], member [{}]", targetClass, target, member);
+        if (!checkProxyMemberAccess(target, member)) {
+            LOG.warn("Access to proxy is blocked! Member class [{}] of target [{}], member [{}]", member.getDeclaringClass(), target, member);
             return false;
         }
 
-        if (!checkPublicMemberAccess(memberModifiers)) {
+        if (!checkPublicMemberAccess(member)) {
             LOG.warn("Access to non-public [{}] is blocked!", member);
             return false;
         }
 
-        if (!checkStaticFieldAccess(member, memberModifiers)) {
+        if (!checkStaticFieldAccess(member)) {
             LOG.warn("Access to static field [{}] is blocked!", member);
             return false;
         }
 
-        // it needs to be before calling #checkStaticMethodAccess()
-        if (checkEnumAccess(target, member)) {
-            LOG.trace("Allowing access to enum: target [{}], member [{}]", target, member);
-            return true;
-        }
-
-        if (!checkStaticMethodAccess(member, memberModifiers)) {
+        if (!checkStaticMethodAccess(member)) {
             LOG.warn("Access to static method [{}] is blocked!", member);
             return false;
         }
 
+        if (!checkDefaultPackageAccess(target, member)) {
+            return false;
+        }
+
+        if (!checkExclusionList(target, member)) {
+            return false;
+        }
+
+        if (!isAcceptableProperty(propertyName)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return {@code true} if member access is allowed
+     */
+    protected boolean checkExclusionList(Object target, Member member) {
+        Class<?> memberClass = member.getDeclaringClass();
         if (isClassExcluded(memberClass)) {
-            LOG.warn("Declaring class of member type [{}] is excluded!", member);
+            LOG.warn("Declaring class of member type [{}] is excluded!", memberClass);
             return false;
         }
-
-        if (targetClass != memberClass && isClassExcluded(targetClass)) {
-            LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
-            return false;
-        }
-
-        if (disallowDefaultPackageAccess) {
-            if (targetClass.getPackage() == null || targetClass.getPackage().getName().isEmpty()) {
-                LOG.warn("Class [{}] from the default package is excluded!", targetClass);
-                return false;
-            }
-            if (memberClass.getPackage() == null || memberClass.getPackage().getName().isEmpty()) {
-                LOG.warn("Class [{}] from the default package is excluded!", memberClass);
-                return false;
-            }
-        }
-
-        if (isPackageExcluded(targetClass)) {
+        if (isPackageExcluded(memberClass)) {
             LOG.warn("Package [{}] of target class [{}] of target [{}] is excluded!",
-                    targetClass.getPackage(),
-                    targetClass,
+                    memberClass.getPackage(),
+                    memberClass,
                     target);
             return false;
         }
-
-        if (targetClass != memberClass && isPackageExcluded(memberClass)) {
-            LOG.warn("Package [{}] of member [{}] are excluded!", memberClass.getPackage(), member);
+        if (target == null || target.getClass() == memberClass) {
+            return true;
+        }
+        Class<?> targetClass = target.getClass();
+        if (isClassExcluded(targetClass)) {
+            LOG.warn("Target class [{}] of target [{}] is excluded!", targetClass, target);
             return false;
         }
+        if (isPackageExcluded(targetClass)) {
+            LOG.warn("Package [{}] of member [{}] are excluded!", targetClass.getPackage(), member);
+            return false;
+        }
+        return true;
+    }
 
-        return isAcceptableProperty(propertyName);
+    /**
+     * @return {@code true} if member access is allowed
+     */
+    protected boolean checkDefaultPackageAccess(Object target, Member member) {
+        if (!disallowDefaultPackageAccess) {
+            return true;
+        }
+        Class<?> memberClass = member.getDeclaringClass();
+        if (memberClass.getPackage() == null || memberClass.getPackage().getName().isEmpty()) {
+            LOG.warn("Class [{}] from the default package is excluded!", memberClass);
+            return false;
+        }
+        if (target == null || target.getClass() == memberClass) {
+            return true;
+        }
+        Class<?> targetClass = target.getClass();
+        if (targetClass.getPackage() == null || targetClass.getPackage().getName().isEmpty()) {
+            LOG.warn("Class [{}] from the default package is excluded!", targetClass);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return {@code true} if member access is allowed
+     */
+    protected boolean checkProxyMemberAccess(Object target, Member member) {
+        return !(disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target));
     }
 
     /**
      * Check access for static method (via modifiers).
-     *
+     * <p>
      * Note: For non-static members, the result is always true.
      *
-     * @param member
-     * @param memberModifiers
-     *
-     * @return
+     * @return {@code true} if member access is allowed
      */
-    protected boolean checkStaticMethodAccess(Member member, int memberModifiers) {
-        return !Modifier.isStatic(memberModifiers) || member instanceof Field;
+    protected boolean checkStaticMethodAccess(Member member) {
+        if (checkEnumAccess(member)) {
+            LOG.trace("Exempting Enum#values from static method check: class [{}]", member.getDeclaringClass());
+            return true;
+        }
+        return member instanceof Field || !isStatic(member);
+    }
+
+    private static boolean isStatic(Member member) {
+        return Modifier.isStatic(member.getModifiers());
     }
 
     /**
@@ -194,36 +236,33 @@ public class SecurityMemberAccess implements MemberAccess {
      * <p>
      * Note: For non-static members, the result is always true.
      *
-     * @param member
-     * @param memberModifiers
-     * @return
+     * @return {@code true} if member access is allowed
      */
-    protected boolean checkStaticFieldAccess(Member member, int memberModifiers) {
-        if (Modifier.isStatic(memberModifiers) && member instanceof Field) {
-            return allowStaticFieldAccess;
-        } else {
+    protected boolean checkStaticFieldAccess(Member member) {
+        if (allowStaticFieldAccess) {
             return true;
         }
+        return !(member instanceof Field) || !isStatic(member);
     }
 
     /**
      * Check access for public members (via modifiers)
-     * <p>
-     * Returns true if-and-only-if the member is public.
      *
-     * @param memberModifiers
-     * @return
+     * @return {@code true} if member access is allowed
      */
-    protected boolean checkPublicMemberAccess(int memberModifiers) {
-        return Modifier.isPublic(memberModifiers);
+    protected boolean checkPublicMemberAccess(Member member) {
+        return Modifier.isPublic(member.getModifiers());
     }
 
-    protected boolean checkEnumAccess(Object target, Member member) {
-        if (target instanceof Class) {
-            final Class<?> clazz = (Class<?>) target;
-            return Enum.class.isAssignableFrom(clazz) && member.getName().equals("values");
-        }
-        return false;
+    /**
+     * @return {@code true} if member access is allowed
+     */
+    protected boolean checkEnumAccess(Member member) {
+        return member.getDeclaringClass().isEnum()
+                && isStatic(member)
+                && member instanceof Method
+                && member.getName().equals("values")
+                && ((Method) member).getParameterCount() == 0;
     }
 
     protected boolean isPackageExcluded(Class<?> clazz) {
@@ -260,8 +299,11 @@ public class SecurityMemberAccess implements MemberAccess {
         return excludedClasses.contains(clazz.getName());
     }
 
+    /**
+     * @return {@code true} if member access is allowed
+     */
     protected boolean isAcceptableProperty(String name) {
-        return name == null || ((!isExcluded(name)) && isAccepted(name));
+        return name == null || !isExcluded(name) && isAccepted(name);
     }
 
     protected boolean isAccepted(String paramName) {

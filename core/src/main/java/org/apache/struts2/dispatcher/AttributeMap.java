@@ -16,14 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.util;
+package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsStatics;
 
 import javax.servlet.jsp.PageContext;
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -38,17 +40,16 @@ import java.util.Set;
  *   <li>Session scope</li>
  *   <li>Application scope</li>
  * </ul>
- *
+ * <p>
  * A object is searched in the order above, starting from page and ending at application scope.
- *
  */
-public class AttributeMap implements Map {
+public class AttributeMap extends AbstractMap<String, Object> {
 
     protected static final String UNSUPPORTED = "method makes no sense for a simplified map";
 
-    Map context;
+    private final Map<String, Object> context;
 
-    public AttributeMap(Map context) {
+    public AttributeMap(Map<String, Object> context) {
         this.context = context;
     }
 
@@ -73,18 +74,22 @@ public class AttributeMap implements Map {
     }
 
     @Override
-    public Set entrySet() {
-        return Collections.EMPTY_SET;
+    public Set<Map.Entry<String, Object>> entrySet() {
+        return Collections.unmodifiableSet(this.context.entrySet());
     }
 
     @Override
     public Object get(Object key) {
+        if (key == null) {
+            return null;
+        }
+
         PageContext pc = getPageContext();
 
         if (pc == null) {
-            Map request = (Map) context.get("request");
-            Map session = (Map) context.get("session");
-            Map application = (Map) context.get("application");
+            RequestMap request = (RequestMap) context.get(DispatcherConstants.REQUEST);
+            SessionMap session = (SessionMap) context.get(DispatcherConstants.SESSION);
+            ApplicationMap application = (ApplicationMap) context.get(DispatcherConstants.APPLICATION);
 
             if ((request != null) && (request.get(key) != null)) {
                 return request.get(key);
@@ -94,26 +99,23 @@ public class AttributeMap implements Map {
                 return application.get(key);
             }
         } else {
-            try {
-                return pc.findAttribute(key.toString());
-            } catch (NullPointerException npe) {
-                return null;
-            }
+            return pc.findAttribute(key.toString());
         }
 
         return null;
     }
 
     @Override
-    public Set keySet() {
-        return Collections.EMPTY_SET;
+    public Set<String> keySet() {
+        return Collections.unmodifiableSet(this.context.keySet());
     }
 
     @Override
-    public Object put(Object key, Object value) {
+    public Object put(String key, Object value) {
         PageContext pc = getPageContext();
         if (pc != null) {
-            pc.setAttribute(key.toString(), value);
+            pc.setAttribute(key, value);
+            return value;
         }
 
         return null;
@@ -135,21 +137,21 @@ public class AttributeMap implements Map {
     }
 
     @Override
-    public Collection values() {
-        return Collections.EMPTY_SET;
+    public Collection<Object> values() {
+        return Collections.unmodifiableCollection(this.context.values());
     }
 
     private PageContext getPageContext() {
-        return (PageContext) context.get(ServletActionContext.PAGE_CONTEXT);
+        return (PageContext) context.get(StrutsStatics.PAGE_CONTEXT);
     }
 
     @Override
     public String toString() {
         return "AttributeMap {" +
-                "request=" + toStringSafe(context.get("request")) +
-                ", session=" +  toStringSafe(context.get("session")) +
-                ", application=" + toStringSafe(context.get("application")) +
-                '}';
+            "request=" + toStringSafe(context.get(DispatcherConstants.REQUEST)) +
+            ", session=" + toStringSafe(context.get(DispatcherConstants.SESSION)) +
+            ", application=" + toStringSafe(context.get(DispatcherConstants.APPLICATION)) +
+            '}';
     }
 
     private String toStringSafe(Object obj) {
@@ -161,6 +163,20 @@ public class AttributeMap implements Map {
         } catch (Exception e) {
             return "Exception thrown: " + e;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AttributeMap)) return false;
+        if (!super.equals(o)) return false;
+        AttributeMap that = (AttributeMap) o;
+        return Objects.equals(context, that.context);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), context);
     }
 
 }

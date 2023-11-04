@@ -29,8 +29,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.PrepareOperations;
+import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
@@ -97,11 +99,13 @@ public class DebuggingInterceptor extends AbstractInterceptor {
 
     private final static Logger LOG = LogManager.getLogger(DebuggingInterceptor.class);
 
-    private String[] ignorePrefixes = new String[]{"org.apache.struts.",
-        "com.opensymphony.xwork2.", "xwork."};
-    private String[] _ignoreKeys = new String[]{"application", "session",
-        "parameters", "request"};
-    private HashSet<String> ignoreKeys = new HashSet<>(Arrays.asList(_ignoreKeys));
+    private final String[] ignorePrefixes = new String[]{"org.apache.struts.", "com.opensymphony.xwork2.", "xwork."};
+    private final HashSet<String> ignoreKeys = new HashSet<>(Arrays.asList(
+        DispatcherConstants.APPLICATION,
+        DispatcherConstants.SESSION,
+        DispatcherConstants.PARAMETERS,
+        DispatcherConstants.REQUEST
+    ));
 
     private final static String XML_MODE = "xml";
     private final static String CONSOLE_MODE = "console";
@@ -319,7 +323,7 @@ public class DebuggingInterceptor extends AbstractInterceptor {
             }
         }
         writer.endNode();
-        Map<String, Object> requestMap = (Map<String, Object>) ctx.get("request");
+        RequestMap requestMap = (RequestMap) ctx.get(DispatcherConstants.REQUEST);
         serializeIt(requestMap, "request", writer, filterValueStack(requestMap));
         serializeIt(ctx.getSession(), "session", writer, new ArrayList<>());
 

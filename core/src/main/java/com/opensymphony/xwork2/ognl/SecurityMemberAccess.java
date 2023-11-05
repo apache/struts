@@ -105,14 +105,18 @@ public class SecurityMemberAccess implements MemberAccess {
     public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
         LOG.debug("Checking access for [target: {}, member: {}, property: {}]", target, member, propertyName);
 
-        if (target instanceof Class) { // Target may be of type Class for static members
-            if (!member.getDeclaringClass().equals(target)) {
-                throw new IllegalArgumentException("Target class does not match static member!");
-            }
-            target = null;
-        } else {
-            if (target != null && !member.getDeclaringClass().isAssignableFrom(target.getClass())) {
-                throw new IllegalArgumentException("Target does not match member!");
+        if (target != null) {
+            // Special case: Target is a Class object but not Class.class
+            if (Class.class.equals(target.getClass()) && !Class.class.equals(target)) {
+                if (!isStatic(member)) {
+                    throw new IllegalArgumentException("Member expected to be static!");
+                }
+                if (!member.getDeclaringClass().equals(target)) {
+                    throw new IllegalArgumentException("Target class does not match static member!");
+                }
+            // Standard case: Member should exist on target
+            } else if (!member.getDeclaringClass().isAssignableFrom(target.getClass())) {
+                throw new IllegalArgumentException("Member does not exist on target!");
             }
         }
 

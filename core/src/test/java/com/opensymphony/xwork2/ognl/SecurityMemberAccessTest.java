@@ -368,7 +368,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
-        boolean actual = sma.isAccessible(context, Class.class, method, null);
+        boolean actual = sma.isAccessible(context, StaticTester.class, method, null);
 
         // then
         assertFalse("Access to static method is not blocked!", actual);
@@ -595,7 +595,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
-        boolean actual = sma.isAccessible(context, Class.class, method, null);
+        boolean actual = sma.isAccessible(context, StaticTester.class, method, null);
 
         // then
         assertFalse("Access to static isn't blocked!", actual);
@@ -704,7 +704,7 @@ public class SecurityMemberAccessTest {
         member = System.class.getMethod(propertyName, int.class);
 
         // when
-        accessible = sma.isAccessible(context, target, member, propertyName);
+        accessible = sma.isAccessible(context, System.class, member, propertyName);
 
         // then
         assertFalse(accessible);

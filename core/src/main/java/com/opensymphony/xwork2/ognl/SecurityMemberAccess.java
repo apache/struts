@@ -114,6 +114,7 @@ public class SecurityMemberAccess implements MemberAccess {
                 if (!member.getDeclaringClass().equals(target)) {
                     throw new IllegalArgumentException("Target class does not match static member!");
                 }
+                target = null; // This information is not useful to us and conflicts with following logic which expects target to be null or an instance containing the member
             // Standard case: Member should exist on target
             } else if (!member.getDeclaringClass().isAssignableFrom(target.getClass())) {
                 throw new IllegalArgumentException("Member does not exist on target!");

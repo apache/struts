@@ -311,32 +311,14 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isAccepted(String paramName) {
-        if (!this.acceptProperties.isEmpty()) {
-            for (Pattern pattern : acceptProperties) {
-                Matcher matcher = pattern.matcher(paramName);
-                if (matcher.matches()) {
-                    return true;
-                }
-            }
-
-            //no match, but acceptedParams is not empty
-            return false;
+        if (acceptProperties.isEmpty()) {
+            return true;
         }
-
-        //empty acceptedParams
-        return true;
+        return acceptProperties.stream().map(pattern -> pattern.matcher(paramName)).anyMatch(Matcher::matches);
     }
 
     protected boolean isExcluded(String paramName) {
-        if (!this.excludeProperties.isEmpty()) {
-            for (Pattern pattern : excludeProperties) {
-                Matcher matcher = pattern.matcher(paramName);
-                if (matcher.matches()) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return excludeProperties.stream().map(pattern -> pattern.matcher(paramName)).anyMatch(Matcher::matches);
     }
 
     /**

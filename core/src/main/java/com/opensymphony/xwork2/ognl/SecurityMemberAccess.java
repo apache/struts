@@ -56,8 +56,11 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<Pattern> excludedPackageNamePatterns = emptySet();
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
-    private boolean disallowProxyMemberAccess;
-    private boolean disallowDefaultPackageAccess;
+    private boolean enforceAllowlistEnabled = false;
+    private Set<String> allowlistClasses = emptySet();
+    private Set<String> allowlistPackageNames = emptySet();
+    private boolean disallowProxyMemberAccess = false;
+    private boolean disallowDefaultPackageAccess = false;
 
     /**
      * SecurityMemberAccess
@@ -149,11 +152,42 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
 
+        if (!checkAllowlist(target, member)) {
+            return false;
+        }
+
         if (!isAcceptableProperty(propertyName)) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @return {@code true} if member access is allowed
+     */
+    protected boolean checkAllowlist(Object target, Member member) {
+        Class<?> memberClass = member.getDeclaringClass();
+        if (!enforceAllowlistEnabled) {
+            return true;
+        }
+        if (!isClassAllowlisted(memberClass)) {
+            LOG.warn(format("Declaring class [{0}] of member type [{1}] is not allowlisted!", memberClass, member));
+            return false;
+        }
+        if (target == null || target.getClass() == memberClass) {
+            return true;
+        }
+        Class<?> targetClass = target.getClass();
+        if (!isClassAllowlisted(targetClass)) {
+            LOG.warn(format("Target class [{0}] of target [{1}] is not allowlisted!", targetClass, target));
+            return false;
+        }
+        return true;
+    }
+
+    protected boolean isClassAllowlisted(Class<?> clazz) {
+        return allowlistClasses.contains(clazz.getName()) || isClassBelongsToPackages(clazz, allowlistPackageNames);
     }
 
     /**
@@ -286,14 +320,14 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isExcludedPackageNames(Class<?> clazz) {
-        return isExcludedPackageNamesStatic(clazz, excludedPackageNames);
+        return isClassBelongsToPackages(clazz, excludedPackageNames);
     }
 
-    public static boolean isExcludedPackageNamesStatic(Class<?> clazz, Set<String> excludedPackageNames) {
+    public static boolean isClassBelongsToPackages(Class<?> clazz, Set<String> matchingPackages) {
         List<String> packageParts = Arrays.asList(toPackageName(clazz).split("\\."));
         for (int i = 0; i < packageParts.size(); i++) {
             String parentPackage = String.join(".", packageParts.subList(0, i + 1));
-            if (excludedPackageNames.contains(parentPackage)) {
+            if (matchingPackages.contains(parentPackage)) {
                 return true;
             }
         }
@@ -397,6 +431,18 @@ public class SecurityMemberAccess implements MemberAccess {
 
     public void useExcludedPackageExemptClasses(Set<String> excludedPackageExemptClasses) {
         this.excludedPackageExemptClasses = excludedPackageExemptClasses;
+    }
+
+    public void useEnforceAllowlistEnabled(boolean enforceAllowlistEnabled) {
+        this.enforceAllowlistEnabled = enforceAllowlistEnabled;
+    }
+
+    public void useAllowlistClasses(Set<String> allowlistClasses) {
+        this.allowlistClasses = allowlistClasses;
+    }
+
+    public void useAllowlistPackageNames(Set<String> allowlistPackageNames) {
+        this.allowlistPackageNames = allowlistPackageNames;
     }
 
     /**

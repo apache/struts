@@ -26,7 +26,6 @@ import static org.easymock.EasyMock.verify;
 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.Include;
-import org.springframework.mock.web.MockRequestDispatcher;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletRequest;
@@ -38,7 +37,7 @@ import jakarta.servlet.ServletResponse;
  */
 public class IncludeTagTest extends AbstractTagTest {
 
-    private MockRequestDispatcher mockRequestDispatcher;
+    private RequestDispatcher mockRequestDispatcher;
 
     private IncludeTag tag;
 
@@ -368,7 +367,7 @@ public class IncludeTagTest extends AbstractTagTest {
         super.setUp();
         tag = new IncludeTag();
 
-        mockRequestDispatcher = (MockRequestDispatcher) createMock(RequestDispatcher.class);
+        mockRequestDispatcher = (RequestDispatcher) createMock(RequestDispatcher.class);
 
         request.setRequestDispatcher(mockRequestDispatcher);
         tag.setPageContext(pageContext);

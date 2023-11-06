@@ -18,8 +18,11 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.servlet.MockJspWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+
+import org.springframework.mock.web.MockJspWriter;
+
 import jakarta.servlet.jsp.JspException;
 
 
@@ -249,7 +252,7 @@ public class SetTagTest extends AbstractUITagTest {
         tag.setName("foo");
         tag.setValue(null);
         // Do not set any value - default for tag should be true
-        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         mockBodyContent.setString(beginEndSpaceString);
         tag.setBodyContent(mockBodyContent);
         tag.doStartTag();
@@ -266,7 +269,7 @@ public class SetTagTest extends AbstractUITagTest {
         tag.setName("foo");
         tag.setValue(null);
         tag.setTrimBody(true);
-        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         mockBodyContent.setString(beginEndSpaceString);
         tag.setBodyContent(mockBodyContent);
         tag.doStartTag();
@@ -281,7 +284,7 @@ public class SetTagTest extends AbstractUITagTest {
         tag.setName("foo");
         tag.setValue(null);
         tag.setTrimBody(false);
-        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         mockBodyContent.setString(beginEndSpaceString);
         tag.setBodyContent(mockBodyContent);
         tag.doStartTag();
@@ -303,7 +306,7 @@ public class SetTagTest extends AbstractUITagTest {
         tag.setName("foo");
         tag.setValue(null);
         // Do not set any value - default for tag should be true
-        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         mockBodyContent.setString(beginEndSpaceString);
         tag.setBodyContent(mockBodyContent);
         tag.doStartTag();
@@ -322,7 +325,7 @@ public class SetTagTest extends AbstractUITagTest {
         tag.setName("foo");
         tag.setValue(null);
         tag.setTrimBody(true);
-        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         mockBodyContent.setString(beginEndSpaceString);
         tag.setBodyContent(mockBodyContent);
         tag.doStartTag();
@@ -338,7 +341,7 @@ public class SetTagTest extends AbstractUITagTest {
         tag.setName("foo");
         tag.setValue(null);
         tag.setTrimBody(false);
-        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         mockBodyContent.setString(beginEndSpaceString);
         tag.setBodyContent(mockBodyContent);
         tag.doStartTag();
@@ -357,7 +360,7 @@ public class SetTagTest extends AbstractUITagTest {
         String variableName = "foo";
         tag.setName(variableName);
         tag.setValue(null);
-        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         String emptyBody = "";
         mockBodyContent.setString(emptyBody);
         tag.setBodyContent(mockBodyContent);
@@ -379,7 +382,7 @@ public class SetTagTest extends AbstractUITagTest {
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setName(variableName);
         tag.setValue(null);
-        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         String emptyBody = "";
         mockBodyContent.setString(emptyBody);
         tag.setBodyContent(mockBodyContent);

@@ -18,16 +18,18 @@
  */
 package org.apache.struts2.views.jsp;
 
-import jakarta.servlet.jsp.JspException;
-import jakarta.servlet.jsp.tagext.TagSupport;
+import java.io.StringWriter;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.components.Component;
+import org.springframework.mock.web.MockJspWriter;
 
-import com.mockobjects.servlet.MockJspWriter;
-import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
+
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 
 /**
@@ -35,7 +37,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class IfTagTest extends StrutsInternalTestCase {
 
     IfTag tag;
-    MockPageContext pageContext;
+    StrutsMockPageContext pageContext;
     ValueStack stack;
 
 
@@ -953,9 +955,8 @@ public class IfTagTest extends StrutsInternalTestCase {
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
         // create the mock page context
-        pageContext = new MockPageContext();
-        pageContext.setRequest(request);
-        pageContext.setJspWriter(new MockJspWriter());
+        pageContext = new StrutsMockPageContext(null, request, null);
+        pageContext.setJspWriter(new MockJspWriter(new StringWriter()));
 
         // associate the tag with the mock page request
         tag.setPageContext(pageContext);

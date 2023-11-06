@@ -47,7 +47,7 @@ public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
     }
 
     public String getContentType() {
-        return contentType;  //To change body of implemented methods use File | Settings | File Templates.
+        return contentType;  
     }
     
     @Override

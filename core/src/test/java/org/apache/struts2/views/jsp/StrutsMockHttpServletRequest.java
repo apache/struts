@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockRequestDispatcher;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpSession;
@@ -50,6 +51,7 @@ public class StrutsMockHttpServletRequest extends MockHttpServletRequest {
     private int serverPort;
     private String encoding;
     private String requestDispatherString;
+    private RequestDispatcher requestDispatcher  = null;
 
 
     public void setAttribute(String s, Object o) {
@@ -121,7 +123,14 @@ public class StrutsMockHttpServletRequest extends MockHttpServletRequest {
 
     public RequestDispatcher getRequestDispatcher(String string) {
         this.requestDispatherString = string;
-        return super.getRequestDispatcher(string);
+        if(this.requestDispatcher == null) {
+        	this.requestDispatcher = new MockRequestDispatcher(string);
+        }
+        return this.requestDispatcher;
+    }
+    
+    public void setRequestDispatcher(RequestDispatcher rd) {
+    	this.requestDispatcher = rd;
     }
 
     /**

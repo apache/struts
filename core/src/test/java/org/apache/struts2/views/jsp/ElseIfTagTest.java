@@ -18,23 +18,25 @@
  */
 package org.apache.struts2.views.jsp;
 
-import jakarta.servlet.jsp.tagext.TagSupport;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.components.Component;
 import org.apache.struts2.components.If;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockJspWriter;
 
-import com.mockobjects.servlet.MockJspWriter;
-import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 /**
  *
  */
 public class ElseIfTagTest extends StrutsInternalTestCase {
 
-    protected MockPageContext pageContext;
+    protected StrutsMockPageContext pageContext;
     protected MockJspWriter jspWriter;
     protected ValueStack stack;
 
@@ -215,18 +217,16 @@ public class ElseIfTagTest extends StrutsInternalTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         stack = ActionContext.getContext().getValueStack();
-
-        jspWriter = new MockJspWriter();
+        HttpServletResponse resp = new MockHttpServletResponse();
+        jspWriter = new MockJspWriter(resp);
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
 
         StrutsMockServletContext servletContext = new StrutsMockServletContext();
         servletContext.setServletInfo("not-weblogic");
 
-        pageContext = new MockPageContext();
+        pageContext = new StrutsMockPageContext(servletContext, request, resp);
         pageContext.setJspWriter(jspWriter);
-        pageContext.setRequest(request);
-        pageContext.setServletContext(servletContext);
 
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
     }

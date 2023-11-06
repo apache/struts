@@ -22,9 +22,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.struts2.StrutsInternalTestCase;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.mockobjects.servlet.MockHttpServletRequest;
-import com.mockobjects.servlet.MockHttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class RolesInterceptorTest extends StrutsInternalTestCase {
 
@@ -127,9 +128,8 @@ public class RolesInterceptorTest extends StrutsInternalTestCase {
 
     public void testHandleRejection() throws Exception {
         MockHttpServletResponse response = new MockHttpServletResponse();
-        response.setExpectedError(response.SC_FORBIDDEN);
         interceptor.handleRejection(null, response);
-        response.verify();
+        assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
     }
     
     public void testAreRolesValid() throws Exception {

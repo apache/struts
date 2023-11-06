@@ -51,8 +51,8 @@ public class BeanTagTest extends AbstractUITagTest {
             fail();
         }
 
-        request.verify();
-        pageContext.verify();
+        
+        
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         BeanTag freshTag = new BeanTag();
@@ -83,8 +83,8 @@ public class BeanTagTest extends AbstractUITagTest {
             fail();
         }
 
-        request.verify();
-        pageContext.verify();
+        
+        
 
         // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
         BeanTag freshTag = new BeanTag();

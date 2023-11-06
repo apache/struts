@@ -352,7 +352,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
             endline;
         req.setContent(content.getBytes());
 
-        assertTrue(ServletFileUpload.isMultipartContent(req));
+        fail("TODO");
+        //assertTrue(ServletFileUpload.isMultipartContent(req));
 
         MyFileupAction action = new MyFileupAction();
         container.inject(action);
@@ -404,7 +405,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
             endline;
         req.setContent(content.getBytes());
 
-        assertTrue(ServletFileUpload.isMultipartContent(req));
+        fail("TODO");
+        //assertTrue(ServletFileUpload.isMultipartContent(req));
 
         MyFileupAction action = new MyFileupAction();
         container.inject(action);

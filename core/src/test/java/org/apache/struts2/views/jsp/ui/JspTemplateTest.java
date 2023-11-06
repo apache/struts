@@ -41,7 +41,7 @@ public class JspTemplateTest extends AbstractUITagTest {
         Mock rdMock = new Mock(RequestDispatcher.class);
         rdMock.expect("include",C.args(C.isA(HttpServletRequest.class), C.isA(HttpServletResponse.class)));
         RequestDispatcher dispatcher = (RequestDispatcher) rdMock.proxy();
-        request.setupGetRequestDispatcher(dispatcher);
+        request.setRequestDispatcher(dispatcher);
         tag.setPageContext(pageContext);
         tag.setTemplate("/test/checkbox.jsp");
         tag.doStartTag();
@@ -64,7 +64,7 @@ public class JspTemplateTest extends AbstractUITagTest {
         Mock rdMock = new Mock(RequestDispatcher.class);
         rdMock.expect("include",C.args(C.isA(HttpServletRequest.class), C.isA(HttpServletResponse.class)));
         RequestDispatcher dispatcher = (RequestDispatcher) rdMock.proxy();
-        request.setupGetRequestDispatcher(dispatcher);
+        request.setRequestDispatcher(dispatcher);
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setPageContext(pageContext);
         tag.setTemplate("/test/checkbox.jsp");

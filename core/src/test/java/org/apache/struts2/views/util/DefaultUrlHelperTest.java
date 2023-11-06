@@ -18,20 +18,22 @@
  */
 package org.apache.struts2.views.util;
 
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Scope.Strategy;
-import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.url.StrutsQueryStringBuilder;
-import org.apache.struts2.url.StrutsUrlEncoder;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.url.StrutsQueryStringBuilder;
+import org.apache.struts2.url.StrutsUrlEncoder;
+
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Scope.Strategy;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Test case for DefaultUrlHelper.

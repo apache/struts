@@ -18,27 +18,30 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.servlet.MockJspWriter;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.TestAction;
-import org.apache.struts2.components.Text;
-import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
-import org.apache.struts2.views.jsp.ui.TestAction1;
+import static org.junit.Assert.assertNotEquals;
 
-import jakarta.servlet.jsp.JspException;
-import jakarta.servlet.jsp.tagext.BodyTag;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.Assert.assertNotEquals;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.TestAction;
+import org.apache.struts2.components.Text;
+import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
+import org.apache.struts2.views.jsp.ui.TestAction1;
+import org.springframework.mock.web.MockJspWriter;
+
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
+
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.BodyTag;
 
 
 /**
@@ -63,7 +66,7 @@ public class TextTagTest extends AbstractTagTest {
         // simulate the condition
         // <s:text name="some.invalid.key">My Default Message</s:text>
 
-        StrutsMockBodyContent mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        StrutsMockBodyContent mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         mockBodyContent.setString("Sample Of Default Message");
         tag.setBodyContent(mockBodyContent);
         tag.setName("some.invalid.key.so.we.should.get.the.default.message");
@@ -86,7 +89,7 @@ public class TextTagTest extends AbstractTagTest {
         // simulate the condition
         // <s:text name="some.invalid.key">My Default Message</s:text>
 
-        StrutsMockBodyContent mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+        StrutsMockBodyContent mockBodyContent = new StrutsMockBodyContent(new MockJspWriter(new StringWriter()));
         mockBodyContent.setString("Sample Of Default Message");
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setBodyContent(mockBodyContent);

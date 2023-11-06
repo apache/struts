@@ -105,7 +105,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputTimestamp>2023-09-11T07:49:50Z</project.build.outputTimestamp>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.6</asm.version>
@@ -920,7 +920,12 @@
                 <artifactId>spring-web</artifactId>
                 <version>${spring.platformVersion}</version>
             </dependency>
-
+			<dependency>
+                <groupId>mockobjects</groupId>
+                <artifactId>mockobjects-core</artifactId>
+                <version>0.09</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>net.sourceforge.htmlunit</groupId>
                 <artifactId>htmlunit</artifactId>

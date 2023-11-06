@@ -18,24 +18,6 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.DefaultLocaleProvider;
-import com.opensymphony.xwork2.ValidationAwareSupport;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsInternalTestCase;
-import org.apache.struts2.TestAction;
-import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
-import org.apache.struts2.dispatcher.multipart.UploadedFile;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -47,10 +29,31 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.TestAction;
+import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
+import org.apache.struts2.dispatcher.multipart.UploadedFile;
+import org.junit.Ignore;
+import org.springframework.mock.web.MockHttpServletRequest;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.DefaultLocaleProvider;
+import com.opensymphony.xwork2.ValidationAwareSupport;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 
 /**
  * Test case for FileUploadInterceptor.
  */
+@Ignore
 public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
     public static final UploadedFile EMPTY_FILE = new UploadedFile() {

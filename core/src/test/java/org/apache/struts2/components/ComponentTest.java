@@ -117,7 +117,7 @@ public class ComponentTest extends AbstractTagTest {
 
     // Action Component
     public void testActionComponentDisposeItselfFromComponentStack() {
-        request.setupGetServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/" + "foo.action");
+        request.setServletPath(TestConfigurationProvider.TEST_NAMESPACE + "/" + "foo.action");
         try {
             TextFieldTag t = new TextFieldTag();
             t.setName("textFieldName");

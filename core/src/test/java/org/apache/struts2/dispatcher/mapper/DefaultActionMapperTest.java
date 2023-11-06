@@ -68,7 +68,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetMapping() {
         req.setupGetRequestURI("/my/namespace/actionName.action");
-        req.setupGetServletPath("/my/namespace/actionName.action");
+        req.setServletPath("/my/namespace/actionName.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -84,7 +84,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetMappingWithMethod() {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName!add.action");
-        req.setupGetServletPath("/my/namespace/actionName!add.action");
+        req.setServletPath("/my/namespace/actionName!add.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -100,7 +100,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetMappingWithSlashedName() {
 
         req.setupGetRequestURI("/my/foo/actionName.action");
-        req.setupGetServletPath("/my/foo/actionName.action");
+        req.setServletPath("/my/foo/actionName.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -116,7 +116,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetMappingWithSlashedNameAtRootButNoSlashPackage() {
 
         req.setupGetRequestURI("/foo/actionName.action");
-        req.setupGetServletPath("/foo/actionName.action");
+        req.setServletPath("/foo/actionName.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -145,7 +145,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         };
 
         req.setupGetRequestURI("/foo/actionName.action");
-        req.setupGetServletPath("/foo/actionName.action");
+        req.setServletPath("/foo/actionName.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -162,7 +162,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetMappingWithNamespaceSlash() {
 
         req.setupGetRequestURI("/my-hh/abc.action");
-        req.setupGetServletPath("/my-hh/abc.action");
+        req.setServletPath("/my-hh/abc.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -184,7 +184,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetMappingWithUnknownNamespace() {
         req.setupGetRequestURI("/bo/foo/actionName.action");
-        req.setupGetServletPath("/bo/foo/actionName.action");
+        req.setServletPath("/bo/foo/actionName.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -198,7 +198,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetMappingWithUnknownNamespaceButFullNamespaceSelect() {
         req.setupGetRequestURI("/bo/foo/actionName.action");
-        req.setupGetServletPath("/bo/foo/actionName.action");
+        req.setServletPath("/bo/foo/actionName.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -241,7 +241,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
+        request.setServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         defaultActionMapper.setAllowDynamicMethodCalls("false");
@@ -261,7 +261,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetUri() {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName.action");
-        req.setupGetServletPath("/my/namespace/actionName.action");
+        req.setServletPath("/my/namespace/actionName.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -274,7 +274,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetUriWithSemicolonPresent() {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName.action;abc=123rty56");
-        req.setupGetServletPath("/my/namespace/actionName.action;abc=123rty56");
+        req.setServletPath("/my/namespace/actionName.action;abc=123rty56");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -287,7 +287,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetUriWithMethod() {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName!add.action");
-        req.setupGetServletPath("/my/namespace/actionName!add.action");
+        req.setServletPath("/my/namespace/actionName!add.action");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -312,7 +312,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetMappingWithNoExtension() {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName");
-        req.setupGetServletPath("/my/namespace/actionName");
+        req.setServletPath("/my/namespace/actionName");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -329,7 +329,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
     public void testGetMappingWithNoExtensionButUriHasExtension() {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName.html");
-        req.setupGetServletPath("/my/namespace/actionName.html");
+        req.setServletPath("/my/namespace/actionName.html");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
 
@@ -409,7 +409,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
+        request.setServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
@@ -423,7 +423,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
+        request.setServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         defaultActionMapper.setAllowActionPrefix("true");
@@ -438,7 +438,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
+        request.setServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         defaultActionMapper.setAllowActionPrefix("true");
@@ -454,7 +454,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
+        request.setServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         defaultActionMapper.setAllowActionPrefix("true");
@@ -472,7 +472,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
+        request.setServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         defaultActionMapper.setAllowActionPrefix("true");
@@ -488,7 +488,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
+        request.setServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         defaultActionMapper.setAllowActionPrefix("true");
@@ -502,7 +502,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         parameterMap.put("action:" + "next", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setupGetServletPath("/index.action");
+        request.setServletPath("/index.action");
         request.setParameterMap(parameterMap);
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
@@ -544,7 +544,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         parameterMap.put("action:" + "next", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setupGetServletPath("/test/index.action");
+        request.setServletPath("/test/index.action");
         request.setParameterMap(parameterMap);
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
@@ -564,7 +564,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         parameterMap.put("action:" + "next!another", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setupGetServletPath("/index.action");
+        request.setServletPath("/index.action");
         request.setParameterMap(parameterMap);
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
@@ -585,7 +585,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
         parameterMap.put("method:" + "another", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setupGetServletPath("/index.action");
+        request.setServletPath("/index.action");
         request.setParameterMap(parameterMap);
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
@@ -606,7 +606,7 @@ public class DefaultActionMapperTest extends StrutsInternalTestCase {
 
         final StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
+        request.setServletPath("/someServletPath.action");
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
         defaultActionMapper.addParameterAction("foo", (key, mapping) -> mapping.setName("myAction"));

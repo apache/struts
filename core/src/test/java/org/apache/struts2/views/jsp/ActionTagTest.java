@@ -110,7 +110,7 @@ public class ActionTagTest extends AbstractTagTest {
     }
 
     public void testSimple() {
-        request.setupGetServletPath("/foo.action");
+        request.setServletPath("/foo.action");
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", "testAction");
         container.inject(config.getInterceptors().get(0).getInterceptor());
@@ -150,7 +150,7 @@ public class ActionTagTest extends AbstractTagTest {
     }
 
     public void testSimple_clearTagStateSet() {
-        request.setupGetServletPath("/foo.action");
+        request.setServletPath("/foo.action");
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", "testAction");
         container.inject(config.getInterceptors().get(0).getInterceptor());
@@ -199,7 +199,7 @@ public class ActionTagTest extends AbstractTagTest {
     }
 
     public void testSimpleWithActionMethodInOriginalURI() {
-        request.setupGetServletPath("/foo!foo.action");
+        request.setServletPath("/foo!foo.action");
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", "testAction");
         container.inject(config.getInterceptors().get(0).getInterceptor());
@@ -239,7 +239,7 @@ public class ActionTagTest extends AbstractTagTest {
     }
 
     public void testSimpleWithctionMethodInOriginalURI_clearTagStateSet() {
-        request.setupGetServletPath("/foo!foo.action");
+        request.setServletPath("/foo!foo.action");
 
         ActionConfig config = configuration.getRuntimeConfiguration().getActionConfig("", "testAction");
         container.inject(config.getInterceptors().get(0).getInterceptor());

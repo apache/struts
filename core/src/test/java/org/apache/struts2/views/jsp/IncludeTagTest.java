@@ -169,7 +169,7 @@ public class IncludeTagTest extends AbstractTagTest {
         
         replay(mockRequestDispatcher);
 
-        request.setupGetServletPath("app/manager");
+        request.setServletPath("app/manager");
         tag.setValue("../car/view.jsp");
         tag.doStartTag();
         tag.doEndTag();
@@ -196,7 +196,7 @@ public class IncludeTagTest extends AbstractTagTest {
 
         replay(mockRequestDispatcher);
 
-        request.setupGetServletPath("app/manager");
+        request.setServletPath("app/manager");
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setValue("../car/view.jsp");
         tag.doStartTag();

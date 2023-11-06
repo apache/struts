@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Locale;
 
-import com.mockobjects.servlet.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 
 /**
@@ -55,7 +55,7 @@ public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
         this.contentType = type;
     }
 
-    public PrintWriter getWriter() throws IOException {
+    public PrintWriter getWriter() {
         if (writer == null)
             return new PrintWriter(new ByteArrayOutputStream());
         else

@@ -18,10 +18,10 @@
  */
 package org.apache.struts2.views.jsp;
 
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.mock.web.MockJspWriter;
 import org.springframework.mock.web.MockPageContext;
 
 import jakarta.servlet.ServletContext;
@@ -75,7 +75,7 @@ public class StrutsMockPageContext extends MockPageContext {
     @Override
 	public JspWriter getOut() {
 		if (this.smpcOut == null) {
-			this.smpcOut = new StrutsMockJspWriter();
+			this.smpcOut = new StrutsMockJspWriter(new StringWriter());
 		}
 		return this.smpcOut;
 	}

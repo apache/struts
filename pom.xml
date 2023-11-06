@@ -1075,14 +1075,14 @@
 
             <dependency>
                 <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-core</artifactId>
-                <version>2.4.8.Final</version>
+                <artifactId>weld-core-impl</artifactId>
+                <version>5.1.2.Final</version>
             </dependency>
 
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
-                <artifactId>weld-se</artifactId>
-                <version>2.4.8.Final</version>
+                <artifactId>weld-se-core</artifactId>
+                <version>5.1.2.Final</version>
             </dependency>
 
             <dependency>

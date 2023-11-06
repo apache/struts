@@ -95,7 +95,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
         response = new StrutsMockHttpServletResponse();
         request.setSession(new StrutsMockHttpSession());
-        request.setupGetServletPath("/");
+        request.setServletPath("/");
 
         writer = new StringWriter();
 
@@ -104,12 +104,9 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         servletContext.setRealPath(new File("nosuchfile.properties").getAbsolutePath());
         servletContext.setServletInfo("Resin");
 
-        pageContext = new StrutsMockPageContext();
-        pageContext.setRequest(request);
-        pageContext.setResponse(response);
+        pageContext = new StrutsMockPageContext(servletContext, request, response);
         pageContext.setJspWriter(jspWriter);
-        pageContext.setServletContext(servletContext);
-
+        
         mockContainer = new Mock(Container.class);
         MockDispatcher du = new MockDispatcher(pageContext.getServletContext(), new HashMap<>(), configurationManager);
         du.init();
@@ -160,8 +157,6 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        pageContext.verify();
-        request.verify();
         action = null;
         context = null;
         session = null;

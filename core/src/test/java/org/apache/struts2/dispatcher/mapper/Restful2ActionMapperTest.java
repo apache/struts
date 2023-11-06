@@ -18,16 +18,17 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork2.inject.Container;
+import java.util.HashMap;
+
 import org.apache.struts2.StrutsInternalTestCase;
-import com.mockobjects.servlet.MockHttpServletRequest;
-import com.opensymphony.xwork2.config.ConfigurationManager;
+import org.apache.struts2.url.StrutsUrlDecoder;
+import org.springframework.mock.web.MockHttpServletRequest;
+
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
-import org.apache.struts2.url.StrutsUrlDecoder;
-
-import java.util.HashMap;
+import com.opensymphony.xwork2.inject.Container;
 
 public class Restful2ActionMapperTest extends StrutsInternalTestCase {
 
@@ -43,8 +44,8 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
         mapper.setExtensions("");
         mapper.setDecoder(new StrutsUrlDecoder());
         req = new MockHttpServletRequest();
-        req.setupGetParameterMap(new HashMap());
-        req.setupGetContextPath("/my/namespace");
+        req.setParameters(new HashMap());
+        req.setContextPath("/my/namespace");
 
         config = new DefaultConfiguration();
         PackageConfig pkg = new PackageConfig.Builder("myns")
@@ -61,11 +62,11 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
     }
 
     public void testGetIndex() throws Exception {
-        req.setupGetRequestURI("/my/namespace/foo/");
+        req.setRequestURI("/my/namespace/foo/");
         req.setServletPath("/my/namespace/foo/");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("GET");
+        //
+        //
+        req.setMethod("GET");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
@@ -76,11 +77,9 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetId() throws Exception {
         mapper.setIdParameterName("id");
-        req.setupGetRequestURI("/my/namespace/foo/3");
+        req.setRequestURI("/my/namespace/foo/3");
         req.setServletPath("/my/namespace/foo/3");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("GET");
+        req.setMethod("GET");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
@@ -93,11 +92,9 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
     public void testGetEdit() throws Exception {
         mapper.setIdParameterName("id");
         mapper.setAllowDynamicMethodCalls("true");
-        req.setupGetRequestURI("/my/namespace/foo/3!edit");
+        req.setRequestURI("/my/namespace/foo/3!edit");
         req.setServletPath("/my/namespace/foo/3!edit");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("GET");
+        req.setMethod("GET");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
@@ -108,11 +105,9 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
     }
 
     public void testGetIndexWithParams() throws Exception {
-        req.setupGetRequestURI("/my/namespace/bar/1/foo/");
+        req.setRequestURI("/my/namespace/bar/1/foo/");
         req.setServletPath("/my/namespace/bar/1/foo/");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("GET");
+        req.setMethod("GET");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
@@ -124,11 +119,9 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
     }
 
     public void testPostCreate() throws Exception {
-        req.setupGetRequestURI("/my/namespace/bar/1/foo/");
+        req.setRequestURI("/my/namespace/bar/1/foo/");
         req.setServletPath("/my/namespace/bar/1/foo/");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("POST");
+        req.setMethod("POST");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
@@ -141,11 +134,9 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
 
     public void testPutUpdate() throws Exception {
 
-        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setRequestURI("/my/namespace/bar/1/foo/2");
         req.setServletPath("/my/namespace/bar/1/foo/2");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("PUT");
+        req.setMethod("PUT");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
@@ -159,11 +150,9 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
     public void testPutUpdateWithIdParam() throws Exception {
 
         mapper.setIdParameterName("id");
-        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setRequestURI("/my/namespace/bar/1/foo/2");
         req.setServletPath("/my/namespace/bar/1/foo/2");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("PUT");
+        req.setMethod("PUT");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
@@ -178,13 +167,11 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
 
     public void testPutUpdateWithFakePut() throws Exception {
 
-        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setRequestURI("/my/namespace/bar/1/foo/2");
         req.setServletPath("/my/namespace/bar/1/foo/2");
-        req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "put");
-        req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "put");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("POST");
+        req.setParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "put");
+        req.setParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "put");
+        req.setMethod("POST");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
@@ -197,11 +184,9 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
 
     public void testDeleteRemove() throws Exception {
 
-        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setRequestURI("/my/namespace/bar/1/foo/2");
         req.setServletPath("/my/namespace/bar/1/foo/2");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("DELETE");
+        req.setMethod("DELETE");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
@@ -214,13 +199,11 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
 
     public void testDeleteRemoveWithFakeDelete() throws Exception {
 
-        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setRequestURI("/my/namespace/bar/1/foo/2");
         req.setServletPath("/my/namespace/bar/1/foo/2");
-        req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "DELETE");
-        req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "DELETE");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("jakarta.servlet.include.servlet_path");
-        req.setupGetMethod("POST");
+        req.setParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "DELETE");
+        req.setParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "DELETE");
+        req.setMethod("POST");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 

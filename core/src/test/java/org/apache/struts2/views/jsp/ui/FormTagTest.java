@@ -1700,7 +1700,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormWithStaticAction() throws Exception {
         request.setServletPath("/");
-        request.setupGetContextPath("/");
+        request.setContextPath("/");
         request.setRequestURI("/foo.jsp");
 
         FormTag tag = new FormTag();
@@ -1721,7 +1721,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormWithStaticAction_clearTagStateSet() throws Exception {
         request.setServletPath("/");
-        request.setupGetContextPath("/");
+        request.setContextPath("/");
         request.setRequestURI("/foo.jsp");
 
         FormTag tag = new FormTag();

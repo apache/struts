@@ -18,16 +18,19 @@
  */
 package org.apache.struts2.views.jsp;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.components.Include;
+import org.springframework.mock.web.MockRequestDispatcher;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.components.Include;
-
-import com.mockobjects.servlet.MockRequestDispatcher;
 
 /**
  * Unit test of {@link IncludeTag}.
@@ -35,7 +38,7 @@ import com.mockobjects.servlet.MockRequestDispatcher;
  */
 public class IncludeTagTest extends AbstractTagTest {
 
-    private RequestDispatcher mockRequestDispatcher;
+    private MockRequestDispatcher mockRequestDispatcher;
 
     private IncludeTag tag;
 
@@ -363,12 +366,11 @@ public class IncludeTagTest extends AbstractTagTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        request.setupGetRequestDispatcher(new MockRequestDispatcher());
         tag = new IncludeTag();
 
-        mockRequestDispatcher = (RequestDispatcher) createMock(RequestDispatcher.class);
+        mockRequestDispatcher = (MockRequestDispatcher) createMock(RequestDispatcher.class);
 
-        request.setupGetRequestDispatcher(mockRequestDispatcher);
+        request.setRequestDispatcher(mockRequestDispatcher);
         tag.setPageContext(pageContext);
         tag.setPageContext(pageContext);
     }

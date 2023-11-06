@@ -51,9 +51,6 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
         PlainTextResult result = new PlainTextResult();
         result.setLocation("/someJspFile.jsp");
 
-        response.setExpectedContentType("text/plain");
-        response.setExpectedHeader("Content-Disposition", "inline");
-
         try (InputStream jspResourceInputStream =
             ClassLoaderUtil.getResourceAsStream(
                 "org/apache/struts2/dispatcher/someJspFile.jsp",
@@ -66,15 +63,14 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
                     readAsString("org/apache/struts2/dispatcher/someJspFile.jsp"), true);
             assertEquals(r, e);
         }
+        assertEquals("text/plain", response.getContentType());
+        assertEquals("inline", response.getHeader("Content-Disposition"));
     }
 
     public void testPlainTextWithoutSlash() throws Exception {
         PlainTextResult result = new PlainTextResult();
         result.setLocation("someJspFile.jsp");
-
-        response.setExpectedContentType("text/plain");
-        response.setExpectedHeader("Content-Disposition", "inline");
-
+        
         try (InputStream jspResourceInputStream =
             ClassLoaderUtil.getResourceAsStream("org/apache/struts2/dispatcher/someJspFile.jsp", PlainTextResultTest.class)) {
             servletContext.setResourceAsStream(jspResourceInputStream);
@@ -84,15 +80,14 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
             String e = AbstractUITagTest.normalize(readAsString("org/apache/struts2/dispatcher/someJspFile.jsp"), true);
             assertEquals(r, e);
         }
+        assertEquals("text/plain", response.getContentType());
+        assertEquals("inline", response.getHeader("Content-Disposition"));
     }
 
     public void testPlainTextWithEncoding() throws Exception {
         PlainTextResult result = new PlainTextResult();
         result.setLocation("/someJspFile.jsp");
         result.setCharSet("UTF-8");
-
-        response.setExpectedContentType("text/plain; charset=UTF-8");
-        response.setExpectedHeader("Content-Disposition", "inline");
 
         try (InputStream jspResourceInputStream =
             ClassLoaderUtil.getResourceAsStream(
@@ -106,6 +101,8 @@ public class PlainTextResultTest extends StrutsInternalTestCase {
                     readAsString("org/apache/struts2/dispatcher/someJspFile.jsp"), true);
             assertEquals(r, e);
         }
+        assertEquals("text/plain; charset=UTF-8", response.getContentType());
+        assertEquals("inline", response.getHeader("Content-Disposition"));
     }
 
     protected String readAsString(String resource) throws Exception {

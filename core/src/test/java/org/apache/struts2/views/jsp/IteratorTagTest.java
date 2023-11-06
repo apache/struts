@@ -18,18 +18,21 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.servlet.MockBodyContent;
-import com.mockobjects.servlet.MockJspWriter;
-import org.apache.commons.collections.ListUtils;
-
-import jakarta.servlet.jsp.JspException;
-import jakarta.servlet.jsp.tagext.TagSupport;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.collections.ListUtils;
+import org.springframework.mock.web.MockBodyContent;
+import org.springframework.mock.web.MockJspWriter;
+
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 
 /**
@@ -1019,8 +1022,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         // create the needed objects
         tag = new IteratorTag();
 
-        MockBodyContent mockBodyContent = new TestMockBodyContent();
-        mockBodyContent.setupGetEnclosingWriter(new MockJspWriter());
+        MockBodyContent mockBodyContent = new TestMockBodyContent("", new MockJspWriter(new StringWriter()));
         tag.setBodyContent(mockBodyContent);
 
         // associate the tag with the mock page request
@@ -1133,7 +1135,11 @@ public class IteratorTagTest extends AbstractUITagTest {
     }
 
     class TestMockBodyContent extends MockBodyContent {
-        public String getString() {
+        public TestMockBodyContent(String content, Writer targetWriter) {
+			super(content, response, targetWriter);
+		}
+
+		public String getString() {
             return ".-.";
         }
     }

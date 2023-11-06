@@ -18,13 +18,16 @@
  */
 package org.apache.struts2.views.jsp;
 
-import org.apache.struts2.StrutsInternalTestCase;
+import java.io.StringWriter;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
-import com.mockobjects.servlet.MockPageContext;
-import com.mockobjects.servlet.MockJspWriter;
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.components.Component;
+import org.springframework.mock.web.MockJspWriter;
+
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.tagext.TagSupport;
@@ -32,7 +35,7 @@ import jakarta.servlet.jsp.tagext.TagSupport;
 public class I18nTagTest extends StrutsInternalTestCase {
 
     I18nTag tag;
-    MockPageContext pageContext;
+    StrutsMockPageContext pageContext;
     ValueStack stack;
 
     @Override
@@ -47,9 +50,8 @@ public class I18nTagTest extends StrutsInternalTestCase {
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
         // create the mock page context
-        pageContext = new MockPageContext();
-        pageContext.setRequest(request);
-        pageContext.setJspWriter(new MockJspWriter());
+        pageContext = new StrutsMockPageContext(null, request, null);
+        pageContext.setJspWriter(new MockJspWriter(new StringWriter()));
 
         // associate the tag with the mock page request
         tag.setPageContext(pageContext);

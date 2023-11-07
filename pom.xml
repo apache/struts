@@ -1003,13 +1003,7 @@
                 <artifactId>testng</artifactId>
                 <version>7.5.1</version><!-- the latest version supporting Java 1.8 -->
             </dependency>
-
-            <dependency>
-                <groupId>net.sf.oval</groupId>
-                <artifactId>oval</artifactId>
-                <version>3.2.1</version>
-            </dependency>
-
+            
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>

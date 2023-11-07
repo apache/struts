@@ -45,7 +45,6 @@
         <module>json</module>
         <module>junit</module>
         <module>osgi</module>
-        <module>oval</module>
         <module>plexus</module>
         <module>rest</module>
         

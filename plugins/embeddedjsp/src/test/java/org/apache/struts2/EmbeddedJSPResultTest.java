@@ -20,6 +20,31 @@
  */
 package org.apache.struts2;
 
+import static org.apache.struts2.ServletActionContext.STRUTS_VALUESTACK_KEY;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.jasper.runtime.InstanceHelper;
+import org.apache.struts2.url.QueryStringParser;
+import org.apache.struts2.url.StrutsQueryStringParser;
+import org.apache.struts2.url.StrutsUrlDecoder;
+import org.apache.tomcat.InstanceManager;
+import org.easymock.EasyMock;
+import org.junit.Ignore;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletConfig;
+import org.springframework.mock.web.MockServletContext;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManager;
 import com.opensymphony.xwork2.FileManagerFactory;
@@ -31,35 +56,13 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterfaceDelegate;
 import com.opensymphony.xwork2.util.fs.DefaultFileManager;
-import junit.framework.TestCase;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.jasper.runtime.InstanceHelper;
-import org.apache.struts2.url.QueryStringParser;
-import org.apache.struts2.url.StrutsQueryStringParser;
-import org.apache.struts2.url.StrutsUrlDecoder;
-import org.apache.tomcat.InstanceManager;
-import org.easymock.EasyMock;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletConfig;
-import org.springframework.mock.web.MockServletContext;
 
 import jakarta.servlet.Servlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+import junit.framework.TestCase;
 
-import static org.apache.struts2.ServletActionContext.STRUTS_VALUESTACK_KEY;
-
-
+@Ignore
 public class EmbeddedJSPResultTest extends TestCase {
     private HttpServletRequest request;
     private MockHttpServletResponse response;

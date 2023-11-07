@@ -81,10 +81,10 @@ import org.apache.struts2.el.util.ReflectionUtil;
  * <p>See the notes about comparison, serialization and immutability in 
  * the {@link Expression} javadocs.
  *
- * @see javax.el.ELResolver
- * @see javax.el.Expression
- * @see javax.el.ExpressionFactory
- * @see javax.el.ValueExpression
+ * @see jakarta.el.ELResolver
+ * @see jakarta.el.Expression
+ * @see jakarta.el.ExpressionFactory
+ * @see jakarta.el.ValueExpression
  * 
  * @author Jacob Hookom [jacob@hookom.net]
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: markt $
@@ -135,7 +135,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
     /*
      * (non-Javadoc)
      * 
-     * @see javax.el.ValueExpression#getExpectedType()
+     * @see jakarta.el.ValueExpression#getExpectedType()
      */
     public Class getExpectedType() {
         return this.expectedType;
@@ -149,7 +149,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
      *         <code>ExpressionFactory.createValueExpression</code> method
      *         that created this <code>ValueExpression</code>.
      * 
-     * @see javax.el.Expression#getExpressionString()
+     * @see jakarta.el.Expression#getExpressionString()
      */
     public String getExpressionString() {
         return this.expr;
@@ -169,7 +169,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
     /*
      * (non-Javadoc)
      * 
-     * @see javax.el.ValueExpression#getType(javax.el.ELContext)
+     * @see jakarta.el.ValueExpression#getType(jakarta.el.ELContext)
      */
     public Class getType(ELContext context) throws PropertyNotFoundException,
             ELException {
@@ -181,7 +181,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
     /*
      * (non-Javadoc)
      * 
-     * @see javax.el.ValueExpression#getValue(javax.el.ELContext)
+     * @see jakarta.el.ValueExpression#getValue(jakarta.el.ELContext)
      */
     public Object getValue(ELContext context) throws PropertyNotFoundException,
             ELException {
@@ -206,7 +206,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
     /*
      * (non-Javadoc)
      * 
-     * @see javax.el.ValueExpression#isLiteralText()
+     * @see jakarta.el.ValueExpression#isLiteralText()
      */
     public boolean isLiteralText() {
         try {
@@ -219,7 +219,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
     /*
      * (non-Javadoc)
      * 
-     * @see javax.el.ValueExpression#isReadOnly(javax.el.ELContext)
+     * @see jakarta.el.ValueExpression#isReadOnly(jakarta.el.ELContext)
      */
     public boolean isReadOnly(ELContext context)
             throws PropertyNotFoundException, ELException {
@@ -242,7 +242,7 @@ public final class ValueExpressionImpl extends ValueExpression implements
     /*
      * (non-Javadoc)
      * 
-     * @see javax.el.ValueExpression#setValue(javax.el.ELContext,
+     * @see jakarta.el.ValueExpression#setValue(jakarta.el.ELContext,
      *      java.lang.Object)
      */
     public void setValue(ELContext context, Object value)

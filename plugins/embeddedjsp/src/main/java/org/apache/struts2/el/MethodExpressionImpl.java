@@ -69,10 +69,10 @@ import org.apache.struts2.el.util.ReflectionUtil;
  * <p>See the notes about comparison, serialization and immutability in 
  * the {@link Expression} javadocs.
  *
- * @see javax.el.ELResolver
- * @see javax.el.Expression
- * @see javax.el.ExpressionFactory
- * @see javax.el.MethodExpression
+ * @see jakarta.el.ELResolver
+ * @see jakarta.el.Expression
+ * @see jakarta.el.ExpressionFactory
+ * @see jakarta.el.MethodExpression
  * 
  * @author Jacob Hookom [jacob@hookom.net]
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: markt $
@@ -170,7 +170,7 @@ public final class MethodExpressionImpl extends MethodExpression implements
      * 
      * @return The original expression String.
      * 
-     * @see javax.el.Expression#getExpressionString()
+     * @see jakarta.el.Expression#getExpressionString()
      */
     public String getExpressionString() {
         return this.expr;
@@ -196,7 +196,7 @@ public final class MethodExpressionImpl extends MethodExpression implements
      *             if an exception was thrown while performing property or
      *             variable resolution. The thrown exception must be included as
      *             the cause property of this exception, if available.
-     * @see javax.el.MethodExpression#getMethodInfo(javax.el.ELContext)
+     * @see jakarta.el.MethodExpression#getMethodInfo(jakarta.el.ELContext)
      */
     public MethodInfo getMethodInfo(ELContext context)
             throws PropertyNotFoundException, MethodNotFoundException,
@@ -266,7 +266,7 @@ public final class MethodExpressionImpl extends MethodExpression implements
      *             exception thrown is an <code>InvocationTargetException</code>,
      *             extract its <code>cause</code> and pass it to the
      *             <code>ELException</code> constructor.
-     * @see javax.el.MethodExpression#invoke(javax.el.ELContext,
+     * @see jakarta.el.MethodExpression#invoke(jakarta.el.ELContext,
      *      java.lang.Object[])
      */
     public Object invoke(ELContext context, Object[] params)

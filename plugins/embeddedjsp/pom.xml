@@ -66,8 +66,8 @@
             <artifactId>tomcat-juli</artifactId>
         </dependency>
         <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

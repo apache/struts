@@ -529,7 +529,7 @@ class Generator {
             }
             out.println();
         }
-        out.printin("private javax.el.ExpressionFactory ");
+        out.printin("private jakarta.el.ExpressionFactory ");
         out.print(VAR_EXPRESSIONFACTORY);
         out.println(";");
         out.printin("private org.apache.tomcat.InstanceManager ");
@@ -3777,11 +3777,11 @@ class Generator {
                 
                 // we need to scope the modified VariableMapper for consistency and performance
                 if (!variableMapperVar) {
-                    out.printil("javax.el.VariableMapper _el_variablemapper = jspContext.getELContext().getVariableMapper();");
+                    out.printil("jakarta.el.VariableMapper _el_variablemapper = jspContext.getELContext().getVariableMapper();");
                     variableMapperVar = true;
                 }
                 
-                out.printin("javax.el.ValueExpression _el_ve");
+                out.printin("jakarta.el.ValueExpression _el_ve");
                 out.print(i);
                 out.print(" = _el_variablemapper.setVariable(");
                 out.print(quote(attrName));
@@ -3790,7 +3790,7 @@ class Generator {
                     out.print(VAR_EXPRESSIONFACTORY);
                     out.print(".createValueExpression(");
                     out.print(toGetterMethod(attrName));
-                    out.print(",javax.el.MethodExpression.class)");
+                    out.print(",jakarta.el.MethodExpression.class)");
                 } else {
                     out.print(toGetterMethod(attrName));
                 }

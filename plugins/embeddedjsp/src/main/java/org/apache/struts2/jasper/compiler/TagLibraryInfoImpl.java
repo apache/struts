@@ -533,7 +533,7 @@ class TagLibraryInfoImpl extends TagLibraryInfo implements TagConstants {
                 }
             } else if ("deferred-value".equals(tname)) {
                 deferredValue = true;
-                type = "javax.el.ValueExpression";
+                type = "jakarta.el.ValueExpression";
                 TreeNode child = element.findChild("type");
                 if (child != null) {
                     expectedType = child.getBody();
@@ -545,7 +545,7 @@ class TagLibraryInfoImpl extends TagLibraryInfo implements TagConstants {
                 }
             } else if ("deferred-method".equals(tname)) {
                 deferredMethod = true;
-                type = "javax.el.MethodExpression";
+                type = "jakarta.el.MethodExpression";
                 TreeNode child = element.findChild("method-signature");
                 if (child != null) {
                     methodSignature = child.getBody();

@@ -166,7 +166,7 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
         if (isPackageExcluded(memberClass)) {
-            LOG.warn("Package [{}] of target class [{}] of target [{}] is excluded!",
+            LOG.warn("Package [{}] of member class [{}] of member [{}] is excluded!",
                     memberClass.getPackage(),
                     memberClass,
                     target);
@@ -181,7 +181,7 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
         if (isPackageExcluded(targetClass)) {
-            LOG.warn("Package [{}] of member [{}] are excluded!", targetClass.getPackage(), member);
+            LOG.warn("Package [{}] of target [{}] is excluded!", targetClass.getPackage(), member);
             return false;
         }
         return true;

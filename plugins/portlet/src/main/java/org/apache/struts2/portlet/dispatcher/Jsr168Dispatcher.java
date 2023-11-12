@@ -33,6 +33,7 @@ import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
@@ -48,7 +49,7 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.servlet.PortletServletContext;
 import org.apache.struts2.portlet.servlet.PortletServletRequest;
 import org.apache.struts2.portlet.servlet.PortletServletResponse;
-import org.apache.struts2.util.AttributeMap;
+import org.apache.struts2.dispatcher.AttributeMap;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -377,7 +378,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
         container.inject(servletRequest);
 
         // ServletActionContext
-        Map<String, Object> extraContext = ActionContext.of(new HashMap<String, Object>())
+        Map<String, Object> extraContext = ActionContext.of(new HashMap<>())
             .withServletRequest(servletRequest)
             .withServletResponse(servletResponse)
             .withServletContext(servletContext)
@@ -392,10 +393,10 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
             .with(PORTLET_NAMESPACE, portletNamespace)
             .with(DEFAULT_ACTION_FOR_MODE, actionMap.get(request.getPortletMode()))
             // helpers to get access to request/session/application scope
-            .with("request", requestMap)
-            .with("session", sessionMap)
-            .with("application", applicationMap)
-            .with("parameters", parameterMap)
+            .with(DispatcherConstants.REQUEST, requestMap)
+            .with(DispatcherConstants.SESSION, sessionMap)
+            .with(DispatcherConstants.APPLICATION, applicationMap)
+            .with(DispatcherConstants.PARAMETERS, parameterMap)
             .with(MODE_NAMESPACE_MAP, modeMap)
             .with(PortletConstants.DEFAULT_ACTION_MAP, actionMap)
             .with(PortletConstants.PHASE, phase)

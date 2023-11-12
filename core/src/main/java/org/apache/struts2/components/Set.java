@@ -20,6 +20,7 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
+import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -53,16 +54,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: params -->
  *
  * <ul>
- *
  * <li>var* (String): The name of the new variable that is assigned the value of <i>value</i></li>
- *
  * <li>value (Object): The value that is assigned to the variable named <i>name</i></li>
- *
  * <li>scope (String): The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>,
  * <b>request</b>, <b>page</b>, or <b>action</b>. By default it is <b>action</b>.</li>
- * 
  * <li>Note: With the <b>action</b> scope, the variable is <em>also</em> assigned to the <b>page</b> scope.
- *
  * </ul>
  *
  * <!-- END SNIPPET: params -->
@@ -107,16 +103,16 @@ public class Set extends ContextBean {
 
         body="";
 
-        if ("application".equalsIgnoreCase(scope)) {
+        if (DispatcherConstants.APPLICATION.equalsIgnoreCase(scope)) {
             stack.setValue("#application['" + getVar() + "']", o);
-        } else if ("session".equalsIgnoreCase(scope)) {
+        } else if (DispatcherConstants.SESSION.equalsIgnoreCase(scope)) {
             stack.setValue("#session['" + getVar() + "']", o);
-        } else if ("request".equalsIgnoreCase(scope)) {
+        } else if (DispatcherConstants.REQUEST.equalsIgnoreCase(scope)) {
             stack.setValue("#request['" + getVar() + "']", o);
-        } else if ("page".equalsIgnoreCase(scope)) {
+        } else if (DispatcherConstants.PAGE.equalsIgnoreCase(scope)) {
             stack.setValue("#attr['" + getVar() + "']", o, false);
         } else {
-            // Default scope is action.  Note: The action acope handling also adds the var to the page scope.
+            // Default scope is action. Note: The action scope handling also adds the var to the page scope.
             stack.getContext().put(getVar(), o);
             stack.setValue("#attr['" + getVar() + "']", o, false);
         }

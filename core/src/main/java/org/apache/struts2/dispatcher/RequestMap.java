@@ -32,8 +32,9 @@ public class RequestMap extends AbstractMap<String, Object> implements Serializa
 
     private static final long serialVersionUID = -7675640869293787926L;
 
+    private final HttpServletRequest request;
+
     private Set<Entry<String, Object>> entries;
-    private HttpServletRequest request;
 
     /**
      * Saves the request to use as the backing for getting and setting values
@@ -43,7 +44,6 @@ public class RequestMap extends AbstractMap<String, Object> implements Serializa
     public RequestMap(final HttpServletRequest request) {
         this.request = request;
     }
-
 
     /**
      * Removes all attributes from the request as well as clears entries in this map.

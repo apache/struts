@@ -352,13 +352,23 @@ public class SecurityMemberAccessTest {
     }
 
     @Test
+    public void testAccessEnum_alternateValues() throws Exception {
+        // when
+        Member alternateValues = MyValues.class.getMethod("values", String.class);
+        boolean actual = sma.isAccessible(context, MyValues.class, alternateValues, null);
+
+        // then
+        assertFalse("Access to unrelated #values method not blocked!", actual);
+    }
+
+    @Test
     public void testAccessStaticMethod() throws Exception {
         // given
         sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
-        boolean actual = sma.isAccessible(context, Class.class, method, null);
+        boolean actual = sma.isAccessible(context, StaticTester.class, method, null);
 
         // then
         assertFalse("Access to static method is not blocked!", actual);
@@ -585,7 +595,7 @@ public class SecurityMemberAccessTest {
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
-        boolean actual = sma.isAccessible(context, Class.class, method, null);
+        boolean actual = sma.isAccessible(context, StaticTester.class, method, null);
 
         // then
         assertFalse("Access to static isn't blocked!", actual);
@@ -694,7 +704,7 @@ public class SecurityMemberAccessTest {
         member = System.class.getMethod(propertyName, int.class);
 
         // when
-        accessible = sma.isAccessible(context, target, member, propertyName);
+        accessible = sma.isAccessible(context, System.class, member, propertyName);
 
         // then
         assertFalse(accessible);
@@ -875,7 +885,11 @@ interface FooBarInterface extends FooInterface, BarInterface {
 }
 
 enum MyValues {
-    ONE, TWO, THREE
+    ONE, TWO, THREE;
+
+    public static MyValues[] values(String notUsed) {
+        return new MyValues[] {ONE, TWO, THREE};
+    }
 }
 
 class StaticTester {

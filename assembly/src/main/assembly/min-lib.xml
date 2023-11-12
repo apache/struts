@@ -39,7 +39,7 @@
         <include>org.apache.commons:commons-text</include>
         <include>org.apache.logging.log4j:log4j-api</include>
         <include>ognl:ognl</include>
-        <include>commons-fileupload:commons-fileupload</include>
+        <include>org.apache.commons:commons-fileupload2-jakarta</include>
         <include>org.apache.commons:commons-io</include>
       </includes>
     </dependencySet>

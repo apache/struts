@@ -27,14 +27,12 @@ import java.nio.file.Paths;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.DelegatingServletInputStream;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@Ignore
 public class JakartaStreamMultiPartRequestTest {
 
     private JakartaStreamMultiPartRequest multiPart;
@@ -68,6 +66,6 @@ public class JakartaStreamMultiPartRequestTest {
         multiPart.setMaxSize("4");
         multiPart.parse(request, tempDir.toString());
         LocalizedMessage next = multiPart.getErrors().iterator().next();
-        Assert.assertEquals(next.getTextKey(), "struts.messages.upload.error.SizeLimitExceededException");
+        Assert.assertEquals(next.getTextKey(), "struts.messages.upload.error.FileUploadSizeException");
     }
 }

@@ -91,7 +91,6 @@
             </plugin>
         </plugins>
     </build>
-
     <profiles>
         <profile>
             <id>build-maven</id>
@@ -172,6 +171,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
@@ -214,14 +214,14 @@
 
         <!-- File upload -->
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2-jakarta</artifactId>
+            <version>2.0.0-M1</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

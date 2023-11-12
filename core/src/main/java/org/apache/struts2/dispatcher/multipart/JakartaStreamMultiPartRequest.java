@@ -18,6 +18,10 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
+import org.apache.commons.fileupload2.core.FileUploadSizeException;
+import org.apache.commons.fileupload2.core.FileItemInputIterator;
+import org.apache.commons.fileupload2.core.FileItemInput;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -209,19 +213,17 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param request the servlet request
      * @param saveDir location of the save dir
      */
-    protected void processUpload(HttpServletRequest request, String saveDir) throws IOException, FileUploadException {
-
-        //TODO:  commons-upload upgrade
+    protected void processUpload(HttpServletRequest request, String saveDir) throws Exception {
 
         // Sanity check that the request is a multi-part/form-data request.
-        /*if (ServletFileUpload.isMultipartContent(request)) {
+        if (JakartaServletFileUpload.isMultipartContent(request)) {
 
             // Sanity check on request size.
             boolean requestSizePermitted = isRequestSizePermitted(request);
 
             // Interface with Commons FileUpload API
             // Using the Streaming API
-            ServletFileUpload servletFileUpload = new ServletFileUpload();
+            JakartaServletFileUpload servletFileUpload = new JakartaServletFileUpload();
             if (maxSize != null) {
                 servletFileUpload.setSizeMax(maxSize);
             }
@@ -231,12 +233,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             if (maxFileSize != null) {
                 servletFileUpload.setFileSizeMax(maxFileSize);
             }
-            FileItemIterator i = servletFileUpload.getItemIterator(request);
+            FileItemInputIterator i = servletFileUpload.getItemIterator(request);
 
             // Iterate the file items
             while (i.hasNext()) {
                 try {
-                    FileItemStream itemStream = i.next();
+                    FileItemInput itemStream = i.next();
 
                     // If the file item stream is a form field, delegate to the
                     // field item stream handler
@@ -263,7 +265,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
                     LOG.warn("Error occurred during process upload", e);
                 }
             }
-        }*/
+        }
     }
 
     /**
@@ -299,7 +301,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     protected void addFileSkippedError(String fileName, HttpServletRequest request) {
         String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
         long allowedMaxSize = maxSize != null ? maxSize : -1;
-        FileSizeLimitExceededException exception = new FileUploadBase.FileSizeLimitExceededException(exceptionMessage, getRequestSize(request), allowedMaxSize);
+        FileUploadSizeException exception = new FileUploadSizeException(exceptionMessage, getRequestSize(request), allowedMaxSize);
         LocalizedMessage message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), allowedMaxSize});
         if (!errors.contains(message)) {
             errors.add(message);
@@ -311,11 +313,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      *
      * @param itemStream file item stream
      */
-    protected void processFileItemStreamAsFormField(FileItemStream itemStream) {
+    protected void processFileItemStreamAsFormField(FileItemInput itemStream) {
         String fieldName = itemStream.getFieldName();
         try {
             List<String> values;
-            String fieldValue = Streams.asString(itemStream.openStream());
+
+            String fieldValue = itemStream.getInputStream().toString();
             if (!parameters.containsKey(fieldName)) {
                 values = new ArrayList<>();
                 parameters.put(fieldName, values);
@@ -334,7 +337,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param itemStream file item stream
      * @param location   location
      */
-    protected void processFileItemStreamAsFileField(FileItemStream itemStream, String location) {
+    protected void processFileItemStreamAsFileField(FileItemInput itemStream, String location) {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (itemStream.getName() == null || itemStream.getName().trim().isEmpty()) {
             LOG.debug("No file has been uploaded for the field: {}", itemStream.getFieldName());
@@ -398,10 +401,10 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @return true if stream was successfully
      * @throws IOException in case of IO errors
      */
-    protected boolean streamFileToDisk(FileItemStream itemStream, File file) throws IOException {
+    protected boolean streamFileToDisk(FileItemInput itemStream, File file) throws IOException {
         boolean result;
-        try (InputStream input = itemStream.openStream();
-             OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
+        try (InputStream input = itemStream.getInputStream();
+                OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
             byte[] buffer = new byte[bufferSize];
             LOG.debug("Streaming file using buffer size {}.", bufferSize);
             for (int length; ((length = input.read(buffer)) > 0); ) {
@@ -420,7 +423,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param itemStream file item stream
      * @param file       the file
      */
-    protected void createFileInfoFromItemStream(FileItemStream itemStream, File file) {
+    protected void createFileInfoFromItemStream(FileItemInput itemStream, File file) {
         // gather attributes from file upload stream.
         String fileName = itemStream.getName();
         String fieldName = itemStream.getFieldName();

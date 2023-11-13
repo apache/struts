@@ -75,14 +75,23 @@ public class StrutsVelocityContextTest {
     }
 
     @Test
+    public void getSuperValue() {
+        strutsVelocityContext.put("foo", "bar");
+        assertEquals("bar", strutsVelocityContext.internalGet("foo"));
+    }
+
+    @Test
     public void getValuePrecedence() {
-        when(chainedContext.internalGet("foo")).thenReturn("bar");
-        assertEquals("bar", strutsVelocityContext.internalGet("foo"));
+        stackContext.put("foo", "quux");
+        assertEquals("quux", strutsVelocityContext.internalGet("foo"));
 
-        when(stack.findValue("foo")).thenReturn("baz");
-        assertEquals("bar", strutsVelocityContext.internalGet("foo"));
+        when(stack.findValue("foo")).thenReturn("qux");
+        assertEquals("qux", strutsVelocityContext.internalGet("foo"));
 
-        stackContext.put("foo", "qux");
+        when(chainedContext.internalGet("foo")).thenReturn("baz");
+        assertEquals("baz", strutsVelocityContext.internalGet("foo"));
+
+        strutsVelocityContext.put("foo", "bar");
         assertEquals("bar", strutsVelocityContext.internalGet("foo"));
     }
 }

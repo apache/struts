@@ -77,7 +77,11 @@ public class StrutsVelocityContext extends VelocityContext {
     }
 
     protected List<Function<String, Object>> contextGetterList() {
-        return Arrays.asList(super::internalGet, this::chainedContextGet, this::stackGet, this::stackContextGet);
+        return Arrays.asList(this::superGet, this::chainedContextGet, this::stackGet, this::stackContextGet);
+    }
+
+    protected Object superGet(String key) {
+        return super.internalGet(key);
     }
 
     protected Object stackGet(String key) {

@@ -66,18 +66,15 @@ public class BundleFreemarkerManager extends FreemarkerManager {
 
         // presume that most apps will require the class and webapp template loader
         // if people wish to
-        
-        //TODO: WebAppTemplateLoader requires javax
-        
         return templatePathLoader != null ?
                 new MultiTemplateLoader(new TemplateLoader[]{
                         templatePathLoader,
-                        //new WebappTemplateLoader(servletContext),
+                        new WebappTemplateLoader(servletContext),
                         new StrutsClassTemplateLoader(),
                         new FreeMarkerBundleResourceLoader()
                 })
                 : new MultiTemplateLoader(new TemplateLoader[]{
-                //new WebappTemplateLoader(servletContext),
+                new WebappTemplateLoader(servletContext),
                 new StrutsClassTemplateLoader(),
                 new FreeMarkerBundleResourceLoader()
         });

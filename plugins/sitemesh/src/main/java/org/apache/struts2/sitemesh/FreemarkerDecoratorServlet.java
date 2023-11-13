@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.sitemesh;
 
-//import com.opensymphony.module.sitemesh.HTMLPage;
-//import com.opensymphony.module.sitemesh.RequestConstants;
+import com.opensymphony.module.sitemesh.HTMLPage;
+import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.xwork2.ActionContext;
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.Configuration;
@@ -53,11 +53,8 @@ import java.util.Locale;
  * <p>It overrides the SiteMesh servlet to rely on the
  * Freemarker Manager in Struts instead of creating it's
  * own manager</p>
- * 
- * 
- * TODO: requires javax
  */
-public class FreemarkerDecoratorServlet { /*extends freemarker.ext.servlet.FreemarkerServlet {
+public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.FreemarkerServlet {
 
     private static final Logger LOG = LogManager.getLogger(FreemarkerDecoratorServlet.class);
     public static final long serialVersionUID = -2440216393145762479L;
@@ -229,10 +226,10 @@ public class FreemarkerDecoratorServlet { /*extends freemarker.ext.servlet.Freem
      * The base implementation simply returns the locale setting of the
      * configuration. Override this method to provide different behaviour, i.e.
      * to use the locale indicated in the request.
-     
+     */
     protected Locale deduceLocale(String templatePath, HttpServletRequest request, HttpServletResponse response) {
         return config.getLocale();
-    }*/
+    }
 
 
     /**
@@ -250,10 +247,10 @@ public class FreemarkerDecoratorServlet { /*extends freemarker.ext.servlet.Freem
      * <li>sets up the object wrapper to be the BeansWrapper
      * <li>loads settings from the classpath file /freemarker.properties
      * </ul>
-     
+     */
     protected freemarker.template.Configuration createConfiguration() {
         return freemarkerManager.getConfiguration(this.getServletContext());
-    }*/
+    }
 
     /**
      * <p>
@@ -277,7 +274,7 @@ public class FreemarkerDecoratorServlet { /*extends freemarker.ext.servlet.Freem
      * @param template the template that will get executed
      * @return true to process the template, false to suppress template processing.
      * @see freemarker.ext.servlet.FreemarkerServlet#preTemplateProcess(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, freemarker.template.Template, freemarker.template.TemplateModel)
-     
+     */
     protected boolean preTemplateProcess(HttpServletRequest request, HttpServletResponse response, Template template, TemplateModel templateModel) throws ServletException, IOException {
         boolean result = super.preTemplateProcess(request, response, template, templateModel);
 
@@ -310,19 +307,19 @@ public class FreemarkerDecoratorServlet { /*extends freemarker.ext.servlet.Freem
         hash.put("head", head);
         hash.put("base", request.getContextPath());
 
-        
-        //  Factory factory = Factory.getInstance(new Config(getServletConfig()));
-        //  Decorator decorator = factory.getDecoratorMapper().getDecorator(request, htmlPage);
-        //  -> decorator.getPage()
-          
+        /*
+          Factory factory = Factory.getInstance(new Config(getServletConfig()));
+          Decorator decorator = factory.getDecoratorMapper().getDecorator(request, htmlPage);
+          -> decorator.getPage()
+          */
 
         return result;
-    }*/
+    }
 
     /**
      * If the parameter "nocache" was set to true, generate a set of headers
      * that will advise the HTTP client not to cache the returned page.
-     
+     */
     private void setBrowserCachingPolicy(HttpServletResponse res) {
         if (nocache) {
             // HTTP/1.1 + IE extensions
@@ -332,7 +329,5 @@ public class FreemarkerDecoratorServlet { /*extends freemarker.ext.servlet.Freem
             // Last resort for those that ignore all of the above
             res.setHeader("Expires", FreemarkerManager.EXPIRATION_DATE);
         }
-    }*/
-    
-    
+    }
 }

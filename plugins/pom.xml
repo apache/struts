@@ -46,7 +46,10 @@
         <module>osgi</module>
         <module>plexus</module>
         <module>rest</module>
-        <module>sitemesh</module>
+        
+        <!-- TODO -->
+        <!--module>sitemesh</module-->
+        
         <module>spring</module>
         <module>testng</module>
         <module>tiles</module>

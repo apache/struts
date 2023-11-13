@@ -97,10 +97,6 @@
             <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../plugins/oval/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-oval-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>../plugins/plexus/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-plexus-plugin/apidocs</outputDirectory>
         </fileSet>

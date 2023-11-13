@@ -118,11 +118,6 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-oval-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-plexus-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>

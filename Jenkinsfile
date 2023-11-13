@@ -189,7 +189,7 @@ pipeline {
     failure {
       script {
         emailext(
-            to: "commits@struts.apache.org",
+            to: "notifications@struts.apache.org",
             recipientProviders: [[$class: 'DevelopersRecipientProvider']],
             from: "Mr. Jenkins <jenkins@builds.apache.org>",
             subject: "Jenkins job ${env.JOB_NAME}#${env.BUILD_NUMBER} failed",
@@ -212,7 +212,7 @@ Director of Continuous Integration
     unstable {
       script {
         emailext(
-            to: "commits@struts.apache.org",
+            to: "notifications@struts.apache.org",
             recipientProviders: [[$class: 'DevelopersRecipientProvider']],
             from: "Mr. Jenkins <jenkins@builds.apache.org>",
             subject: "Jenkins job ${env.JOB_NAME}#${env.BUILD_NUMBER} unstable",
@@ -235,7 +235,7 @@ Director of Continuous Integration
     fixed {
       script {
         emailext(
-            to: "commits@struts.apache.org",
+            to: "notifications@struts.apache.org",
             recipientProviders: [[$class: 'DevelopersRecipientProvider']],
             from: 'Mr. Jenkins <jenkins@builds.apache.org>',
             subject: "Jenkins job ${env.JOB_NAME}#${env.BUILD_NUMBER} back to normal",

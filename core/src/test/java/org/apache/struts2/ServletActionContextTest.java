@@ -23,8 +23,8 @@ import java.util.Map;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
 
+import com.mockobjects.servlet.MockServletContext;
 import com.opensymphony.xwork2.ActionContext;
 
 import jakarta.servlet.http.HttpServletRequest;

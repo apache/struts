@@ -24,6 +24,7 @@ import org.apache.velocity.VelocityContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 public class StrutsVelocityContext extends VelocityContext {
 
@@ -54,36 +55,53 @@ public class StrutsVelocityContext extends VelocityContext {
     /**
      * @deprecated please use {@link #StrutsVelocityContext(List, ValueStack)}
      */
-    @Deprecated()
+    @Deprecated
     public StrutsVelocityContext(VelocityContext[] chainedContexts, ValueStack stack) {
         this(new ArrayList<>(Arrays.asList(chainedContexts)), stack);
     }
 
+    @Override
     public boolean internalContainsKey(String key) {
         return internalGet(key) != null;
     }
 
+    @Override
     public Object internalGet(String key) {
-        Object val = super.internalGet(key);
-        if (val != null) {
-            return val;
-        }
-        if (stack != null) {
-            val = stack.findValue(key);
-            if (val != null) {
-                return val;
-            }
-            val = stack.getContext().get(key);
+        for (Function<String, Object> contextGet : contextGetterList()) {
+            Object val = contextGet.apply(key);
             if (val != null) {
                 return val;
             }
         }
-        if (chainedContexts != null) {
-            for (VelocityContext chainedContext : chainedContexts) {
-                val = chainedContext.internalGet(key);
-                if (val != null) {
-                    return val;
-                }
+        return null;
+    }
+
+    protected List<Function<String, Object>> contextGetterList() {
+        return Arrays.asList(super::internalGet, this::chainedContextGet, this::stackGet, this::stackContextGet);
+    }
+
+    protected Object stackGet(String key) {
+        if (stack == null) {
+            return null;
+        }
+        return stack.findValue(key);
+    }
+
+    protected Object stackContextGet(String key) {
+        if (stack == null) {
+            return null;
+        }
+        return stack.getContext().get(key);
+    }
+
+    protected Object chainedContextGet(String key) {
+        if (chainedContexts == null) {
+            return null;
+        }
+        for (VelocityContext chainedContext : chainedContexts) {
+            Object val = chainedContext.internalGet(key);
+            if (val != null) {
+                return val;
             }
         }
         return null;

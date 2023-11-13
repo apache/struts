@@ -37,7 +37,6 @@
         <module>cdi</module>
         <module>config-browser</module>
         <module>convention</module>
-        <module>embeddedjsp</module>
         <module>gxp</module>
         <module>jasperreports</module>
         <module>javatemplates</module>

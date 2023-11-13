@@ -218,11 +218,6 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-embeddedjsp-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-gxp-plugin</artifactId>
         </dependency>
 

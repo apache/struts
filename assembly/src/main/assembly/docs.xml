@@ -69,10 +69,6 @@
             <outputDirectory>docs/struts2-plugins/struts2-convention-plugin/apidocs</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../plugins/embeddedjsp/target/apidocs</directory>
-            <outputDirectory>docs/struts2-plugins/struts2-embeddedjsp-plugin/apidocs</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>../plugins/gxp/target/apidocs</directory>
             <outputDirectory>docs/struts2-plugins/struts2-gxp-plugin/apidocs</outputDirectory>
         </fileSet>

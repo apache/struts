@@ -50,10 +50,7 @@ public class WebappClassTemplateLoader implements TemplateLoader {
      * @param servletContext The servlet context.
      */
     public WebappClassTemplateLoader(ServletContext servletContext) {
-    	
-    	// TODO: requires javax
-    	
-        webappTemplateLoader = null; //new WebappTemplateLoader(servletContext);
+        webappTemplateLoader = new WebappTemplateLoader(servletContext);
         classTemplateLoader = new ClassTemplateLoader(getClass(), "/");
     }
 

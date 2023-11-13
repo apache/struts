@@ -65,12 +65,8 @@ public class FreemarkerRequest extends AbstractViewRequest {
      */
     public static FreemarkerRequest createServletFreemarkerRequest(ApplicationContext applicationContext, Environment env) {
         HttpRequestHashModel requestModel = FreemarkerRequestUtil.getRequestHashModel(env);
-        
-        //TODO: requires javax
-        
-        HttpServletRequest request = null; //requestModel.getRequest();
-        HttpServletResponse response = null; //requestModel.getResponse();
-        
+        HttpServletRequest request = requestModel.getRequest();
+        HttpServletResponse response = requestModel.getResponse();
         DispatchRequest enclosedRequest = new ServletRequest(applicationContext, request, response);
         return new FreemarkerRequest(enclosedRequest, env);
     }

@@ -74,13 +74,9 @@ public final class FreemarkerRequestUtil {
      * @return The
      */
     public static ApplicationContext getApplicationContext(Environment env) {
-    	return null;
-    	
-    	// TODO: requies javax
-    	
-       /* return ServletUtil.getApplicationContext(
+        return ServletUtil.getApplicationContext(
             getServletContextHashModel(env).getServlet().getServletContext()
-        );*/
+        );
     }
 
 }

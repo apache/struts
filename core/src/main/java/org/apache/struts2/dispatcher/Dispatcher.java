@@ -67,7 +67,6 @@ import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import org.apache.struts2.util.AttributeMap;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.fs.JBossFileManager;
 
@@ -779,14 +778,14 @@ public class Dispatcher {
             .withServletResponse(response)
             .withServletContext(servletContext)
             // helpers to get access to request/session/application scope
-            .with("request", requestMap)
-            .with("session", sessionMap)
-            .with("application", applicationMap)
-            .with("parameters", parameters)
+            .with(DispatcherConstants.REQUEST, requestMap)
+            .with(DispatcherConstants.SESSION, sessionMap)
+            .with(DispatcherConstants.APPLICATION, applicationMap)
+            .with(DispatcherConstants.PARAMETERS, parameters)
             .getContextMap();
 
         AttributeMap attrMap = new AttributeMap(extraContext);
-        extraContext.put("attr", attrMap);
+        extraContext.put(DispatcherConstants.ATTRIBUTES, attrMap);
 
         return extraContext;
     }

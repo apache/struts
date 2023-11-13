@@ -28,10 +28,12 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 public class StrutsVelocityContextTest {
@@ -93,5 +95,11 @@ public class StrutsVelocityContextTest {
 
         strutsVelocityContext.put("foo", "bar");
         assertEquals("bar", strutsVelocityContext.internalGet("foo"));
+    }
+
+    @Test
+    public void nullArgs() {
+        strutsVelocityContext = new StrutsVelocityContext((List<VelocityContext>) null, null);
+        assertNull(strutsVelocityContext.internalGet("foo"));
     }
 }

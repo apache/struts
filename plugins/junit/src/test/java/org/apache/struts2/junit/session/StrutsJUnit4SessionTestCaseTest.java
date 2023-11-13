@@ -21,7 +21,6 @@ package org.apache.struts2.junit.session;
 import org.apache.struts2.junit.JUnitTestAction;
 import org.apache.struts2.junit.StrutsJUnit4TestCase;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -32,7 +31,6 @@ import org.junit.Test;
  * either the session values were deleted or the wrong result would be returned (always the result of
  * the first action execution).
  */
-@Ignore
 public class StrutsJUnit4SessionTestCaseTest extends StrutsJUnit4TestCase<JUnitTestAction> {
     @Test
     public void testPersistingSessionValues() throws Exception {

@@ -79,14 +79,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>../plugins/oval/src/main/resources</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>OVAL-LICENSE.txt</include>
-        <include>XSTREAM-LICENSE.txt</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>target/apps</directory>
       <outputDirectory>apps</outputDirectory>
       <includes>
@@ -160,10 +152,6 @@
       <fileSet>
         <directory>../plugins/osgi/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin/apidocs</outputDirectory>
-      </fileSet>
-      <fileSet>
-        <directory>../plugins/oval/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-oval-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/plexus/target/apidocs</directory>

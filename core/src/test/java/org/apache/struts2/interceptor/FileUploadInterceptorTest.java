@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.TestAction;
@@ -53,7 +54,7 @@ import jakarta.servlet.http.HttpServletRequest;
 /**
  * Test case for FileUploadInterceptor.
  */
-@Ignore
+
 public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
     public static final UploadedFile EMPTY_FILE = new UploadedFile() {
@@ -342,8 +343,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         content.append(endline);
         req.setContent(content.toString().getBytes());
 
-        fail("TODO");
-        //assertTrue(ServletFileUpload.isMultipartContent(req));
+        assertTrue(JakartaServletFileUpload.isMultipartContent(req));
 
         MyFileupAction action = new MyFileupAction();
         container.inject(action);
@@ -396,8 +396,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         content.append(endline);
         req.setContent(content.toString().getBytes());
 
-        fail("TODO");
-        //assertTrue(ServletFileUpload.isMultipartContent(req));
+        assertTrue(JakartaServletFileUpload.isMultipartContent(req));
 
         MyFileupAction action = new MyFileupAction();
         container.inject(action);
@@ -453,7 +452,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertEquals(1, errors.size());
         String msg = errors.iterator().next();
         assertEquals(
-                "File in request exceeded allowed file size limit! Max file size allowed is: 10 but file deleteme.txt was: 34!",
+                "File in request exceeded allowed file size limit! Max file size allowed is: 10!",
                 msg);
     }
 
@@ -555,6 +554,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         sb.append(name);
         sb.append("\"; filename=\"");
         sb.append(filename);
+        sb.append("\"");
         sb.append(endline);
         sb.append("Content-Type: ");
         sb.append(contentType);

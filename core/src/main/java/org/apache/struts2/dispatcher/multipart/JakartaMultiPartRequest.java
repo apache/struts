@@ -18,14 +18,15 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.commons.fileupload.FileCountLimitExceededException;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.RequestContext;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload2.core.DiskFileItem;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
+import org.apache.commons.fileupload2.core.FileUploadException;
+import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
+import org.apache.commons.fileupload2.core.FileUploadSizeException;
+import org.apache.commons.fileupload2.core.RequestContext;
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +36,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -58,7 +59,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected Map<String, List<String>> params = new HashMap<>();
 
     /**
-     * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
+     * Creates a new request wrapper to handle multipart data using methods adapted from Jason Pell's
      * multipart classes (see class description).
      *
      * @param saveDir the directory to save off the file
@@ -72,16 +73,16 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         } catch (FileUploadException e) {
             LOG.debug("Request exceeded size limit!", e);
             LocalizedMessage errorMessage;
-            if (e instanceof FileUploadBase.SizeLimitExceededException) {
-                FileUploadBase.SizeLimitExceededException ex = (FileUploadBase.SizeLimitExceededException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getPermittedSize(), ex.getActualSize()});
-            } else if (e instanceof FileUploadBase.FileSizeLimitExceededException) {
-                FileUploadBase.FileSizeLimitExceededException ex = (FileUploadBase.FileSizeLimitExceededException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getFileName(), ex.getPermittedSize(), ex.getActualSize()});
-            } else if (e instanceof FileCountLimitExceededException) {
-                FileCountLimitExceededException ex = (FileCountLimitExceededException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getLimit()});
-            } else {
+            if (e instanceof FileUploadByteCountLimitException) {
+                FileUploadByteCountLimitException ex = (FileUploadByteCountLimitException) e;
+                errorMessage = buildErrorMessage(e, new Object[]{ex.getFileName(), ex.getPermitted(), ex.getActualSize()});
+            } else if (e instanceof FileUploadFileCountLimitException) {
+                FileUploadFileCountLimitException ex = (FileUploadFileCountLimitException) e;
+                errorMessage = buildErrorMessage(e, new Object[]{ex.getPermitted()});
+            } else if (e instanceof FileUploadSizeException) {
+                FileUploadSizeException ex = (FileUploadSizeException) e;
+                errorMessage = buildErrorMessage(e, new Object[]{ex.getPermitted(), ex.getActualSize()});
+            }   else {
                 errorMessage = buildErrorMessage(e, new Object[]{});
             }
 
@@ -97,10 +98,9 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         }
     }
 
-    protected void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
-      //TODO: commons-upload upgrade
+    protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
     	
-    	/* if (ServletFileUpload.isMultipartContent(request)) {
+    	 if (JakartaServletFileUpload.isMultipartContent(request)) {
             for (FileItem item : parseRequest(request, saveDir)) {
                 LOG.debug("Found file item: [{}]", sanitizeNewlines(item.getFieldName()));
                 if (item.isFormField()) {
@@ -109,7 +109,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                     processFileField(item);
                 }
             }
-        }*/
+        }
     }
 
     protected void processFileField(FileItem item) {
@@ -132,9 +132,10 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         files.put(item.getFieldName(), values);
     }
 
-    protected void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
+    protected void processNormalFormField(FileItem item, String charset) throws IOException {
         try {
             LOG.debug("Item is a normal form field");
+            Charset encoding = Charset.forName(charset);
 
             List<String> values;
             if (params.get(item.getFieldName()) != null) {
@@ -159,7 +160,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             } else if (charset == null) {
                 values.add(item.getString()); // WW-633
             } else {
-                values.add(item.getString(charset));
+                values.add(item.getString(encoding));
             }
             params.put(item.getFieldName(), values);
         } finally {
@@ -169,15 +170,14 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     protected List<FileItem> parseRequest(HttpServletRequest servletRequest, String saveDir) throws FileUploadException {
         DiskFileItemFactory fac = createDiskFileItemFactory(saveDir);
-        ServletFileUpload upload = createServletFileUpload(fac);
+        JakartaServletFileUpload upload = createServletFileUpload(fac);
+
         
-        //TODO:  commons-upload upgrade
-        
-        return Collections.emptyList(); //upload.parseRequest(createRequestContext(servletRequest));
+        return upload.parseRequest(createRequestContext(servletRequest));
     }
 
-    protected ServletFileUpload createServletFileUpload(DiskFileItemFactory fac) {
-        ServletFileUpload upload = new ServletFileUpload(fac);
+    protected JakartaServletFileUpload createServletFileUpload(DiskFileItemFactory fac) {
+        JakartaServletFileUpload upload = new JakartaServletFileUpload(fac);
         if (maxSize != null) {
             upload.setSizeMax(maxSize);
         }
@@ -191,13 +191,14 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected DiskFileItemFactory createDiskFileItemFactory(String saveDir) {
-        DiskFileItemFactory fac = new DiskFileItemFactory();
+        DiskFileItemFactory.Builder fac = DiskFileItemFactory.builder();
         // Make sure that the data is written to file, even if the file is empty.
-        fac.setSizeThreshold(-1);
+        //setting 0 or -1 no longer seems to work for fileupload buffer size, so using 1 instead.
+        fac.setBufferSize(1);
         if (saveDir != null) {
-            fac.setRepository(new File(saveDir));
+            fac.setPath(saveDir);
         }
-        return fac;
+        return fac.get();
     }
 
     /* (non-Javadoc)
@@ -238,10 +239,10 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         List<UploadedFile> fileList = new ArrayList<>(items.size());
         for (FileItem fileItem : items) {
             DiskFileItem diskFileItem = (DiskFileItem) fileItem;
-            File storeLocation = diskFileItem.getStoreLocation();
+            File storeLocation = diskFileItem.getPath().toFile();
 
             // Ensure file exists even if it is empty.
-            if (diskFileItem.getSize() == 0 && storeLocation != null && !storeLocation.exists()) {
+            if (diskFileItem.getSize() == 0 && !storeLocation.exists()) {
                 try {
                     storeLocation.createNewFile();
                 } catch (IOException e) {
@@ -284,7 +285,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
         List<String> fileNames = new ArrayList<>(items.size());
         for (FileItem fileItem : items) {
-            fileNames.add(((DiskFileItem) fileItem).getStoreLocation().getName());
+            fileNames.add(((DiskFileItem) fileItem).getPath().toFile().getName());
         }
 
         return fileNames.toArray(new String[0]);
@@ -337,7 +338,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                 return req.getContentType();
             }
 
-            public int getContentLength() {
+            public long getContentLength() {
                 return req.getContentLength();
             }
 
@@ -361,7 +362,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             for (FileItem item : items) {
                 LOG.debug("Removing file {} {}", name, item);
                 if (!item.isInMemory()) {
-                    item.delete();
+                    try {
+                        item.delete();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }

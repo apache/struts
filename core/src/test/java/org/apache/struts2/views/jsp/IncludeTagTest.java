@@ -38,7 +38,7 @@ import jakarta.servlet.ServletResponse;
  */
 public class IncludeTagTest extends AbstractTagTest {
 
-    private MockRequestDispatcher mockRequestDispatcher;
+    private RequestDispatcher mockRequestDispatcher;
 
     private IncludeTag tag;
 
@@ -368,7 +368,7 @@ public class IncludeTagTest extends AbstractTagTest {
         super.setUp();
         tag = new IncludeTag();
 
-        mockRequestDispatcher = (MockRequestDispatcher) createMock(RequestDispatcher.class);
+        mockRequestDispatcher = (RequestDispatcher) createMock(RequestDispatcher.class);
 
         request.setRequestDispatcher(mockRequestDispatcher);
         tag.setPageContext(pageContext);

@@ -182,7 +182,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.struts</groupId>
-			<artifactId>struts2-freemarker-jakarta</artifactId>
+			<artifactId>struts2-freemarker-jakarta-shaded</artifactId>
         </dependency>
 
         <dependency>

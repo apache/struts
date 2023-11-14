@@ -18,7 +18,6 @@
  */
 package com.opensymphony.xwork2.ognl;
 
-import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
@@ -46,22 +45,16 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
-import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassesSet;
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPatternsSet;
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toPackageNamesSet;
 import static java.util.Collections.emptySet;
-import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toSet;
-import static org.apache.commons.lang3.StringUtils.strip;
-import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
-import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_ENABLE;
-import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 import static org.apache.struts2.ognl.OgnlGuard.EXPR_BLOCKED;
 
 
@@ -84,27 +77,15 @@ public class OgnlUtil {
     private final OgnlGuard ognlGuard;
 
     private boolean devMode;
-    private boolean enableExpressionCache = true;
+    private boolean enableExpressionCache;
     private boolean enableEvalExpression;
 
-    private Set<String> excludedClasses = emptySet();
-    private Set<Pattern> excludedPackageNamePatterns = emptySet();
-    private Set<String> excludedPackageNames = emptySet();
-    private Set<String> excludedPackageExemptClasses = emptySet();
-
-    private boolean enforceAllowlistEnabled = false;
-    private Set<String> allowlistClasses = emptySet();
-    private Set<String> allowlistPackageNames = emptySet();
-
-    private Set<String> devModeExcludedClasses = emptySet();
-    private Set<Pattern> devModeExcludedPackageNamePatterns = emptySet();
-    private Set<String> devModeExcludedPackageNames = emptySet();
-    private Set<String> devModeExcludedPackageExemptClasses = emptySet();
+    private String devModeExcludedClasses = "";
+    private String devModeExcludedPackageNamePatterns = "";
+    private String devModeExcludedPackageNames = "";
+    private String devModeExcludedPackageExemptClasses = "";
 
     private Container container;
-    private boolean allowStaticFieldAccess = true;
-    private boolean disallowProxyMemberAccess = false;
-    private boolean disallowDefaultPackageAccess = false;
 
     /**
      * Construct a new OgnlUtil instance for use with the framework
@@ -175,87 +156,84 @@ public class OgnlUtil {
         }
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     protected void setExcludedClasses(String commaDelimitedClasses) {
-        excludedClasses = toNewClassesSet(excludedClasses, commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, required = false)
     protected void setDevModeExcludedClasses(String commaDelimitedClasses) {
-        devModeExcludedClasses = toNewClassesSet(devModeExcludedClasses, commaDelimitedClasses);
+        this.devModeExcludedClasses = commaDelimitedClasses;
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     protected void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        excludedPackageNamePatterns = toNewPatternsSet(excludedPackageNamePatterns, commaDelimitedPackagePatterns);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
     protected void setDevModeExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        devModeExcludedPackageNamePatterns = toNewPatternsSet(devModeExcludedPackageNamePatterns, commaDelimitedPackagePatterns);
+        this.devModeExcludedPackageNamePatterns = commaDelimitedPackagePatterns;
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     protected void setExcludedPackageNames(String commaDelimitedPackageNames) {
-        excludedPackageNames = toNewPackageNamesSet(excludedPackageNames, commaDelimitedPackageNames);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, required = false)
     protected void setDevModeExcludedPackageNames(String commaDelimitedPackageNames) {
-        devModeExcludedPackageNames = toNewPackageNamesSet(devModeExcludedPackageNames, commaDelimitedPackageNames);
+        this.devModeExcludedPackageNames = commaDelimitedPackageNames;
     }
 
-    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     public void setExcludedPackageExemptClasses(String commaDelimitedClasses) {
-        excludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
     public void setDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
-        devModeExcludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
+        this.devModeExcludedPackageExemptClasses = commaDelimitedClasses;
     }
 
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     public Set<String> getExcludedClasses() {
-        return excludedClasses;
+        return toClassesSet(container.getInstance(String.class, StrutsConstants.STRUTS_EXCLUDED_CLASSES));
     }
 
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     public Set<Pattern> getExcludedPackageNamePatterns() {
-        return excludedPackageNamePatterns;
+        return toNewPatternsSet(emptySet(), container.getInstance(String.class, StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS));
     }
 
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     public Set<String> getExcludedPackageNames() {
-        return excludedPackageNames;
+        return toPackageNamesSet(container.getInstance(String.class, StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES));
     }
 
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     public Set<String> getExcludedPackageExemptClasses() {
-        return excludedPackageExemptClasses;
-    }
-
-    @Inject(value = STRUTS_ALLOWLIST_ENABLE, required = false)
-    protected void setEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
-        this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
-    }
-
-    @Inject(value = STRUTS_ALLOWLIST_CLASSES, required = false)
-    protected void setAllowlistClasses(String commaDelimitedClasses) {
-        allowlistClasses = toClassesSet(commaDelimitedClasses);
-    }
-
-    @Inject(value = STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
-    protected void setAllowlistPackageNames(String commaDelimitedPackageNames) {
-        allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
-    }
-
-    public boolean isEnforceAllowlistEnabled() {
-        return enforceAllowlistEnabled;
-    }
-
-    public Set<String> getAllowlistClasses() {
-        return allowlistClasses;
-    }
-
-    public Set<String> getAllowlistPackageNames() {
-        return allowlistPackageNames;
+        return toClassesSet(container.getInstance(String.class, StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES));
     }
 
     @Inject
@@ -263,19 +241,25 @@ public class OgnlUtil {
         this.container = container;
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, required = false)
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     protected void setAllowStaticFieldAccess(String allowStaticFieldAccess) {
-        this.allowStaticFieldAccess = BooleanUtils.toBoolean(allowStaticFieldAccess);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     protected void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
-        this.disallowProxyMemberAccess = BooleanUtils.toBoolean(disallowProxyMemberAccess);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, required = false)
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     protected void setDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
-        this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
     }
 
     /**
@@ -297,12 +281,20 @@ public class OgnlUtil {
         }
     }
 
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     public boolean isDisallowProxyMemberAccess() {
-        return disallowProxyMemberAccess;
+        return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS));
     }
 
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     public boolean isDisallowDefaultPackageAccess() {
-        return disallowDefaultPackageAccess;
+        return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS));
     }
 
     /**

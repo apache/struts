@@ -18,10 +18,13 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ProxyUtil;
 import ognl.MemberAccess;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -36,10 +39,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassesSet;
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewClassesSet;
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPackageNamesSet;
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPatternsSet;
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toPackageNamesSet;
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Allows access decisions to be made on the basis of whether a member is static or not.
@@ -76,7 +83,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     public SecurityMemberAccess(boolean allowStaticFieldAccess) {
         this.allowStaticFieldAccess = allowStaticFieldAccess;
-        useExcludedClasses(excludedClasses); // Initialise default exclusions
+        useExcludedClasses(""); // Initialise default exclusions
     }
 
     @Override
@@ -361,40 +368,17 @@ public class SecurityMemberAccess implements MemberAccess {
         return excludeProperties.stream().map(pattern -> pattern.matcher(paramName)).anyMatch(Matcher::matches);
     }
 
-    /**
-     * @deprecated please use {@link #useExcludeProperties(Set)}
-     */
-    @Deprecated
-    public void setExcludeProperties(Set<Pattern> excludeProperties) {
-        this.excludeProperties = excludeProperties;
-    }
-
     public void useExcludeProperties(Set<Pattern> excludeProperties) {
         this.excludeProperties = excludeProperties;
-    }
-
-    /**
-     * @deprecated please use {@link #useAcceptProperties(Set)}
-     */
-    @Deprecated
-    public void setAcceptProperties(Set<Pattern> acceptedProperties) {
-        this.acceptProperties = acceptedProperties;
     }
 
     public void useAcceptProperties(Set<Pattern> acceptedProperties) {
         this.acceptProperties = acceptedProperties;
     }
 
-    /**
-     * @deprecated please use {@link #useExcludedClasses(Set)}
-     */
-    @Deprecated
-    public void setExcludedClasses(Set<Class<?>> excludedClasses) {
-        useExcludedClasses(excludedClasses.stream().map(Class::getName).collect(toSet()));
-    }
-
-    public void useExcludedClasses(Set<String> excludedClasses) {
-        Set<String> newExcludedClasses = new HashSet<>(excludedClasses);
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
+    protected void useExcludedClasses(String commaDelimitedClasses) {
+        Set<String> newExcludedClasses = new HashSet<>(toNewClassesSet(excludedClasses, commaDelimitedClasses));
         newExcludedClasses.add(Object.class.getName());
         if (!allowStaticFieldAccess) {
             newExcludedClasses.add(Class.class.getName());
@@ -402,67 +386,41 @@ public class SecurityMemberAccess implements MemberAccess {
         this.excludedClasses = unmodifiableSet(newExcludedClasses);
     }
 
-    /**
-     * @deprecated please use {@link #useExcludedPackageNamePatterns(Set)}
-     */
-    @Deprecated
-    public void setExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
-        this.excludedPackageNamePatterns = excludedPackageNamePatterns;
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    public void useExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+        this.excludedPackageNamePatterns = toNewPatternsSet(excludedPackageNamePatterns, commaDelimitedPackagePatterns);
+    }
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
+    public void useExcludedPackageNames(String commaDelimitedPackageNames) {
+        this.excludedPackageNames = toNewPackageNamesSet(excludedPackageNames, commaDelimitedPackageNames);
     }
 
-    public void useExcludedPackageNamePatterns(Set<Pattern> excludedPackageNamePatterns) {
-        this.excludedPackageNamePatterns = excludedPackageNamePatterns;
+    @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
+    public void useExcludedPackageExemptClasses(String commaDelimitedClasses) {
+        this.excludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
+    }
+    @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_ENABLE, required = false)
+    public void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
+        this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
     }
 
-    /**
-     * @deprecated please use {@link #useExcludedPackageNames(Set)}
-     */
-    @Deprecated
-    public void setExcludedPackageNames(Set<String> excludedPackageNames) {
-        this.excludedPackageNames = excludedPackageNames;
+    @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_CLASSES, required = false)
+    public void useAllowlistClasses(String commaDelimitedClasses) {
+        this.allowlistClasses = toClassesSet(commaDelimitedClasses);
     }
 
-    public void useExcludedPackageNames(Set<String> excludedPackageNames) {
-        this.excludedPackageNames = excludedPackageNames;
+    @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
+    public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
+        this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
     }
 
-    /**
-     * @deprecated please use {@link #useExcludedPackageExemptClasses(Set)}
-     */
-    @Deprecated
-    public void setExcludedPackageExemptClasses(Set<Class<?>> excludedPackageExemptClasses) {
-        useExcludedPackageExemptClasses(excludedPackageExemptClasses.stream().map(Class::getName).collect(toSet()));
+    @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)
+    public void useDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
+        this.disallowProxyMemberAccess = BooleanUtils.toBoolean(disallowProxyMemberAccess);
     }
 
-    public void useExcludedPackageExemptClasses(Set<String> excludedPackageExemptClasses) {
-        this.excludedPackageExemptClasses = excludedPackageExemptClasses;
-    }
-
-    public void useEnforceAllowlistEnabled(boolean enforceAllowlistEnabled) {
-        this.enforceAllowlistEnabled = enforceAllowlistEnabled;
-    }
-
-    public void useAllowlistClasses(Set<String> allowlistClasses) {
-        this.allowlistClasses = allowlistClasses;
-    }
-
-    public void useAllowlistPackageNames(Set<String> allowlistPackageNames) {
-        this.allowlistPackageNames = allowlistPackageNames;
-    }
-
-    /**
-     * @deprecated please use {@link #disallowProxyMemberAccess(boolean)}
-     */
-    @Deprecated
-    public void setDisallowProxyMemberAccess(boolean disallowProxyMemberAccess) {
-        this.disallowProxyMemberAccess = disallowProxyMemberAccess;
-    }
-
-    public void disallowProxyMemberAccess(boolean disallowProxyMemberAccess) {
-        this.disallowProxyMemberAccess = disallowProxyMemberAccess;
-    }
-
-    public void disallowDefaultPackageAccess(boolean disallowDefaultPackageAccess) {
-        this.disallowDefaultPackageAccess = disallowDefaultPackageAccess;
+    @Inject(value = StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, required = false)
+    public void useDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
+        this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
     }
 }

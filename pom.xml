@@ -526,11 +526,11 @@
                 <artifactId>struts-annotations</artifactId>
                 <version>1.0.8</version>
                 <exclusions>
-					<exclusion>
-						 <groupId>org.freemarker</groupId>
-                		 <artifactId>freemarker</artifactId>
-					</exclusion>
-				</exclusions>
+                    <exclusion>
+                      <groupId>org.freemarker</groupId>
+                      <artifactId>freemarker</artifactId>
+                    </exclusion>
+                  </exclusions>
             </dependency>
 
             <dependency>
@@ -763,15 +763,15 @@
 
             <dependency>
                 <groupId>jakarta.servlet</groupId>
-				<artifactId>jakarta.servlet-api</artifactId>
-				<version>6.0.0</version>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>6.0.0</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
-			    <groupId>org.glassfish</groupId>
-			    <artifactId>jakarta.el</artifactId>
-			    <version>5.0.0-M1</version>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jakarta.el</artifactId>
+                <version>5.0.0-M1</version>
             </dependency>
 
             <dependency>
@@ -783,16 +783,16 @@
 
             <dependency>
                 <groupId>jakarta.servlet.jsp.jstl</groupId>
-				<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+                <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
                 <version>3.0.0</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>jakarta.el</groupId>
                 <artifactId>jakarta.el-api</artifactId>
                 <version>5.0.0</version>
-        	</dependency>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
@@ -810,8 +810,8 @@
 
             <dependency>
                 <groupId>jakarta.servlet.jsp</groupId>
-				<artifactId>jakarta.servlet.jsp-api</artifactId>
-				<version>3.1.0</version>
+                <artifactId>jakarta.servlet.jsp-api</artifactId>
+                <version>3.1.0</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -922,7 +922,7 @@
                 <artifactId>spring-web</artifactId>
                 <version>${spring.platformVersion}</version>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>mockobjects</groupId>
                 <artifactId>mockobjects-core</artifactId>
                 <version>0.09</version>
@@ -1005,7 +1005,7 @@
                 <artifactId>testng</artifactId>
                 <version>7.5.1</version><!-- the latest version supporting Java 1.8 -->
             </dependency>
-            
+
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
@@ -1025,8 +1025,8 @@
             </dependency>
             <dependency>
                 <groupId>jakarta.persistence</groupId>
-				<artifactId>jakarta.persistence-api</artifactId>
-				<version>3.1.0</version>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>3.1.0</version>
             </dependency>
 
             <dependency>
@@ -1074,11 +1074,11 @@
                 <artifactId>weld-core-impl</artifactId>
                 <version>5.1.2.Final</version>
                 <exclusions>
-					<exclusion>
-						<groupId>jakarta.annotation</groupId>
-               			<artifactId>jakarta.annotation-api</artifactId>
-					</exclusion>
-				</exclusions>
+                  <exclusion>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
+                  </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>

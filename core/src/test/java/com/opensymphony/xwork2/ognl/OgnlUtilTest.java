@@ -889,11 +889,11 @@ public class OgnlUtilTest extends XWorkTestCase {
 
     public void testBeanMapExpressions() throws OgnlException, NoSuchMethodException {
         Foo foo = new Foo();
-        ognlUtil.setExcludedPackageNames(
-                "com.opensymphony.xwork2.ognl."
-        );
 
         Map<String, Object> context = ognlUtil.createDefaultContext(foo);
+        SecurityMemberAccess sma = (SecurityMemberAccess) ((OgnlContext) context).getMemberAccess();
+
+        sma.useExcludedPackageNames("com.opensymphony.xwork2.ognl");
 
         String expression = "%{\n" +
             "(#request.a=#@org.apache.commons.collections.BeanMap@{}) +\n" +
@@ -910,8 +910,7 @@ public class OgnlUtilTest extends XWorkTestCase {
 
         assertEquals(foo.getTitle(), expression);
 
-        SecurityMemberAccess sma = (SecurityMemberAccess) ((OgnlContext) context).getMemberAccess();
-        assertFalse(sma.isAccessible(context, sma, sma.getClass().getDeclaredMethod("useExcludedClasses", Set.class), "excludedClasses"));
+        assertFalse(sma.isAccessible(context, sma, sma.getClass().getDeclaredMethod("useExcludedClasses", String.class), "excludedClasses"));
     }
 
     public void testNullProperties() {

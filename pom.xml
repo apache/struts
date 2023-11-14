@@ -83,6 +83,7 @@
     <modules>
         <module>bom</module>
         <module>freemarker-jakarta</module>
+        <module>sitemesh2-jakarta</module>
         <module>core</module>
         <module>plugins</module>
         <module>bundles</module>
@@ -120,6 +121,7 @@
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <freemarker.version>2.3.32</freemarker.version>
+        <sitemesh.version>2.5.0</sitemesh.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>
@@ -690,9 +692,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.sitemesh</groupId>
+                <groupId>opensymphony</groupId>
                 <artifactId>sitemesh</artifactId>
-                <version>3.2.0-M2</version>
+                <version>${sitemesh.version}</version>
             </dependency>
 
             <!-- Velocity -->

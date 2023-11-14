@@ -33,8 +33,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.sitemesh</groupId>
-            <artifactId>sitemesh</artifactId>
+           <groupId>org.apache.struts</groupId>
+           <artifactId>struts2-sitemesh2-jakarta</artifactId>
+           <version>${project.version}</version>
         </dependency>
 
         <!-- Velocity -->

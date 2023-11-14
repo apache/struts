@@ -31,11 +31,8 @@ import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -59,21 +56,17 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     }
 
     public ValueStack createValueStack() {
-        ValueStack stack = new OgnlValueStack(xworkConverter, compoundRootAccessor, textProvider, containerAllowsStaticFieldAccess());
+        ValueStack stack = new OgnlValueStack(
+                xworkConverter, compoundRootAccessor, textProvider, container.getInstance(SecurityMemberAccess.class));
         container.inject(stack);
-        return stack.getActionContext()
-            .withContainer(container)
-            .withValueStack(stack)
-            .getValueStack();
+        return stack.getActionContext().withContainer(container).withValueStack(stack).getValueStack();
     }
 
     public ValueStack createValueStack(ValueStack stack) {
-        ValueStack result = new OgnlValueStack(stack, xworkConverter, compoundRootAccessor, containerAllowsStaticFieldAccess());
+        ValueStack result = new OgnlValueStack(
+                stack, xworkConverter, compoundRootAccessor, container.getInstance(SecurityMemberAccess.class));
         container.inject(result);
-        return result.getActionContext()
-            .withContainer(container)
-            .withValueStack(result)
-            .getValueStack();
+        return result.getActionContext().withContainer(container).withValueStack(result).getValueStack();
     }
 
     @Inject
@@ -105,10 +98,10 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     }
 
     /**
-     * Retrieve allowStaticFieldAccess state from the container (allows for lazy fetching)
+     * @deprecated since 6.4.0, no replacement.
      */
+    @Deprecated
     protected boolean containerAllowsStaticFieldAccess() {
         return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS));
     }
-
 }

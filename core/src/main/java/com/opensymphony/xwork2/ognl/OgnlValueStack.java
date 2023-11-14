@@ -75,50 +75,94 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private boolean devMode;
     private boolean logMissingProperties;
 
+    /**
+     * @since 6.4.0
+     */
     protected OgnlValueStack(ValueStack vs,
                              XWorkConverter xworkConverter,
                              CompoundRootAccessor accessor,
                              TextProvider prov,
-                             boolean allowStaticFieldAccess) {
+                             SecurityMemberAccess securityMemberAccess) {
         setRoot(xworkConverter,
                 accessor,
                 vs != null ? new CompoundRoot(vs.getRoot()) : new CompoundRoot(),
-                allowStaticFieldAccess);
+                securityMemberAccess);
         if (prov != null) {
             push(prov);
         }
     }
 
-    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticFieldAccess) {
-        this(null, xworkConverter, accessor, prov, allowStaticFieldAccess);
+    /**
+     * @since 6.4.0
+     */
+    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, SecurityMemberAccess securityMemberAccess) {
+        this(null, xworkConverter, accessor, prov, securityMemberAccess);
     }
 
+    /**
+     * @since 6.4.0
+     */
+    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, SecurityMemberAccess securityMemberAccess) {
+        this(vs, xworkConverter, accessor, null, securityMemberAccess);
+    }
+
+    /**
+     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, CompoundRootAccessor, TextProvider, SecurityMemberAccess)} instead.
+     */
+    @Deprecated
+    protected OgnlValueStack(ValueStack vs,
+                             XWorkConverter xworkConverter,
+                             CompoundRootAccessor accessor,
+                             TextProvider prov,
+                             boolean allowStaticFieldAccess) {
+        this(vs, xworkConverter, accessor, prov, new SecurityMemberAccess(allowStaticFieldAccess));
+    }
+
+    /**
+     * @deprecated since 6.4.0, use {@link #OgnlValueStack(XWorkConverter, CompoundRootAccessor, TextProvider, SecurityMemberAccess)} instead.
+     */
+    @Deprecated
+    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticFieldAccess) {
+        this(xworkConverter, accessor, prov, new SecurityMemberAccess(allowStaticFieldAccess));
+    }
+
+    /**
+     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, CompoundRootAccessor, SecurityMemberAccess)} instead.
+     */
+    @Deprecated
     protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticFieldAccess) {
-        this(vs, xworkConverter, accessor, null, allowStaticFieldAccess);
+        this(vs, xworkConverter, accessor, new SecurityMemberAccess(allowStaticFieldAccess));
     }
 
     @Inject
     protected void setOgnlUtil(OgnlUtil ognlUtil) {
         this.ognlUtil = ognlUtil;
-        securityMemberAccess.useExcludedClasses(ognlUtil.getExcludedClasses());
-        securityMemberAccess.useExcludedPackageNamePatterns(ognlUtil.getExcludedPackageNamePatterns());
-        securityMemberAccess.useExcludedPackageNames(ognlUtil.getExcludedPackageNames());
-        securityMemberAccess.useExcludedPackageExemptClasses(ognlUtil.getExcludedPackageExemptClasses());
-        securityMemberAccess.useEnforceAllowlistEnabled(ognlUtil.isEnforceAllowlistEnabled());
-        securityMemberAccess.useAllowlistClasses(ognlUtil.getAllowlistClasses());
-        securityMemberAccess.useAllowlistPackageNames(ognlUtil.getAllowlistPackageNames());
-        securityMemberAccess.disallowProxyMemberAccess(ognlUtil.isDisallowProxyMemberAccess());
-        securityMemberAccess.disallowDefaultPackageAccess(ognlUtil.isDisallowDefaultPackageAccess());
     }
 
-    protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, boolean allowStaticFieldAccess) {
+    /**
+     * @since 6.4.0
+     */
+    protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, SecurityMemberAccess securityMemberAccess) {
         this.root = compoundRoot;
-        this.securityMemberAccess = new SecurityMemberAccess(allowStaticFieldAccess);
+        this.securityMemberAccess = securityMemberAccess;
         this.context = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
         this.converter = xworkConverter;
         context.put(VALUE_STACK, this);
         ((OgnlContext) context).setTraceEvaluations(false);
         ((OgnlContext) context).setKeepLastEvaluation(false);
+    }
+
+    /**
+     * @deprecated since 6.4.0, use {@link #setRoot(XWorkConverter, CompoundRootAccessor, CompoundRoot, SecurityMemberAccess)} instead.
+     */
+    @Deprecated
+    protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, boolean allowStaticFieldAccess) {
+        setRoot(xworkConverter, accessor, compoundRoot, new SecurityMemberAccess(allowStaticFieldAccess));
+    }
+
+    @Inject
+    protected void setSecurityMemberAccess(SecurityMemberAccess securityMemberAccess) {
+        this.securityMemberAccess = securityMemberAccess;
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)

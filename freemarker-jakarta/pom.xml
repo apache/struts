@@ -56,7 +56,6 @@ governing permissions and limitations
 				<version>0.5.0</version>
 				<extensions>true</extensions>
 				<configuration>
-					<extensions>true</extensions> 
 					<rules>
 						<jakartaDefaults>true</jakartaDefaults>
 					</rules>
@@ -64,7 +63,6 @@ governing permissions and limitations
 				<executions>
 					<execution>
 						<id>eclipse-transformer-freemarker-jar</id>
-						<phase>package</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
@@ -76,18 +74,8 @@ governing permissions and limitations
 							</artifact>
 						</configuration>
 					</execution>
-
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.freemarker</groupId>
-			<artifactId>freemarker</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-	</dependencies>
-
 </project>

@@ -49,6 +49,7 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.ognl.BeanInfoCacheFactory;
 import com.opensymphony.xwork2.ognl.ExpressionCacheFactory;
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
@@ -435,6 +436,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(ExpressionCacheFactory.class, StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_FACTORY, builder, props, Scope.SINGLETON);
         alias(BeanInfoCacheFactory.class, StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_FACTORY, builder, props, Scope.SINGLETON);
 
+        alias(SecurityMemberAccess.class, StrutsConstants.STRUTS_MEMBER_ACCESS, builder, props, Scope.PROTOTYPE);
         alias(OgnlGuard.class, StrutsConstants.STRUTS_OGNL_GUARD, builder, props, Scope.SINGLETON);
 
         alias(QueryStringBuilder.class, StrutsConstants.STRUTS_URL_QUERY_STRING_BUILDER, builder, props, Scope.SINGLETON);

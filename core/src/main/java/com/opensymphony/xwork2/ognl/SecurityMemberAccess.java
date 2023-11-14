@@ -62,6 +62,11 @@ public class SecurityMemberAccess implements MemberAccess {
     private boolean disallowProxyMemberAccess = false;
     private boolean disallowDefaultPackageAccess = false;
 
+    @Inject
+    public SecurityMemberAccess(@Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS) String allowStaticFieldAccess) {
+        this(BooleanUtils.toBoolean(allowStaticFieldAccess));
+    }
+
     /**
      * SecurityMemberAccess
      * - access decisions based on whether member is static (or not)

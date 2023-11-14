@@ -115,6 +115,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         this.root = compoundRoot;
         this.securityMemberAccess = new SecurityMemberAccess(allowStaticFieldAccess);
         this.context = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
+        this.converter = xworkConverter;
         context.put(VALUE_STACK, this);
         ((OgnlContext) context).setTraceEvaluations(false);
         ((OgnlContext) context).setKeepLastEvaluation(false);
@@ -490,8 +491,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         securityMemberAccess.useExcludeProperties(excludeProperties);
     }
 
-    @Inject
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     protected void setXWorkConverter(final XWorkConverter converter) {
-        this.converter = converter;
+        // no-op
     }
 }

@@ -185,30 +185,6 @@ public class OgnlUtil {
         devModeExcludedClasses = toNewClassesSet(devModeExcludedClasses, commaDelimitedClasses);
     }
 
-    private static Set<String> toClassesSet(String newDelimitedClasses) throws ConfigurationException {
-        Set<String> classNames = commaDelimitedStringToSet(newDelimitedClasses);
-        validateClasses(classNames, OgnlUtil.class.getClassLoader());
-        return unmodifiableSet(classNames);
-    }
-
-    private static Set<String> toNewClassesSet(Set<String> oldClasses, String newDelimitedClasses) throws ConfigurationException {
-        Set<String> classNames = commaDelimitedStringToSet(newDelimitedClasses);
-        validateClasses(classNames, OgnlUtil.class.getClassLoader());
-        Set<String> excludedClasses = new HashSet<>(oldClasses);
-        excludedClasses.addAll(classNames);
-        return unmodifiableSet(excludedClasses);
-    }
-
-    private static void validateClasses(Set<String> classNames, ClassLoader validatingClassLoader) throws ConfigurationException {
-        for (String className : classNames) {
-            try {
-                validatingClassLoader.loadClass(className);
-            } catch (ClassNotFoundException e) {
-                throw new ConfigurationException("Cannot load class for exclusion/exemption configuration: " + className, e);
-            }
-        }
-    }
-
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
     protected void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         excludedPackageNamePatterns = toNewPatternsSet(excludedPackageNamePatterns, commaDelimitedPackagePatterns);
@@ -219,19 +195,6 @@ public class OgnlUtil {
         devModeExcludedPackageNamePatterns = toNewPatternsSet(devModeExcludedPackageNamePatterns, commaDelimitedPackagePatterns);
     }
 
-    private static Set<Pattern> toNewPatternsSet(Set<Pattern> oldPatterns, String newDelimitedPatterns) throws ConfigurationException {
-        Set<String> patterns = commaDelimitedStringToSet(newDelimitedPatterns);
-        Set<Pattern> newPatterns = new HashSet<>(oldPatterns);
-        for (String pattern: patterns) {
-            try {
-                newPatterns.add(Pattern.compile(pattern));
-            } catch (PatternSyntaxException e) {
-                throw new ConfigurationException("Excluded package name patterns could not be parsed due to invalid regex: " + pattern, e);
-            }
-        }
-        return unmodifiableSet(newPatterns);
-    }
-
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
     protected void setExcludedPackageNames(String commaDelimitedPackageNames) {
         excludedPackageNames = toNewPackageNamesSet(excludedPackageNames, commaDelimitedPackageNames);
@@ -240,28 +203,6 @@ public class OgnlUtil {
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, required = false)
     protected void setDevModeExcludedPackageNames(String commaDelimitedPackageNames) {
         devModeExcludedPackageNames = toNewPackageNamesSet(devModeExcludedPackageNames, commaDelimitedPackageNames);
-    }
-
-    private static Set<String> toPackageNamesSet(String newDelimitedPackageNames) throws ConfigurationException {
-        Set<String> packageNames = commaDelimitedStringToSet(newDelimitedPackageNames)
-                .stream().map(s -> strip(s, ".")).collect(toSet());
-        validatePackageNames(packageNames);
-        return unmodifiableSet(packageNames);
-    }
-
-    private static Set<String> toNewPackageNamesSet(Collection<String> oldPackageNames, String newDelimitedPackageNames) throws ConfigurationException {
-        Set<String> packageNames = commaDelimitedStringToSet(newDelimitedPackageNames)
-                .stream().map(s -> strip(s, ".")).collect(toSet());
-        validatePackageNames(packageNames);
-        Set<String> newPackageNames = new HashSet<>(oldPackageNames);
-        newPackageNames.addAll(packageNames);
-        return unmodifiableSet(newPackageNames);
-    }
-
-    private static void validatePackageNames(Collection<String> packageNames) {
-        if (packageNames.stream().anyMatch(s -> Pattern.compile("\\s").matcher(s).find())) {
-            throw new ConfigurationException("Excluded package names could not be parsed due to erroneous whitespace characters: " + packageNames);
-        }
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)

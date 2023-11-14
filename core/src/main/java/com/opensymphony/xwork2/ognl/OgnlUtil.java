@@ -863,8 +863,7 @@ public class OgnlUtil {
             resolver = container.getInstance(CompoundRootAccessor.class);
         }
 
-        SecurityMemberAccess memberAccess = new SecurityMemberAccess(allowStaticFieldAccess);
-        memberAccess.disallowProxyMemberAccess(disallowProxyMemberAccess);
+        SecurityMemberAccess memberAccess = container.getInstance(SecurityMemberAccess.class);
 
         if (devMode) {
             if (!warnReported.get()) {
@@ -875,14 +874,6 @@ public class OgnlUtil {
             memberAccess.useExcludedPackageNamePatterns(devModeExcludedPackageNamePatterns);
             memberAccess.useExcludedPackageNames(devModeExcludedPackageNames);
             memberAccess.useExcludedPackageExemptClasses(devModeExcludedPackageExemptClasses);
-        } else {
-            memberAccess.useExcludedClasses(getExcludedClasses());
-            memberAccess.useExcludedPackageNamePatterns(getExcludedPackageNamePatterns());
-            memberAccess.useExcludedPackageNames(getExcludedPackageNames());
-            memberAccess.useExcludedPackageExemptClasses(getExcludedPackageExemptClasses());
-            memberAccess.useEnforceAllowlistEnabled(isEnforceAllowlistEnabled());
-            memberAccess.useAllowlistClasses(getAllowlistClasses());
-            memberAccess.useAllowlistPackageNames(getAllowlistPackageNames());
         }
 
         return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);

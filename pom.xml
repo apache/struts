@@ -83,6 +83,7 @@
     <modules>
         <module>bom</module>
         <module>freemarker-jakarta</module>
+        <module>freemarker-jakarta-shaded</module>
         <module>core</module>
         <module>plugins</module>
         <module>bundles</module>
@@ -534,6 +535,11 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-freemarker-jakarta</artifactId>
+                <version>${project.version}</version>
+            </dependency>            
+            <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-freemarker-jakarta-shaded</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -48,7 +48,6 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.config.DefaultPropertiesProvider;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -100,7 +99,6 @@ public class OgnlValueStackTest extends XWorkTestCase {
             (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
             container.getInstance(TextProvider.class, "system"), allowStaticFieldAccess);
         container.inject(stack);
-        ognlUtil.setAllowStaticFieldAccess(Boolean.toString(allowStaticFieldAccess));
         return stack;
     }
 

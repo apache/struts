@@ -27,9 +27,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -49,12 +47,8 @@ public class StrutsVelocityContextTest {
     @Mock
     private ValueStack stack;
 
-    private Map<String, Object> stackContext;
-
     @Before
     public void setUp() throws Exception {
-        stackContext = new HashMap<>();
-        when(stack.getContext()).thenReturn(stackContext);
         strutsVelocityContext = new StrutsVelocityContext(singletonList(chainedContext), stack);
     }
 
@@ -71,12 +65,6 @@ public class StrutsVelocityContextTest {
     }
 
     @Test
-    public void getStackContextValue() {
-        stackContext.put("foo", "bar");
-        assertEquals("bar", strutsVelocityContext.internalGet("foo"));
-    }
-
-    @Test
     public void getSuperValue() {
         strutsVelocityContext.put("foo", "bar");
         assertEquals("bar", strutsVelocityContext.internalGet("foo"));
@@ -84,9 +72,6 @@ public class StrutsVelocityContextTest {
 
     @Test
     public void getValuePrecedence() {
-        stackContext.put("foo", "quux");
-        assertEquals("quux", strutsVelocityContext.internalGet("foo"));
-
         when(stack.findValue("foo")).thenReturn("qux");
         assertEquals("qux", strutsVelocityContext.internalGet("foo"));
 

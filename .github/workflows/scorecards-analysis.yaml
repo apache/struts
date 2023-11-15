@@ -22,7 +22,6 @@ on:
   push:
     branches:
       - master
-      - release/struts-7-0-x
 
 permissions: read-all
 

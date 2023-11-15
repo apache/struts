@@ -20,7 +20,9 @@ on:
   schedule:
     - cron: "30 1 * * 6"    # Weekly on Saturdays
   push:
-    branches: [ "master" ]
+    branches:
+      - master
+      - release/struts-7-0-x
 
 permissions: read-all
 

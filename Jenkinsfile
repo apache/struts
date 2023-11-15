@@ -25,92 +25,12 @@ pipeline {
         }
       }
     }
-    stage('JDK 17') {
+    stage('JDK 21') {
       agent {
         label 'ubuntu'
       }
       tools {
-        jdk 'jdk_17_latest'
-        maven 'maven_3_latest'
-      }
-      environment {
-        MAVEN_OPTS = "-Xmx1024m"
-      }
-      stages {
-        stage('Build') {
-          steps {
-            sh './mvnw -B clean install -DskipTests -DskipAssembly'
-          }
-        }
-        stage('Test') {
-          steps {
-            sh './mvnw -B verify -Pcoverage -DskipAssembly'
-          }
-          post {
-            always {
-              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
-              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
-            }
-          }
-        }
-        stage('Code Quality') {
-          when {
-            branch 'master'
-          }
-          steps {
-            withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
-            }
-          }
-        }
-      }
-      post {
-        always {
-          cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
-        }
-      }
-    }
-    stage('JDK 11') {
-      agent {
-        label 'ubuntu'
-      }
-      tools {
-        jdk 'jdk_11_latest'
-        maven 'maven_3_latest'
-      }
-      environment {
-        MAVEN_OPTS = "-Xmx1024m"
-      }
-      stages {
-        stage('Build') {
-          steps {
-            sh './mvnw -B clean install -DskipTests -DskipAssembly'
-          }
-        }
-        stage('Test') {
-          steps {
-            sh './mvnw -B test'
-          }
-          post {
-            always {
-              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
-              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
-            }
-          }
-        }
-      }
-      post {
-        always {
-          cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
-        }
-      }
-    }
-    stage('JDK 8') {
-      agent {
-        label 'ubuntu'
-      }
-      tools {
-        jdk 'jdk_1.8_latest'
+        jdk 'jdk_21_latest'
         maven 'maven_3_latest'
       }
       environment {
@@ -174,6 +94,51 @@ pipeline {
                     verbose: true
                 )
             ])
+          }
+        }
+      }
+      post {
+        always {
+          cleanWs deleteDirs: true, patterns: [[pattern: '**/target/**', type: 'INCLUDE']]
+        }
+      }
+    }
+    stage('JDK 17') {
+      agent {
+        label 'ubuntu'
+      }
+      tools {
+        jdk 'jdk_17_latest'
+        maven 'maven_3_latest'
+      }
+      environment {
+        MAVEN_OPTS = "-Xmx1024m"
+      }
+      stages {
+        stage('Build') {
+          steps {
+            sh './mvnw -B clean install -DskipTests -DskipAssembly'
+          }
+        }
+        stage('Test') {
+          steps {
+            sh './mvnw -B verify -Pcoverage -DskipAssembly'
+          }
+          post {
+            always {
+              junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
+              junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
+            }
+          }
+        }
+        stage('Code Quality') {
+          when {
+            branch 'master'
+          }
+          steps {
+            withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
+              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+            }
           }
         }
       }

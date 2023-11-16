@@ -160,11 +160,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         setRoot(xworkConverter, accessor, compoundRoot, new SecurityMemberAccess(allowStaticFieldAccess));
     }
 
-    @Inject
-    protected void setSecurityMemberAccess(SecurityMemberAccess securityMemberAccess) {
-        this.securityMemberAccess = securityMemberAccess;
-    }
-
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);

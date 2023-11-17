@@ -377,7 +377,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
-    protected void useExcludedClasses(String commaDelimitedClasses) {
+    public void useExcludedClasses(String commaDelimitedClasses) {
         Set<String> newExcludedClasses = new HashSet<>(toNewClassesSet(excludedClasses, commaDelimitedClasses));
         newExcludedClasses.add(Object.class.getName());
         if (!allowStaticFieldAccess) {

@@ -715,8 +715,8 @@ public class SecurityMemberAccessTest {
         sma.useExcludedClasses(MemberAccess.class.getName());
 
         String propertyName = "excludedClasses";
-        String setter = "setExcludedClasses";
-        Member member = SecurityMemberAccess.class.getMethod(setter, Set.class);
+        String setter = "useExcludedClasses";
+        Member member = SecurityMemberAccess.class.getMethod(setter, String.class);
 
         // when
         boolean accessible = sma.isAccessible(context, sma, member, propertyName);
@@ -731,8 +731,8 @@ public class SecurityMemberAccessTest {
         sma.useExcludedClasses(SecurityMemberAccess.class.getName());
 
         String propertyName = "excludedClasses";
-        String setter = "setExcludedClasses";
-        Member member = SecurityMemberAccess.class.getMethod(setter, Set.class);
+        String setter = "useExcludedClasses";
+        Member member = SecurityMemberAccess.class.getMethod(setter, String.class);
 
         // when
         boolean accessible = sma.isAccessible(context, sma, member, propertyName);

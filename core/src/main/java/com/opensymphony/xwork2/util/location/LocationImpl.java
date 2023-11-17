@@ -202,6 +202,15 @@ public class LocationImpl implements Location, Serializable {
         return LocationUtils.toString(this);
     }
 
+    /**
+     * Ensure serialized unknown location resolve to {@link Location#UNKNOWN}.
+     *
+     * @return resolved location as object
+     */
+    private Object readResolve() {
+        return this.equals(Location.UNKNOWN) ? Location.UNKNOWN : this;
+    }
+
     private boolean testEquals(Object object1, Object object2) {
         if (object1 == object2) {
             return true;

@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.ognl;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.ClearableValueStack;
@@ -33,6 +34,7 @@ import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
+import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -515,6 +517,22 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         return root.size();
     }
 
+    /**
+     * Retained for serializability - see {@link com.opensymphony.xwork2.ognl.OgnlValueStackTest#testSerializable}
+     */
+    private Object readResolve() {
+        // TODO: this should be done better
+        ActionContext ac = ActionContext.getContext();
+        Container cont = ac.getContainer();
+        XWorkConverter xworkConverter = cont.getInstance(XWorkConverter.class);
+        CompoundRootAccessor accessor = (CompoundRootAccessor) cont.getInstance(PropertyAccessor.class, CompoundRoot.class.getName());
+        TextProvider prov = cont.getInstance(TextProvider.class, "system");
+        SecurityMemberAccess sma = cont.getInstance(SecurityMemberAccess.class);
+        OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, sma);
+        aStack.setOgnlUtil(cont.getInstance(OgnlUtil.class));
+        aStack.setRoot(xworkConverter, accessor, this.root, sma);
+        return aStack;
+    }
 
     public void clearContextValues() {
         //this is an OGNL ValueStack so the context will be an OgnlContext

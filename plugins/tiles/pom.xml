@@ -80,14 +80,15 @@
             <artifactId>velocity-engine-core</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.apache.velocity.tools</groupId>
-            <artifactId>velocity-tools-view</artifactId>
+         <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-velocity-tools-view-jakarta</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
-            <groupId>org.apache.velocity.tools</groupId>
-            <artifactId>velocity-tools-view-jsp</artifactId>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-velocity-tools-jsp-jakarta</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

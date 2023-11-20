@@ -170,6 +170,16 @@
                         <artifactId>struts2-sitemesh2-jakarta</artifactId>
                         <destFileName>struts2-sitemesh2-jakarta.jar</destFileName>
                       </artifactItem>
+                      <artifactItem>
+                        <groupId>org.apache.struts</groupId>
+                        <artifactId>struts2-velocity-tools-view-jakarta</artifactId>
+                        <destFileName>struts2-velocity-tools-view-jakarta.jar</destFileName>
+                      </artifactItem>
+                      <artifactItem>
+                        <groupId>org.apache.struts</groupId>
+                        <artifactId>struts2-velocity-tools-jsp-jakarta</artifactId>
+                        <destFileName>struts2-velocity-tools-jsp-jakarta.jar</destFileName>
+                      </artifactItem>
                     </artifactItems>
                     <overWriteReleases>false</overWriteReleases>
                     <overWriteSnapshots>false</overWriteSnapshots>
@@ -224,7 +234,12 @@
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
                     <webApp>                      
-                      <extraClasspath>${project.build.directory}/extraclasspath/struts2-freemarker-jakarta.jar,${project.build.directory}/extraclasspath/struts2-sitemesh2-jakarta.jar</extraClasspath>
+                      <extraClasspath>
+                        ${project.build.directory}/extraclasspath/struts2-freemarker-jakarta.jar,
+                        ${project.build.directory}/extraclasspath/struts2-sitemesh2-jakarta.jar,
+                        ${project.build.directory}/extraclasspath/struts2-velocity-tools-view-jakarta.jar,
+                        ${project.build.directory}/extraclasspath/struts2-velocity-tools-jsp-jakarta
+                      </extraClasspath>
                       <contextPath>/struts2-showcase</contextPath>
                       <descriptor>${basedir}/src/main/webapp/WEB-INF/web.xml</descriptor>
                     </webApp>

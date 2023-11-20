@@ -84,6 +84,8 @@
         <module>bom</module>
         <module>freemarker-jakarta</module>
         <module>sitemesh2-jakarta</module>
+        <module>velocity-tools-view-jakarta</module>
+        <module>velocity-tools-jsp-jakarta</module>
         <module>core</module>
         <module>plugins</module>
         <module>bundles</module>
@@ -122,6 +124,7 @@
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <freemarker.version>2.3.32</freemarker.version>
         <sitemesh.version>2.5.0</sitemesh.version>
+        <velocity-tools.version>3.1</velocity-tools.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>
@@ -693,15 +696,21 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.velocity.tools</groupId>
-                <artifactId>velocity-tools-view</artifactId>
-                <version>3.1</version>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-velocity-tools-view-jakarta</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.velocity.tools</groupId>
-                <artifactId>velocity-tools-view-jsp</artifactId>
-                <version>3.1</version>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-velocity-tools-jsp-jakarta</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+              <groupId>org.apache.velocity.tools</groupId>
+              <artifactId>velocity-tools-generic</artifactId>
+              <version>${velocity-tools.version}</version>
             </dependency>
 
             <dependency>

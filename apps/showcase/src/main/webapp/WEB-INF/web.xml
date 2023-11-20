@@ -122,7 +122,7 @@
         <load-on-startup>3</load-on-startup>
     </servlet>
 
-    <servlet>
+    <!-- servlet>
         <servlet-name>sitemesh-velocity</servlet-name>
         <servlet-class>org.apache.struts2.sitemesh.VelocityDecoratorServlet</servlet-class>
         <init-param>
@@ -130,7 +130,7 @@
             <param-value>UTF-8</param-value>
         </init-param>
         <load-on-startup>4</load-on-startup>
-    </servlet>
+    </servlet-->
 
     <servlet>
         <servlet-name>testServlet</servlet-name>
@@ -142,10 +142,10 @@
         <url-pattern>*.ftl</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
+    <!-- servlet-mapping>
         <servlet-name>sitemesh-velocity</servlet-name>
         <url-pattern>*.vm</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping-->
 
     <servlet-mapping>
         <servlet-name>strutsServlet</servlet-name>

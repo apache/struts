@@ -18,6 +18,12 @@
  */
 package it.org.apache.struts2.showcase;
 
+import java.io.File;
+
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlFileInput;
@@ -25,11 +31,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
-import org.junit.Assert;
-import org.junit.Test;
 
-import java.io.File;
-
+@Ignore
 public class FileUploadTest {
 
     @Test

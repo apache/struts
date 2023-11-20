@@ -85,7 +85,7 @@ public final class VelocityRendererBuilder {
      * @return The Velocity renderer.
      */
     public VelocityRenderer build() {
-       // VelocityView velocityView = new VelocityView(new ApplicationContextJeeConfig(applicationContext, params));
-        return null; //new VelocityRenderer(velocityView);
+        VelocityView velocityView = new VelocityView(new ApplicationContextJeeConfig(applicationContext, params));
+        return new VelocityRenderer(velocityView);
     }
 }

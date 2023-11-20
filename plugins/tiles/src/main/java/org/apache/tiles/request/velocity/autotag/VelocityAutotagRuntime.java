@@ -49,12 +49,9 @@ public class VelocityAutotagRuntime extends Directive implements AutotagRuntime<
     @Override
     public Request createRequest() {
         ViewContext viewContext = (ViewContext) context.getInternalUserContext();
-        
-        //TODO: velocity-tools requires javax
-        
-        HttpServletRequest request = null; //viewContext.getRequest();
-        HttpServletResponse response = null; //viewContext.getResponse();
-        ServletContext servletContext = null; //viewContext.getServletContext();
+        HttpServletRequest request = viewContext.getRequest();
+        HttpServletResponse response = viewContext.getResponse();
+        ServletContext servletContext = viewContext.getServletContext();
         return VelocityRequest.createVelocityRequest(ServletUtil.getApplicationContext(servletContext), request,
                 response, context, writer);
     }

@@ -20,52 +20,52 @@
  */
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.apache.struts</groupId>
-		<artifactId>struts2-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>struts2-sitemesh2-jakarta</artifactId>
-	<packaging>jar</packaging>
-	<name>Struts 2 Jakarta EE Compatible Sitemesh2</name>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.struts</groupId>
+    <artifactId>struts2-parent</artifactId>
+    <version>7.0.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>struts2-sitemesh2-jakarta</artifactId>
+  <packaging>jar</packaging>
+  <name>Struts 2 Jakarta EE Compatible Sitemesh2</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.site.skip>true</maven.site.skip>
-		<maven.site.deploy.skip>true</maven.site.deploy.skip>
-	</properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.site.skip>true</maven.site.skip>
+    <maven.site.deploy.skip>true</maven.site.deploy.skip>
+  </properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.transformer</groupId>
-				<artifactId>transformer-maven-plugin</artifactId>
-				<version>0.5.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<rules>
-						<jakartaDefaults>true</jakartaDefaults>
-					</rules>
-				</configuration>
-				<executions>
-					<execution>
-						<id>eclipse-transformer-freemarker-jar</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<artifact>
-								<groupId>opensymphony</groupId>
-								<artifactId>sitemesh</artifactId>
-								<version>${sitemesh.version}</version>
-							</artifact>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.transformer</groupId>
+        <artifactId>transformer-maven-plugin</artifactId>
+        <version>0.5.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <rules>
+            <jakartaDefaults>true</jakartaDefaults>
+          </rules>
+        </configuration>
+        <executions>
+          <execution>
+            <id>eclipse-transformer-freemarker-jar</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <artifact>
+                <groupId>opensymphony</groupId>
+                <artifactId>sitemesh</artifactId>
+                <version>${sitemesh.version}</version>
+              </artifact>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

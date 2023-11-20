@@ -27,15 +27,13 @@ import jakarta.servlet.ServletContext;
 
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.servlet.ServletUtil;
-// import org.apache.velocity.tools.view.JeeConfig;
+import org.apache.velocity.tools.view.JeeConfig;
 
 /**
  * Implements JeeConfig to use parameters set through
  */
-public class ApplicationContextJeeConfig /*implements JeeConfig*/ {
+public class ApplicationContextJeeConfig implements JeeConfig {
 
-	// TODO: Velocity-tools requires javax
-	
     /**
      * The application context.
      */

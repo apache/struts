@@ -36,9 +36,7 @@ import org.apache.velocity.tools.view.VelocityView;
  * the response. To initialize it correctly, call #setParameter(String, String)
  * for all the parameters that you want to set, and then call #commit().
  */
-public class VelocityRenderer /*implements Renderer*/ {
-	
-	// TODO: Velocity-tools requires javax
+public class VelocityRenderer implements Renderer {
 
     /**
      * The VelocityView object to use.
@@ -54,7 +52,7 @@ public class VelocityRenderer /*implements Renderer*/ {
         this.velocityView = velocityView;
     }
 
-   /* @Override
+    @Override
     public void render(String path, Request request) throws IOException {
         if (path == null) {
             throw new CannotRenderException("Cannot dispatch a null path");
@@ -69,7 +67,7 @@ public class VelocityRenderer /*implements Renderer*/ {
 
         // merge the template and context into the writer
         velocityView.merge(template, context, request.getWriter());
-    }*/
+    }
 
     public boolean isRenderable(String path, Request request) {
         return path != null && path.startsWith("/") && path.endsWith(".vm");

@@ -98,16 +98,6 @@
         <listener-class>org.apache.struts2.dispatcher.listener.StrutsListener</listener-class>
     </listener>
 
-    <!-- SNIPPET START: dwr -->
-
-    <servlet>
-        <servlet-name>dwr</servlet-name>
-        <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </servlet>
     <servlet>
         <servlet-name>JspSupportServlet</servlet-name>
         <servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
@@ -132,7 +122,7 @@
         <load-on-startup>3</load-on-startup>
     </servlet>
 
-    <servlet>
+    <!-- servlet>
         <servlet-name>sitemesh-velocity</servlet-name>
         <servlet-class>org.apache.struts2.sitemesh.VelocityDecoratorServlet</servlet-class>
         <init-param>
@@ -140,7 +130,7 @@
             <param-value>UTF-8</param-value>
         </init-param>
         <load-on-startup>4</load-on-startup>
-    </servlet>
+    </servlet-->
 
     <servlet>
         <servlet-name>testServlet</servlet-name>
@@ -148,19 +138,14 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>dwr</servlet-name>
-        <url-pattern>/dwr/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>sitemesh-freemarker</servlet-name>
         <url-pattern>*.ftl</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
+    <!-- servlet-mapping>
         <servlet-name>sitemesh-velocity</servlet-name>
         <url-pattern>*.vm</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping-->
 
     <servlet-mapping>
         <servlet-name>strutsServlet</servlet-name>

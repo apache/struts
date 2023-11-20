@@ -147,6 +147,38 @@
     <build>
         <plugins>
             <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <executions>
+                <execution>
+                  <?m2e ignore?>
+                  <id>copy-dependencies</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                    <outputDirectory>${project.build.directory}/extraclasspath</outputDirectory>
+                    <artifactItems>
+                      <artifactItem>
+                        <groupId>org.apache.struts</groupId>
+                        <artifactId>struts2-freemarker-jakarta</artifactId>
+                        <destFileName>struts2-freemarker-jakarta.jar</destFileName>
+                      </artifactItem>
+                      <artifactItem>
+                        <groupId>org.apache.struts</groupId>
+                        <artifactId>struts2-sitemesh2-jakarta</artifactId>
+                        <destFileName>struts2-sitemesh2-jakarta.jar</destFileName>
+                      </artifactItem>
+                    </artifactItems>
+                    <overWriteReleases>false</overWriteReleases>
+                    <overWriteSnapshots>false</overWriteSnapshots>
+                    <overWriteIfNewer>true</overWriteIfNewer>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0-M6</version>
@@ -191,10 +223,11 @@
                     </httpConnector>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
-                    <webAppConfig>
-                        <contextPath>/struts2-showcase</contextPath>
-                        <descriptor>${basedir}/src/main/webapp/WEB-INF/web.xml</descriptor>
-                    </webAppConfig>
+                    <webApp>                      
+                      <extraClasspath>${project.build.directory}/extraclasspath/struts2-freemarker-jakarta.jar,${project.build.directory}/extraclasspath/struts2-sitemesh2-jakarta.jar</extraClasspath>
+                      <contextPath>/struts2-showcase</contextPath>
+                      <descriptor>${basedir}/src/main/webapp/WEB-INF/web.xml</descriptor>
+                    </webApp>
                 </configuration>
                 <executions>
                     <execution>

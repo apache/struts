@@ -59,6 +59,9 @@ import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.strip;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_ENABLE;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 import static org.apache.struts2.ognl.OgnlGuard.EXPR_BLOCKED;
 
 
@@ -89,6 +92,10 @@ public class OgnlUtil {
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
 
+    private boolean enforceAllowlistEnabled = false;
+    private Set<String> allowlistClasses = emptySet();
+    private Set<String> allowlistPackageNames = emptySet();
+
     private Set<String> devModeExcludedClasses = emptySet();
     private Set<Pattern> devModeExcludedPackageNamePatterns = emptySet();
     private Set<String> devModeExcludedPackageNames = emptySet();
@@ -96,8 +103,8 @@ public class OgnlUtil {
 
     private Container container;
     private boolean allowStaticFieldAccess = true;
-    private boolean disallowProxyMemberAccess;
-    private boolean disallowDefaultPackageAccess;
+    private boolean disallowProxyMemberAccess = false;
+    private boolean disallowDefaultPackageAccess = false;
 
     /**
      * Construct a new OgnlUtil instance for use with the framework
@@ -178,6 +185,12 @@ public class OgnlUtil {
         devModeExcludedClasses = toNewClassesSet(devModeExcludedClasses, commaDelimitedClasses);
     }
 
+    private static Set<String> toClassesSet(String newDelimitedClasses) throws ConfigurationException {
+        Set<String> classNames = commaDelimitedStringToSet(newDelimitedClasses);
+        validateClasses(classNames, OgnlUtil.class.getClassLoader());
+        return unmodifiableSet(classNames);
+    }
+
     private static Set<String> toNewClassesSet(Set<String> oldClasses, String newDelimitedClasses) throws ConfigurationException {
         Set<String> classNames = commaDelimitedStringToSet(newDelimitedClasses);
         validateClasses(classNames, OgnlUtil.class.getClassLoader());
@@ -229,25 +242,36 @@ public class OgnlUtil {
         devModeExcludedPackageNames = toNewPackageNamesSet(devModeExcludedPackageNames, commaDelimitedPackageNames);
     }
 
-    private static Set<String> toNewPackageNamesSet(Set<String> oldPackageNames, String newDelimitedPackageNames) throws ConfigurationException {
+    private static Set<String> toPackageNamesSet(String newDelimitedPackageNames) throws ConfigurationException {
         Set<String> packageNames = commaDelimitedStringToSet(newDelimitedPackageNames)
                 .stream().map(s -> strip(s, ".")).collect(toSet());
-        if (packageNames.stream().anyMatch(s -> Pattern.compile("\\s").matcher(s).find())) {
-            throw new ConfigurationException("Excluded package names could not be parsed due to erroneous whitespace characters: " + newDelimitedPackageNames);
-        }
+        validatePackageNames(packageNames);
+        return unmodifiableSet(packageNames);
+    }
+
+    private static Set<String> toNewPackageNamesSet(Collection<String> oldPackageNames, String newDelimitedPackageNames) throws ConfigurationException {
+        Set<String> packageNames = commaDelimitedStringToSet(newDelimitedPackageNames)
+                .stream().map(s -> strip(s, ".")).collect(toSet());
+        validatePackageNames(packageNames);
         Set<String> newPackageNames = new HashSet<>(oldPackageNames);
         newPackageNames.addAll(packageNames);
         return unmodifiableSet(newPackageNames);
     }
 
+    private static void validatePackageNames(Collection<String> packageNames) {
+        if (packageNames.stream().anyMatch(s -> Pattern.compile("\\s").matcher(s).find())) {
+            throw new ConfigurationException("Excluded package names could not be parsed due to erroneous whitespace characters: " + packageNames);
+        }
+    }
+
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
     public void setExcludedPackageExemptClasses(String commaDelimitedClasses) {
-        excludedPackageExemptClasses = toNewClassesSet(excludedPackageExemptClasses, commaDelimitedClasses);
+        excludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
     public void setDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
-        devModeExcludedPackageExemptClasses = toNewClassesSet(devModeExcludedPackageExemptClasses, commaDelimitedClasses);
+        devModeExcludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
     }
 
     public Set<String> getExcludedClasses() {
@@ -264,6 +288,33 @@ public class OgnlUtil {
 
     public Set<String> getExcludedPackageExemptClasses() {
         return excludedPackageExemptClasses;
+    }
+
+    @Inject(value = STRUTS_ALLOWLIST_ENABLE, required = false)
+    protected void setEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
+        this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
+    }
+
+    @Inject(value = STRUTS_ALLOWLIST_CLASSES, required = false)
+    protected void setAllowlistClasses(String commaDelimitedClasses) {
+        allowlistClasses = toClassesSet(commaDelimitedClasses);
+    }
+
+    @Inject(value = STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
+    protected void setAllowlistPackageNames(String commaDelimitedPackageNames) {
+        allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
+    }
+
+    public boolean isEnforceAllowlistEnabled() {
+        return enforceAllowlistEnabled;
+    }
+
+    public Set<String> getAllowlistClasses() {
+        return allowlistClasses;
+    }
+
+    public Set<String> getAllowlistPackageNames() {
+        return allowlistPackageNames;
     }
 
     @Inject
@@ -884,10 +935,13 @@ public class OgnlUtil {
             memberAccess.useExcludedPackageNames(devModeExcludedPackageNames);
             memberAccess.useExcludedPackageExemptClasses(devModeExcludedPackageExemptClasses);
         } else {
-            memberAccess.useExcludedClasses(excludedClasses);
-            memberAccess.useExcludedPackageNamePatterns(excludedPackageNamePatterns);
-            memberAccess.useExcludedPackageNames(excludedPackageNames);
-            memberAccess.useExcludedPackageExemptClasses(excludedPackageExemptClasses);
+            memberAccess.useExcludedClasses(getExcludedClasses());
+            memberAccess.useExcludedPackageNamePatterns(getExcludedPackageNamePatterns());
+            memberAccess.useExcludedPackageNames(getExcludedPackageNames());
+            memberAccess.useExcludedPackageExemptClasses(getExcludedPackageExemptClasses());
+            memberAccess.useEnforceAllowlistEnabled(isEnforceAllowlistEnabled());
+            memberAccess.useAllowlistClasses(getAllowlistClasses());
+            memberAccess.useAllowlistPackageNames(getAllowlistPackageNames());
         }
 
         return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);

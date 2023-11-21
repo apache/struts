@@ -432,6 +432,12 @@ public final class StrutsConstants {
     public static final String STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES = "struts.devMode.excludedPackageNames";
     public static final String STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES = "struts.devMode.excludedPackageExemptClasses";
 
+    /** Boolean to enable strict allowlist processing of all OGNL expression calls. */
+    public static final String STRUTS_ALLOWLIST_ENABLE = "struts.allowlist.enable";
+    /** Comma delimited set of allowed classes which CAN be accessed via OGNL expressions. Both target and member classes of OGNL expression must be allowlisted. */
+    public static final String STRUTS_ALLOWLIST_CLASSES = "struts.allowlist.classes";
+    /** Comma delimited set of package names, of which all its classes, and all classes in its subpackages, CAN be accessed via OGNL expressions. Both target and member classes of OGNL expression must be allowlisted. */
+    public static final String STRUTS_ALLOWLIST_PACKAGE_NAMES = "struts.allowlist.packageNames";
 
     /** Dedicated services to check if passed string is excluded/accepted */
     public static final String STRUTS_EXCLUDED_PATTERNS_CHECKER = "struts.excludedPatterns.checker";

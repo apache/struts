@@ -18,12 +18,15 @@
  */
 package com.opensymphony.xwork2.ognl;
 
+import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.test.TestBean2;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,6 +35,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -792,6 +796,79 @@ public class SecurityMemberAccessTest {
 
         // then
         assertTrue("package java.lang. is accessible!", actual);
+    }
+
+    @Test
+    public void classInclusion() throws Exception {
+
+        sma.useEnforceAllowlistEnabled(true);
+
+        TestBean2 bean = new TestBean2();
+        Method method = TestBean2.class.getMethod("getData");
+
+        assertFalse(sma.checkAllowlist(bean, method));
+
+        sma.useAllowlistClasses(new HashSet<>(singletonList(TestBean2.class.getName())));
+
+        assertTrue(sma.checkAllowlist(bean, method));
+    }
+
+    @Test
+    public void packageInclusion() throws Exception {
+        sma.useEnforceAllowlistEnabled(true);
+
+        TestBean2 bean = new TestBean2();
+        Method method = TestBean2.class.getMethod("getData");
+
+        assertFalse(sma.checkAllowlist(bean, method));
+
+        sma.useAllowlistPackageNames(new HashSet<>(singletonList(TestBean2.class.getPackage().getName())));
+
+        assertTrue(sma.checkAllowlist(bean, method));
+    }
+
+    @Test
+    public void classInclusion_subclass() throws Exception {
+        sma.useEnforceAllowlistEnabled(true);
+        sma.useAllowlistClasses(new HashSet<>(singletonList(TestBean2.class.getName())));
+
+        TestBean2 bean = new TestBean2();
+        Method method = TestBean2.class.getMethod("getName");
+
+        assertFalse(sma.checkAllowlist(bean, method));
+    }
+
+    @Test
+    public void classInclusion_subclass_both() throws Exception {
+        sma.useEnforceAllowlistEnabled(true);
+        sma.useAllowlistClasses(new HashSet<>(asList(TestBean.class.getName(), TestBean2.class.getName())));
+
+        TestBean2 bean = new TestBean2();
+        Method method = TestBean2.class.getMethod("getName");
+
+        assertTrue(sma.checkAllowlist(bean, method));
+    }
+
+    @Test
+    public void packageInclusion_subclass() throws Exception {
+        sma.useEnforceAllowlistEnabled(true);
+        sma.useAllowlistPackageNames(new HashSet<>(singletonList(TestBean2.class.getPackage().getName())));
+
+        TestBean2 bean = new TestBean2();
+        Method method = TestBean2.class.getMethod("getName");
+
+        assertFalse(sma.checkAllowlist(bean, method));
+    }
+
+    @Test
+    public void packageInclusion_subclass_both() throws Exception {
+        sma.useEnforceAllowlistEnabled(true);
+        sma.useAllowlistPackageNames(new HashSet<>(asList(TestBean.class.getPackage().getName(), TestBean2.class.getPackage().getName())));
+
+        TestBean2 bean = new TestBean2();
+        Method method = TestBean2.class.getMethod("getName");
+
+        assertTrue(sma.checkAllowlist(bean, method));
     }
 
     private static String formGetterName(String propertyName) {

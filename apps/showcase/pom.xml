@@ -233,7 +233,7 @@
                     </httpConnector>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
-                    <webApp>                      
+                    <webApp>
                       <extraClasspath>
                         ${project.build.directory}/extraclasspath/struts2-freemarker-jakarta.jar,
                         ${project.build.directory}/extraclasspath/struts2-sitemesh2-jakarta.jar,

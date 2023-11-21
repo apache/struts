@@ -103,7 +103,7 @@
       </fileSet>
 
       <!-- Plugins -->
-      <!-- 
+      <!--
       <fileSet>
         <directory>../plugins/$plugin/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-$plugin-plugin</outputDirectory>
@@ -124,6 +124,10 @@
       <fileSet>
         <directory>../plugins/convention/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-convention-plugin/apidocs</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/embeddedjsp/target/apidocs</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-embeddedjsp-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/gxp/target/apidocs</directory>
@@ -186,12 +190,12 @@
     <fileSet>
        <directory>../bundles/admin/target/site</directory>
        <outputDirectory>docs/struts2-bundles/admin</outputDirectory>
-    </fileSet>  
-    
+    </fileSet>
+
     <fileSet>
        <directory>../bundles/demo/target/site</directory>
        <outputDirectory>docs/struts2-bundles/demo</outputDirectory>
-    </fileSet>  
+    </fileSet>
 
     <!-- Include the source code in the assembly -->
     <fileSet>

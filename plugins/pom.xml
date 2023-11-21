@@ -37,6 +37,7 @@
         <module>cdi</module>
         <module>config-browser</module>
         <module>convention</module>
+        <module>embeddedjsp</module>
         <module>gxp</module>
         <module>jasperreports</module>
         <module>javatemplates</module>
@@ -44,9 +45,10 @@
         <module>json</module>
         <module>junit</module>
         <module>osgi</module>
+        <module>oval</module>
         <module>plexus</module>
         <module>rest</module>
-        <module>sitemesh</module>        
+        <module>sitemesh</module>
         <module>spring</module>
         <module>testng</module>
         <module>tiles</module>
@@ -87,12 +89,12 @@
 
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
-			<artifactId>jakarta.servlet.jsp-api</artifactId> 
+			<artifactId>jakarta.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId> 
+			<artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 

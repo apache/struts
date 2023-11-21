@@ -706,7 +706,7 @@
                 <artifactId>struts2-velocity-tools-jsp-jakarta</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
+
             <dependency>
               <groupId>org.apache.velocity.tools</groupId>
               <artifactId>velocity-tools-generic</artifactId>

@@ -165,11 +165,6 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-dwr-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-jasperreports-plugin</artifactId>
         </dependency>
 
@@ -185,17 +180,7 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-pell-multipart-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-plexus-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-portlet-plugin</artifactId>
         </dependency>
 
         <dependency>
@@ -219,11 +204,6 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-tiles-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-oval-plugin</artifactId>
         </dependency>
 
         <dependency>

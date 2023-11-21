@@ -37,7 +37,6 @@
         <module>cdi</module>
         <module>config-browser</module>
         <module>convention</module>
-        <module>dwr</module>
         <module>embeddedjsp</module>
         <module>gxp</module>
         <module>jasperreports</module>
@@ -47,12 +46,7 @@
         <module>junit</module>
         <module>osgi</module>
         <module>oval</module>
-        <module>pell-multipart</module>
         <module>plexus</module>
-        <module>portlet</module>
-        <module>portlet-junit</module>
-        <module>portlet-mocks</module>
-        <module>portlet-tiles</module>
         <module>rest</module>
         <module>sitemesh</module>
         <module>spring</module>

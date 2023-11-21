@@ -83,11 +83,6 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-dwr-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-embeddedjsp-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>
@@ -128,27 +123,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-oval-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-pell-multipart-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-plexus-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-portlet-plugin</artifactId>
-                <version>${struts-version.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-portlet-tiles-plugin</artifactId>
                 <version>${struts-version.version}</version>
             </dependency>
             <dependency>

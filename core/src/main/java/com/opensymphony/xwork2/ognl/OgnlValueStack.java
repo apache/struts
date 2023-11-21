@@ -93,6 +93,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         securityMemberAccess.useExcludedPackageNamePatterns(ognlUtil.getExcludedPackageNamePatterns());
         securityMemberAccess.useExcludedPackageNames(ognlUtil.getExcludedPackageNames());
         securityMemberAccess.useExcludedPackageExemptClasses(ognlUtil.getExcludedPackageExemptClasses());
+        securityMemberAccess.useEnforceAllowlistEnabled(ognlUtil.isEnforceAllowlistEnabled());
+        securityMemberAccess.useAllowlistClasses(ognlUtil.getAllowlistClasses());
+        securityMemberAccess.useAllowlistPackageNames(ognlUtil.getAllowlistPackageNames());
         securityMemberAccess.disallowProxyMemberAccess(ognlUtil.isDisallowProxyMemberAccess());
         securityMemberAccess.disallowDefaultPackageAccess(ognlUtil.isDisallowDefaultPackageAccess());
     }

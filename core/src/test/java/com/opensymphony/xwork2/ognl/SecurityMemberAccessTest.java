@@ -19,21 +19,29 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.test.TestBean2;
+import com.opensymphony.xwork2.util.Foo;
 import ognl.MemberAccess;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -52,6 +60,82 @@ public class SecurityMemberAccessTest {
 
     protected void assignNewSma(boolean allowStaticFieldAccess) {
         sma = new SecurityMemberAccess(allowStaticFieldAccess);
+    }
+
+    private <T> T reflectField(String fieldName) throws IllegalAccessException {
+        return (T) FieldUtils.readField(sma, fieldName, true);
+    }
+
+    @Test
+    public void defaultExclusionList() throws Exception {
+        Set<String> excludedClasses = reflectField("excludedClasses");
+        assertThat(excludedClasses).containsExactly(Object.class.getName());
+
+        assignNewSma(false);
+        excludedClasses = reflectField("excludedClasses");
+        assertThat(excludedClasses).containsExactlyInAnyOrder(Object.class.getName(), Class.class.getName());
+    }
+
+    @Test
+    public void configurationCollectionsImmutable() throws Exception {
+        List<String> fields = Arrays.asList(
+                "excludedClasses",
+                "excludedPackageNames",
+                "excludedPackageNamePatterns",
+                "excludedPackageExemptClasses",
+                "allowlistClasses",
+                "allowlistPackageNames",
+                "excludeProperties",
+                "acceptProperties");
+        for (String field : fields) {
+            Collection<String> fieldVal = reflectField(field);
+            assertThrows(UnsupportedOperationException.class, () -> fieldVal.add("foo"));
+            if (!fieldVal.isEmpty()) {
+                assertThrows(UnsupportedOperationException.class, () -> fieldVal.remove(fieldVal.iterator().next()));
+                assertThrows(UnsupportedOperationException.class, fieldVal::clear);
+            }
+        }
+    }
+
+    @Test
+    public void exclusionListsAreAdditive_classes() throws Exception {
+        Collection<String> fieldVal = reflectField("excludedClasses");
+        Set<String> existing = new HashSet<>(fieldVal);
+
+        Collection<String> newExcludedClasses = Arrays.asList(FooBar.class.getName(), String.class.getName());
+        sma.useExcludedClasses(String.join(",", newExcludedClasses));
+        existing.addAll(newExcludedClasses);
+
+        fieldVal = reflectField("excludedClasses");
+        assertThat(fieldVal).containsExactlyInAnyOrderElementsOf(existing);
+    }
+
+    @Test
+    public void exclusionListsAreAdditive_packages() throws Exception {
+        sma.useExcludedPackageNames(Foo.class.getPackage().getName());
+        Collection<String> fieldVal = reflectField("excludedPackageNames");
+        Set<String> existing = new HashSet<>(fieldVal);
+
+        Collection<String> newExcludedPackages = Arrays.asList(FooBar.class.getPackage().getName(), String.class.getPackage().getName());
+        sma.useExcludedPackageNames(String.join(",", newExcludedPackages));
+        existing.addAll(newExcludedPackages);
+
+        fieldVal = reflectField("excludedPackageNames");
+        assertThat(fieldVal).containsExactlyInAnyOrderElementsOf(existing);
+    }
+
+    @Test
+    public void useExcludedPackageNames() {
+        assertThrows(ConfigurationException.class, () -> sma.useExcludedPackageNames("java.lang\njava.awt"));
+        assertThrows(ConfigurationException.class, () -> sma.useExcludedPackageNames("java.lang\tjava.awt"));
+        ConfigurationException e = assertThrows(ConfigurationException.class, () -> sma.useExcludedPackageNames("java.lang java.awt"));
+        assertTrue(e.getMessage().contains("erroneous whitespace characters"));
+    }
+
+    @Test
+    public void useExcludedPackagePatterns() {
+        ConfigurationException e = assertThrows(ConfigurationException.class, () -> sma.useExcludedPackageNamePatterns("["));
+        assertTrue(e.getMessage().contains("invalid regex"));
     }
 
     @Test

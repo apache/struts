@@ -61,6 +61,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+
 public class OgnlUtilTest extends XWorkTestCase {
 
     // Fields for static field access test
@@ -1174,22 +1177,16 @@ public class OgnlUtilTest extends XWorkTestCase {
         assertNull(expected);
     }
 
-    public void testAllowCallingMethodsOnObjectClassInDevModeFalse() {
-        Exception expected = null;
-        try {
-            ognlUtil.setExcludedClasses(Foo.class.getName());
-            ognlUtil.setDevModeExcludedClasses("");
-            ognlUtil.setDevMode(Boolean.FALSE.toString());
+    public void testExclusionListDevModeOnOff() throws Exception {
+        ognlUtil.setDevModeExcludedClasses(Foo.class.getName());
+        Foo foo = new Foo();
 
-            Foo foo = new Foo();
-            String result = (String) ognlUtil.getValue("toString", ognlUtil.createDefaultContext(foo), foo, String.class);
-            assertEquals("Foo", result);
-        } catch (OgnlException e) {
-            expected = e;
-        }
-        assertNotNull(expected);
-        assertSame(NoSuchPropertyException.class, expected.getClass());
-        assertEquals("com.opensymphony.xwork2.util.Foo.toString", expected.getMessage());
+        ognlUtil.setDevMode(Boolean.TRUE.toString());
+        OgnlException e = assertThrows(OgnlException.class, () -> ognlUtil.getValue("toString", ognlUtil.createDefaultContext(foo), foo, String.class));
+        assertThat(e).hasMessageContaining("com.opensymphony.xwork2.util.Foo.toString");
+
+        ognlUtil.setDevMode(Boolean.FALSE.toString());
+        assertEquals("Foo", (String) ognlUtil.getValue("toString", ognlUtil.createDefaultContext(foo), foo, String.class));
     }
 
     public void testAvoidCallingMethodsOnObjectClassUpperCased() {

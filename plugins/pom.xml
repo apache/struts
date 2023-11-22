@@ -37,7 +37,6 @@
         <module>cdi</module>
         <module>config-browser</module>
         <module>convention</module>
-        <module>gxp</module>
         <module>jasperreports</module>
         <module>javatemplates</module>
         <module>jfreechart</module>
@@ -46,7 +45,7 @@
         <module>osgi</module>
         <module>plexus</module>
         <module>rest</module>
-        <module>sitemesh</module>        
+        <module>sitemesh</module>
         <module>spring</module>
         <module>testng</module>
         <module>tiles</module>

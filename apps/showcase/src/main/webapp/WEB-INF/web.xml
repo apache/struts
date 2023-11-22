@@ -157,8 +157,6 @@
         <url-pattern>/testServlet/*</url-pattern>
     </servlet-mapping>
 
-    <!-- END SNIPPET: dwr -->
-
     <!-- SNIPPET START: example.velocity.filter.chain
         <filter>
             <filter-name>struts-cleanup</filter-name>

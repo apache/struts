@@ -40,6 +40,11 @@ public class ConfigParseUtil {
         return unmodifiableSet(classNames);
     }
 
+    public static Set<Class<?>> toClassObjectsSet(String newDelimitedClasses) throws ConfigurationException {
+        Set<String> classNames = commaDelimitedStringToSet(newDelimitedClasses);
+        return unmodifiableSet(validateClasses(classNames, OgnlUtil.class.getClassLoader()));
+    }
+
     public static Set<String> toNewClassesSet(Set<String> oldClasses, String newDelimitedClasses) throws ConfigurationException {
         Set<String> classNames = commaDelimitedStringToSet(newDelimitedClasses);
         validateClasses(classNames, OgnlUtil.class.getClassLoader());
@@ -61,14 +66,16 @@ public class ConfigParseUtil {
         return unmodifiableSet(newPatterns);
     }
 
-    public static void validateClasses(Set<String> classNames, ClassLoader validatingClassLoader) throws ConfigurationException {
+    public static Set<Class<?>> validateClasses(Set<String> classNames, ClassLoader validatingClassLoader) throws ConfigurationException {
+        Set<Class<?>> classes = new HashSet<>();
         for (String className : classNames) {
             try {
-                validatingClassLoader.loadClass(className);
+                classes.add(validatingClassLoader.loadClass(className));
             } catch (ClassNotFoundException e) {
                 throw new ConfigurationException("Cannot load class for exclusion/exemption configuration: " + className, e);
             }
         }
+        return classes;
     }
 
     public static Set<String> toPackageNamesSet(String newDelimitedPackageNames) throws ConfigurationException {

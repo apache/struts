@@ -39,6 +39,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassObjectsSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassesSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewClassesSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPackageNamesSet;
@@ -64,7 +65,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
     private boolean enforceAllowlistEnabled = false;
-    private Set<String> allowlistClasses = emptySet();
+    private Set<Class<?>> allowlistClasses = emptySet();
     private Set<String> allowlistPackageNames = emptySet();
     private boolean disallowProxyMemberAccess = false;
     private boolean disallowDefaultPackageAccess = false;
@@ -199,7 +200,7 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isClassAllowlisted(Class<?> clazz) {
-        return allowlistClasses.contains(clazz.getName()) || isClassBelongsToPackages(clazz, allowlistPackageNames);
+        return allowlistClasses.contains(clazz) || isClassBelongsToPackages(clazz, allowlistPackageNames);
     }
 
     /**
@@ -406,7 +407,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_CLASSES, required = false)
     public void useAllowlistClasses(String commaDelimitedClasses) {
-        this.allowlistClasses = toClassesSet(commaDelimitedClasses);
+        this.allowlistClasses = toClassObjectsSet(commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)

@@ -57,13 +57,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>../plugins/plexus/src/main/resources</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>CLASSWORLDS-LICENSE.txt</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>../plugins/rest/src/main/resources</directory>
       <outputDirectory></outputDirectory>
       <includes>
@@ -103,7 +96,7 @@
       </fileSet>
 
       <!-- Plugins -->
-      <!-- 
+      <!--
       <fileSet>
         <directory>../plugins/$plugin/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-$plugin-plugin</outputDirectory>
@@ -126,14 +119,6 @@
         <outputDirectory>docs/struts2-plugins/struts2-convention-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/embeddedjsp/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-embeddedjsp-plugin/apidocs</outputDirectory>
-      </fileSet>
-      <fileSet>
-        <directory>../plugins/gxp/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-gxp-plugin/apidocs</outputDirectory>
-      </fileSet>
-      <fileSet>
         <directory>../plugins/jasperreports/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-jasperreports-plugin/apidocs</outputDirectory>
       </fileSet>
@@ -152,10 +137,6 @@
       <fileSet>
         <directory>../plugins/junit/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-junit-plugin/apidocs</outputDirectory>
-      </fileSet>
-      <fileSet>
-        <directory>../plugins/osgi/target/apidocs</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-osgi-plugin/apidocs</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/rest/target/apidocs</directory>
@@ -181,17 +162,6 @@
         <directory>../plugins/velocity/target/apidocs</directory>
         <outputDirectory>docs/struts2-plugins/struts2-velocity-plugin/apidocs</outputDirectory>
       </fileSet>
-
-    <!-- bundles -->
-    <fileSet>
-       <directory>../bundles/admin/target/site</directory>
-       <outputDirectory>docs/struts2-bundles/admin</outputDirectory>
-    </fileSet>  
-    
-    <fileSet>
-       <directory>../bundles/demo/target/site</directory>
-       <outputDirectory>docs/struts2-bundles/demo</outputDirectory>
-    </fileSet>  
 
     <!-- Include the source code in the assembly -->
     <fileSet>

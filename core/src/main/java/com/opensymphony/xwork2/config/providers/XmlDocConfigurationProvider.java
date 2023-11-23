@@ -45,6 +45,7 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,6 +65,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
 import static java.lang.Boolean.parseBoolean;
@@ -135,6 +137,16 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     public void destroy() {
     }
 
+    protected Class<?> allowAndLoadClass(String className) throws ClassNotFoundException {
+        Class<?> clazz = loadClass(className);
+        List<Class<?>> superClasses = ClassUtils.getAllSuperclasses(clazz);
+        List<Class<?>> interfaces = ClassUtils.getAllInterfaces(clazz);
+        Stream.concat(superClasses.stream(), interfaces.stream()).forEach(c -> {
+
+        });
+        return clazz;
+    }
+
     protected Class<?> loadClass(String className) throws ClassNotFoundException {
         return objectFactory.getClassInstance(className);
     }
@@ -197,7 +209,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         String name = child.getAttribute("name");
         String impl = child.getAttribute("class");
         try {
-            Class<?> classImpl = loadClass(impl);
+            Class<?> classImpl = ClassLoaderUtil.loadClass(impl, getClass());
             if (BeanSelectionProvider.class.isAssignableFrom(classImpl)) {
                 BeanSelectionProvider provider = (BeanSelectionProvider) classImpl.newInstance();
                 provider.register(containerBuilder, props);
@@ -442,13 +454,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
         Location location = DomHelper.getLocationObject(actionElement);
 
-        if (location == null) {
-            LOG.warn("Location null for {}", className);
-        }
-
-        if (!className.isEmpty() && !verifyAction(className, name, location)) {
-            LOG.error("Unable to verify action [{}] with class [{}], from [{}]", name, className, location);
-            return;
+        if (!className.isEmpty()) {
+            verifyAction(className, name, location);
         }
 
         Map<String, ResultConfig> results;
@@ -499,17 +506,18 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
      */
     @Deprecated
     protected boolean verifyAction(String className, String name, Location loc) {
-        return verifyAction(className, loc);
+        verifyAction(className, loc);
+        return true;
     }
 
-    protected boolean verifyAction(String className, Location loc) {
+    protected void verifyAction(String className, Location loc) {
         if (className.contains("{")) {
             LOG.debug("Action class [{}] contains a wildcard replacement value, so it can't be verified", className);
-            return true;
+            return;
         }
         try {
+            Class<?> clazz = allowAndLoadClass(className);
             if (objectFactory.isNoArgConstructorRequired()) {
-                Class<?> clazz = loadClass(className);
                 if (!Modifier.isPublic(clazz.getModifiers())) {
                     throw new ConfigurationException("Action class [" + className + "] is not public", loc);
                 }
@@ -530,7 +538,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             LOG.debug("Unable to verify action class [{}]", className, ex);
             throw new ConfigurationException(ex, loc);
         }
-        return true;
     }
 
     protected void addResultTypes(PackageConfig.Builder packageContext, Element element) {
@@ -572,7 +579,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
     protected Class<?> verifyResultType(String className, Location loc) {
         try {
-            return loadClass(className);
+            return allowAndLoadClass(className);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             LOG.warn("Result class [{}] doesn't exist ({}) at {}, ignoring", className, e.getClass().getSimpleName(), loc, e);
         }
@@ -888,7 +895,12 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         NodeList defaultClassRefList = element.getElementsByTagName("default-class-ref");
         if (defaultClassRefList.getLength() > 0) {
             Element defaultClassRefElement = (Element) defaultClassRefList.item(0);
-            packageContext.defaultClassRef(defaultClassRefElement.getAttribute("class"));
+
+            String className = defaultClassRefElement.getAttribute("class");
+            Location location = DomHelper.getLocationObject(defaultClassRefElement);
+            verifyAction(className, location);
+
+            packageContext.defaultClassRef(className);
         }
     }
 
@@ -927,8 +939,23 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         iterateChildrenByTagName(
                 element,
                 "interceptor",
-                interceptorElement -> context.addInterceptorConfig(buildInterceptorConfig(interceptorElement)));
+                interceptorElement -> {
+                    String className = interceptorElement.getAttribute("class");
+                    Location location = DomHelper.getLocationObject(interceptorElement);
+
+                    verifyInterceptor(className, location);
+
+                    context.addInterceptorConfig(buildInterceptorConfig(interceptorElement));
+                });
         loadInterceptorStacks(element, context);
+    }
+
+    protected void verifyInterceptor(String className, Location loc) {
+        try {
+            allowAndLoadClass(className);
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            LOG.warn("Interceptor class [{}] doesn't exist at {}, ignoring", className, loc, e);
+        }
     }
 
     protected InterceptorConfig buildInterceptorConfig(Element interceptorElement) {

@@ -88,7 +88,6 @@
         <module>velocity-tools-jsp-jakarta</module>
         <module>core</module>
         <module>plugins</module>
-        <module>bundles</module>
         <module>apps</module>
     </modules>
 
@@ -566,11 +565,6 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-osgi-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-javatemplates-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -587,11 +581,6 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-jfreechart-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-plexus-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -616,22 +605,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-gxp-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-async-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-osgi-admin-bundle</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-osgi-demo-bundle</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

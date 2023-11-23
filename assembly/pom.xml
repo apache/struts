@@ -180,11 +180,6 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-plexus-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-rest-plugin</artifactId>
         </dependency>
 
@@ -210,26 +205,5 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-json-plugin</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-gxp-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-osgi-plugin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-osgi-admin-bundle</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-osgi-demo-bundle</artifactId>
-        </dependency>
-
     </dependencies>
 </project>

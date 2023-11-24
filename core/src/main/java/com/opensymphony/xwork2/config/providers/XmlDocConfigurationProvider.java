@@ -534,7 +534,11 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 clazz.getConstructor();
             }
         } catch (ClassNotFoundException e) {
-            throw new ConfigurationException("Action class [" + className + "] not found", e, loc);
+            if (objectFactory.isNoArgConstructorRequired()) {
+                throw new ConfigurationException("Action class [" + className + "] not found", e, loc);
+            }
+            LOG.warn("Action class [" + className + "] not found");
+            LOG.debug("Action class [" + className + "] not found", e);
         } catch (NoSuchMethodException e) {
             throw new ConfigurationException("Action class [" + className + "] does not have a public no-arg constructor", e, loc);
         } catch (RuntimeException ex) {
@@ -543,8 +547,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             LOG.debug("Action verification cause", ex);
         } catch (Exception ex) {
             // Default to failing fast
-            LOG.debug("Unable to verify action class [{}]", className, ex);
-            throw new ConfigurationException(ex, loc);
+            throw new ConfigurationException("Unable to verify action class [" + className + "]", ex, loc);
         }
     }
 
@@ -556,9 +559,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
             Location loc = DomHelper.getLocationObject(resultTypeElement);
             Class<?> clazz = verifyResultType(className, loc);
-            if (clazz == null) {
-                return;
-            }
+
             String paramName = null;
             try {
                 paramName = (String) clazz.getField("DEFAULT_PARAM").get(null);
@@ -961,7 +962,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         try {
             allowAndLoadClass(className);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            throw new ConfigurationException("Interceptor class [" + className + "] not found", e, loc);
+            LOG.warn("Interceptor class [" + className + "] at location " + loc + " not found");
+            LOG.debug("Interceptor class [" + className + "] not found", e);
         }
     }
 

@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.test.TestBean2;
 import com.opensymphony.xwork2.util.Foo;
 import ognl.MemberAccess;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.struts2.ognl.ProviderAllowlist;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,22 +45,27 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SecurityMemberAccessTest {
 
     private Map context;
     private FooBar target;
     protected SecurityMemberAccess sma;
+    private ProviderAllowlist mockedProviderAllowlist;
 
     @Before
     public void setUp() throws Exception {
         context = new HashMap<>();
         target = new FooBar();
+        mockedProviderAllowlist = mock(ProviderAllowlist.class);
         assignNewSma(true);
     }
 
     protected void assignNewSma(boolean allowStaticFieldAccess) {
-        sma = new SecurityMemberAccess(allowStaticFieldAccess);
+        when(mockedProviderAllowlist.getProviderAllowlist()).thenReturn(new HashSet<>());
+        sma = new SecurityMemberAccess(String.valueOf(allowStaticFieldAccess), mockedProviderAllowlist);
     }
 
     private <T> T reflectField(String fieldName) throws IllegalAccessException {

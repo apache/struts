@@ -25,6 +25,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.ognl.ProviderAllowlist;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -57,6 +58,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
+    private final ProviderAllowlist providerAllowlist;
     private final boolean allowStaticFieldAccess;
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
@@ -71,8 +73,10 @@ public class SecurityMemberAccess implements MemberAccess {
     private boolean disallowDefaultPackageAccess = false;
 
     @Inject
-    public SecurityMemberAccess(@Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS) String allowStaticFieldAccess) {
-        this(BooleanUtils.toBoolean(allowStaticFieldAccess));
+    public SecurityMemberAccess(@Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS) String allowStaticFieldAccess, @Inject ProviderAllowlist providerAllowlist) {
+        this.allowStaticFieldAccess = BooleanUtils.toBoolean(allowStaticFieldAccess);
+        useExcludedClasses(""); // Initialise default exclusions
+        this.providerAllowlist = providerAllowlist;
     }
 
     /**
@@ -83,8 +87,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @param allowStaticFieldAccess if set to true static fields (constants) will be accessible
      */
     public SecurityMemberAccess(boolean allowStaticFieldAccess) {
-        this.allowStaticFieldAccess = allowStaticFieldAccess;
-        useExcludedClasses(""); // Initialise default exclusions
+        this(String.valueOf(allowStaticFieldAccess), null);
     }
 
     @Override
@@ -200,7 +203,9 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isClassAllowlisted(Class<?> clazz) {
-        return allowlistClasses.contains(clazz) || isClassBelongsToPackages(clazz, allowlistPackageNames);
+        return allowlistClasses.contains(clazz)
+                || (providerAllowlist != null && providerAllowlist.getProviderAllowlist().contains(clazz))
+                || isClassBelongsToPackages(clazz, allowlistPackageNames);
     }
 
     /**

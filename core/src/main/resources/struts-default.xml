@@ -44,8 +44,6 @@
 
         <interceptors>
             <interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
-            <interceptor name="autowiring"
-                         class="com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor"/>
             <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
             <interceptor name="coep" class="org.apache.struts2.interceptor.CoepInterceptor"/>
             <interceptor name="conversionError"

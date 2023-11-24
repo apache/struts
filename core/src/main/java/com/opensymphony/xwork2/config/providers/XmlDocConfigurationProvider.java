@@ -49,6 +49,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ognl.ProviderAllowlist;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -94,8 +95,10 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     protected ObjectFactory objectFactory;
     protected Map<String, String> dtdMappings = new HashMap<>();
     protected Configuration configuration;
+    protected ProviderAllowlist providerAllowlist;
     protected boolean throwExceptionOnDuplicateBeans = true;
     protected ValueSubstitutor valueSubstitutor;
+    protected Set<Class<?>> allowlistClasses = new HashSet<>();
 
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
@@ -133,17 +136,22 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         this.configuration = configuration;
     }
 
+    private void registerAllowlist() {
+        providerAllowlist = configuration.getContainer().getInstance(ProviderAllowlist.class);
+        providerAllowlist.registerAllowlist(this, allowlistClasses);
+    }
+
     @Override
     public void destroy() {
+        providerAllowlist.clearAllowlist(this);
     }
 
     protected Class<?> allowAndLoadClass(String className) throws ClassNotFoundException {
         Class<?> clazz = loadClass(className);
+        allowlistClasses.add(clazz);
         List<Class<?>> superClasses = ClassUtils.getAllSuperclasses(clazz);
         List<Class<?>> interfaces = ClassUtils.getAllInterfaces(clazz);
-        Stream.concat(superClasses.stream(), interfaces.stream()).forEach(c -> {
-
-        });
+        Stream.concat(superClasses.stream(), interfaces.stream()).forEach(allowlistClasses::add);
         return clazz;
     }
 
@@ -181,6 +189,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
     @Override
     public void register(ContainerBuilder containerBuilder, LocatableProperties props) throws ConfigurationException {
+        allowlistClasses.clear();
         Map<String, Node> loadedBeans = new HashMap<>();
         for (Document doc : documents) {
             iterateElementChildren(doc, child -> {
@@ -315,7 +324,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             loadExtraConfiguration(doc);
         }
 
-        if (reloads.size() > 0) {
+        if (!reloads.isEmpty()) {
             reloadRequiredPackages(reloads);
         }
 
@@ -324,6 +333,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         }
 
         declaredPackages.clear();
+        registerAllowlist();
         configuration = null;
     }
 
@@ -524,10 +534,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 clazz.getConstructor();
             }
         } catch (ClassNotFoundException e) {
-            LOG.debug("Class not found for action [{}]", className, e);
-            throw new ConfigurationException("Action class [" + className + "] not found", loc);
+            throw new ConfigurationException("Action class [" + className + "] not found", e, loc);
         } catch (NoSuchMethodException e) {
-            LOG.debug("No constructor found for action [{}]", className, e);
             throw new ConfigurationException("Action class [" + className + "] does not have a public no-arg constructor", e, loc);
         } catch (RuntimeException ex) {
             // Probably not a big deal, like request or session-scoped Spring beans that need a real request
@@ -581,9 +589,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         try {
             return allowAndLoadClass(className);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            LOG.warn("Result class [{}] doesn't exist ({}) at {}, ignoring", className, e.getClass().getSimpleName(), loc, e);
+            throw new ConfigurationException("Result class [" + className + "] not found", e, loc);
         }
-        return null;
     }
 
     /**
@@ -954,7 +961,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         try {
             allowAndLoadClass(className);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            LOG.warn("Interceptor class [{}] doesn't exist at {}, ignoring", className, loc, e);
+            throw new ConfigurationException("Interceptor class [" + className + "] not found", e, loc);
         }
     }
 

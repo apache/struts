@@ -123,6 +123,7 @@ import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.interceptor.exec.ExecutorProvider;
 import org.apache.struts2.interceptor.exec.StrutsExecutorProvider;
 import org.apache.struts2.ognl.OgnlGuard;
+import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
 import org.apache.struts2.url.QueryStringBuilder;
 import org.apache.struts2.url.QueryStringParser;
@@ -233,6 +234,7 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
             .factory(OgnlUtil.class, Scope.SINGLETON)
             .factory(SecurityMemberAccess.class, Scope.PROTOTYPE)
             .factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON)
+            .factory(ProviderAllowlist.class, Scope.SINGLETON)
             .factory(CollectionConverter.class, Scope.SINGLETON)
             .factory(ArrayConverter.class, Scope.SINGLETON)
             .factory(DateConverter.class, Scope.SINGLETON)

@@ -58,6 +58,18 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
+    private static final Set<String> ALLOWLIST_REQUIRED_PACKAGES = unmodifiableSet(new HashSet<>(Arrays.asList(
+            "org.apache.struts2.components",
+            "org.apache.struts2.views.jsp",
+            "com.opensymphony.xwork2.validator.validators"
+    )));
+
+    private static final Set<Class<?>> ALLOWLIST_REQUIRED_CLASSES = unmodifiableSet(new HashSet<>(Arrays.asList(
+            java.lang.Enum.class,
+            java.util.Date.class,
+            java.util.HashMap.class
+    )));
+
     private final ProviderAllowlist providerAllowlist;
     private final boolean allowStaticFieldAccess;
     private Set<Pattern> excludeProperties = emptySet();
@@ -204,7 +216,9 @@ public class SecurityMemberAccess implements MemberAccess {
 
     protected boolean isClassAllowlisted(Class<?> clazz) {
         return allowlistClasses.contains(clazz)
+                || ALLOWLIST_REQUIRED_CLASSES.contains(clazz)
                 || (providerAllowlist != null && providerAllowlist.getProviderAllowlist().contains(clazz))
+                || isClassBelongsToPackages(clazz, ALLOWLIST_REQUIRED_PACKAGES)
                 || isClassBelongsToPackages(clazz, allowlistPackageNames);
     }
 

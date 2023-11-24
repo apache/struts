@@ -43,7 +43,8 @@
                 java.lang.System,
                 java.lang.Thread,
                 java.lang.ThreadGroup,
-                java.lang.ThreadLocal"/>
+                java.lang.ThreadLocal
+    "/>
 
     <constant name="struts.devMode.excludedClasses"
               value="
@@ -61,7 +62,8 @@
                 java.lang.System,
                 java.lang.Thread,
                 java.lang.ThreadGroup,
-                java.lang.ThreadLocal"/>
+                java.lang.ThreadLocal
+    "/>
 
     <!-- this must be valid regex, each '.' in package name must be escaped! -->
     <!-- it's more flexible but slower than simple string comparison -->
@@ -98,7 +100,8 @@
                 org.wildfly.extension.undertow.deployment,
                 org.yaml.snakeyaml,
                 sun.misc,
-                sun.reflect"/>
+                sun.reflect
+    "/>
 
     <constant name="struts.devMode.excludedPackageNames"
               value="
@@ -129,6 +132,7 @@
                 org.wildfly.extension.undertow.deployment,
                 org.yaml.snakeyaml,
                 sun.misc,
-                sun.reflect"/>
+                sun.reflect
+    "/>
 
 </struts>

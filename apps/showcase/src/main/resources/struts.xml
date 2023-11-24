@@ -33,6 +33,7 @@
     <constant name="struts.configuration.xml.reload" value="false" />
     <constant name="struts.custom.i18n.resources" value="globalMessages" />
     <constant name="struts.action.extension" value="action,," />
+    <constant name="struts.allowlist.enable" value="true" />
 
     <constant name="struts.convention.package.locators.basePackage" value="org.apache.struts2.showcase" />
     <constant name="struts.convention.result.path" value="/WEB-INF" />

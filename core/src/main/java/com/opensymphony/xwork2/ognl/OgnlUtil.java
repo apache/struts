@@ -856,6 +856,7 @@ public class OgnlUtil {
         }
 
         SecurityMemberAccess memberAccess = container.getInstance(SecurityMemberAccess.class);
+        memberAccess.useEnforceAllowlistEnabled(Boolean.FALSE.toString());
 
         if (devMode) {
             if (!warnReported.get()) {

@@ -77,7 +77,7 @@ public class OgnlUtil {
     private final OgnlGuard ognlGuard;
 
     private boolean devMode;
-    private boolean enableExpressionCache;
+    private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
 
     private String devModeExcludedClasses = "";
@@ -126,7 +126,7 @@ public class OgnlUtil {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
-    @Inject(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE)
+    @Inject(value = StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, required = false)
     protected void setEnableExpressionCache(String cache) {
         enableExpressionCache = BooleanUtils.toBoolean(cache);
     }

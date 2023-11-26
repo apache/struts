@@ -63,7 +63,11 @@ public class SecurityMemberAccessTest {
     }
 
     private <T> T reflectField(String fieldName) throws IllegalAccessException {
-        return (T) FieldUtils.readField(sma, fieldName, true);
+        return reflectField(sma, fieldName);
+    }
+
+    public static <T> T reflectField(Object instance, String fieldName) throws IllegalAccessException {
+        return (T) FieldUtils.readField(instance, fieldName, true);
     }
 
     @Test

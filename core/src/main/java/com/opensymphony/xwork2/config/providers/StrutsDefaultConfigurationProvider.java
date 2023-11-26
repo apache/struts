@@ -114,7 +114,6 @@ import com.opensymphony.xwork2.validator.ValidatorFactory;
 import com.opensymphony.xwork2.validator.ValidatorFileParser;
 import ognl.MethodAccessor;
 import ognl.PropertyAccessor;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
@@ -257,8 +256,5 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
         for (Map.Entry<String, Object> entry : DefaultConfiguration.BOOTSTRAP_CONSTANTS.entrySet()) {
             props.setProperty(entry.getKey(), String.valueOf(entry.getValue()));
         }
-
-        props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Boolean.TRUE.toString());
-        props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());
     }
 }

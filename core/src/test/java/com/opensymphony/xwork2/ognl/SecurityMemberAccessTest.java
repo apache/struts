@@ -95,7 +95,8 @@ public class SecurityMemberAccessTest {
             Collection<String> fieldVal = reflectField(field);
             assertThrows(UnsupportedOperationException.class, () -> fieldVal.add("foo"));
             if (!fieldVal.isEmpty()) {
-                assertThrows(UnsupportedOperationException.class, () -> fieldVal.remove(fieldVal.iterator().next()));
+                String firstVal = fieldVal.iterator().next();
+                assertThrows(UnsupportedOperationException.class, () -> fieldVal.remove(firstVal));
                 assertThrows(UnsupportedOperationException.class, fieldVal::clear);
             }
         }

@@ -34,6 +34,9 @@ import static org.apache.commons.lang3.StringUtils.strip;
 
 public class ConfigParseUtil {
 
+    private ConfigParseUtil() {
+    }
+
     public static Set<String> toClassesSet(String newDelimitedClasses) throws ConfigurationException {
         Set<String> classNames = commaDelimitedStringToSet(newDelimitedClasses);
         validateClasses(classNames, OgnlUtil.class.getClassLoader());

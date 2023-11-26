@@ -48,6 +48,7 @@ import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPatternsSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toPackageNamesSet;
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableSet;
 
 /**
@@ -71,10 +72,10 @@ public class SecurityMemberAccess implements MemberAccess {
     )));
 
     private final ProviderAllowlist providerAllowlist;
-    private final boolean allowStaticFieldAccess;
+    private boolean allowStaticFieldAccess = true;
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
-    private Set<String> excludedClasses = emptySet();
+    private Set<String> excludedClasses = unmodifiableSet(new HashSet<>(singletonList(Object.class.getName())));
     private Set<Pattern> excludedPackageNamePatterns = emptySet();
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
@@ -85,9 +86,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private boolean disallowDefaultPackageAccess = false;
 
     @Inject
-    public SecurityMemberAccess(@Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS) String allowStaticFieldAccess, @Inject ProviderAllowlist providerAllowlist) {
-        this.allowStaticFieldAccess = BooleanUtils.toBoolean(allowStaticFieldAccess);
-        useExcludedClasses(""); // Initialise default exclusions
+    public SecurityMemberAccess(@Inject ProviderAllowlist providerAllowlist) {
         this.providerAllowlist = providerAllowlist;
     }
 
@@ -97,9 +96,12 @@ public class SecurityMemberAccess implements MemberAccess {
      * - block or allow access to properties (configurable-after-construction)
      *
      * @param allowStaticFieldAccess if set to true static fields (constants) will be accessible
+     * @deprecated since 6.4.0, use {@link #SecurityMemberAccess(ProviderAllowlist)} instead.
      */
+    @Deprecated
     public SecurityMemberAccess(boolean allowStaticFieldAccess) {
-        this(String.valueOf(allowStaticFieldAccess), null);
+        this(null);
+        useAllowStaticFieldAccess(String.valueOf(allowStaticFieldAccess));
     }
 
     @Override
@@ -396,20 +398,24 @@ public class SecurityMemberAccess implements MemberAccess {
         this.acceptProperties = acceptedProperties;
     }
 
+    @Inject(value = StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, required = false)
+    public void useAllowStaticFieldAccess(String allowStaticFieldAccess) {
+        this.allowStaticFieldAccess = BooleanUtils.toBoolean(allowStaticFieldAccess);
+        if (!this.allowStaticFieldAccess) {
+            useExcludedClasses(Class.class.getName());
+        }
+    }
+
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_CLASSES, required = false)
     public void useExcludedClasses(String commaDelimitedClasses) {
-        Set<String> newExcludedClasses = new HashSet<>(toNewClassesSet(excludedClasses, commaDelimitedClasses));
-        newExcludedClasses.add(Object.class.getName());
-        if (!allowStaticFieldAccess) {
-            newExcludedClasses.add(Class.class.getName());
-        }
-        this.excludedClasses = unmodifiableSet(newExcludedClasses);
+       this.excludedClasses = toNewClassesSet(excludedClasses, commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
     public void useExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
         this.excludedPackageNamePatterns = toNewPatternsSet(excludedPackageNamePatterns, commaDelimitedPackagePatterns);
     }
+
     @Inject(value = StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES, required = false)
     public void useExcludedPackageNames(String commaDelimitedPackageNames) {
         this.excludedPackageNames = toNewPackageNamesSet(excludedPackageNames, commaDelimitedPackageNames);
@@ -419,6 +425,7 @@ public class SecurityMemberAccess implements MemberAccess {
     public void useExcludedPackageExemptClasses(String commaDelimitedClasses) {
         this.excludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
     }
+
     @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_ENABLE, required = false)
     public void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
         this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);

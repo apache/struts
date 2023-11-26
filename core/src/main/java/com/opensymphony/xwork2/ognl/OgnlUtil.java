@@ -77,7 +77,7 @@ public class OgnlUtil {
     private final OgnlGuard ognlGuard;
 
     private boolean devMode;
-    private boolean enableExpressionCache;
+    private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
 
     private String devModeExcludedClasses = "";
@@ -126,7 +126,7 @@ public class OgnlUtil {
         this.devMode = BooleanUtils.toBoolean(mode);
     }
 
-    @Inject(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE)
+    @Inject(value = StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, required = false)
     protected void setEnableExpressionCache(String cache) {
         enableExpressionCache = BooleanUtils.toBoolean(cache);
     }
@@ -161,6 +161,7 @@ public class OgnlUtil {
      */
     @Deprecated
     protected void setExcludedClasses(String commaDelimitedClasses) {
+        // Must be set directly on SecurityMemberAccess
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, required = false)
@@ -173,6 +174,7 @@ public class OgnlUtil {
      */
     @Deprecated
     protected void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+        // Must be set directly on SecurityMemberAccess
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
@@ -185,6 +187,7 @@ public class OgnlUtil {
      */
     @Deprecated
     protected void setExcludedPackageNames(String commaDelimitedPackageNames) {
+        // Must be set directly on SecurityMemberAccess
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, required = false)
@@ -197,6 +200,7 @@ public class OgnlUtil {
      */
     @Deprecated
     public void setExcludedPackageExemptClasses(String commaDelimitedClasses) {
+        // Must be set directly on SecurityMemberAccess
     }
 
     @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
@@ -246,6 +250,7 @@ public class OgnlUtil {
      */
     @Deprecated
     protected void setAllowStaticFieldAccess(String allowStaticFieldAccess) {
+        // Must be set directly on SecurityMemberAccess
     }
 
     /**
@@ -253,6 +258,7 @@ public class OgnlUtil {
      */
     @Deprecated
     protected void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
+        // Must be set directly on SecurityMemberAccess
     }
 
     /**
@@ -260,6 +266,7 @@ public class OgnlUtil {
      */
     @Deprecated
     protected void setDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
+        // Must be set directly on SecurityMemberAccess
     }
 
     /**

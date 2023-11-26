@@ -65,11 +65,16 @@ public class SecurityMemberAccessTest {
 
     protected void assignNewSma(boolean allowStaticFieldAccess) {
         when(mockedProviderAllowlist.getProviderAllowlist()).thenReturn(new HashSet<>());
-        sma = new SecurityMemberAccess(String.valueOf(allowStaticFieldAccess), mockedProviderAllowlist);
+        sma = new SecurityMemberAccess(mockedProviderAllowlist);
+        sma.useAllowStaticFieldAccess(String.valueOf(allowStaticFieldAccess));
     }
 
     private <T> T reflectField(String fieldName) throws IllegalAccessException {
-        return (T) FieldUtils.readField(sma, fieldName, true);
+        return reflectField(sma, fieldName);
+    }
+
+    public static <T> T reflectField(Object instance, String fieldName) throws IllegalAccessException {
+        return (T) FieldUtils.readField(instance, fieldName, true);
     }
 
     @Test
@@ -97,7 +102,8 @@ public class SecurityMemberAccessTest {
             Collection<String> fieldVal = reflectField(field);
             assertThrows(UnsupportedOperationException.class, () -> fieldVal.add("foo"));
             if (!fieldVal.isEmpty()) {
-                assertThrows(UnsupportedOperationException.class, () -> fieldVal.remove(fieldVal.iterator().next()));
+                String firstVal = fieldVal.iterator().next();
+                assertThrows(UnsupportedOperationException.class, () -> fieldVal.remove(firstVal));
                 assertThrows(UnsupportedOperationException.class, fieldVal::clear);
             }
         }

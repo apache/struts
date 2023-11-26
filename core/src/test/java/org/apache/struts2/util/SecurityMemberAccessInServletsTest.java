@@ -25,10 +25,7 @@ import org.apache.struts2.views.jsp.ActionTag;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.lang.reflect.Member;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
 
@@ -43,9 +40,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
-        Set<Pattern> excluded = new HashSet<Pattern>();
-        excluded.add(Pattern.compile("^(?!javax\\.servlet\\..+)(javax\\..+)"));
-        sma.useExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns("^(?!javax\\.servlet\\..+)(javax\\..+)");
 
         String propertyName = "value";
         Member member = TagSupport.class.getMethod("doStartTag");
@@ -61,9 +56,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
-        Set<Pattern> excluded = new HashSet<>();
-        excluded.add(Pattern.compile("^javax\\..+"));
-        sma.useExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns("^javax\\..+");
 
         String propertyName = "value";
         Member member = TagSupport.class.getMethod("doStartTag");

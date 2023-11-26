@@ -19,8 +19,11 @@
 package com.opensymphony.xwork2.ognl;
 
 import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.test.TestBean2;
-import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.Foo;
+import ognl.MemberAccess;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,16 +31,17 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.regex.Pattern;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -56,6 +60,87 @@ public class SecurityMemberAccessTest {
 
     protected void assignNewSma(boolean allowStaticFieldAccess) {
         sma = new SecurityMemberAccess(allowStaticFieldAccess);
+    }
+
+    private <T> T reflectField(String fieldName) throws IllegalAccessException {
+        return reflectField(sma, fieldName);
+    }
+
+    public static <T> T reflectField(Object instance, String fieldName) throws IllegalAccessException {
+        return (T) FieldUtils.readField(instance, fieldName, true);
+    }
+
+    @Test
+    public void defaultExclusionList() throws Exception {
+        Set<String> excludedClasses = reflectField("excludedClasses");
+        assertThat(excludedClasses).containsExactly(Object.class.getName());
+
+        assignNewSma(false);
+        excludedClasses = reflectField("excludedClasses");
+        assertThat(excludedClasses).containsExactlyInAnyOrder(Object.class.getName(), Class.class.getName());
+    }
+
+    @Test
+    public void configurationCollectionsImmutable() throws Exception {
+        List<String> fields = Arrays.asList(
+                "excludedClasses",
+                "excludedPackageNames",
+                "excludedPackageNamePatterns",
+                "excludedPackageExemptClasses",
+                "allowlistClasses",
+                "allowlistPackageNames",
+                "excludeProperties",
+                "acceptProperties");
+        for (String field : fields) {
+            Collection<String> fieldVal = reflectField(field);
+            assertThrows(UnsupportedOperationException.class, () -> fieldVal.add("foo"));
+            if (!fieldVal.isEmpty()) {
+                String firstVal = fieldVal.iterator().next();
+                assertThrows(UnsupportedOperationException.class, () -> fieldVal.remove(firstVal));
+                assertThrows(UnsupportedOperationException.class, fieldVal::clear);
+            }
+        }
+    }
+
+    @Test
+    public void exclusionListsAreAdditive_classes() throws Exception {
+        Collection<String> fieldVal = reflectField("excludedClasses");
+        Set<String> existing = new HashSet<>(fieldVal);
+
+        Collection<String> newExcludedClasses = Arrays.asList(FooBar.class.getName(), String.class.getName());
+        sma.useExcludedClasses(String.join(",", newExcludedClasses));
+        existing.addAll(newExcludedClasses);
+
+        fieldVal = reflectField("excludedClasses");
+        assertThat(fieldVal).containsExactlyInAnyOrderElementsOf(existing);
+    }
+
+    @Test
+    public void exclusionListsAreAdditive_packages() throws Exception {
+        sma.useExcludedPackageNames(Foo.class.getPackage().getName());
+        Collection<String> fieldVal = reflectField("excludedPackageNames");
+        Set<String> existing = new HashSet<>(fieldVal);
+
+        Collection<String> newExcludedPackages = Arrays.asList(FooBar.class.getPackage().getName(), String.class.getPackage().getName());
+        sma.useExcludedPackageNames(String.join(",", newExcludedPackages));
+        existing.addAll(newExcludedPackages);
+
+        fieldVal = reflectField("excludedPackageNames");
+        assertThat(fieldVal).containsExactlyInAnyOrderElementsOf(existing);
+    }
+
+    @Test
+    public void useExcludedPackageNames() {
+        assertThrows(ConfigurationException.class, () -> sma.useExcludedPackageNames("java.lang\njava.awt"));
+        assertThrows(ConfigurationException.class, () -> sma.useExcludedPackageNames("java.lang\tjava.awt"));
+        ConfigurationException e = assertThrows(ConfigurationException.class, () -> sma.useExcludedPackageNames("java.lang java.awt"));
+        assertTrue(e.getMessage().contains("erroneous whitespace characters"));
+    }
+
+    @Test
+    public void useExcludedPackagePatterns() {
+        ConfigurationException e = assertThrows(ConfigurationException.class, () -> sma.useExcludedPackageNamePatterns("["));
+        assertTrue(e.getMessage().contains("invalid regex"));
     }
 
     @Test
@@ -77,9 +162,7 @@ public class SecurityMemberAccessTest {
         String propertyName = "stringField";
         Member member = FooBar.class.getDeclaredMethod(formGetterName(propertyName));
 
-        Set<String> excluded = new HashSet<>();
-        excluded.add(FooBar.class.getName());
-        sma.useExcludedClasses(excluded);
+        sma.useExcludedClasses(FooBar.class.getName());
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -120,9 +203,7 @@ public class SecurityMemberAccessTest {
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
 
-        Set<String> excluded = new HashSet<>();
-        excluded.add(BarInterface.class.getName());
-        sma.useExcludedClasses(excluded);
+        sma.useExcludedClasses(BarInterface.class.getName());
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -137,9 +218,7 @@ public class SecurityMemberAccessTest {
         String propertyName = "fooLogic";
         Member member = FooBar.class.getMethod(propertyName);
 
-        Set<String> excluded = new HashSet<>();
-        excluded.add(BarInterface.class.getName());
-        sma.useExcludedClasses(excluded);
+        sma.useExcludedClasses(BarInterface.class.getName());
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -154,9 +233,7 @@ public class SecurityMemberAccessTest {
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
 
-        Set<String> excluded = new HashSet<>();
-        excluded.add(BarInterface.class.getName());
-        sma.useExcludedClasses(excluded);
+        sma.useExcludedClasses(BarInterface.class.getName());
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -171,9 +248,7 @@ public class SecurityMemberAccessTest {
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
 
-        Set<String> excluded = new HashSet<>();
-        excluded.add(FooInterface.class.getName());
-        sma.useExcludedClasses(excluded);
+        sma.useExcludedClasses(FooInterface.class.getName());
 
         // when
         boolean accessible = sma.isAccessible(context, target, member, propertyName);
@@ -185,9 +260,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testPackageExclusion() throws Exception {
         // given
-        Set<Pattern> excluded = new HashSet<>();
-        excluded.add(Pattern.compile("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*"));
-        sma.useExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*");
 
         String propertyName = "stringField";
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
@@ -202,13 +275,9 @@ public class SecurityMemberAccessTest {
     @Test
     public void testPackageExclusionExemption() throws Exception {
         // given
-        Set<Pattern> excluded = new HashSet<>();
-        excluded.add(Pattern.compile("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*"));
-        sma.useExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*");
 
-        Set<String> allowed = new HashSet<>();
-        allowed.add(FooBar.class.getName());
-        sma.useExcludedPackageExemptClasses(allowed);
+        sma.useExcludedPackageExemptClasses(FooBar.class.getName());
 
         String propertyName = "stringField";
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
@@ -223,9 +292,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testPackageNameExclusion() throws Exception {
         // given
-        Set<String> excluded = new HashSet<>();
-        excluded.add(FooBar.class.getPackage().getName());
-        sma.useExcludedPackageNames(excluded);
+        sma.useExcludedPackageNames(FooBar.class.getPackage().getName());
 
         String propertyName = "stringField";
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
@@ -240,13 +307,9 @@ public class SecurityMemberAccessTest {
     @Test
     public void testPackageNameExclusionExemption() throws Exception {
         // given
-        Set<String> excluded = new HashSet<>();
-        excluded.add(FooBar.class.getPackage().getName());
-        sma.useExcludedPackageNames(excluded);
+        sma.useExcludedPackageNames(FooBar.class.getPackage().getName());
 
-        Set<String> allowed = new HashSet<>();
-        allowed.add(FooBar.class.getName());
-        sma.useExcludedPackageExemptClasses(allowed);
+        sma.useExcludedPackageExemptClasses(FooBar.class.getName());
 
         String propertyName = "stringField";
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
@@ -261,14 +324,10 @@ public class SecurityMemberAccessTest {
     @Test
     public void testPackageNameExclusionExemption2() throws Exception {
         // given
-        Set<String> excluded = new HashSet<>();
-        excluded.add(FooBar.class.getPackage().getName());
-        sma.useExcludedPackageNames(excluded);
+        sma.useExcludedPackageNames(FooBar.class.getPackage().getName());
 
         // Exemption must exist for both classes (target and member) if they both match a banned package
-        Set<String> allowed = new HashSet<>();
-        allowed.add(BarInterface.class.getName());
-        sma.useExcludedPackageExemptClasses(allowed);
+        sma.useExcludedPackageExemptClasses(BarInterface.class.getName());
 
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
@@ -283,15 +342,10 @@ public class SecurityMemberAccessTest {
     @Test
     public void testPackageNameExclusionExemption3() throws Exception {
         // given
-        Set<String> excluded = new HashSet<>();
-        excluded.add(FooBar.class.getPackage().getName());
-        sma.useExcludedPackageNames(excluded);
+        sma.useExcludedPackageNames(FooBar.class.getPackage().getName());
 
         // Exemption must exist for both classes (target and member) if they both match a banned package
-        Set<String> allowed = new HashSet<>();
-        allowed.add(BarInterface.class.getName());
-        allowed.add(FooBar.class.getName());
-        sma.useExcludedPackageExemptClasses(allowed);
+        sma.useExcludedPackageExemptClasses(String.join(",", BarInterface.class.getName(), FooBar.class.getName()));
 
         String propertyName = "barLogic";
         Member member = BarInterface.class.getMethod(propertyName);
@@ -306,9 +360,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testDefaultPackageExclusion() throws Exception {
         // given
-        Set<Pattern> excluded = new HashSet<>();
-        excluded.add(Pattern.compile("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*"));
-        sma.useExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns("^" + FooBar.class.getPackage().getName().replaceAll("\\.", "\\\\.") + ".*");
 
         Class<?> clazz = Class.forName("PackagelessAction");
 
@@ -321,7 +373,7 @@ public class SecurityMemberAccessTest {
 
     @Test
     public void testDefaultPackageExclusionSetting() throws Exception {
-        sma.disallowDefaultPackageAccess(true);
+        sma.useDisallowDefaultPackageAccess(Boolean.TRUE.toString());
 
         Class<?> clazz = Class.forName("PackagelessAction");
         boolean actual = sma.isAccessible(null, clazz.getConstructor().newInstance(), clazz.getMethod("execute"), null);
@@ -332,9 +384,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testDefaultPackageExclusion2() throws Exception {
         // given
-        Set<Pattern> excluded = new HashSet<>();
-        excluded.add(Pattern.compile("^$"));
-        sma.useExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns("^$");
 
         Class<?> clazz = Class.forName("PackagelessAction");
 
@@ -368,7 +418,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessStaticMethod() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
@@ -381,7 +431,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessStaticField() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
@@ -395,7 +445,7 @@ public class SecurityMemberAccessTest {
     public void testBlockedStaticFieldWhenFlagIsTrue() throws Exception {
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
@@ -407,7 +457,7 @@ public class SecurityMemberAccessTest {
         // public static final test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         method = StaticTester.class.getField("MIN_VALUE");
@@ -419,7 +469,7 @@ public class SecurityMemberAccessTest {
         // package static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         method = StaticTester.getFieldByName("PACKAGE_STRING");
@@ -431,7 +481,7 @@ public class SecurityMemberAccessTest {
         // package final static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         method = StaticTester.getFieldByName("FINAL_PACKAGE_STRING");
@@ -443,7 +493,7 @@ public class SecurityMemberAccessTest {
         // protected static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         method = StaticTester.getFieldByName("PROTECTED_STRING");
@@ -455,7 +505,7 @@ public class SecurityMemberAccessTest {
         // protected final static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         method = StaticTester.getFieldByName("FINAL_PROTECTED_STRING");
@@ -467,7 +517,7 @@ public class SecurityMemberAccessTest {
         // private static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         method = StaticTester.getFieldByName("PRIVATE_STRING");
@@ -479,7 +529,7 @@ public class SecurityMemberAccessTest {
         // private final static test
         // given
         assignNewSma(true);
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         method = StaticTester.getFieldByName("FINAL_PRIVATE_STRING");
@@ -582,7 +632,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testBlockedStaticFieldWhenClassIsExcluded() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(Arrays.asList(Class.class.getName(), StaticTester.class.getName())));
+        sma.useExcludedClasses(String.join(",", Class.class.getName(), StaticTester.class.getName()));
 
         // when
         Member method = StaticTester.class.getField("MAX_VALUE");
@@ -595,7 +645,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testBlockStaticMethodAccess() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         Member method = StaticTester.class.getMethod("sayHello");
@@ -608,7 +658,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testBlockAccessIfClassIsExcluded() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         Member method = Class.class.getMethod("getClassLoader");
@@ -621,7 +671,7 @@ public class SecurityMemberAccessTest {
    @Test
     public void testBlockAccessIfClassIsExcluded_2() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(singletonList(ClassLoader.class.getName())));
+        sma.useExcludedClasses(ClassLoader.class.getName());
 
         // when
         Member method = ClassLoader.class.getMethod("loadClass", String.class);
@@ -635,7 +685,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAllowAccessIfClassIsNotExcluded() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(singletonList(ClassLoader.class.getName())));
+        sma.useExcludedClasses(ClassLoader.class.getName());
 
         // when
         Member method = Class.class.getMethod("getClassLoader");
@@ -648,7 +698,7 @@ public class SecurityMemberAccessTest {
    @Test
     public void testIllegalArgumentExceptionExpectedForTargetMemberMismatch() throws Exception {
         // given
-        sma.useExcludedClasses(new HashSet<>(singletonList(Class.class.getName())));
+        sma.useExcludedClasses(Class.class.getName());
 
         // when
         Member method = ClassLoader.class.getMethod("loadClass", String.class);
@@ -667,7 +717,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessPrimitiveInt() throws Exception {
         // given
-        sma.useExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang.,ognl,javax"));
+        sma.useExcludedPackageNames("java.lang.,ognl,javax");
 
         String propertyName = "intField";
         Member member = FooBar.class.getMethod(formGetterName(propertyName));
@@ -682,7 +732,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessPrimitiveDoubleWithNames() throws Exception {
         // given
-        sma.useExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("ognl.,javax."));
+        sma.useExcludedPackageNames("ognl.,javax.");
 
 
         Set<String> excluded = new HashSet<>();
@@ -691,7 +741,7 @@ public class SecurityMemberAccessTest {
         excluded.add(System.class.getName());
         excluded.add(Class.class.getName());
         excluded.add(ClassLoader.class.getName());
-        sma.useExcludedClasses(excluded);
+        sma.useExcludedClasses(String.join(",", excluded));
 
         String propertyName = "doubleValue";
         double myDouble = 1;
@@ -735,9 +785,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessPrimitiveDoubleWithPackageRegExs() throws Exception {
         // given
-        Set<Pattern> patterns = new HashSet<>();
-        patterns.add(Pattern.compile("^java\\.lang\\..*"));
-        sma.useExcludedPackageNamePatterns(patterns);
+        sma.useExcludedPackageNamePatterns("^java\\.lang\\..*");
 
         String propertyName = "doubleValue";
         double myDouble = 1;
@@ -753,13 +801,11 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessMemberAccessIsAccessible() throws Exception {
         // given
-        Set<String> excluded = new HashSet<>();
-        excluded.add(ognl.MemberAccess.class.getName());
-        sma.useExcludedClasses(excluded);
+        sma.useExcludedClasses(MemberAccess.class.getName());
 
         String propertyName = "excludedClasses";
-        String setter = "setExcludedClasses";
-        Member member = SecurityMemberAccess.class.getMethod(setter, Set.class);
+        String setter = "useExcludedClasses";
+        Member member = SecurityMemberAccess.class.getMethod(setter, String.class);
 
         // when
         boolean accessible = sma.isAccessible(context, sma, member, propertyName);
@@ -771,13 +817,11 @@ public class SecurityMemberAccessTest {
     @Test
     public void testAccessMemberAccessIsBlocked() throws Exception {
         // given
-        Set<String> excluded = new HashSet<>();
-        excluded.add(SecurityMemberAccess.class.getName());
-        sma.useExcludedClasses(excluded);
+        sma.useExcludedClasses(SecurityMemberAccess.class.getName());
 
         String propertyName = "excludedClasses";
-        String setter = "setExcludedClasses";
-        Member member = SecurityMemberAccess.class.getMethod(setter, Set.class);
+        String setter = "useExcludedClasses";
+        Member member = SecurityMemberAccess.class.getMethod(setter, String.class);
 
         // when
         boolean accessible = sma.isAccessible(context, sma, member, propertyName);
@@ -789,7 +833,7 @@ public class SecurityMemberAccessTest {
     @Test
     public void testPackageNameExclusionAsCommaDelimited() {
         // given
-        sma.useExcludedPackageNames(TextParseUtil.commaDelimitedStringToSet("java.lang"));
+        sma.useExcludedPackageNames("java.lang");
 
         // when
         boolean actual = sma.isPackageExcluded(String.class);
@@ -801,36 +845,36 @@ public class SecurityMemberAccessTest {
     @Test
     public void classInclusion() throws Exception {
 
-        sma.useEnforceAllowlistEnabled(true);
+        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
 
         TestBean2 bean = new TestBean2();
         Method method = TestBean2.class.getMethod("getData");
 
         assertFalse(sma.checkAllowlist(bean, method));
 
-        sma.useAllowlistClasses(new HashSet<>(singletonList(TestBean2.class.getName())));
+        sma.useAllowlistClasses(TestBean2.class.getName());
 
         assertTrue(sma.checkAllowlist(bean, method));
     }
 
     @Test
     public void packageInclusion() throws Exception {
-        sma.useEnforceAllowlistEnabled(true);
+        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
 
         TestBean2 bean = new TestBean2();
         Method method = TestBean2.class.getMethod("getData");
 
         assertFalse(sma.checkAllowlist(bean, method));
 
-        sma.useAllowlistPackageNames(new HashSet<>(singletonList(TestBean2.class.getPackage().getName())));
+        sma.useAllowlistPackageNames(TestBean2.class.getPackage().getName());
 
         assertTrue(sma.checkAllowlist(bean, method));
     }
 
     @Test
     public void classInclusion_subclass() throws Exception {
-        sma.useEnforceAllowlistEnabled(true);
-        sma.useAllowlistClasses(new HashSet<>(singletonList(TestBean2.class.getName())));
+        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useAllowlistClasses(TestBean2.class.getName());
 
         TestBean2 bean = new TestBean2();
         Method method = TestBean2.class.getMethod("getName");
@@ -840,8 +884,8 @@ public class SecurityMemberAccessTest {
 
     @Test
     public void classInclusion_subclass_both() throws Exception {
-        sma.useEnforceAllowlistEnabled(true);
-        sma.useAllowlistClasses(new HashSet<>(asList(TestBean.class.getName(), TestBean2.class.getName())));
+        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useAllowlistClasses(String.join(",", TestBean.class.getName(), TestBean2.class.getName()));
 
         TestBean2 bean = new TestBean2();
         Method method = TestBean2.class.getMethod("getName");
@@ -851,8 +895,8 @@ public class SecurityMemberAccessTest {
 
     @Test
     public void packageInclusion_subclass() throws Exception {
-        sma.useEnforceAllowlistEnabled(true);
-        sma.useAllowlistPackageNames(new HashSet<>(singletonList(TestBean2.class.getPackage().getName())));
+        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useAllowlistPackageNames(TestBean2.class.getPackage().getName());
 
         TestBean2 bean = new TestBean2();
         Method method = TestBean2.class.getMethod("getName");
@@ -862,8 +906,10 @@ public class SecurityMemberAccessTest {
 
     @Test
     public void packageInclusion_subclass_both() throws Exception {
-        sma.useEnforceAllowlistEnabled(true);
-        sma.useAllowlistPackageNames(new HashSet<>(asList(TestBean.class.getPackage().getName(), TestBean2.class.getPackage().getName())));
+        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useAllowlistPackageNames(String.join(",",
+                TestBean.class.getPackage().getName(),
+                TestBean2.class.getPackage().getName()));
 
         TestBean2 bean = new TestBean2();
         Method method = TestBean2.class.getMethod("getName");

@@ -30,7 +30,6 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
-import org.apache.struts2.StrutsConstants;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,7 +61,6 @@ public class MockConfiguration implements Configuration {
         for (Map.Entry<String, Object> entry : DefaultConfiguration.BOOTSTRAP_CONSTANTS.entrySet()) {
             builder.constant(entry.getKey(), String.valueOf(entry.getValue()));
         }
-        builder.constant(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, "false");
         container = builder.create(true);
     }
 

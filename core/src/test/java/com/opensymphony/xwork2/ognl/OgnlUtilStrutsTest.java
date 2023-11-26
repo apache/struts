@@ -31,33 +31,6 @@ public class OgnlUtilStrutsTest extends StrutsInternalTestCase {
         ognlUtil = container.getInstance(OgnlUtil.class);
     }
 
-    public void testDefaultExcludes() {
-        ognlUtil.setExcludedClasses("");
-        ognlUtil.setExcludedPackageNames("");
-        ognlUtil.setExcludedPackageNamePatterns("");
-        assertFalse(ognlUtil.getExcludedClasses().isEmpty());
-        assertFalse(ognlUtil.getExcludedPackageNames().isEmpty());
-
-        try {
-            ognlUtil.getExcludedClasses().clear();
-            fail("Missing the expected Exception");
-        } catch (Exception ex) {
-            assertTrue(ex instanceof UnsupportedOperationException);
-        }
-        try {
-            ognlUtil.getExcludedPackageNames().clear();
-            fail("Missing the expected Exception");
-        } catch (Exception ex) {
-            assertTrue(ex instanceof UnsupportedOperationException);
-        }
-        try {
-            ognlUtil.getExcludedPackageNamePatterns().clear();
-            fail("Missing the expected Exception");
-        } catch (Exception ex) {
-            assertTrue(ex instanceof UnsupportedOperationException);
-        }
-    }
-
     public void testAccessToSizeMethod() throws Exception {
         // given
         TestArrayBean bean = new TestArrayBean();

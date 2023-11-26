@@ -85,6 +85,7 @@ import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.OgnlTextParser;
@@ -132,16 +133,13 @@ public class DefaultConfiguration implements Configuration {
     static {
         Map<String, Object> constants = new HashMap<>();
         constants.put(StrutsConstants.STRUTS_DEVMODE, Boolean.FALSE);
-        constants.put(StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, Boolean.FALSE);
-        constants.put(StrutsConstants.STRUTS_OGNL_ENABLE_EVAL_EXPRESSION, Boolean.FALSE);
-        constants.put(StrutsConstants.STRUTS_OGNL_ENABLE_EXPRESSION_CACHE, Boolean.TRUE);
         constants.put(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, Boolean.FALSE);
-        constants.put(StrutsConstants.STRUTS_I18N_RELOAD, Boolean.FALSE);
         constants.put(StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS, Boolean.TRUE);
         constants.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_TYPE, OgnlCacheFactory.CacheType.BASIC);
         constants.put(StrutsConstants.STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE, 10000);
         constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_TYPE, OgnlCacheFactory.CacheType.BASIC);
         constants.put(StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE, 10000);
+        constants.put(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE);
         BOOTSTRAP_CONSTANTS = Collections.unmodifiableMap(constants);
     }
 
@@ -385,6 +383,7 @@ public class DefaultConfiguration implements Configuration {
         builder.factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON);
         builder.factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON);
         builder.factory(OgnlUtil.class, Scope.SINGLETON);
+        builder.factory(SecurityMemberAccess.class, Scope.PROTOTYPE);
         builder.factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON);
 
         builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);

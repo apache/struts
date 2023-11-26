@@ -31,7 +31,9 @@ public interface MemberAccessValueStack {
      * @deprecated please use {@link #useExcludeProperties(Set)}
      */
     @Deprecated
-    void setExcludeProperties(Set<Pattern> excludeProperties);
+    default void setExcludeProperties(Set<Pattern> excludeProperties) {
+        useExcludeProperties(excludeProperties);
+    }
 
     void useExcludeProperties(Set<Pattern> excludeProperties);
 
@@ -39,7 +41,9 @@ public interface MemberAccessValueStack {
      * @deprecated please use {@link #useAcceptProperties(Set)}
      */
     @Deprecated
-    void setAcceptProperties(Set<Pattern> acceptedProperties);
+    default void setAcceptProperties(Set<Pattern> acceptedProperties) {
+        useAcceptProperties(acceptedProperties);
+    }
 
     void useAcceptProperties(Set<Pattern> acceptedProperties);
 

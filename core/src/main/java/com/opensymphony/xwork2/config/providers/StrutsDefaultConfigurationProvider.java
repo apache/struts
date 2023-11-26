@@ -75,6 +75,7 @@ import com.opensymphony.xwork2.ognl.OgnlReflectionContextFactory;
 import com.opensymphony.xwork2.ognl.OgnlReflectionProvider;
 import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.ognl.accessor.HttpParametersPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.ObjectAccessor;
@@ -113,7 +114,6 @@ import com.opensymphony.xwork2.validator.ValidatorFactory;
 import com.opensymphony.xwork2.validator.ValidatorFileParser;
 import ognl.MethodAccessor;
 import ognl.PropertyAccessor;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
@@ -230,6 +230,7 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
             .factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
             .factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
             .factory(OgnlUtil.class, Scope.SINGLETON)
+            .factory(SecurityMemberAccess.class, Scope.PROTOTYPE)
             .factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON)
             .factory(CollectionConverter.class, Scope.SINGLETON)
             .factory(ArrayConverter.class, Scope.SINGLETON)
@@ -255,8 +256,5 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
         for (Map.Entry<String, Object> entry : DefaultConfiguration.BOOTSTRAP_CONSTANTS.entrySet()) {
             props.setProperty(entry.getKey(), String.valueOf(entry.getValue()));
         }
-
-        props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Boolean.TRUE.toString());
-        props.setProperty(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION, Boolean.FALSE.toString());
     }
 }

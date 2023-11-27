@@ -294,39 +294,38 @@ public class StrutsMockServletContext implements ServletContext {
         this.contextPath = contextPath;
     }
 
-	@Override
-	public Dynamic addJspFile(String servletName, String jspFile) {		
-		return null;
-	}
+    @Override
+    public Dynamic addJspFile(String servletName, String jspFile) {
+        return null;
+    }
 
-	@Override
-	public int getSessionTimeout() {		
-		return 0;
-	}
+    @Override
+    public int getSessionTimeout() {
+        return 0;
+    }
 
-	@Override
-	public void setSessionTimeout(int sessionTimeout) {
-		
-		
-	}
+    @Override
+    public void setSessionTimeout(int sessionTimeout) {
 
-	@Override
-	public String getRequestCharacterEncoding() {		
-		return null;
-	}
+    }
 
-	@Override
-	public void setRequestCharacterEncoding(String encoding) {		
-		
-	}
+    @Override
+    public String getRequestCharacterEncoding() {
+        return null;
+    }
 
-	@Override
-	public String getResponseCharacterEncoding() {		
-		return null;
-	}
+    @Override
+    public void setRequestCharacterEncoding(String encoding) {
 
-	@Override
-	public void setResponseCharacterEncoding(String encoding) {		
-		
-	}
+    }
+
+    @Override
+    public String getResponseCharacterEncoding() {
+        return null;
+    }
+
+    @Override
+    public void setResponseCharacterEncoding(String encoding) {
+
+    }
 }

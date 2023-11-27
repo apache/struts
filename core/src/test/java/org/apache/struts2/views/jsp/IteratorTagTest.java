@@ -1136,10 +1136,10 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     class TestMockBodyContent extends MockBodyContent {
         public TestMockBodyContent(String content, Writer targetWriter) {
-			super(content, response, targetWriter);
-		}
+            super(content, response, targetWriter);
+        }
 
-		public String getString() {
+        public String getString() {
             return ".-.";
         }
     }

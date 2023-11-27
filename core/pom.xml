@@ -89,8 +89,7 @@
                     <failOnError>true</failOnError>
                 </configuration>
             </plugin>
-			
-		</plugins>
+          </plugins>
     </build>
     <profiles>
         <profile>
@@ -181,8 +180,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.struts</groupId>
-			<artifactId>struts2-freemarker-jakarta</artifactId>
+          <groupId>org.apache.struts</groupId>
+          <artifactId>struts2-freemarker-jakarta</artifactId>
         </dependency>
 
         <dependency>

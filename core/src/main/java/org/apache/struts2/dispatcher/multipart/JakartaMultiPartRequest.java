@@ -99,8 +99,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
-    	
-    	 if (JakartaServletFileUpload.isMultipartContent(request)) {
+
+        if (JakartaServletFileUpload.isMultipartContent(request)) {
             for (FileItem item : parseRequest(request, saveDir)) {
                 LOG.debug("Found file item: [{}]", sanitizeNewlines(item.getFieldName()));
                 if (item.isFormField()) {

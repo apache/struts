@@ -350,21 +350,21 @@ public class CookieInterceptorTest extends StrutsInternalTestCase {
             new Cookie(pollution4, "pollution4");
             fail("It shouldn't be possible to create cookie: " + pollution4);
         } catch (IllegalArgumentException e) {
-        	assertTrue(e.getMessage(), e.getMessage().startsWith("Cookie name \"" + pollution4 + "\" is a reserved token"));
+            assertTrue(e.getMessage(), e.getMessage().startsWith("Cookie name \"" + pollution4 + "\" is a reserved token"));
         }
 
         try {
             new Cookie(pollution5, "pollution5");
             fail("It shouldn't be possible to create cookie: " + pollution5);
         } catch (IllegalArgumentException e) {
-        	assertTrue(e.getMessage(), e.getMessage().startsWith("Cookie name \"" + pollution5 + "\" is a reserved token"));
+            assertTrue(e.getMessage(), e.getMessage().startsWith("Cookie name \"" + pollution5 + "\" is a reserved token"));
         }
 
         try {
             new Cookie(pollution6, "pollution6");
             fail("It shouldn't be possible to create cookie: " + pollution6);
         } catch (IllegalArgumentException e) {
-        	assertTrue(e.getMessage(), e.getMessage().startsWith("Cookie name \"" + pollution6 + "\" is a reserved token"));
+            assertTrue(e.getMessage(), e.getMessage().startsWith("Cookie name \"" + pollution6 + "\" is a reserved token"));
         }
 
         request.setCookies(

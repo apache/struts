@@ -42,7 +42,7 @@ public class StrutsMockPageContext extends MockPageContext {
     public StrutsMockPageContext() { }
     
     public StrutsMockPageContext(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
-    	super(context, request, response);
+        super(context, request, response);
     }
 
 
@@ -73,15 +73,15 @@ public class StrutsMockPageContext extends MockPageContext {
     }
     
     @Override
-	public JspWriter getOut() {
-		if (this.smpcOut == null) {
-			this.smpcOut = new StrutsMockJspWriter(new StringWriter());
-		}
-		return this.smpcOut;
-	}
+    public JspWriter getOut() {
+        if (this.smpcOut == null) {
+            this.smpcOut = new StrutsMockJspWriter(new StringWriter());
+        }
+        return this.smpcOut;
+    }
     
     public void setJspWriter(JspWriter w) {
-    	this.smpcOut = w;
+        this.smpcOut = w;
     }
 
     public Object findAttribute(String s) {

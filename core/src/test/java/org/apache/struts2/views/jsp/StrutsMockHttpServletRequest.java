@@ -124,13 +124,13 @@ public class StrutsMockHttpServletRequest extends MockHttpServletRequest {
     public RequestDispatcher getRequestDispatcher(String string) {
         this.requestDispatherString = string;
         if(this.requestDispatcher == null) {
-        	this.requestDispatcher = new MockRequestDispatcher(string);
+            this.requestDispatcher = new MockRequestDispatcher(string);
         }
         return this.requestDispatcher;
     }
     
     public void setRequestDispatcher(RequestDispatcher rd) {
-    	this.requestDispatcher = rd;
+        this.requestDispatcher = rd;
     }
 
     /**

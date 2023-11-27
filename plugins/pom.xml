@@ -42,8 +42,6 @@
         <module>jfreechart</module>
         <module>json</module>
         <module>junit</module>
-        <module>osgi</module>
-        <module>plexus</module>
         <module>rest</module>
         <module>sitemesh</module>
         <module>spring</module>

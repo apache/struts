@@ -20,12 +20,11 @@
  */
 package it.org.apache.struts2.showcase;
 
+import org.htmlunit.WebClient;
+import org.htmlunit.html.DomElement;
+import org.htmlunit.html.HtmlPage;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.DomElement;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class FreeMarkerManagerTest {
     @Test
@@ -36,11 +35,11 @@ public class FreeMarkerManagerTest {
 
             final DomElement date = page.getElementById("todaysDate");
             Assert.assertNotNull(date);
-            Assert.assertTrue(date.asNormalizedText().length() > 0);
+            Assert.assertFalse(date.asNormalizedText().isEmpty());
 
             final DomElement time = page.getElementById("timeNow");
             Assert.assertNotNull(time);
-            Assert.assertTrue(time.asNormalizedText().length() > 0);
+            Assert.assertFalse(time.asNormalizedText().isEmpty());
         }
     }
 

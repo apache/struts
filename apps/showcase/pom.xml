@@ -130,10 +130,10 @@
        </dependency>
 
        <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <scope>test</scope>
-        </dependency>
+           <groupId>org.htmlunit</groupId>
+           <artifactId>htmlunit</artifactId>
+           <scope>test</scope>
+       </dependency>
 
         <!-- BeanValidation Example -->
         <dependency>

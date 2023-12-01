@@ -20,19 +20,16 @@ package it.org.apache.struts2.showcase;
 
 import java.io.File;
 
+import org.htmlunit.WebClient;
+import org.htmlunit.html.DomElement;
+import org.htmlunit.html.HtmlFileInput;
+import org.htmlunit.html.HtmlForm;
+import org.htmlunit.html.HtmlInput;
+import org.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlSubmitInput;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.DomElement;
-import com.gargoylesoftware.htmlunit.html.HtmlFileInput;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlInput;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
-
-@Ignore
 public class FileUploadTest {
 
     @Test
@@ -45,7 +42,7 @@ public class FileUploadTest {
             captionInput.type("some caption");
             File tempFile = File.createTempFile("testEmptyFile", ".tmp");
             tempFile.deleteOnExit();
-            uploadInput.setValueAttribute(tempFile.getAbsolutePath());
+            uploadInput.setValue(tempFile.getAbsolutePath());
             final HtmlSubmitInput button = form.getInputByValue("Submit");
             final HtmlPage resultPage = button.click();
             DomElement errorMessage = resultPage.getFirstByXPath("//span[@class='errorMessage']");

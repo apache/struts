@@ -18,15 +18,21 @@
  */
 package it.org.apache.struts2.rest.example;
 
-import net.sourceforge.jwebunit.junit.WebTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ListOrdersTest extends WebTestCase {
+import static net.sourceforge.jwebunit.junit.JWebUnit.assertTextPresent;
+import static net.sourceforge.jwebunit.junit.JWebUnit.beginAt;
+import static net.sourceforge.jwebunit.junit.JWebUnit.getTestContext;
 
+public class ListOrdersTest {
+
+    @Before
     public void setUp() throws Exception {
         getTestContext().setBaseUrl(ParameterUtils.getBaseUrl());
     }
 
-
+    @Test
     public void testListOrders() {
         beginAt("/orders");
         assertTextPresent("Bob");
@@ -34,6 +40,7 @@ public class ListOrdersTest extends WebTestCase {
         assertTextPresent("Jim");
     }
 
+    @Test
     public void testListOrdersInHtml() {
         beginAt("/orders.xhtml");
         assertTextPresent("Bob");
@@ -41,6 +48,7 @@ public class ListOrdersTest extends WebTestCase {
         assertTextPresent("Jim");
     }
 
+    @Test
     public void testListOrdersInXml() {
         beginAt("/orders.xml");
         assertTextPresent("<clientName>Bob");
@@ -48,6 +56,7 @@ public class ListOrdersTest extends WebTestCase {
         assertTextPresent("<clientName>Jim");
     }
 
+    @Test
     public void testListOrdersInJson() {
         beginAt("/orders.json");
         assertTextPresent("\"clientName\":\"Bob\"");

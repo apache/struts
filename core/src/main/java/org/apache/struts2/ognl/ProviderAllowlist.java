@@ -34,8 +34,13 @@ import static java.util.Collections.unmodifiableSet;
  */
 public class ProviderAllowlist {
 
-    private final Map<ConfigurationProvider, Set<Class<?>>> allowlistMap = new HashMap<>();
-    private final Set<Class<?>> allowlistClasses = new HashSet<>();
+    private final Map<ConfigurationProvider, Set<Class<?>>> allowlistMap;
+    private Set<Class<?>> allowlistClasses;
+
+    public ProviderAllowlist() {
+        allowlistMap = new HashMap<>();
+        reconstructAllowlist();
+    }
 
     public synchronized void registerAllowlist(ConfigurationProvider configurationProvider, Set<Class<?>> allowlist) {
         Set<Class<?>> existingAllowlist = allowlistMap.get(configurationProvider);
@@ -51,11 +56,18 @@ public class ProviderAllowlist {
         if (allowlist == null) {
             return;
         }
-        this.allowlistClasses.removeAll(allowlist);
         this.allowlistMap.remove(configurationProvider);
+        reconstructAllowlist();
     }
 
     public Set<Class<?>> getProviderAllowlist() {
         return unmodifiableSet(allowlistClasses);
+    }
+
+    private void reconstructAllowlist() {
+        this.allowlistClasses = allowlistMap.values().stream().reduce(new HashSet<>(), (a, b) -> {
+            a.addAll(b);
+            return a;
+        });
     }
 }

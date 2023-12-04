@@ -66,7 +66,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import static com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet;
 import static java.lang.Boolean.parseBoolean;
@@ -149,9 +148,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     protected Class<?> allowAndLoadClass(String className) throws ClassNotFoundException {
         Class<?> clazz = loadClass(className);
         allowlistClasses.add(clazz);
-        List<Class<?>> superClasses = ClassUtils.getAllSuperclasses(clazz);
-        List<Class<?>> interfaces = ClassUtils.getAllInterfaces(clazz);
-        Stream.concat(superClasses.stream(), interfaces.stream()).forEach(allowlistClasses::add);
+        allowlistClasses.addAll(ClassUtils.getAllSuperclasses(clazz));
+        allowlistClasses.addAll(ClassUtils.getAllInterfaces(clazz));
         return clazz;
     }
 

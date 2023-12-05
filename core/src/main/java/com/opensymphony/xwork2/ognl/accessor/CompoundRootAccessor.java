@@ -42,7 +42,6 @@ import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -77,10 +76,16 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
     private final static Class[] EMPTY_CLASS_ARRAY = new Class[0];
     private static final Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
     private boolean devMode;
+    private boolean disallowCustomOgnlMap;
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     protected void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DISALLOW_CUSTOM_OGNL_MAP, required = false)
+    public void useDisallowCustomOgnlMap(String disallowCustomOgnlMap) {
+        this.disallowCustomOgnlMap = BooleanUtils.toBoolean(disallowCustomOgnlMap);
     }
 
     public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
@@ -274,6 +279,14 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
 
     public Class classForName(String className, Map context) throws ClassNotFoundException {
         Object root = Ognl.getRoot(context);
+
+        if (disallowCustomOgnlMap) {
+            String nodeClassName = ((OgnlContext) context).getCurrentNode().getClass().getName();
+            if ("ognl.ASTMap".equals(nodeClassName)) {
+                LOG.error("Constructing OGNL ASTMap's from custom classes is forbidden. Attempted class: {}", className);
+                return null;
+            }
+        }
 
         try {
             if (root instanceof CompoundRoot) {

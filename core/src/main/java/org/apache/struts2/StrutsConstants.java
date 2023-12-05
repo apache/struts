@@ -234,6 +234,8 @@ public final class StrutsConstants {
     /** The name of the parameter to determine whether static field access will be allowed in OGNL expressions or not */
     public static final String STRUTS_ALLOW_STATIC_FIELD_ACCESS = "struts.ognl.allowStaticFieldAccess";
 
+    public static final String STRUTS_DISALLOW_CUSTOM_OGNL_MAP = "struts.ognl.disallowCustomOgnlMap";
+
     public static final String STRUTS_MEMBER_ACCESS = "struts.securityMemberAccess";
 
     public static final String STRUTS_OGNL_GUARD = "struts.ognlGuard";

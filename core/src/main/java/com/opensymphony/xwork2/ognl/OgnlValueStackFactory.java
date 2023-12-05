@@ -24,9 +24,9 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
-import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import ognl.ClassResolver;
 import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
@@ -48,6 +48,11 @@ public class OgnlValueStackFactory implements ValueStackFactory {
     @Inject
     protected void setXWorkConverter(XWorkConverter converter) {
         this.xworkConverter = converter;
+    }
+
+    @Inject(value = "com.opensymphony.xwork2.util.CompoundRoot")
+    protected void setClassResolver(ClassResolver classResolver) {
+        this.compoundRootAccessor = (CompoundRootAccessor) classResolver;
     }
 
     @Inject("system")
@@ -75,9 +80,6 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         for (String name : names) {
             Class<?> cls = Class.forName(name);
             OgnlRuntime.setPropertyAccessor(cls, container.getInstance(PropertyAccessor.class, name));
-            if (compoundRootAccessor == null && CompoundRoot.class.isAssignableFrom(cls)) {
-                compoundRootAccessor = (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, name);
-            }
         }
 
         names = container.getInstanceNames(MethodAccessor.class);
@@ -90,9 +92,6 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         for (String name : names) {
             Class<?> cls = Class.forName(name);
             OgnlRuntime.setNullHandler(cls, new OgnlNullHandlerWrapper(container.getInstance(NullHandler.class, name)));
-        }
-        if (compoundRootAccessor == null) {
-            throw new IllegalStateException("Couldn't find the compound root accessor");
         }
         this.container = container;
     }

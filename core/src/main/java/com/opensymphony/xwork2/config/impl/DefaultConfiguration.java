@@ -100,6 +100,7 @@ import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import ognl.ClassResolver;
 import ognl.PropertyAccessor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -390,6 +391,7 @@ public class DefaultConfiguration implements Configuration {
 
                 .factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON)
+                .factory(ClassResolver.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON)
 
                 .factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
                 .factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)

@@ -25,6 +25,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.ognl.ProviderAllowlist;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -39,6 +40,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassObjectsSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassesSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewClassesSet;
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPackageNamesSet;
@@ -57,6 +59,19 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
+    private static final Set<String> ALLOWLIST_REQUIRED_PACKAGES = unmodifiableSet(new HashSet<>(Arrays.asList(
+            "org.apache.struts2.components",
+            "org.apache.struts2.views.jsp",
+            "com.opensymphony.xwork2.validator.validators"
+    )));
+
+    private static final Set<Class<?>> ALLOWLIST_REQUIRED_CLASSES = unmodifiableSet(new HashSet<>(Arrays.asList(
+            java.lang.Enum.class,
+            java.util.Date.class,
+            java.util.HashMap.class
+    )));
+
+    private final ProviderAllowlist providerAllowlist;
     private boolean allowStaticFieldAccess = true;
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
@@ -65,12 +80,14 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
     private boolean enforceAllowlistEnabled = false;
-    private Set<String> allowlistClasses = emptySet();
+    private Set<Class<?>> allowlistClasses = emptySet();
     private Set<String> allowlistPackageNames = emptySet();
     private boolean disallowProxyMemberAccess = false;
     private boolean disallowDefaultPackageAccess = false;
 
-    public SecurityMemberAccess() {
+    @Inject
+    public SecurityMemberAccess(@Inject ProviderAllowlist providerAllowlist) {
+        this.providerAllowlist = providerAllowlist;
     }
 
     /**
@@ -79,10 +96,11 @@ public class SecurityMemberAccess implements MemberAccess {
      * - block or allow access to properties (configurable-after-construction)
      *
      * @param allowStaticFieldAccess if set to true static fields (constants) will be accessible
-     * @deprecated since 6.4.0, use {@link #SecurityMemberAccess()} instead.
+     * @deprecated since 6.4.0, use {@link #SecurityMemberAccess(ProviderAllowlist)} instead.
      */
     @Deprecated
     public SecurityMemberAccess(boolean allowStaticFieldAccess) {
+        this(null);
         useAllowStaticFieldAccess(String.valueOf(allowStaticFieldAccess));
     }
 
@@ -199,7 +217,11 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     protected boolean isClassAllowlisted(Class<?> clazz) {
-        return allowlistClasses.contains(clazz.getName()) || isClassBelongsToPackages(clazz, allowlistPackageNames);
+        return allowlistClasses.contains(clazz)
+                || ALLOWLIST_REQUIRED_CLASSES.contains(clazz)
+                || (providerAllowlist != null && providerAllowlist.getProviderAllowlist().contains(clazz))
+                || isClassBelongsToPackages(clazz, ALLOWLIST_REQUIRED_PACKAGES)
+                || isClassBelongsToPackages(clazz, allowlistPackageNames);
     }
 
     /**
@@ -411,7 +433,7 @@ public class SecurityMemberAccess implements MemberAccess {
 
     @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_CLASSES, required = false)
     public void useAllowlistClasses(String commaDelimitedClasses) {
-        this.allowlistClasses = toClassesSet(commaDelimitedClasses);
+        this.allowlistClasses = toClassObjectsSet(commaDelimitedClasses);
     }
 
     @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)

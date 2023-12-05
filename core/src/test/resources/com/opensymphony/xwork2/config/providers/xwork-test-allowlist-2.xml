@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.junit;
+-->
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
+        "https://struts.apache.org/dtds/struts-6.0.dtd">
+<struts>
+    <package name="allow2">
+        <result-types>
+            <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult" default="true"/>
+        </result-types>
 
-public abstract class XWorkJUnit4TestCase extends com.opensymphony.xwork2.XWorkJUnit4TestCase {
-}
+        <interceptors>
+            <interceptor name="noop" class="org.apache.struts2.interceptor.NoOpInterceptor"/>
+        </interceptors>
+
+        <action name="WildCard" class="com.opensymphony.xwork2.ActionSupport">
+            <result name="*" type="chain"/>
+            <interceptor-ref name="noop"/>
+        </action>
+
+    </package>
+</struts>

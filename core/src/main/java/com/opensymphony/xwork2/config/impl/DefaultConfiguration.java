@@ -68,10 +68,12 @@ import com.opensymphony.xwork2.factory.DefaultActionFactory;
 import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
 import com.opensymphony.xwork2.factory.DefaultResultFactory;
 import com.opensymphony.xwork2.factory.DefaultUnknownHandlerFactory;
+import com.opensymphony.xwork2.factory.DefaultValidatorFactory;
 import com.opensymphony.xwork2.factory.InterceptorFactory;
 import com.opensymphony.xwork2.factory.ResultFactory;
 import com.opensymphony.xwork2.factory.StrutsConverterFactory;
 import com.opensymphony.xwork2.factory.UnknownHandlerFactory;
+import com.opensymphony.xwork2.factory.ValidatorFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
@@ -107,6 +109,7 @@ import org.apache.struts2.conversion.StrutsConversionPropertiesProcessor;
 import org.apache.struts2.conversion.StrutsTypeConverterCreator;
 import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import org.apache.struts2.ognl.OgnlGuard;
+import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
 
 import java.util.ArrayList;
@@ -341,58 +344,70 @@ public class DefaultConfiguration implements Configuration {
                 fmFactoryRegistered = true;
             }
         }
-        builder.factory(ObjectFactory.class, Scope.SINGLETON);
-        builder.factory(ActionFactory.class, DefaultActionFactory.class, Scope.SINGLETON);
-        builder.factory(ResultFactory.class, DefaultResultFactory.class, Scope.SINGLETON);
-        builder.factory(InterceptorFactory.class, DefaultInterceptorFactory.class, Scope.SINGLETON);
-        builder.factory(com.opensymphony.xwork2.factory.ValidatorFactory.class, com.opensymphony.xwork2.factory.DefaultValidatorFactory.class, Scope.SINGLETON);
-        builder.factory(ConverterFactory.class, StrutsConverterFactory.class, Scope.SINGLETON);
-        builder.factory(UnknownHandlerFactory.class, DefaultUnknownHandlerFactory.class, Scope.SINGLETON);
 
-        builder.factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON);
+        bootstrapFactories(builder);
+        bootstrapTypeConverters(builder);
+
         if (!fmFactoryRegistered) {
             builder.factory(FileManagerFactory.class, DefaultFileManagerFactory.class, Scope.SINGLETON);
         }
-        builder.factory(ReflectionProvider.class, OgnlReflectionProvider.class, Scope.SINGLETON);
-        builder.factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON);
-
-        builder.factory(XWorkConverter.class, Scope.SINGLETON);
-        builder.factory(ConversionPropertiesProcessor.class, StrutsConversionPropertiesProcessor.class, Scope.SINGLETON);
-        builder.factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON);
-        builder.factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON);
-        builder.factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON);
-        builder.factory(TypeConverterHolder.class, StrutsTypeConverterHolder.class, Scope.SINGLETON);
-
-        builder.factory(XWorkBasicConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_COLLECTION,  CollectionConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_ARRAY, ArrayConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_DATE, DateConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_NUMBER,  NumberConverter.class, Scope.SINGLETON);
-        builder.factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_STRING, StringConverter.class, Scope.SINGLETON);
-
-        builder.factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON);
-
-        builder.factory(LocalizedTextProvider.class, StrutsLocalizedTextProvider.class, Scope.SINGLETON);
-        builder.factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON);
-        builder.factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON);
-
-        builder.factory(TextParser.class, OgnlTextParser.class, Scope.SINGLETON);
-
-        builder.factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON);
-        builder.factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON);
-        builder.factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON);
-        builder.factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON);
-        builder.factory(OgnlUtil.class, Scope.SINGLETON);
-        builder.factory(SecurityMemberAccess.class, Scope.PROTOTYPE);
-        builder.factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON);
-
-        builder.factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
 
         for (Map.Entry<String, Object> entry : BOOTSTRAP_CONSTANTS.entrySet()) {
             builder.constant(entry.getKey(), String.valueOf(entry.getValue()));
         }
 
         return builder.create(true);
+    }
+
+    public static ContainerBuilder bootstrapFactories(ContainerBuilder builder) {
+        return builder
+                // TODO: SpringObjectFactoryTest fails when these are SINGLETON
+                .factory(ObjectFactory.class, Scope.PROTOTYPE)
+                .factory(ActionFactory.class, DefaultActionFactory.class, Scope.PROTOTYPE)
+                .factory(ResultFactory.class, DefaultResultFactory.class, Scope.PROTOTYPE)
+                .factory(InterceptorFactory.class, DefaultInterceptorFactory.class, Scope.PROTOTYPE)
+                .factory(ValidatorFactory.class, DefaultValidatorFactory.class, Scope.PROTOTYPE)
+                .factory(ConverterFactory.class, StrutsConverterFactory.class, Scope.PROTOTYPE)
+                .factory(UnknownHandlerFactory.class, DefaultUnknownHandlerFactory.class, Scope.PROTOTYPE)
+
+                .factory(FileManager.class, "system", DefaultFileManager.class, Scope.SINGLETON)
+                .factory(ReflectionProvider.class, OgnlReflectionProvider.class, Scope.SINGLETON)
+                .factory(ValueStackFactory.class, OgnlValueStackFactory.class, Scope.SINGLETON)
+
+                .factory(XWorkConverter.class, Scope.SINGLETON)
+                .factory(XWorkBasicConverter.class, Scope.SINGLETON)
+                .factory(ConversionPropertiesProcessor.class, StrutsConversionPropertiesProcessor.class, Scope.SINGLETON)
+                .factory(ConversionFileProcessor.class, DefaultConversionFileProcessor.class, Scope.SINGLETON)
+                .factory(ConversionAnnotationProcessor.class, DefaultConversionAnnotationProcessor.class, Scope.SINGLETON)
+                .factory(TypeConverterCreator.class, StrutsTypeConverterCreator.class, Scope.SINGLETON)
+                .factory(TypeConverterHolder.class, StrutsTypeConverterHolder.class, Scope.SINGLETON)
+
+                .factory(TextProvider.class, "system", DefaultTextProvider.class, Scope.SINGLETON)
+                .factory(LocalizedTextProvider.class, StrutsLocalizedTextProvider.class, Scope.SINGLETON)
+                .factory(TextProviderFactory.class, StrutsTextProviderFactory.class, Scope.SINGLETON)
+                .factory(LocaleProviderFactory.class, DefaultLocaleProviderFactory.class, Scope.SINGLETON)
+                .factory(TextParser.class, OgnlTextParser.class, Scope.SINGLETON)
+
+                .factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON)
+                .factory(PropertyAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON)
+
+                .factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
+                .factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)
+                .factory(OgnlUtil.class, Scope.SINGLETON)
+                .factory(SecurityMemberAccess.class, Scope.PROTOTYPE)
+                .factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON)
+                .factory(ProviderAllowlist.class, Scope.SINGLETON)
+
+                .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
+    }
+
+    public static ContainerBuilder bootstrapTypeConverters(ContainerBuilder builder) {
+        return builder
+                .factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_COLLECTION, CollectionConverter.class, Scope.SINGLETON)
+                .factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_ARRAY, ArrayConverter.class, Scope.SINGLETON)
+                .factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_DATE, DateConverter.class, Scope.SINGLETON)
+                .factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_NUMBER, NumberConverter.class, Scope.SINGLETON)
+                .factory(TypeConverter.class, StrutsConstants.STRUTS_CONVERTER_STRING, StringConverter.class, Scope.SINGLETON);
     }
 
     /**

@@ -45,9 +45,11 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ognl.ProviderAllowlist;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -92,8 +94,10 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     protected ObjectFactory objectFactory;
     protected Map<String, String> dtdMappings = new HashMap<>();
     protected Configuration configuration;
+    protected ProviderAllowlist providerAllowlist;
     protected boolean throwExceptionOnDuplicateBeans = true;
     protected ValueSubstitutor valueSubstitutor;
+    protected Set<Class<?>> allowlistClasses = new HashSet<>();
 
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
@@ -131,8 +135,22 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         this.configuration = configuration;
     }
 
+    private void registerAllowlist() {
+        providerAllowlist = configuration.getContainer().getInstance(ProviderAllowlist.class);
+        providerAllowlist.registerAllowlist(this, allowlistClasses);
+    }
+
     @Override
     public void destroy() {
+        providerAllowlist.clearAllowlist(this);
+    }
+
+    protected Class<?> allowAndLoadClass(String className) throws ClassNotFoundException {
+        Class<?> clazz = loadClass(className);
+        allowlistClasses.add(clazz);
+        allowlistClasses.addAll(ClassUtils.getAllSuperclasses(clazz));
+        allowlistClasses.addAll(ClassUtils.getAllInterfaces(clazz));
+        return clazz;
     }
 
     protected Class<?> loadClass(String className) throws ClassNotFoundException {
@@ -169,6 +187,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
     @Override
     public void register(ContainerBuilder containerBuilder, LocatableProperties props) throws ConfigurationException {
+        allowlistClasses.clear();
         Map<String, Node> loadedBeans = new HashMap<>();
         for (Document doc : documents) {
             iterateElementChildren(doc, child -> {
@@ -197,7 +216,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         String name = child.getAttribute("name");
         String impl = child.getAttribute("class");
         try {
-            Class<?> classImpl = loadClass(impl);
+            Class<?> classImpl = ClassLoaderUtil.loadClass(impl, getClass());
             if (BeanSelectionProvider.class.isAssignableFrom(classImpl)) {
                 BeanSelectionProvider provider = (BeanSelectionProvider) classImpl.newInstance();
                 provider.register(containerBuilder, props);
@@ -303,7 +322,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             loadExtraConfiguration(doc);
         }
 
-        if (reloads.size() > 0) {
+        if (!reloads.isEmpty()) {
             reloadRequiredPackages(reloads);
         }
 
@@ -312,6 +331,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         }
 
         declaredPackages.clear();
+        registerAllowlist();
         configuration = null;
     }
 
@@ -442,13 +462,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
         Location location = DomHelper.getLocationObject(actionElement);
 
-        if (location == null) {
-            LOG.warn("Location null for {}", className);
-        }
-
-        if (!className.isEmpty() && !verifyAction(className, name, location)) {
-            LOG.error("Unable to verify action [{}] with class [{}], from [{}]", name, className, location);
-            return;
+        if (!className.isEmpty()) {
+            verifyAction(className, name, location);
         }
 
         Map<String, ResultConfig> results;
@@ -499,27 +514,30 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
      */
     @Deprecated
     protected boolean verifyAction(String className, String name, Location loc) {
-        return verifyAction(className, loc);
+        verifyAction(className, loc);
+        return true;
     }
 
-    protected boolean verifyAction(String className, Location loc) {
+    protected void verifyAction(String className, Location loc) {
         if (className.contains("{")) {
             LOG.debug("Action class [{}] contains a wildcard replacement value, so it can't be verified", className);
-            return true;
+            return;
         }
         try {
+            Class<?> clazz = allowAndLoadClass(className);
             if (objectFactory.isNoArgConstructorRequired()) {
-                Class<?> clazz = loadClass(className);
                 if (!Modifier.isPublic(clazz.getModifiers())) {
                     throw new ConfigurationException("Action class [" + className + "] is not public", loc);
                 }
                 clazz.getConstructor();
             }
         } catch (ClassNotFoundException e) {
-            LOG.debug("Class not found for action [{}]", className, e);
-            throw new ConfigurationException("Action class [" + className + "] not found", loc);
+            if (objectFactory.isNoArgConstructorRequired()) {
+                throw new ConfigurationException("Action class [" + className + "] not found", e, loc);
+            }
+            LOG.warn("Action class [" + className + "] not found");
+            LOG.debug("Action class [" + className + "] not found", e);
         } catch (NoSuchMethodException e) {
-            LOG.debug("No constructor found for action [{}]", className, e);
             throw new ConfigurationException("Action class [" + className + "] does not have a public no-arg constructor", e, loc);
         } catch (RuntimeException ex) {
             // Probably not a big deal, like request or session-scoped Spring beans that need a real request
@@ -527,10 +545,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
             LOG.debug("Action verification cause", ex);
         } catch (Exception ex) {
             // Default to failing fast
-            LOG.debug("Unable to verify action class [{}]", className, ex);
-            throw new ConfigurationException(ex, loc);
+            throw new ConfigurationException("Unable to verify action class [" + className + "]", ex, loc);
         }
-        return true;
     }
 
     protected void addResultTypes(PackageConfig.Builder packageContext, Element element) {
@@ -541,9 +557,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
             Location loc = DomHelper.getLocationObject(resultTypeElement);
             Class<?> clazz = verifyResultType(className, loc);
-            if (clazz == null) {
-                return;
-            }
+
             String paramName = null;
             try {
                 paramName = (String) clazz.getField("DEFAULT_PARAM").get(null);
@@ -572,11 +586,10 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
     protected Class<?> verifyResultType(String className, Location loc) {
         try {
-            return loadClass(className);
+            return allowAndLoadClass(className);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            LOG.warn("Result class [{}] doesn't exist ({}) at {}, ignoring", className, e.getClass().getSimpleName(), loc, e);
+            throw new ConfigurationException("Result class [" + className + "] not found", e, loc);
         }
-        return null;
     }
 
     /**
@@ -888,7 +901,12 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         NodeList defaultClassRefList = element.getElementsByTagName("default-class-ref");
         if (defaultClassRefList.getLength() > 0) {
             Element defaultClassRefElement = (Element) defaultClassRefList.item(0);
-            packageContext.defaultClassRef(defaultClassRefElement.getAttribute("class"));
+
+            String className = defaultClassRefElement.getAttribute("class");
+            Location location = DomHelper.getLocationObject(defaultClassRefElement);
+            verifyAction(className, location);
+
+            packageContext.defaultClassRef(className);
         }
     }
 
@@ -927,8 +945,24 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         iterateChildrenByTagName(
                 element,
                 "interceptor",
-                interceptorElement -> context.addInterceptorConfig(buildInterceptorConfig(interceptorElement)));
+                interceptorElement -> {
+                    String className = interceptorElement.getAttribute("class");
+                    Location location = DomHelper.getLocationObject(interceptorElement);
+
+                    verifyInterceptor(className, location);
+
+                    context.addInterceptorConfig(buildInterceptorConfig(interceptorElement));
+                });
         loadInterceptorStacks(element, context);
+    }
+
+    protected void verifyInterceptor(String className, Location loc) {
+        try {
+            allowAndLoadClass(className);
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            LOG.warn("Interceptor class [" + className + "] at location " + loc + " not found");
+            LOG.debug("Interceptor class [" + className + "] not found", e);
+        }
     }
 
     protected InterceptorConfig buildInterceptorConfig(Element interceptorElement) {

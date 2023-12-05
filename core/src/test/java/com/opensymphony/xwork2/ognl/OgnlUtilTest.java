@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ChainingInterceptor;
+import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.test.User;
 import com.opensymphony.xwork2.util.Bar;
@@ -35,6 +36,7 @@ import com.opensymphony.xwork2.util.Owner;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import ognl.ClassResolver;
 import ognl.InappropriateExpressionException;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
@@ -1621,6 +1623,16 @@ public class OgnlUtilTest extends XWorkTestCase {
         ognlCache = defaultOgnlCacheFactory.buildOgnlCache(15, 15, 0.75f, true);
         assertNotNull("No param build method result null ?", ognlCache);
         assertEquals("Eviction limit for cache mismatches limit for factory ?", 15, ognlCache.getEvictionLimit());
+    }
+
+    public void testCustomOgnlMapBlocked() throws Exception {
+        String vulnerableExpr = "#@com.opensymphony.xwork2.ognl.MyCustomMap@{}.get(\"ye\")";
+        assertEquals("System compromised", ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(null), null));
+
+        ((CompoundRootAccessor) container.getInstance(ClassResolver.class, CompoundRoot.class.getName()))
+                .useDisallowCustomOgnlMap(Boolean.TRUE.toString());
+
+        assertThrows(OgnlException.class, () -> ognlUtil.getValue(vulnerableExpr, ognlUtil.createDefaultContext(null), null));
     }
 
     /**

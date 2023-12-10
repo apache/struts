@@ -29,7 +29,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 @SuppressWarnings("unchecked")
-public class HttpParameters implements Map<String, Parameter>, Cloneable {
+public class HttpParameters implements Map<String, Parameter> {
 
     final private Map<String, Parameter> parameters;
 
@@ -37,6 +37,7 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
         this.parameters = parameters;
     }
 
+    @SuppressWarnings("rawtypes")
     public static Builder create(Map requestParameterMap) {
         return new Builder(requestParameterMap);
     }
@@ -47,7 +48,7 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
 
     public HttpParameters remove(Set<String> paramsToRemove) {
         for (String paramName : paramsToRemove) {
-            parameters.remove(paramName);
+            parameters.entrySet().removeIf(p -> p.getKey().equalsIgnoreCase(paramName));
         }
         return this;
     }
@@ -59,12 +60,15 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
     }
 
     public boolean contains(String name) {
-        return parameters.containsKey(name);
+        return parameters.keySet().stream().anyMatch(p -> p.equalsIgnoreCase(name));
     }
 
     /**
      * Access to this method can be potentially dangerous as it allows access to raw parameter values.
+     *
+     * @deprecated since 6.4.0, it will be removed with a new major release
      */
+    @Deprecated
     private Map<String, String[]> toMap() {
         final Map<String, String[]> result = new HashMap<>(parameters.size());
         for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
@@ -73,7 +77,14 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
         return result;
     }
 
+    /**
+     * Appends all the parameters by overriding any existing params in a case-insensitive manner
+     *
+     * @param newParams A new params to append
+     * @return a current instance of {@link HttpParameters}
+     */
     public HttpParameters appendAll(Map<String, Parameter> newParams) {
+        remove(newParams.keySet());
         parameters.putAll(newParams);
         return this;
     }
@@ -100,8 +111,11 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
 
     @Override
     public Parameter get(Object key) {
-        if (parameters.containsKey(key)) {
-            return parameters.get(key);
+        if (key != null && contains(String.valueOf(key))) {
+            return parameters.entrySet().stream()
+                .filter(p -> p.getKey().equalsIgnoreCase(String.valueOf(key)))
+                .findFirst().map(Entry::getValue)
+                .orElse(new Parameter.Empty(String.valueOf(key)));
         } else {
             return new Parameter.Empty(String.valueOf(key));
         }
@@ -177,8 +191,8 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
 
         public HttpParameters build() {
             Map<String, Parameter> parameters = (parent == null)
-                    ? new HashMap<>()
-                    : new HashMap<>(parent.parameters);
+                ? new HashMap<>()
+                : new HashMap<>(parent.parameters);
 
             for (Map.Entry<String, Object> entry : requestParameterMap.entrySet()) {
                 String name = entry.getKey();
@@ -197,8 +211,9 @@ public class HttpParameters implements Map<String, Parameter>, Cloneable {
         * Alternate Builder method which avoids wrapping any parameters that are already
         * a {@link Parameter} element within another {@link Parameter} wrapper.
         *
-        * @return 
+        * @deprecated since 6.4.0, use {@link #build()} instead
          */
+        @Deprecated
         public HttpParameters buildNoNestedWrapping() {
             Map<String, Parameter> parameters = (parent == null)
                     ? new HashMap<>()

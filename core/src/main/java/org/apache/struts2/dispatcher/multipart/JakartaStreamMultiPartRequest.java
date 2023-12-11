@@ -22,6 +22,7 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.logging.log4j.LogManager;
@@ -110,7 +111,11 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
         List<UploadedFile> files = new ArrayList<>(infos.size());
         for (FileInfo fileInfo : infos) {
-            files.add(new StrutsUploadedFile(fileInfo.getFile()));
+            UploadedFile file = StrutsUploadedFile.Builder.create(fileInfo.getFile())
+                .withContentType(fileInfo.contentType)
+                .withOriginalName(fileInfo.originalName)
+                .build();
+            files.add(file);
         }
 
         return files.toArray(new UploadedFile[0]);
@@ -162,7 +167,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     public String getParameter(String name) {
         List<String> values = parameters.get(name);
-        if (values != null && values.size() > 0) {
+        if (values != null && !values.isEmpty()) {
             return values.get(0);
         }
         return null;
@@ -180,7 +185,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     public String[] getParameterValues(String name) {
         List<String> values = parameters.get(name);
-        if (values != null && values.size() > 0) {
+        if (values != null && !values.isEmpty()) {
             return values.toArray(new String[0]);
         }
         return null;
@@ -207,9 +212,8 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      *
      * @param request the servlet request
      * @param saveDir location of the save dir
-     * @throws Exception
      */
-    protected void processUpload(HttpServletRequest request, String saveDir) throws Exception {
+    protected void processUpload(HttpServletRequest request, String saveDir) throws IOException, FileUploadException {
 
         // Sanity check that the request is a multi-part/form-data request.
         if (ServletFileUpload.isMultipartContent(request)) {
@@ -292,7 +296,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * Add a file skipped message notification for action messages.
      *
      * @param fileName file name
-     * @param request the servlet request
+     * @param request  the servlet request
      */
     protected void addFileSkippedError(String fileName, HttpServletRequest request) {
         String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
@@ -330,11 +334,11 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * Processes the FileItemStream as a file field.
      *
      * @param itemStream file item stream
-     * @param location location
+     * @param location   location
      */
     protected void processFileItemStreamAsFileField(FileItemStream itemStream, String location) {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
-        if (itemStream.getName() == null || itemStream.getName().trim().length() < 1) {
+        if (itemStream.getName() == null || itemStream.getName().trim().isEmpty()) {
             LOG.debug("No file has been uploaded for the field: {}", itemStream.getFieldName());
             return;
         }
@@ -368,8 +372,8 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     protected File createTemporaryFile(String fileName, String location) throws IOException {
         String name = fileName
-                .substring(fileName.lastIndexOf('/') + 1)
-                .substring(fileName.lastIndexOf('\\') + 1);
+            .substring(fileName.lastIndexOf('/') + 1)
+            .substring(fileName.lastIndexOf('\\') + 1);
 
         String prefix = name;
         String suffix = "";
@@ -392,14 +396,14 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * Streams the file upload stream to the specified file.
      *
      * @param itemStream file item stream
-     * @param file the file
+     * @param file       the file
      * @return true if stream was successfully
      * @throws IOException in case of IO errors
      */
     protected boolean streamFileToDisk(FileItemStream itemStream, File file) throws IOException {
         boolean result;
         try (InputStream input = itemStream.openStream();
-                OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
+             OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
             byte[] buffer = new byte[bufferSize];
             LOG.debug("Streaming file using buffer size {}.", bufferSize);
             for (int length; ((length = input.read(buffer)) > 0); ) {
@@ -416,7 +420,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * invocation process.
      *
      * @param itemStream file item stream
-     * @param file the file
+     * @param file       the file
      */
     protected void createFileInfoFromItemStream(FileItemStream itemStream, File file) {
         // gather attributes from file upload stream.
@@ -440,7 +444,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      *
      * @since 7.0.0
      */
-     public static class FileInfo implements Serializable {
+    public static class FileInfo implements Serializable {
 
         private static final long serialVersionUID = 1083158552766906037L;
 
@@ -451,8 +455,8 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         /**
          * Default constructor.
          *
-         * @param file the file
-         * @param contentType content type
+         * @param file         the file
+         * @param contentType  content type
          * @param originalName original file name
          */
         public FileInfo(File file, String contentType, String originalName) {

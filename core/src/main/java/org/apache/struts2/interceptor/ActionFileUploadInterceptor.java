@@ -18,22 +18,19 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -173,32 +170,30 @@ import java.util.Map;
  * <!-- END SNIPPET: example-action -->
  * </pre>
  */
-public class FileUploadInterceptor extends AbstractFileUploadInterceptor {
+public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
 
-    private static final long serialVersionUID = -4764627478894962478L;
-
-    protected static final Logger LOG = LogManager.getLogger(FileUploadInterceptor.class);
+    protected static final Logger LOG = LogManager.getLogger(ActionFileUploadInterceptor.class);
 
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
-
     public String intercept(ActionInvocation invocation) throws Exception {
-        ActionContext ac = invocation.getInvocationContext();
-
-        HttpServletRequest request = ac.getServletRequest();
-
+        HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         if (!(request instanceof MultiPartRequestWrapper)) {
-            if (LOG.isDebugEnabled()) {
-                ActionProxy proxy = invocation.getProxy();
-                LOG.debug(getTextMessage("struts.messages.bypass.request", new String[]{proxy.getNamespace(), proxy.getActionName()}));
-            }
-
+            ActionProxy proxy = invocation.getProxy();
+            LOG.debug(getTextMessage("struts.messages.bypass.request", new String[]{proxy.getNamespace(), proxy.getActionName()}));
             return invocation.invoke();
         }
 
-        Object action = invocation.getAction();
         MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
+
+        if (!(invocation.getAction() instanceof UploadedFilesAware)) {
+            LOG.debug("Action: {} doesn't implement: {}, ignoring file upload",
+                invocation.getProxy().getActionName(),
+                UploadedFilesAware.class.getSimpleName());
+            return invocation.invoke();
+        }
+        UploadedFilesAware action = (UploadedFilesAware) invocation.getAction();
 
         applyValidation(action, multiWrapper);
 
@@ -220,25 +215,18 @@ public class FileUploadInterceptor extends AbstractFileUploadInterceptor {
                     UploadedFile[] files = multiWrapper.getFiles(inputName);
                     if (files != null && files.length > 0) {
                         List<UploadedFile> acceptedFiles = new ArrayList<>(files.length);
-                        List<String> acceptedContentTypes = new ArrayList<>(files.length);
-                        List<String> acceptedFileNames = new ArrayList<>(files.length);
-                        String contentTypeName = inputName + "ContentType";
-                        String fileNameName = inputName + "FileName";
 
                         for (int index = 0; index < files.length; index++) {
                             if (acceptFile(action, files[index], fileName[index], contentType[index], inputName)) {
                                 acceptedFiles.add(files[index]);
-                                acceptedContentTypes.add(contentType[index]);
-                                acceptedFileNames.add(fileName[index]);
                             }
                         }
 
-                        if (!acceptedFiles.isEmpty()) {
-                            Map<String, Parameter> newParams = new HashMap<>();
-                            newParams.put(inputName, new Parameter.File(inputName, acceptedFiles.toArray(new UploadedFile[0])));
-                            newParams.put(contentTypeName, new Parameter.File(contentTypeName, acceptedContentTypes.toArray(new String[0])));
-                            newParams.put(fileNameName, new Parameter.File(fileNameName, acceptedFileNames.toArray(new String[0])));
-                            ac.getParameters().appendAll(newParams);
+                        if (acceptedFiles.isEmpty()) {
+                            LOG.debug("No files have been uploaded/accepted");
+                        } else {
+                            LOG.debug("Passing: {} uploaded file(s) to action", acceptedFiles.size());
+                            action.withUploadedFiles(acceptedFiles);
                         }
                     }
                 } else {

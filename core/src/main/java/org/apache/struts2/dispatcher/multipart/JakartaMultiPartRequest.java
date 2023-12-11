@@ -243,7 +243,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                     LOG.error("Cannot write uploaded empty file to disk: {}", storeLocation.getAbsolutePath(), e);
                 }
             }
-            fileList.add(new StrutsUploadedFile(storeLocation));
+            UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(storeLocation)
+                .withContentType(fileItem.getContentType())
+                .withOriginalName(fileItem.getName())
+                .build();
+            fileList.add(uploadedFile);
         }
 
         return fileList.toArray(new UploadedFile[0]);

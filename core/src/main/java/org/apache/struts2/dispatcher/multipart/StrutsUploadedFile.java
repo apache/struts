@@ -79,6 +79,14 @@ public class StrutsUploadedFile implements UploadedFile {
         return originalName;
     }
 
+    @Override
+    public String toString() {
+        return "StrutsUploadedFile{" +
+            "contentType='" + contentType + '\'' +
+            ", originalName='" + originalName + '\'' +
+            '}';
+    }
+
     public static class Builder {
         private final File file;
         private String contentType;

@@ -18,10 +18,12 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import java.io.Serializable;
+
 /**
  * Virtual representation of a uploaded file used by {@link MultiPartRequest}
  */
-public interface UploadedFile {
+public interface UploadedFile extends Serializable {
 
     Long length();
 

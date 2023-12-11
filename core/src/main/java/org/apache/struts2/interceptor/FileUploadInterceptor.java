@@ -191,7 +191,7 @@ public class FileUploadInterceptor extends AbstractFileUploadInterceptor {
         if (!(request instanceof MultiPartRequestWrapper)) {
             if (LOG.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
-                LOG.debug(getTextMessage("struts.messages.bypass.request", new String[]{proxy.getNamespace(), proxy.getActionName()}));
+                LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY, new String[]{proxy.getNamespace(), proxy.getActionName()}));
             }
 
             return invocation.invoke();
@@ -243,12 +243,12 @@ public class FileUploadInterceptor extends AbstractFileUploadInterceptor {
                     }
                 } else {
                     if (LOG.isWarnEnabled()) {
-                        LOG.warn(getTextMessage(action, "struts.messages.invalid.file", new String[]{inputName}));
+                        LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_FILE_KEY, new String[]{inputName}));
                     }
                 }
             } else {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn(getTextMessage(action, "struts.messages.invalid.content.type", new String[]{inputName}));
+                    LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY, new String[]{inputName}));
                 }
             }
         }

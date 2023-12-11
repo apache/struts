@@ -26,6 +26,11 @@ public class StrutsUploadedFile implements UploadedFile {
     private final String contentType;
     private final String originalName;
 
+    /**
+     * Use builder instead of constructor
+     * @param file an uploaded file
+     * @deprecated since Struts 6.4.0
+     */
     @Deprecated
     public StrutsUploadedFile(File file) {
         this.file = file;

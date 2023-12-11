@@ -180,8 +180,10 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         if (!(request instanceof MultiPartRequestWrapper)) {
-            ActionProxy proxy = invocation.getProxy();
-            LOG.debug(getTextMessage("struts.messages.bypass.request", new String[]{proxy.getNamespace(), proxy.getActionName()}));
+            if (LOG.isDebugEnabled()) {
+                ActionProxy proxy = invocation.getProxy();
+                LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY, new String[]{proxy.getNamespace(), proxy.getActionName()}));
+            }
             return invocation.invoke();
         }
 
@@ -199,46 +201,31 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
 
         // bind allowed Files
         Enumeration<String> fileParameterNames = multiWrapper.getFileParameterNames();
+        List<UploadedFile> acceptedFiles = new ArrayList<>();
+
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
             // get the value of this input tag
             String inputName = fileParameterNames.nextElement();
+            UploadedFile[] uploadedFiles = multiWrapper.getFiles(inputName);
 
-            // get the content type
-            String[] contentType = multiWrapper.getContentTypes(inputName);
-
-            if (isNonEmpty(contentType)) {
-                // get the name of the file from the input tag
-                String[] fileName = multiWrapper.getFileNames(inputName);
-
-                if (isNonEmpty(fileName)) {
-                    // get a File object for the uploaded File
-                    UploadedFile[] files = multiWrapper.getFiles(inputName);
-                    if (files != null && files.length > 0) {
-                        List<UploadedFile> acceptedFiles = new ArrayList<>(files.length);
-
-                        for (int index = 0; index < files.length; index++) {
-                            if (acceptFile(action, files[index], fileName[index], contentType[index], inputName)) {
-                                acceptedFiles.add(files[index]);
-                            }
-                        }
-
-                        if (acceptedFiles.isEmpty()) {
-                            LOG.debug("No files have been uploaded/accepted");
-                        } else {
-                            LOG.debug("Passing: {} uploaded file(s) to action", acceptedFiles.size());
-                            action.withUploadedFiles(acceptedFiles);
-                        }
-                    }
-                } else {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn(getTextMessage(action, "struts.messages.invalid.file", new String[]{inputName}));
-                    }
+            if (uploadedFiles == null || uploadedFiles.length == 0) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_FILE_KEY, new String[]{inputName}));
                 }
             } else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn(getTextMessage(action, "struts.messages.invalid.content.type", new String[]{inputName}));
+                for (UploadedFile uploadedFile : uploadedFiles) {
+                    if (acceptFile(action, uploadedFile, uploadedFile.getOriginalName(), uploadedFile.getContentType(), inputName)) {
+                        acceptedFiles.add(uploadedFile);
+                    }
                 }
             }
+        }
+
+        if (acceptedFiles.isEmpty()) {
+            LOG.debug("No files have been uploaded/accepted");
+        } else {
+            LOG.debug("Passing: {} uploaded file(s) to action", acceptedFiles.size());
+            action.withUploadedFiles(acceptedFiles);
         }
 
         // invoke action
@@ -246,3 +233,4 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
     }
 
 }
+

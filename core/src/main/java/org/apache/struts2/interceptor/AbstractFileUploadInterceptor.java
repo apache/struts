@@ -45,6 +45,14 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
 
     private static final Logger LOG = LogManager.getLogger(AbstractFileUploadInterceptor.class);
 
+    public static final String STRUTS_MESSAGES_BYPASS_REQUEST_KEY = "struts.messages.bypass.request";
+    public static final String STRUTS_MESSAGES_ERROR_UPLOADING_KEY = "struts.messages.error.uploading";
+    public static final String STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY = "struts.messages.error.file.too.large";
+    public static final String STRUTS_MESSAGES_INVALID_FILE_KEY = "struts.messages.invalid.file";
+    public static final String STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY = "struts.messages.invalid.content.type";
+    public static final String STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY = "struts.messages.error.content.type.not.allowed";
+    public static final String STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY = "struts.messages.error.file.extension.not.allowed";
+
     protected Long maximumSize;
     protected Set<String> allowedTypesSet = Collections.emptySet();
     protected Set<String> allowedExtensionsSet = Collections.emptySet();
@@ -109,31 +117,31 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
 
         // If it's null the upload failed
         if (file == null) {
-            String errMsg = getTextMessage(action, "struts.messages.error.uploading", new String[]{inputName});
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{inputName});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
             LOG.warn(errMsg);
         } else if (file.getContent() == null) {
-            String errMsg = getTextMessage(action, "struts.messages.error.uploading", new String[]{filename});
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{filename});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
             LOG.warn(errMsg);
         } else if (maximumSize != null && maximumSize < file.length()) {
-            String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new String[]{inputName, filename, file.getName(), "" + file.length(), getMaximumSizeStr(action)});
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{inputName, filename, file.getName(), "" + file.length(), getMaximumSizeStr(action)});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
             LOG.warn(errMsg);
         } else if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
-            String errMsg = getTextMessage(action, "struts.messages.error.content.type.not.allowed", new String[]{inputName, filename, file.getName(), contentType});
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY, new String[]{inputName, filename, file.getName(), contentType});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
             LOG.warn(errMsg);
         } else if ((!allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, filename))) {
-            String errMsg = getTextMessage(action, "struts.messages.error.file.extension.not.allowed", new String[]{inputName, filename, file.getName(), contentType});
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY, new String[]{inputName, filename, file.getName(), contentType});
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
@@ -237,7 +245,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
                 if (textProvider.hasKey(error.getTextKey())) {
                     errorMessage = textProvider.getText(error.getTextKey(), Arrays.asList(error.getArgs()));
                 } else {
-                    errorMessage = textProvider.getText("struts.messages.error.uploading", error.getDefaultMessage());
+                    errorMessage = textProvider.getText(STRUTS_MESSAGES_ERROR_UPLOADING_KEY, error.getDefaultMessage());
                 }
                 validation.addActionError(errorMessage);
             }

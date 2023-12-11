@@ -24,15 +24,12 @@ import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * Show case File Upload example's action. <code>FileUploadAction</code>
  */
 public class FileUploadAction extends ActionSupport implements UploadedFilesAware {
-
-    private static final long serialVersionUID = 5156288255337069381L;
 
     private String contentType;
     private UploadedFile uploadedFile;

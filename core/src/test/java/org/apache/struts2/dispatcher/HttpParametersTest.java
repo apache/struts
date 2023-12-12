@@ -24,7 +24,6 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class HttpParametersTest {
@@ -51,7 +50,7 @@ public class HttpParametersTest {
 
         // then
         assertFalse(params.remove("Param1").contains("param1"));
-        assertNull(params.get("param1"));
+        assertEquals(new Parameter.Empty("param1"), params.get("param1"));
     }
 
     @Test

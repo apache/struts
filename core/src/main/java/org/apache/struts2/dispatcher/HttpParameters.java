@@ -111,11 +111,11 @@ public class HttpParameters implements Map<String, Parameter> {
 
     @Override
     public Parameter get(Object key) {
-        if (key != null) {
-            return parameters.get(String.valueOf(key));
-        } else {
-            return null;
+        if (key == null) {
+            return new Parameter.Empty("null");
         }
+        Parameter val = parameters.get(key.toString());
+        return val != null ? val : new Parameter.Empty(key.toString());
     }
 
     @Override

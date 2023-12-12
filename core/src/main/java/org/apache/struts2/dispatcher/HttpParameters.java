@@ -49,7 +49,7 @@ public class HttpParameters implements Map<String, Parameter> {
 
     public HttpParameters remove(Set<String> paramsToRemove) {
         for (String paramName : paramsToRemove) {
-            parameters.entrySet().removeIf(p -> p.getKey().equalsIgnoreCase(paramName));
+            parameters.remove(paramName);
         }
         return this;
     }
@@ -85,7 +85,6 @@ public class HttpParameters implements Map<String, Parameter> {
      * @return a current instance of {@link HttpParameters}
      */
     public HttpParameters appendAll(Map<String, Parameter> newParams) {
-        remove(newParams.keySet());
         parameters.putAll(newParams);
         return this;
     }
@@ -112,10 +111,10 @@ public class HttpParameters implements Map<String, Parameter> {
 
     @Override
     public Parameter get(Object key) {
-        if (key != null && contains(String.valueOf(key))) {
-            return parameters.get(key);
+        if (key != null) {
+            return parameters.get(String.valueOf(key));
         } else {
-            return new Parameter.Empty(String.valueOf(key));
+            return null;
         }
     }
 

@@ -23,6 +23,8 @@ import org.junit.Test;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class HttpParametersTest {
@@ -38,6 +40,18 @@ public class HttpParametersTest {
         assertEquals("value1", params.get("Param1").getValue());
         assertEquals("value1", params.get("paraM1").getValue());
         assertEquals("value1", params.get("pAraM1").getValue());
+    }
+
+    @Test
+    public void shouldRemoveBeCaseInsensitive() {
+        // given
+        HttpParameters params = HttpParameters.create(new HashMap<String, Object>() {{
+            put("param1", "value1");
+        }}).build();
+
+        // then
+        assertFalse(params.remove("Param1").contains("param1"));
+        assertNull(params.get("param1"));
     }
 
     @Test

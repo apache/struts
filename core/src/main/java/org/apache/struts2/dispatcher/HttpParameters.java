@@ -34,7 +34,8 @@ public class HttpParameters implements Map<String, Parameter> {
     final private Map<String, Parameter> parameters;
 
     private HttpParameters(Map<String, Parameter> parameters) {
-        this.parameters = parameters;
+        this.parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        this.parameters.putAll(parameters);
     }
 
     @SuppressWarnings("rawtypes")
@@ -43,7 +44,7 @@ public class HttpParameters implements Map<String, Parameter> {
     }
 
     public static Builder create() {
-        return new Builder(new HashMap<>());
+        return new Builder(new TreeMap<>(String.CASE_INSENSITIVE_ORDER));
     }
 
     public HttpParameters remove(Set<String> paramsToRemove) {
@@ -60,7 +61,7 @@ public class HttpParameters implements Map<String, Parameter> {
     }
 
     public boolean contains(String name) {
-        return parameters.keySet().stream().anyMatch(p -> p.equalsIgnoreCase(name));
+        return parameters.containsKey(name);
     }
 
     /**
@@ -112,10 +113,7 @@ public class HttpParameters implements Map<String, Parameter> {
     @Override
     public Parameter get(Object key) {
         if (key != null && contains(String.valueOf(key))) {
-            return parameters.entrySet().stream()
-                .filter(p -> p.getKey().equalsIgnoreCase(String.valueOf(key)))
-                .findFirst().map(Entry::getValue)
-                .orElse(new Parameter.Empty(String.valueOf(key)));
+            return parameters.get(key);
         } else {
             return new Parameter.Empty(String.valueOf(key));
         }

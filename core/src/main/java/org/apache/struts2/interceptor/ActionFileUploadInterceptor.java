@@ -33,105 +33,62 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * <!-- START SNIPPET: description -->
  * <p>
  * Interceptor that is based off of {@link MultiPartRequestWrapper}, which is automatically applied for any request that
- * includes a file. It adds the following parameters, where [File Name] is the name given to the file uploaded by the
- * HTML form:
- * </p>
- * <ul>
- *
- * <li>[File Name] : File - the actual File</li>
- *
- * <li>[File Name]ContentType : String - the content type of the file</li>
- *
- * <li>[File Name]FileName : String - the actual name of the file uploaded (not the HTML name)</li>
- *
- * </ul>
- *
- * <p>You can get access to these files by merely providing setters in your action that correspond to any of the three
- * patterns above, such as setDocument(File document), setDocumentContentType(String contentType), etc.
- * <br>See the example code section.
+ * includes a file when the support for multi-part request is enabled,
+ * see <a href="https://struts.apache.org/core-developers/file-upload.html#disabling-file-upload-support">Disabling file upload</a>.
  * </p>
  *
- * <p> This interceptor will add several field errors, assuming that the action implements {@link ValidationAware}.
+ * <p>
+ * You can get access to these files by implementing {@link UploadedFilesAware} interface. The interceptor will then
+ * call {@link UploadedFilesAware#withUploadedFiles(List)} when there are files which were accepted during the upload process.
+ * </p>
+ *
+ * <p>
+ * This interceptor will add several field errors, assuming that the action implements {@link ValidationAware}.
  * These error messages are based on several i18n values stored in struts-messages.properties, a default i18n file
  * processed for all i18n requests. You can override the text of these messages by providing text for the following
  * keys:
  * </p>
  *
  * <ul>
- *
  * <li>struts.messages.error.uploading - a general error that occurs when the file could not be uploaded</li>
- *
  * <li>struts.messages.error.file.too.large - occurs when the uploaded file is too large</li>
- *
  * <li>struts.messages.error.content.type.not.allowed - occurs when the uploaded file does not match the expected
  * content types specified</li>
- *
  * <li>struts.messages.error.file.extension.not.allowed - occurs when the uploaded file does not match the expected
  * file extensions specified</li>
- *
  * </ul>
- * <p>
- * <!-- END SNIPPET: description -->
  *
- * <p><u>Interceptor parameters:</u></p>
- * <p>
- * <!-- START SNIPPET: parameters -->
- *
+ * <p>Interceptor parameters:</p>
  * <ul>
- *
  * <li>maximumSize (optional) - the maximum size (in bytes) that the interceptor will allow a file reference to be set
  * on the action. Note, this is <b>not</b> related to the various properties found in struts.properties.
  * Default to approximately 2MB.</li>
- *
  * <li>allowedTypes (optional) - a comma separated list of content types (ie: text/html) that the interceptor will allow
  * a file reference to be set on the action. If none is specified allow all types to be uploaded.</li>
- *
  * <li>allowedExtensions (optional) - a comma separated list of file extensions (ie: .html) that the interceptor will allow
  * a file reference to be set on the action. If none is specified allow all extensions to be uploaded.</li>
  * </ul>
- * <p>
- * <p>
- * <!-- END SNIPPET: parameters -->
  *
- * <p><u>Extending the interceptor:</u></p>
- * <p>
- * <p>
- * <p>
- * <!-- START SNIPPET: extending -->
- * <p>
- * You can extend this interceptor and override the acceptFile method to provide more control over which files
- * are supported and which are not.
- * </p>
- * <!-- END SNIPPET: extending -->
- *
- * <p><u>Example code:</u></p>
+ * <p>Example code:</p>
  *
  * <pre>
- * <!-- START SNIPPET: example-configuration -->
  * &lt;action name="doUpload" class="com.example.UploadAction"&gt;
- *     &lt;interceptor-ref name="fileUpload"/&gt;
+ *     &lt;interceptor-ref name="actionFileUpload"/&gt;
  *     &lt;interceptor-ref name="basicStack"/&gt;
  *     &lt;result name="success"&gt;good_result.jsp&lt;/result&gt;
  * &lt;/action&gt;
- * <!-- END SNIPPET: example-configuration -->
  * </pre>
  * <p>
- * <!-- START SNIPPET: multipart-note -->
  * <p>
  * You must set the encoding to <code>multipart/form-data</code> in the form where the user selects the file to upload.
  * </p>
- * <!-- END SNIPPET: multipart-note -->
- *
  * <pre>
- * <!-- START SNIPPET: example-form -->
  *   &lt;s:form action="doUpload" method="post" enctype="multipart/form-data"&gt;
  *       &lt;s:file name="upload" label="File"/&gt;
  *       &lt;s:submit/&gt;
  *   &lt;/s:form&gt;
- * <!-- END SNIPPET: example-form -->
  * </pre>
  * <p>
  * And then in your action code you'll have access to the File object if you provide setters according to the
@@ -139,35 +96,33 @@ import java.util.List;
  * </p>
  *
  * <pre>
- * <!-- START SNIPPET: example-action -->
- *    package com.example;
+ *  package com.example;
  *
- *    import java.io.File;
- *    import com.opensymphony.xwork2.ActionSupport;
+ *  import java.io.File;
+ *  import com.opensymphony.xwork2.ActionSupport;
+ *  import org.apache.struts2.action.UploadedFilesAware;
  *
- *    public UploadAction extends ActionSupport {
- *       private File file;
- *       private String contentType;
- *       private String filename;
+ *  public UploadAction extends ActionSupport implements UploadedFilesAware {
+ *    private UploadedFile uploadedFile;
+ *    private String contentType;
+ *    private String fileName;
+ *    private String originalName;
  *
- *       public void setUpload(File file) {
- *          this.file = file;
- *       }
+ *    &#064;Override
+ *    public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
+ *        if (!uploadedFiles.isEmpty() > 0) {
+ *            this.uploadedFile = uploadedFiles.get(0);
+ *            this.fileName = uploadedFile.getName();
+ *            this.contentType = uploadedFile.getContentType();
+ *            this.originalName = uploadedFile.getOriginalName();
+ *        }
+ *    }
  *
- *       public void setUploadContentType(String contentType) {
- *          this.contentType = contentType;
- *       }
- *
- *       public void setUploadFileName(String filename) {
- *          this.filename = filename;
- *       }
- *
- *       public String execute() {
- *          //...
- *          return SUCCESS;
- *       }
+ *    public String execute() {
+ *       //...
+ *       return SUCCESS;
+ *    }
  *  }
- * <!-- END SNIPPET: example-action -->
  * </pre>
  */
 public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {

@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Multi-part form data request adapter for Jakarta Commons FileUpload package that
@@ -109,16 +110,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             return null;
         }
 
-        List<UploadedFile> files = new ArrayList<>(infos.size());
-        for (FileInfo fileInfo : infos) {
-            UploadedFile file = StrutsUploadedFile.Builder.create(fileInfo.getFile())
+        return infos.stream().map(fileInfo ->
+            StrutsUploadedFile.Builder.create(fileInfo.getFile())
                 .withContentType(fileInfo.contentType)
                 .withOriginalName(fileInfo.originalName)
-                .build();
-            files.add(file);
-        }
-
-        return files.toArray(new UploadedFile[0]);
+                .build()
+        ).toArray(UploadedFile[]::new);
     }
 
     /* (non-Javadoc)

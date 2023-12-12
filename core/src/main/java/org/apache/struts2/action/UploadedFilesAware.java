@@ -33,7 +33,7 @@ public interface UploadedFilesAware {
      * Notifies action about the multiple uploaded files, when a single file is uploaded
      * the list will have just one element
      *
-     * @param uploadedFiles a list of {@link UploadedFile}.
+     * @param uploadedFiles a list of {@link UploadedFile}, cannot be null. It can be empty.
      */
     void withUploadedFiles(List<UploadedFile> uploadedFiles);
 

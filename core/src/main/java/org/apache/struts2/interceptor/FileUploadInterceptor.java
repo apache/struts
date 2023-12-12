@@ -172,7 +172,10 @@ import java.util.Map;
  *  }
  * <!-- END SNIPPET: example-action -->
  * </pre>
+ *
+ * @deprecated since Struts 6.4.0, use {@link ActionFileUploadInterceptor} instead
  */
+@Deprecated
 public class FileUploadInterceptor extends AbstractFileUploadInterceptor {
 
     private static final long serialVersionUID = -4764627478894962478L;

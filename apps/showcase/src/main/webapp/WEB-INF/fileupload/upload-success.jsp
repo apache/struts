@@ -19,7 +19,7 @@
 */
 -->
 <%@ page
-	language="java" 
+	language="java"
 	contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
@@ -37,9 +37,10 @@
 	<div class="row">
 		<div class="col-md-12">
 			<ul>
-		        <li>ContentType: <s:property value="uploadContentType" /></li>
-		        <li>FileName: <s:property value="uploadFileName" /></li>
-		        <li>File: <s:property value="upload" /></li>
+		        <li>ContentType: <s:property value="contentType" /></li>
+		        <li>FileName: <s:property value="fileName" /></li>
+		        <li>Original FileName: <s:property value="originalName" /></li>
+		        <li>File: <s:property value="uploadedFile" /></li>
 		        <li>Caption:<s:property value="caption" /></li>
 	        </ul>
 		</div>

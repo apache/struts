@@ -34,10 +34,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UploadedFileConverterTest {
 
     private Map<String, Object> context;
-    private Class target;
+    private Class<?> target;
     private Member member;
     private String propertyName;
     private File tempFile;
+    private String contentType;
+    private String originalName;
 
     @Before
     public void setUp() throws Exception {
@@ -46,6 +48,8 @@ public class UploadedFileConverterTest {
         member = File.class.getMethod("length");
         propertyName = "ignore";
         tempFile = File.createTempFile("struts", "test");
+        contentType = "text/plain";
+        originalName = tempFile.getName();
     }
 
     @After
@@ -54,10 +58,10 @@ public class UploadedFileConverterTest {
     }
 
     @Test
-    public void convertUploadedFileToFile() throws Exception {
+    public void convertUploadedFileToFile() {
         // given
         UploadedFileConverter ufc = new UploadedFileConverter();
-        UploadedFile uploadedFile = new StrutsUploadedFile(tempFile);
+        UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(tempFile).withContentType(this.contentType).withOriginalName(this.originalName).build();
 
         // when
         Object result = ufc.convertValue(context, target, member, propertyName, uploadedFile, File.class);
@@ -70,10 +74,15 @@ public class UploadedFileConverterTest {
     }
 
     @Test
-    public void convertUploadedFileArrayToFile() throws Exception {
+    public void convertUploadedFileArrayToFile() {
         // given
         UploadedFileConverter ufc = new UploadedFileConverter();
-        UploadedFile[] uploadedFile = new UploadedFile[] { new StrutsUploadedFile(tempFile) };
+        UploadedFile[] uploadedFile = new UploadedFile[]{
+            StrutsUploadedFile.Builder.create(tempFile)
+                .withContentType(this.contentType)
+                .withOriginalName(this.originalName)
+                .build()
+        };
 
         // when
         Object result = ufc.convertValue(context, target, member, propertyName, uploadedFile, File.class);

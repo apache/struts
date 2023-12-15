@@ -31,7 +31,6 @@ import java.util.List;
 
 /**
  * Multipart form data request adapter for Jason Pell's multipart utils package.
- *
  */
 public class PellMultiPartRequest extends AbstractMultiPartRequest {
 
@@ -69,7 +68,11 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     public UploadedFile[] getFile(String fieldName) {
-        return new UploadedFile[]{ new StrutsUploadedFile(multi.getFile(fieldName)) };
+        return new UploadedFile[]{StrutsUploadedFile.Builder.create(multi.getFile(fieldName))
+            .withContentType(multi.getContentType(fieldName))
+            .withOriginalName(multi.getFileSystemName(fieldName))
+            .build()
+        };
     }
 
     public String[] getFileNames(String fieldName) {
@@ -132,7 +135,7 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
             }
         } catch (IllegalArgumentException e) {
             if (LOG.isInfoEnabled()) {
-        	    LOG.info("Could not get encoding property 'struts.i18n.encoding' for file upload.  Using system default");
+                LOG.info("Could not get encoding property 'struts.i18n.encoding' for file upload.  Using system default");
             }
         } catch (UnsupportedEncodingException e) {
             LOG.error("Encoding " + encoding + " is not a valid encoding.  Please check your struts.properties file.");
@@ -140,8 +143,8 @@ public class PellMultiPartRequest extends AbstractMultiPartRequest {
     }
 
     /* (non-Javadoc)
-    * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
-    */
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
+     */
     public void cleanUp() {
         Enumeration fileParameterNames = multi.getFileParameterNames();
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {

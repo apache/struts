@@ -18,23 +18,22 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
-import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
-import org.apache.struts2.util.ContentTypeMatcher;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -77,11 +76,11 @@ import java.util.*;
  * file extensions specified</li>
  *
  * </ul>
- *
+ * <p>
  * <!-- END SNIPPET: description -->
  *
  * <p><u>Interceptor parameters:</u></p>
- *
+ * <p>
  * <!-- START SNIPPET: parameters -->
  *
  * <ul>
@@ -96,14 +95,14 @@ import java.util.*;
  * <li>allowedExtensions (optional) - a comma separated list of file extensions (ie: .html) that the interceptor will allow
  * a file reference to be set on the action. If none is specified allow all extensions to be uploaded.</li>
  * </ul>
- *
- *
+ * <p>
+ * <p>
  * <!-- END SNIPPET: parameters -->
  *
  * <p><u>Extending the interceptor:</u></p>
- *
- *
- *
+ * <p>
+ * <p>
+ * <p>
  * <!-- START SNIPPET: extending -->
  * <p>
  * You can extend this interceptor and override the acceptFile method to provide more control over which files
@@ -122,7 +121,7 @@ import java.util.*;
  * &lt;/action&gt;
  * <!-- END SNIPPET: example-configuration -->
  * </pre>
- *
+ * <p>
  * <!-- START SNIPPET: multipart-note -->
  * <p>
  * You must set the encoding to <code>multipart/form-data</code> in the form where the user selects the file to upload.
@@ -173,56 +172,15 @@ import java.util.*;
  *  }
  * <!-- END SNIPPET: example-action -->
  * </pre>
+ *
+ * @deprecated since Struts 6.4.0, use {@link ActionFileUploadInterceptor} instead
  */
-public class FileUploadInterceptor extends AbstractInterceptor {
+@Deprecated
+public class FileUploadInterceptor extends AbstractFileUploadInterceptor {
 
     private static final long serialVersionUID = -4764627478894962478L;
 
     protected static final Logger LOG = LogManager.getLogger(FileUploadInterceptor.class);
-
-    protected Long maximumSize;
-    protected Set<String> allowedTypesSet = Collections.emptySet();
-    protected Set<String> allowedExtensionsSet = Collections.emptySet();
-
-    private ContentTypeMatcher matcher;
-    private Container container;
-
-    @Inject
-    public void setMatcher(ContentTypeMatcher matcher) {
-        this.matcher = matcher;
-    }
-
-    @Inject
-    public void setContainer(Container container) {
-        this.container = container;
-    }
-
-    /**
-     * Sets the allowed extensions
-     *
-     * @param allowedExtensions A comma-delimited list of extensions
-     */
-    public void setAllowedExtensions(String allowedExtensions) {
-        allowedExtensionsSet = TextParseUtil.commaDelimitedStringToSet(allowedExtensions);
-    }
-
-    /**
-     * Sets the allowed mimetypes
-     *
-     * @param allowedTypes A comma-delimited list of types
-     */
-    public void setAllowedTypes(String allowedTypes) {
-        allowedTypesSet = TextParseUtil.commaDelimitedStringToSet(allowedTypes);
-    }
-
-    /**
-     * Sets the maximum size of an uploaded file
-     *
-     * @param maximumSize The maximum size in bytes
-     */
-    public void setMaximumSize(Long maximumSize) {
-        this.maximumSize = maximumSize;
-    }
 
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
@@ -236,40 +194,22 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         if (!(request instanceof MultiPartRequestWrapper)) {
             if (LOG.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
-                LOG.debug(getTextMessage("struts.messages.bypass.request", new String[]{proxy.getNamespace(), proxy.getActionName()}));
+                LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY, new String[]{proxy.getNamespace(), proxy.getActionName()}));
             }
 
             return invocation.invoke();
         }
 
-        ValidationAware validation = null;
-
         Object action = invocation.getAction();
-
-        if (action instanceof ValidationAware) {
-            validation = (ValidationAware) action;
-        }
-
         MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
 
-        if (multiWrapper.hasErrors() && validation != null) {
-            TextProvider textProvider = getTextProvider(action);
-            for (LocalizedMessage error : multiWrapper.getErrors()) {
-                String errorMessage;
-                if (textProvider.hasKey(error.getTextKey())) {
-                    errorMessage = textProvider.getText(error.getTextKey(), Arrays.asList(error.getArgs()));
-                } else {
-                    errorMessage = textProvider.getText("struts.messages.error.uploading", error.getDefaultMessage());
-                }
-                validation.addActionError(errorMessage);
-            }
-        }
+        applyValidation(action, multiWrapper);
 
         // bind allowed Files
-        Enumeration fileParameterNames = multiWrapper.getFileParameterNames();
+        Enumeration<String> fileParameterNames = multiWrapper.getFileParameterNames();
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
             // get the value of this input tag
-            String inputName = (String) fileParameterNames.nextElement();
+            String inputName = fileParameterNames.nextElement();
 
             // get the content type
             String[] contentType = multiWrapper.getContentTypes(inputName);
@@ -289,7 +229,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         String fileNameName = inputName + "FileName";
 
                         for (int index = 0; index < files.length; index++) {
-                            if (acceptFile(action, files[index], fileName[index], contentType[index], inputName, validation)) {
+                            if (acceptFile(action, files[index], fileName[index], contentType[index], inputName)) {
                                 acceptedFiles.add(files[index]);
                                 acceptedContentTypes.add(contentType[index]);
                                 acceptedFileNames.add(fileName[index]);
@@ -298,171 +238,26 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
                         if (!acceptedFiles.isEmpty()) {
                             Map<String, Parameter> newParams = new HashMap<>();
-                            newParams.put(inputName, new Parameter.File(inputName, acceptedFiles.toArray(new UploadedFile[acceptedFiles.size()])));
-                            newParams.put(contentTypeName, new Parameter.File(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()])));
-                            newParams.put(fileNameName, new Parameter.File(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()])));
+                            newParams.put(inputName, new Parameter.File(inputName, acceptedFiles.toArray(new UploadedFile[0])));
+                            newParams.put(contentTypeName, new Parameter.File(contentTypeName, acceptedContentTypes.toArray(new String[0])));
+                            newParams.put(fileNameName, new Parameter.File(fileNameName, acceptedFileNames.toArray(new String[0])));
                             ac.getParameters().appendAll(newParams);
                         }
                     }
                 } else {
                     if (LOG.isWarnEnabled()) {
-                        LOG.warn(getTextMessage(action, "struts.messages.invalid.file", new String[]{inputName}));
+                        LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_FILE_KEY, new String[]{inputName}));
                     }
                 }
             } else {
                 if (LOG.isWarnEnabled()) {
-                    LOG.warn(getTextMessage(action, "struts.messages.invalid.content.type", new String[]{inputName}));
+                    LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_CONTENT_TYPE_KEY, new String[]{inputName}));
                 }
             }
         }
 
         // invoke action
         return invocation.invoke();
-    }
-
-    /**
-     * Override for added functionality. Checks if the proposed file is acceptable based on contentType and size.
-     *
-     * @param action      - uploading action for message retrieval.
-     * @param file        - proposed upload file.
-     * @param filename    - name of the file.
-     * @param contentType - contentType of the file.
-     * @param inputName   - inputName of the file.
-     * @param validation  - Non-null ValidationAware if the action implements ValidationAware, allowing for better
-     *                    logging.
-     * @return true if the proposed file is acceptable by contentType and size.
-     */
-    protected boolean acceptFile(Object action, UploadedFile file, String filename, String contentType, String inputName, ValidationAware validation) {
-        boolean fileIsAcceptable = false;
-
-        // If it's null the upload failed
-        if (file == null) {
-            String errMsg = getTextMessage(action, "struts.messages.error.uploading", new String[]{inputName});
-            if (validation != null) {
-                validation.addFieldError(inputName, errMsg);
-            }
-
-            if (LOG.isWarnEnabled()) {
-                LOG.warn(errMsg);
-            }
-        } else if (file.getContent() == null) {
-            String errMsg = getTextMessage(action, "struts.messages.error.uploading", new String[]{filename});
-            if (validation != null) {
-                validation.addFieldError(inputName, errMsg);
-            }
-            if (LOG.isWarnEnabled()) {
-                LOG.warn(errMsg);
-            }
-        } else if (maximumSize != null && maximumSize < file.length()) {
-            String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new String[]{inputName, filename, file.getName(), "" + file.length(), getMaximumSizeStr(action)});
-            if (validation != null) {
-                validation.addFieldError(inputName, errMsg);
-            }
-
-            if (LOG.isWarnEnabled()) {
-                LOG.warn(errMsg);
-            }
-        } else if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
-            String errMsg = getTextMessage(action, "struts.messages.error.content.type.not.allowed", new String[]{inputName, filename, file.getName(), contentType});
-            if (validation != null) {
-                validation.addFieldError(inputName, errMsg);
-            }
-
-            if (LOG.isWarnEnabled()) {
-                LOG.warn(errMsg);
-            }
-        } else if ((!allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, filename))) {
-            String errMsg = getTextMessage(action, "struts.messages.error.file.extension.not.allowed", new String[]{inputName, filename, file.getName(), contentType});
-            if (validation != null) {
-                validation.addFieldError(inputName, errMsg);
-            }
-
-            if (LOG.isWarnEnabled()) {
-                LOG.warn(errMsg);
-            }
-        } else {
-            fileIsAcceptable = true;
-        }
-
-        return fileIsAcceptable;
-    }
-
-    private String getMaximumSizeStr(Object action) {
-        return NumberFormat.getNumberInstance(getLocaleProvider(action).getLocale()).format(maximumSize);
-    }
-
-    /**
-     * @param extensionCollection - Collection of extensions (all lowercase).
-     * @param filename            - filename to check.
-     * @return true if the filename has an allowed extension, false otherwise.
-     */
-    private boolean hasAllowedExtension(Collection<String> extensionCollection, String filename) {
-        if (filename == null) {
-            return false;
-        }
-
-        String lowercaseFilename = filename.toLowerCase();
-        for (String extension : extensionCollection) {
-            if (lowercaseFilename.endsWith(extension)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param itemCollection - Collection of string items (all lowercase).
-     * @param item           - Item to search for.
-     * @return true if itemCollection contains the item, false otherwise.
-     */
-    private boolean containsItem(Collection<String> itemCollection, String item) {
-        for (String pattern : itemCollection)
-            if (matchesWildcard(pattern, item))
-                return true;
-        return false;
-    }
-
-    private boolean matchesWildcard(String pattern, String text) {
-        Object o = matcher.compilePattern(pattern);
-        return matcher.match(new HashMap<String, String>(), text, o);
-    }
-
-    private boolean isNonEmpty(Object[] objArray) {
-        boolean result = false;
-        for (int index = 0; index < objArray.length && !result; index++) {
-            if (objArray[index] != null) {
-                result = true;
-            }
-        }
-        return result;
-    }
-
-    protected String getTextMessage(String messageKey, String[] args) {
-        return getTextMessage(this, messageKey, args);
-    }
-
-    protected String getTextMessage(Object action, String messageKey, String[] args) {
-        if (action instanceof TextProvider) {
-            return ((TextProvider) action).getText(messageKey, args);
-        }
-        return getTextProvider(action).getText(messageKey, args);
-    }
-
-    private TextProvider getTextProvider(Object action) {
-        TextProviderFactory tpf = container.getInstance(TextProviderFactory.class);
-        return tpf.createInstance(action.getClass());
-    }
-
-    private LocaleProvider getLocaleProvider(Object action) {
-        LocaleProvider localeProvider;
-        if (action instanceof LocaleProvider) {
-            localeProvider = (LocaleProvider) action;
-        } else {
-            LocaleProviderFactory localeProviderFactory = container.getInstance(LocaleProviderFactory.class);
-            localeProvider = localeProviderFactory.createLocaleProvider();
-        }
-        return localeProvider;
     }
 
 }

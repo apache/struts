@@ -22,10 +22,26 @@ import java.io.File;
 
 public class StrutsUploadedFile implements UploadedFile {
 
-    private File file;
+    private final File file;
+    private final String contentType;
+    private final String originalName;
 
+    /**
+     * Use builder instead of constructor
+     * @param file an uploaded file
+     * @deprecated since Struts 6.4.0
+     */
+    @Deprecated
     public StrutsUploadedFile(File file) {
         this.file = file;
+        this.contentType = null;
+        this.originalName = null;
+    }
+
+    private StrutsUploadedFile(File file, String contentType, String originalName) {
+        this.file = file;
+        this.contentType = contentType;
+        this.originalName = originalName;
     }
 
     @Override
@@ -56,5 +72,51 @@ public class StrutsUploadedFile implements UploadedFile {
     @Override
     public File getContent() {
         return file;
+    }
+
+    @Override
+    public String getContentType() {
+        return this.contentType;
+    }
+
+    @Override
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    @Override
+    public String toString() {
+        return "StrutsUploadedFile{" +
+            "contentType='" + contentType + '\'' +
+            ", originalName='" + originalName + '\'' +
+            '}';
+    }
+
+    public static class Builder {
+        private final File file;
+        private String contentType;
+        private String originalName;
+
+        private Builder(File file) {
+            this.file = file;
+        }
+
+        public static Builder create(File file) {
+            return new Builder(file);
+        }
+
+        public Builder withContentType(String contentType) {
+            this.contentType = contentType;
+            return this;
+        }
+
+        public Builder withOriginalName(String originalName) {
+            this.originalName = originalName;
+            return this;
+        }
+
+        public UploadedFile build() {
+            return new StrutsUploadedFile(this.file, this.contentType, this.originalName);
+        }
     }
 }

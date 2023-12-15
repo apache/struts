@@ -89,7 +89,7 @@
                     <failOnError>true</failOnError>
                 </configuration>
             </plugin>
-          </plugins>
+        </plugins>
     </build>
     <profiles>
         <profile>

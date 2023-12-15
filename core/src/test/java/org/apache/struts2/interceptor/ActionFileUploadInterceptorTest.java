@@ -44,6 +44,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Test case for {@link ActionFileUploadInterceptor}.
  */
@@ -199,7 +201,6 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testAcceptFileWithMaxSize() throws Exception {
-        interceptor.setAllowedTypes("text/plain");
         interceptor.setMaximumSize(10L);
 
         // when file is not of allowed types
@@ -218,9 +219,12 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         assertEquals(1, errors.size());
         String msg = errors.get(0);
         // the error message should contain at least this test
-        assertTrue(msg.startsWith("The file is too large to be uploaded"));
-        assertTrue(msg.indexOf("inputName") > 0);
-        assertTrue(msg.indexOf("log4j2.xml") > 0);
+        assertThat(msg).contains(
+            "The file is too large to be uploaded",
+            "inputName",
+            "log4j2.xml",
+            "allowed mx size is 10"
+        );
     }
 
     public void testNoMultipartRequest() throws Exception {

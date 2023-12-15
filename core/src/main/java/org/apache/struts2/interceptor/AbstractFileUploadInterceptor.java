@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor {
@@ -53,9 +54,9 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     public static final String STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY = "struts.messages.error.content.type.not.allowed";
     public static final String STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY = "struts.messages.error.file.extension.not.allowed";
 
-    protected Long maximumSize;
-    protected Set<String> allowedTypesSet = Collections.emptySet();
-    protected Set<String> allowedExtensionsSet = Collections.emptySet();
+    private Long maximumSize;
+    private Set<String> allowedTypesSet = Collections.emptySet();
+    private Set<String> allowedExtensionsSet = Collections.emptySet();
 
     private ContentTypeMatcher<Object> matcher;
     private Container container;
@@ -100,15 +101,15 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
     /**
      * Override for added functionality. Checks if the proposed file is acceptable based on contentType and size.
      *
-     * @param action      - uploading action for message retrieval.
-     * @param file        - proposed upload file.
-     * @param filename    - name of the file.
-     * @param contentType - contentType of the file.
-     * @param inputName   - inputName of the file.
+     * @param action           - uploading action for message retrieval.
+     * @param file             - proposed upload file.
+     * @param originalFilename - name of the file.
+     * @param contentType      - contentType of the file.
+     * @param inputName        - inputName of the file.
      * @return true if the proposed file is acceptable by contentType and size.
      */
-    protected boolean acceptFile(Object action, UploadedFile file, String filename, String contentType, String inputName) {
-        boolean fileIsAcceptable = false;
+    protected boolean acceptFile(Object action, UploadedFile file, String originalFilename, String contentType, String inputName) {
+        Set<String> errorMessages = new HashSet<>();
 
         ValidationAware validation = null;
         if (action instanceof ValidationAware) {
@@ -122,35 +123,42 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
                 validation.addFieldError(inputName, errMsg);
             }
             LOG.warn(errMsg);
-        } else if (file.getContent() == null) {
-            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{filename});
-            if (validation != null) {
-                validation.addFieldError(inputName, errMsg);
-            }
-            LOG.warn(errMsg);
-        } else if (maximumSize != null && maximumSize < file.length()) {
-            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{inputName, filename, file.getName(), "" + file.length(), getMaximumSizeStr(action)});
-            if (validation != null) {
-                validation.addFieldError(inputName, errMsg);
-            }
-            LOG.warn(errMsg);
-        } else if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
-            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY, new String[]{inputName, filename, file.getName(), contentType});
-            if (validation != null) {
-                validation.addFieldError(inputName, errMsg);
-            }
-            LOG.warn(errMsg);
-        } else if ((!allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, filename))) {
-            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY, new String[]{inputName, filename, file.getName(), contentType});
-            if (validation != null) {
-                validation.addFieldError(inputName, errMsg);
-            }
-            LOG.warn(errMsg);
-        } else {
-            fileIsAcceptable = true;
+            return false;
         }
 
-        return fileIsAcceptable;
+        if (file.getContent() == null) {
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_UPLOADING_KEY, new String[]{originalFilename});
+            errorMessages.add(errMsg);
+            LOG.warn(errMsg);
+        }
+        if (maximumSize != null && maximumSize < file.length()) {
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_TOO_LARGE_KEY, new String[]{
+                inputName, originalFilename, file.getName(), "" + file.length(), getMaximumSizeStr(action)
+            });
+            errorMessages.add(errMsg);
+            LOG.warn(errMsg);
+        }
+        if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_CONTENT_TYPE_NOT_ALLOWED_KEY, new String[]{
+                inputName, originalFilename, file.getName(), contentType
+            });
+            errorMessages.add(errMsg);
+            LOG.warn(errMsg);
+        }
+        if ((!allowedExtensionsSet.isEmpty()) && (!hasAllowedExtension(allowedExtensionsSet, originalFilename))) {
+            String errMsg = getTextMessage(action, STRUTS_MESSAGES_ERROR_FILE_EXTENSION_NOT_ALLOWED_KEY, new String[]{
+                inputName, originalFilename, file.getName(), contentType
+            });
+            errorMessages.add(errMsg);
+            LOG.warn(errMsg);
+        }
+        if (validation != null) {
+            for (String errorMsg : errorMessages) {
+                validation.addFieldError(inputName, errorMsg);
+            }
+        }
+
+        return errorMessages.isEmpty();
     }
 
     private String getMaximumSizeStr(Object action) {

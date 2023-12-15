@@ -18,6 +18,19 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.fileupload2.core.DiskFileItem;
 import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.core.FileItem;
@@ -33,17 +46,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
@@ -82,7 +84,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             } else if (e instanceof FileUploadSizeException) {
                 FileUploadSizeException ex = (FileUploadSizeException) e;
                 errorMessage = buildErrorMessage(e, new Object[]{ex.getPermitted(), ex.getActualSize()});
-            }   else {
+            } else {
                 errorMessage = buildErrorMessage(e, new Object[]{});
             }
 
@@ -369,7 +371,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                     try {
                         item.delete();
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw new UncheckedIOException(e);
                     }
                 }
             }

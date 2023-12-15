@@ -64,8 +64,6 @@ public class Restful2ActionMapperTest extends StrutsInternalTestCase {
     public void testGetIndex() throws Exception {
         req.setRequestURI("/my/namespace/foo/");
         req.setServletPath("/my/namespace/foo/");
-        //
-        //
         req.setMethod("GET");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);

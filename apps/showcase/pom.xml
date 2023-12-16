@@ -130,6 +130,12 @@
        </dependency>
 
        <dependency>
+           <groupId>org.assertj</groupId>
+           <artifactId>assertj-core</artifactId>
+           <scope>test</scope>
+       </dependency>
+
+       <dependency>
            <groupId>org.htmlunit</groupId>
            <artifactId>htmlunit</artifactId>
            <scope>test</scope>
@@ -231,7 +237,7 @@
                     <httpConnector>
                         <port>8090</port>
                     </httpConnector>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scan>10</scan>
                     <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
                     <webApp>
                       <extraClasspath>

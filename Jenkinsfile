@@ -37,63 +37,15 @@ pipeline {
         MAVEN_OPTS = "-Xmx1024m"
       }
       stages {
-        stage('Build') {
-          steps {
-            sh './mvnw -B clean install -DskipTests -DskipAssembly'
-          }
-        }
         stage('Test') {
           steps {
-            sh './mvnw -B test'
+            sh './mvnw -B -DskipAssembly verify --no-transfer-progress'
           }
           post {
             always {
               junit(testResults: '**/surefire-reports/*.xml', allowEmptyResults: true)
               junit(testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true)
             }
-          }
-        }
-        stage('Build Source & JavaDoc') {
-          when {
-            branch 'master'
-          }
-          steps {
-            dir("local-snapshots-dir/") {
-              deleteDir()
-            }
-            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly'
-          }
-        }
-        stage('Deploy Snapshot') {
-          when {
-            branch 'master'
-          }
-          steps {
-            withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
-              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly'
-            }
-          }
-        }
-        stage('Upload nightlies') {
-          when {
-            branch 'master'
-          }
-          steps {
-            sh './mvnw -B package -DskipTests'
-            sshPublisher(publishers: [
-                sshPublisherDesc(
-                    configName: 'Nightlies',
-                    transfers: [
-                        sshTransfer(
-                            remoteDirectory: '/struts/snapshot',
-                            removePrefix: 'assembly/target/assembly/out',
-                            sourceFiles: 'assembly/target/assembly/out/struts-*.zip',
-                            cleanRemote: true
-                        )
-                    ],
-                    verbose: true
-                )
-            ])
           }
         }
       }
@@ -115,14 +67,9 @@ pipeline {
         MAVEN_OPTS = "-Xmx1024m"
       }
       stages {
-        stage('Build') {
-          steps {
-            sh './mvnw -B clean install -DskipTests -DskipAssembly'
-          }
-        }
         stage('Test') {
           steps {
-            sh './mvnw -B verify -Pcoverage -DskipAssembly'
+            sh './mvnw -B verify -Pcoverage -DskipAssembly --no-transfer-progress'
           }
           post {
             always {
@@ -133,12 +80,64 @@ pipeline {
         }
         stage('Code Quality') {
           when {
-            branch 'master'
+            anyOf {
+              branch 'master'; branch 'release/struts-7-0-x'
+            }
           }
           steps {
             withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
               sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
             }
+          }
+        }
+        stage('Build Source & JavaDoc') {
+          when {
+            anyOf {
+              branch 'master'; branch 'release/struts-7-0-x'
+            }
+          }
+          steps {
+            dir("local-snapshots-dir/") {
+              deleteDir()
+            }
+            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly'
+          }
+        }
+        stage('Deploy Snapshot') {
+          when {
+            anyOf {
+              branch 'master'; branch 'release/struts-7-0-x'
+            }
+          }
+          steps {
+            withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
+              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly'
+            }
+          }
+        }
+        stage('Upload nightlies') {
+          when {
+            anyOf {
+              branch 'master'
+              branch 'release/struts-7-0-x'
+            }
+          }
+          steps {
+            sh './mvnw -B package -DskipTests'
+            sshPublisher(publishers: [
+                    sshPublisherDesc(
+                            configName: 'Nightlies',
+                            transfers: [
+                                    sshTransfer(
+                                            remoteDirectory: '/struts/snapshot',
+                                            removePrefix: 'assembly/target/assembly/out',
+                                            sourceFiles: 'assembly/target/assembly/out/struts-*.zip',
+                                            cleanRemote: true
+                                    )
+                            ],
+                            verbose: true
+                    )
+            ])
           }
         }
       }

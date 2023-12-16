@@ -25,7 +25,9 @@ import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload2.jakarta.JakartaServletDiskFileUpload;
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.action.UploadedFilesAware;
@@ -35,7 +37,6 @@ import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -290,13 +291,14 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
-        String content = ("-----1234\r\n" +
-            "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
-            "Content-Type: text/html\r\n" +
-            "\r\n" +
-            "Unit test of ActionFileUploadInterceptor" +
-            "\r\n" +
-            "-----1234--\r\n");
+        String content = ("""
+                -----1234\r
+                Content-Disposition: form-data; name="file"; filename="deleteme.txt"\r
+                Content-Type: text/html\r
+                \r
+                Unit test of ActionFileUploadInterceptor\r
+                -----1234--\r
+                """);
         req.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileUploadAction action = new MyFileUploadAction();
@@ -340,7 +342,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             endline;
         req.setContent(content.getBytes());
 
-        assertTrue(ServletFileUpload.isMultipartContent(req));
+        assertTrue(JakartaServletDiskFileUpload.isMultipartContent(req));
 
         MyFileUploadAction action = new MyFileUploadAction();
         container.inject(action);
@@ -377,7 +379,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
             endline;
         req.setContent(content.getBytes());
 
-        assertTrue(ServletFileUpload.isMultipartContent(req));
+        assertTrue(JakartaServletFileUpload.isMultipartContent(req));
 
         MyFileUploadAction action = new MyFileUploadAction();
         container.inject(action);
@@ -402,13 +404,14 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
-        String content = ("-----1234\r\n" +
-            "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
-            "Content-Type: text/html\r\n" +
-            "\r\n" +
-            "Unit test of ActionFileUploadInterceptor" +
-            "\r\n" +
-            "-----1234--\r\n");
+        String content = ("""
+                -----1234\r
+                Content-Disposition: form-data; name="file"; filename="deleteme.txt"\r
+                Content-Type: text/html\r
+                \r
+                Unit test of ActionFileUploadInterceptor\r
+                -----1234--\r
+                """);
         req.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileUploadAction action = container.inject(MyFileUploadAction.class);
@@ -439,23 +442,22 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
-        String content = ("-----1234\r\n" +
-            "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
-            "Content-Type: text/html\r\n" +
-            "\r\n" +
-            "Unit test of ActionFileUploadInterceptor" +
-            "\r\n" +
-            "-----1234\r\n" +
-            "Content-Disposition: form-data; name=\"normalFormField1\"\r\n" +
-            "\r\n" +
-            "it works" +
-            "\r\n" +
-            "-----1234\r\n" +
-            "Content-Disposition: form-data; name=\"normalFormField2\"\r\n" +
-            "\r\n" +
-            "long string should not work" +
-            "\r\n" +
-            "-----1234--\r\n");
+        String content = ("""
+                -----1234\r
+                Content-Disposition: form-data; name="file"; filename="deleteme.txt"\r
+                Content-Type: text/html\r
+                \r
+                Unit test of ActionFileUploadInterceptor\r
+                -----1234\r
+                Content-Disposition: form-data; name="normalFormField1"\r
+                \r
+                it works\r
+                -----1234\r
+                Content-Disposition: form-data; name="normalFormField2"\r
+                \r
+                long string should not work\r
+                -----1234--\r
+                """);
         req.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileUploadAction action = container.inject(MyFileUploadAction.class);
@@ -486,13 +488,14 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
-        String content = ("-----1234\r\n" +
-            "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
-            "Content-Type: text/html\r\n" +
-            "\r\n" +
-            "Unit test of ActionFileUploadInterceptor" +
-            "\r\n" +
-            "-----1234--\r\n");
+        String content = ("""
+                -----1234\r
+                Content-Disposition: form-data; name="file"; filename="deleteme.txt"\r
+                Content-Type: text/html\r
+                \r
+                Unit test of ActionFileUploadInterceptor\r
+                -----1234--\r
+                """);
         req.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileUploadAction action = container.inject(MyFileUploadAction.class);

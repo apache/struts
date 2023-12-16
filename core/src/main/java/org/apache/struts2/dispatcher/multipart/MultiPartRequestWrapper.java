@@ -55,9 +55,9 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
 
     protected static final Logger LOG = LogManager.getLogger(MultiPartRequestWrapper.class);
 
-    private Collection<LocalizedMessage> errors;
-    private MultiPartRequest multi;
-    private Locale defaultLocale = Locale.ENGLISH;
+    private final Collection<LocalizedMessage> errors;
+    private final MultiPartRequest multi;
+    private Locale defaultLocale;
 
     /**
      * Process file downloads and log any errors.
@@ -84,7 +84,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         } catch (IOException e) {
             LOG.warn(e.getMessage(), e);
             addError(buildErrorMessage(e, new Object[] {e.getMessage()}));
-        } 
+        }
     }
 
     public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request, String saveDir, LocaleProvider provider) {
@@ -185,12 +185,12 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     /**
      * @see jakarta.servlet.http.HttpServletRequest#getParameterMap()
      */
-    public Map getParameterMap() {
+    public Map<String, String[]> getParameterMap() {
         Map<String, String[]> map = new HashMap<>();
-        Enumeration enumeration = getParameterNames();
+        Enumeration<String> enumeration = getParameterNames();
 
         while (enumeration.hasMoreElements()) {
-            String name = (String) enumeration.nextElement();
+            String name = enumeration.nextElement();
             map.put(name, this.getParameterValues(name));
         }
 
@@ -200,7 +200,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     /**
      * @see jakarta.servlet.http.HttpServletRequest#getParameterNames()
      */
-    public Enumeration getParameterNames() {
+    public Enumeration<String> getParameterNames() {
         if (multi == null) {
             return super.getParameterNames();
         } else {
@@ -251,8 +251,8 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @param params2 the second enumeration.
      * @return a single Enumeration of all elements from both Enumerations.
      */
-    protected Enumeration mergeParams(Enumeration params1, Enumeration params2) {
-        Vector temp = new Vector();
+    protected Enumeration<String> mergeParams(Enumeration<String> params1, Enumeration<String> params2) {
+        Vector<String> temp = new Vector<>();
 
         while (params1.hasMoreElements()) {
             temp.add(params1.nextElement());

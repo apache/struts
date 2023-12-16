@@ -19,7 +19,8 @@
  * under the License.
  */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -115,7 +116,8 @@
                                     The tags interact with the framework's validation and
                                     internationalization features;
                                     to ensure that input is correct and output is localized.
-                                    The Struts Tags can be used with JSP FreeMarker or Velocity."</arg>
+                                    The Struts Tags can be used with JSP FreeMarker or Velocity."
+                                </arg>
                                 <arg>-AoutTemplatesDir=${basedir}/src/site/resources/tags</arg>
                             </compilerArgs>
                         </configuration>
@@ -180,8 +182,8 @@
 
     <dependencies>
         <dependency>
-          <groupId>org.apache.struts</groupId>
-          <artifactId>struts2-freemarker-jakarta</artifactId>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-freemarker-jakarta</artifactId>
         </dependency>
 
         <dependency>
@@ -197,7 +199,7 @@
 
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
-            <artifactId>jakarta.servlet.jsp-api</artifactId> 
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -278,7 +280,7 @@
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-core</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock</artifactId>

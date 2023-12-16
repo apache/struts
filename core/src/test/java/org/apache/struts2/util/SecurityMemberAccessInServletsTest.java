@@ -19,10 +19,10 @@
 package org.apache.struts2.util;
 
 import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
+import jakarta.servlet.jsp.tagext.TagSupport;
 import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.views.jsp.ActionTag;
 
-import jakarta.servlet.jsp.tagext.TagSupport;
 import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,9 +40,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
-        Set<Pattern> excluded = new HashSet<Pattern>();
-        excluded.add(Pattern.compile("^(?!jakarta\\.servlet\\..+)(jakarta\\..+)"));
-        sma.useExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns("^(?!jakarta\\.servlet\\..+)(jakarta\\..+)");
 
         String propertyName = "value";
         Member member = TagSupport.class.getMethod("doStartTag");
@@ -58,9 +56,7 @@ public class SecurityMemberAccessInServletsTest extends StrutsInternalTestCase {
         // given
         SecurityMemberAccess sma = new SecurityMemberAccess(true);
 
-        Set<Pattern> excluded = new HashSet<>();
-        excluded.add(Pattern.compile("^jakarta\\..+"));
-        sma.useExcludedPackageNamePatterns(excluded);
+        sma.useExcludedPackageNamePatterns("^jakarta\\..+");
 
         String propertyName = "value";
         Member member = TagSupport.class.getMethod("doStartTag");

@@ -36,6 +36,8 @@ import java.util.Locale;
  */
 public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
+    protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY = "struts.messages.upload.error.parameter.too.long";
+
     private static final Logger LOG = LogManager.getLogger(AbstractMultiPartRequest.class);
 
     /**

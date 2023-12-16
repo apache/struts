@@ -18,6 +18,22 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload2.core.DiskFileItem;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
+import org.apache.commons.fileupload2.core.FileUploadContentTypeException;
+import org.apache.commons.fileupload2.core.FileUploadException;
+import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
+import org.apache.commons.fileupload2.core.FileUploadSizeException;
+import org.apache.commons.fileupload2.core.RequestContext;
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.LocalizedMessage;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,22 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.fileupload2.core.DiskFileItem;
-import org.apache.commons.fileupload2.core.DiskFileItemFactory;
-import org.apache.commons.fileupload2.core.FileItem;
-import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
-import org.apache.commons.fileupload2.core.FileUploadException;
-import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
-import org.apache.commons.fileupload2.core.FileUploadSizeException;
-import org.apache.commons.fileupload2.core.RequestContext;
-import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.struts2.dispatcher.LocalizedMessage;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
@@ -77,13 +77,24 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             LocalizedMessage errorMessage;
             if (e instanceof FileUploadByteCountLimitException) {
                 FileUploadByteCountLimitException ex = (FileUploadByteCountLimitException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getFileName(), ex.getPermitted(), ex.getActualSize()});
+                errorMessage = buildErrorMessage(e, new Object[]{
+                        ex.getFieldName(), ex.getFileName(), ex.getPermitted(), ex.getActualSize()
+                });
             } else if (e instanceof FileUploadFileCountLimitException) {
                 FileUploadFileCountLimitException ex = (FileUploadFileCountLimitException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getPermitted()});
+                errorMessage = buildErrorMessage(e, new Object[]{
+                        ex.getPermitted(), ex.getActualSize()
+                });
             } else if (e instanceof FileUploadSizeException) {
                 FileUploadSizeException ex = (FileUploadSizeException) e;
-                errorMessage = buildErrorMessage(e, new Object[]{ex.getPermitted(), ex.getActualSize()});
+                errorMessage = buildErrorMessage(e, new Object[]{
+                        ex.getPermitted(), ex.getActualSize()
+                });
+            } else if (e instanceof FileUploadContentTypeException) {
+                FileUploadContentTypeException ex = (FileUploadContentTypeException) e;
+                errorMessage = buildErrorMessage(e, new Object[]{
+                        ex.getContentType()
+                });
             } else {
                 errorMessage = buildErrorMessage(e, new Object[]{});
             }
@@ -149,8 +160,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             long size = item.getSize();
             if (size > maxStringLength) {
                 LOG.debug("Form field {} of size {} bytes exceeds limit of {}.", sanitizeNewlines(item.getFieldName()), size, maxStringLength);
-                String errorKey = "struts.messages.upload.error.parameter.too.long";
-                LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(), errorKey, null,
+                LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(),
+                        STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY, null,
                         new Object[]{item.getFieldName(), maxStringLength, size});
                 if (!errors.contains(localizedMessage)) {
                     errors.add(localizedMessage);
@@ -174,7 +185,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         DiskFileItemFactory fac = createDiskFileItemFactory(saveDir);
         JakartaServletFileUpload upload = createServletFileUpload(fac);
 
-        
+
         return upload.parseRequest(createRequestContext(servletRequest));
     }
 
@@ -252,9 +263,9 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
                 }
             }
             UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(storeLocation)
-                .withContentType(fileItem.getContentType())
-                .withOriginalName(fileItem.getName())
-                .build();
+                    .withContentType(fileItem.getContentType())
+                    .withOriginalName(fileItem.getName())
+                    .build();
             fileList.add(uploadedFile);
         }
 

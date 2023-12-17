@@ -8,7 +8,7 @@
 <br/>
 <select name="region" id="region">
 </select>
-<script type="text/javascript">
+<script>
     var foo_barGroup = new Array(2 + 0);
     for (var i = 0; i < (2 + 0); i++) {
     foo_barGroup[i] = [];

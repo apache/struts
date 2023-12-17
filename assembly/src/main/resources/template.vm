@@ -1,6 +1,6 @@
 #set ($stylebase = "https://struts.apache.org/css")
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -16,7 +16,7 @@ software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
-under the License. 
+under the License.
 -->
 <html>
 <head>
@@ -43,12 +43,12 @@ under the License.
         <script src='http://struts.apache.org/highlighter/js/$hscript' type='text/javascript'></script>
     #end
 
-    <script type="text/javascript">
+    <script>
         SyntaxHighlighter.defaults['toolbar'] = false;
         SyntaxHighlighter.all();
     </script>
 #end
-    <script type="text/javascript" language="javascript">
+    <script language="javascript">
         var hide = null;
         var show = null;
         var children = null;

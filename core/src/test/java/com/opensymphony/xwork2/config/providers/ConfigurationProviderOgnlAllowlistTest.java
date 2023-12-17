@@ -40,7 +40,7 @@ public class ConfigurationProviderOgnlAllowlistTest extends XWorkJUnit4TestCase 
     }
 
     @Test
-    public void allowlist() throws Exception {
+    public void allowList() throws Exception {
         loadConfigurationProviders(testXml1, testXml2);
         providerAllowlist = container.getInstance(ProviderAllowlist.class);
 

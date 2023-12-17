@@ -18,17 +18,12 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import org.apache.commons.fileupload2.core.DiskFileItem;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.core.FileItemInputIterator;
 import org.apache.commons.fileupload2.core.FileItemInput;
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.util.Streams;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
@@ -223,7 +218,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
             // Interface with Commons FileUpload API
             // Using the Streaming API
-            JakartaServletFileUpload servletFileUpload = new JakartaServletFileUpload();
+            JakartaServletFileUpload<DiskFileItem, DiskFileItemFactory> servletFileUpload = new JakartaServletFileUpload<>();
             if (maxSize != null) {
                 servletFileUpload.setSizeMax(maxSize);
             }
@@ -446,8 +441,6 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @since 7.0.0
      */
     public static class FileInfo implements Serializable {
-
-        private static final long serialVersionUID = 1083158552766906037L;
 
         private final File file;
         private final String contentType;

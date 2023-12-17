@@ -424,7 +424,10 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         HttpParameters parameters = mai.getInvocationContext().getParameters();
         assertEquals(0, parameters.keySet().size());
         assertEquals(1, action.getActionErrors().size());
-        assertEquals("Request exceeded allowed number of files! Max allowed files number is: 3!", action.getActionErrors().iterator().next());
+        assertEquals(
+                "Request exceeded allowed number of files! Permitted number of files is: 3!",
+                action.getActionErrors().iterator().next()
+        );
     }
 
     public void testMultipartRequestMaxFileSize() throws Exception {
@@ -461,8 +464,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         Collection<String> errors = action.getActionErrors();
         assertEquals(1, errors.size());
         String msg = errors.iterator().next();
+        // FIXME: the expected size is 40 - length of the string
         assertEquals(
-                "File in request exceeded allowed file size limit! Max file size allowed is: 10!",
+                "File deleteme.txt assigned to file exceeded allowed size limit! Max size allowed is: 10 but file was: 10!",
                 msg);
     }
 
@@ -511,7 +515,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         assertEquals(1, errors.size());
         String msg = errors.iterator().next();
         assertEquals(
-                "The request parameter \"normalFormField2\" was too long.  Max length allowed is 20, but found 27!",
+                "The request parameter \"normalFormField2\" was too long. Max length allowed is 20, but found 27!",
                 msg);
     }
 

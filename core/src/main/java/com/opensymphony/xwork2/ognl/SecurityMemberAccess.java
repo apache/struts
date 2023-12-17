@@ -68,6 +68,8 @@ public class SecurityMemberAccess implements MemberAccess {
     private static final Set<Class<?>> ALLOWLIST_REQUIRED_CLASSES = unmodifiableSet(new HashSet<>(Arrays.asList(
             java.lang.Enum.class,
             java.util.Date.class,
+            java.util.Map.class,
+            java.util.Map.Entry.class,
             java.util.HashMap.class
     )));
 

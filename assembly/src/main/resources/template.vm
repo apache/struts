@@ -48,7 +48,7 @@ under the License.
         SyntaxHighlighter.all();
     </script>
 #end
-    <script language="javascript">
+    <script>
         var hide = null;
         var show = null;
         var children = null;

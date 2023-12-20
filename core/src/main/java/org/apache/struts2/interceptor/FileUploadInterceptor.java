@@ -46,6 +46,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -305,9 +306,9 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         if (!acceptedFiles.isEmpty()) {
                             Map<String, Object> params = ac.getParameters();
 
-                            params.put(inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
-                            params.put(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
-                            params.put(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
+                            putCaseInsensitive(params, inputName, acceptedFiles.toArray(new File[acceptedFiles.size()]));
+                            putCaseInsensitive(params, contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()]));
+                            putCaseInsensitive(params, fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()]));
                         }
                     }
                 } else {
@@ -324,6 +325,27 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
         // invoke action
         return invocation.invoke();
+    }
+
+    /**
+     * Removes existing parameters with identical name (case-insensitive) before adding the given parameter.
+     * Minimal invasiv solution to fix CVE-2023-50164 for the 2.3.x branch.
+     * 
+     * @param params - parameters to update.
+     * @param key    - parameter name (compared case-insensitive with existing ones).
+     * @param value  - parameter value.
+     */
+    private void putCaseInsensitive(Map<String, Object> params, String key, Object value) {
+        // Remove existing map entry if its key is equal to the given key (case-insensitive)
+        Iterator<Map.Entry<String, Object>> iterator = params.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Object> entry = iterator.next();
+            if (key.equalsIgnoreCase(entry.getKey())) {
+                iterator.remove();
+            }
+        }
+        // Add new entry
+        params.put(key, value);
     }
 
     /**

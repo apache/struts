@@ -18,16 +18,12 @@
  */
 package org.apache.struts2.views.velocity.components;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Component;
+import org.apache.struts2.views.util.ContextUtil;
+import org.apache.struts2.views.velocity.StrutsVelocityContext;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
@@ -35,9 +31,12 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractDirective extends Directive {
     public String getName() {
@@ -57,8 +56,14 @@ public abstract class AbstractDirective extends Directive {
     protected abstract Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res);
 
     public boolean render(InternalContextAdapter ctx, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
-        // get the bean
-        ValueStack stack = (ValueStack) ctx.get("stack");
+        ValueStack stack;
+        if (ctx.getInternalUserContext() instanceof StrutsVelocityContext) {
+            StrutsVelocityContext svc = (StrutsVelocityContext) ctx.getInternalUserContext();
+            stack = svc.getValueStack();
+        } else {
+            // Fallback to assuming the ValueStack was put into the Velocity context (as is by default)
+            stack = (ValueStack) ctx.get(ContextUtil.STACK);
+        }
         HttpServletRequest req = (HttpServletRequest) stack.getContext().get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse res = (HttpServletResponse) stack.getContext().get(ServletActionContext.HTTP_RESPONSE);
         Component bean = getBean(stack, req, res);

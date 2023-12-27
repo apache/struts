@@ -103,4 +103,8 @@ public class StrutsVelocityContext extends VelocityContext {
         }
         return null;
     }
+
+    public ValueStack getValueStack() {
+        return stack;
+    }
 }

@@ -337,32 +337,14 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     private Object tryFindValue(String expr) throws OgnlException {
-        Object value;
-        expr = lookupForOverrides(expr);
-        if (defaultType != null) {
-            value = findValue(expr, defaultType);
-        } else {
-            value = getValueUsingOgnl(expr);
-            if (value == null) {
-                value = findInContext(expr);
-            }
-        }
-        return value;
+        return tryFindValue(expr, defaultType);
     }
 
     private String lookupForOverrides(String expr) {
-        if ((overrides != null) && overrides.containsKey(expr)) {
+        if (overrides != null && overrides.containsKey(expr)) {
             expr = (String) overrides.get(expr);
         }
         return expr;
-    }
-
-    private Object getValueUsingOgnl(String expr) throws OgnlException {
-        try {
-            return ognlUtil.getValue(expr, context, root);
-        } finally {
-            context.remove(THROW_EXCEPTION_ON_FAILURE);
-        }
     }
 
     public Object findValue(String expr) {
@@ -419,22 +401,19 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     private Object tryFindValue(String expr, Class asType) throws OgnlException {
-        Object value = null;
         try {
             expr = lookupForOverrides(expr);
-            value = getValue(expr, asType);
+            Object value = ognlUtil.getValue(expr, context, root, asType);
             if (value == null) {
                 value = findInContext(expr);
-                return converter.convertValue(getContext(), value, asType);
+                if (value != null && asType != null) {
+                    value = converter.convertValue(getContext(), value, asType);
+                }
             }
+            return value;
         } finally {
             context.remove(THROW_EXCEPTION_ON_FAILURE);
         }
-        return value;
-    }
-
-    private Object getValue(String expr, Class asType) throws OgnlException {
-        return ognlUtil.getValue(expr, context, root, asType);
     }
 
     protected Object findInContext(String name) {

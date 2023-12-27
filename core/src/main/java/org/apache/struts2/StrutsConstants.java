@@ -309,6 +309,14 @@ public final class StrutsConstants {
     public static final String STRUTS_OGNL_LOG_MISSING_PROPERTIES = "struts.ognl.logMissingProperties";
 
     /**
+     * Determines whether lookups on the ValueStack should fallback to looking in the context if the OGNL expression
+     * fails or returns null.
+     *
+     * @since 6.4.0
+     */
+    public static final String STRUTS_OGNL_VALUE_STACK_FALLBACK_TO_CONTEXT = "struts.ognl.valueStackFallbackToContext";
+
+    /**
      * Logs properties that are not found (very verbose)
      * @deprecated as of 6.0.0.  Use {@link #STRUTS_OGNL_LOG_MISSING_PROPERTIES} instead.
      */

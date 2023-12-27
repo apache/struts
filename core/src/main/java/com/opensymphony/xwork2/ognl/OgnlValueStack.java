@@ -76,6 +76,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private transient XWorkConverter converter;
     private boolean devMode;
     private boolean logMissingProperties;
+    private boolean shouldFallbackToContext = true;
 
     /**
      * @since 6.4.0
@@ -170,6 +171,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     @Inject(value = StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, required = false)
     protected void setLogMissingProperties(String logMissingProperties) {
         this.logMissingProperties = BooleanUtils.toBoolean(logMissingProperties);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_OGNL_VALUE_STACK_FALLBACK_TO_CONTEXT, required = false)
+    protected void setShouldFallbackToContext(String shouldFallbackToContext) {
+        this.shouldFallbackToContext = BooleanUtils.toBoolean(shouldFallbackToContext);
     }
 
     /**
@@ -417,6 +423,9 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     protected Object findInContext(String name) {
+        if (!shouldFallbackToContext) {
+            return null;
+        }
         return getContext().get(name);
     }
 

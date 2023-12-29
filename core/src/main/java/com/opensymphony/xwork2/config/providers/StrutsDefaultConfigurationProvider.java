@@ -47,7 +47,6 @@ import com.opensymphony.xwork2.ognl.accessor.XWorkEnumerationAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkIteratorPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkListPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.XWorkMapPropertyAccessor;
-import com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
@@ -66,7 +65,6 @@ import com.opensymphony.xwork2.validator.DefaultValidatorFactory;
 import com.opensymphony.xwork2.validator.DefaultValidatorFileParser;
 import com.opensymphony.xwork2.validator.ValidatorFactory;
 import com.opensymphony.xwork2.validator.ValidatorFileParser;
-import ognl.MethodAccessor;
 import ognl.PropertyAccessor;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
@@ -141,8 +139,6 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                 .factory(PropertyAccessor.class, ObjectProxy.class.getName(), ObjectProxyPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, HttpParameters.class.getName(), HttpParametersPropertyAccessor.class, Scope.SINGLETON)
                 .factory(PropertyAccessor.class, Parameter.class.getName(), ParameterPropertyAccessor.class, Scope.SINGLETON)
-
-                .factory(MethodAccessor.class, Object.class.getName(), XWorkMethodAccessor.class, Scope.SINGLETON)
 
                 .factory(NullHandler.class, Object.class.getName(), InstantiatingNullHandler.class, Scope.SINGLETON)
                 .factory(ActionValidatorManager.class, AnnotationActionValidatorManager.class, Scope.SINGLETON)

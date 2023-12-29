@@ -61,6 +61,7 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
+import ognl.MethodAccessor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.components.date.DateFormatter;
@@ -389,6 +390,7 @@ public class StrutsBeanSelectionProvider extends AbstractBeanSelectionProvider {
         alias(FileManagerFactory.class, StrutsConstants.STRUTS_FILE_MANAGER_FACTORY, builder, props, Scope.SINGLETON);
 
         alias(RootAccessor.class, StrutsConstants.STRUTS_COMPOUND_ROOT_ACCESSOR, builder, props);
+        alias(MethodAccessor.class, StrutsConstants.STRUTS_METHOD_ACCESSOR, builder, props);
 
         alias(XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER, builder, props);
         alias(CollectionConverter.class, StrutsConstants.STRUTS_CONVERTER_COLLECTION, builder, props);

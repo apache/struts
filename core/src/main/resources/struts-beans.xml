@@ -198,7 +198,7 @@
     <bean type="ognl.PropertyAccessor" name="org.apache.struts2.dispatcher.Parameter"
           class="com.opensymphony.xwork2.ognl.accessor.ParameterPropertyAccessor"/>
 
-    <bean type="ognl.MethodAccessor" name="java.lang.Object"
+    <bean type="ognl.MethodAccessor" name="struts"
           class="com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor"/>
 
     <bean type="org.apache.struts2.dispatcher.StaticContentLoader"

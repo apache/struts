@@ -57,6 +57,11 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         OgnlRuntime.setMethodAccessor(CompoundRoot.class, compoundRootAccessor);
     }
 
+    @Inject
+    protected void setMethodAccessor(MethodAccessor methodAccessor) {
+        OgnlRuntime.setMethodAccessor(Object.class, methodAccessor);
+    }
+
     @Inject("system")
     protected void setTextProvider(TextProvider textProvider) {
         this.textProvider = textProvider;
@@ -85,12 +90,6 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         for (String name : names) {
             Class<?> cls = Class.forName(name);
             OgnlRuntime.setPropertyAccessor(cls, container.getInstance(PropertyAccessor.class, name));
-        }
-
-        names = container.getInstanceNames(MethodAccessor.class);
-        for (String name : names) {
-            Class<?> cls = Class.forName(name);
-            OgnlRuntime.setMethodAccessor(cls, container.getInstance(MethodAccessor.class, name));
         }
 
         names = container.getInstanceNames(NullHandler.class);

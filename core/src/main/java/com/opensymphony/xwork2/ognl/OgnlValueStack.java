@@ -30,7 +30,6 @@ import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
-import ognl.ClassResolver;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import ognl.Ognl;
@@ -514,7 +513,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         ActionContext ac = ActionContext.getContext();
         Container cont = ac.getContainer();
         XWorkConverter xworkConverter = cont.getInstance(XWorkConverter.class);
-        RootAccessor accessor = (RootAccessor) cont.getInstance(ClassResolver.class, CompoundRoot.class.getName());
+        RootAccessor accessor = cont.getInstance(RootAccessor.class);
         TextProvider prov = cont.getInstance(TextProvider.class, "system");
         SecurityMemberAccess sma = cont.getInstance(SecurityMemberAccess.class);
         OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, sma);

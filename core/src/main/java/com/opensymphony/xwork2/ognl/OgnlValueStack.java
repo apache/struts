@@ -24,17 +24,18 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
+import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+import ognl.ClassResolver;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
-import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -83,7 +84,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
      */
     protected OgnlValueStack(ValueStack vs,
                              XWorkConverter xworkConverter,
-                             CompoundRootAccessor accessor,
+                             RootAccessor accessor,
                              TextProvider prov,
                              SecurityMemberAccess securityMemberAccess) {
         setRoot(xworkConverter,
@@ -98,19 +99,19 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @since 6.4.0
      */
-    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, SecurityMemberAccess securityMemberAccess) {
+    protected OgnlValueStack(XWorkConverter xworkConverter, RootAccessor accessor, TextProvider prov, SecurityMemberAccess securityMemberAccess) {
         this(null, xworkConverter, accessor, prov, securityMemberAccess);
     }
 
     /**
      * @since 6.4.0
      */
-    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, SecurityMemberAccess securityMemberAccess) {
+    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, RootAccessor accessor, SecurityMemberAccess securityMemberAccess) {
         this(vs, xworkConverter, accessor, null, securityMemberAccess);
     }
 
     /**
-     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, CompoundRootAccessor, TextProvider, SecurityMemberAccess)} instead.
+     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, RootAccessor, TextProvider, SecurityMemberAccess)} instead.
      */
     @Deprecated
     protected OgnlValueStack(ValueStack vs,
@@ -122,7 +123,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @deprecated since 6.4.0, use {@link #OgnlValueStack(XWorkConverter, CompoundRootAccessor, TextProvider, SecurityMemberAccess)} instead.
+     * @deprecated since 6.4.0, use {@link #OgnlValueStack(XWorkConverter, RootAccessor, TextProvider, SecurityMemberAccess)} instead.
      */
     @Deprecated
     protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticFieldAccess) {
@@ -130,7 +131,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, CompoundRootAccessor, SecurityMemberAccess)} instead.
+     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, RootAccessor, SecurityMemberAccess)} instead.
      */
     @Deprecated
     protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticFieldAccess) {
@@ -145,7 +146,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @since 6.4.0
      */
-    protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, SecurityMemberAccess securityMemberAccess) {
+    protected void setRoot(XWorkConverter xworkConverter, RootAccessor accessor, CompoundRoot compoundRoot, SecurityMemberAccess securityMemberAccess) {
         this.root = compoundRoot;
         this.securityMemberAccess = securityMemberAccess;
         this.context = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
@@ -156,7 +157,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @deprecated since 6.4.0, use {@link #setRoot(XWorkConverter, CompoundRootAccessor, CompoundRoot, SecurityMemberAccess)} instead.
+     * @deprecated since 6.4.0, use {@link #setRoot(XWorkConverter, RootAccessor, CompoundRoot, SecurityMemberAccess)} instead.
      */
     @Deprecated
     protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, boolean allowStaticFieldAccess) {
@@ -513,7 +514,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         ActionContext ac = ActionContext.getContext();
         Container cont = ac.getContainer();
         XWorkConverter xworkConverter = cont.getInstance(XWorkConverter.class);
-        CompoundRootAccessor accessor = (CompoundRootAccessor) cont.getInstance(PropertyAccessor.class, CompoundRoot.class.getName());
+        RootAccessor accessor = (RootAccessor) cont.getInstance(ClassResolver.class, CompoundRoot.class.getName());
         TextProvider prov = cont.getInstance(TextProvider.class, "system");
         SecurityMemberAccess sma = cont.getInstance(SecurityMemberAccess.class);
         OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, sma);

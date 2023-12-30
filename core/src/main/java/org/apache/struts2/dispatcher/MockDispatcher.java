@@ -19,14 +19,19 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Container;
 
 import javax.servlet.ServletContext;
-import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * We really shouldn't test with this class because it relies on changing the ConfigurationManager mid-lifecycle,
+ * but retaining the stale injections - this will prevent us from detecting exactly these kind of bugs in our tests...
+ */
 public class MockDispatcher extends Dispatcher {
 
     private final ConfigurationManager copyConfigurationManager;
+    private boolean injectedOnce = false;
 
     public MockDispatcher(ServletContext servletContext, Map<String, String> context, ConfigurationManager configurationManager) {
         super(servletContext, context);
@@ -38,5 +43,17 @@ public class MockDispatcher extends Dispatcher {
         super.init();
         ContainerHolder.clear();
         this.configurationManager = copyConfigurationManager;
+    }
+
+    @Override
+    public Container getContainer() {
+        if (!injectedOnce) {
+            injectedOnce = true;
+            return super.getContainer();
+        }
+        if (ContainerHolder.get() == null) {
+            ContainerHolder.store(getConfigurationManager().getConfiguration().getContainer());
+        }
+        return ContainerHolder.get();
     }
 }

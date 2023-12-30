@@ -119,6 +119,8 @@ public class Dispatcher {
      */
     private static final List<DispatcherListener> dispatcherListeners = new CopyOnWriteArrayList<>();
 
+    private Container injectedContainer;
+
     /**
      * Store state of StrutsConstants.STRUTS_DEVMODE setting.
      */
@@ -331,6 +333,12 @@ public class Dispatcher {
         this.handleException = Boolean.parseBoolean(handleException);
     }
 
+    @Inject(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND)
+    public void setDispatchersParametersWorkaround(String dispatchersParametersWorkaround) {
+        this.paramsWorkaroundEnabled = Boolean.parseBoolean(dispatchersParametersWorkaround)
+                || (servletContext != null && StringUtils.contains(servletContext.getServerInfo(), "WebLogic"));
+    }
+
     public boolean isHandleException() {
         return handleException;
     }
@@ -536,17 +544,6 @@ public class Dispatcher {
         return getContainer();
     }
 
-    private void init_CheckWebLogicWorkaround(Container container) {
-        // test whether param-access workaround needs to be enabled
-        if (servletContext != null && StringUtils.contains(servletContext.getServerInfo(), "WebLogic")) {
-            LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
-            paramsWorkaroundEnabled = true;
-        } else {
-            paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class,
-                StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
-        }
-    }
-
     /**
      * Load configurations, including both XML and zero-configuration strategies,
      * and update optional settings, including whether to reload configurations and resource files.
@@ -567,9 +564,7 @@ public class Dispatcher {
             init_AliasStandardObjects(); // [7]
             init_DeferredXmlConfigurations();
 
-            Container container = init_PreloadConfiguration();
-            container.inject(this);
-            init_CheckWebLogicWorkaround(container);
+            getContainer(); // Inject this instance
 
             if (!dispatcherListeners.isEmpty()) {
                 for (DispatcherListener l : dispatcherListeners) {
@@ -1068,22 +1063,18 @@ public class Dispatcher {
      * @return Our dependency injection container
      */
     public Container getContainer() {
-        if (ContainerHolder.get() != null) {
-            return ContainerHolder.get();
-        }
-        ConfigurationManager mgr = getConfigurationManager();
-        if (mgr == null) {
-            throw new IllegalStateException("The configuration manager shouldn't be null");
-        } else {
-            Configuration config = mgr.getConfiguration();
-            if (config == null) {
-                throw new IllegalStateException("Unable to load configuration");
-            } else {
-                Container container = config.getContainer();
-                ContainerHolder.store(container);
-                return container;
+        if (ContainerHolder.get() == null) {
+            try {
+                ContainerHolder.store(getConfigurationManager().getConfiguration().getContainer());
+            } catch (NullPointerException e) {
+                throw new IllegalStateException("ConfigurationManager and/or Configuration should not be null", e);
             }
         }
+        if (injectedContainer != ContainerHolder.get()) {
+            injectedContainer = ContainerHolder.get();
+            injectedContainer.inject(this);
+        }
+        return ContainerHolder.get();
     }
 
 }

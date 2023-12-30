@@ -325,12 +325,8 @@ public class DefaultConfiguration implements Configuration {
     }
 
     protected ActionContext setContext(Container cont) {
-        ActionContext context = ActionContext.getContext();
-        if (context == null) {
-            ValueStack vs = cont.getInstance(ValueStackFactory.class).createValueStack();
-            context = ActionContext.of(vs.getContext()).bind();
-        }
-        return context;
+        ValueStack vs = cont.getInstance(ValueStackFactory.class).createValueStack();
+        return ActionContext.of(vs.getContext()).bind();
     }
 
     protected Container createBootstrapContainer(List<ContainerProvider> providers) {

@@ -59,7 +59,7 @@ public class StrutsTestCaseHelper {
 
     public static void tearDown() {
         (new Dispatcher(null, null)).cleanUpAfterInit(); // Clear ContainerHolder
-        Dispatcher.setInstance(null);
+        Dispatcher.clearInstance();
         ActionContext.clear();
     }
 

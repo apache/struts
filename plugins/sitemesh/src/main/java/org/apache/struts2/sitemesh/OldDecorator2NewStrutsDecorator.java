@@ -22,10 +22,15 @@ import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.sitemesh.webapp.decorator.BaseWebAppDecorator;
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionEventListener;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 import freemarker.template.Configuration;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -93,7 +98,7 @@ public abstract class OldDecorator2NewStrutsDecorator extends BaseWebAppDecorato
         ActionContext ctx = ServletActionContext.getActionContext(request);
         if (ctx == null) {
             // ok, one isn't associated with the request, so let's create one using the current Dispatcher
-            ValueStack vs = Dispatcher.getInstance().getContainer().getInstance(ValueStackFactory.class).createValueStack();
+            ValueStack vs = Dispatcher.getInstance().getValueStackFactory().createValueStack();
             vs.getContext().putAll(Dispatcher.getInstance().createContextMap(request, response, null));
             ctx = ActionContext.of(vs.getContext());
             if (ctx.getActionInvocation() == null) {

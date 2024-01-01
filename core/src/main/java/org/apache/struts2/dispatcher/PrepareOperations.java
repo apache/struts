@@ -20,13 +20,11 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import javax.servlet.ServletException;
@@ -78,7 +76,7 @@ public class PrepareOperations {
                 dispatcher.cleanUpRequest(request);
             } finally {
                 ActionContext.clear();
-                Dispatcher.setInstance(null);
+                Dispatcher.clearInstance();
                 devModeOverride.remove();
             }
         });
@@ -101,7 +99,7 @@ public class PrepareOperations {
         } else {
             ctx = ServletActionContext.getActionContext(request);   //checks if we are probably in an async
             if (ctx == null) {
-                ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+                ValueStack stack = dispatcher.getValueStackFactory().createValueStack();
                 stack.getContext().putAll(dispatcher.createContextMap(request, response, null));
                 ctx = ActionContext.of(stack.getContext()).bind();
             }
@@ -188,7 +186,7 @@ public class PrepareOperations {
         Object mappingAttr = request.getAttribute(STRUTS_ACTION_MAPPING_KEY);
         if (mappingAttr == null || forceLookup) {
             try {
-                mapping = dispatcher.getContainer().getInstance(ActionMapper.class).getMapping(request, dispatcher.getConfigurationManager());
+                mapping = dispatcher.getActionMapper().getMapping(request, dispatcher.getConfigurationManager());
                 if (mapping != null) {
                     request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
                 } else {

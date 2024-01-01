@@ -251,12 +251,8 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
 
     @Test
     public void testObjectFactoryDestroy() {
-        dispatcher = spy(dispatcher);
-        Container spiedContainer = spy(container);
-        doReturn(spiedContainer).when(dispatcher).getContainer();
-
         InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
-        doReturn(destroyedObjectFactory).when(spiedContainer).getInstance(ObjectFactory.class);
+        dispatcher.setObjectFactory(destroyedObjectFactory);
 
         assertFalse(destroyedObjectFactory.destroyed);
         dispatcher.cleanup();

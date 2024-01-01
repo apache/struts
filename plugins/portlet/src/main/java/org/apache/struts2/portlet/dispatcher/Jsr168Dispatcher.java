@@ -32,6 +32,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.ApplicationMap;
+import org.apache.struts2.dispatcher.AttributeMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.DispatcherConstants;
 import org.apache.struts2.dispatcher.HttpParameters;
@@ -49,7 +50,6 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.servlet.PortletServletContext;
 import org.apache.struts2.portlet.servlet.PortletServletRequest;
 import org.apache.struts2.portlet.servlet.PortletServletResponse;
-import org.apache.struts2.dispatcher.AttributeMap;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -209,7 +209,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
 
         // For testability
         if (factory == null) {
-            factory = dispatcherUtils.getContainer().getInstance(ActionProxyFactory.class);
+            factory = dispatcherUtils.getActionProxyFactory();
         }
         portletNamespace = cfg.getInitParameter("portletNamespace");
         LOG.debug("PortletNamespace: {}", portletNamespace);
@@ -488,7 +488,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics {
             }
             throw new PortletException("Error executing action " + actionName, e);
         } finally {
-            Dispatcher.setInstance(null);
+            Dispatcher.clearInstance();
         }
     }
 

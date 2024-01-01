@@ -57,7 +57,7 @@ public class InitOperations {
      * @return the static content loader
      */
     public StaticContentLoader initStaticContentLoader(HostConfig filterConfig, Dispatcher dispatcher) {
-        StaticContentLoader loader = dispatcher.getContainer().getInstance(StaticContentLoader.class);
+        StaticContentLoader loader = dispatcher.getStaticContentLoader();
         loader.setHostConfig(filterConfig);
         return loader;
     }

@@ -18,31 +18,26 @@
  */
 package org.apache.struts2.validators;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.DefaultActionInvocation;
+import com.opensymphony.xwork2.ValidationAwareSupport;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
-
 import org.directwebremoting.WebContextFactory;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
-import com.opensymphony.xwork2.ValidationAwareSupport;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * <p>
@@ -87,7 +82,7 @@ public class DWRValidator {
                 res);
 
         try {
-            ActionProxyFactory actionProxyFactory = du.getContainer().getInstance(ActionProxyFactory.class);
+            ActionProxyFactory actionProxyFactory = du.getActionProxyFactory();
             ActionProxy proxy = actionProxyFactory.createActionProxy(namespace, actionName, null, ctx, true, true);
             proxy.execute();
             Object action = proxy.getAction();

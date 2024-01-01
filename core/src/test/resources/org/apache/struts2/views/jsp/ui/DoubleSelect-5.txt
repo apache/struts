@@ -8,7 +8,7 @@
 </select>
 <br />
 <select name="region" disabled="disabled" id="region" title="someTitle" select-name="secondName"></select>
-<script type="text/javascript">
+<script>
   var someIdGroup = newArray(2 + 0);
   for (var i = 0; i < (2 + 0); i++) {
     someIdGroup[i] = [];

@@ -21,7 +21,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <@s.script type="text/javascript">
+    <@s.script>
       var baseUrl = "<@s.url value="/static" includeParams="none"/>";
       window.open(baseUrl+"/webconsole.html", 'OGNL Console','width=500,height=450,status=no,toolbar=no,menubar=no');
     </@s.script>

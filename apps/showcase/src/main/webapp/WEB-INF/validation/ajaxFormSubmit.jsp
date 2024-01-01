@@ -72,7 +72,7 @@
     </div>
 </div>
 
-<s:script type="text/javascript">
+<s:script>
 /********************************************************************
  * JS just used on this page.
  * Usually this would be placed in a JS file

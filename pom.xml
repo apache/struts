@@ -19,7 +19,8 @@
  * under the License.
  */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -82,10 +83,7 @@
 
     <modules>
         <module>bom</module>
-        <module>freemarker-jakarta</module>
-        <module>sitemesh2-jakarta</module>
-        <module>velocity-tools-view-jakarta</module>
-        <module>velocity-tools-jsp-jakarta</module>
+        <module>jakarta</module>
         <module>core</module>
         <module>plugins</module>
         <module>apps</module>
@@ -96,7 +94,7 @@
             <name>The Apache Software License, Version 2.0</name>
             <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
-            <comments />
+            <comments/>
         </license>
     </licenses>
 
@@ -305,10 +303,10 @@
                         <useDefaultExcludes>true</useDefaultExcludes>
                         <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
                         <licenses>
-                            <licens implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20" />
+                            <license implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20"/>
                         </licenses>
                         <licenseFamilies>
-                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily" />
+                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily"/>
                         </licenseFamilies>
                         <includes>
                             <include>pom.xml</include>
@@ -357,7 +355,7 @@
                             <id>enforce</id>
                             <configuration>
                                 <rules>
-                                    <dependencyConvergence />
+                                    <dependencyConvergence/>
                                 </rules>
                             </configuration>
                             <goals>
@@ -517,10 +515,10 @@
                 <version>1.0.8</version>
                 <exclusions>
                     <exclusion>
-                      <groupId>org.freemarker</groupId>
-                      <artifactId>freemarker</artifactId>
+                        <groupId>org.freemarker</groupId>
+                        <artifactId>freemarker</artifactId>
                     </exclusion>
-                  </exclusions>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -682,9 +680,9 @@
             </dependency>
 
             <dependency>
-              <groupId>org.apache.velocity.tools</groupId>
-              <artifactId>velocity-tools-generic</artifactId>
-              <version>${velocity-tools.version}</version>
+                <groupId>org.apache.velocity.tools</groupId>
+                <artifactId>velocity-tools-generic</artifactId>
+                <version>${velocity-tools.version}</version>
             </dependency>
 
             <dependency>
@@ -1024,9 +1022,9 @@
 
             <!-- CDI & Weld -->
             <dependency>
-               <groupId>jakarta.enterprise</groupId>
-               <artifactId>jakarta.enterprise.cdi-api</artifactId>
-               <version>4.0.0</version>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <version>4.0.0</version>
             </dependency>
 
             <dependency>
@@ -1034,10 +1032,10 @@
                 <artifactId>weld-core-impl</artifactId>
                 <version>5.1.2.Final</version>
                 <exclusions>
-                  <exclusion>
-                    <groupId>jakarta.annotation</groupId>
-                    <artifactId>jakarta.annotation-api</artifactId>
-                  </exclusion>
+                    <exclusion>
+                        <groupId>jakarta.annotation</groupId>
+                        <artifactId>jakarta.annotation-api</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 

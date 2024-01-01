@@ -569,6 +569,29 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
         assertEquals(Locale.getDefault(), context.getLocale());  // Expect the system default value when Mock request access fails.
     }
 
+    @Test
+    public void dispatcherReinjectedAfterReload() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        dispatcher.prepare(request, response);
+
+        assertEquals(Locale.GERMANY, dispatcher.getLocale(request));
+
+        configurationManager.addContainerProvider(new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder,
+                                 LocatableProperties props) throws ConfigurationException {
+                props.setProperty(StrutsConstants.STRUTS_LOCALE, "fr_CA");
+            }
+        });
+        configurationManager.reload();
+        dispatcher.cleanUpRequest(request);
+        dispatcher.prepare(request, response);
+
+        assertEquals(Locale.CANADA_FRENCH, dispatcher.getLocale(request));
+    }
+
     public static Dispatcher spyDispatcherWithConfigurationManager(Dispatcher dispatcher, ConfigurationManager configurationManager) {
         Dispatcher spiedDispatcher = spy(dispatcher);
         doReturn(configurationManager).when(spiedDispatcher).createConfigurationManager(any());

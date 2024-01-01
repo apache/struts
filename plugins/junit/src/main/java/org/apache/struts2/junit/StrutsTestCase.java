@@ -168,8 +168,8 @@ public abstract class StrutsTestCase extends XWorkTestCase {
      * Sets up the configuration settings, XWork configuration, and
      * message resources
      */
+    @Override
     protected void setUp() throws Exception {
-        super.setUp();
         initServletMockObjects();
         setupBeforeInitDispatcher();
         dispatcher = initDispatcher(dispatcherInitParams);
@@ -199,14 +199,9 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         return du;
     }
 
+    @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
-        // maybe someone else already destroyed Dispatcher
-        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
-            dispatcher.cleanup();
-            dispatcher = null;
-        }
-        StrutsTestCaseHelper.tearDown();
+        StrutsTestCaseHelper.tearDown(dispatcher);
     }
 
 }

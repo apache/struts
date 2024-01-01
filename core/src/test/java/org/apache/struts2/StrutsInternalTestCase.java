@@ -75,12 +75,7 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        // maybe someone else already destroyed Dispatcher
-        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
-            dispatcher.cleanup();
-            dispatcher = null;
-        }
-        StrutsTestCaseHelper.tearDown();
+        StrutsTestCaseHelper.tearDown(dispatcher);
     }
 
     /**

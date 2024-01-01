@@ -367,7 +367,7 @@ public class Dispatcher {
         }
 
         // clean up Dispatcher itself for this thread
-        instance.set(null);
+        instance.remove();
         servletContext.setAttribute(StrutsStatics.SERVLET_DISPATCHER, null);
 
         // clean up DispatcherListeners

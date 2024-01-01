@@ -28,19 +28,17 @@ import org.apache.struts2.dispatcher.DispatcherErrorHandler;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
+
 /**
- * Generic test setup methods to be used with any unit testing framework. 
+ * Generic test setup methods to be used with any unit testing framework.
  */
 public class StrutsTestCaseHelper {
-    
-    public static Dispatcher initDispatcher(ServletContext ctx, Map<String,String> params) {
-        if (params == null) {
-            params = new HashMap<>();
-        }
-        Dispatcher du = new DispatcherWrapper(ctx, params);
+
+    public static Dispatcher initDispatcher(ServletContext ctx, Map<String, String> params) {
+        Dispatcher du = new DispatcherWrapper(ctx, params != null ? params : emptyMap());
         du.init();
         Dispatcher.setInstance(du);
 
@@ -52,7 +50,15 @@ public class StrutsTestCaseHelper {
         return du;
     }
 
-    public static void tearDown() throws Exception {
+    public static void tearDown(Dispatcher dispatcher) {
+        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
+            dispatcher.cleanup();
+        }
+        tearDown();
+    }
+
+    public static void tearDown() {
+        (new Dispatcher(null, null)).cleanUpAfterInit(); // Clear ContainerHolder
         Dispatcher.setInstance(null);
         ActionContext.clear();
     }

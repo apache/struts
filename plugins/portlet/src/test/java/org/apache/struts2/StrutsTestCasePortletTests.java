@@ -23,12 +23,6 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.config.Configuration;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -40,6 +34,13 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
  * Changes:  This is a copy of org.apache.struts2.StrutsTestCase from the Struts 2 junit-plugin, kept in
@@ -180,8 +181,8 @@ public abstract class StrutsTestCasePortletTests extends XWorkTestCase {
      * Sets up the configuration settings, XWork configuration, and
      * message resources
      */
+    @Override
     protected void setUp() throws Exception {
-        super.setUp();
         initServletMockObjects();
         setupBeforeInitDispatcher();
         dispatcher = initDispatcher(dispatcherInitParams);
@@ -211,14 +212,9 @@ public abstract class StrutsTestCasePortletTests extends XWorkTestCase {
         return du;
     }
 
+    @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
-        // maybe someone else already destroyed Dispatcher
-        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
-            dispatcher.cleanup();
-            dispatcher = null;
-        }
-        StrutsTestCaseHelper.tearDown();
+        StrutsTestCaseHelper.tearDown(dispatcher);
     }
 
 }

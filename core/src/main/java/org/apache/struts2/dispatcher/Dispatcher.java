@@ -1095,7 +1095,11 @@ public class Dispatcher {
     }
 
     /**
-     * Expose the dependency injection container.
+     * Exposes a thread-cached reference of the dependency injection container. If the container is found to have
+     * changed since the last time it was cached, this Dispatcher instance is re-injected to ensure no stale
+     * configuration/dependencies persist.
+     * <p>
+     * A non-cached reference can be obtained by calling {@link #getConfigurationManager()}.
      *
      * @return Our dependency injection container
      */

@@ -110,17 +110,19 @@
 
         <!-- dependency versions in alphanumeric order -->
         <asm.version>9.6</asm.version>
+        <byte-buddy.version>1.14.11</byte-buddy.version>
+        <freemarker.version>2.3.32</freemarker.version>
+        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <jackson.version>2.16.0</jackson.version>
         <log4j2.version>2.20.0</log4j2.version>
+        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
+        <mockito.version>5.8.0</mockito.version>
         <ognl.version>3.3.4</ognl.version>
+        <sitemesh.version>2.5.0</sitemesh.version>
         <slf4j.version>2.0.9</slf4j.version>
         <spring.platformVersion>6.0.13</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
-        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
-        <freemarker.version>2.3.32</freemarker.version>
-        <sitemesh.version>2.5.0</sitemesh.version>
         <velocity-tools.version>3.1</velocity-tools.version>
 
         <!-- Site generation -->
@@ -921,7 +923,19 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>4.3.1</version>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>${byte-buddy.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy-agent</artifactId>
+                <version>${byte-buddy.version}</version>
                 <scope>test</scope>
             </dependency>
 

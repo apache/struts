@@ -60,17 +60,18 @@ public class SecurityMemberAccess implements MemberAccess {
     private static final Logger LOG = LogManager.getLogger(SecurityMemberAccess.class);
 
     private static final Set<String> ALLOWLIST_REQUIRED_PACKAGES = unmodifiableSet(new HashSet<>(Arrays.asList(
+            "com.opensymphony.xwork2.validator.validators",
             "org.apache.struts2.components",
-            "org.apache.struts2.views.jsp",
-            "com.opensymphony.xwork2.validator.validators"
+            "org.apache.struts2.views.jsp"
     )));
 
     private static final Set<Class<?>> ALLOWLIST_REQUIRED_CLASSES = unmodifiableSet(new HashSet<>(Arrays.asList(
             java.lang.Enum.class,
+            java.lang.String.class,
             java.util.Date.class,
+            java.util.HashMap.class,
             java.util.Map.class,
-            java.util.Map.Entry.class,
-            java.util.HashMap.class
+            java.util.Map.Entry.class
     )));
 
     private final ProviderAllowlist providerAllowlist;

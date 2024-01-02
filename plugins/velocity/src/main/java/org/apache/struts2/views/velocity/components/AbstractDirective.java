@@ -22,8 +22,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Component;
+import org.apache.struts2.util.ValueStackProvider;
 import org.apache.struts2.views.util.ContextUtil;
-import org.apache.struts2.views.velocity.StrutsVelocityContext;
 import org.apache.velocity.context.AbstractContext;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.context.InternalContextAdapter;
@@ -86,8 +86,8 @@ public abstract class AbstractDirective extends Directive {
 
     private ValueStack extractValueStack(Context context) {
         do {
-            if (context instanceof StrutsVelocityContext) {
-                return ((StrutsVelocityContext) context).getValueStack();
+            if (context instanceof ValueStackProvider) {
+                return ((ValueStackProvider) context).getValueStack();
             }
             context = extractContext(context);
         } while (context != null);

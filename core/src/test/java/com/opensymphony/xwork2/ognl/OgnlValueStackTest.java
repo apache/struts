@@ -1122,9 +1122,18 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals("Hello World", vs.findValue("claus", String.class));
         assertEquals("Hello World", vs.findValue("top", String.class));
 
+        assertNull(vs.findValue("unknown", String.class));
+    }
+
+    public void testExprFallbackToContext() {
         vs.getContext().put("santa", "Hello Santa");
         assertEquals("Hello Santa", vs.findValue("santa", String.class));
-        assertNull(vs.findValue("unknown", String.class));
+    }
+
+    public void testExprFallbackToContext_disabled() {
+        vs.setShouldFallbackToContext("false");
+        vs.getContext().put("santa", "Hello Santa");
+        assertNull(vs.findValue("santa", String.class));
     }
 
     public void testWarnAboutInvalidProperties() {

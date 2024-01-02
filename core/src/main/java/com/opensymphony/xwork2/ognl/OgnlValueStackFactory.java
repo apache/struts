@@ -60,18 +60,21 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         this.textProvider = textProvider;
     }
 
+    @Override
     public ValueStack createValueStack() {
-        ValueStack stack = new OgnlValueStack(
-                xworkConverter, compoundRootAccessor, textProvider, container.getInstance(SecurityMemberAccess.class));
-        container.inject(stack);
-        return stack.getActionContext().withContainer(container).withValueStack(stack).getValueStack();
+        return createValueStack(null, true);
     }
 
+    @Override
     public ValueStack createValueStack(ValueStack stack) {
-        ValueStack result = new OgnlValueStack(
-                stack, xworkConverter, compoundRootAccessor, container.getInstance(SecurityMemberAccess.class));
-        container.inject(result);
-        return result.getActionContext().withContainer(container).withValueStack(result).getValueStack();
+        return createValueStack(stack, false);
+    }
+
+    protected ValueStack createValueStack(ValueStack stack, boolean useTextProvider) {
+        ValueStack newStack = new OgnlValueStack(
+                stack, xworkConverter, compoundRootAccessor, useTextProvider ? textProvider : null, container.getInstance(SecurityMemberAccess.class));
+        container.inject(newStack);
+        return newStack.getActionContext().withContainer(container).withValueStack(newStack).getValueStack();
     }
 
     @Inject

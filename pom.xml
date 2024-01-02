@@ -122,6 +122,8 @@
         <freemarker.version>2.3.32</freemarker.version>
         <sitemesh.version>2.5.0</sitemesh.version>
         <velocity-tools.version>3.1</velocity-tools.version>
+        <mockito.version>5.8.0</mockito.version>
+        <byte-buddy.version>1.14.11</byte-buddy.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>
@@ -921,7 +923,19 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>5.8.0</version>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>${byte-buddy.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy-agent</artifactId>
+                <version>${byte-buddy.version}</version>
                 <scope>test</scope>
             </dependency>
 

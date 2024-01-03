@@ -16,20 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor.parameter;
 
 /**
- * @deprecated since 6.4.0, use {@link org.apache.struts2.interceptor.parameter.ParameterValueAware}.
+ * This interface is implemented by actions that want to declare acceptable parameters. Works in conjunction with {@link
+ * ParametersInterceptor}. For example, actions may want to create a white list of parameters they will accept or a
+ * blacklist of parameters they will reject to prevent clients from setting other unexpected (and possibly dangerous)
+ * parameters.
  */
-@Deprecated
-public interface ParameterValueAware extends org.apache.struts2.interceptor.parameter.ParameterValueAware {
+public interface ParameterNameAware {
 
     /**
-     * Tests if the the action will accept the parameter with the given value.
+     * Tests if the action will accept the parameter with the given name.
      *
-     * @param parameterValue  the parameter value
-     * @return <tt>true</tt> if accepted, <tt>false</tt> otherwise
+     * @param parameterName the parameter name
+     * @return <code>true</code> if accepted, <code>false</code> otherwise
      */
-    boolean acceptableParameterValue(String parameterValue);
+    boolean acceptableParameterName(String parameterName);
 
 }

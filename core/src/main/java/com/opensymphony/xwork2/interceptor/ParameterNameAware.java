@@ -23,13 +23,4 @@ package com.opensymphony.xwork2.interceptor;
  */
 @Deprecated
 public interface ParameterNameAware extends org.apache.struts2.action.ParameterNameAware {
-
-    /**
-     * Tests if the the action will accept the parameter with the given name.
-     *
-     * @param parameterName  the parameter name
-     * @return <tt>true</tt> if accepted, <tt>false</tt> otherwise
-     */
-    boolean acceptableParameterName(String parameterName);
-
 }

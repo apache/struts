@@ -23,13 +23,4 @@ package com.opensymphony.xwork2.interceptor;
  */
 @Deprecated
 public interface ParameterValueAware extends org.apache.struts2.action.ParameterValueAware {
-
-    /**
-     * Tests if the the action will accept the parameter with the given value.
-     *
-     * @param parameterValue  the parameter value
-     * @return <tt>true</tt> if accepted, <tt>false</tt> otherwise
-     */
-    boolean acceptableParameterValue(String parameterValue);
-
 }

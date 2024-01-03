@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
@@ -43,16 +44,27 @@ import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.ognl.ThreadAllowlist;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
@@ -204,13 +216,19 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected void applyParameters(final Object action, ValueStack stack, HttpParameters parameters) {
-        Map<String, Parameter> acceptableParameters = toAcceptableParameters(parameters, action);
+        Map<String, Parameter> acceptableParameters;
+        ValueStack newStack;
+        try {
+            acceptableParameters = toAcceptableParameters(parameters, action); // Side-effect: Allowlist required types
 
-        ValueStack newStack = toNewStack(stack);
-        batchApplyReflectionContextState(newStack.getContext(), true);
-        applyMemberAccessProperties(newStack);
+            newStack = toNewStack(stack);
+            batchApplyReflectionContextState(newStack.getContext(), true);
+            applyMemberAccessProperties(newStack);
 
-        applyParametersOnStack(newStack, acceptableParameters, action);
+            applyParametersOnStack(newStack, acceptableParameters, action);
+        } finally {
+            threadAllowlist.clearAllowlist();
+        }
 
         if (newStack instanceof ClearableValueStack) {
             stack.getActionContext().withConversionErrors(newStack.getActionContext().getConversionErrors());
@@ -308,19 +326,129 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @return true if parameter is accepted
      */
     protected boolean isAcceptableParameter(String name, Object action) {
-        return acceptableName(name) && isAcceptableParameterNameAware(name, action) && isParameterAnnotated(name, action);
+        return acceptableName(name) && isAcceptableParameterNameAware(name, action) && isParameterAnnotatedAndAllowlist(name, action);
     }
 
     protected boolean isAcceptableParameterNameAware(String name, Object action) {
         return !(action instanceof ParameterNameAware) || ((ParameterNameAware) action).acceptableParameterName(name);
     }
 
-    protected boolean isParameterAnnotated(String name, Object action) {
+    /**
+     * Checks if the Action class member corresponding to a parameter is appropriately annotated with
+     * {@link StrutsParameter} and OGNL allowlists any necessary classes.
+     * <p>
+     * Note that this logic relies on the use of {@link DefaultAcceptedPatternsChecker#ACCEPTED_PATTERNS} and may also
+     * be adversely impacted by the use of custom OGNL property accessors.
+     */
+    protected boolean isParameterAnnotatedAndAllowlist(String name, Object action) {
         if (!requireAnnotations) {
             return true;
         }
-        // TODO: Implement
-        return true;
+
+        int nestingIndex = indexOfAny(name, ".[");
+        String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
+        long paramDepth = name.chars().filter(ch -> ch == '.' || ch == '[').count();
+
+        return hasValidAnnotatedMember(rootProperty, action, paramDepth);
+    }
+
+    /**
+     * Note that we check for a public field last or only if there is no valid, annotated property descriptor. This is
+     * because this check is likely to fail more often than not, as the relative use of public fields is low - so we
+     * save computation by checking this last.
+     */
+    protected boolean hasValidAnnotatedMember(String rootProperty, Object action, long paramDepth) {
+        BeanInfo beanInfo = getBeanInfo(action);
+        if (beanInfo == null) {
+            return hasValidAnnotatedField(action, rootProperty, paramDepth);
+        }
+
+        Optional<PropertyDescriptor> propDescOpt = Arrays.stream(beanInfo.getPropertyDescriptors())
+                .filter(desc -> desc.getName().equals(rootProperty)).findFirst();
+        if (!propDescOpt.isPresent()) {
+            return hasValidAnnotatedField(action, rootProperty, paramDepth);
+        }
+
+        if (hasValidAnnotatedPropertyDescriptor(propDescOpt.get(), paramDepth)) {
+            return true;
+        }
+
+        return hasValidAnnotatedField(action, rootProperty, paramDepth);
+    }
+
+    protected boolean hasValidAnnotatedPropertyDescriptor(PropertyDescriptor propDesc, long paramDepth) {
+        Class<?> rootType = getValidAnnotatedPropertyDescriptorType(propDesc, paramDepth);
+        if (rootType != null) {
+            if (paramDepth > 0) {
+                threadAllowlist.allowClass(rootType);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return getter return type or setter parameter type, if one corresponding to the <code>paramDepth</code> exists
+     * with a valid annotation
+     */
+    protected Class<?> getValidAnnotatedPropertyDescriptorType(PropertyDescriptor propDesc, long paramDepth) {
+        Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
+        if (relevantMethod == null) {
+            return null;
+        }
+        StrutsParameter annotation = getParameterAnnotation(relevantMethod);
+        if (annotation != null && annotation.depth() >= paramDepth) {
+            return paramDepth == 0 ? relevantMethod.getParameterTypes()[0] : relevantMethod.getReturnType();
+        }
+        return null;
+    }
+
+    protected boolean hasValidAnnotatedField(Object action, String fieldName, long paramDepth) {
+        Class<?> rootType = getValidAnnotatedFieldType(action, fieldName, paramDepth);
+        if (rootType != null) {
+            if (paramDepth > 0) {
+                threadAllowlist.allowClass(rootType);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return field type if a public field exists on the action with a valid annotation
+     */
+    protected Class<?> getValidAnnotatedFieldType(Object action, String fieldName, long paramDepth) {
+        Field field;
+        try {
+            field = action.getClass().getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            return null;
+        }
+        if (!Modifier.isPublic(field.getModifiers())) {
+            return null;
+        }
+        StrutsParameter annotation = getParameterAnnotation(field);
+        if (annotation != null && annotation.depth() >= paramDepth) {
+            return field.getType();
+        }
+        return null;
+    }
+
+    /**
+     * Annotation retrieval logic. Can be overridden to support extending annotations or some other form of annotation
+     * inheritance.
+     */
+    protected StrutsParameter getParameterAnnotation(AnnotatedElement element) {
+        return element.getAnnotation(StrutsParameter.class);
+    }
+
+    protected BeanInfo getBeanInfo(Object action) {
+        try {
+            return Introspector.getBeanInfo(action.getClass());
+        } catch (IntrospectionException e) {
+            LOG.warn("Error introspecting Action {} for parameter injection validation", action.getClass(), e);
+            return null;
+        }
     }
 
     /**

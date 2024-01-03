@@ -1053,7 +1053,7 @@ class ValidateAction implements ValidationAware {
     }
 
     public boolean hasActionMessages() {
-        return messages.size() > 0;
+        return !messages.isEmpty();
     }
 
     public boolean hasErrors() {

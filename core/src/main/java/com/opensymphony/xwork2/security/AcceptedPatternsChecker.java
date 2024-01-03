@@ -32,37 +32,37 @@ public interface AcceptedPatternsChecker {
      * @param value to check
      * @return object containing result of matched pattern and pattern itself
      */
-    public IsAccepted isAccepted(String value);
+    IsAccepted isAccepted(String value);
 
     /**
      * Sets excluded patterns during runtime
      *
      * @param commaDelimitedPatterns comma delimited string with patterns
      */
-    public void setAcceptedPatterns(String commaDelimitedPatterns);
+    void setAcceptedPatterns(String commaDelimitedPatterns);
 
     /**
      * Set excluded patterns during runtime
      *
      * @param patterns array of additional excluded patterns
      */
-    public void setAcceptedPatterns(String[] patterns);
+    void setAcceptedPatterns(String[] patterns);
 
     /**
      * Sets excluded patterns during runtime
      *
      * @param patterns set of additional patterns
      */
-    public void setAcceptedPatterns(Set<String> patterns);
+    void setAcceptedPatterns(Set<String> patterns);
 
     /**
      * Allow access list of all defined excluded patterns
      *
      * @return set of excluded patterns
      */
-    public Set<Pattern> getAcceptedPatterns();
+    Set<Pattern> getAcceptedPatterns();
 
-    public final static class IsAccepted {
+    final class IsAccepted {
 
         private final boolean accepted;
         private final String acceptedPattern;

@@ -19,7 +19,7 @@
  */
 -->
 <#if parameters.validate!false == true>
-	<@s.script type="text/javascript" src="${base}${parameters.staticContentPath}/xhtml/validation.js" />
+	<@s.script src="${base}${parameters.staticContentPath}/xhtml/validation.js" />
 	<#if parameters.onsubmit??>
 		${tag.addParameter('onsubmit', "${parameters.onsubmit}; return validateForm_${parameters.escapedId}();")}
 	<#else>

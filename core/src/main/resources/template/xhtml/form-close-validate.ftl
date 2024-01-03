@@ -32,7 +32,7 @@ Only the following validators are supported:
 END SNIPPET: supported-validators
 -->
 <#if ((parameters.validate!false == true) && (parameters.performValidation!false == true))>
-<@s.script type="text/javascript">
+<@s.script>
     function validateForm_${parameters.escapedId}() {
         <#--
             In case of multiselect fields return only the first value.

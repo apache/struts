@@ -1,4 +1,3 @@
-<#--
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,17 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
--->
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/control-close.ftl" />
-<#include "/${parameters.templateDir}/simple/form-close.ftl" />
-<#include "/${parameters.templateDir}/${parameters.expandTheme}/form-close-validate.ftl" />
-<#if parameters.focusElement??>
-<@s.script>
-    StrutsUtils.addOnLoad(function() {
-        var element = document.getElementById("${parameters.focusElement?js_string}");
-        if(element) {
-            element.focus();
-        }
-    });
-</@s.script>
-</#if>
+package org.apache.struts2.action;
+
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
+
+/**
+ * This interface is implemented by actions that want to declare acceptable parameters. Works in conjunction with {@link
+ * ParametersInterceptor}. For example, actions may want to create a white list of parameters they will accept or a
+ * blacklist of parameters they will reject to prevent clients from setting other unexpected (and possibly dangerous)
+ * parameters.
+ */
+public interface ParameterNameAware {
+
+    /**
+     * Tests if the action will accept the parameter with the given name.
+     *
+     * @param parameterName the parameter name
+     * @return <code>true</code> if accepted, <code>false</code> otherwise
+     */
+    boolean acceptableParameterName(String parameterName);
+
+}

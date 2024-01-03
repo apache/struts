@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.opensymphony.xwork2.interceptor;
+package org.apache.struts2.interceptor.parameter;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.config.providers.MockConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.StrutsDefaultConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
@@ -41,6 +42,9 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlContext;
+import org.apache.struts2.action.NoParameters;
+import org.apache.struts2.action.ParameterNameAware;
+import org.apache.struts2.action.ParameterValueAware;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.junit.Assert;
@@ -74,11 +78,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
                 put("barKey", "barValue");
             }
         };
-        Object a = new ParameterNameAware() {
-            public boolean acceptableParameterName(String parameterName) {
-                return expected.containsKey(parameterName);
-            }
-        };
+        ParameterNameAware a = expected::containsKey;
         final Map<String, Object> parameters = new HashMap<String, Object>() {
             {
                 put("fooKey", "fooValue");
@@ -231,10 +231,10 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 
     public void testModelDrivenParameters() throws Exception {
         Map<String, Object> params = new HashMap<>();
-        final String fooVal = "com.opensymphony.xwork2.interceptor.ParametersInterceptorTest.foo";
+        final String fooVal = "org.apache.struts2.interceptor.parameter.ParametersInterceptorTest.foo";
         params.put("foo", fooVal);
 
-        final String nameVal = "com.opensymphony.xwork2.interceptor.ParametersInterceptorTest.name";
+        final String nameVal = "org.apache.struts2.interceptor.parameter.ParametersInterceptorTest.name";
         params.put("name", nameVal);
         params.put("count", "15");
 

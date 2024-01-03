@@ -1,7 +1,7 @@
 <tr>
     <td class="tdLabel"><label for="myFavouriteFruit" class="label">My Favourite Fruit:</label></td>
     <td class="tdInput">
-<script type="text/javascript">
+<script>
 	function autoPopulate_myFavouriteFruit(targetElement) {
 		if (targetElement.options[targetElement.selectedIndex].value == '-1') {
 			return;

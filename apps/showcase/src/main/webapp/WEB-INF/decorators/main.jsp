@@ -72,7 +72,7 @@
     <s:script src="%{jqueryJs}"/>
     <s:url var="bootstrapJs" value='/js/bootstrap.min.js' encode='false' includeParams='none'/>
     <s:script src="%{bootstrapJs}"/>
-    <s:script type="text/javascript">
+    <s:script>
         $(function () {
             var alerts = $('ul.alert').wrap('<div />');
             alerts.prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');

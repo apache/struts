@@ -33,5 +33,5 @@ package com.opensymphony.xwork2.interceptor;
  * @deprecated since Struts 6.2.0, use {@link org.apache.struts2.action.NoParameters}
  */
 @Deprecated
-public interface NoParameters {
+public interface NoParameters extends org.apache.struts2.action.NoParameters {
 }

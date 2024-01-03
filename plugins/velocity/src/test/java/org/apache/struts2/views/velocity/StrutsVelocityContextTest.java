@@ -54,7 +54,7 @@ public class StrutsVelocityContextTest {
 
     @Test
     public void getChainedValue() {
-        when(chainedContext.internalGet("foo")).thenReturn("bar");
+        when(chainedContext.get("foo")).thenReturn("bar");
         assertEquals("bar", strutsVelocityContext.internalGet("foo"));
     }
 
@@ -75,7 +75,7 @@ public class StrutsVelocityContextTest {
         when(stack.findValue("foo")).thenReturn("qux");
         assertEquals("qux", strutsVelocityContext.internalGet("foo"));
 
-        when(chainedContext.internalGet("foo")).thenReturn("baz");
+        when(chainedContext.get("foo")).thenReturn("baz");
         assertEquals("baz", strutsVelocityContext.internalGet("foo"));
 
         strutsVelocityContext.put("foo", "bar");

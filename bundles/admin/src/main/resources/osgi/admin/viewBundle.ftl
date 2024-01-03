@@ -22,17 +22,17 @@
     <head>
         <title>${bundle.symbolicName!}</title>
 
-        <link rel="stylesheet" type="text/css" href="<@s.url value="${parameters.staticContentPath}/css/main.css" />" />
-        <link rel="stylesheet" type="text/css" href="<@s.url value="${parameters.staticContentPath}/css/redmond/jquery-ui-1.12.1.redmond.css" />" />
+        <@s.link rel="stylesheet" type="text/css" href="${base}${parameters.staticContentPath}/css/main.css" />
+        <@s.link rel="stylesheet" type="text/css" href="${base}${parameters.staticContentPath}/css/redmond/jquery-ui-1.12.1.redmond.css" />
 
-        <script src="<@s.url value="${parameters.staticContentPath}/js/jquery-1.12.4.min.js" />"></script>
-        <script src="<@s.url value="${parameters.staticContentPath}/js/jquery-ui-1.12.1.min.js" />"></script>
+        <@s.script src="${base}${parameters.staticContentPath}/js/jquery-1.12.4.min.js"/>
+        <@s.script src="${base}${parameters.staticContentPath}/js/jquery-ui-1.12.1.min.js" />
 
-        <script type="text/javascript">
+        <@s.script>
             $(function() {
                 $("#tabs").tabs();
             });
-        </script>
+        </@s.script>
 
     </head>
 <body>
@@ -72,7 +72,7 @@
             <span class="ui-icon ui-icon-transferthick-e-w"></span>
             OSGi Shell
         </a>
-    </div>    
+    </div>
 </div>
 
 <@s.actionerror />

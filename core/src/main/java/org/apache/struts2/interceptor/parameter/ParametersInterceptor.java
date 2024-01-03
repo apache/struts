@@ -41,6 +41,7 @@ import org.apache.struts2.action.ParameterNameAware;
 import org.apache.struts2.action.ParameterValueAware;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.ognl.ThreadAllowlist;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -73,6 +74,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected boolean requireAnnotations = false;
 
     private ValueStackFactory valueStackFactory;
+    protected ThreadAllowlist threadAllowlist;
     private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
     private Set<Pattern> excludedValuePatterns = null;
@@ -81,6 +83,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
+    }
+
+    @Inject
+    public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
+        this.threadAllowlist = threadAllowlist;
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)

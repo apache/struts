@@ -70,6 +70,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private boolean dmiEnabled = false;
 
     protected boolean ordered = false;
+    protected boolean requireAnnotations = false;
 
     private ValueStackFactory valueStackFactory;
     private ExcludedPatternsChecker excludedPatterns;
@@ -85,6 +86,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, required = false)
+    public void setRequireAnnotations(String requireAnnotations) {
+        this.requireAnnotations = BooleanUtils.toBoolean(requireAnnotations);
     }
 
     @Inject
@@ -295,11 +301,19 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @return true if parameter is accepted
      */
     protected boolean isAcceptableParameter(String name, Object action) {
-        return acceptableName(name) && isAcceptableParameterNameAware(name, action);
+        return acceptableName(name) && isAcceptableParameterNameAware(name, action) && isParameterAnnotated(name, action);
     }
 
     protected boolean isAcceptableParameterNameAware(String name, Object action) {
         return !(action instanceof ParameterNameAware) || ((ParameterNameAware) action).acceptableParameterName(name);
+    }
+
+    protected boolean isParameterAnnotated(String name, Object action) {
+        if (!requireAnnotations) {
+            return true;
+        }
+        // TODO: Implement
+        return true;
     }
 
     /**

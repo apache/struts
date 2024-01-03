@@ -49,6 +49,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
+
 /**
  * This interceptor sets all parameters on the value stack.
  */
@@ -133,7 +135,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             HttpParameters parameters = retrieveParameters(ac);
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Setting params {}", getParameterLogMap(parameters));
+                LOG.debug("Setting params {}", normalizeSpace(getParameterLogMap(parameters)));
             }
 
             if (parameters != null) {
@@ -363,9 +365,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (!accepted) {
             String message = "Value [{}] of parameter [{}] was not accepted and will be dropped!";
             if (devMode) {
-                LOG.warn(message, value, name);
+                LOG.warn(message, normalizeSpace(value), normalizeSpace(name));
             } else {
-                LOG.debug(message, value, name);
+                LOG.debug(message, normalizeSpace(value), normalizeSpace(name));
             }
         }
         return accepted;

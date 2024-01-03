@@ -18,11 +18,22 @@
  */
 package org.apache.struts2.action;
 
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
+
 /**
- * This marker interface should be implemented by actions that do not want any parameters set on
- * them automatically. This may be useful if one is using the action tag and want to supply
- * the parameters to the action manually using the param tag. It may also be useful if one for
- * security reasons wants to make sure that parameters cannot be set by malicious users.
+ * This interface is implemented by actions that want to declare acceptable parameter values. Works in conjunction with
+ * {@link ParametersInterceptor}. For example, actions may want to create a white list of parameter values they will
+ * accept or a blacklist of parameter values they will reject to prevent clients from setting other unexpected (and
+ * possibly dangerous) parameter values.
  */
-public interface NoParameters {
+public interface ParameterValueAware {
+
+    /**
+     * Tests if the action will accept the parameter with the given value.
+     *
+     * @param parameterValue the parameter value
+     * @return <code>true</code> if accepted, <code>false</code> otherwise
+     */
+    boolean acceptableParameterValue(String parameterValue);
+
 }

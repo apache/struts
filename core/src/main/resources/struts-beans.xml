@@ -201,6 +201,11 @@
     <bean type="ognl.MethodAccessor" name="struts"
           class="com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor"/>
 
+    <!-- DEPRECATED since 6.4.0 - Retained for backwards compatibility with custom beans
+            that may expect it to be present. Inject the DEFAULT bean of 'ognl.MethodAccessor' above instead.  -->
+    <bean type="ognl.MethodAccessor" name="java.lang.Object"
+          class="com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor"/>
+
     <bean type="org.apache.struts2.dispatcher.StaticContentLoader"
           class="org.apache.struts2.dispatcher.DefaultStaticContentLoader" name="struts"/>
     <bean type="com.opensymphony.xwork2.UnknownHandlerManager"

@@ -19,10 +19,10 @@
 package com.opensymphony.xwork2.interceptor;
 
 /**
- * @deprecated since 6.4.0, use {@link org.apache.struts2.interceptor.parameter.ParameterValueAware}.
+ * @deprecated since 6.4.0, use {@link org.apache.struts2.action.ParameterValueAware}.
  */
 @Deprecated
-public interface ParameterValueAware extends org.apache.struts2.interceptor.parameter.ParameterValueAware {
+public interface ParameterValueAware extends org.apache.struts2.action.ParameterValueAware {
 
     /**
      * Tests if the the action will accept the parameter with the given value.

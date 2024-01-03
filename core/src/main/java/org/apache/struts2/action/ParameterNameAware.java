@@ -16,7 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.interceptor.parameter;
+package org.apache.struts2.action;
+
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
 
 /**
  * This interface is implemented by actions that want to declare acceptable parameters. Works in conjunction with {@link

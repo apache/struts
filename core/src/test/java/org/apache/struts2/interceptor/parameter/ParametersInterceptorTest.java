@@ -44,6 +44,8 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlContext;
 import ognl.PropertyAccessor;
 import org.apache.struts2.action.NoParameters;
+import org.apache.struts2.action.ParameterNameAware;
+import org.apache.struts2.action.ParameterValueAware;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.junit.Assert;

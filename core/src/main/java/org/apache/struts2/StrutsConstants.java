@@ -220,6 +220,9 @@ public final class StrutsConstants {
 
     public static final String STRUTS_FREEMARKER_WRAPPER_ALT_MAP = "struts.freemarker.wrapper.altMap";
 
+    /** Extension point for the Struts CompoundRootAccessor */
+    public static final String STRUTS_COMPOUND_ROOT_ACCESSOR = "struts.compoundRootAccessor";
+
     /** The name of the xwork converter implementation */
     public static final String STRUTS_XWORKCONVERTER = "struts.xworkConverter";
 

@@ -24,9 +24,9 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
+import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import ognl.ClassResolver;
 import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
@@ -50,9 +50,11 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         this.xworkConverter = converter;
     }
 
-    @Inject(value = "com.opensymphony.xwork2.util.CompoundRoot")
-    protected void setClassResolver(ClassResolver classResolver) {
-        this.compoundRootAccessor = (RootAccessor) classResolver;
+    @Inject
+    protected void setCompoundRootAccessor(RootAccessor compoundRootAccessor) {
+        this.compoundRootAccessor = compoundRootAccessor;
+        OgnlRuntime.setPropertyAccessor(CompoundRoot.class, compoundRootAccessor);
+        OgnlRuntime.setMethodAccessor(CompoundRoot.class, compoundRootAccessor);
     }
 
     @Inject("system")

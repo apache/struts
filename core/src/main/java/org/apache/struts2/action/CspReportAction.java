@@ -42,7 +42,7 @@ import static org.apache.struts2.interceptor.csp.CspSettings.CSP_REPORT_TYPE;
  *     &lt;package name="csp-reports" namespace="/" extends="struts-default"&gt;
  *         &lt;action name="csp-reports" class="org.apache.struts2.action.DefaultCspReportAction"&gt;
  *             &lt;result type="httpheader"&gt;
- *                 &lt;param name="statusCode">200&lt;/param&gt;
+ *                 &lt;param name="status">204&lt;/param&gt;
  *             &lt;/result&gt;
  *         &lt;/action&gt;
  *     &lt;/package&gt;

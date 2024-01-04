@@ -22,15 +22,12 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
-import ognl.ClassResolver;
-import ognl.MethodAccessor;
 import ognl.MethodFailedException;
 import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
-import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,11 +53,12 @@ import static org.apache.commons.lang3.BooleanUtils.toBoolean;
  * @author Rainer Hermanns
  * @version $Revision$
  */
-public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, ClassResolver {
+public class CompoundRootAccessor implements RootAccessor {
 
     /**
      * Used by OGNl to generate bytecode
      */
+    @Override
     public String getSourceAccessor(OgnlContext context, Object target, Object index) {
         return null;
     }
@@ -68,6 +66,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
     /**
      * Used by OGNl to generate bytecode
      */
+    @Override
     public String getSourceSetter(OgnlContext context, Object target, Object index) {
         return null;
     }
@@ -88,6 +87,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
         this.disallowCustomOgnlMap = BooleanUtils.toBoolean(disallowCustomOgnlMap);
     }
 
+    @Override
     public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
         CompoundRoot root = (CompoundRoot) target;
         OgnlContext ognlContext = (OgnlContext) context;
@@ -136,6 +136,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
         }
     }
 
+    @Override
     public Object getProperty(Map context, Object target, Object name) throws OgnlException {
         CompoundRoot root = (CompoundRoot) target;
         OgnlContext ognlContext = (OgnlContext) context;
@@ -181,6 +182,7 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
         }
     }
 
+    @Override
     public Object callMethod(Map context, Object target, String name, Object[] objects) throws MethodFailedException {
         CompoundRoot root = (CompoundRoot) target;
 
@@ -273,10 +275,12 @@ public class CompoundRootAccessor implements PropertyAccessor, MethodAccessor, C
         return null;
     }
 
+    @Override
     public Object callStaticMethod(Map transientVars, Class aClass, String s, Object[] objects) throws MethodFailedException {
         return null;
     }
 
+    @Override
     public Class classForName(String className, Map context) throws ClassNotFoundException {
         Object root = Ognl.getRoot(context);
 

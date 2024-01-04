@@ -18,4 +18,4 @@
  * under the License.
  */
 -->
-<@s.script src="${base}${parameters.staticContentPath}/utils.js" type="text/javascript" />
+<@s.script src="${base}${parameters.staticContentPath}/utils.js" />

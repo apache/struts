@@ -20,39 +20,39 @@
 -->
 <!DOCTYPE html>
 <html>
-    <style>
+    <@s.style>
         .debugTable {
             border-style: solid;
             border-width: 1px;
         }
-        
+
         .debugTable td {
             border-style: solid;
             border-width: 1px;
         }
-        
+
         .nameColumn {
             background-color:#CCDDFF;
         }
-        
+
         .valueColumn {
             background-color: #CCFFCC;
         }
-        
+
         .nullValue {
             background-color: #FF0000;
         }
-        
+
         .typeColumn {
             background-color: white;
         }
-        
+
         .emptyCollection {
             background-color: #EEEEEE;
         }
-    </style>
+    </@s.style>
 
-    <script>
+    <@s.script>
         function expand(src, path) {
           var baseUrl = location.href;
           var i = baseUrl.indexOf("&object=");
@@ -83,7 +83,7 @@
           };
           request.send();
         }
-    </script>
+    </@s.script>
 
 <body>
     ${debugHtml?no_esc}

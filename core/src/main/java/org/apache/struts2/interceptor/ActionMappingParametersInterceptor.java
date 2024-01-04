@@ -19,10 +19,10 @@
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
-import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.action.ParameterNameAware;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
 
 import java.util.Map;
 
@@ -53,7 +53,7 @@ import java.util.Map;
  * <!-- START SNIPPET: extending -->
  *
  * <p>
- * The best way to add behavior to this interceptor is to utilize the {@link com.opensymphony.xwork2.interceptor.ParameterNameAware} interface in your
+ * The best way to add behavior to this interceptor is to utilize the {@link ParameterNameAware} interface in your
  * actions. However, if you wish to apply a global rule that isn't implemented in your action, then you could extend
  * this interceptor and override the {@link #acceptableName(String)} method.
  * </p>

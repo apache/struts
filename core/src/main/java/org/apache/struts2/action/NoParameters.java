@@ -23,7 +23,6 @@ package org.apache.struts2.action;
  * them automatically. This may be useful if one is using the action tag and want to supply
  * the parameters to the action manually using the param tag. It may also be useful if one for
  * security reasons wants to make sure that parameters cannot be set by malicious users.
- *
  */
-public interface NoParameters extends com.opensymphony.xwork2.interceptor.NoParameters {
+public interface NoParameters {
 }

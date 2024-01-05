@@ -21,7 +21,7 @@
 </form>
 
 <#if (parameters.customOnsubmitEnabled??)>
-<@s.script type="text/javascript">
+<@s.script>
 <#--
   Enable auto-select of optiontransferselect tag's entries upon containing form's
   submission.

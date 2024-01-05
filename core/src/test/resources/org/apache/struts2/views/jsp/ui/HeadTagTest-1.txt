@@ -1,2 +1,2 @@
 <link rel="stylesheet" type="text/css" href="/static/xhtml/styles.css" nonce="r4nd0m"/>
-<script type="text/javascript" src="/static/utils.js" nonce="r4nd0m"></script>
+<script src="/static/utils.js" nonce="r4nd0m"></script>

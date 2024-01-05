@@ -19,19 +19,8 @@
 package com.opensymphony.xwork2.interceptor;
 
 /**
- * This interface is implemented by actions that want to declare acceptable parameters. Works in conjunction with {@link
- * ParametersInterceptor}. For example, actions may want to create a white list of parameters they will accept or a
- * blacklist of parameters they will reject to prevent clients from setting other unexpected (and possibly dangerous)
- * parameters.
+ * @deprecated since 6.4.0, use {@link org.apache.struts2.action.ParameterNameAware}.
  */
-public interface ParameterNameAware {
-
-    /**
-     * Tests if the the action will accept the parameter with the given name.
-     *
-     * @param parameterName  the parameter name
-     * @return <tt>true</tt> if accepted, <tt>false</tt> otherwise
-     */
-    boolean acceptableParameterName(String parameterName);
-    
+@Deprecated
+public interface ParameterNameAware extends org.apache.struts2.action.ParameterNameAware {
 }

@@ -19,6 +19,7 @@
 package org.apache.struts2.views.velocity;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.util.ValueStackProvider;
 import org.apache.velocity.VelocityContext;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-public class StrutsVelocityContext extends VelocityContext {
+public class StrutsVelocityContext extends VelocityContext implements ValueStackProvider {
 
     private final ValueStack stack;
     private final List<VelocityContext> chainedContexts;
@@ -77,10 +78,10 @@ public class StrutsVelocityContext extends VelocityContext {
     }
 
     protected List<Function<String, Object>> contextGetterList() {
-        return Arrays.asList(this::superGet, this::chainedContextGet, this::stackGet);
+        return Arrays.asList(this::superInternalGet, this::chainedContextGet, this::stackGet);
     }
 
-    protected Object superGet(String key) {
+    protected Object superInternalGet(String key) {
         return super.internalGet(key);
     }
 
@@ -96,11 +97,16 @@ public class StrutsVelocityContext extends VelocityContext {
             return null;
         }
         for (VelocityContext chainedContext : chainedContexts) {
-            Object val = chainedContext.internalGet(key);
+            Object val = chainedContext.get(key);
             if (val != null) {
                 return val;
             }
         }
         return null;
+    }
+
+    @Override
+    public ValueStack getValueStack() {
+        return stack;
     }
 }

@@ -26,7 +26,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -98,7 +97,10 @@ import java.util.TreeMap;
  * </pre>
  *
  * @author Gabe
+ *
+ * @deprecated since 6.4.0, use {@link org.apache.struts2.interceptor.parameter.ParametersInterceptor}.
  */
+@Deprecated
 public class ParameterFilterInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(ParameterFilterInterceptor.class);

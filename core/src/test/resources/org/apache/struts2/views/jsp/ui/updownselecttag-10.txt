@@ -1,9 +1,9 @@
 <tr> <td class="tdLabel"></td> <td class="tdInput">
-<script type="text/javascript" src="/static/optiontransferselect.js"></script>
+<script src="/static/optiontransferselect.js"></script>
 <table>
 <tr><td>
 <select name="myName" size="5" id="myId" multiple="multiple">
-	<option value=""></option>
+    <option value=""></option>
     <option value="england">England</option>
     <option value="america" selected="selected">America</option>
     <option value="australia">Australia</option>
@@ -12,9 +12,9 @@
 <input type="hidden" id="__multiselect_myId" name="__multiselect_myName" value=""/>
 </td></tr>
 <tr><td>
-		&nbsp;<input type="button" value="Move Up" onclick="moveOptionUp(document.getElementById('myId'), 'key', '');" />&nbsp;
-		&nbsp;<input type="button" value="v" onclick="moveOptionDown(document.getElementById('myId'), 'key', '');" />&nbsp;
-		&nbsp;<input type="button" value="*" onclick="selectAllOptions(document.getElementById('myId'), 'key', '');" />&nbsp;
+        &nbsp;<input type="button" value="Move Up" onclick="moveOptionUp(document.getElementById('myId'), 'key', '');" />&nbsp;
+        &nbsp;<input type="button" value="v" onclick="moveOptionDown(document.getElementById('myId'), 'key', '');" />&nbsp;
+        &nbsp;<input type="button" value="*" onclick="selectAllOptions(document.getElementById('myId'), 'key', '');" />&nbsp;
 </td></tr>
 </table>
 </td> </tr>

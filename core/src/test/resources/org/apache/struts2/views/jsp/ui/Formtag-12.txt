@@ -3,7 +3,7 @@
 </table>
 </form>
 
-<script type="text/javascript">
+<script>
     StrutsUtils.addOnLoad(function() {
         var element = document.getElementById("felement");
         if(element) {

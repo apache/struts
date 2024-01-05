@@ -1,7 +1,7 @@
-<tr> 
+<tr>
 <td class="tdLabel"></td>
 <td class="tdInput">
-<script type="text/javascript" src="/static/optiontransferselect.js"></script>
+<script src="/static/optiontransferselect.js"></script>
 <table>
 <tr>
 <td>
@@ -22,12 +22,12 @@
 			value="Left" onclick="moveSelectedOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '');alert('Moving Left');" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
 			value="Right" onclick="moveSelectedOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '');alert('Moving Right');" /><br/><br/>
-</td> 
+</td>
 <td>
 	<label for="rightTitle">Title Right</label><br/>
-	<select 
+	<select
 		name="list2"
-		size="20"		
+		size="20"
 		multiple="multiple"
 		id="doubleId"
 	>

@@ -338,6 +338,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     /**
+     * @deprecated since 6.4.0, use {@link #isAcceptableName}
+     */
+    protected boolean acceptableName(String name) {
+        return isAcceptableName(name);
+    }
+
+    /**
      * Validates the name passed is:
      * * Within the max length of a parameter name
      * * Is not excluded
@@ -346,7 +353,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param name - Name to check
      * @return true if accepted
      */
-    protected boolean acceptableName(String name) {
+    protected boolean isAcceptableName(String name) {
         if (isIgnoredDMI(name)) {
             LOG.trace("DMI is enabled, ignoring DMI method: {}", name);
             return false;
@@ -366,6 +373,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     /**
+     * @deprecated since 6.4.0, use {@link #isAcceptableValue}
+     */
+    protected boolean acceptableValue(String name, String value) {
+        return isAcceptableValue(name, value);
+    }
+
+    /**
      * Validates:
      * * Value is null/blank
      * * Value is not excluded
@@ -375,7 +389,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param value - value to check
      * @return true if accepted
      */
-    protected boolean acceptableValue(String name, String value) {
+    protected boolean isAcceptableValue(String name, String value) {
         boolean accepted = value == null || value.isEmpty() || (!isParamValueExcluded(value) && isParamValueAccepted(value));
         if (!accepted) {
             String message = "Value [{}] of parameter [{}] was not accepted and will be dropped!";

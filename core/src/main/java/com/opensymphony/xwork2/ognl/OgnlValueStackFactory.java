@@ -96,14 +96,14 @@ public class OgnlValueStackFactory implements ValueStackFactory {
      * The only exception is the {@link MethodAccessor} for the {@link Object} type which has its own extension point.
      *
      * @see #setMethodAccessor(MethodAccessor)
-     * @see #registerAdditionalMethodAccessors(Container)
+     * @see #registerAdditionalMethodAccessors()
      */
     @Inject
     protected void setContainer(Container container) throws ClassNotFoundException {
         this.container = container;
-        registerPropertyAccessors(container);
-        registerNullHandlers(container);
-        registerAdditionalMethodAccessors(container);
+        registerPropertyAccessors();
+        registerNullHandlers();
+        registerAdditionalMethodAccessors();
     }
 
     /**
@@ -111,7 +111,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
      * {@link #setMethodAccessor} and can be configured using the extension point
      * {@link StrutsConstants#STRUTS_METHOD_ACCESSOR}.
      */
-    protected void registerAdditionalMethodAccessors(Container container) {
+    protected void registerAdditionalMethodAccessors() {
         Set<String> names = container.getInstanceNames(MethodAccessor.class);
         for (String name : names) {
             Class<?> cls;
@@ -136,7 +136,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         }
     }
 
-    protected void registerNullHandlers(Container container) throws ClassNotFoundException {
+    protected void registerNullHandlers() throws ClassNotFoundException {
         Set<String> names = container.getInstanceNames(NullHandler.class);
         for (String name : names) {
             Class<?> cls = Class.forName(name);
@@ -146,7 +146,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         }
     }
 
-    protected void registerPropertyAccessors(Container container) throws ClassNotFoundException {
+    protected void registerPropertyAccessors() throws ClassNotFoundException {
         Set<String> names = container.getInstanceNames(PropertyAccessor.class);
         for (String name : names) {
             Class<?> cls = Class.forName(name);

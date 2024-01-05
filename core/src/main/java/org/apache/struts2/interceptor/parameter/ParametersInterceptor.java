@@ -149,11 +149,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
 
         Map<String, Object> contextMap = actionContext.getContextMap();
-        batchSetReflectionContextState(contextMap, true);
+        batchApplyReflectionContextState(contextMap, true);
         try {
             setParameters(action, actionContext.getValueStack(), parameters);
         } finally {
-            batchSetReflectionContextState(contextMap, false);
+            batchApplyReflectionContextState(contextMap, false);
         }
 
         return invocation.invoke();
@@ -182,14 +182,22 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
     }
 
+    /**
+     * @deprecated since 6.4.0, use {@link #applyParameters}
+     */
+    @Deprecated
     protected void setParameters(final Object action, ValueStack stack, HttpParameters parameters) {
+        applyParameters(action, stack, parameters);
+    }
+
+    protected void applyParameters(final Object action, ValueStack stack, HttpParameters parameters) {
         Map<String, Parameter> acceptableParameters = toAcceptableParameters(parameters, action);
 
         ValueStack newStack = toNewStack(stack);
-        batchSetReflectionContextState(newStack.getContext(), true);
-        setMemberAccessProperties(newStack);
+        batchApplyReflectionContextState(newStack.getContext(), true);
+        applyMemberAccessProperties(newStack);
 
-        setParametersOnStack(newStack, acceptableParameters, action);
+        applyParametersOnStack(newStack, acceptableParameters, action);
 
         if (newStack instanceof ClearableValueStack) {
             stack.getActionContext().withConversionErrors(newStack.getActionContext().getConversionErrors());
@@ -198,7 +206,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         addParametersToContext(ActionContext.getContext(), acceptableParameters);
     }
 
-    protected void batchSetReflectionContextState(Map<String, Object> context, boolean value) {
+    protected void batchApplyReflectionContextState(Map<String, Object> context, boolean value) {
         ReflectionContextState.setCreatingNullObjects(context, value);
         ReflectionContextState.setDenyMethodExecution(context, value);
         ReflectionContextState.setReportingConversionErrors(context, value);
@@ -213,7 +221,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return newStack;
     }
 
-    protected void setMemberAccessProperties(ValueStack stack) {
+    protected void applyMemberAccessProperties(ValueStack stack) {
         if (!(stack instanceof MemberAccessValueStack)) {
             return;
         }
@@ -251,7 +259,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
     }
 
-    protected void setParametersOnStack(ValueStack stack, Map<String, Parameter> parameters, Object action) {
+    protected void applyParametersOnStack(ValueStack stack, Map<String, Parameter> parameters, Object action) {
         for (Map.Entry<String, Parameter> entry : parameters.entrySet()) {
             try {
                 stack.setParameter(entry.getKey(), entry.getValue().getObject());

@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
+import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
@@ -34,7 +35,6 @@ import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
-import ognl.PropertyAccessor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,13 +76,14 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     private transient XWorkConverter converter;
     private boolean devMode;
     private boolean logMissingProperties;
+    private boolean shouldFallbackToContext = true;
 
     /**
      * @since 6.4.0
      */
     protected OgnlValueStack(ValueStack vs,
                              XWorkConverter xworkConverter,
-                             CompoundRootAccessor accessor,
+                             RootAccessor accessor,
                              TextProvider prov,
                              SecurityMemberAccess securityMemberAccess) {
         setRoot(xworkConverter,
@@ -97,19 +98,19 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @since 6.4.0
      */
-    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, SecurityMemberAccess securityMemberAccess) {
+    protected OgnlValueStack(XWorkConverter xworkConverter, RootAccessor accessor, TextProvider prov, SecurityMemberAccess securityMemberAccess) {
         this(null, xworkConverter, accessor, prov, securityMemberAccess);
     }
 
     /**
      * @since 6.4.0
      */
-    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, SecurityMemberAccess securityMemberAccess) {
+    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, RootAccessor accessor, SecurityMemberAccess securityMemberAccess) {
         this(vs, xworkConverter, accessor, null, securityMemberAccess);
     }
 
     /**
-     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, CompoundRootAccessor, TextProvider, SecurityMemberAccess)} instead.
+     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, RootAccessor, TextProvider, SecurityMemberAccess)} instead.
      */
     @Deprecated
     protected OgnlValueStack(ValueStack vs,
@@ -121,7 +122,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @deprecated since 6.4.0, use {@link #OgnlValueStack(XWorkConverter, CompoundRootAccessor, TextProvider, SecurityMemberAccess)} instead.
+     * @deprecated since 6.4.0, use {@link #OgnlValueStack(XWorkConverter, RootAccessor, TextProvider, SecurityMemberAccess)} instead.
      */
     @Deprecated
     protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticFieldAccess) {
@@ -129,7 +130,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, CompoundRootAccessor, SecurityMemberAccess)} instead.
+     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, RootAccessor, SecurityMemberAccess)} instead.
      */
     @Deprecated
     protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticFieldAccess) {
@@ -144,7 +145,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     /**
      * @since 6.4.0
      */
-    protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, SecurityMemberAccess securityMemberAccess) {
+    protected void setRoot(XWorkConverter xworkConverter, RootAccessor accessor, CompoundRoot compoundRoot, SecurityMemberAccess securityMemberAccess) {
         this.root = compoundRoot;
         this.securityMemberAccess = securityMemberAccess;
         this.context = Ognl.createDefaultContext(this.root, securityMemberAccess, accessor, new OgnlTypeConverterWrapper(xworkConverter));
@@ -155,7 +156,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     /**
-     * @deprecated since 6.4.0, use {@link #setRoot(XWorkConverter, CompoundRootAccessor, CompoundRoot, SecurityMemberAccess)} instead.
+     * @deprecated since 6.4.0, use {@link #setRoot(XWorkConverter, RootAccessor, CompoundRoot, SecurityMemberAccess)} instead.
      */
     @Deprecated
     protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, boolean allowStaticFieldAccess) {
@@ -170,6 +171,11 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     @Inject(value = StrutsConstants.STRUTS_OGNL_LOG_MISSING_PROPERTIES, required = false)
     protected void setLogMissingProperties(String logMissingProperties) {
         this.logMissingProperties = BooleanUtils.toBoolean(logMissingProperties);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_OGNL_VALUE_STACK_FALLBACK_TO_CONTEXT, required = false)
+    protected void setShouldFallbackToContext(String shouldFallbackToContext) {
+        this.shouldFallbackToContext = BooleanUtils.toBoolean(shouldFallbackToContext);
     }
 
     /**
@@ -337,32 +343,14 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     private Object tryFindValue(String expr) throws OgnlException {
-        Object value;
-        expr = lookupForOverrides(expr);
-        if (defaultType != null) {
-            value = findValue(expr, defaultType);
-        } else {
-            value = getValueUsingOgnl(expr);
-            if (value == null) {
-                value = findInContext(expr);
-            }
-        }
-        return value;
+        return tryFindValue(expr, defaultType);
     }
 
     private String lookupForOverrides(String expr) {
-        if ((overrides != null) && overrides.containsKey(expr)) {
+        if (overrides != null && overrides.containsKey(expr)) {
             expr = (String) overrides.get(expr);
         }
         return expr;
-    }
-
-    private Object getValueUsingOgnl(String expr) throws OgnlException {
-        try {
-            return ognlUtil.getValue(expr, context, root);
-        } finally {
-            context.remove(THROW_EXCEPTION_ON_FAILURE);
-        }
     }
 
     public Object findValue(String expr) {
@@ -419,25 +407,25 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
     }
 
     private Object tryFindValue(String expr, Class asType) throws OgnlException {
-        Object value = null;
         try {
             expr = lookupForOverrides(expr);
-            value = getValue(expr, asType);
+            Object value = ognlUtil.getValue(expr, context, root, asType);
             if (value == null) {
                 value = findInContext(expr);
-                return converter.convertValue(getContext(), value, asType);
+                if (value != null && asType != null) {
+                    value = converter.convertValue(getContext(), value, asType);
+                }
             }
+            return value;
         } finally {
             context.remove(THROW_EXCEPTION_ON_FAILURE);
         }
-        return value;
-    }
-
-    private Object getValue(String expr, Class asType) throws OgnlException {
-        return ognlUtil.getValue(expr, context, root, asType);
     }
 
     protected Object findInContext(String name) {
+        if (!shouldFallbackToContext) {
+            return null;
+        }
         return getContext().get(name);
     }
 
@@ -525,7 +513,7 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         ActionContext ac = ActionContext.getContext();
         Container cont = ac.getContainer();
         XWorkConverter xworkConverter = cont.getInstance(XWorkConverter.class);
-        CompoundRootAccessor accessor = (CompoundRootAccessor) cont.getInstance(PropertyAccessor.class, CompoundRoot.class.getName());
+        RootAccessor accessor = cont.getInstance(RootAccessor.class);
         TextProvider prov = cont.getInstance(TextProvider.class, "system");
         SecurityMemberAccess sma = cont.getInstance(SecurityMemberAccess.class);
         OgnlValueStack aStack = new OgnlValueStack(xworkConverter, accessor, prov, sma);

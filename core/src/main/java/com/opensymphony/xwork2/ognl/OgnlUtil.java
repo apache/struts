@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.ognl;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import ognl.ClassResolver;
@@ -857,7 +858,7 @@ public class OgnlUtil {
 
     protected Map<String, Object> createDefaultContext(Object root, ClassResolver resolver) {
         if (resolver == null) {
-            resolver = container.getInstance(ClassResolver.class, CompoundRoot.class.getName());
+            resolver = container.getInstance(RootAccessor.class);
             if (resolver == null) {
                 throw new IllegalStateException("Cannot find ClassResolver");
             }

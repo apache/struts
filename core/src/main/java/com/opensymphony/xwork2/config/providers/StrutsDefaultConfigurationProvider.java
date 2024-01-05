@@ -38,7 +38,6 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.ognl.ObjectProxy;
 import com.opensymphony.xwork2.ognl.OgnlReflectionContextFactory;
-import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.ognl.accessor.HttpParametersPropertyAccessor;
 import com.opensymphony.xwork2.ognl.accessor.ObjectAccessor;
 import com.opensymphony.xwork2.ognl.accessor.ObjectProxyPropertyAccessor;
@@ -55,7 +54,6 @@ import com.opensymphony.xwork2.security.DefaultExcludedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultNotExcludedAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
-import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.WildcardHelper;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
@@ -145,7 +143,6 @@ public class StrutsDefaultConfigurationProvider implements ConfigurationProvider
                 .factory(PropertyAccessor.class, Parameter.class.getName(), ParameterPropertyAccessor.class, Scope.SINGLETON)
 
                 .factory(MethodAccessor.class, Object.class.getName(), XWorkMethodAccessor.class, Scope.SINGLETON)
-                .factory(MethodAccessor.class, CompoundRoot.class.getName(), CompoundRootAccessor.class, Scope.SINGLETON)
 
                 .factory(NullHandler.class, Object.class.getName(), InstantiatingNullHandler.class, Scope.SINGLETON)
                 .factory(ActionValidatorManager.class, AnnotationActionValidatorManager.class, Scope.SINGLETON)

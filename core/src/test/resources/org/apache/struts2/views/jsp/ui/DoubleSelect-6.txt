@@ -6,7 +6,7 @@
 <br/>
 <select name="region" id="region" onclick="testMe()" ondblclick="testMe()" onmousedown="testMe()" onmouseup="testMe()" onmouseover="testMe()" onmousemove="testMe()" onmouseout="testMe()" onfocus="testMe()" onblur="testMe()" onkeypress="testMe()" onkeydown="testMe()" onselect="testMe()" onchange="testMe()">
 </select>
-<script type="text/javascript"  >
+<script>
     var fooGroup = new Array(2 + 0);
     for (var i = 0; i < (2 + 0); i++) {
         fooGroup[i] = [];

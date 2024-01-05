@@ -19,7 +19,7 @@
  */
 -->
 <#if !stack.findValue("#optiontransferselect_js_included")??><#t/>
-	<@s.script type="text/javascript" src="${base}${parameters.staticContentPath}/optiontransferselect.js" />
+	<@s.script src="${base}${parameters.staticContentPath}/optiontransferselect.js" />
 	<#assign temporaryVariable = stack.setValue("#optiontransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table>

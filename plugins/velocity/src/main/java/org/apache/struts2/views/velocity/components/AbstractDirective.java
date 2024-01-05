@@ -28,7 +28,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Component;
+import org.apache.struts2.util.ValueStackProvider;
+import org.apache.struts2.views.util.ContextUtil;
+import org.apache.velocity.context.AbstractContext;
+import org.apache.velocity.context.Context;
 import org.apache.velocity.context.InternalContextAdapter;
+import org.apache.velocity.context.InternalWrapperContext;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -57,8 +62,11 @@ public abstract class AbstractDirective extends Directive {
     protected abstract Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res);
 
     public boolean render(InternalContextAdapter ctx, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
-        // get the bean
-        ValueStack stack = (ValueStack) ctx.get("stack");
+        ValueStack stack = extractValueStack(ctx);
+        if (stack == null) {
+            // Fallback to assuming the ValueStack was put into the Velocity context (as is by default)
+            stack = (ValueStack) ctx.get(ContextUtil.STACK);
+        }
         HttpServletRequest req = (HttpServletRequest) stack.getContext().get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse res = (HttpServletResponse) stack.getContext().get(ServletActionContext.HTTP_RESPONSE);
         Component bean = getBean(stack, req, res);
@@ -77,6 +85,27 @@ public abstract class AbstractDirective extends Directive {
 
         bean.end(writer, "");
         return true;
+    }
+
+    private ValueStack extractValueStack(Context context) {
+        do {
+            if (context instanceof ValueStackProvider) {
+                return ((ValueStackProvider) context).getValueStack();
+            }
+            context = extractContext(context);
+        } while (context != null);
+
+        return null;
+    }
+
+    private Context extractContext(Context context) {
+        if (context instanceof InternalWrapperContext) {
+            return ((InternalWrapperContext) context).getInternalUserContext();
+        }
+        if (context instanceof AbstractContext) {
+            return ((AbstractContext) context).getChainedContext();
+        }
+        return null;
     }
 
     /**

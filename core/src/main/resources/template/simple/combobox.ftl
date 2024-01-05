@@ -18,7 +18,7 @@
  * under the License.
  */
 -->
-<@s.script type="text/javascript">
+<@s.script>
 	function autoPopulate_${parameters.escapedId}(targetElement) {
 	<#if parameters.headerKey?? && parameters.headerValue??>
 		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey?js_string}') {

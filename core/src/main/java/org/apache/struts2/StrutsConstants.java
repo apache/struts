@@ -220,6 +220,9 @@ public final class StrutsConstants {
 
     public static final String STRUTS_FREEMARKER_WRAPPER_ALT_MAP = "struts.freemarker.wrapper.altMap";
 
+    /** Extension point for the Struts CompoundRootAccessor */
+    public static final String STRUTS_COMPOUND_ROOT_ACCESSOR = "struts.compoundRootAccessor";
+
     /** The name of the xwork converter implementation */
     public static final String STRUTS_XWORKCONVERTER = "struts.xworkConverter";
 
@@ -307,6 +310,14 @@ public final class StrutsConstants {
      * @since 6.0.0
      */
     public static final String STRUTS_OGNL_LOG_MISSING_PROPERTIES = "struts.ognl.logMissingProperties";
+
+    /**
+     * Determines whether lookups on the ValueStack should fallback to looking in the context if the OGNL expression
+     * fails or returns null.
+     *
+     * @since 6.4.0
+     */
+    public static final String STRUTS_OGNL_VALUE_STACK_FALLBACK_TO_CONTEXT = "struts.ognl.valueStackFallbackToContext";
 
     /**
      * Logs properties that are not found (very verbose)

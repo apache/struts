@@ -23,10 +23,10 @@ import com.opensymphony.xwork2.conversion.NullHandler;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
+import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
+import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import ognl.ClassResolver;
 import ognl.MethodAccessor;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
@@ -41,7 +41,7 @@ import java.util.Set;
 public class OgnlValueStackFactory implements ValueStackFactory {
 
     protected XWorkConverter xworkConverter;
-    protected CompoundRootAccessor compoundRootAccessor;
+    protected RootAccessor compoundRootAccessor;
     protected TextProvider textProvider;
     protected Container container;
 
@@ -50,9 +50,11 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         this.xworkConverter = converter;
     }
 
-    @Inject(value = "com.opensymphony.xwork2.util.CompoundRoot")
-    protected void setClassResolver(ClassResolver classResolver) {
-        this.compoundRootAccessor = (CompoundRootAccessor) classResolver;
+    @Inject
+    protected void setCompoundRootAccessor(RootAccessor compoundRootAccessor) {
+        this.compoundRootAccessor = compoundRootAccessor;
+        OgnlRuntime.setPropertyAccessor(CompoundRoot.class, compoundRootAccessor);
+        OgnlRuntime.setMethodAccessor(CompoundRoot.class, compoundRootAccessor);
     }
 
     @Inject("system")
@@ -60,18 +62,21 @@ public class OgnlValueStackFactory implements ValueStackFactory {
         this.textProvider = textProvider;
     }
 
+    @Override
     public ValueStack createValueStack() {
-        ValueStack stack = new OgnlValueStack(
-                xworkConverter, compoundRootAccessor, textProvider, container.getInstance(SecurityMemberAccess.class));
-        container.inject(stack);
-        return stack.getActionContext().withContainer(container).withValueStack(stack).getValueStack();
+        return createValueStack(null, true);
     }
 
+    @Override
     public ValueStack createValueStack(ValueStack stack) {
-        ValueStack result = new OgnlValueStack(
-                stack, xworkConverter, compoundRootAccessor, container.getInstance(SecurityMemberAccess.class));
-        container.inject(result);
-        return result.getActionContext().withContainer(container).withValueStack(result).getValueStack();
+        return createValueStack(stack, false);
+    }
+
+    protected ValueStack createValueStack(ValueStack stack, boolean useTextProvider) {
+        ValueStack newStack = new OgnlValueStack(
+                stack, xworkConverter, compoundRootAccessor, useTextProvider ? textProvider : null, container.getInstance(SecurityMemberAccess.class));
+        container.inject(newStack);
+        return newStack.getActionContext().withContainer(container).withValueStack(newStack).getValueStack();
     }
 
     @Inject

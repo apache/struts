@@ -27,19 +27,18 @@ import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
+import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.test.TestBean2;
 import com.opensymphony.xwork2.util.Bar;
 import com.opensymphony.xwork2.util.BarJunior;
 import com.opensymphony.xwork2.util.Cat;
-import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.Dog;
 import com.opensymphony.xwork2.util.Foo;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.OgnlException;
-import ognl.PropertyAccessor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LogEvent;
@@ -98,7 +97,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
     private OgnlValueStack createValueStack(boolean allowStaticFieldAccess) {
         OgnlValueStack stack = new OgnlValueStack(
             container.getInstance(XWorkConverter.class),
-            (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()),
+            (CompoundRootAccessor) container.getInstance(RootAccessor.class),
             container.getInstance(TextProvider.class, "system"), allowStaticFieldAccess);
         container.inject(stack);
         return stack;
@@ -1078,7 +1077,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         OgnlValueStack stack2 = new OgnlValueStack(vs,
             container.getInstance(XWorkConverter.class),
-            (CompoundRootAccessor) container.getInstance(PropertyAccessor.class, CompoundRoot.class.getName()), true);
+            (CompoundRootAccessor) container.getInstance(RootAccessor.class), true);
         container.inject(stack2);
 
         assertEquals(vs.getRoot(), stack2.getRoot());
@@ -1122,9 +1121,18 @@ public class OgnlValueStackTest extends XWorkTestCase {
         assertEquals("Hello World", vs.findValue("claus", String.class));
         assertEquals("Hello World", vs.findValue("top", String.class));
 
+        assertNull(vs.findValue("unknown", String.class));
+    }
+
+    public void testExprFallbackToContext() {
         vs.getContext().put("santa", "Hello Santa");
         assertEquals("Hello Santa", vs.findValue("santa", String.class));
-        assertNull(vs.findValue("unknown", String.class));
+    }
+
+    public void testExprFallbackToContext_disabled() {
+        vs.setShouldFallbackToContext("false");
+        vs.getContext().put("santa", "Hello Santa");
+        assertNull(vs.findValue("santa", String.class));
     }
 
     public void testWarnAboutInvalidProperties() {

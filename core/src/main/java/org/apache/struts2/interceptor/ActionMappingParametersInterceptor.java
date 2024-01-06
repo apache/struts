@@ -76,12 +76,12 @@ public class ActionMappingParametersInterceptor extends ParametersInterceptor {
     /**
      * Get the parameter map from ActionMapping associated with the provided ActionContext.
      *
-     * @param ac The action context
+     * @param actionContext The action context
      * @return the parameters from the action mapping in the context.  If none found, returns an empty map.
      */
     @Override
-    protected HttpParameters retrieveParameters(ActionContext ac) {
-        ActionMapping mapping = ac.getActionMapping();
+    protected HttpParameters retrieveParameters(ActionContext actionContext) {
+        ActionMapping mapping = actionContext.getActionMapping();
         if (mapping != null) {
             return HttpParameters.create(mapping.getParams()).buildNoNestedWrapping();
         } else {

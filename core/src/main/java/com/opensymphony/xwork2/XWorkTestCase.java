@@ -64,10 +64,6 @@ public abstract class XWorkTestCase extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         XWorkTestCaseHelper.tearDown(configurationManager);
-        configurationManager = null;
-        configuration = null;
-        container = null;
-        actionProxyFactory = null;
     }
 
     protected void loadConfigurationProviders(ConfigurationProvider... providers) {

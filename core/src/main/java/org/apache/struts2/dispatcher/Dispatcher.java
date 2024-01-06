@@ -64,6 +64,7 @@ import org.apache.struts2.config.StrutsBeanSelectionProvider;
 import org.apache.struts2.config.StrutsJavaConfiguration;
 import org.apache.struts2.config.StrutsJavaConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -120,6 +121,12 @@ public class Dispatcher {
     private static final List<DispatcherListener> dispatcherListeners = new CopyOnWriteArrayList<>();
 
     /**
+     * This field exists so {@link #getContainer()} can determine whether to (re-)inject this instance in the case of
+     * a {@link ConfigurationManager} reload.
+     */
+    private Container injectedContainer;
+
+    /**
      * Store state of StrutsConstants.STRUTS_DEVMODE setting.
      */
     private boolean devMode;
@@ -143,11 +150,6 @@ public class Dispatcher {
      * Store state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
      */
     private String multipartSaveDir;
-
-    /**
-     * Stores the value of {@link StrutsConstants#STRUTS_MULTIPART_PARSER} setting
-     */
-    private String multipartHandlerName;
 
     /**
      * Stores the value of {@link StrutsConstants#STRUTS_MULTIPART_ENABLED}
@@ -192,6 +194,11 @@ public class Dispatcher {
      * Store ConfigurationManager instance, set on init.
      */
     protected ConfigurationManager configurationManager;
+    private ObjectFactory objectFactory;
+    private ActionProxyFactory actionProxyFactory;
+    private LocaleProviderFactory localeProviderFactory;
+    private StaticContentLoader staticContentLoader;
+    private ActionMapper actionMapper;
 
     /**
      * Provide the dispatcher instance for the current thread.
@@ -209,6 +216,13 @@ public class Dispatcher {
      */
     public static void setInstance(Dispatcher instance) {
         Dispatcher.instance.set(instance);
+    }
+
+    /**
+     * Removes the dispatcher instance for this thread.
+     */
+    public static void clearInstance() {
+        Dispatcher.instance.remove();
     }
 
     /**
@@ -306,9 +320,12 @@ public class Dispatcher {
         multipartSaveDir = val;
     }
 
-    @Inject(StrutsConstants.STRUTS_MULTIPART_PARSER)
+    /**
+     * @deprecated since 6.4.0, no replacement.
+     */
+    @Deprecated
     public void setMultipartHandler(String val) {
-        multipartHandlerName = val;
+        // no-op
     }
 
     @Inject(value = StrutsConstants.STRUTS_MULTIPART_ENABLED, required = false)
@@ -326,9 +343,19 @@ public class Dispatcher {
         this.valueStackFactory = valueStackFactory;
     }
 
+    public ValueStackFactory getValueStackFactory() {
+        return valueStackFactory;
+    }
+
     @Inject(StrutsConstants.STRUTS_HANDLE_EXCEPTION)
     public void setHandleException(String handleException) {
         this.handleException = Boolean.parseBoolean(handleException);
+    }
+
+    @Inject(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND)
+    public void setDispatchersParametersWorkaround(String dispatchersParametersWorkaround) {
+        this.paramsWorkaroundEnabled = Boolean.parseBoolean(dispatchersParametersWorkaround)
+                || (servletContext != null && StringUtils.contains(servletContext.getServerInfo(), "WebLogic"));
     }
 
     public boolean isHandleException() {
@@ -340,12 +367,48 @@ public class Dispatcher {
         this.errorHandler = errorHandler;
     }
 
+    @Inject
+    public void setObjectFactory(ObjectFactory objectFactory) {
+        this.objectFactory = objectFactory;
+    }
+
+    @Inject
+    public void setActionProxyFactory(ActionProxyFactory actionProxyFactory) {
+        this.actionProxyFactory = actionProxyFactory;
+    }
+
+    public ActionProxyFactory getActionProxyFactory() {
+        return actionProxyFactory;
+    }
+
+    @Inject
+    public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
+        this.localeProviderFactory = localeProviderFactory;
+    }
+
+    @Inject
+    public void setStaticContentLoader(StaticContentLoader staticContentLoader) {
+        this.staticContentLoader = staticContentLoader;
+    }
+
+    public StaticContentLoader getStaticContentLoader() {
+        return staticContentLoader;
+    }
+
+    @Inject
+    public void setActionMapper(ActionMapper actionMapper) {
+        this.actionMapper = actionMapper;
+    }
+
+    public ActionMapper getActionMapper() {
+        return actionMapper;
+    }
+
     /**
      * Releases all instances bound to this dispatcher instance.
      */
     public void cleanup() {
         // clean up ObjectFactory
-        ObjectFactory objectFactory = getContainer().getInstance(ObjectFactory.class);
         if (objectFactory == null) {
             LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
         }
@@ -359,7 +422,7 @@ public class Dispatcher {
         }
 
         // clean up Dispatcher itself for this thread
-        instance.set(null);
+        instance.remove();
         servletContext.setAttribute(StrutsStatics.SERVLET_DISPATCHER, null);
 
         // clean up DispatcherListeners
@@ -532,21 +595,6 @@ public class Dispatcher {
         loadConfigPaths("struts-deferred.xml");
     }
 
-    private Container init_PreloadConfiguration() {
-        return getContainer();
-    }
-
-    private void init_CheckWebLogicWorkaround(Container container) {
-        // test whether param-access workaround needs to be enabled
-        if (servletContext != null && StringUtils.contains(servletContext.getServerInfo(), "WebLogic")) {
-            LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
-            paramsWorkaroundEnabled = true;
-        } else {
-            paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class,
-                StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
-        }
-    }
-
     /**
      * Load configurations, including both XML and zero-configuration strategies,
      * and update optional settings, including whether to reload configurations and resource files.
@@ -567,9 +615,7 @@ public class Dispatcher {
             init_AliasStandardObjects(); // [7]
             init_DeferredXmlConfigurations();
 
-            Container container = init_PreloadConfiguration();
-            container.inject(this);
-            init_CheckWebLogicWorkaround(container);
+            getContainer(); // Inject this instance
 
             if (!dispatcherListeners.isEmpty()) {
                 for (DispatcherListener l : dispatcherListeners) {
@@ -689,7 +735,6 @@ public class Dispatcher {
     }
 
     protected ActionProxy createActionProxy(String namespace, String name, String method, Map<String, Object> extraContext) {
-        ActionProxyFactory actionProxyFactory = getContainer().getInstance(ActionProxyFactory.class);
         return actionProxyFactory.createActionProxy(namespace, name, method, extraContext, true, false);
     }
 
@@ -865,6 +910,7 @@ public class Dispatcher {
      * @param response The response
      */
     public void prepare(HttpServletRequest request, HttpServletResponse response) {
+        getContainer(); // Init ContainerHolder and reinject this instance IF ConfigurationManager was reloaded
         String encoding = null;
         if (defaultEncoding != null) {
             encoding = defaultEncoding;
@@ -937,15 +983,12 @@ public class Dispatcher {
         }
 
         if (isMultipartSupportEnabled(request) && isMultipartRequest(request)) {
-            MultiPartRequest multiPartRequest = getMultiPartRequest();
-            LocaleProviderFactory localeProviderFactory = getContainer().getInstance(LocaleProviderFactory.class);
-
             request = new MultiPartRequestWrapper(
-                multiPartRequest,
-                request,
-                getSaveDir(),
-                localeProviderFactory.createLocaleProvider(),
-                disableRequestAttributeValueStackLookup
+                    getMultiPartRequest(),
+                    request,
+                    getSaveDir(),
+                    localeProviderFactory.createLocaleProvider(),
+                    disableRequestAttributeValueStackLookup
             );
         } else {
             request = new StrutsRequestWrapper(request, disableRequestAttributeValueStackLookup);
@@ -988,18 +1031,7 @@ public class Dispatcher {
      * @return a multi part request object
      */
     protected MultiPartRequest getMultiPartRequest() {
-        MultiPartRequest mpr = null;
-        //check for alternate implementations of MultiPartRequest
-        Set<String> multiNames = getContainer().getInstanceNames(MultiPartRequest.class);
-        for (String multiName : multiNames) {
-            if (multiName.equals(multipartHandlerName)) {
-                mpr = getContainer().getInstance(MultiPartRequest.class, multiName);
-            }
-        }
-        if (mpr == null) {
-            mpr = getContainer().getInstance(MultiPartRequest.class);
-        }
-        return mpr;
+        return getContainer().getInstance(MultiPartRequest.class);
     }
 
     /**
@@ -1063,27 +1095,26 @@ public class Dispatcher {
     }
 
     /**
-     * Expose the dependency injection container.
+     * Exposes a thread-cached reference of the dependency injection container. If the container is found to have
+     * changed since the last time it was cached, this Dispatcher instance is re-injected to ensure no stale
+     * configuration/dependencies persist.
+     * <p>
+     * A non-cached reference can be obtained by calling {@link #getConfigurationManager()}.
      *
      * @return Our dependency injection container
      */
     public Container getContainer() {
-        if (ContainerHolder.get() != null) {
-            return ContainerHolder.get();
-        }
-        ConfigurationManager mgr = getConfigurationManager();
-        if (mgr == null) {
-            throw new IllegalStateException("The configuration manager shouldn't be null");
-        } else {
-            Configuration config = mgr.getConfiguration();
-            if (config == null) {
-                throw new IllegalStateException("Unable to load configuration");
-            } else {
-                Container container = config.getContainer();
-                ContainerHolder.store(container);
-                return container;
+        if (ContainerHolder.get() == null) {
+            try {
+                ContainerHolder.store(getConfigurationManager().getConfiguration().getContainer());
+            } catch (NullPointerException e) {
+                throw new IllegalStateException("ConfigurationManager and/or Configuration should not be null", e);
             }
         }
+        if (injectedContainer != ContainerHolder.get()) {
+            injectedContainer = ContainerHolder.get();
+            injectedContainer.inject(this);
+        }
+        return ContainerHolder.get();
     }
-
 }

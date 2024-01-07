@@ -1,0 +1,4 @@
+<input type="radio" name="myname" id="mynametrue" value="true"/>
+<label for="mynametrue">male</label>
+<input type="radio" name="myname" id="mynamefalse" checked="checked" value="false"/>
+<label for="mynamefalse">female</label>

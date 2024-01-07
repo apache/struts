@@ -53,6 +53,7 @@ public class TestAction extends ActionSupport {
     private Long id;
     private List<SomeEnum> enumList;
     private List<Integer> intList;
+    private Boolean someBool;
 
     private final Map<String, String> texts = new HashMap<>();
 
@@ -253,5 +254,13 @@ public class TestAction extends ActionSupport {
 
     public void setIntList(List<Integer> intList) {
         this.intList = intList;
+    }
+
+    public Boolean getSomeBool() {
+        return someBool;
+    }
+
+    public void setSomeBool(Boolean someBool) {
+        this.someBool = someBool;
     }
 }

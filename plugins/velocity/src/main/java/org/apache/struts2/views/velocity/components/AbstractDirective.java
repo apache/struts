@@ -18,6 +18,7 @@
  */
 package org.apache.struts2.views.velocity.components;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.ServletActionContext;
@@ -59,11 +60,7 @@ public abstract class AbstractDirective extends Directive {
     protected abstract Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res);
 
     public boolean render(InternalContextAdapter ctx, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
-        ValueStack stack = extractValueStack(ctx);
-        if (stack == null) {
-            // Fallback to assuming the ValueStack was put into the Velocity context (as is by default)
-            stack = (ValueStack) ctx.get(ContextUtil.STACK);
-        }
+        ValueStack stack = getValueStack(ctx);
         HttpServletRequest req = (HttpServletRequest) stack.getContext().get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse res = (HttpServletResponse) stack.getContext().get(ServletActionContext.HTTP_RESPONSE);
         Component bean = getBean(stack, req, res);
@@ -82,6 +79,19 @@ public abstract class AbstractDirective extends Directive {
 
         bean.end(writer, "");
         return true;
+    }
+
+    protected ValueStack getValueStack(Context context) {
+        ValueStack stack = extractValueStack(context);
+        if (stack == null) {
+            // Fallback to assuming the ValueStack was put into the Velocity context (as is by default)
+            stack = (ValueStack) context.get(ContextUtil.STACK);
+        }
+        if (stack == null) {
+            // Fallback to current ActionContext
+            stack = ActionContext.getContext().getValueStack();
+        }
+        return stack;
     }
 
     private ValueStack extractValueStack(Context context) {

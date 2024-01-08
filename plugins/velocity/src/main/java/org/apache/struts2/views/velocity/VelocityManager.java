@@ -128,7 +128,7 @@ public class VelocityManager {
 
     protected Context buildContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         List<VelocityContext> chainedContexts = prepareChainedContexts(req, res, stack.getContext());
-        Context context = new StrutsVelocityContext(chainedContexts, stack);
+        Context context = new StrutsVelocityContext(stack, chainedContexts.toArray(new Context[0]));
         ContextUtil.getStandardContext(stack, req, res).forEach(context::put);
         VelocityStrutsUtil util = new VelocityStrutsUtil(velocityEngine, context, stack, req, res);
         context.put(STRUTS, util);

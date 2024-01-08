@@ -29,7 +29,6 @@ import org.mockito.junit.MockitoRule;
 
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
@@ -49,42 +48,42 @@ public class StrutsVelocityContextTest {
 
     @Before
     public void setUp() throws Exception {
-        strutsVelocityContext = new StrutsVelocityContext(singletonList(chainedContext), stack);
+        strutsVelocityContext = new StrutsVelocityContext(stack, chainedContext);
     }
 
     @Test
     public void getChainedValue() {
         when(chainedContext.get("foo")).thenReturn("bar");
-        assertEquals("bar", strutsVelocityContext.internalGet("foo"));
+        assertEquals("bar", strutsVelocityContext.get("foo"));
     }
 
     @Test
     public void getStackValue() {
         when(stack.findValue("foo")).thenReturn("bar");
-        assertEquals("bar", strutsVelocityContext.internalGet("foo"));
+        assertEquals("bar", strutsVelocityContext.get("foo"));
     }
 
     @Test
     public void getSuperValue() {
         strutsVelocityContext.put("foo", "bar");
-        assertEquals("bar", strutsVelocityContext.internalGet("foo"));
+        assertEquals("bar", strutsVelocityContext.get("foo"));
     }
 
     @Test
     public void getValuePrecedence() {
         when(stack.findValue("foo")).thenReturn("qux");
-        assertEquals("qux", strutsVelocityContext.internalGet("foo"));
+        assertEquals("qux", strutsVelocityContext.get("foo"));
 
         when(chainedContext.get("foo")).thenReturn("baz");
-        assertEquals("baz", strutsVelocityContext.internalGet("foo"));
+        assertEquals("baz", strutsVelocityContext.get("foo"));
 
         strutsVelocityContext.put("foo", "bar");
-        assertEquals("bar", strutsVelocityContext.internalGet("foo"));
+        assertEquals("bar", strutsVelocityContext.get("foo"));
     }
 
     @Test
     public void nullArgs() {
         strutsVelocityContext = new StrutsVelocityContext((List<VelocityContext>) null, null);
-        assertNull(strutsVelocityContext.internalGet("foo"));
+        assertNull(strutsVelocityContext.get("foo"));
     }
 }

@@ -19,94 +19,57 @@
 package org.apache.struts2.views.velocity;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.util.ValueStackProvider;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.context.Context;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
-public class StrutsVelocityContext extends VelocityContext implements ValueStackProvider {
+/**
+ * A Velocity {@link Context} which falls back to a {@link ValueStack} lookup after looking in any other provided
+ * Velocity contexts.
+ */
+public class StrutsVelocityContext extends DirectiveVelocityContext {
 
-    private final ValueStack stack;
-    private final List<VelocityContext> chainedContexts;
+    /**
+     * @since 6.4.0.
+     */
+    public StrutsVelocityContext(ValueStack stack, Context ...contexts) {
+        super(stack, contexts);
+    }
 
     /**
      * Creates a content with link to the ValueStack and any other Velocity contexts
      *
      * @param chainedContexts Existing Velocity contexts to chain to
-     * @param stack Struts ValueStack
+     * @param stack           Struts ValueStack
      * @since 6.0.0
      */
-    public StrutsVelocityContext(List<VelocityContext> chainedContexts, ValueStack stack) {
-        this.chainedContexts = chainedContexts;
-        this.stack = stack;
+    public StrutsVelocityContext(List<? extends Context> chainedContexts, ValueStack stack) {
+        super(stack, chainedContexts == null ? new Context[0] : chainedContexts.toArray(new Context[0]));
     }
 
     /**
-     * @deprecated please use {@link #StrutsVelocityContext(List, ValueStack)}
-     * and pass {null} or empty list if no chained contexts were defined
+     * @deprecated since 6.0.0, use {@link #StrutsVelocityContext(ValueStack, Context...)} instead.
      */
     @Deprecated
     public StrutsVelocityContext(ValueStack stack) {
-        this((List<VelocityContext>) null, stack);
+        this(stack, new Context[0]);
     }
 
     /**
-     * @deprecated please use {@link #StrutsVelocityContext(List, ValueStack)}
+     * @deprecated since 6.0.0, use {@link #StrutsVelocityContext(ValueStack, Context...)} instead.
      */
     @Deprecated
     public StrutsVelocityContext(VelocityContext[] chainedContexts, ValueStack stack) {
-        this(new ArrayList<>(Arrays.asList(chainedContexts)), stack);
+        this(stack, chainedContexts);
     }
 
     @Override
-    public boolean internalContainsKey(String key) {
-        return internalGet(key) != null;
-    }
-
-    @Override
-    public Object internalGet(String key) {
-        for (Function<String, Object> contextGet : contextGetterList()) {
-            Object val = contextGet.apply(key);
-            if (val != null) {
-                return val;
-            }
+    public Object get(String key) {
+        Object value = super.get(key);
+        if (value == null && getValueStack() != null) {
+            value = getValueStack().findValue(key);
         }
-        return null;
-    }
-
-    protected List<Function<String, Object>> contextGetterList() {
-        return Arrays.asList(this::superInternalGet, this::chainedContextGet, this::stackGet);
-    }
-
-    protected Object superInternalGet(String key) {
-        return super.internalGet(key);
-    }
-
-    protected Object stackGet(String key) {
-        if (stack == null) {
-            return null;
-        }
-        return stack.findValue(key);
-    }
-
-    protected Object chainedContextGet(String key) {
-        if (chainedContexts == null) {
-            return null;
-        }
-        for (VelocityContext chainedContext : chainedContexts) {
-            Object val = chainedContext.get(key);
-            if (val != null) {
-                return val;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public ValueStack getValueStack() {
-        return stack;
+        return value;
     }
 }

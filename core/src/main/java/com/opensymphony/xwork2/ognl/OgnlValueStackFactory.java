@@ -132,7 +132,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
             }
             MethodAccessor methodAccessor = container.getInstance(MethodAccessor.class, name);
             OgnlRuntime.setMethodAccessor(cls, methodAccessor);
-            LOG.info("Registered custom OGNL MethodAccessor [{}] for class [{}]", methodAccessor.getClass().getName(), cls.getName());
+            LOG.debug("Registered custom OGNL MethodAccessor [{}] for class [{}]", methodAccessor.getClass().getName(), cls.getName());
         }
     }
 
@@ -142,7 +142,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
             Class<?> cls = Class.forName(name);
             NullHandler nullHandler = container.getInstance(NullHandler.class, name);
             OgnlRuntime.setNullHandler(cls, new OgnlNullHandlerWrapper(nullHandler));
-            LOG.info("Registered custom OGNL NullHandler [{}] for class [{}]", nullHandler.getClass().getName(), cls.getName());
+            LOG.debug("Registered custom OGNL NullHandler [{}] for class [{}]", nullHandler.getClass().getName(), cls.getName());
         }
     }
 
@@ -156,7 +156,7 @@ public class OgnlValueStackFactory implements ValueStackFactory {
             }
             PropertyAccessor propertyAccessor = container.getInstance(PropertyAccessor.class, name);
             OgnlRuntime.setPropertyAccessor(cls, propertyAccessor);
-            LOG.info("Registered custom OGNL PropertyAccessor [{}] for class [{}]", propertyAccessor.getClass().getName(), cls.getName());
+            LOG.debug("Registered custom OGNL PropertyAccessor [{}] for class [{}]", propertyAccessor.getClass().getName(), cls.getName());
         }
     }
 

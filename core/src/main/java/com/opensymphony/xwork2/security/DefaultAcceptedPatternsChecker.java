@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.stream.Collectors.joining;
 
 public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
 
@@ -44,6 +45,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
      * Must match {@link #ACCEPTED_PATTERNS} RegEx. Signifies characters which result in a nested lookup via OGNL.
      */
     public static final Set<Character> NESTING_CHARS = unmodifiableSet(new HashSet<>(asList('.', '[', '(')));
+    public static final String NESTING_CHARS_STR = NESTING_CHARS.stream().map(String::valueOf).collect(joining());
 
     public static final String[] DMI_AWARE_ACCEPTED_PATTERNS = {
             "\\w+([:]?\\w+)?((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w-?|[\\u4e00-\\u9fa5]-?)+'])|(\\('(\\w-?|[\\u4e00-\\u9fa5]-?)+'\\)))*([!]?\\w+)?"

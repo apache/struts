@@ -63,6 +63,7 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
+import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.indexOfAny;
@@ -340,7 +341,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return true;
         }
 
-        int nestingIndex = indexOfAny(name, NESTING_CHARS.stream().map(String::valueOf).collect(joining()));
+        int nestingIndex = indexOfAny(name, NESTING_CHARS_STR);
         String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
         long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
 

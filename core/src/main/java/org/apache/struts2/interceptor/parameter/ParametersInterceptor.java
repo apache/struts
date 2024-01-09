@@ -62,6 +62,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.indexOfAny;
@@ -341,7 +342,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * Checks if the Action class member corresponding to a parameter is appropriately annotated with
      * {@link StrutsParameter} and OGNL allowlists any necessary classes.
      * <p>
-     * Note that this logic relies on the use of {@link DefaultAcceptedPatternsChecker#ACCEPTED_PATTERNS} and may also
+     * Note that this logic relies on the use of {@link DefaultAcceptedPatternsChecker#NESTING_CHARS} and may also
      * be adversely impacted by the use of custom OGNL property accessors.
      */
     protected boolean isParameterAnnotatedAndAllowlist(String name, Object action) {
@@ -349,9 +350,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return true;
         }
 
-        int nestingIndex = indexOfAny(name, ".[");
+        int nestingIndex = indexOfAny(name, NESTING_CHARS.stream().map(String::valueOf).collect(joining()));
         String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
-        long paramDepth = name.chars().filter(ch -> ch == '.' || ch == '[').count();
+        long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
 
         return hasValidAnnotatedMember(rootProperty, action, paramDepth);
     }

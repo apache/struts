@@ -110,6 +110,18 @@ public class StrutsParameterAnnotationTest {
     }
 
     @Test
+    public void publicPojoDepthOne_sqrBracket() {
+        testParameter(new FieldAction(), "publicPojoDepthOne['key']", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+    }
+
+    @Test
+    public void publicPojoDepthOne_bracket() {
+        testParameter(new FieldAction(), "publicPojoDepthOne('key')", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+    }
+
+    @Test
     public void publicNestedPojoDepthOne() {
         testParameter(new FieldAction(), "publicPojoDepthOne.key.key", false);
     }
@@ -123,6 +135,18 @@ public class StrutsParameterAnnotationTest {
     @Test
     public void publicNestedPojoDepthTwo() {
         testParameter(new FieldAction(), "publicPojoDepthTwo.key.key", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+    }
+
+    @Test
+    public void publicNestedPojoDepthTwo_sqrBracket() {
+        testParameter(new FieldAction(), "publicPojoDepthTwo['key']['key']", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+    }
+
+    @Test
+    public void publicNestedPojoDepthTwo_bracket() {
+        testParameter(new FieldAction(), "publicPojoDepthTwo('key')('key')", true);
         assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
     }
 

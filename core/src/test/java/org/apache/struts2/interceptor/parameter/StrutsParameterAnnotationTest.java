@@ -234,6 +234,18 @@ public class StrutsParameterAnnotationTest {
         assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrder(Map.class, String.class, Pojo.class);
     }
 
+    @Test
+    public void publicStrNotAnnotated_transitionMode() {
+        parametersInterceptor.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
+        testParameter(new FieldAction(), "publicStrNotAnnotated", true);
+    }
+
+    @Test
+    public void publicStrNotAnnotatedMethod_transitionMode() {
+        parametersInterceptor.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
+        testParameter(new MethodAction(), "publicStrNotAnnotated", true);
+    }
+
 
     class FieldAction {
         @StrutsParameter

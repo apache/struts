@@ -88,6 +88,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected boolean ordered = false;
     protected boolean requireAnnotations = false;
+    protected boolean requireAnnotationsTransitionMode = false;
 
     private ValueStackFactory valueStackFactory;
     protected ThreadAllowlist threadAllowlist;
@@ -114,6 +115,20 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, required = false)
     public void setRequireAnnotations(String requireAnnotations) {
         this.requireAnnotations = BooleanUtils.toBoolean(requireAnnotations);
+    }
+
+    /**
+     * When 'Transition Mode' is enabled, parameters that are not 'nested' will be accepted without annotations. What
+     * this means in practice is that all public setters on an Action will be exposed for parameter injection again, and
+     * only 'nested' parameters, i.e. public getters on an Action, will require annotations.
+     * <p>
+     * In this mode, the OGNL auto-allowlisting capability is not degraded in any way, and as such, it offers a
+     * convenient option for applications to enable the OGNL allowlist capability whilst they work through the process
+     * of annotating all their Action parameters.
+     */
+    @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS_TRANSITION, required = false)
+    public void setRequireAnnotationsTransitionMode(String transitionMode) {
+        this.requireAnnotationsTransitionMode = BooleanUtils.toBoolean(transitionMode);
     }
 
     @Inject
@@ -343,9 +358,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return true;
         }
 
+        long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
+        if (requireAnnotationsTransitionMode && paramDepth == 0) {
+            return true;
+        }
+
         int nestingIndex = indexOfAny(name, NESTING_CHARS_STR);
         String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
-        long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
 
         return hasValidAnnotatedMember(rootProperty, action, paramDepth);
     }

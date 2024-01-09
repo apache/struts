@@ -219,6 +219,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         Map<String, Parameter> acceptableParameters;
         ValueStack newStack;
         try {
+            if (!threadAllowlist.getAllowlist().isEmpty()) {
+                LOG.error("Thread allowlist was utilised but not cleared", new IllegalStateException());
+                threadAllowlist.clearAllowlist();
+            }
             acceptableParameters = toAcceptableParameters(parameters, action); // Side-effect: Allowlist required types
 
             newStack = toNewStack(stack);

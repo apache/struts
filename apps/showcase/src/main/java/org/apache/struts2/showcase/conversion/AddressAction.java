@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.conversion;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -30,7 +31,7 @@ import java.util.Set;
  */
 public class AddressAction extends ActionSupport {
 
-	private Set<Address> addresses = new LinkedHashSet<Address>();
+	private Set<Address> addresses = new LinkedHashSet<>();
 
 	public String input() throws Exception {
 		return SUCCESS;
@@ -41,6 +42,7 @@ public class AddressAction extends ActionSupport {
 		return SUCCESS;
 	}
 
+	@StrutsParameter(depth = 2)
 	public Set<Address> getAddresses() {
 		return addresses;
 	}

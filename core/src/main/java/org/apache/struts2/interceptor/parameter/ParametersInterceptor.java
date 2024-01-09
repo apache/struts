@@ -52,6 +52,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -373,61 +375,62 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean hasValidAnnotatedPropertyDescriptor(PropertyDescriptor propDesc, long paramDepth) {
-        Class<?> rootType = getValidAnnotatedPropertyDescriptorType(propDesc, paramDepth);
-        if (rootType != null) {
-            if (paramDepth > 0) {
-                threadAllowlist.allowClass(rootType);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return getter return type or setter parameter type, if one corresponding to the <code>paramDepth</code> exists
-     * with a valid annotation
-     */
-    protected Class<?> getValidAnnotatedPropertyDescriptorType(PropertyDescriptor propDesc, long paramDepth) {
         Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
         if (relevantMethod == null) {
-            return null;
+            return false;
         }
         StrutsParameter annotation = getParameterAnnotation(relevantMethod);
-        if (annotation != null && annotation.depth() >= paramDepth) {
-            return paramDepth == 0 ? relevantMethod.getParameterTypes()[0] : relevantMethod.getReturnType();
+        if (annotation == null || annotation.depth() < paramDepth) {
+            return false;
         }
-        return null;
+        if (paramDepth >= 1) {
+            threadAllowlist.allowClass(relevantMethod.getReturnType());
+        }
+        if (paramDepth >= 2) {
+            allowlistReturnTypeIfParameterized(relevantMethod);
+        }
+        return true;
+    }
+
+    protected void allowlistReturnTypeIfParameterized(Method method) {
+        allowlistParameterizedTypeArg(method.getGenericReturnType());
+    }
+
+    protected void allowlistParameterizedTypeArg(Type genericType) {
+        if (!(genericType instanceof ParameterizedType)) {
+            return;
+        }
+        Type paramType = ((ParameterizedType) genericType).getActualTypeArguments()[0];
+        if (paramType instanceof Class) {
+            threadAllowlist.allowClass((Class<?>) paramType);
+        }
     }
 
     protected boolean hasValidAnnotatedField(Object action, String fieldName, long paramDepth) {
-        Class<?> rootType = getValidAnnotatedFieldType(action, fieldName, paramDepth);
-        if (rootType != null) {
-            if (paramDepth > 0) {
-                threadAllowlist.allowClass(rootType);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return field type if a public field exists on the action with a valid annotation
-     */
-    protected Class<?> getValidAnnotatedFieldType(Object action, String fieldName, long paramDepth) {
         Field field;
         try {
             field = action.getClass().getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
-            return null;
+            return false;
         }
         if (!Modifier.isPublic(field.getModifiers())) {
-            return null;
+            return false;
         }
         StrutsParameter annotation = getParameterAnnotation(field);
-        if (annotation != null && annotation.depth() >= paramDepth) {
-            return field.getType();
+        if (annotation == null || annotation.depth() < paramDepth) {
+            return false;
         }
-        return null;
+        if (paramDepth >= 1) {
+            threadAllowlist.allowClass(field.getType());
+        }
+        if (paramDepth >= 2) {
+            allowlistFieldIfParameterized(field);
+        }
+        return true;
+    }
+
+    protected void allowlistFieldIfParameterized(Field field) {
+        allowlistParameterizedTypeArg(field.getGenericType());
     }
 
     /**

@@ -68,6 +68,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.fs.JBossFileManager;
 
@@ -199,6 +200,7 @@ public class Dispatcher {
     private LocaleProviderFactory localeProviderFactory;
     private StaticContentLoader staticContentLoader;
     private ActionMapper actionMapper;
+    private ThreadAllowlist threadAllowlist;
 
     /**
      * Provide the dispatcher instance for the current thread.
@@ -402,6 +404,11 @@ public class Dispatcher {
 
     public ActionMapper getActionMapper() {
         return actionMapper;
+    }
+
+    @Inject
+    public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
+        this.threadAllowlist = threadAllowlist;
     }
 
     /**
@@ -712,6 +719,8 @@ public class Dispatcher {
             } else {
                 throw new ServletException(e);
             }
+        } finally {
+            threadAllowlist.clearAllowlist();
         }
     }
 

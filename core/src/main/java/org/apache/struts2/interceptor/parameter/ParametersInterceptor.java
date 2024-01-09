@@ -217,23 +217,13 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected void applyParameters(final Object action, ValueStack stack, HttpParameters parameters) {
-        Map<String, Parameter> acceptableParameters;
-        ValueStack newStack;
-        try {
-            if (!threadAllowlist.getAllowlist().isEmpty()) {
-                LOG.error("Thread allowlist was utilised but not cleared", new IllegalStateException());
-                threadAllowlist.clearAllowlist();
-            }
-            acceptableParameters = toAcceptableParameters(parameters, action); // Side-effect: Allowlist required types
+        Map<String, Parameter> acceptableParameters = toAcceptableParameters(parameters, action);
 
-            newStack = toNewStack(stack);
-            batchApplyReflectionContextState(newStack.getContext(), true);
-            applyMemberAccessProperties(newStack);
+        ValueStack newStack = toNewStack(stack);
+        batchApplyReflectionContextState(newStack.getContext(), true);
+        applyMemberAccessProperties(newStack);
 
-            applyParametersOnStack(newStack, acceptableParameters, action);
-        } finally {
-            threadAllowlist.clearAllowlist();
-        }
+        applyParametersOnStack(newStack, acceptableParameters, action);
 
         if (newStack instanceof ClearableValueStack) {
             stack.getActionContext().withConversionErrors(newStack.getActionContext().getConversionErrors());

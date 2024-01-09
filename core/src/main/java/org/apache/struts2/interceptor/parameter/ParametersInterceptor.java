@@ -400,7 +400,15 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (!(genericType instanceof ParameterizedType)) {
             return;
         }
-        Type paramType = ((ParameterizedType) genericType).getActualTypeArguments()[0];
+        Type[] paramTypes = ((ParameterizedType) genericType).getActualTypeArguments();
+        allowlistParamType(paramTypes[0]);
+        if (paramTypes.length > 1) {
+            // Probably useful for Map or Map-like classes
+            allowlistParamType(paramTypes[1]);
+        }
+    }
+
+    protected void allowlistParamType(Type paramType) {
         if (paramType instanceof Class) {
             threadAllowlist.allowClass((Class<?>) paramType);
         }

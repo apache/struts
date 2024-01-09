@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -199,6 +200,41 @@ public class StrutsParameterAnnotationTest {
         assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
     }
 
+    @Test
+    public void publicPojoListDepthOne() {
+        testParameter(new FieldAction(), "publicPojoListDepthOne[0].key", false);
+    }
+
+    @Test
+    public void publicPojoListDepthTwo() {
+        testParameter(new FieldAction(), "publicPojoListDepthTwo[0].key", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrder(List.class, Pojo.class);
+    }
+
+    @Test
+    public void publicPojoMapDepthTwo() {
+        testParameter(new FieldAction(), "publicPojoMapDepthTwo['a'].key", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrder(Map.class, String.class, Pojo.class);
+    }
+
+    @Test
+    public void publicPojoListDepthOneMethod() {
+        testParameter(new MethodAction(), "publicPojoListDepthOne[0].key", false);
+    }
+
+    @Test
+    public void publicPojoListDepthTwoMethod() {
+        testParameter(new MethodAction(), "publicPojoListDepthTwo[0].key", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrder(List.class, Pojo.class);
+    }
+
+    @Test
+    public void publicPojoMapDepthTwoMethod() {
+        testParameter(new MethodAction(), "publicPojoMapDepthTwo['a'].key", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrder(Map.class, String.class, Pojo.class);
+    }
+
+
     class FieldAction {
         @StrutsParameter
         private String privateStr;
@@ -219,6 +255,15 @@ public class StrutsParameterAnnotationTest {
 
         @StrutsParameter(depth = 2)
         public Pojo publicPojoDepthTwo;
+
+        @StrutsParameter(depth = 1)
+        public List<Pojo> publicPojoListDepthOne;
+
+        @StrutsParameter(depth = 2)
+        public List<Pojo> publicPojoListDepthTwo;
+
+        @StrutsParameter(depth = 2)
+        public Map<String, Pojo> publicPojoMapDepthTwo;
     }
 
     class MethodAction {
@@ -255,6 +300,21 @@ public class StrutsParameterAnnotationTest {
 
         @StrutsParameter(depth = 2)
         public Pojo getPublicPojoDepthTwo() {
+            return null;
+        }
+
+        @StrutsParameter(depth = 1)
+        public List<Pojo> getPublicPojoListDepthOne() {
+            return null;
+        }
+
+        @StrutsParameter(depth = 2)
+        public List<Pojo> getPublicPojoListDepthTwo() {
+            return null;
+        }
+
+        @StrutsParameter(depth = 2)
+        public Map<String, Pojo> getPublicPojoMapDepthTwo() {
             return null;
         }
     }

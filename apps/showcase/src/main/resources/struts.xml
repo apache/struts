@@ -38,7 +38,6 @@
     <constant name="struts.parameters.requireAnnotations" value="true" />
     <constant name="struts.allowlist.classes"
               value="
-                org.apache.struts2.showcase.conversion.OperationsEnum,
                 org.apache.struts2.showcase.conversion.Person,
                 org.apache.struts2.showcase.conversion.Address
     "/>

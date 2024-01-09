@@ -18,9 +18,11 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -188,8 +190,8 @@ import java.util.List;
  * <!-- START SNIPPET: example6description -->
  *
  * <p>Another way to create a simple loop, similar to JSTL's
- * &lt;c:forEach begin="..." end="..." ...&gt; is to use some 
- * OGNL magic, which provides some under-the-covers magic to 
+ * &lt;c:forEach begin="..." end="..." ...&gt; is to use some
+ * OGNL magic, which provides some under-the-covers magic to
  * make 0-n loops trivial. This example also loops five times.</p>
  *
  * <!-- END SNIPPET: example6description -->
@@ -237,9 +239,15 @@ public class IteratorComponent extends ContextBean {
     protected Integer end;
     protected String stepStr;
     protected Integer step;
+    private ThreadAllowlist threadAllowlist;
 
     public IteratorComponent(ValueStack stack) {
         super(stack);
+    }
+
+    @Inject
+    public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
+        this.threadAllowlist = threadAllowlist;
     }
 
     public boolean start(Writer writer) {
@@ -298,6 +306,7 @@ public class IteratorComponent extends ContextBean {
         if ((iterator != null) && iterator.hasNext()) {
             Object currentValue = iterator.next();
             stack.push(currentValue);
+            threadAllowlist.allowClass(currentValue.getClass());
 
             String var = getVar();
 

@@ -719,8 +719,6 @@ public class Dispatcher {
             } else {
                 throw new ServletException(e);
             }
-        } finally {
-            threadAllowlist.clearAllowlist();
         }
     }
 
@@ -1051,6 +1049,7 @@ public class Dispatcher {
      */
     public void cleanUpRequest(HttpServletRequest request) {
         ContainerHolder.clear();
+        threadAllowlist.clearAllowlist();
         if (!(request instanceof MultiPartRequestWrapper)) {
             return;
         }

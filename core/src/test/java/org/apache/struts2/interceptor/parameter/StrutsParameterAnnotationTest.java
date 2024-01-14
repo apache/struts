@@ -20,6 +20,7 @@ package org.apache.struts2.interceptor.parameter;
 
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.NotExcludedAcceptedPatternsChecker;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.ognl.ThreadAllowlist;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -78,6 +80,16 @@ public class StrutsParameterAnnotationTest {
         }
     }
 
+    private Set<Class<?>> getParentClasses(Class<?> ...clazzes) {
+        Set<Class<?>> set = new HashSet<>();
+        for (Class<?> clazz : clazzes) {
+            set.add(clazz);
+            set.addAll(ClassUtils.getAllSuperclasses(clazz));
+            set.addAll(ClassUtils.getAllInterfaces(clazz));
+        }
+        return set;
+    }
+
     @Test
     public void privateStrAnnotated() {
         testParameter(new FieldAction(), "privateStr", false);
@@ -107,19 +119,19 @@ public class StrutsParameterAnnotationTest {
     @Test
     public void publicPojoDepthOne() {
         testParameter(new FieldAction(), "publicPojoDepthOne.key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
     public void publicPojoDepthOne_sqrBracket() {
         testParameter(new FieldAction(), "publicPojoDepthOne['key']", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
     public void publicPojoDepthOne_bracket() {
         testParameter(new FieldAction(), "publicPojoDepthOne('key')", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
@@ -130,25 +142,25 @@ public class StrutsParameterAnnotationTest {
     @Test
     public void publicPojoDepthTwo() {
         testParameter(new FieldAction(), "publicPojoDepthTwo.key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
     public void publicNestedPojoDepthTwo() {
         testParameter(new FieldAction(), "publicPojoDepthTwo.key.key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
     public void publicNestedPojoDepthTwo_sqrBracket() {
         testParameter(new FieldAction(), "publicPojoDepthTwo['key']['key']", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
     public void publicNestedPojoDepthTwo_bracket() {
         testParameter(new FieldAction(), "publicPojoDepthTwo('key')('key')", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
@@ -180,7 +192,7 @@ public class StrutsParameterAnnotationTest {
     @Test
     public void publicPojoDepthOneMethod() {
         testParameter(new MethodAction(), "publicPojoDepthOne.key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
@@ -191,13 +203,13 @@ public class StrutsParameterAnnotationTest {
     @Test
     public void publicPojoDepthTwoMethod() {
         testParameter(new MethodAction(), "publicPojoDepthTwo.key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
     public void publicNestedPojoDepthTwoMethod() {
         testParameter(new MethodAction(), "publicPojoDepthTwo.key.key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactly(Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Pojo.class));
     }
 
     @Test
@@ -208,13 +220,13 @@ public class StrutsParameterAnnotationTest {
     @Test
     public void publicPojoListDepthTwo() {
         testParameter(new FieldAction(), "publicPojoListDepthTwo[0].key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrder(List.class, Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(List.class, Pojo.class));
     }
 
     @Test
     public void publicPojoMapDepthTwo() {
         testParameter(new FieldAction(), "publicPojoMapDepthTwo['a'].key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrder(Map.class, String.class, Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Map.class, String.class, Pojo.class));
     }
 
     @Test
@@ -225,13 +237,13 @@ public class StrutsParameterAnnotationTest {
     @Test
     public void publicPojoListDepthTwoMethod() {
         testParameter(new MethodAction(), "publicPojoListDepthTwo[0].key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrder(List.class, Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(List.class, Pojo.class));
     }
 
     @Test
     public void publicPojoMapDepthTwoMethod() {
         testParameter(new MethodAction(), "publicPojoMapDepthTwo['a'].key", true);
-        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrder(Map.class, String.class, Pojo.class);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(Map.class, String.class, Pojo.class));
     }
 
     @Test

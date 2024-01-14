@@ -34,6 +34,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -403,7 +404,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
         if (paramDepth >= 1) {
-            threadAllowlist.allowClass(relevantMethod.getReturnType());
+            allowlistClass(relevantMethod.getReturnType());
         }
         if (paramDepth >= 2) {
             allowlistReturnTypeIfParameterized(relevantMethod);
@@ -429,8 +430,14 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected void allowlistParamType(Type paramType) {
         if (paramType instanceof Class) {
-            threadAllowlist.allowClass((Class<?>) paramType);
+            allowlistClass((Class<?>) paramType);
         }
+    }
+
+    protected void allowlistClass(Class<?> clazz) {
+        threadAllowlist.allowClass(clazz);
+        ClassUtils.getAllSuperclasses(clazz).forEach(threadAllowlist::allowClass);
+        ClassUtils.getAllInterfaces(clazz).forEach(threadAllowlist::allowClass);
     }
 
     protected boolean hasValidAnnotatedField(Object action, String fieldName, long paramDepth) {
@@ -448,7 +455,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
         if (paramDepth >= 1) {
-            threadAllowlist.allowClass(field.getType());
+            allowlistClass(field.getType());
         }
         if (paramDepth >= 2) {
             allowlistFieldIfParameterized(field);

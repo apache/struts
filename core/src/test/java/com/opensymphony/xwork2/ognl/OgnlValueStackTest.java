@@ -106,20 +106,10 @@ public class OgnlValueStackTest extends XWorkTestCase {
      *
      * @param allowStaticField new allowStaticField configuration
      */
-    private void reloadTestContainerConfiguration(boolean allowStaticField) {
+    private void reloadContainer(boolean allowStaticField) {
         Map<String, String> properties = new HashMap<>();
         properties.put(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Boolean.toString(allowStaticField));
-        reloadTestContainerConfiguration(properties);
-    }
-
-    private void reloadTestContainerConfiguration(Map<String, String> properties) {
-        loadConfigurationProviders(new StubConfigurationProvider() {
-            @Override
-            public void register(ContainerBuilder builder,
-                                 LocatableProperties props) throws ConfigurationException {
-                properties.forEach(props::setProperty);
-            }
-        });
+        loadButSet(properties);
         refreshContainerFields();
     }
 
@@ -1184,7 +1174,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when static access flag is set to false.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryNoStaticAccess() throws IllegalAccessException {
-        reloadTestContainerConfiguration(false);
+        reloadContainer(false);
         Object accessedValue;
 
         assertFalse("OgnlValueStackFactory staticFieldAccess (set false) not false?",
@@ -1216,7 +1206,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when static access flag is set to true.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryAllStaticAccess() throws IllegalAccessException {
-        reloadTestContainerConfiguration(true);
+        reloadContainer(true);
         Object accessedValue;
 
         assertTrue("OgnlValueStackFactory staticFieldAccess (set true) not true?",

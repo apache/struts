@@ -90,43 +90,27 @@ public class OgnlValueStackTest extends XWorkTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        refreshContainerFields();
+    }
+
+    protected void refreshContainerFields() {
         ognlUtil = container.getInstance(OgnlUtil.class);
-        vs = createValueStack(true);
-    }
-
-    private OgnlValueStack createValueStack(boolean allowStaticFieldAccess) {
-        OgnlValueStack stack = new OgnlValueStack(
-            container.getInstance(XWorkConverter.class),
-            (CompoundRootAccessor) container.getInstance(RootAccessor.class),
-            container.getInstance(TextProvider.class, "system"), allowStaticFieldAccess);
-        container.inject(stack);
-        return stack;
+        vs = (OgnlValueStack) container.getInstance(ValueStackFactory.class).createValueStack();
     }
 
     /**
-     * @return current OgnlValueStackFactory instance from current container
-     */
-    private OgnlValueStackFactory getValueStackFactory() {
-        return (OgnlValueStackFactory) container.getInstance(ValueStackFactory.class);
-    }
-
-    /**
-     * Reloads container and gets a new OgnlValueStackFactory with specified new configuration.
+     * Reloads container and sets a new OgnlValueStackFactory with specified new configuration.
      * Intended for testing OgnlValueStack instance(s) that are minimally configured.
      * This should help ensure no underlying configuration/injection side-effects are responsible
      * for the behaviour of fundamental access control flags).
      *
      * @param allowStaticField new allowStaticField configuration
-     * @return a new OgnlValueStackFactory with specified new configuration
      */
-    private OgnlValueStackFactory reloadValueStackFactory(boolean allowStaticField) {
-        try {
-            reloadTestContainerConfiguration(allowStaticField);
-        } catch (Exception ex) {
-            fail("Unable to reload container configuration and configure ognlValueStackFactory - exception: " + ex);
-        }
-
-        return getValueStackFactory();
+    private void reloadContainer(boolean allowStaticField) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Boolean.toString(allowStaticField));
+        loadButSet(properties);
+        refreshContainerFields();
     }
 
     public void testExpOverridesCanStackExpUp() throws Exception {
@@ -1159,31 +1143,29 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when a default configuration is used.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryDefaultConfig() throws IllegalAccessException {
-        OgnlValueStackFactory ognlValueStackFactory = getValueStackFactory();
-        OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
         Object accessedValue;
 
         assertTrue("OgnlValueStackFactory staticFieldAccess (default flags) not true?",
-                reflectField(ognlValueStack.securityMemberAccess, "allowStaticFieldAccess"));
+                reflectField(vs.securityMemberAccess, "allowStaticFieldAccess"));
         // An OgnlValueStack created from the above OgnlValueStackFactory should allow public field access,
         // but prevent non-public field access.  It should also deny static method access.
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticInteger100Method()");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticInteger100Method()");
         assertNull("able to access static method (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PUBLIC_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PUBLIC_ATTRIBUTE");
         assertEquals("accessed static final public field value not equal to actual?", accessedValue, STATIC_FINAL_PUBLIC_ATTRIBUTE);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PUBLIC_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PUBLIC_ATTRIBUTE");
         assertEquals("accessed static public field value not equal to actual?", accessedValue, STATIC_PUBLIC_ATTRIBUTE);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PACKAGE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PACKAGE_ATTRIBUTE");
         assertNull("accessed final package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PACKAGE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PACKAGE_ATTRIBUTE");
         assertNull("accessed package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PROTECTED_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PROTECTED_ATTRIBUTE");
         assertNull("accessed final protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PROTECTED_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PROTECTED_ATTRIBUTE");
         assertNull("accessed protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PRIVATE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PRIVATE_ATTRIBUTE");
         assertNull("accessed final private field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
         assertNull("accessed private field (result not null) ?", accessedValue);
     }
 
@@ -1192,31 +1174,30 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when static access flag is set to false.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryNoStaticAccess() throws IllegalAccessException {
-        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(false);
-        OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
+        reloadContainer(false);
         Object accessedValue;
 
         assertFalse("OgnlValueStackFactory staticFieldAccess (set false) not false?",
-                reflectField(ognlValueStack.securityMemberAccess, "allowStaticFieldAccess"));
+                reflectField(vs.securityMemberAccess, "allowStaticFieldAccess"));
         // An OgnlValueStack created from the above OgnlValueStackFactory should prevent public field access,
         // and prevent non-public field access.  It should also deny static method access.
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticInteger100Method()");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticInteger100Method()");
         assertNull("able to access static method (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PUBLIC_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PUBLIC_ATTRIBUTE");
         assertNull("able to access static final public field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PUBLIC_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PUBLIC_ATTRIBUTE");
         assertNull("able to access static public field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PACKAGE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PACKAGE_ATTRIBUTE");
         assertNull("accessed final package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PACKAGE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PACKAGE_ATTRIBUTE");
         assertNull("accessed package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PROTECTED_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PROTECTED_ATTRIBUTE");
         assertNull("accessed final protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PROTECTED_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PROTECTED_ATTRIBUTE");
         assertNull("accessed protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PRIVATE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PRIVATE_ATTRIBUTE");
         assertNull("accessed final private field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
         assertNull("accessed private field (result not null) ?", accessedValue);
     }
 
@@ -1225,43 +1206,31 @@ public class OgnlValueStackTest extends XWorkTestCase {
      * when static access flag is set to true.
      */
     public void testOgnlValueStackFromOgnlValueStackFactoryAllStaticAccess() throws IllegalAccessException {
-        OgnlValueStackFactory ognlValueStackFactory = reloadValueStackFactory(true);
-        OgnlValueStack ognlValueStack = (OgnlValueStack) ognlValueStackFactory.createValueStack();
+        reloadContainer(true);
         Object accessedValue;
 
         assertTrue("OgnlValueStackFactory staticFieldAccess (set true) not true?",
-                reflectField(ognlValueStack.securityMemberAccess, "allowStaticFieldAccess"));
+                reflectField(vs.securityMemberAccess, "allowStaticFieldAccess"));
         // An OgnlValueStack created from the above OgnlValueStackFactory should allow public field access,
         // but prevent non-public field access.  It should also allow static method access.
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticInteger100Method()");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@staticInteger100Method()");
         assertNull("able to access static method (result non-null)!!!", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PUBLIC_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PUBLIC_ATTRIBUTE");
         assertEquals("accessed static final public field value not equal to actual?", accessedValue, STATIC_FINAL_PUBLIC_ATTRIBUTE);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PUBLIC_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PUBLIC_ATTRIBUTE");
         assertEquals("accessed static public field value not equal to actual?", accessedValue, STATIC_PUBLIC_ATTRIBUTE);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PACKAGE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PACKAGE_ATTRIBUTE");
         assertNull("accessed final package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PACKAGE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PACKAGE_ATTRIBUTE");
         assertNull("accessed package field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PROTECTED_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PROTECTED_ATTRIBUTE");
         assertNull("accessed final protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PROTECTED_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PROTECTED_ATTRIBUTE");
         assertNull("accessed protected field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PRIVATE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_FINAL_PRIVATE_ATTRIBUTE");
         assertNull("accessed final private field (result not null) ?", accessedValue);
-        accessedValue = ognlValueStack.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
+        accessedValue = vs.findValue("@com.opensymphony.xwork2.ognl.OgnlValueStackTest@STATIC_PRIVATE_ATTRIBUTE");
         assertNull("accessed private field (result not null) ?", accessedValue);
-    }
-
-    private void reloadTestContainerConfiguration(boolean allowStaticField) throws Exception {
-        loadConfigurationProviders(new StubConfigurationProvider() {
-            @Override
-            public void register(ContainerBuilder builder,
-                                 LocatableProperties props) throws ConfigurationException {
-                props.setProperty(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, String.valueOf(allowStaticField));
-            }
-        });
-        ognlUtil = container.getInstance(OgnlUtil.class);
     }
 
     static class BadJavaBean {

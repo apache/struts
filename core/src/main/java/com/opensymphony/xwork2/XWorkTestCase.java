@@ -73,6 +73,16 @@ public abstract class XWorkTestCase extends TestCase {
         actionProxyFactory = container.getInstance(ActionProxyFactory.class);
     }
 
+    protected void loadButSet(Map<String, ?> properties) {
+        loadConfigurationProviders(new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder,
+                                 LocatableProperties props) throws ConfigurationException {
+                properties.forEach((k, v) -> props.setProperty(k, String.valueOf(v)));
+            }
+        });
+    }
+
     protected <T> void loadButAdd(final Class<T> type, final T impl) {
         loadButAdd(type, Container.DEFAULT_NAME, impl);
     }

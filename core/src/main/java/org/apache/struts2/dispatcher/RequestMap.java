@@ -125,11 +125,16 @@ public class RequestMap extends AbstractMap<String, Object> implements Serializa
      * @param key the name of the attribute to remove.
      * @return the value that was removed or <tt>null</tt> if the value was not found (and hence, not removed).
      */
-    public Object remove(final String key) {
+    @Override
+    public Object remove(final Object key) {
+        if (key == null) {
+            return null;
+        }
+
         entries = null;
 
         Object value = get(key);
-        request.removeAttribute(key);
+        request.removeAttribute(key.toString());
 
         return value;
     }

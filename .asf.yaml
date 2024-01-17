@@ -8,7 +8,7 @@ notifications:
   # Send individual PR comments/reviews to issues@
   pullrequests_comment: notifications@struts.apache.org
   # Link opened PRs with JIRA
-  jira_options: link label worklog
+  jira_options: link label
 
 github:
   del_branch_on_merge: true

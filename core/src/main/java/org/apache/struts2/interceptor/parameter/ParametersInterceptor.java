@@ -399,8 +399,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (relevantMethod == null) {
             return false;
         }
-        StrutsParameter annotation = getParameterAnnotation(relevantMethod);
-        if (annotation == null || annotation.depth() < paramDepth) {
+        if (getPermittedInjectionDepth(relevantMethod) < paramDepth) {
+            LOG.debug(
+                    "Parameter injection for method [{}] on action [{}] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
+                    relevantMethod.getName(),
+                    relevantMethod.getDeclaringClass().getName());
             return false;
         }
         if (paramDepth >= 1) {
@@ -450,8 +453,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         if (!Modifier.isPublic(field.getModifiers())) {
             return false;
         }
-        StrutsParameter annotation = getParameterAnnotation(field);
-        if (annotation == null || annotation.depth() < paramDepth) {
+        if (getPermittedInjectionDepth(field) < paramDepth) {
+            LOG.debug(
+                    "Parameter injection for field [{}] on action [{}] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
+                    fieldName,
+                    action.getClass().getName());
             return false;
         }
         if (paramDepth >= 1) {
@@ -465,6 +471,17 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
     protected void allowlistFieldIfParameterized(Field field) {
         allowlistParameterizedTypeArg(field.getGenericType());
+    }
+
+    /**
+     * @return permitted injection depth where -1 indicates not permitted
+     */
+    protected int getPermittedInjectionDepth(AnnotatedElement element) {
+        StrutsParameter annotation = getParameterAnnotation(element);
+        if (annotation == null) {
+            return -1;
+        }
+        return annotation.depth();
     }
 
     /**

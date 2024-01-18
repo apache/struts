@@ -366,8 +366,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 
         int nestingIndex = indexOfAny(name, NESTING_CHARS_STR);
         String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
+        String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
 
-        return hasValidAnnotatedMember(rootProperty, action, paramDepth);
+        return hasValidAnnotatedMember(normalisedRootProperty, action, paramDepth);
     }
 
     /**

@@ -41,6 +41,8 @@
         <include>ognl:ognl</include>
         <include>commons-fileupload:commons-fileupload</include>
         <include>org.apache.commons:commons-io</include>
+        <include>com.github.ben-manes.caffeine:caffeine</include>
+        <include>org.javassist:javassist</include>
       </includes>
     </dependencySet>
   </dependencySets>

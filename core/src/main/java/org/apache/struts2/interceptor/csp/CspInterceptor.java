@@ -108,7 +108,7 @@ public final class CspInterceptor extends AbstractInterceptor {
     /**
      * Enables enforcing mode, by default all exceptions are only reported
      *
-     * @param enforcingMode <tt>true</tt> to enable enforcing mode, <tt>false</tt> to keep reporting mode.
+     * @param enforcingMode {@code true} to enable enforcing mode, {@code false} to keep reporting mode.
      */
     public void setEnforcingMode(boolean enforcingMode) {
         this.enforcingMode = enforcingMode;
@@ -117,7 +117,8 @@ public final class CspInterceptor extends AbstractInterceptor {
     /**
      * Sets whether to prepend the servlet context path to the {@link #reportUri}.
      *
-     * @param prependServletContext true</tt> to prepend the location with the servlet context path, <tt>false</tt> otherwise.
+     * @param prependServletContext {@code true} to prepend the location with the servlet context path,
+     *                              {@code false} otherwise.
      */
     public void setPrependServletContext(boolean prependServletContext) {
         this.prependServletContext = prependServletContext;

@@ -160,6 +160,20 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         checkHeader("/app/report-uri", enforcingMode);
     }
 
+    public void testNoPrependContext() throws Exception {
+        boolean enforcingMode = true;
+        mai.setAction(new TestAction());
+        request.setContextPath("/app");
+
+        interceptor.setEnforcingMode(enforcingMode);
+        interceptor.setReportUri("/report-uri");
+        interceptor.setPrependServletContext(false);
+
+        interceptor.intercept(mai);
+
+        checkHeader("/report-uri", enforcingMode);
+    }
+
     public void checkHeader(String reportUri, boolean enforcingMode) {
         String expectedCspHeader;
         if (Strings.isEmpty(reportUri)) {

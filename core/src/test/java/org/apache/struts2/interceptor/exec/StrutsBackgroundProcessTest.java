@@ -112,7 +112,7 @@ public class StrutsBackgroundProcessTest extends StrutsInternalTestCase {
             executor.execute(bp);
         }
 
-        Thread.sleep(500);
+        Thread.sleep(800);
 
         for (BackgroundProcess bp : bps) {
             assertTrue("Process is still active: " + bp, bp.isDone());

@@ -1,0 +1,1 @@
+<a id="mylink" href="a" disabled="disabled">should have disabled attribute</a>

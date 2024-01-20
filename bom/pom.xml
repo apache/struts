@@ -44,7 +44,7 @@
     </licenses>
 
     <properties>
-        <struts-version.version>6.4.0-SNAPSHOT</struts-version.version>
+        <struts-version.version>7.0.0-SNAPSHOT</struts-version.version>
         <maven.site.skip>true</maven.site.skip>
         <maven.site.deploy.skip>true</maven.site.deploy.skip>
     </properties>
@@ -165,7 +165,7 @@
     </dependencyManagement>
 
   <scm>
-    <tag>STRUTS_6_3_0_1</tag>
+    <tag>HEAD</tag>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
     <url>https://github.com/apache/struts/</url>

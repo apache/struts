@@ -19,8 +19,7 @@
  * under the License.
  */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.apache.struts</groupId>
@@ -94,7 +93,7 @@
             <name>The Apache Software License, Version 2.0</name>
             <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
-            <comments/>
+            <comments />
         </license>
     </licenses>
 
@@ -307,10 +306,10 @@
                         <useDefaultExcludes>true</useDefaultExcludes>
                         <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
                         <licenses>
-                            <license implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20"/>
+                            <license implementation="org.apache.rat.analysis.license.ApacheSoftwareLicense20" />
                         </licenses>
                         <licenseFamilies>
-                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily"/>
+                            <licenseFamily implementation="org.apache.rat.license.Apache20LicenseFamily" />
                         </licenseFamilies>
                         <includes>
                             <include>pom.xml</include>
@@ -359,7 +358,7 @@
                             <id>enforce</id>
                             <configuration>
                                 <rules>
-                                    <dependencyConvergence/>
+                                    <dependencyConvergence />
                                 </rules>
                             </configuration>
                             <goals>

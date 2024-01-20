@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.RequestUtils;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,7 +54,7 @@ public class ExecuteOperations {
             resourcePath = request.getPathInfo();
         }
 
-        StaticContentLoader staticResourceLoader = dispatcher.getContainer().getInstance(StaticContentLoader.class);
+        StaticContentLoader staticResourceLoader = dispatcher.getStaticContentLoader();
         if (staticResourceLoader.canHandle(resourcePath)) {
             staticResourceLoader.findStaticResource(resourcePath, request, response);
             // The framework did its job here

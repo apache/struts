@@ -18,12 +18,14 @@
  */
 package org.apache.struts2;
 
+import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.XWorkTestCase;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.PrepareOperations;
 import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,22 +40,22 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
     /**
      * Sets up the configuration settings, XWork configuration, and
      * message resources
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Override
     protected void setUp() throws Exception {
-        super.setUp();
         PrepareOperations.clearDevModeOverride();  // Clear DevMode override every time (consistent ThreadLocal state for tests).
         initDispatcher(null);
     }
-    
+
     protected Dispatcher initDispatcher(Map<String,String> params) {
         servletContext = new StrutsMockServletContext();
         dispatcher = StrutsTestCaseHelper.initDispatcher(servletContext, params);
         configurationManager = dispatcher.getConfigurationManager();
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();
+        actionProxyFactory = container.getInstance(ActionProxyFactory.class);
         container.inject(dispatcher);
         return dispatcher;
     }
@@ -66,31 +68,25 @@ public abstract class StrutsInternalTestCase extends XWorkTestCase {
      * @return instance of {@see Dispatcher}
      */
     protected Dispatcher initDispatcherWithConfigs(String configs) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("config", configs);
         return initDispatcher(params);
     }
 
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
-        // maybe someone else already destroyed Dispatcher
-        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
-            dispatcher.cleanup();
-            dispatcher = null;
-        }
-        StrutsTestCaseHelper.tearDown();
+        StrutsTestCaseHelper.tearDown(dispatcher);
     }
 
     /**
-     * Compare if two objects are considered equal according to their fields as accessed 
+     * Compare if two objects are considered equal according to their fields as accessed
      * via reflection.
-     * 
-     * Utilizes {@link EqualsBuilder#reflectionEquals(java.lang.Object, java.lang.Object, boolean)} to perform 
+     *
+     * Utilizes {@link EqualsBuilder#reflectionEquals(java.lang.Object, java.lang.Object, boolean)} to perform
      * the check, and compares transient fields as well.  This may fail when run while a security manager is
      * active, due to a need to user reflection.
-     * 
-     * 
+     *
+     *
      * @param obj1 the first {@link Object} to compare against the other.
      * @param obj2 the second {@link Object} to compare against the other.
      * @return true if the objects are equal based on field comparisons by reflection, false otherwise.

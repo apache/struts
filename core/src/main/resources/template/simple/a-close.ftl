@@ -25,6 +25,9 @@
 <#if parameters.href??>
  href="${parameters.href?no_esc}"<#rt/>
 </#if>
+<#if parameters.disabled!false>
+ disabled="disabled"<#rt/>
+</#if>
 <#if parameters.tabindex??>
  tabindex="${parameters.tabindex}"<#rt/>
 </#if>

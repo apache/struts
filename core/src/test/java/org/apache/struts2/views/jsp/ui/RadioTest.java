@@ -64,6 +64,37 @@ public class RadioTest extends AbstractUITagTest {
             strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testMapWithBooleanAsKeyWithoutForceValue() throws Exception {
+        TestAction testAction = (TestAction) action;
+
+        Map<Boolean, String> map = new LinkedHashMap<>();
+        map.put(Boolean.TRUE, "male");
+        map.put(Boolean.FALSE, "female");
+        testAction.setMap(map);
+
+        testAction.setSomeBool(false);
+
+        RadioTag tag = new RadioTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("myname");
+        tag.setValue("someBool");
+        tag.setList("map");
+        tag.setTheme("simple");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(RadioTag.class.getResource("Radio-11.txt"));
+
+        // Basic sanity check of clearTagStateForTagPoolingServers() behaviour for Struts Tags after doEndTag().
+        RadioTag freshTag = new RadioTag();
+        freshTag.setPageContext(pageContext);
+        assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
+                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+            strutsBodyTagsAreReflectionEqual(tag, freshTag));
+    }
+
     public void testMapWithBooleanAsKey_clearTagStateSet() throws Exception {
         TestAction testAction = (TestAction) action;
 
@@ -165,12 +196,13 @@ public class RadioTest extends AbstractUITagTest {
 
         List<SomeEnum> enumList = new ArrayList<>(Arrays.asList(SomeEnum.values()));
         testAction.setEnumList(enumList);
+        testAction.setStatus(SomeEnum.INIT);
 
         RadioTag tag = new RadioTag();
         tag.setTheme("simple");
         tag.setPageContext(pageContext);
         tag.setName("status");
-        tag.setValue("INIT");
+        tag.setValue("status");
         tag.setList("enumList");
 
         tag.doStartTag();
@@ -191,13 +223,14 @@ public class RadioTest extends AbstractUITagTest {
 
         List<SomeEnum> enumList = new ArrayList<>(Arrays.asList(SomeEnum.values()));
         testAction.setEnumList(enumList);
+        testAction.setStatus(SomeEnum.INIT);
 
         RadioTag tag = new RadioTag();
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setTheme("simple");
         tag.setPageContext(pageContext);
         tag.setName("status");
-        tag.setValue("INIT");
+        tag.setValue("status");
         tag.setList("enumList");
 
         tag.doStartTag();

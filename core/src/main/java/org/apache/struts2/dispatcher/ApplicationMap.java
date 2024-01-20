@@ -151,11 +151,16 @@ public class ApplicationMap extends AbstractMap<String, Object> implements Seria
      * @param key the attribute to remove.
      * @return the entry that was just removed.
      */
-    public Object remove(final String key) {
+    @Override
+    public Object remove(Object key) {
+        if (key == null) {
+            return null;
+        }
+
         entries = null;
 
         Object value = get(key);
-        context.removeAttribute(key);
+        context.removeAttribute(key.toString());
 
         return value;
     }

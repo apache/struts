@@ -276,6 +276,23 @@ public class AnchorTest extends AbstractUITagTest {
         verifyResource("href-5.txt");
     }
 
+    public void testSimpleDisabled() throws Exception {
+        createAction();
+
+        AnchorTag tag = createTag();
+        tag.setHref("a");
+        tag.setDisabled("true");
+
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.print("should have disabled attribute");
+        tag.setBodyContent(body);
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verifyResource("href-6.txt");
+    }
+
     public void testInjectEscapeHtmlBodyFlag() throws Exception {
         // given
         initDispatcherWithConfigs("struts-default.xml, struts-escape-body.xml");

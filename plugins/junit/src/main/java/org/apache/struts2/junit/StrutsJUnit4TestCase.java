@@ -203,9 +203,9 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
      * Sets up the configuration settings, XWork configuration, and
      * message resources
      */
+    @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         initServletMockObjects();
         setupBeforeInitDispatcher();
         initDispatcherParams();
@@ -239,14 +239,10 @@ public abstract class StrutsJUnit4TestCase<T> extends XWorkJUnit4TestCase {
         return null;
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
-        if (dispatcher != null && dispatcher.getConfigurationManager() != null) {
-            dispatcher.cleanup();
-            dispatcher = null;
-        }
-        StrutsTestCaseHelper.tearDown();
+        StrutsTestCaseHelper.tearDown(dispatcher);
     }
 
 }

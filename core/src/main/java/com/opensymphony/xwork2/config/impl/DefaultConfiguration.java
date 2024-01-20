@@ -90,6 +90,7 @@ import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
 import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
+import com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor;
 import com.opensymphony.xwork2.util.OgnlTextParser;
 import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.StrutsLocalizedTextProvider;
@@ -100,6 +101,7 @@ import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import ognl.MethodAccessor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -323,12 +325,8 @@ public class DefaultConfiguration implements Configuration {
     }
 
     protected ActionContext setContext(Container cont) {
-        ActionContext context = ActionContext.getContext();
-        if (context == null) {
-            ValueStack vs = cont.getInstance(ValueStackFactory.class).createValueStack();
-            context = ActionContext.of(vs.getContext()).bind();
-        }
-        return context;
+        ValueStack vs = cont.getInstance(ValueStackFactory.class).createValueStack();
+        return ActionContext.of(vs.getContext()).bind();
     }
 
     protected Container createBootstrapContainer(List<ContainerProvider> providers) {
@@ -389,6 +387,7 @@ public class DefaultConfiguration implements Configuration {
 
                 .factory(ObjectTypeDeterminer.class, DefaultObjectTypeDeterminer.class, Scope.SINGLETON)
                 .factory(RootAccessor.class, CompoundRootAccessor.class, Scope.SINGLETON)
+                .factory(MethodAccessor.class, XWorkMethodAccessor.class, Scope.SINGLETON)
 
                 .factory(ExpressionCacheFactory.class, DefaultOgnlExpressionCacheFactory.class, Scope.SINGLETON)
                 .factory(BeanInfoCacheFactory.class, DefaultOgnlBeanInfoCacheFactory.class, Scope.SINGLETON)

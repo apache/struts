@@ -208,6 +208,11 @@
     <bean type="ognl.PropertyAccessor" name="org.apache.struts2.dispatcher.Parameter"
           class="com.opensymphony.xwork2.ognl.accessor.ParameterPropertyAccessor"/>
 
+    <bean type="ognl.MethodAccessor" name="struts"
+          class="com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor"/>
+
+    <!-- DEPRECATED since 6.4.0 - Retained for backwards compatibility with custom beans
+            that may expect it to be present. Inject the DEFAULT bean of 'ognl.MethodAccessor' above instead.  -->
     <bean type="ognl.MethodAccessor" name="java.lang.Object"
           class="com.opensymphony.xwork2.ognl.accessor.XWorkMethodAccessor"/>
 

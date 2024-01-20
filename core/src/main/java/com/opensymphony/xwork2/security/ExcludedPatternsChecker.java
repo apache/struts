@@ -32,37 +32,37 @@ public interface ExcludedPatternsChecker {
      * @param value to check
      * @return object containing result of matched pattern and pattern itself
      */
-    public IsExcluded isExcluded(String value);
+    IsExcluded isExcluded(String value);
 
     /**
      * Sets excluded patterns during runtime
      *
      * @param commaDelimitedPatterns comma delimited string with patterns
      */
-    public void setExcludedPatterns(String commaDelimitedPatterns);
+    void setExcludedPatterns(String commaDelimitedPatterns);
 
     /**
      * Sets excluded patterns during runtime
      *
      * @param patterns array of additional excluded patterns
      */
-    public void setExcludedPatterns(String[] patterns);
+    void setExcludedPatterns(String[] patterns);
 
     /**
      * Sets excluded patterns during runtime
      *
      * @param patterns set of additional patterns
      */
-    public void setExcludedPatterns(Set<String> patterns);
+    void setExcludedPatterns(Set<String> patterns);
 
     /**
      * Allow access list of all defined excluded patterns
      *
      * @return set of excluded patterns
      */
-    public Set<Pattern> getExcludedPatterns();
+    Set<Pattern> getExcludedPatterns();
 
-    public final static class IsExcluded {
+    final class IsExcluded {
 
         private final boolean excluded;
         private final String excludedPattern;

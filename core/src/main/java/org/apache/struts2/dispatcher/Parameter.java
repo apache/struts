@@ -18,11 +18,11 @@
  */
 package org.apache.struts2.dispatcher;
 
-import java.util.Objects;
-
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Objects;
 
 public interface Parameter {
 
@@ -58,7 +58,7 @@ public interface Parameter {
         @Override
         public String getValue() {
             String[] values = toStringArray();
-            return (values != null && values.length > 0) ? values[0] : null;
+            return values.length > 0 ? values[0] : null;
         }
 
         private String[] toStringArray() {
@@ -124,7 +124,7 @@ public interface Parameter {
 
     class Empty implements Parameter {
 
-        private String name;
+        private final String name;
 
         public Empty(String name) {
             this.name = name;

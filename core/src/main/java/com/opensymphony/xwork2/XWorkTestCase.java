@@ -64,10 +64,6 @@ public abstract class XWorkTestCase extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         XWorkTestCaseHelper.tearDown(configurationManager);
-        configurationManager = null;
-        configuration = null;
-        container = null;
-        actionProxyFactory = null;
     }
 
     protected void loadConfigurationProviders(ConfigurationProvider... providers) {
@@ -75,6 +71,16 @@ public abstract class XWorkTestCase extends TestCase {
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();
         actionProxyFactory = container.getInstance(ActionProxyFactory.class);
+    }
+
+    protected void loadButSet(Map<String, ?> properties) {
+        loadConfigurationProviders(new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder,
+                                 LocatableProperties props) throws ConfigurationException {
+                properties.forEach((k, v) -> props.setProperty(k, String.valueOf(v)));
+            }
+        });
     }
 
     protected <T> void loadButAdd(final Class<T> type, final T impl) {

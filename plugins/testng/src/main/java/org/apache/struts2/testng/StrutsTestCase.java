@@ -18,13 +18,13 @@
  */
 package org.apache.struts2.testng;
 
-import java.util.Map;
-
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.StrutsTestCaseHelper;
+import org.springframework.mock.web.MockServletContext;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
-import org.springframework.mock.web.MockServletContext;
+
+import java.util.Map;
 
 /**
  * Base test class for TestNG unit tests.  Provides common Struts variables
@@ -33,12 +33,12 @@ import org.springframework.mock.web.MockServletContext;
 public class StrutsTestCase extends TestNGXWorkTestCase {
 
     @BeforeTest
+    @Override
     protected void setUp() throws Exception {
-        super.setUp();
         initDispatcher(null);
     }
 
-    protected Dispatcher initDispatcher(Map<String,String> params) {
+    protected Dispatcher initDispatcher(Map<String, String> params) {
         Dispatcher du = StrutsTestCaseHelper.initDispatcher(new MockServletContext(), params);
         configurationManager = du.getConfigurationManager();
         configuration = configurationManager.getConfiguration();
@@ -56,8 +56,8 @@ public class StrutsTestCase extends TestNGXWorkTestCase {
     }
 
     @AfterTest
+    @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
         StrutsTestCaseHelper.tearDown();
     }
 }

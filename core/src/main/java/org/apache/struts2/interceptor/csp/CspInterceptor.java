@@ -43,7 +43,8 @@ public final class CspInterceptor extends AbstractInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(CspInterceptor.class);
 
-    private Boolean enforcingMode;
+    private boolean prependServletContext = true;
+    private boolean enforcingMode;
     private String reportUri;
 
     @Override
@@ -60,17 +61,22 @@ public final class CspInterceptor extends AbstractInterceptor {
     }
 
     private void applySettings(ActionInvocation invocation, CspSettings cspSettings) {
-        if (enforcingMode != null) {
-            LOG.trace("Applying: {} to enforcingMode", enforcingMode);
-            cspSettings.setEnforcingMode(enforcingMode);
-        }
-        if (reportUri != null) {
-            LOG.trace("Applying: {} to reportUri", reportUri);
-            cspSettings.setReportUri(reportUri);
-        }
-
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
         HttpServletResponse response = invocation.getInvocationContext().getServletResponse();
+
+        LOG.trace("Applying: {} to enforcingMode", enforcingMode);
+        cspSettings.setEnforcingMode(enforcingMode);
+
+        if (reportUri != null) {
+            LOG.trace("Applying: {} to reportUri", reportUri);
+            String finalReportUri = reportUri;
+
+            if (prependServletContext && (request.getContextPath() != null) && (!request.getContextPath().isEmpty())) {
+                finalReportUri = request.getContextPath() + finalReportUri;
+            }
+
+            cspSettings.setReportUri(finalReportUri);
+        }
 
         invocation.addPreResultListener((actionInvocation, resultCode) -> {
             LOG.trace("Applying CSP header: {} to the request", cspSettings);
@@ -99,8 +105,23 @@ public final class CspInterceptor extends AbstractInterceptor {
         }
     }
 
-    public void setEnforcingMode(String value) {
-        this.enforcingMode = Boolean.parseBoolean(value);
+    /**
+     * Enables enforcing mode, by default all exceptions are only reported
+     *
+     * @param enforcingMode {@code true} to enable enforcing mode, {@code false} to keep reporting mode.
+     */
+    public void setEnforcingMode(boolean enforcingMode) {
+        this.enforcingMode = enforcingMode;
+    }
+
+    /**
+     * Sets whether to prepend the servlet context path to the {@link #reportUri}.
+     *
+     * @param prependServletContext {@code true} to prepend the location with the servlet context path,
+     *                              {@code false} otherwise.
+     */
+    public void setPrependServletContext(boolean prependServletContext) {
+        this.prependServletContext = prependServletContext;
     }
 
 }

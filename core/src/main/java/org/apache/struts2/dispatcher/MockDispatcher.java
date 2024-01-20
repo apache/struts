@@ -21,7 +21,6 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 
 import jakarta.servlet.ServletContext;
-import java.util.HashMap;
 import java.util.Map;
 
 public class MockDispatcher extends Dispatcher {

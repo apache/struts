@@ -223,6 +223,9 @@ public final class StrutsConstants {
     /** Extension point for the Struts CompoundRootAccessor */
     public static final String STRUTS_COMPOUND_ROOT_ACCESSOR = "struts.compoundRootAccessor";
 
+    /** Extension point for the Struts MethodAccessor */
+    public static final String STRUTS_METHOD_ACCESSOR = "struts.methodAccessor";
+
     /** The name of the xwork converter implementation */
     public static final String STRUTS_XWORKCONVERTER = "struts.xworkConverter";
 

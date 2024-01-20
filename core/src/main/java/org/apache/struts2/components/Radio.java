@@ -66,10 +66,6 @@ public class Radio extends ListUIBean {
         return TEMPLATE;
     }
 
-    public void evaluateExtraParams() {
-    	super.evaluateExtraParams();
-    }
-
     /**
      * Radio tag requires lazy evaluation as list of tags is dynamically generated using <s:iterator/>
      *
@@ -78,10 +74,6 @@ public class Radio extends ListUIBean {
     @Override
     protected boolean lazyEvaluation() {
         return true;
-    }
-
-    protected Class<?> getValueClassType() {
-        return String.class;
     }
 
 }

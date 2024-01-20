@@ -34,7 +34,6 @@ import org.apache.struts2.TestAction;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.dispatcher.MockDispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 
@@ -42,8 +41,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.jsp.JspWriter;
 import java.io.File;
 import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Collections.emptyMap;
 
 /**
  * Base class to extend for unit testing UI Tags.
@@ -108,7 +108,7 @@ public abstract class AbstractTagTest extends StrutsInternalTestCase {
         pageContext.setJspWriter(jspWriter);
         
         mockContainer = new Mock(Container.class);
-        MockDispatcher du = new MockDispatcher(pageContext.getServletContext(), new HashMap<>(), configurationManager);
+        Dispatcher du = new Dispatcher(pageContext.getServletContext(), emptyMap());
         du.init();
         Dispatcher.setInstance(du);
         session = new SessionMap(request);

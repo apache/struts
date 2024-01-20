@@ -125,18 +125,17 @@ pipeline {
           steps {
             sh './mvnw -B package -DskipTests'
             sshPublisher(publishers: [
-                    sshPublisherDesc(
-                            configName: 'Nightlies',
-                            transfers: [
-                                    sshTransfer(
-                                            remoteDirectory: '/struts/snapshot',
-                                            removePrefix: 'assembly/target/assembly/out',
-                                            sourceFiles: 'assembly/target/assembly/out/struts-*.zip',
-                                            cleanRemote: true
-                                    )
-                            ],
-                            verbose: true
-                    )
+                sshPublisherDesc(
+                    configName: 'Nightlies',
+                    transfers: [
+                        sshTransfer(
+                            remoteDirectory: '/struts/snapshot',
+                            removePrefix: 'assembly/target/assembly/out',
+                            sourceFiles: 'assembly/target/assembly/out/struts-*.zip'
+                        )
+                    ],
+                    verbose: true
+                )
             ])
           }
         }

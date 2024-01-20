@@ -57,13 +57,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>../plugins/plexus/src/main/resources</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>CLASSWORLDS-LICENSE.txt</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>../plugins/rest/src/main/resources</directory>
       <outputDirectory></outputDirectory>
       <includes>

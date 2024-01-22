@@ -132,21 +132,16 @@
         <notes><![CDATA[ file name: plexus-utils-1.2.jar]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus/plexus\-utils@.*$</packageUrl>
         <cpe>cpe:/a:plexus-utils_project:plexus-utils</cpe>
+        <cve>CVE-2022-4244</cve>
+        <cve>CVE-2022-4245</cve>
+        <cve>CVE-2017-1000487</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[file name: plexus-utils-1.2.jar]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus/plexus\-utils@.*$</packageUrl>
-        <vulnerabilityName>CVE-2017-1000487</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[file name: plexus-utils-1.2.jar]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus/plexus\-utils@.*$</packageUrl>
-        <vulnerabilityName>Directory traversal in org.codehaus.plexus.util.Expand</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[file name: plexus-utils-1.2.jar]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus/plexus\-utils@.*$</packageUrl>
-        <vulnerabilityName>Possible XML Injection</vulnerabilityName>
+        <notes><![CDATA[ file name: plexus-container-default-1.0-alpha-10.jar]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.codehaus\.plexus\/plexus\-container\-default@.*$</packageUrl>
+        <cpe>cpe:/a:plexus-utils_project:plexus-utils</cpe>
+        <cve>CVE-2022-4244</cve>
+        <cve>CVE-2022-4245</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[file name: oval-1.90.jar]]></notes>

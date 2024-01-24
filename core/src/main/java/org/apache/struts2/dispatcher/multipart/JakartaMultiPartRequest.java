@@ -116,11 +116,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
         for (DiskFileItem item : parseRequest(request, saveDir)) {
-            LOG.debug("Processing a form field: {}", item.getFieldName());
+            LOG.debug("Processing a form field: {}", sanitizeNewlines(item.getFieldName()));
             if (item.isFormField()) {
                 processNormalFormField(item, request.getCharacterEncoding());
             } else {
-                LOG.debug("Processing a file: {}", item.getFieldName());
+                LOG.debug("Processing a file: {}", sanitizeNewlines(item.getFieldName()));
                 processFileField(item);
             }
         }
@@ -210,6 +210,8 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             LOG.debug("Using file save directory: {}", saveDir);
             builder.setPath(saveDir);
         }
+        // sets minimal buffer size to always write file to disk
+        builder.setBufferSize(1);
         return builder.get();
     }
 

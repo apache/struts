@@ -172,7 +172,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     }
 
     protected String sanitizeNewlines(String before) {
-        return before.replaceAll("[\n\r]", "_");
+        return before.replaceAll("\\R", "_");
     }
 
 }

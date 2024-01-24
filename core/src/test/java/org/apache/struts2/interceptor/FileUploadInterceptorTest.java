@@ -53,7 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
-    public static final UploadedFile EMPTY_FILE = new UploadedFile() {
+    private static final UploadedFile EMPTY_FILE = new UploadedFile() {
         @Override
         public Long length() {
             return 0L;
@@ -462,7 +462,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         String msg = errors.iterator().next();
         // FIXME: the expected size is 40 - length of the string
         assertEquals(
-                "File deleteme.txt assigned to file exceeded allowed size limit! Max size allowed is: 10 but file was: 10!",
+                "File deleteme.txt assigned to file exceeded allowed size limit! Max size allowed is: 10 but file was: 11!",
                 msg);
     }
 

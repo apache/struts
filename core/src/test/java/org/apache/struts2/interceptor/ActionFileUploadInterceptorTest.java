@@ -52,7 +52,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
-    public static final UploadedFile EMPTY_FILE = new UploadedFile() {
+    private static final UploadedFile EMPTY_FILE = new UploadedFile() {
         @Override
         public Long length() {
             return 0L;
@@ -329,17 +329,11 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setCharacterEncoding(StandardCharsets.UTF_8.name());
         req.setMethod("POST");
-        req.addHeader("Content-type", "multipart/form-data; boundary=" + boundary);
+        req.addHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");
         String content = encodeTextFile("test.html", "text/plain", plainContent) +
                 encodeTextFile("test1.html", "text/html", htmlContent) +
                 encodeTextFile("test2.html", "text/html", htmlContent) +
-                endline +
-                endline +
-                endline +
-                "--" +
-                boundary +
-                "--" +
-                endline;
+                endline + "--" + boundary + "--";;
         req.setContent(content.getBytes());
 
         assertTrue(JakartaServletDiskFileUpload.isMultipartContent(req));
@@ -350,7 +344,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setAction(action);
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
 
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
@@ -435,7 +429,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         String msg = errors.iterator().next();
         // FIXME: the expected size is 40 - length of the string
         assertEquals(
-                "File deleteme.txt assigned to file exceeded allowed size limit! Max size allowed is: 10 but file was: 10!",
+                "File deleteme.txt assigned to file exceeded allowed size limit! Max size allowed is: 10 but file was: 11!",
                 msg);
     }
 
@@ -524,19 +518,14 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     private String encodeTextFile(String filename, String contentType, String content) {
-        return "\r\n" +
-                "--" +
-                "simple boundary" +
-                "\r\n" +
-                "Content-Disposition: form-data; name=\"" +
-                "file" +
-                "\"; filename=\"" +
-                filename +
-                "\r\n" +
-                "Content-Type: " +
-                contentType +
-                "\r\n" +
-                "\r\n" +
+        return endline +
+                "--" + boundary +
+                endline +
+                "Content-Disposition: form-data; name=\"" + "file" + "\"; filename=\"" + filename +
+                endline +
+                "Content-Type: " + contentType +
+                endline +
+                endline +
                 content;
     }
 

@@ -74,23 +74,19 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
         } catch (FileUploadException e) {
             LOG.debug("Request exceeded size limit!", e);
             LocalizedMessage errorMessage;
-            if (e instanceof FileUploadByteCountLimitException) {
-                FileUploadByteCountLimitException ex = (FileUploadByteCountLimitException) e;
+            if (e instanceof FileUploadByteCountLimitException ex) {
                 errorMessage = buildErrorMessage(e, new Object[]{
                         ex.getFieldName(), ex.getFileName(), ex.getPermitted(), ex.getActualSize()
                 });
-            } else if (e instanceof FileUploadFileCountLimitException) {
-                FileUploadFileCountLimitException ex = (FileUploadFileCountLimitException) e;
+            } else if (e instanceof FileUploadFileCountLimitException ex) {
                 errorMessage = buildErrorMessage(e, new Object[]{
                         ex.getPermitted(), ex.getActualSize()
                 });
-            } else if (e instanceof FileUploadSizeException) {
-                FileUploadSizeException ex = (FileUploadSizeException) e;
+            } else if (e instanceof FileUploadSizeException ex) {
                 errorMessage = buildErrorMessage(e, new Object[]{
                         ex.getPermitted(), ex.getActualSize()
                 });
-            } else if (e instanceof FileUploadContentTypeException) {
-                FileUploadContentTypeException ex = (FileUploadContentTypeException) e;
+            } else if (e instanceof FileUploadContentTypeException ex) {
                 errorMessage = buildErrorMessage(e, new Object[]{
                         ex.getContentType()
                 });

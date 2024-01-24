@@ -88,13 +88,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         if (uploadedFileList == null) {
             return null;
         }
-
-        List<String> types = new ArrayList<>(uploadedFileList.size());
-        for (UploadedFile uploadedFile : uploadedFileList) {
-            types.add(uploadedFile.getContentType());
-        }
-
-        return types.toArray(new String[0]);
+        return uploadedFileList.stream().map(UploadedFile::getContentType).toArray(String[]::new);
     }
 
     /* (non-Javadoc)
@@ -116,13 +110,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         if (uploadedFileList == null) {
             return null;
         }
-
-        List<String> names = new ArrayList<>(uploadedFileList.size());
-        for (UploadedFile uploadedFile : uploadedFileList) {
-            names.add(getCanonicalName(uploadedFile.getOriginalName()));
-        }
-
-        return names.toArray(new String[0]);
+        return uploadedFileList.stream().map(UploadedFile::getOriginalName).toArray(String[]::new);
     }
 
     /* (non-Javadoc)
@@ -194,15 +182,13 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param request the servlet request
      * @param saveDir location of the save dir
      */
-    protected void processUpload(HttpServletRequest request, String saveDir) throws Exception {
+    protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
         // Sanity check that the request is a multi-part/form-data request.
         if (!JakartaServletFileUpload.isMultipartContent(request)) {
             LOG.debug("Http request isn't: {}, stop processing", AbstractFileUpload.MULTIPART_FORM_DATA);
             return;
         }
 
-        // Interface with Commons FileUpload API
-        // Using the Streaming API
         JakartaServletFileUpload<DiskFileItem, DiskFileItemFactory> servletFileUpload = new JakartaServletFileUpload<>();
         if (maxSize != null) {
             LOG.debug("Applies max size: {} to file upload request", maxSize);
@@ -217,7 +203,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             servletFileUpload.setFileSizeMax(maxFileSize);
         }
 
-        // Iterate the file items
+        LOG.debug("Using Jakarta Stream API to process request");
         servletFileUpload.getItemIterator(request).forEachRemaining(item -> {
             if (item.isFormField()) {
                 LOG.debug("Processing a form field: {}", sanitizeNewlines(item.getFieldName()));
@@ -271,7 +257,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             file = createTemporaryFile(fileItemInput.getName(), location);
 
             if (streamFileToDisk(fileItemInput, file)) {
-                createUploadFile(fileItemInput, file);
+                createUploadedFile(fileItemInput, file);
             }
         } catch (IOException e) {
             if (file != null) {
@@ -346,7 +332,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param fileItemInput file item stream
      * @param file          the file
      */
-    protected void createUploadFile(FileItemInput fileItemInput, File file) {
+    protected void createUploadedFile(FileItemInput fileItemInput, File file) {
         // gather attributes from file upload stream.
         String fileName = fileItemInput.getName();
         String fieldName = fileItemInput.getFieldName();

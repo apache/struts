@@ -2,13 +2,13 @@
 
 ## Supported Versions
 
-Please vist the [Releases](https://struts.apache.org/releases.html#prior-releases) page to see full information about each version 
+Please visit the [Releases](https://struts.apache.org/releases.html#prior-releases) page to see full information about each version 
 and what potential vulnerability it can have:
 
 | Version | Supported          |
-| ------- | ------------------ |
-| 6.0.0   | :white_check_mark: |
-| 2.5.30  | :white_check_mark: |
+|---------|--------------------|
+| 6.x     | :white_check_mark: |
+| 2.5.x   | :white_check_mark: |
 
 ## Reporting New Security Issues with thr Apache Struts
 
@@ -28,8 +28,8 @@ All mail sent to this address that does not relate to security problems in the A
 ```
 
 Note that all networked servers are subject to denial of service attacks, and we cannot promise magic
-workarounds to generic problems (such as a client streaming lots of data to your server, or re-requesting
-the same URL repeatedly). In general our philosophy is to avoid any attacks which can cause the server
+workarounds to generic problems (such as a client streaming lots of data to your server, or requesting
+the same URL repeatedly). In general, our philosophy is to avoid any attacks that can cause the server
 to consume resources in a non-linear relationship to the size of inputs.
 
 The mailing address is: [security@struts.apache.org](mailto:security@struts.apache.org)

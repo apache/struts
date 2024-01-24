@@ -20,12 +20,12 @@ package org.apache.struts2.dispatcher.multipart;
 
 import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -125,7 +125,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     /**
      * @param request Inspect the servlet request and set the locale if one wasn't provided by
-     * the Struts2 framework.
+     *                the Struts2 framework.
      */
     protected void setLocale(HttpServletRequest request) {
         if (defaultLocale == null) {
@@ -136,7 +136,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
     /**
      * Build error message.
      *
-     * @param e the Throwable/Exception
+     * @param e    the Throwable/Exception
      * @param args arguments
      * @return error message
      */
@@ -149,7 +149,7 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getErrors()
-    */
+     */
     public List<LocalizedMessage> getErrors() {
         return errors;
     }
@@ -169,6 +169,10 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
             fileName = fileName.substring(backwardSlash + 1);
         }
         return fileName;
+    }
+
+    protected String sanitizeNewlines(String before) {
+        return before.replaceAll("[\n\r]", "_");
     }
 
 }

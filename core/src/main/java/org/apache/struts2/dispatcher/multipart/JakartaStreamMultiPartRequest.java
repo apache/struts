@@ -18,23 +18,22 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload2.core.AbstractFileUpload;
 import org.apache.commons.fileupload2.core.DiskFileItem;
 import org.apache.commons.fileupload2.core.DiskFileItemFactory;
-import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
-import org.apache.commons.fileupload2.core.FileUploadSizeException;
-import org.apache.commons.fileupload2.core.FileItemInputIterator;
 import org.apache.commons.fileupload2.core.FileItemInput;
+import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.struts2.dispatcher.LocalizedMessage;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,12 +53,12 @@ import java.util.UUID;
  */
 public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
-    static final Logger LOG = LogManager.getLogger(JakartaStreamMultiPartRequest.class);
+    private static final Logger LOG = LogManager.getLogger(JakartaStreamMultiPartRequest.class);
 
     /**
      * Map between file fields and file data.
      */
-    protected Map<String, List<FileInfo>> fileInfos = new HashMap<>();
+    protected Map<String, List<UploadedFile>> uploadedFiles = new HashMap<>();
 
     /**
      * Map between non-file fields and values.
@@ -71,12 +70,11 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      */
     public void cleanUp() {
         LOG.debug("Performing File Upload temporary storage cleanup.");
-        for (List<FileInfo> fileInfoList : fileInfos.values()) {
-            for (FileInfo fileInfo : fileInfoList) {
-                File file = fileInfo.getFile();
-                LOG.debug("Deleting file '{}'.", file.getName());
-                if (!file.delete()) {
-                    LOG.warn("There was a problem attempting to delete file '{}'.", file.getName());
+        for (List<UploadedFile> uploadedFileList : uploadedFiles.values()) {
+            for (UploadedFile uploadedFile : uploadedFileList) {
+                LOG.debug("Deleting file '{}'.", uploadedFile.getName());
+                if (!uploadedFile.delete()) {
+                    LOG.warn("There was a problem attempting to delete file '{}'.", uploadedFile.getName());
                 }
             }
         }
@@ -86,14 +84,14 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getContentType(java.lang.String)
      */
     public String[] getContentType(String fieldName) {
-        List<FileInfo> infos = fileInfos.get(fieldName);
-        if (infos == null) {
+        List<UploadedFile> uploadedFileList = uploadedFiles.get(fieldName);
+        if (uploadedFileList == null) {
             return null;
         }
 
-        List<String> types = new ArrayList<>(infos.size());
-        for (FileInfo fileInfo : infos) {
-            types.add(fileInfo.getContentType());
+        List<String> types = new ArrayList<>(uploadedFileList.size());
+        for (UploadedFile uploadedFile : uploadedFileList) {
+            types.add(uploadedFile.getContentType());
         }
 
         return types.toArray(new String[0]);
@@ -103,31 +101,25 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFile(java.lang.String)
      */
     public UploadedFile[] getFile(String fieldName) {
-        List<FileInfo> infos = fileInfos.get(fieldName);
-        if (infos == null) {
+        List<UploadedFile> uploadedFileList = uploadedFiles.get(fieldName);
+        if (uploadedFileList == null) {
             return null;
         }
-
-        return infos.stream().map(fileInfo ->
-            StrutsUploadedFile.Builder.create(fileInfo.getFile())
-                .withContentType(fileInfo.contentType)
-                .withOriginalName(fileInfo.originalName)
-                .build()
-        ).toArray(UploadedFile[]::new);
+        return uploadedFileList.toArray(UploadedFile[]::new);
     }
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFileNames(java.lang.String)
      */
     public String[] getFileNames(String fieldName) {
-        List<FileInfo> infos = fileInfos.get(fieldName);
-        if (infos == null) {
+        List<UploadedFile> uploadedFileList = uploadedFiles.get(fieldName);
+        if (uploadedFileList == null) {
             return null;
         }
 
-        List<String> names = new ArrayList<>(infos.size());
-        for (FileInfo fileInfo : infos) {
-            names.add(getCanonicalName(fileInfo.getOriginalName()));
+        List<String> names = new ArrayList<>(uploadedFileList.size());
+        for (UploadedFile uploadedFile : uploadedFileList) {
+            names.add(getCanonicalName(uploadedFile.getOriginalName()));
         }
 
         return names.toArray(new String[0]);
@@ -137,24 +129,18 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFileParameterNames()
      */
     public Enumeration<String> getFileParameterNames() {
-        return Collections.enumeration(fileInfos.keySet());
+        return Collections.enumeration(uploadedFiles.keySet());
     }
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFilesystemName(java.lang.String)
      */
     public String[] getFilesystemName(String fieldName) {
-        List<FileInfo> infos = fileInfos.get(fieldName);
-        if (infos == null) {
+        List<UploadedFile> uploadedFileList = uploadedFiles.get(fieldName);
+        if (uploadedFileList == null) {
             return null;
         }
-
-        List<String> names = new ArrayList<>(infos.size());
-        for (FileInfo fileInfo : infos) {
-            names.add(fileInfo.getFile().getName());
-        }
-
-        return names.toArray(new String[0]);
+        return uploadedFileList.stream().map(UploadedFile::getAbsolutePath).toArray(String[]::new);
     }
 
     /* (non-Javadoc)
@@ -209,111 +195,51 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      * @param saveDir location of the save dir
      */
     protected void processUpload(HttpServletRequest request, String saveDir) throws Exception {
-
         // Sanity check that the request is a multi-part/form-data request.
-        if (JakartaServletFileUpload.isMultipartContent(request)) {
-
-            // Sanity check on request size.
-            boolean requestSizePermitted = isRequestSizePermitted(request);
-
-            // Interface with Commons FileUpload API
-            // Using the Streaming API
-            JakartaServletFileUpload<DiskFileItem, DiskFileItemFactory> servletFileUpload = new JakartaServletFileUpload<>();
-            if (maxSize != null) {
-                servletFileUpload.setSizeMax(maxSize);
-            }
-            if (maxFiles != null) {
-                servletFileUpload.setFileCountMax(maxFiles);
-            }
-            if (maxFileSize != null) {
-                servletFileUpload.setFileSizeMax(maxFileSize);
-            }
-            FileItemInputIterator i = servletFileUpload.getItemIterator(request);
-
-            // Iterate the file items
-            while (i.hasNext()) {
-                try {
-                    FileItemInput itemStream = i.next();
-
-                    // If the file item stream is a form field, delegate to the
-                    // field item stream handler
-                    if (itemStream.isFormField()) {
-                        processFileItemStreamAsFormField(itemStream);
-                    }
-
-                    // Delegate the file item stream for a file field to the
-                    // file item stream handler, but delegation is skipped
-                    // if the requestSizePermitted check failed based on the
-                    // complete content-size of the request.
-                    else {
-
-                        // prevent processing file field item if request size not allowed.
-                        if (!requestSizePermitted) {
-                            addFileSkippedError(itemStream.getName(), request);
-                            LOG.debug("Skipped stream '{}', request maximum size ({}) exceeded.", itemStream.getName(), maxSize);
-                            continue;
-                        }
-
-                        processFileItemStreamAsFileField(itemStream, saveDir);
-                    }
-                } catch (IOException e) {
-                    LOG.warn("Error occurred during process upload", e);
-                }
-            }
+        if (!JakartaServletFileUpload.isMultipartContent(request)) {
+            LOG.debug("Http request isn't: {}, stop processing", AbstractFileUpload.MULTIPART_FORM_DATA);
+            return;
         }
-    }
 
-    /**
-     * Defines whether the request allowed based on content length.
-     *
-     * @param request the servlet request
-     * @return true if request size is permitted
-     */
-    protected boolean isRequestSizePermitted(HttpServletRequest request) {
-        // if maxSize is specified as -1, there is no sanity check and it's
-        // safe to return true for any request, delegating the failure
-        // checks later in the upload process.
-        if (maxSize == null || maxSize == -1 || request == null) {
-            return true;
+        // Interface with Commons FileUpload API
+        // Using the Streaming API
+        JakartaServletFileUpload<DiskFileItem, DiskFileItemFactory> servletFileUpload = new JakartaServletFileUpload<>();
+        if (maxSize != null) {
+            LOG.debug("Applies max size: {} to file upload request", maxSize);
+            servletFileUpload.setSizeMax(maxSize);
         }
-        return request.getContentLength() < maxSize;
-    }
-
-    /**
-     * @param request the servlet request
-     * @return the request content length.
-     */
-    protected long getRequestSize(HttpServletRequest request) {
-        return request != null ? request.getContentLength() : 0;
-    }
-
-    /**
-     * Add a file skipped message notification for action messages.
-     *
-     * @param fileName file name
-     * @param request  the servlet request
-     */
-    protected void addFileSkippedError(String fileName, HttpServletRequest request) {
-        String exceptionMessage = "Skipped file " + fileName + "; request size limit exceeded.";
-        long allowedMaxSize = maxSize != null ? maxSize : -1;
-        FileUploadSizeException exception = new FileUploadSizeException(exceptionMessage, getRequestSize(request), allowedMaxSize);
-        LocalizedMessage message = buildErrorMessage(exception, new Object[]{fileName, getRequestSize(request), allowedMaxSize});
-        if (!errors.contains(message)) {
-            errors.add(message);
+        if (maxFiles != null) {
+            LOG.debug("Applies max files number: {} to file upload request", maxFiles);
+            servletFileUpload.setFileCountMax(maxFiles);
         }
+        if (maxFileSize != null) {
+            LOG.debug("Applies max size of single file: {} to file upload request", maxFileSize);
+            servletFileUpload.setFileSizeMax(maxFileSize);
+        }
+
+        // Iterate the file items
+        servletFileUpload.getItemIterator(request).forEachRemaining(item -> {
+            if (item.isFormField()) {
+                LOG.debug("Processing a form field: {}", sanitizeNewlines(item.getFieldName()));
+                processFileItemAsFormField(item);
+            } else {
+                LOG.debug("Processing a file: {}", sanitizeNewlines(item.getFieldName()));
+                processFileItemAsFileField(item, saveDir);
+            }
+        });
     }
 
     /**
-     * Processes the FileItemStream as a Form Field.
+     * Processes the FileItem as a normal form field.
      *
-     * @param itemStream file item stream
+     * @param fileItemInput a form field item input
      */
-    protected void processFileItemStreamAsFormField(FileItemInput itemStream) {
-        String fieldName = itemStream.getFieldName();
+    protected void processFileItemAsFormField(FileItemInput fileItemInput) {
+        String fieldName = fileItemInput.getFieldName();
         try {
             List<String> values;
 
-            String fieldValue = itemStream.getInputStream().toString();
+            String fieldValue = fileItemInput.getInputStream().toString();
             if (!parameters.containsKey(fieldName)) {
                 values = new ArrayList<>();
                 parameters.put(fieldName, values);
@@ -322,35 +248,37 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             }
             values.add(fieldValue);
         } catch (IOException e) {
-            LOG.warn("Failed to handle form field '{}'.", fieldName, e);
+            LOG.warn(new ParameterizedMessage("Failed to handle form field: '{}'", sanitizeNewlines(fieldName)), e);
         }
     }
 
     /**
-     * Processes the FileItemStream as a file field.
+     * Processes the FileItem as a file field.
      *
-     * @param itemStream file item stream
-     * @param location   location
+     * @param fileItemInput file item representing upload file
+     * @param location      location
      */
-    protected void processFileItemStreamAsFileField(FileItemInput itemStream, String location) {
+    protected void processFileItemAsFileField(FileItemInput fileItemInput, String location) {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
-        if (itemStream.getName() == null || itemStream.getName().trim().isEmpty()) {
-            LOG.debug("No file has been uploaded for the field: {}", itemStream.getFieldName());
+        if (fileItemInput.getName() == null || fileItemInput.getName().trim().isEmpty()) {
+            LOG.debug("No file has been uploaded for the field: {}", sanitizeNewlines(fileItemInput.getFieldName()));
             return;
         }
 
         File file = null;
         try {
             // Create the temporary upload file.
-            file = createTemporaryFile(itemStream.getName(), location);
+            file = createTemporaryFile(fileItemInput.getName(), location);
 
-            if (streamFileToDisk(itemStream, file)) {
-                createFileInfoFromItemStream(itemStream, file);
+            if (streamFileToDisk(fileItemInput, file)) {
+                createUploadFile(fileItemInput, file);
             }
         } catch (IOException e) {
             if (file != null) {
                 try {
-                    file.delete();
+                    if (!file.delete()) {
+                        LOG.warn("Could not delete the file: {}", file.getAbsoluteFile());
+                    }
                 } catch (SecurityException se) {
                     LOG.warn("Failed to delete '{}' due to security exception above.", file.getName(), se);
                 }
@@ -363,13 +291,13 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
      *
      * @param fileName file name
      * @param location location
-     * @return temporary file based on the given filename and location
+     * @return a temporary file based on the given filename and location
      * @throws IOException in case of IO errors
      */
     protected File createTemporaryFile(String fileName, String location) throws IOException {
         String name = fileName
-            .substring(fileName.lastIndexOf('/') + 1)
-            .substring(fileName.lastIndexOf('\\') + 1);
+                .substring(fileName.lastIndexOf('/') + 1)
+                .substring(fileName.lastIndexOf('\\') + 1);
 
         String prefix = name;
         String suffix = "";
@@ -391,93 +319,50 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     /**
      * Streams the file upload stream to the specified file.
      *
-     * @param itemStream file item stream
-     * @param file       the file
+     * @param fileItemInput file item input
+     * @param file          the file
      * @return true if stream was successfully
      * @throws IOException in case of IO errors
      */
-    protected boolean streamFileToDisk(FileItemInput itemStream, File file) throws IOException {
-        boolean result;
-        try (InputStream input = itemStream.getInputStream();
-                OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
+    protected boolean streamFileToDisk(FileItemInput fileItemInput, File file) throws IOException {
+        try (InputStream input = fileItemInput.getInputStream();
+             OutputStream output = new BufferedOutputStream(Files.newOutputStream(file.toPath()), bufferSize)) {
             byte[] buffer = new byte[bufferSize];
-            LOG.debug("Streaming file using buffer size {}.", bufferSize);
+            LOG.debug("Streaming file using buffer size: {}", bufferSize);
             for (int length; ((length = input.read(buffer)) > 0); ) {
                 output.write(buffer, 0, length);
             }
-            result = true;
+        } catch (IOException e) {
+            LOG.error(new ParameterizedMessage("Cannot write input file: {} into file stream: {}",
+                    fileItemInput.getName(), file.getAbsolutePath()), e);
+            return false;
         }
-        return result;
+        return true;
     }
 
     /**
-     * Creates an internal <code>FileInfo</code> structure used to pass information
-     * to the <code>FileUploadInterceptor</code> during the interceptor stack
-     * invocation process.
+     * Create {@link UploadedFile} abstraction over uploaded file
      *
-     * @param itemStream file item stream
-     * @param file       the file
+     * @param fileItemInput file item stream
+     * @param file          the file
      */
-    protected void createFileInfoFromItemStream(FileItemInput itemStream, File file) {
+    protected void createUploadFile(FileItemInput fileItemInput, File file) {
         // gather attributes from file upload stream.
-        String fileName = itemStream.getName();
-        String fieldName = itemStream.getFieldName();
+        String fileName = fileItemInput.getName();
+        String fieldName = fileItemInput.getFieldName();
         // create internal structure
-        FileInfo fileInfo = new FileInfo(file, itemStream.getContentType(), fileName);
+        UploadedFile uploadedFile = StrutsUploadedFile.Builder
+                .create(file)
+                .withOriginalName(fileName)
+                .withContentType(fileItemInput.getContentType())
+                .build();
         // append or create new entry.
-        if (!fileInfos.containsKey(fieldName)) {
-            List<FileInfo> infos = new ArrayList<>();
-            infos.add(fileInfo);
-            fileInfos.put(fieldName, infos);
+        if (!uploadedFiles.containsKey(fieldName)) {
+            List<UploadedFile> infos = new ArrayList<>();
+            infos.add(uploadedFile);
+            uploadedFiles.put(fieldName, infos);
         } else {
-            fileInfos.get(fieldName).add(fileInfo);
-        }
-    }
-
-    /**
-     * Internal data structure used to store a reference to information needed
-     * to later pass post processing data to the <code>FileUploadInterceptor</code>.
-     *
-     * @since 7.0.0
-     */
-    public static class FileInfo implements Serializable {
-
-        private final File file;
-        private final String contentType;
-        private final String originalName;
-
-        /**
-         * Default constructor.
-         *
-         * @param file         the file
-         * @param contentType  content type
-         * @param originalName original file name
-         */
-        public FileInfo(File file, String contentType, String originalName) {
-            this.file = file;
-            this.contentType = contentType;
-            this.originalName = originalName;
-        }
-
-        /**
-         * @return the file
-         */
-        public File getFile() {
-            return file;
-        }
-
-        /**
-         * @return content type
-         */
-        public String getContentType() {
-            return contentType;
-        }
-
-        /**
-         * @return original file name
-         */
-        public String getOriginalName() {
-            return originalName;
+            uploadedFiles.get(fieldName).add(uploadedFile);
         }
     }
 

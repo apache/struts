@@ -206,10 +206,10 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
         LOG.debug("Using Jakarta Stream API to process request");
         servletFileUpload.getItemIterator(request).forEachRemaining(item -> {
             if (item.isFormField()) {
-                LOG.debug("Processing a form field: {}", sanitizeNewlines(item.getFieldName()));
+                LOG.debug(() -> "Processing a form field: " + sanitizeNewlines(item.getFieldName()));
                 processFileItemAsFormField(item);
             } else {
-                LOG.debug("Processing a file: {}", sanitizeNewlines(item.getFieldName()));
+                LOG.debug(() -> "Processing a file: " + sanitizeNewlines(item.getFieldName()));
                 processFileItemAsFileField(item, saveDir);
             }
         });
@@ -234,7 +234,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
             }
             values.add(fieldValue);
         } catch (IOException e) {
-            LOG.warn(new ParameterizedMessage("Failed to handle form field: '{}'", sanitizeNewlines(fieldName)), e);
+            LOG.warn(() -> "Failed to handle form field: " + sanitizeNewlines(fieldName), e);
         }
     }
 
@@ -247,7 +247,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
     protected void processFileItemAsFileField(FileItemInput fileItemInput, String location) {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (fileItemInput.getName() == null || fileItemInput.getName().trim().isEmpty()) {
-            LOG.debug("No file has been uploaded for the field: {}", sanitizeNewlines(fileItemInput.getFieldName()));
+            LOG.debug(() -> "No file has been uploaded for the field: " + sanitizeNewlines(fileItemInput.getFieldName()));
             return;
         }
 

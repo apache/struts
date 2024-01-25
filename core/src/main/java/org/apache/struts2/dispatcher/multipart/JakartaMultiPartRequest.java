@@ -112,11 +112,11 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
             return;
         }
         for (DiskFileItem item : parseRequest(request, saveDir)) {
-            LOG.debug("Processing a form field: {}", sanitizeNewlines(item.getFieldName()));
+            LOG.debug(() -> "Processing a form field: " + sanitizeNewlines(item.getFieldName()));
             if (item.isFormField()) {
                 processNormalFormField(item, request.getCharacterEncoding());
             } else {
-                LOG.debug("Processing a file: {}", sanitizeNewlines(item.getFieldName()));
+                LOG.debug(() -> "Processing a file: " + sanitizeNewlines(item.getFieldName()));
                 processFileField(item);
             }
         }
@@ -125,7 +125,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
     protected void processFileField(DiskFileItem item) {
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().isEmpty()) {
-            LOG.debug("No file has been uploaded for the field: {}", sanitizeNewlines(item.getFieldName()));
+            LOG.debug(() -> "No file has been uploaded for the field: " + sanitizeNewlines(item.getFieldName()));
             return;
         }
 
@@ -160,7 +160,9 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
             long size = item.getSize();
             if (size > maxStringLength) {
-                LOG.debug("Form field: {} of size: {} bytes exceeds limit of: {}.", sanitizeNewlines(item.getFieldName()), size, maxStringLength);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Form field: {} of size: {} bytes exceeds limit of: {}.", sanitizeNewlines(item.getFieldName()), size, maxStringLength);
+                }
                 LocalizedMessage localizedMessage = new LocalizedMessage(this.getClass(),
                         STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY, null,
                         new Object[]{item.getFieldName(), maxStringLength, size});

@@ -21,6 +21,7 @@ package org.apache.struts2.showcase.action;
 import com.opensymphony.xwork2.Preparable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.dao.SkillDao;
 import org.apache.struts2.showcase.model.Skill;
@@ -71,6 +72,7 @@ public class SkillAction extends AbstractCRUDAction implements Preparable {
 		return skillDao;
 	}
 
+	@StrutsParameter(depth = 1)
 	public Skill getCurrentSkill() {
 		return currentSkill;
 	}

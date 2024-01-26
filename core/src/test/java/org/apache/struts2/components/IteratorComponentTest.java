@@ -21,6 +21,7 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.ognl.ThreadAllowlist;
 
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -28,14 +29,25 @@ import java.util.List;
 
 public class IteratorComponentTest extends StrutsInternalTestCase {
 
+    private ValueStack stack;
+    private IteratorComponent ic;
+    private ThreadAllowlist threadAllowlist;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        stack = ActionContext.getContext().getValueStack();
+        ic = new IteratorComponent(stack);
+        threadAllowlist = new ThreadAllowlist();
+        ic.setThreadAllowlist(threadAllowlist);
+    }
+
     public void testIterator() throws Exception {
         // given
-        final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooAction());
 
         StringWriter out = new StringWriter();
 
-        IteratorComponent ic = new IteratorComponent(stack);
         ic.setValue("items");
         ic.setVar("val");
 
@@ -64,12 +76,10 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
 
     public void testIteratorWithBegin() throws Exception {
         // given
-        final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooAction());
 
         StringWriter out = new StringWriter();
 
-        IteratorComponent ic = new IteratorComponent(stack);
         ic.setValue("items");
         ic.setVar("val");
         ic.setBegin("1");
@@ -96,7 +106,6 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
 
     public void testIteratorWithNulls() throws Exception {
         // given
-        final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooAction() {
             private List items  = Arrays.asList("1", "2", null, "4");
 
@@ -107,7 +116,6 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
 
         StringWriter out = new StringWriter();
 
-        IteratorComponent ic = new IteratorComponent(stack);
         ic.setValue("items");
         ic.setVar("val");
         Property prop = new Property(stack);

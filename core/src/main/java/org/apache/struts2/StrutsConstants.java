@@ -469,6 +469,9 @@ public final class StrutsConstants {
     public static final String STRUTS_ADDITIONAL_EXCLUDED_PATTERNS = "struts.additional.excludedPatterns";
     public static final String STRUTS_ADDITIONAL_ACCEPTED_PATTERNS = "struts.additional.acceptedPatterns";
 
+    public static final String STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS = "struts.parameters.requireAnnotations";
+    public static final String STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS_TRANSITION = "struts.parameters.requireAnnotations.transitionMode";
+
     public static final String STRUTS_CONTENT_TYPE_MATCHER = "struts.contentTypeMatcher";
 
     public static final String STRUTS_SMI_METHOD_REGEX = "struts.strictMethodInvocation.methodRegex";

@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.wait;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  * Example to illustrate the <code>execAndWait</code> interceptor.
@@ -41,6 +42,7 @@ public class LongProcessAction extends ActionSupport {
 		return time;
 	}
 
+	@StrutsParameter
 	public void setTime(int time) {
 		this.time = time;
 	}

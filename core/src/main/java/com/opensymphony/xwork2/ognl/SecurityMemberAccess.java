@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.ognl.ProviderAllowlist;
+import org.apache.struts2.ognl.ThreadAllowlist;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -75,6 +76,7 @@ public class SecurityMemberAccess implements MemberAccess {
     )));
 
     private final ProviderAllowlist providerAllowlist;
+    private final ThreadAllowlist threadAllowlist;
     private boolean allowStaticFieldAccess = true;
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
@@ -89,8 +91,9 @@ public class SecurityMemberAccess implements MemberAccess {
     private boolean disallowDefaultPackageAccess = false;
 
     @Inject
-    public SecurityMemberAccess(@Inject ProviderAllowlist providerAllowlist) {
+    public SecurityMemberAccess(@Inject ProviderAllowlist providerAllowlist, @Inject ThreadAllowlist threadAllowlist) {
         this.providerAllowlist = providerAllowlist;
+        this.threadAllowlist = threadAllowlist;
     }
 
     /**
@@ -99,11 +102,11 @@ public class SecurityMemberAccess implements MemberAccess {
      * - block or allow access to properties (configurable-after-construction)
      *
      * @param allowStaticFieldAccess if set to true static fields (constants) will be accessible
-     * @deprecated since 6.4.0, use {@link #SecurityMemberAccess(ProviderAllowlist)} instead.
+     * @deprecated since 6.4.0, use {@link #SecurityMemberAccess(ProviderAllowlist, ThreadAllowlist)} instead.
      */
     @Deprecated
     public SecurityMemberAccess(boolean allowStaticFieldAccess) {
-        this(null);
+        this(null, null);
         useAllowStaticFieldAccess(String.valueOf(allowStaticFieldAccess));
     }
 
@@ -223,6 +226,7 @@ public class SecurityMemberAccess implements MemberAccess {
         return allowlistClasses.contains(clazz)
                 || ALLOWLIST_REQUIRED_CLASSES.contains(clazz)
                 || (providerAllowlist != null && providerAllowlist.getProviderAllowlist().contains(clazz))
+                || (threadAllowlist != null && threadAllowlist.getAllowlist().contains(clazz))
                 || isClassBelongsToPackages(clazz, ALLOWLIST_REQUIRED_PACKAGES)
                 || isClassBelongsToPackages(clazz, allowlistPackageNames);
     }

@@ -333,7 +333,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         String content = encodeTextFile("test.html", "text/plain", plainContent) +
                 encodeTextFile("test1.html", "text/html", htmlContent) +
                 encodeTextFile("test2.html", "text/html", htmlContent) +
-                endline + "--" + boundary + "--";;
+                endline + "--" + boundary + "--";
         req.setContent(content.getBytes());
 
         assertTrue(JakartaServletDiskFileUpload.isMultipartContent(req));

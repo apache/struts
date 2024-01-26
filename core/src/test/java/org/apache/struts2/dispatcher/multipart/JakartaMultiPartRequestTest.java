@@ -28,15 +28,15 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JakartaStreamMultiPartRequestTest extends AbstractMultiPartRequestTest<File> {
+public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest<File> {
 
     @Override
     protected AbstractMultiPartRequest<File> createMultipartRequest() {
-        return new JakartaStreamMultiPartRequest();
+        return new JakartaMultiPartRequest();
     }
 
     @Test
-    public void maxFilesNotSupportedInJakartaStreamMultiPartRequest() throws IOException {
+    public void maxFiles() throws IOException {
         String content = formFile("file1", "test1.csv", "1,2,3,4") +
                 formFile("file2", "test2.csv", "5,6,7,8") +
                 endline + "--" + boundary + "--";
@@ -50,10 +50,7 @@ public class JakartaStreamMultiPartRequestTest extends AbstractMultiPartRequestT
 
         assertThat(multiPart.errors)
                 .map(LocalizedMessage::getTextKey)
-                .isEmpty();
-        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
-                .hasSize(2)
-                .contains("file1", "file2");
+                .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
     }
 
 }

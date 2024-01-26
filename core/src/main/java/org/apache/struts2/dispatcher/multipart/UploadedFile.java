@@ -23,7 +23,7 @@ import java.io.Serializable;
 /**
  * Virtual representation of a uploaded file used by {@link MultiPartRequest}
  */
-public interface UploadedFile extends Serializable {
+public interface UploadedFile<T> extends Serializable {
 
     Long length();
 
@@ -37,7 +37,7 @@ public interface UploadedFile extends Serializable {
 
     String getAbsolutePath();
 
-    Object getContent();
+    T getContent();
 
     String getContentType();
 

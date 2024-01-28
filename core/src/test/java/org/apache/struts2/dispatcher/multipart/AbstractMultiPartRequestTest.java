@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -121,6 +122,57 @@ abstract class AbstractMultiPartRequestTest<T> {
                     .exists()
                     .content()
                     .isEqualTo("5,6,7,8");
+        });
+    }
+
+    @Test
+    public void uploadedMultipleFilesToDisk() throws IOException {
+        // given
+        String content = formFile("file1", "test1.csv", "1,2,3,4") +
+                formFile("file1", "test2.csv", "5,6,7,8") +
+                endline + "--" + boundary + "--";
+
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
+
+        // when
+        multiPart.setBufferSize("1"); // always write files into disk
+        multiPart.parse(mockRequest, tempDir.toString());
+
+        // then
+        assertThat(multiPart.getErrors())
+                .isEmpty();
+
+        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
+                .asList()
+                .containsOnly("file1");
+        assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
+            if (Objects.equals(file.getName(), "test1.csv")) {
+                assertThat(file.isFile())
+                        .isTrue();
+                assertThat(file.getOriginalName())
+                        .isEqualTo("test1.csv");
+                assertThat(file.getContentType())
+                        .isEqualTo("text/csv");
+                assertThat(file.getContent()).asInstanceOf(InstanceOfAssertFactories.FILE)
+                        .exists()
+                        .content()
+                        .isEqualTo("1,2,3,4");
+            }
+            if (Objects.equals(file.getName(), "test2.csv")) {
+                assertThat(file.isFile())
+                        .isTrue();
+                assertThat(file.getOriginalName())
+                        .isEqualTo("test2.csv");
+                assertThat(file.getContentType())
+                        .isEqualTo("text/csv");
+                assertThat(file.getContent())
+                        .asInstanceOf(InstanceOfAssertFactories.FILE)
+                        .exists()
+                        .content()
+                        .isEqualTo("5,6,7,8");
+            }
         });
     }
 
@@ -362,6 +414,8 @@ abstract class AbstractMultiPartRequestTest<T> {
                 formFile("file2", "test2.csv", "5,6,7,8") +
                 formField("longText", "very long text") +
                 formField("shortText", "short text") +
+                formField("multi", "multi1") +
+                formField("multi", "multi2") +
                 endline + "--" + boundary + "--";
 
         mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
@@ -374,8 +428,7 @@ abstract class AbstractMultiPartRequestTest<T> {
                 .isEmpty();
 
         assertThat(multiPart.getParameterNames().asIterator()).toIterable()
-                .hasSize(2)
-                .contains("longText", "shortText");
+                .containsOnly("longText", "shortText", "multi");
         assertThat(multiPart.getParameterValues("longText"))
                 .contains("very long text");
         assertThat(multiPart.getParameterValues("shortText"))
@@ -384,6 +437,8 @@ abstract class AbstractMultiPartRequestTest<T> {
                 .isEqualTo("very long text");
         assertThat(multiPart.getParameter("shortText"))
                 .isEqualTo("short text");
+        assertThat(multiPart.getParameterValues("multi"))
+                .containsOnly("multi1", "multi2");
     }
 
     protected String formFile(String fieldName, String filename, String content) {

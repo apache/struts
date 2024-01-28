@@ -23,13 +23,13 @@ import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,15 +39,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 abstract class AbstractMultiPartRequestTest<T> {
 
+    protected static Path tempDir;
+
     protected MockHttpServletRequest mockRequest;
 
     protected final String boundary = "_boundary_";
     protected final String endline = "\r\n";
 
     protected AbstractMultiPartRequest<T> multiPart;
-    protected Path tempDir;
 
     abstract protected AbstractMultiPartRequest<T> createMultipartRequest();
+
+    @BeforeClass
+    public static void beforeClass() {
+        String dirProp = System.getProperty("java.io.tmpdir");
+        if (Path.of(dirProp).toFile().exists()) {
+            tempDir = Path.of(dirProp, "multi-part-test");
+        } else {
+            tempDir = Path.of("target", "multi-part-test");
+        }
+    }
 
     @Before
     public void before() {
@@ -57,7 +68,6 @@ abstract class AbstractMultiPartRequestTest<T> {
         mockRequest.setContentType("multipart/form-data; boundary=" + boundary);
 
         multiPart = createMultipartRequest();
-        tempDir = Paths.get("target", "multi-part-test");
     }
 
     @After
@@ -111,7 +121,6 @@ abstract class AbstractMultiPartRequestTest<T> {
                     .exists()
                     .content()
                     .isEqualTo("5,6,7,8");
-            ;
         });
     }
 
@@ -208,7 +217,6 @@ abstract class AbstractMultiPartRequestTest<T> {
                     .exists()
                     .content()
                     .isEqualTo("5,6,7,8");
-            ;
         });
 
         List<UploadedFile<T>> uploadedFiles = new ArrayList<>();

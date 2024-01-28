@@ -52,7 +52,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
-    private static final UploadedFile EMPTY_FILE = new UploadedFile() {
+    private static final UploadedFile<String> EMPTY_FILE = new UploadedFile<>() {
         @Override
         public Long length() {
             return 0L;
@@ -79,8 +79,8 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         }
 
         @Override
-        public byte[] getContent() {
-            return new byte[0];
+        public String getContent() {
+            return "";
         }
 
         @Override
@@ -210,7 +210,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         URL url = ClassLoaderUtil.getResource("log4j2.xml", ActionFileUploadInterceptorTest.class);
         File file = new File(new URI(url.toString()));
         assertTrue("log4j2.xml should be in src/test folder", file.exists());
-        UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html").withOriginalName("filename").build();
+        UploadedFile<File> uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html").withOriginalName("filename").build();
         boolean notOk = interceptor.acceptFile(validation, uploadedFile, "filename", "text/html", "inputName");
 
         assertFalse(notOk);
@@ -229,7 +229,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testNoMultipartRequest() throws Exception {
-        MyFileUploadAction action = new MyFileUploadAction();
+        MyFileUploadAction<File> action = new MyFileUploadAction<>();
 
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
@@ -250,13 +250,13 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         req.setContentType("multipart/form-data"); // not a multipart contentype
         req.setMethod("post");
 
-        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+        MyFileUploadAction<File> action = container.inject(MyFileUploadAction.class);
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
 
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
 
         interceptor.intercept(mai);
 
@@ -271,13 +271,13 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         req.addHeader("Content-type", "multipart/form-data");
         req.setContent(null); // there is no content
 
-        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+        MyFileUploadAction<File> action = container.inject(MyFileUploadAction.class);
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
 
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
 
         interceptor.intercept(mai);
 
@@ -301,19 +301,19 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 """);
         req.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
-        MyFileUploadAction action = new MyFileUploadAction();
+        MyFileUploadAction<File> action = new MyFileUploadAction<>();
 
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
 
         interceptor.intercept(mai);
 
         assertFalse(action.hasErrors());
 
-        List<UploadedFile> files = action.getUploadFiles();
+        List<UploadedFile<File>> files = action.getUploadFiles();
 
         assertNotNull(files);
         assertEquals(1, files.size());
@@ -338,7 +338,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         assertTrue(JakartaServletDiskFileUpload.isMultipartContent(req));
 
-        MyFileUploadAction action = new MyFileUploadAction();
+        MyFileUploadAction<File> action = new MyFileUploadAction<>();
         container.inject(action);
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
@@ -349,7 +349,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
 
-        List<UploadedFile> files = action.getUploadFiles();
+        List<UploadedFile<File>> files = action.getUploadFiles();
 
         assertNotNull(files);
         assertEquals("files accepted ", 2, files.size());
@@ -375,7 +375,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         assertTrue(JakartaServletFileUpload.isMultipartContent(req));
 
-        MyFileUploadAction action = new MyFileUploadAction();
+        MyFileUploadAction<File> action = new MyFileUploadAction<>();
         container.inject(action);
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
@@ -411,7 +411,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 """);
         req.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
-        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+        MyFileUploadAction<File> action = container.inject(MyFileUploadAction.class);
 
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
@@ -458,7 +458,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 """);
         req.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
-        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+        MyFileUploadAction<File> action = container.inject(MyFileUploadAction.class);
 
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
@@ -496,7 +496,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
                 """);
         req.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
-        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+        MyFileUploadAction<File> action = container.inject(MyFileUploadAction.class);
 
         MockActionInvocation mai = new MockActionInvocation();
         mai.setAction(action);
@@ -546,12 +546,12 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize, int maxfilesize, int maxfiles, int maxStringLength) {
-
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
         jak.setMaxSize(String.valueOf(maxsize));
         jak.setMaxFileSize(String.valueOf(maxfilesize));
         jak.setMaxFiles(String.valueOf(maxfiles));
         jak.setMaxStringLength(String.valueOf(maxStringLength));
+        jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
@@ -571,15 +571,15 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         super.tearDown();
     }
 
-    public static class MyFileUploadAction extends ActionSupport implements UploadedFilesAware {
-        private List<UploadedFile> uploadedFiles;
+    public static class MyFileUploadAction<T> extends ActionSupport implements UploadedFilesAware {
+        private List<UploadedFile<File>> uploadedFiles;
 
         @Override
-        public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
+        public void withUploadedFiles(List<UploadedFile<File>> uploadedFiles) {
             this.uploadedFiles = uploadedFiles;
         }
 
-        public List<UploadedFile> getUploadFiles() {
+        public List<UploadedFile<File>> getUploadFiles() {
             return this.uploadedFiles;
         }
     }

@@ -140,21 +140,28 @@ public final class StrutsConstants {
     public static final String STRUTS_UI_ESCAPE_HTML_BODY = "struts.ui.escapeHtmlBody";
 
     /** The maximum size of a multipart request (file upload) */
-    public static final String STRUTS_MULTIPART_MAXSIZE = "struts.multipart.maxSize";
+    public static final String STRUTS_MULTIPART_MAX_SIZE = "struts.multipart.maxSize";
+
+    /** The maximum size of all uploaded files.
+       Used only with {@link org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest} */
+    public static final String STRUTS_MULTIPART_MAX_SIZE_OF_FILES = "struts.multipart.maxSizeOfFiles";
 
     /** The maximum number of files allowed in a multipart request */
-    public static final String STRUTS_MULTIPART_MAXFILES = "struts.multipart.maxFiles";
+    public static final String STRUTS_MULTIPART_MAX_FILES = "struts.multipart.maxFiles";
 
     /** The maximum length of a string parameter in a multipart request. */
     public static final String STRUTS_MULTIPART_MAX_STRING_LENGTH = "struts.multipart.maxStringLength";
 
     /** The maximum size per file in a multipart request */
-    public static final String STRUTS_MULTIPART_MAXFILESIZE = "struts.multipart.maxFileSize";
-    /** The directory to use for storing uploaded files */
-    public static final String STRUTS_MULTIPART_SAVEDIR = "struts.multipart.saveDir";
+    public static final String STRUTS_MULTIPART_MAX_FILE_SIZE = "struts.multipart.maxFileSize";
 
-    /** Declares the buffer size to be used during streaming multipart content to disk. Used only with {@link org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest} */
-    public static final String STRUTS_MULTIPART_BUFFERSIZE = "struts.multipart.bufferSize";
+    /** The directory to use for storing uploaded files */
+    public static final String STRUTS_MULTIPART_SAVE_DIR = "struts.multipart.saveDir";
+
+    /** Declares the buffer size to be used during streaming multipart content to disk.
+     * Used only with {@link org.apache.struts2.dispatcher.multipart.JakartaStreamMultiPartRequest}
+     */
+    public static final String STRUTS_MULTIPART_BUFFER_SIZE = "struts.multipart.bufferSize";
 
     /**
      * The org.apache.struts2.dispatcher.multipart.MultiPartRequest parser implementation

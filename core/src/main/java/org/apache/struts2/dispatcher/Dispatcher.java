@@ -315,7 +315,7 @@ public class Dispatcher {
      *
      * @param val New setting
      */
-    @Inject(StrutsConstants.STRUTS_MULTIPART_SAVEDIR)
+    @Inject(StrutsConstants.STRUTS_MULTIPART_SAVE_DIR)
     public void setMultipartSaveDir(String val) {
         multipartSaveDir = val;
     }

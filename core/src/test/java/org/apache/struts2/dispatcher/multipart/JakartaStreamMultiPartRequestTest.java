@@ -20,40 +20,55 @@ package org.apache.struts2.dispatcher.multipart;
 
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JakartaStreamMultiPartRequestTest extends AbstractMultiPartRequestTest<File> {
+public class JakartaStreamMultiPartRequestTest extends AbstractMultiPartRequestTest {
 
     @Override
-    protected AbstractMultiPartRequest<File> createMultipartRequest() {
+    protected AbstractMultiPartRequest createMultipartRequest() {
         return new JakartaStreamMultiPartRequest();
     }
 
     @Test
-    public void maxFilesNotSupportedInJakartaStreamMultiPartRequest() throws IOException {
+    public void maxSizeOfFiles() throws IOException {
+        // given
         String content = formFile("file1", "test1.csv", "1,2,3,4") +
                 formFile("file2", "test2.csv", "5,6,7,8") +
                 endline + "--" + boundary + "--";
 
-        mockRequest.setContent(content.getBytes(StandardCharsets.US_ASCII));
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
 
         assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
 
-        multiPart.setMaxFiles("1");
+        // when
+        multiPart.setMaxSizeOfFiles("10");
         multiPart.parse(mockRequest, tempDir.toString());
 
-        assertThat(multiPart.errors)
+        // then
+        assertThat(multiPart.uploadedFiles)
+                .hasSize(1);
+        assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
+            assertThat(file.isFile())
+                    .isTrue();
+            assertThat(file.getOriginalName())
+                    .isEqualTo("test1.csv");
+            assertThat(file.getContentType())
+                    .isEqualTo("text/csv");
+            assertThat(file.getContent())
+                    .asInstanceOf(InstanceOfAssertFactories.FILE)
+                    .exists()
+                    .content()
+                    .isEqualTo("1,2,3,4");
+        });
+        assertThat(multiPart.getErrors())
                 .map(LocalizedMessage::getTextKey)
-                .isEmpty();
-        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
-                .hasSize(2)
-                .contains("file1", "file2");
+                .containsExactly("struts.messages.upload.error.FileUploadSizeException");
     }
 
 }

@@ -25,6 +25,8 @@ import org.apache.struts2.dispatcher.LocalizedMessage;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -137,7 +139,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @param fieldName input field name
      * @return a File[] object for files associated with the specified input field name
      */
-    public UploadedFile[] getFiles(String fieldName) {
+    public UploadedFile<File>[] getFiles(String fieldName) {
         if (multi == null) {
             return null;
         }

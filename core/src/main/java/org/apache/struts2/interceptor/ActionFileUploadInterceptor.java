@@ -28,6 +28,7 @@ import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -153,19 +154,19 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
 
         // bind allowed Files
         Enumeration<String> fileParameterNames = multiWrapper.getFileParameterNames();
-        List<UploadedFile> acceptedFiles = new ArrayList<>();
+        List<UploadedFile<File>> acceptedFiles = new ArrayList<>();
 
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
             // get the value of this input tag
             String inputName = fileParameterNames.nextElement();
-            UploadedFile[] uploadedFiles = multiWrapper.getFiles(inputName);
+            UploadedFile<File>[] uploadedFiles = multiWrapper.getFiles(inputName);
 
             if (uploadedFiles == null || uploadedFiles.length == 0) {
                 if (LOG.isWarnEnabled()) {
                     LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_FILE_KEY, new String[]{inputName}));
                 }
             } else {
-                for (UploadedFile uploadedFile : uploadedFiles) {
+                for (UploadedFile<File> uploadedFile : uploadedFiles) {
                     if (acceptFile(action, uploadedFile, uploadedFile.getOriginalName(), uploadedFile.getContentType(), inputName)) {
                         acceptedFiles.add(uploadedFile);
                     }

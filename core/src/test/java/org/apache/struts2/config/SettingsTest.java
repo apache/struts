@@ -35,8 +35,8 @@ public class SettingsTest extends StrutsInternalTestCase {
     public void testSettings() {
         Settings settings = new DefaultSettings();
 
-        assertEquals("12345", settings.get(StrutsConstants.STRUTS_MULTIPART_MAXSIZE));
-        assertEquals("\\temp", settings.get(StrutsConstants.STRUTS_MULTIPART_SAVEDIR));
+        assertEquals("12345", settings.get(StrutsConstants.STRUTS_MULTIPART_MAX_SIZE));
+        assertEquals("\\temp", settings.get(StrutsConstants.STRUTS_MULTIPART_SAVE_DIR));
 
         assertEquals("test,org/apache/struts2/othertest", settings.get( StrutsConstants.STRUTS_CUSTOM_PROPERTIES));
         assertEquals("testvalue", settings.get("testkey"));

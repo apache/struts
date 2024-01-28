@@ -67,6 +67,11 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     protected Long maxSize;
 
     /**
+     * Specifies the maximum size of all the uploaded files.
+     */
+    protected Long maxSizeOfFiles;
+
+    /**
      * Specifies the maximum number of files in one request.
      */
     protected Long maxFiles;
@@ -104,7 +109,7 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     /**
      * @param bufferSize Sets the buffer size to be used.
      */
-    @Inject(value = StrutsConstants.STRUTS_MULTIPART_BUFFERSIZE, required = false)
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_BUFFER_SIZE, required = false)
     public void setBufferSize(String bufferSize) {
         this.bufferSize = Integer.parseInt(bufferSize);
     }
@@ -117,15 +122,23 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     /**
      * @param maxSize Injects the Struts multipart request maximum size.
      */
-    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAX_SIZE)
     public void setMaxSize(String maxSize) {
         this.maxSize = Long.parseLong(maxSize);
     }
 
     /**
+     * @param maxSizeOfFiles Injects the Struts maximum size of all uploaded files.
+     */
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_MAX_SIZE_OF_FILES, required = false)
+    public void setMaxSizeOfFiles(String maxSizeOfFiles) {
+        this.maxSizeOfFiles = Long.parseLong(maxSizeOfFiles);
+    }
+
+    /**
      * @param maxFiles Injects the Struts maximum size of an individual file uploaded.
      */
-    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXFILES)
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAX_FILES)
     public void setMaxFiles(String maxFiles) {
         this.maxFiles = Long.parseLong(maxFiles);
     }
@@ -133,7 +146,7 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     /**
      * @param maxFileSize Injects the Struts maximum number of files, which can be uploaded.
      */
-    @Inject(value = StrutsConstants.STRUTS_MULTIPART_MAXFILESIZE, required = false)
+    @Inject(value = StrutsConstants.STRUTS_MULTIPART_MAX_FILE_SIZE, required = false)
     public void setMaxFileSize(String maxFileSize) {
         this.maxFileSize = Long.parseLong(maxFileSize);
     }
@@ -232,7 +245,7 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
             if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOG.debug("Unable to parse request", e);
             LocalizedMessage errorMessage = buildErrorMessage(e, new Object[]{});
             if (!errors.contains(errorMessage)) {

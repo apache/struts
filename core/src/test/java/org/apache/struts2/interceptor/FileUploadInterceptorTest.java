@@ -50,10 +50,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test case for FileUploadInterceptor.
  */
-
 public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
-    private static final UploadedFile EMPTY_FILE = new UploadedFile() {
+    private static final UploadedFile<String> EMPTY_FILE = new UploadedFile<>() {
         @Override
         public Long length() {
             return 0L;
@@ -80,8 +79,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         }
 
         @Override
-        public byte[] getContent() {
-            return new byte[0];
+        public String getContent() {
+            return "";
         }
 
         @Override
@@ -206,7 +205,11 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         URL url = ClassLoaderUtil.getResource("log4j2.xml", FileUploadInterceptorTest.class);
         File file = new File(new URI(url.toString()));
         assertTrue("log4j2.xml should be in src/test folder", file.exists());
-        UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html").withOriginalName("filename").build();
+        UploadedFile<File> uploadedFile = StrutsUploadedFile.Builder.create(file)
+                .withContentType("text/html")
+                .withOriginalName("filename")
+                .build();
+
         boolean notOk = interceptor.acceptFile(validation, uploadedFile, "filename", "text/html", "inputName");
 
         assertFalse(notOk);
@@ -249,7 +252,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
 
         ActionContext.getContext().withParameters(HttpParameters.create().build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
 
         interceptor.intercept(mai);
 
@@ -271,7 +274,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
 
         ActionContext.getContext().withParameters(HttpParameters.create().build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
 
         interceptor.intercept(mai);
 
@@ -302,7 +305,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext().withParameters(HttpParameters.create(param).build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
 
         interceptor.intercept(mai);
 
@@ -310,7 +313,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         HttpParameters parameters = mai.getInvocationContext().getParameters();
         assertEquals(3, parameters.keySet().size());
-        UploadedFile[] files = (UploadedFile[]) parameters.get("file").getObject();
+        UploadedFile<File>[] files = (UploadedFile<File>[]) parameters.get("file").getObject();
         String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
         String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
 
@@ -360,14 +363,14 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext().withParameters(HttpParameters.create(param).build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
 
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
 
         HttpParameters parameters = mai.getInvocationContext().getParameters();
         assertEquals(3, parameters.keySet().size());
-        UploadedFile[] files = (UploadedFile[]) parameters.get("file").getObject();
+        UploadedFile<File>[] files = (UploadedFile<File>[]) parameters.get("file").getObject();
         String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
         String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
 
@@ -412,7 +415,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext().withParameters(HttpParameters.create(param).build());
-        ActionContext.getContext().put(ServletActionContext.HTTP_REQUEST, createMultipartRequestMaxFiles(req));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles(req));
 
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
@@ -588,12 +591,12 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize, int maxfilesize, int maxfiles, int maxStringLength) {
-
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
         jak.setMaxSize(String.valueOf(maxsize));
         jak.setMaxFileSize(String.valueOf(maxfilesize));
         jak.setMaxFiles(String.valueOf(maxfiles));
         jak.setMaxStringLength(String.valueOf(maxStringLength));
+        jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
         return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
@@ -614,11 +617,6 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public static class MyFileupAction extends ActionSupport {
-
-        private static final long serialVersionUID = 6255238895447968889L;
-
-        // no methods
     }
-
 
 }

@@ -20,6 +20,7 @@ package org.apache.struts2.action;
 
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -35,6 +36,6 @@ public interface UploadedFilesAware {
      *
      * @param uploadedFiles a list of {@link UploadedFile}, cannot be null. It can be empty.
      */
-    void withUploadedFiles(List<UploadedFile> uploadedFiles);
+    void withUploadedFiles(List<UploadedFile<File>> uploadedFiles);
 
 }

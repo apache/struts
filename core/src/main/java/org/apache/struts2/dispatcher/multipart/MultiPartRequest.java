@@ -32,7 +32,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface MultiPartRequest {
 
     void parse(HttpServletRequest request, String saveDir) throws IOException;
-    
+
     /**
      * Returns an enumeration of the parameter names for uploaded files
      *
@@ -58,7 +58,7 @@ public interface MultiPartRequest {
      * @param fieldName input field name
      * @return a UploadedFile[] object for files associated with the specified input field name
      */
-    UploadedFile[] getFile(String fieldName);
+    <T> UploadedFile<T>[] getFile(String fieldName);
 
     /**
      * Returns a String[] of file names for files associated with the specified input field name

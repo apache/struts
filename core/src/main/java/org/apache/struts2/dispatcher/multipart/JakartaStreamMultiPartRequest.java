@@ -21,10 +21,13 @@ package org.apache.struts2.dispatcher.multipart;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.core.FileItemInput;
+import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
+import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.dispatcher.LocalizedMessage;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -129,6 +132,54 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest<File
     }
 
     /**
+     * @return actual size of already uploaded files
+     */
+    protected Long actualSizeOfUploadedFiles() {
+        return uploadedFiles.values().stream()
+                .map(files -> files.stream().map(UploadedFile::length).reduce(0L, Long::sum))
+                .reduce(0L, Long::sum);
+    }
+
+    private boolean exceedsMaxFiles(FileItemInput fileItemInput) {
+        if (maxFiles != null && maxFiles == uploadedFiles.size()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Cannot accept another file: {} as it will exceed max files: {}",
+                        sanitizeNewlines(fileItemInput.getName()), maxFiles);
+            }
+            LocalizedMessage errorMessage = buildErrorMessage(new FileUploadFileCountLimitException(
+                            String.format("File %s exceeds allowed maximum number of files %s",
+                                    fileItemInput.getName(), maxFiles),
+                            maxFiles, uploadedFiles.size()),
+                    new Object[]{maxFiles, uploadedFiles.size()});
+            if (!errors.contains(errorMessage)) {
+                errors.add(errorMessage);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void exceedsMaxSizeOfFiles(FileItemInput fileItemInput, File file, Long currentFilesSize) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("File: {} of size: {} exceeds allowed max size: {}, actual size of already uploaded files: {}",
+                    sanitizeNewlines(fileItemInput.getName()), file.length(), maxSizeOfFiles, currentFilesSize
+            );
+        }
+        LocalizedMessage errorMessage = buildErrorMessage(new FileUploadSizeException(
+                        String.format("Size %s of file %s exceeds allowed max size %s",
+                                file.length(), fileItemInput.getName(), maxSizeOfFiles),
+                        maxSizeOfFiles, currentFilesSize),
+                new Object[]{maxSizeOfFiles, currentFilesSize});
+        if (!errors.contains(errorMessage)) {
+            errors.add(errorMessage);
+        }
+        if (!file.delete() && LOG.isWarnEnabled()) {
+            LOG.warn("Cannot delete file: {} which exceeds maximum size: {} of all files!",
+                    sanitizeNewlines(fileItemInput.getName()), maxSizeOfFiles);
+        }
+    }
+
+    /**
      * Processes the FileItem as a file field.
      *
      * @param fileItemInput file item representing upload file
@@ -141,9 +192,19 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest<File
             return;
         }
 
+        if (exceedsMaxFiles(fileItemInput)) {
+            return;
+        }
+
         File file = createTemporaryFile(fileItemInput.getName(), location);
         streamFileToDisk(fileItemInput, file);
-        createUploadedFile(fileItemInput, file);
+
+        Long currentFilesSize = maxSizeOfFiles != null ? actualSizeOfUploadedFiles() : null;
+        if (maxSizeOfFiles != null && currentFilesSize + file.length() >= maxSizeOfFiles) {
+            exceedsMaxSizeOfFiles(fileItemInput, file, currentFilesSize);
+        } else {
+            createUploadedFile(fileItemInput, file);
+        }
     }
 
     /**

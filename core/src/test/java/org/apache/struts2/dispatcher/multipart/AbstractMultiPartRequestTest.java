@@ -27,18 +27,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-abstract class AbstractMultiPartRequestTest<T> {
+abstract class AbstractMultiPartRequestTest {
 
     protected static Path tempDir;
 
@@ -47,9 +47,9 @@ abstract class AbstractMultiPartRequestTest<T> {
     protected final String boundary = "_boundary_";
     protected final String endline = "\r\n";
 
-    protected AbstractMultiPartRequest<T> multiPart;
+    protected AbstractMultiPartRequest<File> multiPart;
 
-    abstract protected AbstractMultiPartRequest<T> createMultipartRequest();
+    abstract protected AbstractMultiPartRequest<File> createMultipartRequest();
 
     @BeforeClass
     public static void beforeClass() {
@@ -271,8 +271,8 @@ abstract class AbstractMultiPartRequestTest<T> {
                     .isEqualTo("5,6,7,8");
         });
 
-        List<UploadedFile<T>> uploadedFiles = new ArrayList<>();
-        for (Map.Entry<String, List<UploadedFile<T>>> entry : multiPart.uploadedFiles.entrySet()) {
+        List<UploadedFile<File>> uploadedFiles = new ArrayList<>();
+        for (Map.Entry<String, List<UploadedFile<File>>> entry : multiPart.uploadedFiles.entrySet()) {
             uploadedFiles.addAll(entry.getValue());
         }
 
@@ -284,10 +284,10 @@ abstract class AbstractMultiPartRequestTest<T> {
                 .isEmpty();
         assertThat(multiPart.parameters)
                 .isEmpty();
-        assertThat(uploadedFiles).allSatisfy(file -> {
-            assertThat(file.getContent()).asInstanceOf(InstanceOfAssertFactories.FILE)
-                    .doesNotExist();
-        });
+        assertThat(uploadedFiles).allSatisfy(file ->
+                assertThat(file.getContent()).asInstanceOf(InstanceOfAssertFactories.FILE)
+                    .doesNotExist()
+        );
     }
 
     @Test
@@ -315,6 +315,7 @@ abstract class AbstractMultiPartRequestTest<T> {
 
     @Test
     public void maxSize() throws IOException {
+        // given
         String content = formFile("file1", "test1.csv", "1,2,3,4") +
                 formFile("file2", "test2.csv", "5,6,7,8") +
                 endline + "--" + boundary + "--";
@@ -323,10 +324,13 @@ abstract class AbstractMultiPartRequestTest<T> {
 
         assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
 
+        // when
         multiPart.setMaxSize("1");
         multiPart.parse(mockRequest, tempDir.toString());
 
-        Arrays.stream(multiPart.getFile("file1")).findFirst().map(UploadedFile::length);
+        // then
+        assertThat(multiPart.uploadedFiles)
+                .isEmpty();
 
         assertThat(multiPart.getErrors())
                 .map(LocalizedMessage::getTextKey)
@@ -349,6 +353,24 @@ abstract class AbstractMultiPartRequestTest<T> {
         assertThat(multiPart.getErrors())
                 .map(LocalizedMessage::getTextKey)
                 .containsExactly("struts.messages.upload.error.FileUploadByteCountLimitException");
+    }
+
+    @Test
+    public void maxFiles() throws IOException {
+        String content = formFile("file1", "test1.csv", "1,2,3,4") +
+                formFile("file2", "test2.csv", "5,6,7,8") +
+                endline + "--" + boundary + "--";
+
+        mockRequest.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
+
+        multiPart.setMaxFiles("1");
+        multiPart.parse(mockRequest, tempDir.toString());
+
+        assertThat(multiPart.errors)
+                .map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadFileCountLimitException");
     }
 
     @Test

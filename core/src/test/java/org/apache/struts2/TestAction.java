@@ -45,6 +45,7 @@ public class TestAction extends ActionSupport {
     private String result;
     private User user;
     private String[] array;
+    private Object[] objectArray;
     private String[][] list;
     private List list2;
     private List list3;
@@ -133,6 +134,14 @@ public class TestAction extends ActionSupport {
 
     public void setArray(String[] array) {
         this.array = array;
+    }
+
+    public Object[] getObjectArray() {
+        return objectArray;
+    }
+
+    public void setObjectArray(Object[] arrayObject) {
+        this.objectArray = arrayObject;
     }
 
     public String[][] getList() {

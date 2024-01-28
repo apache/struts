@@ -18,7 +18,6 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import com.opensymphony.xwork2.LocaleProviderFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
@@ -40,7 +39,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -88,12 +86,10 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
      */
     protected int bufferSize = BUFFER_SIZE;
 
-    protected String defaultEncoding;
-
     /**
-     * Localization to be used regarding errors.
+     * Defines default encoding to encode data from request used if not provided with request
      */
-    protected Locale defaultLocale = Locale.ENGLISH;
+    protected String defaultEncoding;
 
     /**
      * Map between file fields and file data.
@@ -126,34 +122,28 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
         this.maxSize = Long.parseLong(maxSize);
     }
 
+    /**
+     * @param maxFiles Injects the Struts maximum size of an individual file uploaded.
+     */
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAXFILES)
     public void setMaxFiles(String maxFiles) {
         this.maxFiles = Long.parseLong(maxFiles);
     }
 
+    /**
+     * @param maxFileSize Injects the Struts maximum number of files, which can be uploaded.
+     */
     @Inject(value = StrutsConstants.STRUTS_MULTIPART_MAXFILESIZE, required = false)
     public void setMaxFileSize(String maxFileSize) {
         this.maxFileSize = Long.parseLong(maxFileSize);
     }
 
+    /**
+     * @param maxStringLength Injects the Struts maximum size of single form field.
+     */
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAX_STRING_LENGTH)
     public void setMaxStringLength(String maxStringLength) {
         this.maxStringLength = Long.parseLong(maxStringLength);
-    }
-
-    @Inject
-    public void setLocaleProviderFactory(LocaleProviderFactory localeProviderFactory) {
-        defaultLocale = localeProviderFactory.createLocaleProvider().getLocale();
-    }
-
-    /**
-     * @param request Inspect the servlet request and set the locale if one wasn't provided by
-     *                the Struts2 framework.
-     */
-    protected void setLocale(HttpServletRequest request) {
-        if (defaultLocale == null) {
-            defaultLocale = request.getLocale();
-        }
     }
 
     /**
@@ -215,7 +205,6 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
      */
     public void parse(HttpServletRequest request, String saveDir) throws IOException {
         try {
-            setLocale(request);
             processUpload(request, saveDir);
         } catch (FileUploadException e) {
             LOG.debug("Request exceeded size limit!", e);
@@ -368,18 +357,23 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
      */
     public void cleanUp() {
-        LOG.debug("Performing File Upload temporary storage cleanup.");
-        for (List<UploadedFile<T>> uploadedFileList : uploadedFiles.values()) {
-            for (UploadedFile<T> uploadedFile : uploadedFileList) {
-                if (uploadedFile.isFile()) {
-                    LOG.debug("Deleting file: {}", uploadedFile.getName());
-                    if (!uploadedFile.delete()) {
-                        LOG.warn("There was a problem attempting to delete file: {}", uploadedFile.getName());
+        try {
+            LOG.debug("Performing File Upload temporary storage cleanup.");
+            for (List<UploadedFile<T>> uploadedFileList : uploadedFiles.values()) {
+                for (UploadedFile<T> uploadedFile : uploadedFileList) {
+                    if (uploadedFile.isFile()) {
+                        LOG.debug("Deleting file: {}", uploadedFile.getName());
+                        if (!uploadedFile.delete()) {
+                            LOG.warn("There was a problem attempting to delete file: {}", uploadedFile.getName());
+                        }
+                    } else {
+                        LOG.debug("File: {} already deleted", uploadedFile.getName());
                     }
-                } else {
-                    LOG.debug("File: {} already deleted", uploadedFile.getName());
                 }
             }
+        } finally {
+            uploadedFiles = new HashMap<>();
+            parameters = new HashMap<>();
         }
     }
 

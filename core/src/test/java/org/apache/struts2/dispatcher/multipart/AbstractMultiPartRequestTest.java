@@ -30,7 +30,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -208,32 +211,21 @@ abstract class AbstractMultiPartRequestTest<T> {
             ;
         });
 
+        List<UploadedFile<T>> uploadedFiles = new ArrayList<>();
+        for (Map.Entry<String, List<UploadedFile<T>>> entry : multiPart.uploadedFiles.entrySet()) {
+            uploadedFiles.addAll(entry.getValue());
+        }
+
         // when
         multiPart.cleanUp();
 
         // then
-        assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
-                .asList()
-                .containsOnly("file1", "file2");
-        assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
-            assertThat(file.isFile())
-                    .isFalse();
-            assertThat(file.getOriginalName())
-                    .isEqualTo("test1.csv");
-            assertThat(file.getContentType())
-                    .isEqualTo("text/csv");
+        assertThat(multiPart.uploadedFiles)
+                .isEmpty();
+        assertThat(multiPart.parameters)
+                .isEmpty();
+        assertThat(uploadedFiles).allSatisfy(file -> {
             assertThat(file.getContent()).asInstanceOf(InstanceOfAssertFactories.FILE)
-                    .doesNotExist();
-        });
-        assertThat(multiPart.getFile("file2")).allSatisfy(file -> {
-            assertThat(file.isFile())
-                    .isFalse();
-            assertThat(file.getOriginalName())
-                    .isEqualTo("test2.csv");
-            assertThat(file.getContentType())
-                    .isEqualTo("text/csv");
-            assertThat(file.getContent())
-                    .asInstanceOf(InstanceOfAssertFactories.FILE)
                     .doesNotExist();
         });
     }

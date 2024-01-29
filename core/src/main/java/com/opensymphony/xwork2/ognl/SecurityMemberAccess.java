@@ -67,12 +67,18 @@ public class SecurityMemberAccess implements MemberAccess {
     )));
 
     private static final Set<Class<?>> ALLOWLIST_REQUIRED_CLASSES = unmodifiableSet(new HashSet<>(Arrays.asList(
+            com.opensymphony.xwork2.conversion.impl.XWorkList.class,
             java.lang.Enum.class,
             java.lang.String.class,
+            java.util.ArrayList.class,
+            java.util.Collection.class,
             java.util.Date.class,
             java.util.HashMap.class,
+            java.util.HashSet.class,
+            java.util.List.class,
             java.util.Map.class,
-            java.util.Map.Entry.class
+            java.util.Map.Entry.class,
+            java.util.Set.class
     )));
 
     private final ProviderAllowlist providerAllowlist;

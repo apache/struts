@@ -51,7 +51,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -368,7 +367,14 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
         String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
 
-        return hasValidAnnotatedMember(normalisedRootProperty, action, paramDepth);
+        boolean result = hasValidAnnotatedMember(normalisedRootProperty, action, paramDepth);
+        if (!result) {
+            LOG.debug(
+                    "Parameter injection for root property [{}] on action [{}] rejected. Ensure the corresponding getter or setter is annotated with @StrutsParameter with an appropriate 'depth'.",
+                    normalisedRootProperty,
+                    action.getClass().getName());
+        }
+        return result;
     }
 
     /**
@@ -396,28 +402,39 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected boolean hasValidAnnotatedPropertyDescriptor(PropertyDescriptor propDesc, long paramDepth) {
-        Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
-        if (relevantMethod == null) {
+        int permittedDepth = -1;
+        if (paramDepth > 0 && propDesc.getReadMethod() != null) {
+            permittedDepth = getPermittedInjectionDepth(propDesc.getReadMethod());
+        }
+        if (permittedDepth == -1 && propDesc.getWriteMethod() != null) {
+            permittedDepth = getPermittedInjectionDepth(propDesc.getWriteMethod());
+        }
+
+        if (permittedDepth < paramDepth) {
             return false;
         }
-        if (getPermittedInjectionDepth(relevantMethod) < paramDepth) {
-            LOG.debug(
-                    "Parameter injection for method [{}] on action [{}] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
-                    relevantMethod.getName(),
-                    relevantMethod.getDeclaringClass().getName());
-            return false;
-        }
-        if (paramDepth >= 1) {
-            allowlistClass(relevantMethod.getReturnType());
-        }
-        if (paramDepth >= 2) {
-            allowlistReturnTypeIfParameterized(relevantMethod);
-        }
+
+        autoAllowlistTypes(propDesc, paramDepth);
         return true;
     }
 
-    protected void allowlistReturnTypeIfParameterized(Method method) {
-        allowlistParameterizedTypeArg(method.getGenericReturnType());
+    protected void autoAllowlistTypes(PropertyDescriptor propDesc, long paramDepth) {
+        if (propDesc.getReadMethod() != null) {
+            if (paramDepth >= 1) {
+                allowlistClass(propDesc.getReadMethod().getReturnType());
+            }
+            if (paramDepth >= 2) {
+                allowlistParameterizedTypeArg(propDesc.getReadMethod().getGenericReturnType());
+            }
+        }
+        if (propDesc.getWriteMethod() != null) {
+            if (paramDepth >= 1) {
+                allowlistClass(propDesc.getWriteMethod().getParameterTypes()[0]);
+            }
+            if (paramDepth >= 2) {
+                allowlistParameterizedTypeArg(propDesc.getWriteMethod().getGenericParameterTypes()[0]);
+            }
+        }
     }
 
     protected void allowlistParameterizedTypeArg(Type genericType) {
@@ -465,13 +482,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             allowlistClass(field.getType());
         }
         if (paramDepth >= 2) {
-            allowlistFieldIfParameterized(field);
+            allowlistParameterizedTypeArg(field.getGenericType());
         }
         return true;
-    }
-
-    protected void allowlistFieldIfParameterized(Field field) {
-        allowlistParameterizedTypeArg(field.getGenericType());
     }
 
     /**

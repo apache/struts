@@ -247,6 +247,17 @@ public class StrutsParameterAnnotationTest {
     }
 
     @Test
+    public void setterPojoListDepthOneMethod() {
+        testParameter(new SetterOnlyAction(), "pojosDepthOne[0].key", false);
+    }
+
+    @Test
+    public void setterPojoListDepthTwoMethod() {
+        testParameter(new SetterOnlyAction(), "pojosDepthTwo[0].key", true);
+        assertThat(threadAllowlist.getAllowlist()).containsExactlyInAnyOrderElementsOf(getParentClasses(List.class, Pojo.class));
+    }
+
+    @Test
     public void publicStrNotAnnotated_transitionMode() {
         parametersInterceptor.setRequireAnnotationsTransitionMode(Boolean.TRUE.toString());
         testParameter(new FieldAction(), "publicStrNotAnnotated", true);
@@ -340,6 +351,17 @@ public class StrutsParameterAnnotationTest {
         @StrutsParameter(depth = 2)
         public Map<String, Pojo> getPublicPojoMapDepthTwo() {
             return null;
+        }
+    }
+
+    class SetterOnlyAction {
+
+        @StrutsParameter(depth = 1)
+        public void setPojosDepthOne(List<Pojo> pojos) {
+        }
+
+        @StrutsParameter(depth = 2)
+        public void setPojosDepthTwo(List<Pojo> pojos) {
         }
     }
 

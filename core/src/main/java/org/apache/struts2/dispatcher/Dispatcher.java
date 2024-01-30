@@ -147,7 +147,7 @@ public class Dispatcher {
     private String defaultLocale;
 
     /**
-     * Store state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
+     * Store state of {@link StrutsConstants#STRUTS_MULTIPART_SAVE_DIR} setting.
      */
     private String multipartSaveDir;
 
@@ -323,7 +323,7 @@ public class Dispatcher {
     /**
      * @deprecated since 6.4.0, no replacement.
      */
-    @Deprecated(since = "6.4.9", forRemoval = true)
+    @Deprecated(since = "6.4.0", forRemoval = true)
     public void setMultipartHandler(String val) {
         // no-op
     }
@@ -868,11 +868,12 @@ public class Dispatcher {
      * @return the path to save uploaded files to
      */
     protected String getSaveDir() {
-        String saveDir = multipartSaveDir.trim();
+        String saveDir = Objects.toString(multipartSaveDir, "").trim();
 
-        if (saveDir.equals("")) {
-            File tempdir = (File) servletContext.getAttribute("jakarta.servlet.context.tempdir");
-            LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to jakarta.servlet.context.tempdir");
+        if (saveDir.isEmpty()) {
+            File tempdir = (File) servletContext.getAttribute(ServletContext.TEMPDIR);
+            LOG.info("Unable to find: {} property setting. Defaulting to: {}",
+                    StrutsConstants.STRUTS_MULTIPART_SAVE_DIR, ServletContext.TEMPDIR);
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
@@ -885,9 +886,9 @@ public class Dispatcher {
                 if (!multipartSaveDir.mkdirs()) {
                     String logMessage;
                     try {
-                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.getCanonicalPath() + "'.";
+                        logMessage = "Could not create multipart save directory '" + multipartSaveDir.getCanonicalPath() + "'.";
                     } catch (IOException e) {
-                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.toString() + "'.";
+                        logMessage = "Could not create multipart save directory '" + multipartSaveDir + "'.";
                     }
                     if (devMode) {
                         LOG.error(logMessage);

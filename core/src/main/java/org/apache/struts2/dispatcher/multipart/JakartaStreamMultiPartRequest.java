@@ -24,7 +24,6 @@ import org.apache.commons.fileupload2.core.FileItemInput;
 import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.dispatcher.LocalizedMessage;
@@ -63,13 +62,11 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest<File
      */
     @Override
     protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
-        String charset = StringUtils.isBlank(request.getCharacterEncoding())
-                ? defaultEncoding
-                : request.getCharacterEncoding();
-
+        Charset charset = readCharsetEncoding(request);
         Path location = Path.of(saveDir);
+
         JakartaServletDiskFileUpload servletFileUpload =
-                prepareServletFileUpload(Charset.forName(charset), location);
+                prepareServletFileUpload(charset, location);
 
         LOG.debug("Using Jakarta Stream API to process request");
         servletFileUpload.getItemIterator(request).forEachRemaining(item -> {

@@ -26,6 +26,7 @@ import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -166,6 +167,18 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
      * @param saveDir a temporary directory to store files
      */
     protected abstract void processUpload(HttpServletRequest request, String saveDir) throws IOException;
+
+    /**
+     * @param request multipart request
+     * @return character encoding from request or {@link #defaultEncoding}
+     */
+    protected Charset readCharsetEncoding(HttpServletRequest request) {
+        String charsetStr = StringUtils.isBlank(request.getCharacterEncoding())
+                ? defaultEncoding
+                : request.getCharacterEncoding();
+
+        return Charset.forName(charsetStr);
+    }
 
     /**
      * Creates an instance of {@link JakartaServletDiskFileUpload} used by the parser to extract uploaded files

@@ -42,12 +42,10 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest<File> {
 
     @Override
     protected void processUpload(HttpServletRequest request, String saveDir) throws IOException {
-        String charset = StringUtils.isBlank(request.getCharacterEncoding())
-                ? defaultEncoding
-                : request.getCharacterEncoding();
+        Charset charset = readCharsetEncoding(request);
 
         JakartaServletDiskFileUpload servletFileUpload =
-                prepareServletFileUpload(Charset.forName(charset), Path.of(saveDir));
+                prepareServletFileUpload(charset, Path.of(saveDir));
 
         for (DiskFileItem item : servletFileUpload.parseRequest(request)) {
             LOG.debug(() -> "Processing a form field: " + sanitizeNewlines(item.getFieldName()));
@@ -76,33 +74,27 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest<File> {
         return new JakartaServletDiskFileUpload(factory);
     }
 
+    protected void processNormalFormField(DiskFileItem item, Charset charset) throws IOException {
+        LOG.debug("Item: {} is a normal form field", item.getName());
 
-    protected void processNormalFormField(DiskFileItem item, String charset) throws IOException {
-        try {
-            LOG.debug("Item: {} is a normal form field", item.getName());
-            Charset encoding = StringUtils.isBlank(charset) ? Charset.forName(defaultEncoding) : Charset.forName(charset);
-
-            List<String> values;
-            String fieldName = item.getFieldName();
-            if (parameters.get(fieldName) != null) {
-                values = parameters.get(fieldName);
-            } else {
-                values = new ArrayList<>();
-            }
-
-            String fieldValue = item.getString(encoding);
-            if (exceedsMaxStringLength(fieldName, fieldValue)) {
-                return;
-            }
-            if (item.getSize() == 0) {
-                values.add(StringUtils.EMPTY);
-            } else {
-                values.add(fieldValue);
-            }
-            parameters.put(fieldName, values);
-        } finally {
-            item.delete();
+        List<String> values;
+        String fieldName = item.getFieldName();
+        if (parameters.get(fieldName) != null) {
+            values = parameters.get(fieldName);
+        } else {
+            values = new ArrayList<>();
         }
+
+        String fieldValue = item.getString(charset);
+        if (exceedsMaxStringLength(fieldName, fieldValue)) {
+            return;
+        }
+        if (item.getSize() == 0) {
+            values.add(StringUtils.EMPTY);
+        } else {
+            values.add(fieldValue);
+        }
+        parameters.put(fieldName, values);
     }
 
     protected void processFileField(DiskFileItem item) {

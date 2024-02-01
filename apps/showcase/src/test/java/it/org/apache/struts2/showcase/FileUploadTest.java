@@ -18,9 +18,6 @@
  */
 package it.org.apache.struts2.showcase;
 
-import java.io.File;
-import java.io.FileWriter;
-
 import org.htmlunit.WebClient;
 import org.htmlunit.html.HtmlFileInput;
 import org.htmlunit.html.HtmlForm;
@@ -28,6 +25,10 @@ import org.htmlunit.html.HtmlInput;
 import org.htmlunit.html.HtmlPage;
 import org.htmlunit.html.HtmlSubmitInput;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.security.SecureRandom;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,6 +47,42 @@ public class FileUploadTest {
 
             try (FileWriter writer = new FileWriter(tempFile)) {
                 writer.append("Some strings");
+                writer.flush();
+            }
+
+            uploadInput.setValue(tempFile.getAbsolutePath());
+            final HtmlSubmitInput button = form.getInputByValue("Submit");
+            final HtmlPage resultPage = button.click();
+
+            String content = resultPage.getVisibleText();
+            assertThat(content).contains(
+                    "ContentType: text/plain",
+                    "Original FileName: " + tempFile.getName(),
+                    "Caption: some caption",
+                    "Size: 12"
+            );
+        }
+    }
+
+    @Test
+    public void testUploadOverMaxSize() throws Exception {
+        try (final WebClient webClient = new WebClient()) {
+            final HtmlPage page = webClient.getPage(ParameterUtils.getBaseUrl() + "/fileupload/doUpload.action");
+            final HtmlForm form = page.getFormByName("doUpload");
+            HtmlInput captionInput = form.getInputByName("caption");
+            HtmlFileInput uploadInput = form.getInputByName("upload");
+
+            captionInput.type("Large file");
+
+            File tempFile = File.createTempFile("testEmptyFile", ".txt");
+            SecureRandom rng = new SecureRandom();
+            tempFile.deleteOnExit();
+            try (FileWriter writer = new FileWriter(tempFile)) {
+                for (int i = 0; i < 10240; ++i) {
+                    String line = String.format("%s %s%n", rng.nextInt(), rng.nextInt());
+                    writer.append(line);
+                }
+                writer.flush();
             }
 
             uploadInput.setValue(tempFile.getAbsolutePath());
@@ -55,9 +92,7 @@ public class FileUploadTest {
             String content = resultPage.getVisibleText();
             System.out.println(content);
             assertThat(content).contains(
-                    "ContentType: text/plain",
-                    "Original FileName: " + tempFile.getName(),
-                    "Caption:some caption"
+                    "Request exceeded allowed size limit! Max size allowed is: 10,240!"
             );
         }
     }

@@ -16,26 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.action;
-
-import org.apache.struts2.dispatcher.multipart.UploadedFile;
+package org.apache.struts2.dispatcher.multipart;
 
 import java.io.File;
-import java.util.List;
 
-/**
- * Actions that want to be aware of all the uploaded file should implement this interface.
- * The {@link org.apache.struts2.interceptor.ActionFileUploadInterceptor} will use the interface
- * to notify action about the multiple uploaded files.
- */
-public interface UploadedFilesAware {
+public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
 
-    /**
-     * Notifies action about the multiple uploaded files, when a single file is uploaded
-     * the list will have just one element
-     *
-     * @param uploadedFiles a list of {@link UploadedFile}, cannot be null. It can be empty.
-     */
-    void withUploadedFiles(List<UploadedFile<File>> uploadedFiles);
+    @Override
+    protected AbstractMultiPartRequest<File> createMultipartRequest() {
+        return new JakartaMultiPartRequest();
+    }
 
 }

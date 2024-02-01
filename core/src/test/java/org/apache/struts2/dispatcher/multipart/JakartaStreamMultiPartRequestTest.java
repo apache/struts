@@ -18,54 +18,57 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import java.io.ByteArrayInputStream;
+import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
+import org.apache.struts2.dispatcher.LocalizedMessage;
+import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import org.apache.struts2.dispatcher.LocalizedMessage;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.mock.web.DelegatingServletInputStream;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.servlet.http.HttpServletRequest;
+public class JakartaStreamMultiPartRequestTest extends AbstractMultiPartRequestTest {
 
-public class JakartaStreamMultiPartRequestTest {
-
-    private JakartaStreamMultiPartRequest multiPart;
-    private Path tempDir;
-
-    @Before
-    public void initialize() {
-        multiPart = new JakartaStreamMultiPartRequest();
-        tempDir = Paths.get("target", "multi-part-test");
+    @Override
+    protected AbstractMultiPartRequest createMultipartRequest() {
+        return new JakartaStreamMultiPartRequest();
     }
 
-    /**
-     * Number of bytes in files greater than 2GB overflow the {@code int} primative.
-     * The {@link HttpServletRequest#getContentLength()} returns {@literal -1}
-     * when the header is not present or the size is greater than {@link Integer#MAX_VALUE}.
-     */
     @Test
-    public void unknownContentLength() throws IOException {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(request.getContentType()).thenReturn("multipart/form-data; charset=utf-8; boundary=__X_BOUNDARY__");
-        Mockito.when(request.getMethod()).thenReturn("POST");
-        Mockito.when(request.getContentLength()).thenReturn(-1);
-        String entity = "\r\n--__X_BOUNDARY__\r\n" +
-            "Content-Disposition: form-data; name=\"upload\"; filename=\"test.csv\"\r\n" +
-            "Content-Type: text/csv\r\n\r\n1,2\r\n\r\n" +
-            "--__X_BOUNDARY__\r\n" +
-            "Content-Disposition: form-data; name=\"upload2\"; filename=\"test2.csv\"\r\n" +
-            "Content-Type: text/csv\r\n\r\n3,4\r\n\r\n" +
-            "--__X_BOUNDARY__--\r\n";
-        Mockito.when(request.getInputStream()).thenReturn(new DelegatingServletInputStream(new ByteArrayInputStream(entity.getBytes(StandardCharsets.UTF_8))));
-        multiPart.setMaxSize("4");
-        multiPart.parse(request, tempDir.toString());
-        LocalizedMessage next = multiPart.getErrors().iterator().next();
-        Assert.assertEquals(next.getTextKey(), "struts.messages.upload.error.FileUploadSizeException");
+    public void maxSizeOfFiles() throws IOException {
+        // given
+        String content = formFile("file1", "test1.csv", "1,2,3,4") +
+                formFile("file2", "test2.csv", "5,6,7,8") +
+                endline + "--" + boundary + "--";
+
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
+
+        // when
+        multiPart.setMaxSizeOfFiles("10");
+        multiPart.parse(mockRequest, tempDir.toString());
+
+        // then
+        assertThat(multiPart.uploadedFiles)
+                .hasSize(1);
+        assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
+            assertThat(file.isFile())
+                    .isTrue();
+            assertThat(file.getOriginalName())
+                    .isEqualTo("test1.csv");
+            assertThat(file.getContentType())
+                    .isEqualTo("text/csv");
+            assertThat(file.getContent())
+                    .asInstanceOf(InstanceOfAssertFactories.FILE)
+                    .exists()
+                    .content()
+                    .isEqualTo("1,2,3,4");
+        });
+        assertThat(multiPart.getErrors())
+                .map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadSizeException");
     }
+
 }

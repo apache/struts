@@ -18,6 +18,12 @@
  */
 package org.apache.struts2.views.jsp;
 
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.TagSupport;
+import org.apache.commons.collections.ListUtils;
+import org.springframework.mock.web.MockBodyContent;
+import org.springframework.mock.web.MockJspWriter;
+
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -25,27 +31,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-
-import org.apache.commons.collections.ListUtils;
-import org.springframework.mock.web.MockBodyContent;
-import org.springframework.mock.web.MockJspWriter;
-
-import jakarta.servlet.jsp.JspException;
-import jakarta.servlet.jsp.tagext.TagSupport;
 
 
 /**
  * Test Case for Iterator Tag
- *
  */
 public class IteratorTagTest extends AbstractUITagTest {
 
-    IteratorTag tag;
-
+    private IteratorTag tag;
 
     public void testIteratingWithIdSpecified() throws Exception {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add("one");
         list.add("two");
         list.add("three");
@@ -107,12 +105,12 @@ public class IteratorTagTest extends AbstractUITagTest {
         IteratorTag freshTag = new IteratorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIteratingWithIdSpecified_clearTagStateSet() throws Exception {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add("one");
         list.add("two");
         list.add("three");
@@ -177,12 +175,12 @@ public class IteratorTagTest extends AbstractUITagTest {
         freshTag.setPerformClearTagStateForTagPoolingServers(true);
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIteratingWithIdSpecifiedAndNullElementOnCollection() throws Exception {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add("one");
         list.add(null);
         list.add("three");
@@ -227,12 +225,12 @@ public class IteratorTagTest extends AbstractUITagTest {
         IteratorTag freshTag = new IteratorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testIteratingWithIdSpecifiedAndNullElementOnCollection_clearTagStateSet() throws Exception {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add("one");
         list.add(null);
         list.add("three");
@@ -280,7 +278,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         freshTag.setPerformClearTagStateForTagPoolingServers(true);
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
@@ -297,7 +295,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCollectionIterator() {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add("test1");
         list.add("test2");
         list.add("test3");
@@ -317,7 +315,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testMapIterator() {
         Foo foo = new Foo();
-        HashMap map = new HashMap();
+        HashMap<String, String> map = new HashMap<>();
         map.put("test1", "123");
         map.put("test2", "456");
         map.put("test3", "789");
@@ -332,8 +330,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doStartTag();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
@@ -343,8 +340,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -354,8 +350,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -365,8 +360,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.SKIP_BODY, result);
@@ -375,8 +369,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doEndTag();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_PAGE, result);
@@ -385,13 +378,13 @@ public class IteratorTagTest extends AbstractUITagTest {
         IteratorTag freshTag = new IteratorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
     public void testMapIterator_clearTagStateSet() {
         Foo foo = new Foo();
-        HashMap map = new HashMap();
+        HashMap<String, String> map = new HashMap<>();
         map.put("test1", "123");
         map.put("test2", "456");
         map.put("test3", "789");
@@ -408,8 +401,7 @@ public class IteratorTagTest extends AbstractUITagTest {
             result = tag.doStartTag();
             setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
@@ -419,8 +411,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -430,8 +421,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -441,8 +431,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.SKIP_BODY, result);
@@ -451,8 +440,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doEndTag();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_PAGE, result);
@@ -462,7 +450,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         freshTag.setPerformClearTagStateForTagPoolingServers(true);
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
@@ -480,8 +468,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doStartTag();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
@@ -493,15 +480,16 @@ public class IteratorTagTest extends AbstractUITagTest {
         assertFalse(status.isLast());
         assertTrue(status.isFirst());
         assertEquals(0, status.getIndex());
+        assertEquals("0", status.getIndexStr());
         assertEquals(1, status.getCount());
+        assertEquals("1", status.getCountStr());
         assertTrue(status.isOdd());
         assertFalse(status.isEven());
 
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -520,8 +508,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -540,8 +527,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doEndTag();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_PAGE, result);
@@ -550,7 +536,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         IteratorTag freshTag = new IteratorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
@@ -570,8 +556,7 @@ public class IteratorTagTest extends AbstractUITagTest {
             result = tag.doStartTag();
             setComponentTagClearTagState(tag, true);  // Ensure component tag state clearing is set true (to match tag).
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
@@ -590,8 +575,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -610,8 +594,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -630,8 +613,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doEndTag();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_PAGE, result);
@@ -641,7 +623,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         freshTag.setPerformClearTagStateForTagPoolingServers(true);
         freshTag.setPageContext(pageContext);
         assertTrue("Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
@@ -669,7 +651,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testEmptyCollection() {
         Foo foo = new Foo();
-        foo.setList(new ArrayList());
+        foo.setList(new ArrayList<>());
 
         stack.push(foo);
 
@@ -695,17 +677,41 @@ public class IteratorTagTest extends AbstractUITagTest {
         validateCounter(new Integer[]{0, 1, 2, 3, 4, 5});
     }
 
-     public void testCounterWithStackValues() throws JspException {
+    public void testCounterWithDifferentLocale() throws JspException {
+        stack.getActionContext().withLocale(new Locale("fa_IR"));
+        tag.setVar("it");
+        tag.setBegin("0");
+        tag.setEnd("5");
+        List<String> expectedValues = Arrays.asList("0", "1", "2", "3", "4", "5");
+
+        ArrayList<String> values = new ArrayList<>();
+        try {
+            int result = tag.doStartTag();
+            assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
+            values.add((String) stack.findValue("it", String.class));
+        } catch (JspException e) {
+            fail(e.getMessage());
+        }
+
+        while (tag.doAfterBody() == TagSupport.EVAL_BODY_AGAIN) {
+            values.add((String) stack.findValue("top", String.class));
+        }
+
+        assertEquals(expectedValues.size(), values.size());
+        assertEquals(expectedValues, values);
+    }
+
+    public void testCounterWithStackValues() throws JspException {
         stack.getContext().put("begin", 0);
         stack.getContext().put("end", 5);
-        tag.setBegin("%{#begin}");
-        tag.setEnd("%{#end}");
+        tag.setBegin("begin");
+        tag.setEnd("end");
         validateCounter(new Integer[]{0, 1, 2, 3, 4, 5});
     }
 
     public void testCounterWithList() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -723,7 +729,6 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithArray() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
         foo.setArray(new String[]{"a", "b", "c", "d"});
 
         stack.push(foo);
@@ -738,7 +743,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithListNoEnd() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -755,7 +760,6 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithArrayNoEnd() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
         foo.setArray(new String[]{"a", "b", "c", "d"});
 
         stack.push(foo);
@@ -768,7 +772,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithList2() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -786,7 +790,6 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithArray2() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
         foo.setArray(new String[]{"a", "b", "c", "d"});
 
         stack.push(foo);
@@ -800,7 +803,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithListNoEnd2() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -815,9 +818,8 @@ public class IteratorTagTest extends AbstractUITagTest {
         validateCounter(new String[]{"c", "d"});
     }
 
-     public void testCounterWithArrayNoEnd2() throws JspException {
+    public void testCounterWithArrayNoEnd2() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
         foo.setArray(new String[]{"a", "b", "c", "d"});
 
         stack.push(foo);
@@ -841,9 +843,9 @@ public class IteratorTagTest extends AbstractUITagTest {
         validateCounter(new Integer[]{0, 2, 4});
     }
 
-     public void testCounterWithListAndStep() throws JspException {
+    public void testCounterWithListAndStep() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -861,9 +863,8 @@ public class IteratorTagTest extends AbstractUITagTest {
         validateCounter(new String[]{"a", "c"});
     }
 
-     public void testCounterWithArrayAndStep() throws JspException {
+    public void testCounterWithArrayAndStep() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
         foo.setArray(new String[]{"a", "b", "c", "d"});
 
         stack.push(foo);
@@ -879,7 +880,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithListAndStepNoEnd() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -898,7 +899,6 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithArrayAndStepNoEnd() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
         foo.setArray(new String[]{"a", "b", "c", "d"});
 
         stack.push(foo);
@@ -920,7 +920,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithListAndNegativeStep() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -940,7 +940,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithListAndNegativeStepNoEnd() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -957,9 +957,9 @@ public class IteratorTagTest extends AbstractUITagTest {
         validateCounter(new String[]{"d", "c", "b", "a"});
     }
 
-     public void testCounterWithArrayAndNegativeStep() throws JspException {
+    public void testCounterWithArrayAndNegativeStep() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -979,7 +979,7 @@ public class IteratorTagTest extends AbstractUITagTest {
 
     public void testCounterWithArrayAndNegativeStepNoEnd() throws JspException {
         Foo foo = new Foo();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         list.add("a");
         list.add("b");
         list.add("c");
@@ -997,14 +997,13 @@ public class IteratorTagTest extends AbstractUITagTest {
     }
 
     protected void validateCounter(Object[] expectedValues) throws JspException {
-        List values = new ArrayList();
+        ArrayList<Object> values = new ArrayList<>();
         try {
             int result = tag.doStartTag();
             assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
             values.add(stack.getRoot().peek());
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         while (tag.doAfterBody() == TagSupport.EVAL_BODY_AGAIN) {
@@ -1012,7 +1011,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         }
 
         assertEquals(expectedValues.length, values.size());
-        ListUtils.isEqualList(Arrays.asList(expectedValues), values);
+        assertTrue(ListUtils.isEqualList(Arrays.asList(expectedValues), values));
     }
 
     @Override
@@ -1035,8 +1034,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doStartTag();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
@@ -1046,8 +1044,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -1057,8 +1054,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_BODY_AGAIN, result);
@@ -1068,8 +1064,7 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doAfterBody();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.SKIP_BODY, result);
@@ -1082,16 +1077,14 @@ public class IteratorTagTest extends AbstractUITagTest {
         try {
             result = tag.doStartTag();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.SKIP_BODY, result);
         try {
             result = tag.doEndTag();
         } catch (JspException e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertEquals(TagSupport.EVAL_PAGE, result);
@@ -1100,13 +1093,13 @@ public class IteratorTagTest extends AbstractUITagTest {
         IteratorTag freshTag = new IteratorTag();
         freshTag.setPageContext(pageContext);
         assertFalse("Tag state after doEndTag() under default tag clear state is equal to new Tag with pageContext/parent set.  " +
-                "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
+                        "May indicate that clearTagStateForTagPoolingServers() calls are not working properly.",
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
-    class Foo {
-        private Collection list;
-        private Map map;
+    static class Foo {
+        private Collection<String> list;
+        private Map<String, String> map;
         private String[] array;
 
         public void setArray(String[] array) {
@@ -1117,19 +1110,19 @@ public class IteratorTagTest extends AbstractUITagTest {
             return array;
         }
 
-        public void setList(Collection list) {
+        public void setList(Collection<String> list) {
             this.list = list;
         }
 
-        public Collection getList() {
+        public Collection<String> getList() {
             return list;
         }
 
-        public void setMap(Map map) {
+        public void setMap(Map<String, String> map) {
             this.map = map;
         }
 
-        public Map getMap() {
+        public Map<String, String> getMap() {
             return map;
         }
     }

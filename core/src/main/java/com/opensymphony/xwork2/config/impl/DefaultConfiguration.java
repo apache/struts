@@ -112,6 +112,7 @@ import org.apache.struts2.conversion.StrutsTypeConverterHolder;
 import org.apache.struts2.ognl.OgnlGuard;
 import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.ognl.StrutsOgnlGuard;
+import org.apache.struts2.ognl.ThreadAllowlist;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -395,6 +396,7 @@ public class DefaultConfiguration implements Configuration {
                 .factory(SecurityMemberAccess.class, Scope.PROTOTYPE)
                 .factory(OgnlGuard.class, StrutsOgnlGuard.class, Scope.SINGLETON)
                 .factory(ProviderAllowlist.class, Scope.SINGLETON)
+                .factory(ThreadAllowlist.class, Scope.SINGLETON)
 
                 .factory(ValueSubstitutor.class, EnvsValueSubstitutor.class, Scope.SINGLETON);
     }

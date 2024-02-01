@@ -22,6 +22,7 @@ package org.apache.struts2.showcase.filedownload;
 
 import com.opensymphony.xwork2.Action;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.io.InputStream;
 
@@ -38,6 +39,7 @@ public class FileDownloadAction implements Action {
 		return SUCCESS;
 	}
 
+	@StrutsParameter
 	public void setInputPath(String value) {
 		inputPath = sanitizeInputPath(value);
 	}

@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.conversion;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -47,6 +48,7 @@ public class OperationsEnumAction extends ActionSupport {
 		return this.selectedOperations;
 	}
 
+	@StrutsParameter
 	public void setSelectedOperations(List<OperationsEnum> selectedOperations) {
 		this.selectedOperations = selectedOperations;
 	}

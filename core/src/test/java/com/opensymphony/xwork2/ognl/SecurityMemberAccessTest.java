@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.util.Foo;
 import ognl.MemberAccess;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.struts2.ognl.ProviderAllowlist;
+import org.apache.struts2.ognl.ThreadAllowlist;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,18 +55,21 @@ public class SecurityMemberAccessTest {
     private FooBar target;
     protected SecurityMemberAccess sma;
     private ProviderAllowlist mockedProviderAllowlist;
+    private ThreadAllowlist mockedThreadAllowlist;
 
     @Before
     public void setUp() throws Exception {
         context = new HashMap<>();
         target = new FooBar();
         mockedProviderAllowlist = mock(ProviderAllowlist.class);
+        mockedThreadAllowlist = mock(ThreadAllowlist.class);
         assignNewSma(true);
     }
 
     protected void assignNewSma(boolean allowStaticFieldAccess) {
         when(mockedProviderAllowlist.getProviderAllowlist()).thenReturn(new HashSet<>());
-        sma = new SecurityMemberAccess(mockedProviderAllowlist);
+        when(mockedThreadAllowlist.getAllowlist()).thenReturn(new HashSet<>());
+        sma = new SecurityMemberAccess(mockedProviderAllowlist, mockedThreadAllowlist);
         sma.useAllowStaticFieldAccess(String.valueOf(allowStaticFieldAccess));
     }
 

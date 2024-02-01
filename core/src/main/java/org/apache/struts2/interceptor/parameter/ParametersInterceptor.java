@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
+import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.MemberAccessValueStack;
@@ -33,6 +34,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
@@ -41,17 +43,33 @@ import org.apache.struts2.action.ParameterNameAware;
 import org.apache.struts2.action.ParameterValueAware;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.ognl.ThreadAllowlist;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
+import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
@@ -70,8 +88,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     private boolean dmiEnabled = false;
 
     protected boolean ordered = false;
+    protected boolean requireAnnotations = false;
+    protected boolean requireAnnotationsTransitionMode = false;
 
     private ValueStackFactory valueStackFactory;
+    protected ThreadAllowlist threadAllowlist;
     private ExcludedPatternsChecker excludedPatterns;
     private AcceptedPatternsChecker acceptedPatterns;
     private Set<Pattern> excludedValuePatterns = null;
@@ -82,9 +103,33 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         this.valueStackFactory = valueStackFactory;
     }
 
+    @Inject
+    public void setThreadAllowlist(ThreadAllowlist threadAllowlist) {
+        this.threadAllowlist = threadAllowlist;
+    }
+
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS, required = false)
+    public void setRequireAnnotations(String requireAnnotations) {
+        this.requireAnnotations = BooleanUtils.toBoolean(requireAnnotations);
+    }
+
+    /**
+     * When 'Transition Mode' is enabled, parameters that are not 'nested' will be accepted without annotations. What
+     * this means in practice is that all public setters on an Action will be exposed for parameter injection again, and
+     * only 'nested' parameters, i.e. public getters on an Action, will require annotations.
+     * <p>
+     * In this mode, the OGNL auto-allowlisting capability is not degraded in any way, and as such, it offers a
+     * convenient option for applications to enable the OGNL allowlist capability whilst they work through the process
+     * of annotating all their Action parameters.
+     */
+    @Inject(value = StrutsConstants.STRUTS_PARAMETERS_REQUIRE_ANNOTATIONS_TRANSITION, required = false)
+    public void setRequireAnnotationsTransitionMode(String transitionMode) {
+        this.requireAnnotationsTransitionMode = BooleanUtils.toBoolean(transitionMode);
     }
 
     @Inject
@@ -295,11 +340,166 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @return true if parameter is accepted
      */
     protected boolean isAcceptableParameter(String name, Object action) {
-        return acceptableName(name) && isAcceptableParameterNameAware(name, action);
+        return acceptableName(name) && isAcceptableParameterNameAware(name, action) && isParameterAnnotatedAndAllowlist(name, action);
     }
 
     protected boolean isAcceptableParameterNameAware(String name, Object action) {
         return !(action instanceof ParameterNameAware) || ((ParameterNameAware) action).acceptableParameterName(name);
+    }
+
+    /**
+     * Checks if the Action class member corresponding to a parameter is appropriately annotated with
+     * {@link StrutsParameter} and OGNL allowlists any necessary classes.
+     * <p>
+     * Note that this logic relies on the use of {@link DefaultAcceptedPatternsChecker#NESTING_CHARS} and may also
+     * be adversely impacted by the use of custom OGNL property accessors.
+     */
+    protected boolean isParameterAnnotatedAndAllowlist(String name, Object action) {
+        if (!requireAnnotations) {
+            return true;
+        }
+
+        long paramDepth = name.codePoints().mapToObj(c -> (char) c).filter(NESTING_CHARS::contains).count();
+        if (requireAnnotationsTransitionMode && paramDepth == 0) {
+            return true;
+        }
+
+        int nestingIndex = indexOfAny(name, NESTING_CHARS_STR);
+        String rootProperty = nestingIndex == -1 ? name : name.substring(0, nestingIndex);
+        String normalisedRootProperty = Character.toLowerCase(rootProperty.charAt(0)) + rootProperty.substring(1);
+
+        return hasValidAnnotatedMember(normalisedRootProperty, action, paramDepth);
+    }
+
+    /**
+     * Note that we check for a public field last or only if there is no valid, annotated property descriptor. This is
+     * because this check is likely to fail more often than not, as the relative use of public fields is low - so we
+     * save computation by checking this last.
+     */
+    protected boolean hasValidAnnotatedMember(String rootProperty, Object action, long paramDepth) {
+        BeanInfo beanInfo = getBeanInfo(action);
+        if (beanInfo == null) {
+            return hasValidAnnotatedField(action, rootProperty, paramDepth);
+        }
+
+        Optional<PropertyDescriptor> propDescOpt = Arrays.stream(beanInfo.getPropertyDescriptors())
+                .filter(desc -> desc.getName().equals(rootProperty)).findFirst();
+        if (!propDescOpt.isPresent()) {
+            return hasValidAnnotatedField(action, rootProperty, paramDepth);
+        }
+
+        if (hasValidAnnotatedPropertyDescriptor(propDescOpt.get(), paramDepth)) {
+            return true;
+        }
+
+        return hasValidAnnotatedField(action, rootProperty, paramDepth);
+    }
+
+    protected boolean hasValidAnnotatedPropertyDescriptor(PropertyDescriptor propDesc, long paramDepth) {
+        Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
+        if (relevantMethod == null) {
+            return false;
+        }
+        if (getPermittedInjectionDepth(relevantMethod) < paramDepth) {
+            LOG.debug(
+                    "Parameter injection for method [{}] on action [{}] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
+                    relevantMethod.getName(),
+                    relevantMethod.getDeclaringClass().getName());
+            return false;
+        }
+        if (paramDepth >= 1) {
+            allowlistClass(relevantMethod.getReturnType());
+        }
+        if (paramDepth >= 2) {
+            allowlistReturnTypeIfParameterized(relevantMethod);
+        }
+        return true;
+    }
+
+    protected void allowlistReturnTypeIfParameterized(Method method) {
+        allowlistParameterizedTypeArg(method.getGenericReturnType());
+    }
+
+    protected void allowlistParameterizedTypeArg(Type genericType) {
+        if (!(genericType instanceof ParameterizedType)) {
+            return;
+        }
+        Type[] paramTypes = ((ParameterizedType) genericType).getActualTypeArguments();
+        allowlistParamType(paramTypes[0]);
+        if (paramTypes.length > 1) {
+            // Probably useful for Map or Map-like classes
+            allowlistParamType(paramTypes[1]);
+        }
+    }
+
+    protected void allowlistParamType(Type paramType) {
+        if (paramType instanceof Class) {
+            allowlistClass((Class<?>) paramType);
+        }
+    }
+
+    protected void allowlistClass(Class<?> clazz) {
+        threadAllowlist.allowClass(clazz);
+        ClassUtils.getAllSuperclasses(clazz).forEach(threadAllowlist::allowClass);
+        ClassUtils.getAllInterfaces(clazz).forEach(threadAllowlist::allowClass);
+    }
+
+    protected boolean hasValidAnnotatedField(Object action, String fieldName, long paramDepth) {
+        Field field;
+        try {
+            field = action.getClass().getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            return false;
+        }
+        if (!Modifier.isPublic(field.getModifiers())) {
+            return false;
+        }
+        if (getPermittedInjectionDepth(field) < paramDepth) {
+            LOG.debug(
+                    "Parameter injection for field [{}] on action [{}] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
+                    fieldName,
+                    action.getClass().getName());
+            return false;
+        }
+        if (paramDepth >= 1) {
+            allowlistClass(field.getType());
+        }
+        if (paramDepth >= 2) {
+            allowlistFieldIfParameterized(field);
+        }
+        return true;
+    }
+
+    protected void allowlistFieldIfParameterized(Field field) {
+        allowlistParameterizedTypeArg(field.getGenericType());
+    }
+
+    /**
+     * @return permitted injection depth where -1 indicates not permitted
+     */
+    protected int getPermittedInjectionDepth(AnnotatedElement element) {
+        StrutsParameter annotation = getParameterAnnotation(element);
+        if (annotation == null) {
+            return -1;
+        }
+        return annotation.depth();
+    }
+
+    /**
+     * Annotation retrieval logic. Can be overridden to support extending annotations or some other form of annotation
+     * inheritance.
+     */
+    protected StrutsParameter getParameterAnnotation(AnnotatedElement element) {
+        return element.getAnnotation(StrutsParameter.class);
+    }
+
+    protected BeanInfo getBeanInfo(Object action) {
+        try {
+            return Introspector.getBeanInfo(action.getClass());
+        } catch (IntrospectionException e) {
+            LOG.warn("Error introspecting Action {} for parameter injection validation", action.getClass(), e);
+            return null;
+        }
     }
 
     /**

@@ -26,23 +26,29 @@ package org.apache.struts2.views.jsp;
  * <li>count: iterations so far, starts on 1. count is always index + 1</li>
  * <li>first: true if index == 0</li>
  * <li>even: true if (index + 1) % 2 == 0</li>
- * <li>last: true if current iteration is the last iteration</li> 
+ * <li>last: true if current iteration is the last iteration</li>
  * <li>odd: true if (index + 1) % 2 == 1</li>
  * </ul>
  * <p>Example</p>
  * <pre>
  *   &lt;s:iterator status="status" value='{0, 1}'&gt;
  *      Index: &lt;s:property value="%{#status.index}" /&gt; &lt;br /&gt;
- *      Count: &lt;s:property value="%{#status.count}" /&gt; &lt;br /&gt;  
+ *      Index Str: &lt;s:property value="%{#status.indexStr}" /&gt; &lt;br /&gt;
+ *      Count: &lt;s:property value="%{#status.count}" /&gt; &lt;br /&gt;
+ *      Count Str: &lt;s:property value="%{#status.countStr}" /&gt; &lt;br /&gt;
  *   &lt;/s:iterator&gt;
  * </pre>
- * 
+ *
  * <p>will print</p>
  * <pre>
  *      Index: 0
+ *      Index Str: 0
  *      Count: 1
+ *      Count Str: 1
  *      Index: 1
+ *      Index Str: 1
  *      Count: 2
+ *      Count Str: 2
  * </pre>
  */
 public class IteratorStatus {
@@ -56,6 +62,10 @@ public class IteratorStatus {
         return state.index + 1;
     }
 
+    public String getCountStr() {
+        return String.valueOf(state.index + 1);
+    }
+
     public boolean isEven() {
         return ((state.index + 1) % 2) == 0;
     }
@@ -66,6 +76,10 @@ public class IteratorStatus {
 
     public int getIndex() {
         return state.index;
+    }
+
+    public String getIndexStr() {
+        return String.valueOf(state.index);
     }
 
     public boolean isLast() {

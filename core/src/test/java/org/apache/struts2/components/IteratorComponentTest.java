@@ -19,23 +19,38 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.test.User;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.ognl.ThreadAllowlist;
+import org.apache.struts2.TestAction;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class IteratorComponentTest extends StrutsInternalTestCase {
 
+    private ValueStack stack;
+    private IteratorComponent ic;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        stack = ActionContext.getContext().getValueStack();
+        ic = new IteratorComponent(stack);
+        ThreadAllowlist threadAllowlist = new ThreadAllowlist();
+        ic.setThreadAllowlist(threadAllowlist);
+    }
+
     public void testIterator() throws Exception {
         // given
-        final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooAction());
 
         StringWriter out = new StringWriter();
 
-        IteratorComponent ic = new IteratorComponent(stack);
         ic.setValue("items");
         ic.setVar("val");
 
@@ -62,14 +77,53 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         assertEquals("item1 item2 item3 item4 ", out.getBuffer().toString());
     }
 
-    public void testIteratorWithBegin() throws Exception {
+    public void testSimpleIterator() {
         // given
-        final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooAction());
 
         StringWriter out = new StringWriter();
 
-        IteratorComponent ic = new IteratorComponent(stack);
+        ic.setBegin("1");
+        ic.setEnd("8");
+        ic.setStep("2");
+        ic.setStatus("status");
+
+        Property prop = new Property(stack);
+        Property status = new Property(stack);
+        status.setValue("#status.index");
+
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+
+        String body = " ";
+
+        // when
+        assertTrue(ic.start(out));
+
+        for (int i = 0; i < 4; i++) {
+            status.start(out);
+            status.end(out, body);
+            prop.start(out);
+            prop.end(out, body);
+            ic.end(out, null);
+        }
+
+        // then
+        assertEquals("0 1 1 3 2 5 3 7 ", out.getBuffer().toString());
+    }
+
+    public void testIteratorWithBegin() {
+        // given
+        stack.push(new FooAction());
+
+        StringWriter out = new StringWriter();
+
         ic.setValue("items");
         ic.setVar("val");
         ic.setBegin("1");
@@ -94,20 +148,18 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         assertEquals("item2 item3 item4 ", out.getBuffer().toString());
     }
 
-    public void testIteratorWithNulls() throws Exception {
+    public void testIteratorWithNulls() {
         // given
-        final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooAction() {
-            private List items  = Arrays.asList("1", "2", null, "4");
+            private final List<String> items = Arrays.asList("1", "2", null, "4");
 
-            public List getItems() {
+            public List<String> getItems() {
                 return items;
             }
         });
 
         StringWriter out = new StringWriter();
 
-        IteratorComponent ic = new IteratorComponent(stack);
         ic.setValue("items");
         ic.setVar("val");
         Property prop = new Property(stack);
@@ -132,15 +184,147 @@ public class IteratorComponentTest extends StrutsInternalTestCase {
         assertEquals("1, 2, , 4, ", out.getBuffer().toString());
     }
 
+    public void testIteratorWithDifferentLocale() {
+        // given
+        ActionContext.getContext().withLocale(new Locale("fa_IR"));
+        stack.push(new FooAction());
+
+        StringWriter out = new StringWriter();
+
+        ic.setBegin("1");
+        ic.setEnd("3");
+        ic.setStatus("status");
+
+        Property prop = new Property(stack);
+        Property status = new Property(stack);
+        status.setValue("#status.count");
+
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+
+        String body = ",";
+
+        // when
+        assertTrue(ic.start(out));
+
+        for (int i = 0; i < 3; i++) {
+            status.start(out);
+            status.end(out, body);
+
+            prop.start(out);
+            prop.end(out, body);
+            ic.end(out, null);
+        }
+
+        // then
+        assertEquals("1,1,2,2,3,3,", out.getBuffer().toString());
+    }
+
+    public void testListOfBeansIterator() {
+        // given
+        TestAction action = new TestAction();
+        action.setList2(new ArrayList<User>() {{
+            add(new User("Anton"));
+            add(new User("Tym"));
+            add(new User("Luk"));
+        }});
+        stack.push(action);
+
+        StringWriter out = new StringWriter();
+
+        ic.setValue("list2");
+        ic.setStatus("status");
+
+        Property prop = new Property(stack);
+        prop.setValue("name");
+        Property status = new Property(stack);
+        status.setValue("#status.indexStr");
+
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+
+        String body = ",";
+
+        // when
+        assertTrue(ic.start(out));
+
+        for (int i = 0; i < 3; i++) {
+            status.start(out);
+            status.end(out, body);
+
+            prop.start(out);
+            prop.end(out, body);
+
+            ic.end(out, null);
+        }
+
+        // then
+        assertEquals("0,Anton,1,Tym,2,Luk,", out.getBuffer().toString());
+    }
+
+    public void testArrayOfBeansIterator() {
+        // given
+        TestAction action = new TestAction();
+        action.setObjectArray(new ArrayList<User>() {{
+            add(new User("Anton"));
+            add(new User("Tym"));
+            add(new User("Luk"));
+        }}.toArray());
+        stack.push(action);
+
+        StringWriter out = new StringWriter();
+
+        ic.setValue("objectArray");
+        ic.setStatus("status");
+
+        Property prop = new Property(stack);
+        prop.setValue("name");
+        Property status = new Property(stack);
+        status.setValue("#status.countStr");
+
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+        ic.getComponentStack().push(status);
+        ic.getComponentStack().push(prop);
+
+        String body = " ";
+
+        // when
+        assertTrue(ic.start(out));
+
+        for (int i = 0; i < 3; i++) {
+            status.start(out);
+            status.end(out, body);
+
+            prop.start(out);
+            prop.end(out, body);
+
+            ic.end(out, null);
+        }
+
+        // then
+        assertEquals("1 Anton 2 Tym 3 Luk ", out.getBuffer().toString());
+    }
+
     static class FooAction {
 
-        private List items;
+        private final List<String> items;
 
         public FooAction() {
             items = Arrays.asList("item1", "item2", "item3", "item4");
         }
 
-        public List getItems() {
+        public List<String> getItems() {
             return items;
         }
     }

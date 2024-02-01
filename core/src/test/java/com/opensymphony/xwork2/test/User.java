@@ -37,6 +37,12 @@ public class User implements UserMarker {
     private String email2;
     private String name;
 
+    public User() {
+    }
+
+    public User(String name) {
+        this.name = name;
+    }
 
     public void setCollection(Collection collection) {
         this.collection = collection;

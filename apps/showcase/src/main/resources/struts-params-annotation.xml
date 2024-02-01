@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,36 +18,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.showcase.conversion;
+-->
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 6.0//EN"
+        "https://struts.apache.org/dtds/struts-6.0.dtd">
 
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.interceptor.parameter.StrutsParameter;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-/**
- * @version $Date$ $Id$
- */
-public class AddressAction extends ActionSupport {
-
-	private Set<Address> addresses = new LinkedHashSet<>();
-
-	public String input() throws Exception {
-		return SUCCESS;
-	}
-
-	public String submit() throws Exception {
-		System.out.println(addresses);
-		return SUCCESS;
-	}
-
-	@StrutsParameter(depth = 2)
-	public Set<Address> getAddresses() {
-		return addresses;
-	}
-
-	public void setAddresses(Set<Address> addresses) {
-		this.addresses = addresses;
-	}
-}
+<struts>
+    <package name="params-annotation" extends="velocity-default" namespace="/paramsannotation">
+        <action name="test" class="org.apache.struts2.showcase.action.ParamsAnnotationAction">
+            <result type="velocity">/WEB-INF/paramsannotation.vm</result>
+        </action>
+    </package>
+</struts>

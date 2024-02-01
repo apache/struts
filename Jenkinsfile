@@ -67,7 +67,7 @@ pipeline {
         MAVEN_OPTS = "-Xmx1024m"
       }
       stages {
-        stage('Test') {
+        stage('Test & Coverage') {
           steps {
             sh './mvnw -B verify -Pcoverage -DskipAssembly --no-transfer-progress'
           }
@@ -86,7 +86,7 @@ pipeline {
           }
           steps {
             withCredentials([string(credentialsId: 'asf-struts-sonarcloud', variable: 'SONARCLOUD_TOKEN')]) {
-              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+              sh './mvnw -B -Pcoverage -DskipAssembly -Dsonar.login=${SONARCLOUD_TOKEN} verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --no-transfer-progress'
             }
           }
         }
@@ -100,7 +100,7 @@ pipeline {
             dir("local-snapshots-dir/") {
               deleteDir()
             }
-            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly'
+            sh './mvnw -B source:jar javadoc:jar -DskipTests -DskipAssembly --no-transfer-progress'
           }
         }
         stage('Deploy Snapshot') {
@@ -111,7 +111,7 @@ pipeline {
           }
           steps {
             withCredentials([file(credentialsId: 'lukaszlenart-repository-access-token', variable: 'CUSTOM_SETTINGS')]) {
-              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly'
+              sh './mvnw -s \${CUSTOM_SETTINGS} deploy -DskipTests -DskipAssembly --no-transfer-progress'
             }
           }
         }
@@ -123,7 +123,7 @@ pipeline {
             }
           }
           steps {
-            sh './mvnw -B package -DskipTests'
+            sh './mvnw -B package -DskipTests --no-transfer-progress'
             sshPublisher(publishers: [
                 sshPublisherDesc(
                     configName: 'Nightlies',

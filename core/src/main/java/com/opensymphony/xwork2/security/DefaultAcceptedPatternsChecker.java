@@ -25,11 +25,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableSet;
+import static java.util.stream.Collectors.joining;
 
 public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
 
@@ -38,6 +40,12 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
     public static final String[] ACCEPTED_PATTERNS = {
             "\\w+((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w-?|[\\u4e00-\\u9fa5]-?)+'])|(\\('(\\w-?|[\\u4e00-\\u9fa5]-?)+'\\)))*"
     };
+
+    /**
+     * Must match {@link #ACCEPTED_PATTERNS} RegEx. Signifies characters which result in a nested lookup via OGNL.
+     */
+    public static final Set<Character> NESTING_CHARS = unmodifiableSet(new HashSet<>(asList('.', '[', '(')));
+    public static final String NESTING_CHARS_STR = NESTING_CHARS.stream().map(String::valueOf).collect(joining());
 
     public static final String[] DMI_AWARE_ACCEPTED_PATTERNS = {
             "\\w+([:]?\\w+)?((\\.\\w+)|(\\[\\d+])|(\\(\\d+\\))|(\\['(\\w-?|[\\u4e00-\\u9fa5]-?)+'])|(\\('(\\w-?|[\\u4e00-\\u9fa5]-?)+'\\)))*([!]?\\w+)?"
@@ -74,7 +82,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
                 newAcceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
             }
         } finally {
-            acceptedPatterns = Collections.unmodifiableSet(newAcceptedPatterns);
+            acceptedPatterns = unmodifiableSet(newAcceptedPatterns);
         }
     }
 
@@ -85,7 +93,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
 
     @Override
     public void setAcceptedPatterns(String[] additionalPatterns) {
-        setAcceptedPatterns(new HashSet<>(Arrays.asList(additionalPatterns)));
+        setAcceptedPatterns(new HashSet<>(asList(additionalPatterns)));
     }
 
     @Override
@@ -97,7 +105,7 @@ public class DefaultAcceptedPatternsChecker implements AcceptedPatternsChecker {
                 newAcceptedPatterns.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
             }
         } finally {
-            acceptedPatterns = Collections.unmodifiableSet(newAcceptedPatterns);
+            acceptedPatterns = unmodifiableSet(newAcceptedPatterns);
         }
     }
 

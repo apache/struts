@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,36 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.showcase.conversion;
+package org.apache.struts2.showcase.model;
 
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import static java.util.Collections.singletonMap;
 
-/**
- * @version $Date$ $Id$
- */
-public class AddressAction extends ActionSupport {
+public class MyDto {
 
-	private Set<Address> addresses = new LinkedHashSet<>();
+    public String str = "no";
 
-	public String input() throws Exception {
-		return SUCCESS;
-	}
+    public Map<String, String> map = new HashMap<>(singletonMap("key", "no"));
+    public int[] array = new int[]{0};
 
-	public String submit() throws Exception {
-		System.out.println(addresses);
-		return SUCCESS;
-	}
-
-	@StrutsParameter(depth = 2)
-	public Set<Address> getAddresses() {
-		return addresses;
-	}
-
-	public void setAddresses(Set<Address> addresses) {
-		this.addresses = addresses;
-	}
+    @Override
+    public String toString() {
+        return "str=" + str + ", map=" + map + ", array=" + Arrays.toString(array);
+    }
 }

@@ -170,6 +170,7 @@
     <bean type="org.apache.struts2.ognl.OgnlGuard" name="struts"
           class="org.apache.struts2.ognl.StrutsOgnlGuard"/>
     <bean class="org.apache.struts2.ognl.ProviderAllowlist"/>
+    <bean class="org.apache.struts2.ognl.ThreadAllowlist"/>
 
     <bean type="com.opensymphony.xwork2.util.TextParser" name="struts"
           class="com.opensymphony.xwork2.util.OgnlTextParser" scope="singleton"/>

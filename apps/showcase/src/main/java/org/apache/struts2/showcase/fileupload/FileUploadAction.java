@@ -23,6 +23,7 @@ package org.apache.struts2.showcase.fileupload;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.io.File;
 import java.util.List;
@@ -66,6 +67,7 @@ public class FileUploadAction extends ActionSupport implements UploadedFilesAwar
         return caption;
     }
 
+    @StrutsParameter
     public void setCaption(String caption) {
         this.caption = caption;
     }

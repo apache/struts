@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.showcase.validation;
 
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+
 import java.sql.Date;
 
 /**
@@ -44,6 +46,7 @@ public class FieldValidatorsExampleAction extends AbstractValidationActionSuppor
         return dateValidatorField;
     }
 
+    @StrutsParameter
     public void setDateValidatorField(Date dateValidatorField) {
         this.dateValidatorField = dateValidatorField;
     }
@@ -52,6 +55,7 @@ public class FieldValidatorsExampleAction extends AbstractValidationActionSuppor
         return emailValidatorField;
     }
 
+    @StrutsParameter
     public void setEmailValidatorField(String emailValidatorField) {
         this.emailValidatorField = emailValidatorField;
     }
@@ -60,6 +64,7 @@ public class FieldValidatorsExampleAction extends AbstractValidationActionSuppor
         return integerValidatorField;
     }
 
+    @StrutsParameter
     public void setIntegerValidatorField(Integer integerValidatorField) {
         this.integerValidatorField = integerValidatorField;
     }
@@ -68,6 +73,7 @@ public class FieldValidatorsExampleAction extends AbstractValidationActionSuppor
         return regexValidatorField;
     }
 
+    @StrutsParameter
     public void setRegexValidatorField(String regexValidatorField) {
         this.regexValidatorField = regexValidatorField;
     }
@@ -76,6 +82,7 @@ public class FieldValidatorsExampleAction extends AbstractValidationActionSuppor
         return requiredStringValidatorField;
     }
 
+    @StrutsParameter
     public void setRequiredStringValidatorField(String requiredStringValidatorField) {
         this.requiredStringValidatorField = requiredStringValidatorField;
     }
@@ -84,6 +91,7 @@ public class FieldValidatorsExampleAction extends AbstractValidationActionSuppor
         return requiredValidatorField;
     }
 
+    @StrutsParameter
     public void setRequiredValidatorField(String requiredValidatorField) {
         this.requiredValidatorField = requiredValidatorField;
     }
@@ -92,6 +100,7 @@ public class FieldValidatorsExampleAction extends AbstractValidationActionSuppor
         return stringLengthValidatorField;
     }
 
+    @StrutsParameter
     public void setStringLengthValidatorField(String stringLengthValidatorField) {
         this.stringLengthValidatorField = stringLengthValidatorField;
     }
@@ -100,6 +109,7 @@ public class FieldValidatorsExampleAction extends AbstractValidationActionSuppor
         return fieldExpressionValidatorField;
     }
 
+    @StrutsParameter
     public void setFieldExpressionValidatorField(
             String fieldExpressionValidatorField) {
         this.fieldExpressionValidatorField = fieldExpressionValidatorField;
@@ -109,6 +119,7 @@ public class FieldValidatorsExampleAction extends AbstractValidationActionSuppor
         return urlValidatorField;
     }
 
+    @StrutsParameter
     public void setUrlValidatorField(String urlValidatorField) {
         this.urlValidatorField = urlValidatorField;
     }

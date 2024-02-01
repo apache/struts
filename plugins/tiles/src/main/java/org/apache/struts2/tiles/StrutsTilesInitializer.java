@@ -26,7 +26,7 @@ import org.apache.tiles.core.startup.AbstractTilesInitializer;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.servlet.ServletApplicationContext;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 public class StrutsTilesInitializer extends AbstractTilesInitializer {
 

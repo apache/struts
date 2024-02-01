@@ -33,7 +33,7 @@ public interface HttpMethodAware {
     /**
      * Notifies action about http method used to perform request
      *
-     * @param httpMethod {@link javax.servlet.http.HttpServletRequest#getMethod()} translated to enum
+     * @param httpMethod {@link jakarta.servlet.http.HttpServletRequest#getMethod()} translated to enum
      */
     void setMethod(HttpMethod httpMethod);
 

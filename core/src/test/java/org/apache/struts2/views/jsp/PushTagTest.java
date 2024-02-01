@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspException;
 
 
 /**

@@ -18,12 +18,6 @@
  */
 package org.apache.struts2.interceptor.exec;
 
-import com.mockobjects.servlet.MockHttpServletRequest;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import org.apache.struts2.StrutsInternalTestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -40,6 +34,13 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.struts2.StrutsInternalTestCase;
+import org.springframework.mock.web.MockHttpServletRequest;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 /**
  * Test case for BackgroundProcessTest.

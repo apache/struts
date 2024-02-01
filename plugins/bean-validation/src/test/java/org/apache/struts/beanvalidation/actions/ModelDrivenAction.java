@@ -22,7 +22,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import org.apache.struts.beanvalidation.models.Person;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 public class ModelDrivenAction extends ActionSupport implements ModelDriven<Person>, ModelDrivenActionInterface {
 

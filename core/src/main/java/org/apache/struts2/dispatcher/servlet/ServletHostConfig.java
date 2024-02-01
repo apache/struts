@@ -20,8 +20,8 @@ package org.apache.struts2.dispatcher.servlet;
 
 import org.apache.struts2.util.MakeIterator;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
 import java.util.Iterator;
 
 import org.apache.struts2.dispatcher.HostConfig;

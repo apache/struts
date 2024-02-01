@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>6.4.0-SNAPSHOT</version>
+        <version>7.0.0-M3-SNAPSHOT</version>
     </parent>
     <artifactId>struts2-core</artifactId>
     <packaging>jar</packaging>
@@ -91,7 +91,6 @@
             </plugin>
         </plugins>
     </build>
-
     <profiles>
         <profile>
             <id>build-maven</id>
@@ -116,7 +115,8 @@
                                     The tags interact with the framework's validation and
                                     internationalization features;
                                     to ensure that input is correct and output is localized.
-                                    The Struts Tags can be used with JSP FreeMarker or Velocity."</arg>
+                                    The Struts Tags can be used with JSP FreeMarker or Velocity."
+                                </arg>
                                 <arg>-AoutTemplatesDir=${basedir}/src/site/resources/tags</arg>
                             </compilerArgs>
                         </configuration>
@@ -172,6 +172,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
@@ -180,8 +181,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-freemarker-jakarta</artifactId>
         </dependency>
 
         <dependency>
@@ -190,14 +191,14 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -214,14 +215,13 @@
 
         <!-- File upload -->
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -250,6 +250,11 @@
             <artifactId>spring-context-support</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -271,26 +276,7 @@
 
         <dependency>
             <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-jdk1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-alt-jdk1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-alt-jdk1.3-j2ee1.3</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
-            <scope>test</scope>
+            <artifactId>mockobjects-core</artifactId>
         </dependency>
 
         <dependency>
@@ -311,11 +297,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-core</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>

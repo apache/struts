@@ -68,14 +68,14 @@ public class RestfulActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetMappingNoSlash() {
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setupGetServletPath("noslash");
+        request.setServletPath("noslash");
 
         assertNull(mapper.getMapping(request, null));
     }
 
     public void testGetMapping() {
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setupGetServletPath("/myapp/view/12");
+        request.setServletPath("/myapp/view/12");
 
         ActionMapping am = mapper.getMapping(request, null);
         assertEquals("myapp", am.getName());
@@ -85,7 +85,7 @@ public class RestfulActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetMapping2() {
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setupGetServletPath("/myapp/12/region/europe");
+        request.setServletPath("/myapp/12/region/europe");
 
         ActionMapping am = mapper.getMapping(request, null);
         assertEquals("myapp", am.getName());
@@ -96,7 +96,7 @@ public class RestfulActionMapperTest extends StrutsInternalTestCase {
 
     public void testGetMapping3() {
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setupGetServletPath("/myapp/view/12/region/europe");
+        request.setServletPath("/myapp/view/12/region/europe");
 
         ActionMapping am = mapper.getMapping(request, null);
         assertEquals("myapp", am.getName());

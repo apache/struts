@@ -50,11 +50,11 @@ import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.TagLibraryModelProvider;
 import org.apache.struts2.views.util.ContextUtil;
 
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.GenericServlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -561,10 +561,10 @@ public class FreemarkerManager {
         model.putAll(standard);
 
         // support for JSP exception pages, exposing the servlet or JSP exception
-        Throwable exception = (Throwable) request.getAttribute("javax.servlet.error.exception");
+        Throwable exception = (Throwable) request.getAttribute("jakarta.servlet.error.exception");
 
         if (exception == null) {
-            exception = (Throwable) request.getAttribute("javax.servlet.error.JspException");
+            exception = (Throwable) request.getAttribute("jakarta.servlet.error.JspException");
         }
 
         if (exception != null) {

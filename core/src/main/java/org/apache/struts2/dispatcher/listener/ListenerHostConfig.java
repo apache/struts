@@ -20,7 +20,7 @@ package org.apache.struts2.dispatcher.listener;
 
 import org.apache.struts2.dispatcher.HostConfig;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.util.Iterator;
 import java.util.Collections;
 

@@ -18,8 +18,8 @@
  */
 package org.apache.struts2.interceptor.csp;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * CspSettings interface used by the {@link CspInterceptor} to add the CSP header to the response.

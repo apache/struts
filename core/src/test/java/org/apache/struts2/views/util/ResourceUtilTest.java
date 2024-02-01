@@ -21,7 +21,7 @@ package org.apache.struts2.views.util;
  * <code>ResourceUtilTest</code>
  *
  */
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 

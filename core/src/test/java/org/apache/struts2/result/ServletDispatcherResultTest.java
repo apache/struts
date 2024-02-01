@@ -28,9 +28,9 @@ import org.apache.struts2.StrutsInternalTestCase;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ServletDispatcherResultTest extends StrutsInternalTestCase implements StrutsStatics {
 
@@ -72,7 +72,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
 
         Mock requestMock = new Mock(HttpServletRequest.class);
         requestMock.expectAndReturn("getAttribute", "struts.actiontag.invocation", null);
-        requestMock.expectAndReturn("getAttribute", "javax.servlet.include.servlet_path", null);
+        requestMock.expectAndReturn("getAttribute", "jakarta.servlet.include.servlet_path", null);
         requestMock.expectAndReturn("getRequestDispatcher", C.args(C.eq("foo.jsp")), dispatcherMock.proxy());
         requestMock.expect("setAttribute", C.ANY_ARGS); // this is a bad mock, but it works
         requestMock.expect("setAttribute", C.ANY_ARGS); // this is a bad mock, but it works
@@ -105,7 +105,7 @@ public class ServletDispatcherResultTest extends StrutsInternalTestCase implemen
 
         Mock requestMock = new Mock(HttpServletRequest.class);
         requestMock.expectAndReturn("getAttribute", "struts.actiontag.invocation", null);
-        requestMock.expectAndReturn("getAttribute", "javax.servlet.include.servlet_path", null);
+        requestMock.expectAndReturn("getAttribute", "jakarta.servlet.include.servlet_path", null);
         requestMock.expectAndReturn("getRequestDispatcher", C.args(C.eq("foo.jsp?bar=1")), dispatcherMock.proxy());
         requestMock.expect("setAttribute", C.ANY_ARGS); // this is a bad mock, but it works
         requestMock.expect("setAttribute", C.ANY_ARGS); // this is a bad mock, but it works

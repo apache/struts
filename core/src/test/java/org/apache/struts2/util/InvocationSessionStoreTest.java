@@ -18,20 +18,21 @@
  */
 package org.apache.struts2.util;
 
-import com.mockobjects.dynamic.Mock;
-import com.mockobjects.servlet.MockPageContext;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.struts2.StrutsInternalTestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.struts2.StrutsInternalTestCase;
+import org.springframework.mock.web.MockPageContext;
+
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**

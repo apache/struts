@@ -29,7 +29,7 @@ import org.jfree.chart.JFreeChart;
 
 import java.io.OutputStream;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: description -->

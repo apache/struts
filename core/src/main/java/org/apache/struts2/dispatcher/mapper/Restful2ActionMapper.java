@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.url.UrlDecoder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -44,7 +44,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
     private UrlDecoder decoder;
 
     public Restful2ActionMapper() {
-    	setSlashesInActionNames("true");
+    setSlashesInActionNames("true");
     }
 
     @Inject
@@ -55,12 +55,12 @@ public class Restful2ActionMapper extends DefaultActionMapper {
     /*
     * (non-Javadoc)
     *
-    * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
+    * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(jakarta.servlet.http.HttpServletRequest)
     */
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
-    	if (!isSlashesInActionNames()) {
-    		throw new IllegalStateException("This action mapper requires the setting 'slashesInActionNames' to be set to 'true'");
-    	}
+       if (!isSlashesInActionNames()) {
+            throw new IllegalStateException("This action mapper requires the setting 'slashesInActionNames' to be set to 'true'");
+       }
         ActionMapping mapping = super.getMapping(request, configManager);
 
         if (mapping == null) {
@@ -113,7 +113,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                 }
 
                 if (idParameterName != null && lastSlashPos > -1) {
-                	actionName = actionName.substring(0, lastSlashPos);
+                    actionName = actionName.substring(0, lastSlashPos);
                 }
             }
 
@@ -156,7 +156,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                         mapping.getParams().putAll(parameters);
                     }
                 } catch (Exception e) {
-                	LOG.warn("Unable to determine parameters from the url", e);
+                    LOG.warn("Unable to determine parameters from the url", e);
                 }
                 mapping.setName(actionName.substring(actionSlashPos+1));
             }
@@ -189,12 +189,12 @@ public class Restful2ActionMapper extends DefaultActionMapper {
         }
     }
 
-	public String getIdParameterName() {
-		return idParameterName;
-	}
+    public String getIdParameterName() {
+        return idParameterName;
+    }
 
-	@Inject(required=false,value=StrutsConstants.STRUTS_ID_PARAMETER_NAME)
-	public void setIdParameterName(String idParameterName) {
-		this.idParameterName = idParameterName;
-	}
+    @Inject(required = false, value = StrutsConstants.STRUTS_ID_PARAMETER_NAME)
+    public void setIdParameterName(String idParameterName) {
+        this.idParameterName = idParameterName;
+    }
 }

@@ -20,7 +20,7 @@ package org.apache.struts2.dispatcher.multipart;
 
 import java.io.File;
 
-public class StrutsUploadedFile implements UploadedFile {
+public class StrutsUploadedFile implements UploadedFile<File> {
 
     private final File file;
     private final String contentType;
@@ -28,6 +28,7 @@ public class StrutsUploadedFile implements UploadedFile {
 
     /**
      * Use builder instead of constructor
+     *
      * @param file an uploaded file
      * @deprecated since Struts 6.4.0
      */
@@ -87,9 +88,9 @@ public class StrutsUploadedFile implements UploadedFile {
     @Override
     public String toString() {
         return "StrutsUploadedFile{" +
-            "contentType='" + contentType + '\'' +
-            ", originalName='" + originalName + '\'' +
-            '}';
+                "contentType='" + contentType + '\'' +
+                ", originalName='" + originalName + '\'' +
+                '}';
     }
 
     public static class Builder {
@@ -115,7 +116,7 @@ public class StrutsUploadedFile implements UploadedFile {
             return this;
         }
 
-        public UploadedFile build() {
+        public UploadedFile<File> build() {
             return new StrutsUploadedFile(this.file, this.contentType, this.originalName);
         }
     }

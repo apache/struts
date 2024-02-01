@@ -26,8 +26,8 @@ import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.DispatchRequest;
 import org.apache.tiles.request.servlet.ServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;

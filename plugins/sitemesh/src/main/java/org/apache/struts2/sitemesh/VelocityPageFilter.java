@@ -25,7 +25,7 @@ import com.opensymphony.module.sitemesh.Factory;
 import com.opensymphony.module.sitemesh.Config;
 import com.opensymphony.xwork2.inject.Inject;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 
 import org.apache.struts2.views.velocity.VelocityManager;
 

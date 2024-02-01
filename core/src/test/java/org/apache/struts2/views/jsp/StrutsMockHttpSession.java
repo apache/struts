@@ -22,7 +22,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.UUID;
 
-import com.mockobjects.servlet.MockHttpSession;
+import org.springframework.mock.web.MockHttpSession;
 
 
 /**

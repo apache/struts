@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static jakarta.servlet.http.HttpServletResponse.*;
 
 public class DefaultHttpHeadersTest extends TestCase {
 

@@ -21,13 +21,14 @@ package org.apache.struts2.interceptor;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -134,7 +135,7 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
      */
     public String intercept(ActionInvocation invocation) throws Exception {
         HttpServletRequest request = invocation.getInvocationContext().getServletRequest();
-        if (!(request instanceof MultiPartRequestWrapper)) {
+        if (!(request instanceof MultiPartRequestWrapper multiWrapper)) {
             if (LOG.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
                 LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY, new String[]{proxy.getNamespace(), proxy.getActionName()}));
@@ -142,33 +143,30 @@ public class ActionFileUploadInterceptor extends AbstractFileUploadInterceptor {
             return invocation.invoke();
         }
 
-        MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
-
-        if (!(invocation.getAction() instanceof UploadedFilesAware)) {
+        if (!(invocation.getAction() instanceof UploadedFilesAware action)) {
             LOG.debug("Action: {} doesn't implement: {}, ignoring file upload",
                 invocation.getProxy().getActionName(),
                 UploadedFilesAware.class.getSimpleName());
             return invocation.invoke();
         }
-        UploadedFilesAware action = (UploadedFilesAware) invocation.getAction();
 
         applyValidation(action, multiWrapper);
 
         // bind allowed Files
         Enumeration<String> fileParameterNames = multiWrapper.getFileParameterNames();
-        List<UploadedFile> acceptedFiles = new ArrayList<>();
+        List<UploadedFile<File>> acceptedFiles = new ArrayList<>();
 
         while (fileParameterNames != null && fileParameterNames.hasMoreElements()) {
             // get the value of this input tag
             String inputName = fileParameterNames.nextElement();
-            UploadedFile[] uploadedFiles = multiWrapper.getFiles(inputName);
+            UploadedFile<File>[] uploadedFiles = multiWrapper.getFiles(inputName);
 
             if (uploadedFiles == null || uploadedFiles.length == 0) {
                 if (LOG.isWarnEnabled()) {
                     LOG.warn(getTextMessage(action, STRUTS_MESSAGES_INVALID_FILE_KEY, new String[]{inputName}));
                 }
             } else {
-                for (UploadedFile uploadedFile : uploadedFiles) {
+                for (UploadedFile<File> uploadedFile : uploadedFiles) {
                     if (acceptFile(action, uploadedFile, uploadedFile.getOriginalName(), uploadedFile.getContentType(), inputName)) {
                         acceptedFiles.add(uploadedFile);
                     }

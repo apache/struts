@@ -25,6 +25,7 @@ import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ import java.util.List;
 public class FileUploadAction extends ActionSupport implements UploadedFilesAware {
 
     private String contentType;
-    private UploadedFile uploadedFile;
+    private UploadedFile<File> uploadedFile;
     private String fileName;
     private String caption;
     private String originalName;
@@ -80,7 +81,7 @@ public class FileUploadAction extends ActionSupport implements UploadedFilesAwar
     }
 
     @Override
-    public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
+    public void withUploadedFiles(List<UploadedFile<File>> uploadedFiles) {
         this.uploadedFile = uploadedFiles.get(0);
         this.fileName = uploadedFile.getName();
         this.contentType = uploadedFile.getContentType();

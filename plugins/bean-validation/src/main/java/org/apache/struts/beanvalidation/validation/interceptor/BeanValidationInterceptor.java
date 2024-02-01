@@ -35,9 +35,9 @@ import org.apache.struts.beanvalidation.constraints.ValidationGroup;
 import org.apache.struts.beanvalidation.validation.constant.ValidatorConstants;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.groups.Default;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import jakarta.validation.groups.Default;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;

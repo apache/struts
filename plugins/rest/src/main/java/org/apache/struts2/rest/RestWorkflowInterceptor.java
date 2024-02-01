@@ -31,7 +31,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import java.util.HashMap;
 import java.util.Map;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 /**
  * An interceptor that makes sure there are not validation errors before allowing the interceptor chain to continue.

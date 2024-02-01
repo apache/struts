@@ -18,13 +18,14 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.opensymphony.xwork2.inject.Container;
-import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.jsp.JspException;
+
 import org.apache.struts2.components.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspException;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  */
@@ -59,7 +60,7 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
 
     /**
      * Define method to populate component state based on the Tag parameters.
-     * <p>
+     *
      * Descendants should override this method for custom behaviour, but should <em>always</em> call the ancestor method when doing so.
      */
     protected void populateParams() {
@@ -68,7 +69,7 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
 
     /**
      * Specialized method to populate the performClearTagStateForTagPoolingServers state of the Component to match the value set in the Tag.
-     * <p>
+     *
      * Generally only unit tests would call this method directly, to avoid calling the whole populateParams() chain again after doStartTag()
      * has been called.  Doing that can break tag / component state behaviour, but unit tests still need a way to set the
      * performClearTagStateForTagPoolingServers state for the component (which only comes into being after doStartTag() is called).

@@ -29,6 +29,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.struts2.views.velocity.VelocityManagerInterface;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
@@ -85,9 +86,9 @@ public class VelocityResult extends StrutsResultSupport {
     private static final long serialVersionUID = 7268830767762559424L;
 
     private static final Logger LOG = LogManager.getLogger(VelocityResult.class);
-    
+
     private String defaultEncoding;
-    private VelocityManager velocityManager;
+    private VelocityManagerInterface velocityManager;
     private JspFactory jspFactory = JspFactory.getDefaultFactory();
 
     public VelocityResult() {
@@ -97,15 +98,23 @@ public class VelocityResult extends StrutsResultSupport {
     public VelocityResult(String location) {
         super(location);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setDefaultEncoding(String val) {
         defaultEncoding = val;
     }
-    
+
     @Inject
-    public void setVelocityManager(VelocityManager mgr) {
+    public void setVelocityManager(VelocityManagerInterface mgr) {
         this.velocityManager = mgr;
+    }
+
+    /**
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
+    public void setVelocityManager(VelocityManager mgr) {
+        setVelocityManager((VelocityManagerInterface) mgr);
     }
 
     /**
@@ -232,7 +241,23 @@ public class VelocityResult extends StrutsResultSupport {
      * @param location        the name of the template that is being used
      * @return the a minted Velocity context.
      */
-    protected Context createContext(VelocityManager velocityManager, ValueStack stack, HttpServletRequest request, HttpServletResponse response, String location) {
+    protected Context createContext(VelocityManagerInterface velocityManager,
+                                    ValueStack stack,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    String location) {
         return velocityManager.createContext(stack, request, response);
+    }
+
+    /**
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
+    protected Context createContext(VelocityManager velocityManager,
+                                    ValueStack stack,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    String location) {
+        return createContext((VelocityManagerInterface) velocityManager, stack, request, response, location);
     }
 }

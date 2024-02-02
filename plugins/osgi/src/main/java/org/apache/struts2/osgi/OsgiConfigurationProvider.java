@@ -24,15 +24,15 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.PackageProvider;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.finder.ClassLoaderInterface;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.osgi.host.OsgiHost;
 import org.apache.struts2.osgi.loaders.VelocityBundleResourceLoader;
 import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.struts2.views.velocity.VelocityManagerInterface;
 import org.apache.velocity.app.Velocity;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -40,7 +40,6 @@ import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 
 import javax.servlet.ServletContext;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -255,14 +254,25 @@ public class OsgiConfigurationProvider implements PackageProvider, BundleListene
     }
 
     @Inject
-    public void setVelocityManager(VelocityManager vm) {
-        LOG.trace("OSGi ConfigurationProvider - setVelocityManager() called - VelocityManager: [{}]", vm);
-
+    public void setVelocityManager(VelocityManagerInterface vmi) {
+        LOG.trace("OSGi ConfigurationProvider - setVelocityManager() called - VelocityManager: [{}]", vmi);
+        if (!(vmi instanceof VelocityManager)) {
+            return;
+        }
+        VelocityManager vm = (VelocityManager) vmi;
         Properties props = new Properties();
         props.setProperty("osgi.resource.loader.description", "OSGI bundle loader");
         props.setProperty("osgi.resource.loader.class", VelocityBundleResourceLoader.class.getName());
         props.setProperty(Velocity.RESOURCE_LOADER, "strutsfile,strutsclass,osgi");
         vm.setVelocityProperties(props);
+    }
+
+    /**
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
+    public void setVelocityManager(VelocityManager mgr) {
+        setVelocityManager((VelocityManagerInterface) mgr);
     }
 
     @Inject

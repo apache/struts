@@ -92,7 +92,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     private static final Logger LOG = LogManager.getLogger(PortletVelocityResult.class);
 
     private String defaultEncoding;
-    private VelocityManagerInterface velocityManager;
+    private transient VelocityManagerInterface velocityManager;
     private JspFactory jspFactory = JspFactory.getDefaultFactory();
 
     public PortletVelocityResult() {

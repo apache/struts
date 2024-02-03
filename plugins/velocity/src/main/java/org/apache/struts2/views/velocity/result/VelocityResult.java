@@ -88,7 +88,7 @@ public class VelocityResult extends StrutsResultSupport {
     private static final Logger LOG = LogManager.getLogger(VelocityResult.class);
 
     private String defaultEncoding;
-    private VelocityManagerInterface velocityManager;
+    private transient VelocityManagerInterface velocityManager;
     private JspFactory jspFactory = JspFactory.getDefaultFactory();
 
     public VelocityResult() {

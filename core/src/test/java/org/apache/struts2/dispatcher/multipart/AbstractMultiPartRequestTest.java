@@ -30,7 +30,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 abstract class AbstractMultiPartRequestTest {
 
-    protected static Path tempDir;
+    protected static String tempDir;
 
     protected MockHttpServletRequest mockRequest;
 
@@ -52,13 +51,11 @@ abstract class AbstractMultiPartRequestTest {
     abstract protected AbstractMultiPartRequest<File> createMultipartRequest();
 
     @BeforeClass
-    public static void beforeClass() {
-        String dirProp = System.getProperty("java.io.tmpdir");
-        if (Path.of(dirProp).toFile().exists()) {
-            tempDir = Path.of(dirProp, "multi-part-test");
-        } else {
-            tempDir = Path.of("target", "multi-part-test");
-        }
+    public static void beforeClass() throws IOException {
+        File tempFile = File.createTempFile("struts", "fileupload");
+        assertThat(tempFile.delete()).isTrue();
+        assertThat(tempFile.mkdirs()).isTrue();
+        tempDir = tempFile.getAbsolutePath();
     }
 
     @Before
@@ -89,7 +86,7 @@ abstract class AbstractMultiPartRequestTest {
 
         // when
         multiPart.setBufferSize("1"); // always write files into disk
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         // then
         assertThat(multiPart.getErrors())
@@ -138,7 +135,7 @@ abstract class AbstractMultiPartRequestTest {
 
         // when
         multiPart.setBufferSize("1"); // always write files into disk
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         // then
         assertThat(multiPart.getErrors())
@@ -189,7 +186,7 @@ abstract class AbstractMultiPartRequestTest {
 
         // when
         multiPart.setBufferSize("8192"); // streams files into disk using larger buffer
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         // then
         assertThat(multiPart.getErrors())
@@ -236,7 +233,7 @@ abstract class AbstractMultiPartRequestTest {
         assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
 
         // when
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         // then
         assertThat(multiPart.getErrors())
@@ -286,7 +283,7 @@ abstract class AbstractMultiPartRequestTest {
                 .isEmpty();
         assertThat(uploadedFiles).allSatisfy(file ->
                 assertThat(file.getContent()).asInstanceOf(InstanceOfAssertFactories.FILE)
-                    .doesNotExist()
+                        .doesNotExist()
         );
     }
 
@@ -301,7 +298,7 @@ abstract class AbstractMultiPartRequestTest {
         mockRequest.setContentType("");
 
         // when
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         // then
         assertThat(multiPart.getErrors())
@@ -326,7 +323,7 @@ abstract class AbstractMultiPartRequestTest {
 
         // when
         multiPart.setMaxSize("1");
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         // then
         assertThat(multiPart.uploadedFiles)
@@ -348,7 +345,7 @@ abstract class AbstractMultiPartRequestTest {
         assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
 
         multiPart.setMaxFileSize("1");
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         assertThat(multiPart.getErrors())
                 .map(LocalizedMessage::getTextKey)
@@ -366,7 +363,7 @@ abstract class AbstractMultiPartRequestTest {
         assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
 
         multiPart.setMaxFiles("1");
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         assertThat(multiPart.errors)
                 .map(LocalizedMessage::getTextKey)
@@ -386,7 +383,7 @@ abstract class AbstractMultiPartRequestTest {
         assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
 
         multiPart.setMaxStringLength("10");
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         assertThat(multiPart.getErrors())
                 .map(LocalizedMessage::getTextKey)
@@ -406,7 +403,7 @@ abstract class AbstractMultiPartRequestTest {
         // when
         mockRequest.setCharacterEncoding(null);
         multiPart.setDefaultEncoding(StandardCharsets.ISO_8859_1.name());
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         // then
         assertThat(multiPart.getErrors())
@@ -444,7 +441,7 @@ abstract class AbstractMultiPartRequestTest {
 
         assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
 
-        multiPart.parse(mockRequest, tempDir.toString());
+        multiPart.parse(mockRequest, tempDir);
 
         assertThat(multiPart.getErrors())
                 .isEmpty();

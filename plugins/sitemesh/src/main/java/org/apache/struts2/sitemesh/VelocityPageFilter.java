@@ -18,16 +18,16 @@
  */
 package org.apache.struts2.sitemesh;
 
-import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
-import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
-import com.opensymphony.sitemesh.DecoratorSelector;
-import com.opensymphony.module.sitemesh.Factory;
 import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.sitemesh.DecoratorSelector;
+import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
+import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.xwork2.inject.Inject;
-
-import javax.servlet.*;
-
 import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.struts2.views.velocity.VelocityManagerInterface;
+
+import javax.servlet.FilterConfig;
 
 /**
  * Core Filter for integrating SiteMesh into a Java web application.
@@ -35,8 +35,16 @@ import org.apache.struts2.views.velocity.VelocityManager;
 public class VelocityPageFilter extends SiteMeshFilter {
 
     @Inject(required=false)
-    public static void setVelocityManager(VelocityManager mgr) {
+    public static void setVelocityManager(VelocityManagerInterface mgr) {
         OldDecorator2NewStrutsVelocityDecorator.setVelocityManager(mgr);
+    }
+
+    /**
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
+    public static void setVelocityManager(VelocityManager mgr) {
+        setVelocityManager((VelocityManagerInterface) mgr);
     }
 
     private FilterConfig filterConfig;

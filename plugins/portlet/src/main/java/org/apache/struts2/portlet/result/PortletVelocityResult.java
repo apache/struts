@@ -22,16 +22,17 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletConstants;
 import org.apache.struts2.portlet.PortletPhase;
 import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.result.StrutsResultSupport;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.struts2.views.velocity.VelocityManagerInterface;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
@@ -89,11 +90,11 @@ public class PortletVelocityResult extends StrutsResultSupport {
     private static final long serialVersionUID = -8241086555872212274L;
 
     private static final Logger LOG = LogManager.getLogger(PortletVelocityResult.class);
-    
+
     private String defaultEncoding;
-    private VelocityManager velocityManager;
+    private transient VelocityManagerInterface velocityManager;
     private JspFactory jspFactory = JspFactory.getDefaultFactory();
-    
+
     public PortletVelocityResult() {
         super();
     }
@@ -101,12 +102,20 @@ public class PortletVelocityResult extends StrutsResultSupport {
     public PortletVelocityResult(String location) {
         super(location);
     }
-    
+
     @Inject
-    public void setVelocityManager(VelocityManager mgr) {
+    public void setVelocityManager(VelocityManagerInterface mgr) {
         this.velocityManager = mgr;
     }
-    
+
+    /**
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
+    public void setVelocityManager(VelocityManager mgr) {
+        setVelocityManager((VelocityManagerInterface) mgr);
+    }
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setDefaultEncoding(String encoding) {
         this.defaultEncoding = encoding;
@@ -263,8 +272,23 @@ public class PortletVelocityResult extends StrutsResultSupport {
      * @param location the name of the template that is being used
      * @return the a minted Velocity context.
      */
-    protected Context createContext(VelocityManager velocityManager, ValueStack stack, HttpServletRequest request,
-            HttpServletResponse response, String location) {
+    protected Context createContext(VelocityManagerInterface velocityManager,
+                                    ValueStack stack,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    String location) {
         return velocityManager.createContext(stack, request, response);
+    }
+
+    /**
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
+    protected Context createContext(VelocityManager velocityManager,
+                                    ValueStack stack,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    String location) {
+        return createContext((VelocityManagerInterface) velocityManager, stack, request, response, location);
     }
 }

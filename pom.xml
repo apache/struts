@@ -82,7 +82,7 @@
 
     <modules>
         <module>bom</module>
-        <module>jakarta</module>
+        <!--<module>jakarta</module>-->
         <module>core</module>
         <module>plugins</module>
         <module>apps</module>
@@ -530,7 +530,7 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-freemarker-jakarta</artifactId>
-                <version>${project.version}</version>
+                <version>7.0.0-M3-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
@@ -676,13 +676,19 @@
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-velocity-tools-view-jakarta</artifactId>
-                <version>${project.version}</version>
+                <version>7.0.0-M3-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-velocity-tools-jsp-jakarta</artifactId>
-                <version>${project.version}</version>
+                <version>7.0.0-M3-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts2-sitemesh2-jakarta</artifactId>
+                <version>7.0.0-M3-SNAPSHOT</version>
             </dependency>
 
             <dependency>

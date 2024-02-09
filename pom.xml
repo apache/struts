@@ -115,7 +115,7 @@
         <freemarker.version>2.3.32</freemarker.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <jackson.version>2.16.0</jackson.version>
-        <log4j2.version>2.20.0</log4j2.version>
+        <log4j2.version>2.22.1</log4j2.version>
         <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
         <mockito.version>5.8.0</mockito.version>
         <ognl.version>3.3.4</ognl.version>
@@ -633,7 +633,14 @@
             <dependency>
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
-                <version>2.9.3</version>
+                <version>3.1.8</version>
+            </dependency>
+
+            <!-- override version of error_prone_annotations until caffeine updates from 2.10.0 to 2.23.0 -->
+            <dependency>
+                <groupId>com.google.errorprone</groupId>
+                <artifactId>error_prone_annotations</artifactId>
+                <version>2.23.0</version>
             </dependency>
 
             <dependency>

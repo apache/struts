@@ -143,11 +143,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest<File
                 LOG.debug("Cannot accept another file: {} as it will exceed max files: {}",
                         sanitizeNewlines(fileItemInput.getName()), maxFiles);
             }
-            LocalizedMessage errorMessage = buildErrorMessage(new FileUploadFileCountLimitException(
-                            String.format("File %s exceeds allowed maximum number of files %s",
-                                    fileItemInput.getName(), maxFiles),
-                            maxFiles, uploadedFiles.size()),
-                    new Object[]{maxFiles, uploadedFiles.size()});
+            LocalizedMessage errorMessage = buildErrorMessage(
+                    FileUploadFileCountLimitException.class,
+                    String.format("File %s exceeds allowed maximum number of files %s",
+                            fileItemInput.getName(), maxFiles),
+                    new Object[]{maxFiles, uploadedFiles.size()}
+            );
             if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);
             }
@@ -162,11 +163,12 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest<File
                     sanitizeNewlines(fileItemInput.getName()), file.length(), maxSizeOfFiles, currentFilesSize
             );
         }
-        LocalizedMessage errorMessage = buildErrorMessage(new FileUploadSizeException(
-                        String.format("Size %s of file %s exceeds allowed max size %s",
-                                file.length(), fileItemInput.getName(), maxSizeOfFiles),
-                        maxSizeOfFiles, currentFilesSize),
-                new Object[]{maxSizeOfFiles, currentFilesSize});
+        LocalizedMessage errorMessage = buildErrorMessage(
+                FileUploadSizeException.class,
+                String.format("Size %s of file %s exceeds allowed max size %s", file.length(),
+                        fileItemInput.getName(), maxSizeOfFiles),
+                new Object[]{maxSizeOfFiles, currentFilesSize}
+        );
         if (!errors.contains(errorMessage)) {
             errors.add(errorMessage);
         }

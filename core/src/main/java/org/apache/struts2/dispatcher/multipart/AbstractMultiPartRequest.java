@@ -58,7 +58,7 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     public static final int BUFFER_SIZE = 10240;
 
     /**
-     * Internal list of raised errors to be passed to the the Struts2 framework.
+     * Internal list of raised errors to be passed to the Struts2 framework.
      */
     protected List<LocalizedMessage> errors = new ArrayList<>();
 
@@ -83,7 +83,7 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     protected Long maxStringLength;
 
     /**
-     * Specifies the maximum size per file in the request.
+     * Specifies the maximum size per a file in the request.
      */
     protected Long maxFileSize;
 
@@ -233,34 +233,31 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
         try {
             processUpload(request, saveDir);
         } catch (FileUploadException e) {
-            LOG.debug("Request exceeded size limit!", e);
-            LocalizedMessage errorMessage;
+            LOG.debug("Error parsing the multi-part request!", e);
+            Class<? extends Throwable> exClass = FileUploadException.class;
+            Object[] args = new Object[]{};
+
             if (e instanceof FileUploadByteCountLimitException ex) {
-                errorMessage = buildErrorMessage(e, new Object[]{
-                        ex.getFieldName(), ex.getFileName(), ex.getPermitted(), ex.getActualSize()
-                });
+                exClass = ex.getClass();
+                args = new Object[]{ex.getFieldName(), ex.getFileName(), ex.getPermitted(), ex.getActualSize()};
             } else if (e instanceof FileUploadFileCountLimitException ex) {
-                errorMessage = buildErrorMessage(e, new Object[]{
-                        ex.getPermitted(), ex.getActualSize()
-                });
+                exClass = ex.getClass();
+                args = new Object[]{ex.getPermitted(), ex.getActualSize()};
             } else if (e instanceof FileUploadSizeException ex) {
-                errorMessage = buildErrorMessage(e, new Object[]{
-                        ex.getPermitted(), ex.getActualSize()
-                });
+                exClass = ex.getClass();
+                args = new Object[]{ex.getPermitted(), ex.getActualSize()};
             } else if (e instanceof FileUploadContentTypeException ex) {
-                errorMessage = buildErrorMessage(e, new Object[]{
-                        ex.getContentType()
-                });
-            } else {
-                errorMessage = buildErrorMessage(e, new Object[]{});
+                exClass = ex.getClass();
+                args = new Object[]{ex.getContentType()};
             }
 
+            LocalizedMessage errorMessage = buildErrorMessage(exClass, e.getMessage(), args);
             if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);
             }
         } catch (IOException e) {
             LOG.debug("Unable to parse request", e);
-            LocalizedMessage errorMessage = buildErrorMessage(e, new Object[]{});
+            LocalizedMessage errorMessage = buildErrorMessage(e.getClass(), e.getMessage(), new Object[]{});
             if (!errors.contains(errorMessage)) {
                 errors.add(errorMessage);
             }
@@ -270,15 +267,16 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     /**
      * Build error message.
      *
-     * @param e    the Throwable/Exception
-     * @param args arguments
+     * @param exceptionClass a class of the exception
+     * @param defaultMessage a default message to use
+     * @param args           arguments
      * @return error message
      */
-    protected LocalizedMessage buildErrorMessage(Throwable e, Object[] args) {
-        String errorKey = "struts.messages.upload.error." + e.getClass().getSimpleName();
+    protected LocalizedMessage buildErrorMessage(Class<? extends Throwable> exceptionClass, String defaultMessage, Object[] args) {
+        String errorKey = "struts.messages.upload.error." + exceptionClass.getSimpleName();
         LOG.debug("Preparing error message for key: [{}]", errorKey);
 
-        return new LocalizedMessage(this.getClass(), errorKey, e.getMessage(), args);
+        return new LocalizedMessage(this.getClass(), errorKey, defaultMessage, args);
     }
 
     /**

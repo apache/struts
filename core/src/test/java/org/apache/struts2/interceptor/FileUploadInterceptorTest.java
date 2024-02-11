@@ -23,16 +23,17 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.DefaultLocaleProvider;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsInternalTestCase;
+import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.StrutsUploadedFile;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
+import org.assertj.core.util.Files;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.File;
@@ -52,7 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
-    private static final UploadedFile<String> EMPTY_FILE = new UploadedFile<>() {
+    private static final UploadedFile<File> EMPTY_FILE = new UploadedFile<>() {
         @Override
         public Long length() {
             return 0L;
@@ -79,8 +80,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         }
 
         @Override
-        public String getContent() {
-            return "";
+        public File getContent() {
+            return Files.newTemporaryFile();
         }
 
         @Override
@@ -96,6 +97,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
     private FileUploadInterceptor interceptor;
     private File tempDir;
+    private MockHttpServletRequest request;
 
     public void testAcceptFileWithEmptyAllowedTypesAndExtensions() {
         // when allowed type is empty
@@ -177,9 +179,6 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testAcceptFileWithNoFile() {
-        FileUploadInterceptor interceptor = new FileUploadInterceptor();
-        interceptor.setContainer(container);
-
         interceptor.setAllowedTypes("text/plain");
 
         // when file is not of allowed types
@@ -240,10 +239,8 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testInvalidContentTypeMultipartRequest() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-
-        req.setContentType("multipart/form-data"); // not a multipart contentype
-        req.setMethod("post");
+        request.setContentType("multipart/form-data"); // not a multipart contentype
+        request.setMethod("post");
 
         MyFileupAction action = container.inject(MyFileupAction.class);
         MockActionInvocation mai = new MockActionInvocation();
@@ -252,7 +249,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
 
         ActionContext.getContext().withParameters(HttpParameters.create().build());
-        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(2000));
 
         interceptor.intercept(mai);
 
@@ -260,12 +257,10 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testNoContentMultipartRequest() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data");
-        req.setContent(null); // there is no content
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data");
+        request.setContent(null); // there is no content
 
         MyFileupAction action = container.inject(MyFileupAction.class);
         MockActionInvocation mai = new MockActionInvocation();
@@ -274,7 +269,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
 
         ActionContext.getContext().withParameters(HttpParameters.create().build());
-        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(2000));
 
         interceptor.intercept(mai);
 
@@ -282,10 +277,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testSuccessUploadOfATextFileMultipartRequest() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
         String content = ("-----1234\r\n" +
@@ -295,7 +289,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 "Unit test of FileUploadInterceptor" +
                 "\r\n" +
                 "-----1234--\r\n");
-        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileupAction action = new MyFileupAction();
 
@@ -305,7 +299,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext().withParameters(HttpParameters.create(param).build());
-        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(2000));
 
         interceptor.intercept(mai);
 
@@ -337,10 +331,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         final String bondary = "simple boundary";
         final String endline = "\r\n";
 
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("POST");
-        req.addHeader("Content-type", "multipart/form-data; boundary=" + bondary);
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("POST");
+        request.addHeader("Content-type", "multipart/form-data; boundary=" + bondary);
         String content = encodeTextFile("test.html", "text/plain", plainContent) +
                 encodeTextFile("test1.html", "text/html", htmlContent) +
                 encodeTextFile("test2.html", "text/html", htmlContent) +
@@ -351,9 +344,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 bondary +
                 "--" +
                 endline;
-        req.setContent(content.getBytes());
+        request.setContent(content.getBytes());
 
-        assertTrue(JakartaServletFileUpload.isMultipartContent(req));
+        assertTrue(JakartaServletFileUpload.isMultipartContent(request));
 
         MyFileupAction action = new MyFileupAction();
         container.inject(action);
@@ -363,7 +356,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext().withParameters(HttpParameters.create(param).build());
-        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(req, 2000));
+        ActionContext.getContext().withServletRequest(createMultipartRequestMaxSize(2000));
 
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
@@ -390,10 +383,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         final String boundary = "simple boundary";
         final String endline = "\r\n";
 
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("POST");
-        req.addHeader("Content-type", "multipart/form-data; boundary=" + boundary);
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("POST");
+        request.addHeader("Content-type", "multipart/form-data; boundary=" + boundary);
         String content = encodeTextFile("test.html", "text/plain", plainContent) +
                 encodeTextFile("test1.html", "text/html", htmlContent) +
                 encodeTextFile("test2.html", "text/html", htmlContent) +
@@ -403,9 +395,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 boundary +
                 "--" +
                 endline;
-        req.setContent(content.getBytes());
+        request.setContent(content.getBytes());
 
-        assertTrue(JakartaServletFileUpload.isMultipartContent(req));
+        assertTrue(JakartaServletFileUpload.isMultipartContent(request));
 
         MyFileupAction action = new MyFileupAction();
         container.inject(action);
@@ -414,8 +406,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         mai.setResultCode("success");
         mai.setInvocationContext(ActionContext.getContext());
         Map<String, Object> param = new HashMap<>();
-        ActionContext.getContext().withParameters(HttpParameters.create(param).build());
-        ActionContext.getContext().withServletRequest(createMultipartRequestMaxFiles(req));
+        ActionContext.getContext()
+                .withParameters(HttpParameters.create(param).build())
+                .withServletRequest(createMultipartRequestMaxFiles());
 
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
@@ -430,10 +423,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testMultipartRequestMaxFileSize() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
         String content = ("-----1234\r\n" +
@@ -443,7 +435,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 "Unit test of FileUploadInterceptor" +
                 "\r\n" +
                 "-----1234--\r\n");
-        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileupAction action = container.inject(MyFileupAction.class);
 
@@ -454,7 +446,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext()
                 .withParameters(HttpParameters.create(param).build())
-                .withServletRequest(createMultipartRequestMaxFileSize(req));
+                .withServletRequest(createMultipartRequestMaxFileSize());
 
         interceptor.intercept(mai);
 
@@ -470,10 +462,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testMultipartRequestMaxStringLength() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
         String content = ("-----1234\r\n" +
@@ -493,7 +484,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 "long string should not work" +
                 "\r\n" +
                 "-----1234--\r\n");
-        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileupAction action = container.inject(MyFileupAction.class);
 
@@ -504,7 +495,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         Map<String, Object> param = new HashMap<>();
         ActionContext.getContext()
                 .withParameters(HttpParameters.create(param).build())
-                .withServletRequest(createMultipartRequestMaxStringLength(req));
+                .withServletRequest(createMultipartRequestMaxStringLength());
 
         interceptor.intercept(mai);
 
@@ -519,10 +510,9 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testMultipartRequestLocalizedError() throws Exception {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        req.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        req.setMethod("post");
-        req.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
 
         // inspired by the unit tests for jakarta commons fileupload
         String content = ("-----1234\r\n" +
@@ -532,7 +522,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 "Unit test of FileUploadInterceptor" +
                 "\r\n" +
                 "-----1234--\r\n");
-        req.setContent(content.getBytes(StandardCharsets.US_ASCII));
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
 
         MyFileupAction action = container.inject(MyFileupAction.class);
 
@@ -544,7 +534,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         ActionContext.getContext()
                 .withParameters(HttpParameters.create(param).build())
                 .withLocale(Locale.GERMAN)
-                .withServletRequest(createMultipartRequestMaxSize(req, 10));
+                .withServletRequest(createMultipartRequestMaxSize(10));
 
         interceptor.intercept(mai);
 
@@ -555,6 +545,38 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         String msg = errors.iterator().next();
         // the error message should contain at least this test
         assertTrue(msg.startsWith("Der Request übertraf die maximal erlaubte Größe"));
+    }
+
+    public void testSkippingUploadedFileAware() throws Exception {
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        request.setMethod("post");
+        request.addHeader("Content-type", "multipart/form-data; boundary=---1234");
+
+        // inspired by the unit tests for jakarta commons fileupload
+        String content = ("-----1234\r\n" +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"deleteme.txt\"\r\n" +
+                "Content-Type: text/html\r\n" +
+                "\r\n" +
+                "Unit test of FileUploadInterceptor" +
+                "\r\n" +
+                "-----1234--\r\n");
+        request.setContent(content.getBytes(StandardCharsets.US_ASCII));
+
+        MyFileUploadAction action = container.inject(MyFileUploadAction.class);
+
+        MockActionInvocation mai = new MockActionInvocation();
+        mai.setInvocationContext(ActionContext.getContext());
+        mai.setAction(action);
+        MockActionProxy map = new MockActionProxy();
+        map.setActionName("uploadedFiles");
+        mai.setProxy(map);
+        ActionContext.getContext()
+                .withParameters(HttpParameters.create(new HashMap<String, Object>()).build())
+                .withServletRequest(createMultipartRequestMaxSize(10));
+
+        interceptor.intercept(mai);
+
+        assertFalse(action.hasActionErrors());
     }
 
     private String encodeTextFile(String filename, String contentType, String content) {
@@ -574,49 +596,62 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
                 content;
     }
 
-    private MultiPartRequestWrapper createMultipartRequestMaxFileSize(HttpServletRequest req) {
-        return createMultipartRequest(req, -1, 10, -1, -1);
+    private MultiPartRequestWrapper createMultipartRequestMaxFileSize() {
+        return createMultipartRequest(-1, 10, -1, -1);
     }
 
-    private MultiPartRequestWrapper createMultipartRequestMaxFiles(HttpServletRequest req) {
-        return createMultipartRequest(req, -1, -1, 3, -1);
+    private MultiPartRequestWrapper createMultipartRequestMaxFiles() {
+        return createMultipartRequest(-1, -1, 3, -1);
     }
 
-    private MultiPartRequestWrapper createMultipartRequestMaxSize(HttpServletRequest req, int maxsize) {
-        return createMultipartRequest(req, maxsize, -1, -1, -1);
+    private MultiPartRequestWrapper createMultipartRequestMaxSize(int maxsize) {
+        return createMultipartRequest(maxsize, -1, -1, -1);
     }
 
-    private MultiPartRequestWrapper createMultipartRequestMaxStringLength(HttpServletRequest req) {
-        return createMultipartRequest(req, -1, -1, -1, 20);
+    private MultiPartRequestWrapper createMultipartRequestMaxStringLength() {
+        return createMultipartRequest(-1, -1, -1, 20);
     }
 
-    private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize, int maxfilesize, int maxfiles, int maxStringLength) {
+    private MultiPartRequestWrapper createMultipartRequest(int maxsize, int maxfilesize, int maxfiles, int maxStringLength) {
         JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
         jak.setMaxSize(String.valueOf(maxsize));
         jak.setMaxFileSize(String.valueOf(maxfilesize));
         jak.setMaxFiles(String.valueOf(maxfiles));
         jak.setMaxStringLength(String.valueOf(maxStringLength));
         jak.setDefaultEncoding(StandardCharsets.UTF_8.name());
-        return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
+        return new MultiPartRequestWrapper(jak, request, tempDir.getAbsolutePath(), new DefaultLocaleProvider());
     }
 
     protected void setUp() throws Exception {
         super.setUp();
 
+        request = new MockHttpServletRequest();
         interceptor = new FileUploadInterceptor();
         container.inject(interceptor);
         tempDir = File.createTempFile("struts", "fileupload");
-        tempDir.delete();
-        tempDir.mkdirs();
+        assertThat(tempDir.delete()).isTrue();
+        assertThat(tempDir.mkdirs()).isTrue();
     }
 
     protected void tearDown() throws Exception {
-        tempDir.delete();
         interceptor.destroy();
         super.tearDown();
     }
 
     public static class MyFileupAction extends ActionSupport {
+    }
+
+    public static class MyFileUploadAction extends ActionSupport implements UploadedFilesAware {
+        private List<UploadedFile<File>> uploadedFiles;
+
+        @Override
+        public void withUploadedFiles(List<UploadedFile<File>> uploadedFiles) {
+            this.uploadedFiles = uploadedFiles;
+        }
+
+        public List<UploadedFile<File>> getUploadFiles() {
+            return this.uploadedFiles;
+        }
     }
 
 }

@@ -51,8 +51,9 @@ public class ContentTypeInterceptor extends AbstractInterceptor {
         }
 
         if (request.getContentLength() > 0) {
+            final String encoding = request.getCharacterEncoding();
             InputStream is = request.getInputStream();
-            InputStreamReader reader = new InputStreamReader(is);
+            InputStreamReader reader = encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding);
             handler.toObject(invocation, reader, target);
         }
         return invocation.invoke();

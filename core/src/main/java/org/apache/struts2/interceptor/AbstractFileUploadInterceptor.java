@@ -34,6 +34,7 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 import org.apache.struts2.util.ContentTypeMatcher;
 
+import java.io.File;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -108,7 +109,7 @@ public abstract class AbstractFileUploadInterceptor extends AbstractInterceptor 
      * @param inputName        - inputName of the file.
      * @return true if the proposed file is acceptable by contentType and size.
      */
-    protected boolean acceptFile(Object action, UploadedFile file, String originalFilename, String contentType, String inputName) {
+    protected boolean acceptFile(Object action, UploadedFile<File> file, String originalFilename, String contentType, String inputName) {
         Set<String> errorMessages = new HashSet<>();
 
         ValidationAware validation = null;

@@ -22,14 +22,14 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.action.UploadedFilesAware;
 import org.apache.struts2.dispatcher.Parameter;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
-import jakarta.servlet.http.HttpServletRequest;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -192,17 +192,26 @@ public class FileUploadInterceptor extends AbstractFileUploadInterceptor {
 
         HttpServletRequest request = ac.getServletRequest();
 
-        if (!(request instanceof MultiPartRequestWrapper)) {
+        if (!(request instanceof MultiPartRequestWrapper multiWrapper)) {
             if (LOG.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
-                LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY, new String[]{proxy.getNamespace(), proxy.getActionName()}));
+                LOG.debug(getTextMessage(STRUTS_MESSAGES_BYPASS_REQUEST_KEY,
+                        new String[]{proxy.getNamespace(), proxy.getActionName()})
+                );
             }
 
             return invocation.invoke();
         }
 
         Object action = invocation.getAction();
-        MultiPartRequestWrapper multiWrapper = (MultiPartRequestWrapper) request;
+        if (action instanceof UploadedFilesAware) {
+            LOG.debug("Ignoring action: {} implementing: {} as it will be handled by: {}",
+                    invocation.getProxy().getActionName(),
+                    UploadedFilesAware.class.getSimpleName(),
+                    ActionFileUploadInterceptor.class.getSimpleName()
+            );
+            return invocation.invoke();
+        }
 
         applyValidation(action, multiWrapper);
 

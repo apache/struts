@@ -460,6 +460,20 @@ abstract class AbstractMultiPartRequestTest {
                 .containsOnly("multi1", "multi2");
     }
 
+    @Test
+    public void unableParseRequest() throws IOException {
+        String content = formFile("file1", "test1.csv", "1,2,3,4");
+        mockRequest.setContent(content.getBytes(StandardCharsets.UTF_8));
+
+        assertThat(JakartaServletDiskFileUpload.isMultipartContent(mockRequest)).isTrue();
+
+        multiPart.parse(mockRequest, tempDir);
+
+        assertThat(multiPart.getErrors())
+                .map(LocalizedMessage::getTextKey)
+                .containsExactly("struts.messages.upload.error.FileUploadException");
+    }
+
     protected String formFile(String fieldName, String filename, String content) {
         return endline +
                 "--" + boundary + endline +

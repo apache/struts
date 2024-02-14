@@ -28,7 +28,6 @@ public class FileTest extends AbstractCommonAttributesTest {
 
     public void testRenderTextField() {
         tag.setName("name");
-        tag.setValue("val1");
         tag.setSize("10");
         tag.setDisabled("true");
         tag.setAccept("accept_");
@@ -43,7 +42,7 @@ public class FileTest extends AbstractCommonAttributesTest {
         map.putAll(tag.getParameters());
         theme.renderTag(getTagName(), context);
         String output = writer.getBuffer().toString();
-        String expected = s("<input name='name' type='file' size='10' value='val1' disabled='disabled' accept='accept_' tabindex='1' id='id1' class='class1' style='style1' title='title'></input>");
+        String expected = s("<input name='name' type='file' size='10' disabled='disabled' accept='accept_' tabindex='1' id='id1' class='class1' style='style1' title='title'></input>");
         assertEquals(expected, output);
     }
 

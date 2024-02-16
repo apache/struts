@@ -23,9 +23,10 @@ import com.opensymphony.sitemesh.Content;
 import com.opensymphony.sitemesh.compatability.Content2HTMLPage;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.struts2.views.velocity.VelocityManagerInterface;
 import org.apache.velocity.context.Context;
 
 import jakarta.servlet.ServletContext;
@@ -41,11 +42,19 @@ import java.io.PrintWriter;
 public class OldDecorator2NewStrutsVelocityDecorator extends OldDecorator2NewStrutsDecorator {
     private static final Logger LOG = LogManager.getLogger(OldDecorator2NewStrutsFreemarkerDecorator.class);
 
-    private static VelocityManager velocityManager;
+    private static VelocityManagerInterface velocityManager;
 
     @Inject(required = false)
-    public static void setVelocityManager(VelocityManager mgr) {
+    public static void setVelocityManager(VelocityManagerInterface mgr) {
         velocityManager = mgr;
+    }
+
+    /**
+     * @deprecated since 6.4.0
+     */
+    @Deprecated
+    public static void setVelocityManager(VelocityManager mgr) {
+        setVelocityManager((VelocityManagerInterface) mgr);
     }
 
     public OldDecorator2NewStrutsVelocityDecorator(com.opensymphony.module.sitemesh.Decorator oldDecorator) {

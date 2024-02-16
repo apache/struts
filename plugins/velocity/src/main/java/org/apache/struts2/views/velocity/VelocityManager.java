@@ -62,7 +62,7 @@ import static org.apache.struts2.views.util.ContextUtil.STRUTS;
 /**
  * Manages the environment for Velocity result types
  */
-public class VelocityManager {
+public class VelocityManager implements VelocityManagerInterface {
 
     private static final Logger LOG = LogManager.getLogger(VelocityManager.class);
 
@@ -105,6 +105,7 @@ public class VelocityManager {
      * @return a reference to the VelocityEngine used by <strong>all</strong> Struts Velocity results except directly
      * accessed *.vm pages (unless otherwise configured)
      */
+    @Override
     public VelocityEngine getVelocityEngine() {
         return velocityEngine;
     }
@@ -117,6 +118,7 @@ public class VelocityManager {
      * @param res   the current HttpServletResponse
      * @return a new StrutsVelocityContext
      */
+    @Override
     public Context createContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         Context context = buildToolContext();
         if (context == null) {
@@ -182,6 +184,7 @@ public class VelocityManager {
      *
      * @param context the current servlet context
      */
+    @Override
     public synchronized void init(ServletContext context) {
         if (velocityEngine == null) {
             velocityEngine = newVelocityEngine(context);

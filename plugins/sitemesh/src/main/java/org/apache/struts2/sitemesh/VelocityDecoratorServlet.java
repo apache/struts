@@ -19,17 +19,21 @@
 package org.apache.struts2.sitemesh;
 
 
-import com.opensymphony.module.sitemesh.*;
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.DecoratorMapper;
+import com.opensymphony.module.sitemesh.Factory;
+import com.opensymphony.module.sitemesh.HTMLPage;
+import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.module.sitemesh.util.OutputConverter;
 import com.opensymphony.xwork2.ActionContext;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.listener.StrutsListener;
 import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.struts2.views.velocity.VelocityManagerInterface;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -54,10 +58,10 @@ import java.io.StringWriter;
 public class VelocityDecoratorServlet extends VelocityViewServlet {
 
     private static final Logger LOG = LogManager.getLogger(VelocityDecoratorServlet.class);
-            
+
     private static final long serialVersionUID = -6731485159371716918L;
-    
-    protected VelocityManager velocityManager;
+
+    protected VelocityManagerInterface velocityManager;
     protected String defaultContentType;
 
     /**
@@ -78,14 +82,14 @@ public class VelocityDecoratorServlet extends VelocityViewServlet {
         if (dispatcher == null) {
             throw new IllegalStateException("Unable to find the Dispatcher in the Servlet Context. Is '" + StrutsListener.class.getName() + "' missing in web.xml?");
         }
-        velocityManager = dispatcher.getContainer().getInstance(VelocityManager.class);
+        velocityManager = dispatcher.getContainer().getInstance(VelocityManagerInterface.class);
         velocityManager.init(config.getServletContext());
 
         // do whatever we have to do to init Velocity
         getVelocityView().setVelocityEngine(velocityManager.getVelocityEngine());
         // toolboxManager = velocityManager.getToolboxManager();
 
-        
+
         // we can get these now that velocity is initialized
         defaultContentType = getVelocityProperty(VelocityView.CONTENT_TYPE_KEY, VelocityView.DEFAULT_CONTENT_TYPE);
 

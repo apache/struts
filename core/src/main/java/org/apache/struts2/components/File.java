@@ -99,4 +99,10 @@ public class File extends UIBean {
     public void setSize(String size) {
         this.size = size;
     }
+
+    @Override
+    @StrutsTagAttribute(description="Ignored during file upload")
+    public void setValue(String value) {
+        // ignores provided value
+    }
 }

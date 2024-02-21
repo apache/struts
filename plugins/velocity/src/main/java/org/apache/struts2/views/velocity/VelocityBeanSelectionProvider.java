@@ -49,7 +49,7 @@ public class VelocityBeanSelectionProvider extends AbstractBeanSelectionProvider
 
     @Override
     public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-        alias(VelocityManager.class, VelocityConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME, builder, props);
+        alias(VelocityManagerInterface.class, VelocityConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME, builder, props);
     }
 
 }

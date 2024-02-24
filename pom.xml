@@ -29,7 +29,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>struts2-parent</artifactId>
-    <version>7.0.0-M3</version>
+    <version>7.0.0-M4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>https://struts.apache.org/</url>
@@ -51,7 +51,7 @@
         <connection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</connection>
         <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/struts.git</developerConnection>
         <url>https://github.com/apache/struts/</url>
-        <tag>STRUTS_7_0_0_M3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
@@ -104,7 +104,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2024-02-24T08:17:44Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2024-02-24T08:22:43Z</project.build.outputTimestamp>
         <maven.compiler.release>17</maven.compiler.release>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

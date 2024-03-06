@@ -1033,7 +1033,7 @@ public class Dispatcher {
         boolean isPostRequest = REQUEST_POST_METHOD.equalsIgnoreCase(httpMethod);
         boolean isProperContentType = contentType != null && multipartValidationPattern.matcher(contentType.toLowerCase(Locale.ENGLISH)).matches();
 
-        LOG.debug("Validating if this is proper Multipart request. Request is POST: {} and ContentType matches pattern ({}): {}",
+        LOG.debug("Validating if this is a proper Multipart request. Request is POST: {} and ContentType matches pattern ({}): {}",
                 isPostRequest, multipartValidationPattern, isProperContentType);
         return isPostRequest && isProperContentType;
     }

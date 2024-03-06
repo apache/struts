@@ -986,10 +986,12 @@ public class Dispatcher {
     public HttpServletRequest wrapRequest(HttpServletRequest request) throws IOException {
         // don't wrap more than once
         if (request instanceof StrutsRequestWrapper) {
+            LOG.debug("Request already wrapped with {}", StrutsRequestWrapper.class.getSimpleName());
             return request;
         }
 
         if (isMultipartSupportEnabled(request) && isMultipartRequest(request)) {
+            LOG.debug("Wrapping multipart request with: {}", MultiPartRequestWrapper.class.getSimpleName());
             request = new MultiPartRequestWrapper(
                     getMultiPartRequest(),
                     request,
@@ -998,6 +1000,7 @@ public class Dispatcher {
                     disableRequestAttributeValueStackLookup
             );
         } else {
+            LOG.debug("Wrapping request using: {}", StrutsRequestWrapper.class.getSimpleName());
             request = new StrutsRequestWrapper(request, disableRequestAttributeValueStackLookup);
         }
 
@@ -1012,6 +1015,7 @@ public class Dispatcher {
      * @since 2.5.11
      */
     protected boolean isMultipartSupportEnabled(HttpServletRequest request) {
+        LOG.debug("Support for multipart request is enabled: {}", multipartSupportEnabled);
         return multipartSupportEnabled;
     }
 
@@ -1026,9 +1030,12 @@ public class Dispatcher {
         String httpMethod = request.getMethod();
         String contentType = request.getContentType();
 
-        return REQUEST_POST_METHOD.equalsIgnoreCase(httpMethod) &&
-            contentType != null &&
-            multipartValidationPattern.matcher(contentType.toLowerCase(Locale.ENGLISH)).matches();
+        boolean isPostRequest = REQUEST_POST_METHOD.equalsIgnoreCase(httpMethod);
+        boolean isProperContentType = contentType != null && multipartValidationPattern.matcher(contentType.toLowerCase(Locale.ENGLISH)).matches();
+
+        LOG.debug("Validating if this is proper Multipart request. Request is POST: {} and ContentType matches pattern ({}): {}",
+                isPostRequest, multipartValidationPattern, isProperContentType);
+        return isPostRequest && isProperContentType;
     }
 
     /**

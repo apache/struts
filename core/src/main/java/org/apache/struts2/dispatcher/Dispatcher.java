@@ -986,7 +986,7 @@ public class Dispatcher {
     public HttpServletRequest wrapRequest(HttpServletRequest request) throws IOException {
         // don't wrap more than once
         if (request instanceof StrutsRequestWrapper) {
-            LOG.debug("Request already wrapped with {}", StrutsRequestWrapper.class.getSimpleName());
+            LOG.debug("Request already wrapped with: {}", StrutsRequestWrapper.class.getSimpleName());
             return request;
         }
 

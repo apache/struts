@@ -337,7 +337,7 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
      */
     public String[] getFileNames(String fieldName) {
         return uploadedFiles.getOrDefault(fieldName, Collections.emptyList()).stream()
-                .map(file -> getCanonicalName(file.getName()))
+                .map(file -> getCanonicalName(file.getOriginalName()))
                 .toArray(String[]::new);
     }
 

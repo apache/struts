@@ -142,7 +142,9 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
     @Override
     public void destroy() {
-        providerAllowlist.clearAllowlist(this);
+        if (providerAllowlist != null) {
+            providerAllowlist.clearAllowlist(this);
+        }
     }
 
     protected Class<?> allowAndLoadClass(String className) throws ClassNotFoundException {

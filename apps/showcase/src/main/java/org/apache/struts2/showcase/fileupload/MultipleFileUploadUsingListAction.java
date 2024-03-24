@@ -22,64 +22,56 @@
 package org.apache.struts2.showcase.fileupload;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.action.UploadedFilesAware;
+import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Showcase action - multiple file upload using List
- *
- * @version $Date$ $Id$
  */
-public class MultipleFileUploadUsingListAction extends ActionSupport {
+public class MultipleFileUploadUsingListAction extends ActionSupport implements UploadedFilesAware {
 
-	private List<File> uploads = new ArrayList<>();
-	private List<String> uploadFileNames = new ArrayList<>();
-	private List<String> uploadContentTypes = new ArrayList<>();
+    private List<UploadedFile> uploads = new ArrayList<>();
 
+    public List<UploadedFile> getUpload() {
+        return this.uploads;
+    }
 
-	public List<File> getUpload() {
-		return this.uploads;
-	}
+    @Override
+    public void withUploadedFiles(List<UploadedFile> uploads) {
+        this.uploads = uploads;
+    }
 
-	public void setUpload(List<File> uploads) {
-		this.uploads = uploads;
-	}
+    private List<String> getUploadFileNames() {
+        return this.uploads.stream()
+                .map(UploadedFile::getOriginalName)
+                .collect(Collectors.toList());
+    }
 
-	public List<String> getUploadFileName() {
-		return this.uploadFileNames;
-	}
+    private List<String> getUploadContentTypes() {
+        return this.uploads.stream()
+                .map(UploadedFile::getContentType)
+                .collect(Collectors.toList());
+    }
 
-	public void setUploadFileName(List<String> uploadFileNames) {
-		this.uploadFileNames = uploadFileNames;
-	}
-
-	public List<String> getUploadContentType() {
-		return this.uploadContentTypes;
-	}
-
-	public void setUploadContentType(List<String> contentTypes) {
-		this.uploadContentTypes = contentTypes;
-	}
-
-	public String upload() throws Exception {
-
-		System.out.println("\n\n upload1");
-		System.out.println("files:");
-		for (File u : uploads) {
-			System.out.println("*** " + u + "\t" + u.length());
-		}
-		System.out.println("filenames:");
-		for (String n : uploadFileNames) {
-			System.out.println("*** " + n);
-		}
-		System.out.println("content types:");
-		for (String c : uploadContentTypes) {
-			System.out.println("*** " + c);
-		}
-		System.out.println("\n\n");
-		return SUCCESS;
-	}
+    public String upload() throws Exception {
+        System.out.println("\n\n upload1");
+        System.out.println("files:");
+        for (UploadedFile u : uploads) {
+            System.out.println("*** " + u + "\t" + u.length());
+        }
+        System.out.println("filenames:");
+        for (String n : getUploadFileNames()) {
+            System.out.println("*** " + n);
+        }
+        System.out.println("content types:");
+        for (String c : getUploadContentTypes()) {
+            System.out.println("*** " + c);
+        }
+        System.out.println("\n\n");
+        return SUCCESS;
+    }
 }
-// END SNIPPET: entire-file

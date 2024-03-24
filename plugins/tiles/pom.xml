@@ -35,9 +35,6 @@
     <profiles>
         <profile>
             <id>build-autotags</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>

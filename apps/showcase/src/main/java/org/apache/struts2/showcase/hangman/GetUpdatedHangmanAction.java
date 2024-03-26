@@ -21,16 +21,15 @@
 package org.apache.struts2.showcase.hangman;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.SessionAware;
 
 import java.util.Map;
-
-import org.apache.struts2.action.SessionAware;
 
 public class GetUpdatedHangmanAction extends ActionSupport implements SessionAware {
 
 	private static final long serialVersionUID = 5506025785406043027L;
 
-	private Map<String, Object> session;
+	private Map session;
 	private Hangman hangman;
 
 
@@ -46,6 +45,10 @@ public class GetUpdatedHangmanAction extends ActionSupport implements SessionAwa
 		return SUCCESS;
 	}
 
+	public void setSession(Map session) {
+		this.session = session;
+	}
+
 	public Hangman getHangman() {
 		return hangman;
 	}
@@ -53,9 +56,4 @@ public class GetUpdatedHangmanAction extends ActionSupport implements SessionAwa
 	public void setHangman(Hangman hangman) {
 		this.hangman = hangman;
 	}
-
-    @Override
-    public void withSession(Map<String, Object> session) {
-        this.session = session;
-    }
 }

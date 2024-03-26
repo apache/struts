@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,41 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.showcase.hangman;
+package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.interceptor.SessionAware;
+import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Map;
 
-public class GuessCharacterAction extends ActionSupport implements SessionAware {
+/**
+ * <p>
+ * Actions that want access to the current servlet request attributes should implement this interface.
+ * </p>
+ *
+ * <p>
+ * This interface is only relevant if the Action is used in a servlet environment.
+ * </p>
+ * @deprecated please use {@link org.apache.struts2.action.ParametersAware} instead
+ */
+@Deprecated
+public interface RequestAware {
 
-	private static final long serialVersionUID = 9050915577007590674L;
-
-	private Map session;
-	private Character character;
-	private Hangman hangman;
-
-	public String execute() throws Exception {
-		hangman = (Hangman) session.get(HangmanConstants.HANGMAN_SESSION_KEY);
-		hangman.guess(character);
-
-		return SUCCESS;
-	}
-
-	public Hangman getHangman() {
-		return hangman;
-	}
-
-	public void setSession(Map session) {
-		this.session = session;
-	}
-
-	public void setCharacter(Character character) {
-		this.character = character;
-	}
-
-	public Character getCharacter() {
-		return this.character;
-	}
+    /**
+     * Sets the Map of request attributes in the implementing class.
+     *
+     * @param request a Map of HTTP request attribute name/value pairs.
+     * @deprecated please use {@link org.apache.struts2.action.ParametersAware#withParameters(HttpParameters)} instead
+     */
+    @Deprecated
+    public void setRequest(Map<String,Object> request);
 }

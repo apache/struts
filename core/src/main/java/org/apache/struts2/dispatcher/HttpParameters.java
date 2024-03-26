@@ -18,12 +18,15 @@
  */
 package org.apache.struts2.dispatcher;
 
+import org.apache.struts2.interceptor.ParameterAware;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -87,6 +90,10 @@ public class HttpParameters implements Map<String, Parameter> {
     public HttpParameters appendAll(Map<String, Parameter> newParams) {
         parameters.putAll(newParams);
         return this;
+    }
+
+    public void applyParameters(ParameterAware parameterAware) {
+        parameterAware.setParameters(toMap());
     }
 
     @Override

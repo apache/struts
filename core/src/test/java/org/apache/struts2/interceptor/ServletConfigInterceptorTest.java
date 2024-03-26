@@ -31,9 +31,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,14 +48,14 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     private ServletConfigInterceptor interceptor;
 
     public void testServletRequestAware() throws Exception {
-        ServletRequestAware mock = (ServletRequestAware) createMock(ServletRequestAware.class);
+        ServletRequestAware mock = createMock(ServletRequestAware.class);
 
         MockHttpServletRequest req = new MockHttpServletRequest();
 
         MockActionInvocation mai = createActionInvocation(mock);
         mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
 
-        mock.setServletRequest((HttpServletRequest) req);
+        mock.setServletRequest(req);
         expectLastCall();
 
         replay(mock);
@@ -83,14 +80,14 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testServletResponseAware() throws Exception {
-        ServletResponseAware mock = (ServletResponseAware) createMock(ServletResponseAware.class);
+        ServletResponseAware mock = createMock(ServletResponseAware.class);
 
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         MockActionInvocation mai = createActionInvocation(mock);
         mai.getInvocationContext().put(StrutsStatics.HTTP_RESPONSE, res);
 
-        mock.setServletResponse((HttpServletResponse) res);
+        mock.setServletResponse(res);
         expectLastCall().times(1);
 
         replay(mock);
@@ -120,7 +117,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         MockActionInvocation mai = createActionInvocation(mock);
 
         HttpParameters param = HttpParameters.create().build();
-        mai.getInvocationContext().setParameters(param);
+        mai.getInvocationContext().withParameters(param);
 
         param.applyParameters(mock);
         expectLastCall().times(1);
@@ -136,7 +133,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         MockActionInvocation mai = createActionInvocation(mock);
 
         HttpParameters param = HttpParameters.create().build();
-        mai.getInvocationContext().setParameters(param);
+        mai.getInvocationContext().withParameters(param);
 
         mock.setParameters(param);
         expectLastCall().times(1);
@@ -163,12 +160,12 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testSessionAware() throws Exception {
-        SessionAware mock = (SessionAware) createMock(SessionAware.class);
+        SessionAware mock = createMock(SessionAware.class);
 
         MockActionInvocation mai = createActionInvocation(mock);
 
-        Map<String, Object> session = new HashMap<String, Object>();
-        mai.getInvocationContext().setSession(session);
+        Map<String, Object> session = new HashMap<>();
+        mai.getInvocationContext().withSession(session);
 
         mock.setSession(session);
         expectLastCall().times(1);
@@ -183,7 +180,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
         MockActionInvocation mai = createActionInvocation(mock);
 
-        Map<String, Object> session = new HashMap<String, Object>();
+        Map<String, Object> session = new HashMap<>();
         mai.getInvocationContext().withSession(session);
 
         mock.withSession(session);
@@ -199,7 +196,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
         MockActionInvocation mai = createActionInvocation(mock);
 
-        Map<String, Object> app = new HashMap<String, Object>();
+        Map<String, Object> app = new HashMap<>();
         mai.getInvocationContext().withApplication(app);
 
         mock.setApplication(app);
@@ -230,7 +227,7 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
         req.setUserPrincipal(null);
         req.setRemoteUser("Santa");
-        PrincipalAware mock = (PrincipalAware) createMock(PrincipalAware.class);
+        PrincipalAware mock = createMock(PrincipalAware.class);
 
         MockActionInvocation mai = createActionInvocation(mock);
         mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
@@ -282,8 +279,8 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
 
         PrincipalProxy proxy = action.getProxy();
         assertNull(proxy.getUserPrincipal());
-        assertTrue(!proxy.isRequestSecure());
-        assertTrue(!proxy.isUserInRole("no.role"));
+        assertFalse(proxy.isRequestSecure());
+        assertFalse(proxy.isUserInRole("no.role"));
         assertEquals("Santa", proxy.getRemoteUser());
 
     }
@@ -311,14 +308,14 @@ public class ServletConfigInterceptorTest extends StrutsInternalTestCase {
     }
 
     public void testServletContextAware() throws Exception {
-        ServletContextAware mock = (ServletContextAware) createMock(ServletContextAware.class);
+        ServletContextAware mock = createMock(ServletContextAware.class);
 
         MockActionInvocation mai = createActionInvocation(mock);
 
         MockServletContext ctx = new MockServletContext();
         mai.getInvocationContext().put(StrutsStatics.SERVLET_CONTEXT, ctx);
 
-        mock.setServletContext((ServletContext) ctx);
+        mock.setServletContext(ctx);
         expectLastCall().times(1);
 
         replay(mock);

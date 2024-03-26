@@ -21,10 +21,9 @@
 package org.apache.struts2.showcase.chat;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.SessionAware;
 
 import java.util.Map;
-
-import org.apache.struts2.action.SessionAware;
 
 public class SendMessageToRoomAction extends ActionSupport implements SessionAware {
 
@@ -34,7 +33,7 @@ public class SendMessageToRoomAction extends ActionSupport implements SessionAwa
 
 	private String roomName;
 	private String message;
-	private Map<String, Object> session;
+	private Map session;
 
 
 	public SendMessageToRoomAction(ChatService chatService) {
@@ -68,10 +67,9 @@ public class SendMessageToRoomAction extends ActionSupport implements SessionAwa
 		return SUCCESS;
 	}
 
-    @Override
-    public void withSession(Map<String, Object> session) {
-        this.session = session;
-    }
+	public void setSession(Map session) {
+		this.session = session;
+	}
 
 
 }

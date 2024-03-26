@@ -24,12 +24,8 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.action.PrincipalAware;
+import org.apache.struts2.interceptor.PrincipalAware;
 import org.apache.struts2.portlet.PortletConstants;
-import org.apache.struts2.portlet.action.PortletContextAware;
-import org.apache.struts2.portlet.action.PortletPreferencesAware;
-import org.apache.struts2.portlet.action.PortletRequestAware;
-import org.apache.struts2.portlet.action.PortletResponseAware;
 
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
@@ -54,22 +50,42 @@ public class PortletAwareInterceptor extends AbstractInterceptor implements Stru
 
         if (action instanceof PortletRequestAware) {
             PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
-            ((PortletRequestAware) action).withPortletRequest(request);
+            ((PortletRequestAware) action).setPortletRequest(request);
+        }
+
+        if (action instanceof org.apache.struts2.portlet.action.PortletRequestAware) {
+            PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
+            ((org.apache.struts2.portlet.action.PortletRequestAware) action).withPortletRequest(request);
         }
 
         if (action instanceof PortletResponseAware) {
             PortletResponse response = (PortletResponse) context.get(PortletConstants.RESPONSE);
-            ((PortletResponseAware) action).withPortletResponse(response);
+            ((PortletResponseAware) action).setPortletResponse(response);
+        }
+
+        if (action instanceof org.apache.struts2.portlet.action.PortletResponseAware) {
+            PortletResponse response = (PortletResponse) context.get(PortletConstants.RESPONSE);
+            ((org.apache.struts2.portlet.action.PortletResponseAware) action).withPortletResponse(response);
         }
 
         if (action instanceof PrincipalAware) {
             PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
-            ((PrincipalAware) action).withPrincipalProxy(new PortletPrincipalProxy(request));
+            ((PrincipalAware) action).setPrincipalProxy(new PortletPrincipalProxy(request));
+        }
+
+        if (action instanceof org.apache.struts2.action.PrincipalAware) {
+            PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
+            ((org.apache.struts2.action.PrincipalAware) action).withPrincipalProxy(new PortletPrincipalProxy(request));
         }
 
         if (action instanceof PortletContextAware) {
             PortletContext portletContext = (PortletContext) context.get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
-            ((PortletContextAware) action).withPortletContext(portletContext);
+            ((PortletContextAware) action).setPortletContext(portletContext);
+        }
+
+        if (action instanceof org.apache.struts2.portlet.action.PortletContextAware) {
+            PortletContext portletContext = (PortletContext) context.get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
+            ((org.apache.struts2.portlet.action.PortletContextAware) action).withPortletContext(portletContext);
         }
 
         if (action instanceof PortletPreferencesAware) {
@@ -78,9 +94,21 @@ public class PortletAwareInterceptor extends AbstractInterceptor implements Stru
             // Check if running in a servlet environment
             if (request == null) {
                 LOG.warn("This portlet preferences implementation should only be used during development");
-                ((PortletPreferencesAware) action).withPortletPreferences(new ServletPortletPreferences(ActionContext.getContext().getSession()));
+                ((PortletPreferencesAware) action).setPortletPreferences(new ServletPortletPreferences(ActionContext.getContext().getSession()));
             } else {
-                ((PortletPreferencesAware) action).withPortletPreferences(request.getPreferences());
+                ((PortletPreferencesAware) action).setPortletPreferences(request.getPreferences());
+            }
+        }
+
+        if (action instanceof org.apache.struts2.portlet.action.PortletPreferencesAware) {
+            PortletRequest request = (PortletRequest) context.get(PortletConstants.REQUEST);
+
+            // Check if running in a servlet environment
+            if (request == null) {
+                LOG.warn("This portlet preferences implementation should only be used during development");
+                ((org.apache.struts2.portlet.action.PortletPreferencesAware) action).withPortletPreferences(new ServletPortletPreferences(ActionContext.getContext().getSession()));
+            } else {
+                ((org.apache.struts2.portlet.action.PortletPreferencesAware) action).withPortletPreferences(request.getPreferences());
             }
         }
 

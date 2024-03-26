@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,41 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.showcase.hangman;
-
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.interceptor.SessionAware;
+package org.apache.struts2.interceptor;
 
 import java.util.Map;
 
-public class GuessCharacterAction extends ActionSupport implements SessionAware {
+/**
+ * <p>
+ * Actions that want access to the user's HTTP session attributes should implement this interface.
+ * </p>
+ * <p>
+ * This will give them access to a Map where they can put objects that can be made available
+ * to subsequent requests.
+ * </p>
+ * <p>
+ * Typical uses may be cached user data such as name, or a shopping cart.
+ * </p>
+ * @deprecated use {@link org.apache.struts2.action.SessionAware}
+ */
+@Deprecated
+public interface SessionAware {
 
-	private static final long serialVersionUID = 9050915577007590674L;
-
-	private Map session;
-	private Character character;
-	private Hangman hangman;
-
-	public String execute() throws Exception {
-		hangman = (Hangman) session.get(HangmanConstants.HANGMAN_SESSION_KEY);
-		hangman.guess(character);
-
-		return SUCCESS;
-	}
-
-	public Hangman getHangman() {
-		return hangman;
-	}
-
-	public void setSession(Map session) {
-		this.session = session;
-	}
-
-	public void setCharacter(Character character) {
-		this.character = character;
-	}
-
-	public Character getCharacter() {
-		return this.character;
-	}
+    /**
+     * Sets the Map of session attributes in the implementing class.
+     *
+     * @param session a Map of HTTP session attribute name/value pairs.
+     * @deprecated please use {@link org.apache.struts2.action.SessionAware#withSession(Map)}
+     */
+    @Deprecated
+    public void setSession(Map<String,Object> session);
 }

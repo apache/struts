@@ -58,7 +58,7 @@ public class PortletStateInterceptorTest extends StrutsTestCasePortletTests {
         Map<String, Object> session = new HashMap<>();
 
         ActionContext ctx = ActionContext.of(ctxMap).bind();
-        ctx.withSession(session);
+        ctx.setSession(session);
         EasyMock.expect(invocation.getInvocationContext()).andStubReturn(ctx);
         actionResponse.setRenderParameter(EVENT_ACTION, "true");
 
@@ -97,7 +97,7 @@ public class PortletStateInterceptorTest extends StrutsTestCasePortletTests {
         ctxMap.put(REQUEST, renderRequest);
 
         ActionContext ctx = ActionContext.of(ctxMap).bind();
-        ctx.withSession(session);
+        ctx.setSession(session);
 
         EasyMock.expect(invocation.getInvocationContext()).andStubReturn(ctx);
         EasyMock.expect(invocation.getStack()).andStubReturn(currentStack);
@@ -138,7 +138,7 @@ public class PortletStateInterceptorTest extends StrutsTestCasePortletTests {
         ctxMap.put(REQUEST, renderRequest);
 
         ActionContext ctx = ActionContext.of(ctxMap).bind();
-        ctx.withSession(session);
+        ctx.setSession(session);
 
         EasyMock.expect(invocation.getInvocationContext()).andStubReturn(ctx);
         EasyMock.expect(invocation.getStack()).andStubReturn(currentStack);

@@ -21,11 +21,9 @@
 package org.apache.struts2.showcase.xslt;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.ServletRequestAware;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.action.ServletRequestAware;
-
 import java.util.Map;
 import java.util.Properties;
 
@@ -53,6 +51,10 @@ public class JVMAction implements ServletRequestAware {
 
 	public HttpServletRequest getServletRequest() {
 		return servletRequest;
+	}
+
+	public void setServletRequest(HttpServletRequest servletRequest) {
+		this.servletRequest = servletRequest;
 	}
 
 	public Map<String, String> getEnvironment() {
@@ -98,9 +100,4 @@ public class JVMAction implements ServletRequestAware {
 			this.systemProperties = systemProperties;
 		}
 	}
-
-    @Override
-    public void withServletRequest(HttpServletRequest request) {
-        this.servletRequest = request;
-    }
 }

@@ -22,6 +22,8 @@ import org.apache.struts2.dispatcher.HttpParameters;
 
 import java.util.Map;
 
+import static java.util.stream.Collectors.toMap;
+
 @Deprecated
 public interface ParameterAware extends org.apache.struts2.action.ParametersAware {
 
@@ -29,6 +31,6 @@ public interface ParameterAware extends org.apache.struts2.action.ParametersAwar
 
     @Override
     default void withParameters(HttpParameters parameters) {
-        setParameters(parameters);
+        setParameters(parameters.entrySet().stream().collect(toMap(Map.Entry::getKey, e -> e.getValue().getMultipleValues())));
     }
 }

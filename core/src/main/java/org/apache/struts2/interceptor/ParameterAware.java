@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toMap;
 @Deprecated
 public interface ParameterAware extends org.apache.struts2.action.ParametersAware {
 
-    void setParameters(Map map);
+    void setParameters(Map<String, String[]> map);
 
     @Override
     default void withParameters(HttpParameters parameters) {

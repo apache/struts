@@ -46,9 +46,9 @@ abstract class AbstractMultiPartRequestTest {
     protected final String boundary = "_boundary_";
     protected final String endline = "\r\n";
 
-    protected AbstractMultiPartRequest<File> multiPart;
+    protected AbstractMultiPartRequest multiPart;
 
-    abstract protected AbstractMultiPartRequest<File> createMultipartRequest();
+    abstract protected AbstractMultiPartRequest createMultipartRequest();
 
     @BeforeClass
     public static void beforeClass() throws IOException {
@@ -268,8 +268,8 @@ abstract class AbstractMultiPartRequestTest {
                     .isEqualTo("5,6,7,8");
         });
 
-        List<UploadedFile<File>> uploadedFiles = new ArrayList<>();
-        for (Map.Entry<String, List<UploadedFile<File>>> entry : multiPart.uploadedFiles.entrySet()) {
+        List<UploadedFile> uploadedFiles = new ArrayList<>();
+        for (Map.Entry<String, List<UploadedFile>> entry : multiPart.uploadedFiles.entrySet()) {
             uploadedFiles.addAll(entry.getValue());
         }
 

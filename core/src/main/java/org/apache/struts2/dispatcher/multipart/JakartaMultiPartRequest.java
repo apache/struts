@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -36,7 +35,7 @@ import java.util.List;
 /**
  * Multipart form data request adapter for Jakarta Commons FileUpload package.
  */
-public class JakartaMultiPartRequest extends AbstractMultiPartRequest<File> {
+public class JakartaMultiPartRequest extends AbstractMultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(JakartaMultiPartRequest.class);
 
@@ -104,7 +103,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest<File> {
             return;
         }
 
-        List<UploadedFile<File>> values;
+        List<UploadedFile> values;
         if (uploadedFiles.get(item.getFieldName()) != null) {
             values = uploadedFiles.get(item.getFieldName());
         } else {
@@ -114,7 +113,7 @@ public class JakartaMultiPartRequest extends AbstractMultiPartRequest<File> {
         if (item.isInMemory()) {
             LOG.warn("Storing uploaded files just in memory isn't supported currently, skipping file: {}!", item.getName());
         } else {
-            UploadedFile<File> uploadedFile = StrutsUploadedFile.Builder
+            UploadedFile uploadedFile = StrutsUploadedFile.Builder
                     .create(item.getPath().toFile())
                     .withOriginalName(item.getName())
                     .withContentType(item.getContentType())

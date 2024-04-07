@@ -82,7 +82,7 @@
 
     <modules>
         <module>bom</module>
-        <module>jakarta</module>
+        <!--<module>jakarta</module>-->
         <module>core</module>
         <module>plugins</module>
         <module>apps</module>
@@ -115,12 +115,12 @@
         <freemarker.version>2.3.32</freemarker.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <jackson.version>2.16.0</jackson.version>
-        <log4j2.version>2.22.1</log4j2.version>
+        <log4j2.version>2.23.1</log4j2.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <mockito.version>5.8.0</mockito.version>
         <ognl.version>3.3.4</ognl.version>
         <sitemesh.version>2.5.0</sitemesh.version>
-        <slf4j.version>2.0.11</slf4j.version>
+        <slf4j.version>2.0.12</slf4j.version>
         <spring.platformVersion>6.0.13</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
@@ -287,14 +287,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.rat</groupId>
@@ -351,6 +344,17 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <configuration>
+                        <skipAssembly>true</skipAssembly>
+                        <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+                        <outputDirectory>assembly/out</outputDirectory>
+                        <workDirectory>assembly/work</workDirectory>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>3.4.1</version>
                     <executions>
@@ -372,14 +376,6 @@
                     <artifactId>maven-wrapper-plugin</artifactId>
                     <version>3.2.0</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.6.0</version>
-                    <configuration>
-                        <skipAssembly>true</skipAssembly>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -387,7 +383,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <!-- See https://issues.apache.org/jira/browse/MRELEASE-1029 -->
                 <version>3.0.1</version>
             </plugin>
             <plugin>
@@ -413,10 +408,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.12.1</version>
                 <configuration>
@@ -426,12 +417,12 @@
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
                         <artifactId>doxia-core</artifactId>
-                        <version>1.9.1</version>
+                        <version>1.12.0</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
                         <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.9.1</version>
+                        <version>1.12.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -860,7 +851,7 @@
             <dependency>
                 <groupId>commons-validator</groupId>
                 <artifactId>commons-validator</artifactId>
-                <version>1.6</version>
+                <version>1.8.0</version>
             </dependency>
 
             <!-- Mocks for unit testing (by Spring) -->
@@ -991,7 +982,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.25.0</version>
+                <version>1.26.0</version>
             </dependency>
 
             <dependency>

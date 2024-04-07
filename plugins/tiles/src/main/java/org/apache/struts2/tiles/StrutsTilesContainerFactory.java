@@ -25,11 +25,6 @@ import ognl.PropertyAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tiles.api.TilesContainer;
-import org.apache.tiles.request.ApplicationContext;
-import org.apache.tiles.request.ApplicationResource;
-import org.apache.tiles.request.Request;
-import org.apache.tiles.request.render.BasicRendererFactory;
-import org.apache.tiles.request.render.ChainedDelegateRenderer;
 import org.apache.tiles.core.definition.DefinitionsFactory;
 import org.apache.tiles.core.definition.pattern.DefinitionPatternMatcherFactory;
 import org.apache.tiles.core.definition.pattern.PatternDefinitionResolver;
@@ -57,6 +52,11 @@ import org.apache.tiles.ognl.PropertyAccessorDelegateFactory;
 import org.apache.tiles.ognl.ScopePropertyAccessor;
 import org.apache.tiles.ognl.TilesApplicationContextNestedObjectExtractor;
 import org.apache.tiles.ognl.TilesContextPropertyAccessorDelegateFactory;
+import org.apache.tiles.request.ApplicationContext;
+import org.apache.tiles.request.ApplicationResource;
+import org.apache.tiles.request.Request;
+import org.apache.tiles.request.render.BasicRendererFactory;
+import org.apache.tiles.request.render.ChainedDelegateRenderer;
 import org.apache.tiles.request.render.Renderer;
 
 import jakarta.el.ArrayELResolver;
@@ -68,7 +68,10 @@ import jakarta.el.MapELResolver;
 import jakarta.el.ResourceBundleELResolver;
 import jakarta.servlet.jsp.JspFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -102,8 +105,19 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     /**
      * Default pattern to be used to collect Tiles definitions if user didn't configure any
+     *
+     * @deprecated since Struts 6.4.0, use {@link #TILES_DEFAULT_PATTERNS} instead
      */
-    public static final String TILES_DEFAULT_PATTERN = "tiles*.xml";
+    @Deprecated
+    public static final String TILES_DEFAULT_PATTERN = "/WEB-INF/**/tiles*.xml,classpath*:META-INF/**/tiles*.xml";
+
+    /**
+     * Default pattern to be used to collect Tiles definitions if user didn't configure any
+     */
+    public static final Set<String> TILES_DEFAULT_PATTERNS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            "/WEB-INF/**/tiles*.xml",
+            "classpath*:META-INF/**/tiles*.xml"
+    )));
 
     /**
      * Supported expression languages
@@ -213,7 +227,7 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
         if (params.containsKey(DefinitionsFactory.DEFINITIONS_CONFIG)) {
             return TextParseUtil.commaDelimitedStringToSet(params.get(DefinitionsFactory.DEFINITIONS_CONFIG));
         }
-        return TextParseUtil.commaDelimitedStringToSet(TILES_DEFAULT_PATTERN);
+        return TILES_DEFAULT_PATTERNS;
     }
 
     protected ELAttributeEvaluator createELEvaluator(ApplicationContext applicationContext) {

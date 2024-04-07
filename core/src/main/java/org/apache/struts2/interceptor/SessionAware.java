@@ -16,25 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.action;
+package org.apache.struts2.interceptor;
 
-import org.apache.struts2.dispatcher.multipart.UploadedFile;
+import java.util.Map;
 
-import java.util.List;
+@Deprecated
+public interface SessionAware extends org.apache.struts2.action.SessionAware {
 
-/**
- * Actions that want to be aware of all the uploaded file should implement this interface.
- * The {@link org.apache.struts2.interceptor.ActionFileUploadInterceptor} will use the interface
- * to notify action about the multiple uploaded files.
- */
-public interface UploadedFilesAware {
+    void setSession(Map<String, Object> session);
 
-    /**
-     * Notifies action about the multiple uploaded files, when a single file is uploaded
-     * the list will have just one element
-     *
-     * @param uploadedFiles a list of {@link UploadedFile}, cannot be null. It can be empty.
-     */
-    void withUploadedFiles(List<UploadedFile> uploadedFiles);
-
+    @Override
+    default void withSession(Map<String, Object> session) {
+        setSession(session);
+    }
 }

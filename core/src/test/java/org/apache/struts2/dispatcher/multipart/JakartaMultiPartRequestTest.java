@@ -18,12 +18,10 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import java.io.File;
-
 public class JakartaMultiPartRequestTest extends AbstractMultiPartRequestTest {
 
     @Override
-    protected AbstractMultiPartRequest<File> createMultipartRequest() {
+    protected AbstractMultiPartRequest createMultipartRequest() {
         return new JakartaMultiPartRequest();
     }
 

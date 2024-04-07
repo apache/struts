@@ -16,25 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.action;
+package org.apache.struts2.interceptor;
 
-import org.apache.struts2.dispatcher.multipart.UploadedFile;
+import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.List;
+@Deprecated
+public interface ServletRequestAware extends org.apache.struts2.action.ServletRequestAware {
 
-/**
- * Actions that want to be aware of all the uploaded file should implement this interface.
- * The {@link org.apache.struts2.interceptor.ActionFileUploadInterceptor} will use the interface
- * to notify action about the multiple uploaded files.
- */
-public interface UploadedFilesAware {
+    void setServletRequest(HttpServletRequest httpServletRequest);
 
-    /**
-     * Notifies action about the multiple uploaded files, when a single file is uploaded
-     * the list will have just one element
-     *
-     * @param uploadedFiles a list of {@link UploadedFile}, cannot be null. It can be empty.
-     */
-    void withUploadedFiles(List<UploadedFile> uploadedFiles);
-
+    @Override
+    default void withServletRequest(HttpServletRequest request) {
+        setServletRequest(request);
+    }
 }

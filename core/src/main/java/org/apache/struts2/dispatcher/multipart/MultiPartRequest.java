@@ -58,7 +58,7 @@ public interface MultiPartRequest {
      * @param fieldName input field name
      * @return a UploadedFile[] object for files associated with the specified input field name
      */
-    <T> UploadedFile<T>[] getFile(String fieldName);
+    UploadedFile[] getFile(String fieldName);
 
     /**
      * Returns a String[] of file names for files associated with the specified input field name

@@ -16,25 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.action;
+package org.apache.struts2.interceptor;
 
-import org.apache.struts2.dispatcher.multipart.UploadedFile;
+import org.apache.struts2.dispatcher.HttpParameters;
 
-import java.util.List;
+import java.util.Map;
 
-/**
- * Actions that want to be aware of all the uploaded file should implement this interface.
- * The {@link org.apache.struts2.interceptor.ActionFileUploadInterceptor} will use the interface
- * to notify action about the multiple uploaded files.
- */
-public interface UploadedFilesAware {
+import static java.util.stream.Collectors.toMap;
 
-    /**
-     * Notifies action about the multiple uploaded files, when a single file is uploaded
-     * the list will have just one element
-     *
-     * @param uploadedFiles a list of {@link UploadedFile}, cannot be null. It can be empty.
-     */
-    void withUploadedFiles(List<UploadedFile> uploadedFiles);
+@Deprecated
+public interface ParameterAware extends org.apache.struts2.action.ParametersAware {
 
+    void setParameters(Map<String, String[]> map);
+
+    @Override
+    default void withParameters(HttpParameters parameters) {
+        setParameters(parameters.entrySet().stream().collect(toMap(Map.Entry::getKey, e -> e.getValue().getMultipleValues())));
+    }
 }

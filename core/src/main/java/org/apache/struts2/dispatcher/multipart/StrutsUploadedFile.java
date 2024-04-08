@@ -20,7 +20,7 @@ package org.apache.struts2.dispatcher.multipart;
 
 import java.io.File;
 
-public class StrutsUploadedFile implements UploadedFile<File> {
+public class StrutsUploadedFile implements UploadedFile {
 
     private final File file;
     private final String contentType;
@@ -116,7 +116,7 @@ public class StrutsUploadedFile implements UploadedFile<File> {
             return this;
         }
 
-        public UploadedFile<File> build() {
+        public UploadedFile build() {
             return new StrutsUploadedFile(this.file, this.contentType, this.originalName);
         }
     }

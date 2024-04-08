@@ -46,7 +46,7 @@ import java.util.Map;
  * Abstract class with some helper methods, it should be used
  * when starting development of another implementation of {@link MultiPartRequest}
  */
-public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
+public abstract class AbstractMultiPartRequest implements MultiPartRequest {
 
     protected static final String STRUTS_MESSAGES_UPLOAD_ERROR_PARAMETER_TOO_LONG_KEY = "struts.messages.upload.error.parameter.too.long";
 
@@ -100,7 +100,7 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     /**
      * Map between file fields and file data.
      */
-    protected Map<String, List<UploadedFile<T>>> uploadedFiles = new HashMap<>();
+    protected Map<String, List<UploadedFile>> uploadedFiles = new HashMap<>();
 
     /**
      * Map between non-file fields and values.
@@ -326,8 +326,7 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFile(java.lang.String)
      */
-    @SuppressWarnings("unchecked")
-    public UploadedFile<T>[] getFile(String fieldName) {
+    public UploadedFile[] getFile(String fieldName) {
         return uploadedFiles.getOrDefault(fieldName, Collections.emptyList())
                 .toArray(UploadedFile[]::new);
     }
@@ -383,8 +382,8 @@ public abstract class AbstractMultiPartRequest<T> implements MultiPartRequest {
     public void cleanUp() {
         try {
             LOG.debug("Performing File Upload temporary storage cleanup.");
-            for (List<UploadedFile<T>> uploadedFileList : uploadedFiles.values()) {
-                for (UploadedFile<T> uploadedFile : uploadedFileList) {
+            for (List<UploadedFile> uploadedFileList : uploadedFiles.values()) {
+                for (UploadedFile uploadedFile : uploadedFileList) {
                     if (uploadedFile.isFile()) {
                         LOG.debug("Deleting file: {}", uploadedFile.getName());
                         if (!uploadedFile.delete()) {

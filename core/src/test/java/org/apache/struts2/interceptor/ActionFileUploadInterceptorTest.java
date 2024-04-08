@@ -51,7 +51,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
-    private static final UploadedFile<File> EMPTY_FILE = new UploadedFile<>() {
+    private static final UploadedFile EMPTY_FILE = new UploadedFile() {
         @Override
         public Long length() {
             return 0L;
@@ -210,7 +210,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         URL url = ClassLoaderUtil.getResource("log4j2.xml", ActionFileUploadInterceptorTest.class);
         File file = new File(new URI(url.toString()));
         assertTrue("log4j2.xml should be in src/test folder", file.exists());
-        UploadedFile<File> uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html").withOriginalName("filename").build();
+        UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file).withContentType("text/html").withOriginalName("filename").build();
         boolean notOk = interceptor.acceptFile(validation, uploadedFile, "filename", "text/html", "inputName");
 
         assertFalse(notOk);
@@ -310,7 +310,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
 
         assertFalse(action.hasErrors());
 
-        List<UploadedFile<File>> files = action.getUploadFiles();
+        List<UploadedFile> files = action.getUploadFiles();
 
         assertNotNull(files);
         assertEquals(1, files.size());
@@ -345,7 +345,7 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
         interceptor.setAllowedTypes("text/html");
         interceptor.intercept(mai);
 
-        List<UploadedFile<File>> files = action.getUploadFiles();
+        List<UploadedFile> files = action.getUploadFiles();
 
         assertNotNull(files);
         assertEquals("files accepted ", 2, files.size());
@@ -563,14 +563,14 @@ public class ActionFileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public static class MyFileUploadAction extends ActionSupport implements UploadedFilesAware {
-        private List<UploadedFile<File>> uploadedFiles;
+        private List<UploadedFile> uploadedFiles;
 
         @Override
-        public void withUploadedFiles(List<UploadedFile<File>> uploadedFiles) {
+        public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
             this.uploadedFiles = uploadedFiles;
         }
 
-        public List<UploadedFile<File>> getUploadFiles() {
+        public List<UploadedFile> getUploadFiles() {
             return this.uploadedFiles;
         }
     }

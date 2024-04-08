@@ -23,7 +23,7 @@ import java.io.Serializable;
 /**
  * Virtual representation of an uploaded file used by {@link MultiPartRequest}
  */
-public interface UploadedFile<T> extends Serializable {
+public interface UploadedFile extends Serializable {
 
     /**
      * @return size of the content of file/stream/array
@@ -58,7 +58,7 @@ public interface UploadedFile<T> extends Serializable {
     /**
      * @return content of the upload file
      */
-    T getContent();
+    Object getContent();
 
     /**
      * @return content type of the uploaded file

@@ -22,61 +22,51 @@
 package org.apache.struts2.showcase.fileupload;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.action.UploadedFilesAware;
+import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
-import java.io.File;
+import java.util.List;
 
 /**
  * Showcase action - mutiple file upload using array.
- *
- * @version $Date$ $Id$
  */
-public class MultipleFileUploadUsingArrayAction extends ActionSupport {
+public class MultipleFileUploadUsingArrayAction extends ActionSupport implements UploadedFilesAware {
 
-	private File[] uploads = new File[0];
-	private String[] uploadFileNames = new String[0];
-	private String[] uploadContentTypes = new String[0];
+    private List<UploadedFile> uploadedFiles;
 
+    public String upload() throws Exception {
+        System.out.println("\n\n upload2");
+        System.out.println("files:");
+        for (UploadedFile u : uploadedFiles) {
+            System.out.println("*** " + u + "\t" + u.length());
+        }
+        System.out.println("filenames:");
+        for (String n : getUploadFileNames()) {
+            System.out.println("*** " + n);
+        }
+        System.out.println("content types:");
+        for (String c : getUploadContentTypes()) {
+            System.out.println("*** " + c);
+        }
+        System.out.println("\n\n");
+        return SUCCESS;
+    }
 
-	public String upload() throws Exception {
-		System.out.println("\n\n upload2");
-		System.out.println("files:");
-		for (File u : uploads) {
-			System.out.println("*** " + u + "\t" + u.length());
-		}
-		System.out.println("filenames:");
-		for (String n : uploadFileNames) {
-			System.out.println("*** " + n);
-		}
-		System.out.println("content types:");
-		for (String c : uploadContentTypes) {
-			System.out.println("*** " + c);
-		}
-		System.out.println("\n\n");
-		return SUCCESS;
-	}
+    @Override
+    public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
+        this.uploadedFiles = uploadedFiles;
+    }
 
-	public File[] getUpload() {
-		return this.uploads;
-	}
+    private String[] getUploadFileNames() {
+        return this.uploadedFiles.stream()
+                .map(UploadedFile::getOriginalName)
+                .toArray(String[]::new);
+    }
 
-	public void setUpload(File[] upload) {
-		this.uploads = upload;
-	}
+    private String[] getUploadContentTypes() {
+        return this.uploadedFiles.stream()
+                .map(UploadedFile::getContentType)
+                .toArray(String[]::new);
+    }
 
-	public String[] getUploadFileName() {
-		return this.uploadFileNames;
-	}
-
-	public void setUploadFileName(String[] uploadFileName) {
-		this.uploadFileNames = uploadFileName;
-	}
-
-	public String[] getUploadContentType() {
-		return this.uploadContentTypes;
-	}
-
-	public void setUploadContentType(String[] uploadContentType) {
-		this.uploadContentTypes = uploadContentType;
-	}
 }
-// END SNIPPET: entire-file

@@ -50,7 +50,7 @@ import java.util.UUID;
  *
  * @since 2.3.18
  */
-public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest<File> {
+public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest {
 
     private static final Logger LOG = LogManager.getLogger(JakartaStreamMultiPartRequest.class);
 
@@ -247,7 +247,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest<File
         String fileName = fileItemInput.getName();
         String fieldName = fileItemInput.getFieldName();
 
-        UploadedFile<File> uploadedFile = StrutsUploadedFile.Builder
+        UploadedFile uploadedFile = StrutsUploadedFile.Builder
                 .create(file)
                 .withOriginalName(fileName)
                 .withContentType(fileItemInput.getContentType())
@@ -256,7 +256,7 @@ public class JakartaStreamMultiPartRequest extends AbstractMultiPartRequest<File
         if (uploadedFiles.containsKey(fieldName)) {
             uploadedFiles.get(fieldName).add(uploadedFile);
         } else {
-            List<UploadedFile<File>> infos = new ArrayList<>();
+            List<UploadedFile> infos = new ArrayList<>();
             infos.add(uploadedFile);
             uploadedFiles.put(fieldName, infos);
         }

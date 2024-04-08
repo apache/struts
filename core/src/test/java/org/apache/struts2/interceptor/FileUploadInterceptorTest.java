@@ -53,7 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
-    private static final UploadedFile<File> EMPTY_FILE = new UploadedFile<>() {
+    private static final UploadedFile EMPTY_FILE = new UploadedFile() {
         @Override
         public Long length() {
             return 0L;
@@ -204,7 +204,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
         URL url = ClassLoaderUtil.getResource("log4j2.xml", FileUploadInterceptorTest.class);
         File file = new File(new URI(url.toString()));
         assertTrue("log4j2.xml should be in src/test folder", file.exists());
-        UploadedFile<File> uploadedFile = StrutsUploadedFile.Builder.create(file)
+        UploadedFile uploadedFile = StrutsUploadedFile.Builder.create(file)
                 .withContentType("text/html")
                 .withOriginalName("filename")
                 .build();
@@ -307,7 +307,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         HttpParameters parameters = mai.getInvocationContext().getParameters();
         assertEquals(3, parameters.keySet().size());
-        UploadedFile<File>[] files = (UploadedFile<File>[]) parameters.get("file").getObject();
+        UploadedFile[] files = (UploadedFile[]) parameters.get("file").getObject();
         String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
         String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
 
@@ -363,7 +363,7 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
 
         HttpParameters parameters = mai.getInvocationContext().getParameters();
         assertEquals(3, parameters.keySet().size());
-        UploadedFile<File>[] files = (UploadedFile<File>[]) parameters.get("file").getObject();
+        UploadedFile[] files = (UploadedFile[]) parameters.get("file").getObject();
         String[] fileContentTypes = parameters.get("fileContentType").getMultipleValues();
         String[] fileRealFilenames = parameters.get("fileFileName").getMultipleValues();
 
@@ -642,14 +642,14 @@ public class FileUploadInterceptorTest extends StrutsInternalTestCase {
     }
 
     public static class MyFileUploadAction extends ActionSupport implements UploadedFilesAware {
-        private List<UploadedFile<File>> uploadedFiles;
+        private List<UploadedFile> uploadedFiles;
 
         @Override
-        public void withUploadedFiles(List<UploadedFile<File>> uploadedFiles) {
+        public void withUploadedFiles(List<UploadedFile> uploadedFiles) {
             this.uploadedFiles = uploadedFiles;
         }
 
-        public List<UploadedFile<File>> getUploadFiles() {
+        public List<UploadedFile> getUploadFiles() {
             return this.uploadedFiles;
         }
     }

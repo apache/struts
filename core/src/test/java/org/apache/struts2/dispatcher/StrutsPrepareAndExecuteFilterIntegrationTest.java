@@ -26,13 +26,10 @@ import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -127,6 +124,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterConfig filterConfig = new MockFilterConfig();
+        filterConfig.addInitParameter("struts.action.excludePattern", ".*hello.*");
         MockFilterChain filterChain = new MockFilterChain() {
             @Override
             public void doFilter(ServletRequest req, ServletResponse res) {
@@ -135,14 +133,7 @@ public class StrutsPrepareAndExecuteFilterIntegrationTest {
         };
 
         request.setRequestURI("/hello.action");
-        StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter() {
-            @Override
-            public void init( FilterConfig filterConfig ) throws ServletException {
-                super.init(filterConfig);
-                excludedPatterns = new ArrayList<>();
-                excludedPatterns.add(Pattern.compile(".*hello.*"));
-            }
-        };
+        StrutsPrepareAndExecuteFilter filter = new StrutsPrepareAndExecuteFilter();
         filter.init(filterConfig);
         filter.doFilter(request, response, filterChain);
         assertEquals(200, response.getStatus());

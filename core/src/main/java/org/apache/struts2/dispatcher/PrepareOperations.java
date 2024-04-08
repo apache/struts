@@ -32,8 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Contains preparation operations for a request before execution
@@ -223,21 +221,11 @@ public class PrepareOperations {
      * Check whether the request matches a list of exclude patterns.
      *
      * @param request          The request to check patterns against
-     * @param excludedPatterns list of patterns for exclusion
-     *
      * @return <tt>true</tt> if the request URI matches one of the given patterns
      */
-    public boolean isUrlExcluded(HttpServletRequest request, List<Pattern> excludedPatterns) {
-        if (excludedPatterns == null) {
-            return false;
-        }
+    public boolean isUrlExcluded(HttpServletRequest request) {
         String uri = RequestUtils.getUri(request);
-        for (Pattern pattern : excludedPatterns) {
-            if (pattern.matcher(uri).matches()) {
-                return true;
-            }
-        }
-        return false;
+        return dispatcher.getActionExcludedPatterns().stream().anyMatch(pattern -> pattern.matcher(uri).matches());
     }
 
     /**

@@ -109,7 +109,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- dependency versions in alphanumeric order -->
-        <asm.version>9.6</asm.version>
+        <asm.version>9.7</asm.version>
         <jackson.version>2.16.1</jackson.version>
         <log4j2.version>2.23.1</log4j2.version>
         <ognl.version>3.3.4</ognl.version>

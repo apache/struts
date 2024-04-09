@@ -31,6 +31,7 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.mock.MockInterceptor;
 import com.opensymphony.xwork2.test.StubConfigurationProvider;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
 
@@ -237,6 +238,41 @@ public class ConfigurationTest extends XWorkTestCase {
         assertNotNull(configuration.getActionConfig("/foo/bar", "Bar"));
 
         mockContainerProvider.verify();
+    }
+
+    public void testGetActionConfigFallbackToEmptyNamespaceWhenNamespaceDontMatchAndEmptyNamespaceFallbackIsNotDisabled() {
+        // struts.disableEmptyNamespaceFallback default to null, so it's not disabled
+        RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
+
+        // check namespace that doesn't match fallback to empty namespace
+        ActionConfig actionConfig = configuration.getActionConfig("/something/that/is/not/in/the/namespace/config", "LazyFoo");
+        assertEquals("default", actionConfig.getPackageName()); // fallback to empty namespace (package name is default)
+        assertEquals("LazyFoo", actionConfig.getName());
+
+        // check non-empty namespace and name in config still matches
+        assertNotNull(configuration.getActionConfig("includeTest", "Foo"));
+
+        // check root namespace and name in config still matches
+        actionConfig = configuration.getActionConfig("/", "LazyFoo");
+        assertEquals("default", actionConfig.getPackageName());
+        assertEquals("LazyFoo", actionConfig.getName());
+    }
+
+    public void testGetActionConfigReturnNullWhenNamespaceDontMatchAndEmptyNamespaceFallbackIsDisabled() {
+        // set the struts.disableEmptyNamespaceFallback to true and reload the configuration
+        setStrutsConstant(StrutsConstants.STRUTS_DISABLE_EMPTY_NAMESPACE_FALLBACK, "true");
+        RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
+
+        // check namespace that doesn't match NOT fallback to empty namespace and return null
+        assertNull(configuration.getActionConfig("/something/that/is/not/in/the/namespace/config", "LazyFoo"));
+
+        // check non-empty namespace and name in config still matches
+        assertNotNull(configuration.getActionConfig("includeTest", "Foo"));
+
+        // check root namespace and name in config still matches
+        ActionConfig actionConfig = configuration.getActionConfig("/", "LazyFoo");
+        assertEquals("default", actionConfig.getPackageName());
+        assertEquals("LazyFoo", actionConfig.getName());
     }
 
     public void testInitForPackageProviders() {

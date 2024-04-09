@@ -217,23 +217,9 @@ public class DebugTagTest extends AbstractUITagTest {
     /**
      * Overwrite the Struts Constant and reload container
      */
-    private void setStrutsConstant(final Map<String, String> overwritePropeties) {
-        configurationManager.addContainerProvider(new StubConfigurationProvider() {
-            @Override
-            public boolean needsReload() {
-                return true;
-            }
-
-            @Override
-            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-                for (Map.Entry<String, String> stringStringEntry : overwritePropeties.entrySet()) {
-                    props.setProperty(stringStringEntry.getKey(), stringStringEntry.getValue(), null);
-                }
-            }
-        });
-
-        configurationManager.reload();
-        container = configurationManager.getConfiguration().getContainer();
+    @Override
+    protected void setStrutsConstant(final Map<String, String> overwritePropeties) {
+        super.setStrutsConstant(overwritePropeties);
         stack.getActionContext().withContainer(container);
     }
 }

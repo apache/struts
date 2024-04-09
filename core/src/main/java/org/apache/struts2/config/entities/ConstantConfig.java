@@ -145,6 +145,7 @@ public class ConstantConfig {
     private String strictMethodInvocationMethodRegex;
     private BeanConfig textProviderFactory;
     private BeanConfig localizedTextProvider;
+    private Boolean disallowProxyObjectAccess;
     private Boolean disallowProxyMemberAccess;
     private Integer ognlAutoGrowthCollectionLimit;
     private String staticContentPath;
@@ -279,6 +280,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_SMI_METHOD_REGEX, strictMethodInvocationMethodRegex);
         map.put(StrutsConstants.STRUTS_TEXT_PROVIDER_FACTORY, beanConfToString(textProviderFactory));
         map.put(StrutsConstants.STRUTS_LOCALIZED_TEXT_PROVIDER, beanConfToString(localizedTextProvider));
+        map.put(StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, Objects.toString(disallowProxyObjectAccess, null));
         map.put(StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Objects.toString(disallowProxyMemberAccess, null));
         map.put(StrutsConstants.STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT, Objects.toString(ognlAutoGrowthCollectionLimit, null));
         map.put(StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, Objects.toString(staticContentPath, StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH));
@@ -1358,6 +1360,14 @@ public class ConstantConfig {
 
     public void setLocalizedTextProvider(Class<?> clazz) {
         this.localizedTextProvider = new BeanConfig(clazz, clazz.getName());
+    }
+
+    public Boolean getDisallowProxyObjectAccess() {
+        return disallowProxyObjectAccess;
+    }
+
+    public void setDisallowProxyObjectAccess(Boolean disallowProxyObjectAccess) {
+        this.disallowProxyObjectAccess = disallowProxyObjectAccess;
     }
 
     public Boolean getDisallowProxyMemberAccess() {

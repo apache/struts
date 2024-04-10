@@ -90,7 +90,7 @@ public class ConstantConfig {
     private Boolean freemarkerWrapperAltMap;
     private BeanConfig xworkConverter;
     private Boolean mapperAlwaysSelectFullNamespace;
-    private Boolean proxyDisableEmptyNamespaceFallback;
+    private Boolean actionConfigFallbackToEmptyNamespace;
     private BeanConfig localeProviderFactory;
     private String mapperIdParameterName;
     private Boolean ognlAllowStaticFieldAccess;
@@ -226,7 +226,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_FREEMARKER_WRAPPER_ALT_MAP, Objects.toString(freemarkerWrapperAltMap, null));
         map.put(StrutsConstants.STRUTS_XWORKCONVERTER, beanConfToString(xworkConverter));
         map.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, Objects.toString(mapperAlwaysSelectFullNamespace, null));
-        map.put(StrutsConstants.STRUTS_DISABLE_EMPTY_NAMESPACE_FALLBACK, Objects.toString(proxyDisableEmptyNamespaceFallback, null));
+        map.put(StrutsConstants.STRUTS_ACTION_CONFIG_FALLBACK_TO_EMPTY_NAMESPACE, Objects.toString(actionConfigFallbackToEmptyNamespace, null));
         map.put(StrutsConstants.STRUTS_LOCALE_PROVIDER_FACTORY, beanConfToString(localeProviderFactory));
         map.put(StrutsConstants.STRUTS_ID_PARAMETER_NAME, mapperIdParameterName);
         map.put(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Objects.toString(ognlAllowStaticFieldAccess, null));
@@ -814,12 +814,12 @@ public class ConstantConfig {
         this.mapperAlwaysSelectFullNamespace = mapperAlwaysSelectFullNamespace;
     }
 
-    public Boolean getProxyDisableEmptyNamespaceFallback() {
-        return proxyDisableEmptyNamespaceFallback;
+    public Boolean getActionConfigFallbackToEmptyNamespace() {
+        return actionConfigFallbackToEmptyNamespace;
     }
 
-    public void setProxyDisableEmptyNamespaceFallback(Boolean proxyDisableEmptyNamespaceFallback) {
-        this.proxyDisableEmptyNamespaceFallback = proxyDisableEmptyNamespaceFallback;
+    public void setActionConfigFallbackToEmptyNamespace(Boolean actionConfigFallbackToEmptyNamespace) {
+        this.actionConfigFallbackToEmptyNamespace = actionConfigFallbackToEmptyNamespace;
     }
 
     public BeanConfig getLocaleProviderFactory() {

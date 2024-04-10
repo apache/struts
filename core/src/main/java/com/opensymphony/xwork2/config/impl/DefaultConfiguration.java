@@ -120,6 +120,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -459,12 +460,12 @@ public class DefaultConfiguration implements Configuration {
         boolean appendNamedParameters = Boolean.parseBoolean(
                 container.getInstance(String.class, StrutsConstants.STRUTS_MATCHER_APPEND_NAMED_PARAMETERS)
         );
-        boolean emptyNamespaceFallbackDisabled = Boolean.parseBoolean(
-                container.getInstance(String.class, StrutsConstants.STRUTS_DISABLE_EMPTY_NAMESPACE_FALLBACK)
+        boolean fallbackToEmptyNamespace = Boolean.parseBoolean(
+                Optional.ofNullable(container.getInstance(String.class, StrutsConstants.STRUTS_ACTION_CONFIG_FALLBACK_TO_EMPTY_NAMESPACE)).orElse("true")
         );
 
         return new RuntimeConfigurationImpl(Collections.unmodifiableMap(namespaceActionConfigs),
-                Collections.unmodifiableMap(namespaceConfigs), matcher, appendNamedParameters, emptyNamespaceFallbackDisabled);
+                Collections.unmodifiableMap(namespaceConfigs), matcher, appendNamedParameters, fallbackToEmptyNamespace);
     }
 
     private void setDefaultResults(Map<String, ResultConfig> results, PackageConfig packageContext) {
@@ -539,17 +540,17 @@ public class DefaultConfiguration implements Configuration {
         private final Map<String, ActionConfigMatcher> namespaceActionConfigMatchers;
         private final NamespaceMatcher namespaceMatcher;
         private final Map<String, String> namespaceConfigs;
-        private final boolean emptyNamespaceFallbackDisabled;
+        private final boolean fallbackToEmptyNamespace;
 
         public RuntimeConfigurationImpl(Map<String, Map<String, ActionConfig>> namespaceActionConfigs,
                                         Map<String, String> namespaceConfigs,
                                         PatternMatcher<int[]> matcher,
                                         boolean appendNamedParameters,
-                                        boolean emptyNamespaceFallbackDisabled)
+                                        boolean fallbackToEmptyNamespace)
         {
             this.namespaceActionConfigs = namespaceActionConfigs;
             this.namespaceConfigs = namespaceConfigs;
-            this.emptyNamespaceFallbackDisabled = emptyNamespaceFallbackDisabled;
+            this.fallbackToEmptyNamespace = fallbackToEmptyNamespace;
 
             this.namespaceActionConfigMatchers = new LinkedHashMap<>();
             this.namespaceMatcher = new NamespaceMatcher(matcher, namespaceActionConfigs.keySet(), appendNamedParameters);
@@ -589,7 +590,7 @@ public class DefaultConfiguration implements Configuration {
             }
 
             // fail over to empty namespace
-            if (config == null && StringUtils.isNotBlank(namespace) && ("/".equals(namespace) || !emptyNamespaceFallbackDisabled)) {
+            if (config == null && StringUtils.isNotBlank(namespace) && ("/".equals(namespace) || fallbackToEmptyNamespace)) {
                 config = findActionConfigInNamespace("", name);
             }
 

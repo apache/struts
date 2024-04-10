@@ -240,8 +240,8 @@ public class ConfigurationTest extends XWorkTestCase {
         mockContainerProvider.verify();
     }
 
-    public void testGetActionConfigFallbackToEmptyNamespaceWhenNamespaceDontMatchAndEmptyNamespaceFallbackIsNotDisabled() {
-        // struts.disableEmptyNamespaceFallback default to null, so it's not disabled
+    public void testGetActionConfigFallbackToEmptyNamespaceWhenNamespaceDontMatchAndEmptyNamespaceFallbackIsEnabled() {
+        // struts.actionConfig.fallbackToEmptyNamespace default to true, so it is enabled
         RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
 
         // check namespace that doesn't match fallback to empty namespace
@@ -259,8 +259,8 @@ public class ConfigurationTest extends XWorkTestCase {
     }
 
     public void testGetActionConfigReturnNullWhenNamespaceDontMatchAndEmptyNamespaceFallbackIsDisabled() {
-        // set the struts.disableEmptyNamespaceFallback to true and reload the configuration
-        setStrutsConstant(StrutsConstants.STRUTS_DISABLE_EMPTY_NAMESPACE_FALLBACK, "true");
+        // set the struts.actionConfig.fallbackToEmptyNamespace to false and reload the configuration
+        setStrutsConstant(StrutsConstants.STRUTS_ACTION_CONFIG_FALLBACK_TO_EMPTY_NAMESPACE, "false");
         RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
 
         // check namespace that doesn't match NOT fallback to empty namespace and return null

@@ -132,8 +132,7 @@ public class ProxyUtil {
     public static boolean isHibernateProxyMember(Member member) {
         try {
             Class<?> clazz = ClassLoaderUtil.loadClass(HIBERNATE_HIBERNATEPROXY_CLASS_NAME, ProxyUtil.class);
-            if (hasMember(clazz, member))
-                return true;
+            return hasMember(clazz, member);
         } catch (ClassNotFoundException ignored) {
         }
 

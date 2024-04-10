@@ -31,6 +31,7 @@ import org.apache.struts2.interceptor.csp.DefaultCspSettings;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.assertNotEquals;
@@ -74,8 +75,10 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
 
     public void testEnforcingCspHeadersSet() throws Exception {
         String reportUri = "/csp-reports";
+        String reportTo =  "csp-group";
         boolean enforcingMode = true;
         interceptor.setReportUri(reportUri);
+        interceptor.setReportTo(reportTo);
         interceptor.setEnforcingMode(enforcingMode);
         session.setAttribute("nonce", "foo");
 
@@ -84,13 +87,15 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         assertNotNull("Nonce key does not exist", session.getAttribute("nonce"));
         assertFalse("Nonce value is empty", Strings.isEmpty((String) session.getAttribute("nonce")));
         assertNotEquals("New nonce value couldn't be set", "foo", session.getAttribute("nonce"));
-        checkHeader(reportUri, enforcingMode);
+        checkHeader(reportUri, reportTo, enforcingMode);
     }
 
     public void testReportingCspHeadersSet() throws Exception {
         String reportUri = "/csp-reports";
+        String reportTo =  "csp-group";
         boolean enforcingMode = false;
         interceptor.setReportUri(reportUri);
+        interceptor.setReportTo(reportTo);
         interceptor.setEnforcingMode(enforcingMode);
         session.setAttribute("nonce", "foo");
 
@@ -98,7 +103,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
 
         assertNotNull("Nonce value is empty", session.getAttribute("nonce"));
         assertNotEquals("New nonce value couldn't be set", "foo", session.getAttribute("nonce"));
-        checkHeader(reportUri, enforcingMode);
+        checkHeader(reportUri, reportTo, enforcingMode);
     }
 
     public void test_uriSetOnlyWhenSetIsCalled() throws Exception {
@@ -174,7 +179,47 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         checkHeader("/report-uri", enforcingMode);
     }
 
+    public void testInvalidDefaultCspSettingsClassName() throws Exception {
+        boolean enforcingMode = true;
+        mai.setAction(new TestAction());
+        request.setContextPath("/app");
+
+        interceptor.setEnforcingMode(enforcingMode);
+        interceptor.setReportUri("/report-uri");
+        interceptor.setPrependServletContext(false);
+
+        try {
+            interceptor.setDefaultCspSettingsClassName("foo");
+            interceptor.intercept(mai);
+            assert (false);
+        } catch (IllegalArgumentException e) {
+            assert (true);
+        }
+    }
+
+    public void testCustomDefaultCspSettingsClassName() throws Exception {
+        boolean enforcingMode = true;
+        mai.setAction(new TestAction());
+        request.setContextPath("/app");
+
+        interceptor.setEnforcingMode(enforcingMode);
+        interceptor.setReportUri("/report-uri");
+        interceptor.setPrependServletContext(false);
+        interceptor.setDefaultCspSettingsClassName(CustomDefaultCspSettings.class.getName());
+
+        interceptor.intercept(mai);
+
+        String header = response.getHeader(CspSettings.CSP_ENFORCE_HEADER);
+
+        // no other customization matters for this particular class
+        assertEquals("foo", header);
+    }
+
     public void checkHeader(String reportUri, boolean enforcingMode) {
+        checkHeader(reportUri, null, enforcingMode);
+    }
+
+    public void checkHeader(String reportUri, String reportTo, boolean enforcingMode) {
         String expectedCspHeader;
         if (Strings.isEmpty(reportUri)) {
             expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; ",
@@ -183,12 +228,23 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
                 CspSettings.BASE_URI, CspSettings.NONE
             );
         } else {
-            expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s",
-                CspSettings.OBJECT_SRC, CspSettings.NONE,
-                CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
-                CspSettings.BASE_URI, CspSettings.NONE,
-                CspSettings.REPORT_URI, reportUri
-            );
+            if (Strings.isEmpty(reportTo)) {
+                expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s; ",
+                        CspSettings.OBJECT_SRC, CspSettings.NONE,
+                        CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
+                        CspSettings.BASE_URI, CspSettings.NONE,
+                        CspSettings.REPORT_URI, reportUri
+                );
+            }
+            else {
+                expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s; %s %s; ",
+                        CspSettings.OBJECT_SRC, CspSettings.NONE,
+                        CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
+                        CspSettings.BASE_URI, CspSettings.NONE,
+                        CspSettings.REPORT_URI, reportUri,
+                        CspSettings.REPORT_TO, reportTo
+                );
+            }
         }
 
         String header;
@@ -228,6 +284,17 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
             DefaultCspSettings settings = new DefaultCspSettings();
             settings.setReportUri(reportUri);
             return settings;
+        }
+    }
+
+    /**
+     * Custom DefaultCspSettings class that overrides the createPolicyFormat method
+     * to return a fixed value.
+     */
+    public static class CustomDefaultCspSettings extends DefaultCspSettings {
+
+        protected String createPolicyFormat(HttpServletRequest request) {
+            return "foo";
         }
     }
 }

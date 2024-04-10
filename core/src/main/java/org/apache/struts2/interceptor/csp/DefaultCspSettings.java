@@ -20,6 +20,7 @@ package org.apache.struts2.interceptor.csp;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.action.CspSettingsAware;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +32,11 @@ import static java.lang.String.format;
 
 /**
  * Default implementation of {@link CspSettings}.
- * The default policy implements strict CSP with a nonce based approach and follows the guide: <a href="https://csp.withgoogle.com/docs/index.html">https://csp.withgoogle.com/docs/index.html/</a>
+ * The default policy implements strict CSP with a nonce based approach and follows the guide:
+ * <a href="https://csp.withgoogle.com/docs/index.html">https://csp.withgoogle.com/docs/index.html/</a>
+ * You may extend or replace this class if you wish to customize the default policy further, and use your class
+ * by setting the {@link CspInterceptor} defaultCspSettingsClassName parameter. Actions that
+ * implement the {@link CspSettingsAware} interface will ignore the defaultCspSettingsClassName parameter.
  *
  * @see CspSettings
  * @see CspInterceptor
@@ -42,20 +47,22 @@ public class DefaultCspSettings implements CspSettings {
 
     private final SecureRandom sRand = new SecureRandom();
 
-    private String reportUri;
+    protected String reportUri;
+    protected String reportTo;
     // default to reporting mode
-    private String cspHeader = CSP_REPORT_HEADER;
+    protected String cspHeader = CSP_REPORT_HEADER;
 
     @Override
     public void addCspHeaders(HttpServletResponse response) {
         throw new UnsupportedOperationException("Unsupported implementation, use #addCspHeaders(HttpServletRequest request, HttpServletResponse response)");
     }
 
+    @Override
     public void addCspHeaders(HttpServletRequest request, HttpServletResponse response) {
         if (isSessionActive(request)) {
             LOG.trace("Session is active, applying CSP settings");
             associateNonceWithSession(request);
-            response.setHeader(cspHeader, cratePolicyFormat(request));
+            response.setHeader(cspHeader, createPolicyFormat(request));
         } else {
             LOG.trace("Session is not active, ignoring CSP settings");
         }
@@ -70,7 +77,7 @@ public class DefaultCspSettings implements CspSettings {
         request.getSession().setAttribute("nonce", nonceValue);
     }
 
-    private String cratePolicyFormat(HttpServletRequest request) {
+    protected String createPolicyFormat(HttpServletRequest request) {
         StringBuilder policyFormatBuilder = new StringBuilder()
             .append(OBJECT_SRC)
             .append(format(" '%s'; ", NONE))
@@ -84,13 +91,18 @@ public class DefaultCspSettings implements CspSettings {
         if (reportUri != null) {
             policyFormatBuilder
                 .append(REPORT_URI)
-                .append(format(" %s", reportUri));
+                .append(format(" %s; ", reportUri));
+            if(reportTo != null) {
+                policyFormatBuilder
+                        .append(REPORT_TO)
+                        .append(format(" %s; ", reportTo));
+            }
         }
 
         return format(policyFormatBuilder.toString(), getNonceString(request));
     }
 
-    private String getNonceString(HttpServletRequest request) {
+    protected String getNonceString(HttpServletRequest request) {
         Object nonce = request.getSession().getAttribute("nonce");
         return Objects.toString(nonce);
     }
@@ -101,20 +113,28 @@ public class DefaultCspSettings implements CspSettings {
         return ret;
     }
 
+    @Override
     public void setEnforcingMode(boolean enforcingMode) {
         if (enforcingMode) {
             cspHeader = CSP_ENFORCE_HEADER;
         }
     }
 
+    @Override
     public void setReportUri(String reportUri) {
         this.reportUri = reportUri;
+    }
+
+    @Override
+    public void setReportTo(String reportTo) {
+        this.reportTo = reportTo;
     }
 
     @Override
     public String toString() {
         return "DefaultCspSettings{" +
             "reportUri='" + reportUri + '\'' +
+            "reportTo='" + reportTo + '\'' +
             ", cspHeader='" + cspHeader + '\'' +
             '}';
     }

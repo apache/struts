@@ -37,6 +37,7 @@ public interface CspSettings {
     String SCRIPT_SRC = "script-src";
     String BASE_URI = "base-uri";
     String REPORT_URI = "report-uri";
+    String REPORT_TO = "report-to";
     String NONE = "none";
     String STRICT_DYNAMIC = "strict-dynamic";
     String HTTP = "http:";
@@ -55,6 +56,11 @@ public interface CspSettings {
      * Sets the uri where csp violation reports will be sent
      */
     void setReportUri(String uri);
+
+    /**
+     * Sets the report group where csp violation reports will be sent
+     */
+    void setReportTo(String group);
 
     /**
      * Sets CSP headers in enforcing mode when true, and report-only when false

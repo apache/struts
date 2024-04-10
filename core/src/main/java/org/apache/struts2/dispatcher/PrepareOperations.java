@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Contains preparation operations for a request before execution
@@ -226,6 +228,18 @@ public class PrepareOperations {
     public boolean isUrlExcluded(HttpServletRequest request) {
         String uri = RequestUtils.getUri(request);
         return dispatcher.getActionExcludedPatterns().stream().anyMatch(pattern -> pattern.matcher(uri).matches());
+    }
+
+    /**
+     * @deprecated since 6.4.0, use {@link #isUrlExcluded(HttpServletRequest)} instead.
+     */
+    @Deprecated
+    public boolean isUrlExcluded(HttpServletRequest request, List<Pattern> excludedPatterns) {
+        if (excludedPatterns == null) {
+            return false;
+        }
+        String uri = RequestUtils.getUri(request);
+        return excludedPatterns.stream().anyMatch(pattern -> pattern.matcher(uri).matches());
     }
 
     /**

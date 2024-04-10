@@ -53,7 +53,7 @@ public class StrutsPrepareAndExecuteFilter implements StrutsStatics, Filter {
 
     /**
      * @deprecated since 6.4.0, use {@link Dispatcher#getActionExcludedPatterns} or
-     * {@link PrepareOperations#isUrlExcluded} instead.
+     * {@link PrepareOperations#isUrlExcluded(HttpServletRequest)} instead.
      */
     @Deprecated
     protected List<Pattern> excludedPatterns;

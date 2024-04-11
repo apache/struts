@@ -20,8 +20,8 @@
  */
 -->
 <!DOCTYPE struts PUBLIC
-        "-//Apache Software Foundation//DTD Struts Configuration 6.4.0//EN"
-        "struts-6.4.0.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 6.5.0//EN"
+        "struts-6.5.0.dtd">
 <struts>
     <package name="default" namespace="/default">
         <action name="default" class="com.opensymphony.xwork2.ActionSupport"/>

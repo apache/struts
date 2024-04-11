@@ -26,8 +26,8 @@
    Use the following DOCTYPE
 
    <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 6.4.0//EN"
-    "https://struts.apache.org/dtds/struts-6.4.0.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 6.5.0//EN"
+    "https://struts.apache.org/dtds/struts-6.5.0.dtd">
 -->
 
 <!ELEMENT struts ((package|include|bean|constant)*,bean-selection?, unknown-handler-stack?)>

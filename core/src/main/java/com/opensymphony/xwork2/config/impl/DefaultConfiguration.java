@@ -590,11 +590,15 @@ public class DefaultConfiguration implements Configuration {
             }
 
             // fail over to empty namespace
-            if (config == null && StringUtils.isNotBlank(namespace) && ("/".equals(namespace) || fallbackToEmptyNamespace)) {
+            if (config == null && shouldFallbackToEmptyNamespace(namespace)) {
                 config = findActionConfigInNamespace("", name);
             }
 
             return config;
+        }
+
+        private boolean shouldFallbackToEmptyNamespace(String namespace) {
+            return StringUtils.isNotBlank(namespace) && ("/".equals(namespace) || fallbackToEmptyNamespace);
         }
 
         private ActionConfig findActionConfigInNamespace(String namespace, String name) {

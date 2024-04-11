@@ -87,6 +87,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private boolean enforceAllowlistEnabled = false;
     private Set<Class<?>> allowlistClasses = emptySet();
     private Set<String> allowlistPackageNames = emptySet();
+    private boolean disallowProxyObjectAccess = false;
     private boolean disallowProxyMemberAccess = false;
     private boolean disallowDefaultPackageAccess = false;
 
@@ -158,6 +159,11 @@ public class SecurityMemberAccess implements MemberAccess {
             } else if (!member.getDeclaringClass().isAssignableFrom(target.getClass())) {
                 throw new IllegalArgumentException("Member does not exist on target!");
             }
+        }
+
+        if (!checkProxyObjectAccess(target)) {
+            LOG.warn("Access to proxy is blocked! Target [{}], proxy class [{}]", target, target.getClass().getName());
+            return false;
         }
 
         if (!checkProxyMemberAccess(target, member)) {
@@ -286,7 +292,14 @@ public class SecurityMemberAccess implements MemberAccess {
     }
 
     /**
-     * @return {@code true} if member access is allowed
+     * @return {@code true} if proxy object access is allowed
+     */
+    protected boolean checkProxyObjectAccess(Object target) {
+        return !(disallowProxyObjectAccess && ProxyUtil.isProxy(target));
+    }
+
+    /**
+     * @return {@code true} if proxy member access is allowed
      */
     protected boolean checkProxyMemberAccess(Object target, Member member) {
         return !(disallowProxyMemberAccess && ProxyUtil.isProxyMember(member, target));
@@ -446,6 +459,11 @@ public class SecurityMemberAccess implements MemberAccess {
     @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
     public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
         this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, required = false)
+    public void useDisallowProxyObjectAccess(String disallowProxyObjectAccess) {
+        this.disallowProxyObjectAccess = BooleanUtils.toBoolean(disallowProxyObjectAccess);
     }
 
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, required = false)

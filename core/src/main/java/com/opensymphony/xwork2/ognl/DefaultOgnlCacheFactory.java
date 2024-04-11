@@ -32,6 +32,7 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
 
     private CacheType defaultCacheType;
     private int cacheMaxSize;
+    private final int initialCapacity;
 
     /**
      * @deprecated since 6.4.0, use {@link #DefaultOgnlCacheFactory(int, CacheType)}
@@ -42,13 +43,18 @@ public class DefaultOgnlCacheFactory<Key, Value> implements OgnlCacheFactory<Key
     }
 
     public DefaultOgnlCacheFactory(int cacheMaxSize, CacheType defaultCacheType) {
+        this(cacheMaxSize, defaultCacheType, DEFAULT_INIT_CAPACITY);
+    }
+
+    public DefaultOgnlCacheFactory(int cacheMaxSize, CacheType defaultCacheType, int initialCapacity) {
         this.cacheMaxSize = cacheMaxSize;
         this.defaultCacheType = defaultCacheType;
+        this.initialCapacity = initialCapacity;
     }
 
     @Override
     public OgnlCache<Key, Value> buildOgnlCache() {
-        return buildOgnlCache(getCacheMaxSize(), DEFAULT_INIT_CAPACITY, DEFAULT_LOAD_FACTOR, defaultCacheType);
+        return buildOgnlCache(getCacheMaxSize(), initialCapacity, DEFAULT_LOAD_FACTOR, defaultCacheType);
     }
 
     @Override

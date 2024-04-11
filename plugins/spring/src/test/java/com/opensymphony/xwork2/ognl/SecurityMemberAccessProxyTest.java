@@ -29,6 +29,11 @@ import java.util.Map;
 
 public class SecurityMemberAccessProxyTest extends XWorkTestCase {
     private Map<String, Object> context;
+    private ActionProxy proxy;
+    private Map<String, Member> members;
+    private final SecurityMemberAccess sma = new SecurityMemberAccess(true);
+    private final String PROXY_MEMBER_METHOD = "isExposeProxy";
+    private final String TEST_SUB_BEAN_CLASS_METHOD = "setIssueId";
 
     @Override
     public void setUp() throws Exception {
@@ -39,30 +44,51 @@ public class SecurityMemberAccessProxyTest extends XWorkTestCase {
         XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider("com/opensymphony/xwork2/spring/actionContext-xwork.xml");
         container.inject(provider);
         loadConfigurationProviders(provider);
+
+        // Setup proxy object
+        setupProxy();
     }
 
     public void testProxyAccessIsBlocked() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy(null,
-            "chaintoAOPedTestSubBeanAction", null, context);
+        members.values().forEach(member -> {
+            // When disallowProxyObjectAccess is set to true, and disallowProxyMemberAccess is set to false, the proxy access is blocked
+            sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+            sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+            assertFalse(sma.isAccessible(context, proxy.getAction(), member, ""));
 
-        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+            // When disallowProxyObjectAccess is set to true, and disallowProxyMemberAccess is set to true, the proxy access is blocked
+            sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+            sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+            assertFalse(sma.isAccessible(context, proxy.getAction(), member, ""));
+        });
+
+        // When disallowProxyObjectAccess is set to false, and disallowProxyMemberAccess is set to true, the proxy member access is blocked
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
         sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
-
-        Member member = proxy.getAction().getClass().getMethod("isExposeProxy");
-
-        boolean accessible = sma.isAccessible(context, proxy.getAction(), member, "");
-        assertFalse(accessible);
+        assertFalse(sma.isAccessible(context, proxy.getAction(), members.get(PROXY_MEMBER_METHOD), ""));
     }
 
     public void testProxyAccessIsAccessible() throws Exception {
-        ActionProxy proxy = actionProxyFactory.createActionProxy(null,
-            "chaintoAOPedTestSubBeanAction", null, context);
+        members.values().forEach(member -> {
+            // When disallowProxyObjectAccess is set to false, and disallowProxyMemberAccess is set to false, the proxy access is allowed
+            sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+            sma.useDisallowProxyMemberAccess(Boolean.FALSE.toString());
+            assertTrue(sma.isAccessible(context, proxy.getAction(), member, ""));
+        });
 
-        SecurityMemberAccess sma = new SecurityMemberAccess(true);
+        // When disallowProxyObjectAccess is set to false, and disallowProxyMemberAccess is set to true, the original class member access is allowed
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useDisallowProxyMemberAccess(Boolean.TRUE.toString());
+        assertTrue(sma.isAccessible(context, proxy.getAction(), members.get(TEST_SUB_BEAN_CLASS_METHOD), ""));
+    }
 
-        Member member = proxy.getAction().getClass().getMethod("isExposeProxy");
+    private void setupProxy() throws NoSuchMethodException {
+        proxy = actionProxyFactory.createActionProxy(null, "chaintoAOPedTestSubBeanAction", null, context);
 
-        boolean accessible = sma.isAccessible(context, proxy.getAction(), member, "");
-        assertTrue(accessible);
+        members = new HashMap<>();
+        // method is proxy member
+        members.put(PROXY_MEMBER_METHOD, proxy.getAction().getClass().getMethod(PROXY_MEMBER_METHOD));
+        // method is not proxy member but from POJO class
+        members.put(TEST_SUB_BEAN_CLASS_METHOD, proxy.getAction().getClass().getMethod(TEST_SUB_BEAN_CLASS_METHOD, String.class));
     }
 }

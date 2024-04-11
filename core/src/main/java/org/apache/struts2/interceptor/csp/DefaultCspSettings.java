@@ -134,7 +134,7 @@ public class DefaultCspSettings implements CspSettings {
     public String toString() {
         return "DefaultCspSettings{" +
             "reportUri='" + reportUri + '\'' +
-            "reportTo='" + reportTo + '\'' +
+            ", reportTo='" + reportTo + '\'' +
             ", cspHeader='" + cspHeader + '\'' +
             '}';
     }

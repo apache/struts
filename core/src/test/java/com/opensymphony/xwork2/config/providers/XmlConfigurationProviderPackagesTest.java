@@ -36,10 +36,9 @@ import java.util.List;
 public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase {
 
     public void testBadInheritance() throws ConfigurationException {
-        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-bad-inheritance.xml";
         ConfigurationProvider provider = null;
         try {
-	    	provider = buildConfigurationProvider(filename);
+	    	provider = buildConfigurationProvider(getXmlConfigFilePath("xwork-test-bad-inheritance.xml"));
 	    	fail("Should have thrown a ConfigurationException");
 	        provider.init(configuration);
 	        provider.loadPackages();
@@ -49,8 +48,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
     }
 
     public void testBasicPackages() throws ConfigurationException {
-        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-basic-packages.xml";
-        ConfigurationProvider provider = buildConfigurationProvider(filename);
+        ConfigurationProvider provider = buildConfigurationProvider(getXmlConfigFilePath("xwork-test-basic-packages.xml"));
         provider.init(configuration);
         provider.loadPackages();
 
@@ -70,8 +68,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
     }
 
     public void testDefaultPackage() throws ConfigurationException {
-        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-default-package.xml";
-        ConfigurationProvider provider = buildConfigurationProvider(filename);
+        ConfigurationProvider provider = buildConfigurationProvider(getXmlConfigFilePath("xwork-test-default-package.xml"));
         provider.init(configuration);
         provider.loadPackages();
 
@@ -84,8 +81,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
     }
 
     public void testPackageInheritance() throws ConfigurationException {
-        final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-package-inheritance.xml";
-        ConfigurationProvider provider = buildConfigurationProvider(filename);
+        ConfigurationProvider provider = buildConfigurationProvider(getXmlConfigFilePath("xwork-test-package-inheritance.xml"));
 
         provider.init(configuration);
         provider.loadPackages();
@@ -111,7 +107,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
         assertTrue(multipleParents.contains(defaultPackage));
         assertTrue(multipleParents.contains(abstractPackage));
         assertTrue(multipleParents.contains(singlePackage));
-        
+
         PackageConfig parentBelow = configuration.getPackageConfig("testParentBelow");
         assertEquals(1, parentBelow.getParents().size());
         List<PackageConfig> parentBelowParents = parentBelow.getParents();
@@ -129,7 +125,7 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
         assertNull(runtimeConfiguration.getActionConfig("/single", "abstract"));
         assertNotNull(runtimeConfiguration.getActionConfig("/single", "single"));
         assertNull(runtimeConfiguration.getActionConfig("/single", "multiple"));
-        
+
         assertNotNull(runtimeConfiguration.getActionConfig("/parentBelow", "default"));
         assertNotNull(runtimeConfiguration.getActionConfig("/parentBelow", "abstract"));
         assertNotNull(runtimeConfiguration.getActionConfig("/parentBelow", "single"));
@@ -138,13 +134,57 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
 
     }
 
+    public void testPackageWithFinalAttributeLoads() throws ConfigurationException {
+        ConfigurationProvider provider = buildConfigurationProvider(getXmlConfigFilePath("xwork-test-package-final.xml"));
+
+        provider.init(configuration);
+        provider.loadPackages();
+
+        // test expectations
+        assertEquals(3, configuration.getPackageConfigs().size());
+        PackageConfig defaultPackage = configuration.getPackageConfig("default");
+        assertNotNull(defaultPackage);
+        assertEquals("default", defaultPackage.getName());
+
+        // final package extends default
+        PackageConfig finalPackage = configuration.getPackageConfig("finalPackage");
+        assertNotNull(finalPackage);
+        assertEquals("finalPackage", finalPackage.getName());
+        assertEquals(1, finalPackage.getParents().size());
+        assertEquals(defaultPackage, finalPackage.getParents().get(0));
+
+        // normal package extends default
+        PackageConfig normalPackage = configuration.getPackageConfig("normalPackage");
+        assertNotNull(normalPackage);
+        assertEquals("normalPackage", normalPackage.getName());
+        assertEquals(1, normalPackage.getParents().size());
+        assertEquals(defaultPackage, normalPackage.getParents().get(0));
+
+        configurationManager.addContainerProvider(provider);
+        configurationManager.reload();
+
+        RuntimeConfiguration runtimeConfiguration = configurationManager.getConfiguration().getRuntimeConfiguration();
+        assertNotNull(runtimeConfiguration.getActionConfig("/final", "default"));
+        assertNotNull(runtimeConfiguration.getActionConfig("/final", "actionFinal"));
+
+        assertNotNull(runtimeConfiguration.getActionConfig("/normal", "default"));
+        assertNotNull(runtimeConfiguration.getActionConfig("/normal", "actionNormal"));
+    }
+
+    public void testExtendsFinalPackageThrowsConfigurationException() throws ConfigurationException {
+        try {
+            buildConfigurationProvider(getXmlConfigFilePath("xwork-test-package-extends-final.xml"));
+        } catch (ConfigurationException e) {
+            assertEquals("Parent package is final and unextendable: parentLevelTwo", e.getMessage());
+        }
+    }
+
     public void testDefaultClassRef() throws ConfigurationException {
-    	final String filename = "com/opensymphony/xwork2/config/providers/xwork-test-defaultclassref-package.xml";
         final String hasDefaultClassRefPkgName = "hasDefaultClassRef";
         final String noDefaultClassRefPkgName = "noDefaultClassRef";
         final String testDefaultClassRef = "com.opensymphony.xwork2.ActionSupport";
 
-    	ConfigurationProvider provider = buildConfigurationProvider(filename);
+        ConfigurationProvider provider = buildConfigurationProvider(getXmlConfigFilePath("xwork-test-defaultclassref-package.xml"));
         provider.init(configuration);
 
         // setup our expectations
@@ -156,5 +196,9 @@ public class XmlConfigurationProviderPackagesTest extends ConfigurationTestBase 
         assertEquals(2, configuration.getPackageConfigs().size());
         assertEquals(expectedDefaultClassRefPackage, configuration.getPackageConfig(hasDefaultClassRefPkgName));
         assertEquals(expectedNoDefaultClassRefPackage, configuration.getPackageConfig(noDefaultClassRefPkgName));
+    }
+
+    private String getXmlConfigFilePath(String fileName) {
+        return "com/opensymphony/xwork2/config/providers/" + fileName;
     }
 }

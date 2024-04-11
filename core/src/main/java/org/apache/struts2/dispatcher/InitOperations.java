@@ -19,10 +19,7 @@
 package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
-import org.apache.struts2.StrutsConstants;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -100,27 +97,11 @@ public class InitOperations {
      * @param dispatcher The dispatcher to check for exclude pattern configuration
      * @return a List of Patterns for request to exclude if apply, or <tt>null</tt>
      * @see org.apache.struts2.StrutsConstants#STRUTS_ACTION_EXCLUDE_PATTERN
+     * @deprecated since 6.4.0, use {@link Dispatcher#getActionExcludedPatterns()} instead.
      */
+    @Deprecated
     public List<Pattern> buildExcludedPatternsList(Dispatcher dispatcher) {
-        String excludePatterns = dispatcher.getContainer().getInstance(String.class, StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN);
-        String separator = dispatcher.getContainer().getInstance(String.class, StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN_SEPARATOR);
-        if (separator == null) {
-            separator = ",";
-        }
-        return buildExcludedPatternsList(excludePatterns, separator);
-    }
-
-    private List<Pattern> buildExcludedPatternsList(String patterns, String separator) {
-        if (null != patterns && patterns.trim().length() != 0) {
-            List<Pattern> list = new ArrayList<>();
-            String[] tokens = patterns.split(separator);
-            for (String token : tokens) {
-                list.add(Pattern.compile(token.trim()));
-            }
-            return Collections.unmodifiableList(list);
-        } else {
-            return null;
-        }
+        return dispatcher.getActionExcludedPatterns();
     }
 
 }

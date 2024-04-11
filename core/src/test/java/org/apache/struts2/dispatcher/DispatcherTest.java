@@ -54,10 +54,12 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -586,6 +588,30 @@ public class DispatcherTest extends StrutsJUnit4InternalTestCase {
         dispatcher.prepare(request, response);
 
         assertEquals(Locale.CANADA_FRENCH, dispatcher.getLocale(request));
+    }
+
+    @Test
+    public void testExcludePatterns() {
+        initDispatcher(singletonMap(StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN, "/ns1/.*\\.json,/ns2/.*\\.json"));
+
+        assertThat(dispatcher.getActionExcludedPatterns()).extracting(Pattern::toString).containsOnly(
+                "/ns1/.*\\.json",
+                "/ns2/.*\\.json"
+        );
+    }
+
+    @Test
+    public void testExcludePatternsUsingCustomSeparator() {
+        Map<String, String> props = new HashMap<>();
+        props.put(StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN, "/ns1/[a-z]{1,10}.json///ns2/[a-z]{1,10}.json");
+        props.put(StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN_SEPARATOR, "//");
+
+        initDispatcher(props);
+
+        assertThat(dispatcher.getActionExcludedPatterns()).extracting(Pattern::toString).containsOnly(
+                "/ns1/[a-z]{1,10}.json",
+                "/ns2/[a-z]{1,10}.json"
+        );
     }
 
     public static Dispatcher spyDispatcherWithConfigurationManager(Dispatcher dispatcher, ConfigurationManager configurationManager) {

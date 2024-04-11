@@ -223,21 +223,23 @@ public class PrepareOperations {
      * Check whether the request matches a list of exclude patterns.
      *
      * @param request          The request to check patterns against
-     * @param excludedPatterns list of patterns for exclusion
-     *
      * @return <tt>true</tt> if the request URI matches one of the given patterns
      */
+    public boolean isUrlExcluded(HttpServletRequest request) {
+        String uri = RequestUtils.getUri(request);
+        return dispatcher.getActionExcludedPatterns().stream().anyMatch(pattern -> pattern.matcher(uri).matches());
+    }
+
+    /**
+     * @deprecated since 6.4.0, use {@link #isUrlExcluded(HttpServletRequest)} instead.
+     */
+    @Deprecated
     public boolean isUrlExcluded(HttpServletRequest request, List<Pattern> excludedPatterns) {
         if (excludedPatterns == null) {
             return false;
         }
         String uri = RequestUtils.getUri(request);
-        for (Pattern pattern : excludedPatterns) {
-            if (pattern.matcher(uri).matches()) {
-                return true;
-            }
-        }
-        return false;
+        return excludedPatterns.stream().anyMatch(pattern -> pattern.matcher(uri).matches());
     }
 
     /**

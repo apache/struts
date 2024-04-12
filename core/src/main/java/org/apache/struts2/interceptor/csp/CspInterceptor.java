@@ -122,6 +122,14 @@ public final class CspInterceptor extends AbstractInterceptor {
         this.reportUri = reportUri;
     }
 
+    /**
+     * Sets the report group where csp violation reports will be sent. This will
+     * only be used if the reportUri is set.
+     *
+     * @param reportTo the report group where csp violation reports will be sent
+     *
+     * @since Struts 6.5.0
+     */
     public void setReportTo(String reportTo) {
         this.reportTo = reportTo;
     }
@@ -156,6 +164,8 @@ public final class CspInterceptor extends AbstractInterceptor {
     /**
      * Sets the class name of the default {@link CspSettings} implementation to use when the action does not
      * set its own values. If not set, the default is {@link DefaultCspSettings}.
+     *
+     * @since Struts 6.5.0
      */
     public void setDefaultCspSettingsClassName(String defaultCspSettingsClassName) {
         this.defaultCspSettingsClassName = defaultCspSettingsClassName;

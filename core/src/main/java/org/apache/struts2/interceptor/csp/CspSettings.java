@@ -59,6 +59,8 @@ public interface CspSettings {
 
     /**
      * Sets the report group where csp violation reports will be sent
+     *
+     * @since Struts 6.5.0
      */
     void setReportTo(String group);
 

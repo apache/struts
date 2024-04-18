@@ -31,7 +31,6 @@ import org.apache.struts2.ognl.ThreadAllowlist;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -313,10 +312,6 @@ public class SecurityMemberAccess implements MemberAccess {
      * @return {@code true} if member access is allowed
      */
     protected boolean checkStaticMethodAccess(Member member) {
-        if (checkEnumAccess(member)) {
-            LOG.trace("Exempting Enum#values from static method check: class [{}]", member.getDeclaringClass());
-            return true;
-        }
         return member instanceof Field || !isStatic(member);
     }
 
@@ -345,17 +340,6 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     protected boolean checkPublicMemberAccess(Member member) {
         return Modifier.isPublic(member.getModifiers());
-    }
-
-    /**
-     * @return {@code true} if member access is allowed
-     */
-    protected boolean checkEnumAccess(Member member) {
-        return member.getDeclaringClass().isEnum()
-                && isStatic(member)
-                && member instanceof Method
-                && member.getName().equals("values")
-                && ((Method) member).getParameterCount() == 0;
     }
 
     protected boolean isPackageExcluded(Class<?> clazz) {

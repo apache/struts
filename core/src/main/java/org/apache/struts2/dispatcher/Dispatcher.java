@@ -167,8 +167,9 @@ public class Dispatcher {
      */
     private Pattern multipartValidationPattern = Pattern.compile(MULTIPART_FORM_DATA_REGEX);
 
+    private String actionExcludedPatternsStr;
     private String actionExcludedPatternsSeparator = ",";
-    private List<Pattern> actionExcludedPatterns = emptyList();
+    private List<Pattern> actionExcludedPatterns;
 
     /**
      * Provide list of default configuration files.
@@ -355,18 +356,24 @@ public class Dispatcher {
 
     @Inject(value = StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN, required = false)
     public void setActionExcludedPatterns(String excludedPatterns) {
-        this.actionExcludedPatterns = buildExcludedPatternsList(excludedPatterns, actionExcludedPatternsSeparator);
-    }
-
-    private static List<Pattern> buildExcludedPatternsList(String patterns, String separator) {
-        if (patterns == null || patterns.trim().isEmpty()) {
-            return emptyList();
-        }
-        return unmodifiableList(Arrays.stream(patterns.split(separator)).map(String::trim).map(Pattern::compile).collect(toList()));
+        this.actionExcludedPatternsStr = excludedPatterns;
     }
 
     public List<Pattern> getActionExcludedPatterns() {
+        if (actionExcludedPatterns == null) {
+            initActionExcludedPatterns();
+        }
         return actionExcludedPatterns;
+    }
+
+    private void initActionExcludedPatterns() {
+        if (actionExcludedPatternsStr == null || actionExcludedPatternsStr.trim().isEmpty()) {
+            actionExcludedPatterns = emptyList();
+            return;
+        }
+        actionExcludedPatterns = unmodifiableList(
+                Arrays.stream(actionExcludedPatternsStr.split(actionExcludedPatternsSeparator))
+                        .map(String::trim).map(Pattern::compile).collect(toList()));
     }
 
     @Inject

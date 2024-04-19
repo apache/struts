@@ -603,8 +603,8 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
      */
     protected PackageConfig.Builder buildPackageContext(Element packageElement) {
         String parent = packageElement.getAttribute("extends");
-        String abstractVal = packageElement.getAttribute("abstract");
-        boolean isAbstract = parseBoolean(abstractVal);
+        boolean isAbstract = parseBoolean(packageElement.getAttribute("abstract"));
+        boolean isFinal = parseBoolean(packageElement.getAttribute("final"));
         String name = defaultString(packageElement.getAttribute("name"));
         String namespace = defaultString(packageElement.getAttribute("namespace"));
 
@@ -617,6 +617,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         PackageConfig.Builder cfg = new PackageConfig.Builder(name)
                 .namespace(namespace)
                 .isAbstract(isAbstract)
+                .isFinal(isFinal)
                 .strictMethodInvocation(strictDMI)
                 .location(DomHelper.getLocationObject(packageElement));
 
@@ -627,17 +628,23 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         // has parents, let's look it up
         List<PackageConfig> parents = new ArrayList<>();
         for (String parentPackageName : ConfigurationUtil.buildParentListFromString(parent)) {
-            if (configuration.getPackageConfigNames().contains(parentPackageName)) {
-                parents.add(configuration.getPackageConfig(parentPackageName));
-            } else if (declaredPackages.containsKey(parentPackageName)) {
-                if (configuration.getPackageConfig(parentPackageName) == null) {
-                    addPackage(declaredPackages.get(parentPackageName));
+            boolean isParentPackageConfigDefined = false;
+            if (configuration.getPackageConfigNames().contains(parentPackageName)) { // parent package already added to configuration
+                isParentPackageConfigDefined = true;
+            } else if (declaredPackages.containsKey(parentPackageName)) { // parent package declared but yet added to configuration
+                addPackage(declaredPackages.get(parentPackageName));
+                isParentPackageConfigDefined = true;
+            }
+
+            if (isParentPackageConfigDefined) {
+                PackageConfig parentPackageConfig = configuration.getPackageConfig(parentPackageName);
+                if (parentPackageConfig.isFinal()) {
+                    throw new ConfigurationException("Parent package is final and unextendable: " + parentPackageName);
                 }
-                parents.add(configuration.getPackageConfig(parentPackageName));
+                parents.add(parentPackageConfig);
             } else {
                 throw new ConfigurationException("Parent package is not defined: " + parentPackageName);
             }
-
         }
 
         if (parents.isEmpty()) {

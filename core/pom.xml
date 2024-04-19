@@ -132,52 +132,7 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>alljars</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-source</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <sourcepath>${basedir}/src/main/java;${basedir}/../xwork-core/src/main/java</sourcepath>
-                            <encoding>UTF-8</encoding>
-                            <groups>
-                                <group>
-                                    <title>Struts Packages</title>
-                                    <packages>org.apache.struts2*</packages>
-                                </group>
-                                <group>
-                                    <title>XWork Packages</title>
-                                    <packages>com.opensymphony.xwork2*</packages>
-                                </group>
-                            </groups>
-                            <show>private</show>
-                            <links>
-                                <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
-                                <link>http://java.sun.com/javaee/5/docs/api/</link>
-                                <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-                                <link>http://logging.apache.org/log4j/docs/api/</link>
-                            </links>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-
-                </plugins>
-            </build>
-        </profile>
     </profiles>
-
 
     <dependencies>
         <dependency>

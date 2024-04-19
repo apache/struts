@@ -115,7 +115,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <skipAssembly>false</skipAssembly>
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>
                         <descriptor>src/main/assembly/lib.xml</descriptor>
@@ -125,6 +124,8 @@
                         <descriptor>src/main/assembly/docs.xml</descriptor>
                     </descriptors>
                     <finalName>struts-${project.version}</finalName>
+                    <outputDirectory>${project.build.directory}/assembly/out</outputDirectory>
+                    <workDirectory>${project.build.directory}/assembly/work</workDirectory>
                 </configuration>
             </plugin>
         </plugins>

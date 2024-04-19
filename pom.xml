@@ -349,8 +349,6 @@
                     <configuration>
                         <skipAssembly>true</skipAssembly>
                         <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
-                        <outputDirectory>assembly/out</outputDirectory>
-                        <workDirectory>assembly/work</workDirectory>
                     </configuration>
                 </plugin>
                 <plugin>

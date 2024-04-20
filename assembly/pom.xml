@@ -115,6 +115,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skipAssembly>false</skipAssembly>
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>
                         <descriptor>src/main/assembly/lib.xml</descriptor>

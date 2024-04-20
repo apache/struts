@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts-master</artifactId>
-        <version>14</version>
+        <version>15</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -345,10 +345,8 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.6.0</version>
                     <configuration>
                         <skipAssembly>true</skipAssembly>
-                        <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
                     </configuration>
                 </plugin>
                 <plugin>

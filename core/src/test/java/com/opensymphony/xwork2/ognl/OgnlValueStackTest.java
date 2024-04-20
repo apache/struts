@@ -437,12 +437,12 @@ public class OgnlValueStackTest extends XWorkTestCase {
     }
 
     /**
-     * Allow access Enums without enabling access to static methods
+     * Enum methods should also be banned alongside static methods
      */
     public void testEnum() throws Exception {
-        assertEquals("ONE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[0]", String.class));
-        assertEquals("TWO", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[1]", String.class));
-        assertEquals("THREE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[2]", String.class));
+        assertNull("ONE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[0]", String.class));
+        assertNull("TWO", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[1]", String.class));
+        assertNull("THREE", vs.findValue("@com.opensymphony.xwork2.ognl.MyNumbers@values()[2]", String.class));
     }
 
     public void testStaticMethodDisallow() {

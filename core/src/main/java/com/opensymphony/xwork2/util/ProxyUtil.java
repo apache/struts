@@ -18,13 +18,20 @@
  */
 package com.opensymphony.xwork2.util;
 
+import com.opensymphony.xwork2.ognl.DefaultOgnlCacheFactory;
+import com.opensymphony.xwork2.ognl.OgnlCache;
+import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.hibernate.proxy.HibernateProxy;
 
-import java.lang.reflect.*;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 
 /**
  * <code>ProxyUtil</code>
@@ -38,11 +45,13 @@ public class ProxyUtil {
     private static final String SPRING_SPRINGPROXY_CLASS_NAME = "org.springframework.aop.SpringProxy";
     private static final String SPRING_SINGLETONTARGETSOURCE_CLASS_NAME = "org.springframework.aop.target.SingletonTargetSource";
     private static final String SPRING_TARGETCLASSAWARE_CLASS_NAME = "org.springframework.aop.TargetClassAware";
-
-    private static final Map<Class<?>, Boolean> isProxyCache =
-            new ConcurrentHashMap<>(256);
-    private static final Map<Member, Boolean> isProxyMemberCache =
-            new ConcurrentHashMap<>(256);
+    private static final String HIBERNATE_HIBERNATEPROXY_CLASS_NAME = "org.hibernate.proxy.HibernateProxy";
+    private static final int CACHE_MAX_SIZE = 10000;
+    private static final int CACHE_INITIAL_CAPACITY = 256;
+    private static final OgnlCache<Class<?>, Boolean> isProxyCache = new DefaultOgnlCacheFactory<Class<?>, Boolean>(
+            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
+    private static final OgnlCache<Member, Boolean> isProxyMemberCache = new DefaultOgnlCacheFactory<Member, Boolean>(
+            CACHE_MAX_SIZE, OgnlCacheFactory.CacheType.WTLFU, CACHE_INITIAL_CAPACITY).buildOgnlCache();
 
     /**
      * Determine the ultimate target class of the given instance, traversing
@@ -75,7 +84,7 @@ public class ProxyUtil {
             return flag;
         }
 
-        boolean isProxy = isSpringAopProxy(object);
+        boolean isProxy = isSpringAopProxy(object) || isHibernateProxy(object);
 
         isProxyCache.put(clazz, isProxy);
         return isProxy;
@@ -87,7 +96,7 @@ public class ProxyUtil {
      * @param object the object to check
      */
     public static boolean isProxyMember(Member member, Object object) {
-        if (!Modifier.isStatic(member.getModifiers()) && !isProxy(object)) {
+        if (!Modifier.isStatic(member.getModifiers()) && !isProxy(object) && !isHibernateProxy(object)) {
             return false;
         }
 
@@ -96,10 +105,38 @@ public class ProxyUtil {
             return flag;
         }
 
-        boolean isProxyMember = isSpringProxyMember(member);
+        boolean isProxyMember = isSpringProxyMember(member) || isHibernateProxyMember(member);
 
         isProxyMemberCache.put(member, isProxyMember);
         return isProxyMember;
+    }
+
+    /**
+     * Check whether the given object is a Hibernate proxy.
+     *
+     * @param object the object to check
+     */
+    public static boolean isHibernateProxy(Object object) {
+        try {
+            return HibernateProxy.class.isAssignableFrom(object.getClass());
+        } catch (NoClassDefFoundError ignored) {
+            return false;
+        }
+    }
+
+    /**
+     * Check whether the given member is a member of a Hibernate proxy.
+     *
+     * @param member the member to check
+     */
+    public static boolean isHibernateProxyMember(Member member) {
+        try {
+            Class<?> clazz = ClassLoaderUtil.loadClass(HIBERNATE_HIBERNATEPROXY_CLASS_NAME, ProxyUtil.class);
+            return hasMember(clazz, member);
+        } catch (ClassNotFoundException ignored) {
+        }
+
+        return false;
     }
 
     /**

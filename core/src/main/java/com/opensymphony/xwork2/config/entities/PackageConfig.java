@@ -47,6 +47,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
     protected String name;
     protected String namespace = "";
     protected boolean isAbstract = false;
+    protected boolean isFinal = false; // a final package is unextendable
     protected boolean needsRefresh;
     protected boolean strictMethodInvocation = true;
 
@@ -69,6 +70,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         this.name = orig.name;
         this.namespace = orig.namespace;
         this.isAbstract = orig.isAbstract;
+        this.isFinal = orig.isFinal;
         this.needsRefresh = orig.needsRefresh;
         this.actionConfigs = new LinkedHashMap<>(orig.actionConfigs);
         this.globalResultConfigs = new LinkedHashMap<>(orig.globalResultConfigs);
@@ -83,6 +85,10 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
 
     public boolean isAbstract() {
         return isAbstract;
+    }
+
+    public boolean isFinal() {
+        return isFinal;
     }
 
     public Map<String, ActionConfig> getActionConfigs() {
@@ -360,6 +366,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         PackageConfig that = (PackageConfig) o;
 
         if (isAbstract != that.isAbstract) return false;
+        if (isFinal != that.isFinal) return false;
         if (needsRefresh != that.needsRefresh) return false;
         if (strictMethodInvocation != that.strictMethodInvocation) return false;
         if (actionConfigs != null ? !actionConfigs.equals(that.actionConfigs) : that.actionConfigs != null)
@@ -404,6 +411,7 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
         result = 31 * result + name.hashCode();
         result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
         result = 31 * result + (isAbstract ? 1 : 0);
+        result = 31 * result + (isFinal ? 1 : 0);
         result = 31 * result + (needsRefresh ? 1 : 0);
         result = 31 * result + (strictMethodInvocation ? 1 : 0);
         return result;
@@ -450,6 +458,11 @@ public class PackageConfig extends Located implements Comparable<PackageConfig>,
 
         public Builder isAbstract(boolean isAbstract) {
             target.isAbstract = isAbstract;
+            return this;
+        }
+
+        public Builder isFinal(boolean isFinal) {
+            target.isFinal = isFinal;
             return this;
         }
 

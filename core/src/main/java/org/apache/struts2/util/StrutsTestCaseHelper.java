@@ -22,15 +22,16 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.DispatcherErrorHandler;
-
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.DispatcherErrorHandler;
+
+import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Collections.emptyMap;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_ENABLE;
 
 /**
  * Generic test setup methods to be used with any unit testing framework.
@@ -38,7 +39,9 @@ import static java.util.Collections.emptyMap;
 public class StrutsTestCaseHelper {
 
     public static Dispatcher initDispatcher(ServletContext ctx, Map<String, String> params) {
-        Dispatcher du = new DispatcherWrapper(ctx, params != null ? params : emptyMap());
+        Map<String, String> finalParams = params != null ? new HashMap<>(params) : new HashMap<>();
+        finalParams.putIfAbsent(STRUTS_ALLOWLIST_ENABLE, "false");
+        Dispatcher du = new DispatcherWrapper(ctx, finalParams);
         du.init();
         Dispatcher.setInstance(du);
 

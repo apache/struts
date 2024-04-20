@@ -30,7 +30,7 @@ import java.util.Map;
  * Base test class for TestNG unit tests.  Provides common Struts variables
  * and performs Struts setup and teardown processes
  */
-public class StrutsTestCase extends TestNGXWorkTestCase {
+public class TestNGStrutsTestCase extends TestNGXWorkTestCase {
 
     @BeforeTest
     @Override

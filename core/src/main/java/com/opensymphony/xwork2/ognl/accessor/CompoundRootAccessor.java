@@ -38,8 +38,12 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -76,6 +80,8 @@ public class CompoundRootAccessor implements RootAccessor {
     private static final Map<MethodCall, Boolean> invalidMethods = new ConcurrentHashMap<>();
     private boolean devMode;
     private boolean disallowCustomOgnlMap;
+    private static final Set<String> ALLOWED_MAP_CLASSES = Set.of(
+            HashMap.class.getName(), TreeMap.class.getName(), LinkedHashMap.class.getName());
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     protected void setDevMode(String mode) {
@@ -286,7 +292,7 @@ public class CompoundRootAccessor implements RootAccessor {
 
         if (disallowCustomOgnlMap) {
             String nodeClassName = ((OgnlContext) context).getCurrentNode().getClass().getName();
-            if ("ognl.ASTMap".equals(nodeClassName)) {
+            if ("ognl.ASTMap".equals(nodeClassName) && !ALLOWED_MAP_CLASSES.contains(className)) {
                 LOG.error("Constructing OGNL ASTMap's from custom classes is forbidden. Attempted class: {}", className);
                 return null;
             }

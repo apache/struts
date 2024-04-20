@@ -90,6 +90,7 @@ public class ConstantConfig {
     private Boolean freemarkerWrapperAltMap;
     private BeanConfig xworkConverter;
     private Boolean mapperAlwaysSelectFullNamespace;
+    private Boolean actionConfigFallbackToEmptyNamespace;
     private BeanConfig localeProviderFactory;
     private String mapperIdParameterName;
     private Boolean ognlAllowStaticFieldAccess;
@@ -145,6 +146,7 @@ public class ConstantConfig {
     private String strictMethodInvocationMethodRegex;
     private BeanConfig textProviderFactory;
     private BeanConfig localizedTextProvider;
+    private Boolean disallowProxyObjectAccess;
     private Boolean disallowProxyMemberAccess;
     private Integer ognlAutoGrowthCollectionLimit;
     private String staticContentPath;
@@ -225,6 +227,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_FREEMARKER_WRAPPER_ALT_MAP, Objects.toString(freemarkerWrapperAltMap, null));
         map.put(StrutsConstants.STRUTS_XWORKCONVERTER, beanConfToString(xworkConverter));
         map.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, Objects.toString(mapperAlwaysSelectFullNamespace, null));
+        map.put(StrutsConstants.STRUTS_ACTION_CONFIG_FALLBACK_TO_EMPTY_NAMESPACE, Objects.toString(actionConfigFallbackToEmptyNamespace, null));
         map.put(StrutsConstants.STRUTS_LOCALE_PROVIDER_FACTORY, beanConfToString(localeProviderFactory));
         map.put(StrutsConstants.STRUTS_ID_PARAMETER_NAME, mapperIdParameterName);
         map.put(StrutsConstants.STRUTS_ALLOW_STATIC_FIELD_ACCESS, Objects.toString(ognlAllowStaticFieldAccess, null));
@@ -279,6 +282,7 @@ public class ConstantConfig {
         map.put(StrutsConstants.STRUTS_SMI_METHOD_REGEX, strictMethodInvocationMethodRegex);
         map.put(StrutsConstants.STRUTS_TEXT_PROVIDER_FACTORY, beanConfToString(textProviderFactory));
         map.put(StrutsConstants.STRUTS_LOCALIZED_TEXT_PROVIDER, beanConfToString(localizedTextProvider));
+        map.put(StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS, Objects.toString(disallowProxyObjectAccess, null));
         map.put(StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS, Objects.toString(disallowProxyMemberAccess, null));
         map.put(StrutsConstants.STRUTS_OGNL_AUTO_GROWTH_COLLECTION_LIMIT, Objects.toString(ognlAutoGrowthCollectionLimit, null));
         map.put(StrutsConstants.STRUTS_UI_STATIC_CONTENT_PATH, Objects.toString(staticContentPath, StaticContentLoader.DEFAULT_STATIC_CONTENT_PATH));
@@ -810,6 +814,14 @@ public class ConstantConfig {
 
     public void setMapperAlwaysSelectFullNamespace(Boolean mapperAlwaysSelectFullNamespace) {
         this.mapperAlwaysSelectFullNamespace = mapperAlwaysSelectFullNamespace;
+    }
+
+    public Boolean getActionConfigFallbackToEmptyNamespace() {
+        return actionConfigFallbackToEmptyNamespace;
+    }
+
+    public void setActionConfigFallbackToEmptyNamespace(Boolean actionConfigFallbackToEmptyNamespace) {
+        this.actionConfigFallbackToEmptyNamespace = actionConfigFallbackToEmptyNamespace;
     }
 
     public BeanConfig getLocaleProviderFactory() {
@@ -1358,6 +1370,14 @@ public class ConstantConfig {
 
     public void setLocalizedTextProvider(Class<?> clazz) {
         this.localizedTextProvider = new BeanConfig(clazz, clazz.getName());
+    }
+
+    public Boolean getDisallowProxyObjectAccess() {
+        return disallowProxyObjectAccess;
+    }
+
+    public void setDisallowProxyObjectAccess(Boolean disallowProxyObjectAccess) {
+        this.disallowProxyObjectAccess = disallowProxyObjectAccess;
     }
 
     public Boolean getDisallowProxyMemberAccess() {

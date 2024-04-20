@@ -78,6 +78,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -87,6 +88,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * A utility class the actual dispatcher delegates most of its tasks to. Each instance
@@ -161,6 +166,10 @@ public class Dispatcher {
      * A regular expression used to validate if request is a multipart/form-data request
      */
     private Pattern multipartValidationPattern = Pattern.compile(MULTIPART_FORM_DATA_REGEX);
+
+    private String actionExcludedPatternsStr;
+    private String actionExcludedPatternsSeparator = ",";
+    private List<Pattern> actionExcludedPatterns;
 
     /**
      * Provide list of default configuration files.
@@ -338,6 +347,33 @@ public class Dispatcher {
     @Inject(value = StrutsConstants.STRUTS_MULTIPART_VALIDATION_REGEX, required = false)
     public void setMultipartValidationRegex(String multipartValidationRegex) {
         this.multipartValidationPattern = Pattern.compile(multipartValidationRegex);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN_SEPARATOR, required = false)
+    public void setActionExcludedPatternsSeparator(String separator) {
+        this.actionExcludedPatternsSeparator = separator;
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_ACTION_EXCLUDE_PATTERN, required = false)
+    public void setActionExcludedPatterns(String excludedPatterns) {
+        this.actionExcludedPatternsStr = excludedPatterns;
+    }
+
+    public List<Pattern> getActionExcludedPatterns() {
+        if (actionExcludedPatterns == null) {
+            initActionExcludedPatterns();
+        }
+        return actionExcludedPatterns;
+    }
+
+    private void initActionExcludedPatterns() {
+        if (actionExcludedPatternsStr == null || actionExcludedPatternsStr.trim().isEmpty()) {
+            actionExcludedPatterns = emptyList();
+            return;
+        }
+        actionExcludedPatterns = unmodifiableList(
+                Arrays.stream(actionExcludedPatternsStr.split(actionExcludedPatternsSeparator))
+                        .map(String::trim).map(Pattern::compile).collect(toList()));
     }
 
     @Inject

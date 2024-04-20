@@ -237,6 +237,8 @@ public final class StrutsConstants {
     public static final String STRUTS_XWORKCONVERTER = "struts.xworkConverter";
 
     public static final String STRUTS_ALWAYS_SELECT_FULL_NAMESPACE = "struts.mapper.alwaysSelectFullNamespace";
+    /** Fallback to empty namespace when request namespace didn't match any in action configuration */
+    public static final String STRUTS_ACTION_CONFIG_FALLBACK_TO_EMPTY_NAMESPACE = "struts.actionConfig.fallbackToEmptyNamespace";
 
     /** The {@link com.opensymphony.xwork2.LocaleProviderFactory} implementation class */
     public static final String STRUTS_LOCALE_PROVIDER_FACTORY = "struts.localeProviderFactory";
@@ -487,6 +489,7 @@ public final class StrutsConstants {
     public static final String STRUTS_TEXT_PROVIDER_FACTORY = "struts.textProviderFactory";
     public static final String STRUTS_LOCALIZED_TEXT_PROVIDER = "struts.localizedTextProvider";
 
+    public static final String STRUTS_DISALLOW_PROXY_OBJECT_ACCESS = "struts.disallowProxyObjectAccess";
     public static final String STRUTS_DISALLOW_PROXY_MEMBER_ACCESS = "struts.disallowProxyMemberAccess";
     public static final String STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS = "struts.disallowDefaultPackageAccess";
 

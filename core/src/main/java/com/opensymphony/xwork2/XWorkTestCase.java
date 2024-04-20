@@ -36,6 +36,8 @@ import org.apache.commons.lang3.ClassUtils;
 import java.util.Locale;
 import java.util.Map;
 
+import static java.util.Collections.singletonMap;
+
 /**
  * Base JUnit TestCase to extend for XWork specific JUnit tests. Uses
  * the generic test setup for logic.
@@ -56,9 +58,7 @@ public abstract class XWorkTestCase extends TestCase {
     @Override
     protected void setUp() throws Exception {
         configurationManager = XWorkTestCaseHelper.setUp();
-        configuration = configurationManager.getConfiguration();
-        container = configuration.getContainer();
-        actionProxyFactory = container.getInstance(ActionProxyFactory.class);
+        reloadConfiguration(configurationManager);
     }
 
     @Override
@@ -66,11 +66,15 @@ public abstract class XWorkTestCase extends TestCase {
         XWorkTestCaseHelper.tearDown(configurationManager);
     }
 
-    protected void loadConfigurationProviders(ConfigurationProvider... providers) {
-        configurationManager = XWorkTestCaseHelper.loadConfigurationProviders(configurationManager, providers);
+    private void reloadConfiguration(ConfigurationManager configurationManager) {
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();
         actionProxyFactory = container.getInstance(ActionProxyFactory.class);
+    }
+
+    protected void loadConfigurationProviders(ConfigurationProvider... providers) {
+        configurationManager = XWorkTestCaseHelper.loadConfigurationProviders(configurationManager, providers);
+        reloadConfiguration(configurationManager);
     }
 
     protected void loadButSet(Map<String, ?> properties) {
@@ -115,4 +119,25 @@ public abstract class XWorkTestCase extends TestCase {
             .getContextMap();
     }
 
+    protected void setStrutsConstant(String constant, String value) {
+        setStrutsConstant(singletonMap(constant, value));
+    }
+
+    protected void setStrutsConstant(final Map<String, String> overwritePropeties) {
+        configurationManager.addContainerProvider(new StubConfigurationProvider() {
+            @Override
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
+                for (Map.Entry<String, String> stringStringEntry : overwritePropeties.entrySet()) {
+                    props.setProperty(stringStringEntry.getKey(), stringStringEntry.getValue(), null);
+                }
+            }
+
+            @Override
+            public void destroy() {
+            }
+        });
+
+        configurationManager.reload();
+        reloadConfiguration(configurationManager);
+    }
 }

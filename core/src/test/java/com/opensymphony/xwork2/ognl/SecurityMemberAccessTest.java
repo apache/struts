@@ -413,7 +413,7 @@ public class SecurityMemberAccessTest {
         boolean actual = sma.isAccessible(context, MyValues.class, values, null);
 
         // then
-        assertTrue("Access to enums is blocked!", actual);
+        assertFalse("Access to enums is allowed!", actual);
     }
 
     @Test

@@ -68,10 +68,7 @@ import javax.el.MapELResolver;
 import javax.el.ResourceBundleELResolver;
 import javax.servlet.jsp.JspFactory;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -105,19 +102,16 @@ public class StrutsTilesContainerFactory extends BasicTilesContainerFactory {
 
     /**
      * Default pattern to be used to collect Tiles definitions if user didn't configure any
+     */
+    public static final Set<String> TILES_DEFAULT_PATTERNS = TextParseUtil.commaDelimitedStringToSet("*tiles*.xml");
+
+    /**
+     * Default pattern to be used to collect Tiles definitions if user didn't configure any
      *
      * @deprecated since Struts 6.4.0, use {@link #TILES_DEFAULT_PATTERNS} instead
      */
     @Deprecated
-    public static final String TILES_DEFAULT_PATTERN = "/WEB-INF/**/tiles*.xml,classpath*:META-INF/**/tiles*.xml";
-
-    /**
-     * Default pattern to be used to collect Tiles definitions if user didn't configure any
-     */
-    public static final Set<String> TILES_DEFAULT_PATTERNS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            "/WEB-INF/**/tiles*.xml",
-            "classpath*:META-INF/**/tiles*.xml"
-    )));
+    public static final String TILES_DEFAULT_PATTERN = String.join(",", TILES_DEFAULT_PATTERNS);
 
     /**
      * Supported expression languages

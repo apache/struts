@@ -46,6 +46,9 @@ public final class CspInterceptor extends AbstractInterceptor {
     private boolean prependServletContext = true;
     private boolean enforcingMode;
     private String reportUri;
+    private String reportTo;
+
+    private String defaultCspSettingsClassName = DefaultCspSettings.class.getName();
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -54,8 +57,24 @@ public final class CspInterceptor extends AbstractInterceptor {
             LOG.trace("Using CspSettings provided by the action: {}", action);
             applySettings(invocation, ((CspSettingsAware) action).getCspSettings());
         } else {
-            LOG.trace("Using DefaultCspSettings with action: {}", action);
-            applySettings(invocation, new DefaultCspSettings());
+            LOG.trace("Using {} with action: {}", defaultCspSettingsClassName, action);
+
+            // if the defaultCspSettingsClassName is not a real class, throw an exception
+            try {
+                Class.forName(defaultCspSettingsClassName, false, Thread.currentThread().getContextClassLoader());
+            }
+            catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException("The defaultCspSettingsClassName must be a real class.");
+            }
+
+            // if defaultCspSettingsClassName does not implement CspSettings, throw an exception
+            if (!CspSettings.class.isAssignableFrom(Class.forName(defaultCspSettingsClassName))) {
+                throw new IllegalArgumentException("The defaultCspSettingsClassName must implement CspSettings.");
+            }
+
+            CspSettings cspSettings = (CspSettings) Class.forName(defaultCspSettingsClassName)
+                    .getDeclaredConstructor().newInstance();
+            applySettings(invocation, cspSettings);
         }
         return invocation.invoke();
     }
@@ -76,6 +95,12 @@ public final class CspInterceptor extends AbstractInterceptor {
             }
 
             cspSettings.setReportUri(finalReportUri);
+
+            // apply reportTo if set
+            if (reportTo != null) {
+                LOG.trace("Applying: {} to reportTo", reportTo);
+                cspSettings.setReportTo(reportTo);
+            }
         }
 
         invocation.addPreResultListener((actionInvocation, resultCode) -> {
@@ -95,6 +120,18 @@ public final class CspInterceptor extends AbstractInterceptor {
         }
 
         this.reportUri = reportUri;
+    }
+
+    /**
+     * Sets the report group where csp violation reports will be sent. This will
+     * only be used if the reportUri is set.
+     *
+     * @param reportTo the report group where csp violation reports will be sent
+     *
+     * @since Struts 6.5.0
+     */
+    public void setReportTo(String reportTo) {
+        this.reportTo = reportTo;
     }
 
     private Optional<URI> buildUri(String reportUri) {
@@ -124,4 +161,13 @@ public final class CspInterceptor extends AbstractInterceptor {
         this.prependServletContext = prependServletContext;
     }
 
+    /**
+     * Sets the class name of the default {@link CspSettings} implementation to use when the action does not
+     * set its own values. If not set, the default is {@link DefaultCspSettings}.
+     *
+     * @since Struts 6.5.0
+     */
+    public void setDefaultCspSettingsClassName(String defaultCspSettingsClassName) {
+        this.defaultCspSettingsClassName = defaultCspSettingsClassName;
+    }
 }

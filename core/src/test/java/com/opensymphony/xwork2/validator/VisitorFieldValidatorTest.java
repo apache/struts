@@ -28,6 +28,8 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import org.easymock.EasyMock;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -140,6 +142,15 @@ public class VisitorFieldValidatorTest extends XWorkTestCase {
         assertEquals(1, errors.size());
         errors = fieldErrors.get("testBeanList[4].name");
         assertEquals(1, errors.size());
+    }
+
+    public void testDateValidation() throws Exception {
+        action.setBirthday(Date.valueOf(LocalDate.now().minusYears(20)));
+        action.setContext("birthday");
+
+        validate("birthday");
+
+        assertFalse(action.hasFieldErrors());
     }
 
     public void testContextIsOverriddenByContextParamInValidationXML() throws Exception {

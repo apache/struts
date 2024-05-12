@@ -147,7 +147,7 @@ public class SecurityMemberAccess implements MemberAccess {
         if (target != null) {
             // Special case: Target is a Class object but not Class.class
             if (Class.class.equals(target.getClass()) && !Class.class.equals(target)) {
-                if (!isStatic(member)) {
+                if (!isStatic(member) && Arrays.stream(((Class<?>) target).getConstructors()).noneMatch(p -> p.getClass().equals(member.getClass()))) {
                     throw new IllegalArgumentException("Member expected to be static!");
                 }
                 if (!member.getDeclaringClass().equals(target)) {

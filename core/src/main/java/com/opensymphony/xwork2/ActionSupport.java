@@ -91,6 +91,11 @@ public class ActionSupport implements Action, Validateable, ValidationAware, Tex
     }
 
     @Override
+    public Locale toLocale(String localeStr) {
+        return getLocaleProvider().toLocale(localeStr);
+    }
+
+    @Override
     public boolean hasKey(String key) {
         return getTextProvider().hasKey(key);
     }

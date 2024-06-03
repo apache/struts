@@ -119,7 +119,7 @@
         <tiles-request.version>1.0.7</tiles-request.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <hibernate-validator.version>6.2.4.Final</hibernate-validator.version>
-        <freemarker.version>2.3.32</freemarker.version>
+        <freemarker.version>2.3.33</freemarker.version>
 
         <!-- Site generation -->
         <fluido-skin.version>1.9</fluido-skin.version>

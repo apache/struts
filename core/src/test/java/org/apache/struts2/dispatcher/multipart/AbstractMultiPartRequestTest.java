@@ -93,7 +93,7 @@ abstract class AbstractMultiPartRequestTest {
                 .isEmpty();
 
         assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
-                .asList()
+                .asInstanceOf(InstanceOfAssertFactories.LIST)
                 .containsOnly("file1", "file2");
         assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
             assertThat(file.isFile())
@@ -142,7 +142,7 @@ abstract class AbstractMultiPartRequestTest {
                 .isEmpty();
 
         assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
-                .asList()
+                .asInstanceOf(InstanceOfAssertFactories.LIST)
                 .containsOnly("file1");
         assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
             if (Objects.equals(file.getName(), "test1.csv")) {
@@ -193,7 +193,7 @@ abstract class AbstractMultiPartRequestTest {
                 .isEmpty();
 
         assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
-                .asList()
+                .asInstanceOf(InstanceOfAssertFactories.LIST)
                 .containsOnly("file1", "file2");
         assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
             assertThat(file.isFile())
@@ -240,7 +240,7 @@ abstract class AbstractMultiPartRequestTest {
                 .isEmpty();
 
         assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
-                .asList()
+                .asInstanceOf(InstanceOfAssertFactories.LIST)
                 .containsOnly("file1", "file2");
         assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
             assertThat(file.isFile())
@@ -306,7 +306,7 @@ abstract class AbstractMultiPartRequestTest {
                 .containsExactly("struts.messages.upload.error.FileUploadContentTypeException");
 
         assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
-                .asList()
+                .asInstanceOf(InstanceOfAssertFactories.LIST)
                 .isEmpty();
     }
 
@@ -410,7 +410,7 @@ abstract class AbstractMultiPartRequestTest {
                 .isEmpty();
 
         assertThat(multiPart.getFileParameterNames().asIterator()).toIterable()
-                .asList()
+                .asInstanceOf(InstanceOfAssertFactories.LIST)
                 .containsOnly("file1");
         assertThat(multiPart.getFile("file1")).allSatisfy(file -> {
             assertThat(file.isFile())
@@ -458,6 +458,8 @@ abstract class AbstractMultiPartRequestTest {
                 .isEqualTo("short text");
         assertThat(multiPart.getParameterValues("multi"))
                 .containsOnly("multi1", "multi2");
+        assertThat(multiPart.getParameterValues("not-existing"))
+                .isNull();
     }
 
     @Test

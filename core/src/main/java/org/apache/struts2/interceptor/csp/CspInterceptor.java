@@ -19,7 +19,9 @@
 package org.apache.struts2.interceptor.csp;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.action.CspSettingsAware;
@@ -48,7 +50,7 @@ public final class CspInterceptor extends AbstractInterceptor {
     private String reportUri;
     private String reportTo;
 
-    private String defaultCspSettingsClassName = DefaultCspSettings.class.getName();
+    private String cspSettingsClassName = DefaultCspSettings.class.getName();
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -57,26 +59,28 @@ public final class CspInterceptor extends AbstractInterceptor {
             LOG.trace("Using CspSettings provided by the action: {}", action);
             applySettings(invocation, ((CspSettingsAware) action).getCspSettings());
         } else {
-            LOG.trace("Using {} with action: {}", defaultCspSettingsClassName, action);
-
-            // if the defaultCspSettingsClassName is not a real class, throw an exception
-            try {
-                Class.forName(defaultCspSettingsClassName, false, Thread.currentThread().getContextClassLoader());
-            }
-            catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException("The defaultCspSettingsClassName must be a real class.");
-            }
-
-            // if defaultCspSettingsClassName does not implement CspSettings, throw an exception
-            if (!CspSettings.class.isAssignableFrom(Class.forName(defaultCspSettingsClassName))) {
-                throw new IllegalArgumentException("The defaultCspSettingsClassName must implement CspSettings.");
-            }
-
-            CspSettings cspSettings = (CspSettings) Class.forName(defaultCspSettingsClassName)
-                    .getDeclaredConstructor().newInstance();
+            LOG.trace("Using {} with action: {}", cspSettingsClassName, action);
+            CspSettings cspSettings = createCspSettings(invocation);
             applySettings(invocation, cspSettings);
         }
         return invocation.invoke();
+    }
+
+    private CspSettings createCspSettings(ActionInvocation invocation) throws ClassNotFoundException {
+        Class<?> cspSettingsClass;
+
+        try {
+            cspSettingsClass = ClassLoaderUtil.loadClass(cspSettingsClassName, getClass());
+        } catch (ClassNotFoundException e) {
+            throw new ConfigurationException(String.format("The class %s doesn't exist!", cspSettingsClassName));
+        }
+
+        if (!CspSettings.class.isAssignableFrom(Class.forName(cspSettingsClassName))) {
+            throw new ConfigurationException(String.format("The class %s doesn't implement %s!",
+                    cspSettingsClassName, CspSettings.class.getName()));
+        }
+
+        return (CspSettings) invocation.getInvocationContext().getContainer().inject(cspSettingsClass);
     }
 
     private void applySettings(ActionInvocation invocation, CspSettings cspSettings) {
@@ -127,7 +131,6 @@ public final class CspInterceptor extends AbstractInterceptor {
      * only be used if the reportUri is set.
      *
      * @param reportTo the report group where csp violation reports will be sent
-     *
      * @since Struts 6.5.0
      */
     public void setReportTo(String reportTo) {
@@ -167,7 +170,7 @@ public final class CspInterceptor extends AbstractInterceptor {
      *
      * @since Struts 6.5.0
      */
-    public void setDefaultCspSettingsClassName(String defaultCspSettingsClassName) {
-        this.defaultCspSettingsClassName = defaultCspSettingsClassName;
+    public void setCspSettingsClassName(String cspSettingsClassName) {
+        this.cspSettingsClassName = cspSettingsClassName;
     }
 }

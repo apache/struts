@@ -75,7 +75,7 @@ public final class CspInterceptor extends AbstractInterceptor {
             throw new ConfigurationException(String.format("The class %s doesn't exist!", cspSettingsClassName));
         }
 
-        if (!CspSettings.class.isAssignableFrom(Class.forName(cspSettingsClassName))) {
+        if (!CspSettings.class.isAssignableFrom(cspSettingsClass)) {
             throw new ConfigurationException(String.format("The class %s doesn't implement %s!",
                     cspSettingsClassName, CspSettings.class.getName()));
         }

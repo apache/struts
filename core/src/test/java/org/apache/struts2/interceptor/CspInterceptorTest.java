@@ -19,6 +19,7 @@
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.struts2.StrutsInternalTestCase;
@@ -75,7 +76,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
 
     public void testEnforcingCspHeadersSet() throws Exception {
         String reportUri = "/csp-reports";
-        String reportTo =  "csp-group";
+        String reportTo = "csp-group";
         boolean enforcingMode = true;
         interceptor.setReportUri(reportUri);
         interceptor.setReportTo(reportTo);
@@ -92,7 +93,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
 
     public void testReportingCspHeadersSet() throws Exception {
         String reportUri = "/csp-reports";
-        String reportTo =  "csp-group";
+        String reportTo = "csp-group";
         boolean enforcingMode = false;
         interceptor.setReportUri(reportUri);
         interceptor.setReportTo(reportTo);
@@ -179,7 +180,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         checkHeader("/report-uri", enforcingMode);
     }
 
-    public void testInvalidDefaultCspSettingsClassName() throws Exception {
+    public void testNonExistingCspSettingsClassName() throws Exception {
         boolean enforcingMode = true;
         mai.setAction(new TestAction());
         request.setContextPath("/app");
@@ -189,15 +190,15 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         interceptor.setPrependServletContext(false);
 
         try {
-            interceptor.setDefaultCspSettingsClassName("foo");
+            interceptor.setCspSettingsClassName("foo");
             interceptor.intercept(mai);
-            assert (false);
-        } catch (IllegalArgumentException e) {
-            assert (true);
+            fail("Expected exception");
+        } catch (ConfigurationException e) {
+            assertEquals("The class foo doesn't exist!", e.getMessage());
         }
     }
 
-    public void testCustomDefaultCspSettingsClassName() throws Exception {
+    public void testInvalidCspSettingsClassName() throws Exception {
         boolean enforcingMode = true;
         mai.setAction(new TestAction());
         request.setContextPath("/app");
@@ -205,7 +206,25 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         interceptor.setEnforcingMode(enforcingMode);
         interceptor.setReportUri("/report-uri");
         interceptor.setPrependServletContext(false);
-        interceptor.setDefaultCspSettingsClassName(CustomDefaultCspSettings.class.getName());
+
+        try {
+            interceptor.setCspSettingsClassName(Integer.class.getName());
+            interceptor.intercept(mai);
+            fail("Expected exception");
+        } catch (ConfigurationException e) {
+            assertEquals("The class java.lang.Integer doesn't implement org.apache.struts2.interceptor.csp.CspSettings!", e.getMessage());
+        }
+    }
+
+    public void testCustomCspSettingsClassName() throws Exception {
+        boolean enforcingMode = true;
+        mai.setAction(new TestAction());
+        request.setContextPath("/app");
+
+        interceptor.setEnforcingMode(enforcingMode);
+        interceptor.setReportUri("/report-uri");
+        interceptor.setPrependServletContext(false);
+        interceptor.setCspSettingsClassName(CustomDefaultCspSettings.class.getName());
 
         interceptor.intercept(mai);
 
@@ -223,9 +242,9 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         String expectedCspHeader;
         if (Strings.isEmpty(reportUri)) {
             expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; ",
-                CspSettings.OBJECT_SRC, CspSettings.NONE,
-                CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
-                CspSettings.BASE_URI, CspSettings.NONE
+                    CspSettings.OBJECT_SRC, CspSettings.NONE,
+                    CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
+                    CspSettings.BASE_URI, CspSettings.NONE
             );
         } else {
             if (Strings.isEmpty(reportTo)) {
@@ -235,8 +254,7 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
                         CspSettings.BASE_URI, CspSettings.NONE,
                         CspSettings.REPORT_URI, reportUri
                 );
-            }
-            else {
+            } else {
                 expectedCspHeader = String.format("%s '%s'; %s 'nonce-%s' '%s' %s %s; %s '%s'; %s %s; %s %s; ",
                         CspSettings.OBJECT_SRC, CspSettings.NONE,
                         CspSettings.SCRIPT_SRC, session.getAttribute("nonce"), CspSettings.STRICT_DYNAMIC, CspSettings.HTTP, CspSettings.HTTPS,
@@ -263,10 +281,11 @@ public class CspInterceptorTest extends StrutsInternalTestCase {
         super.setUp();
         container.inject(interceptor);
         ActionContext context = ActionContext.getContext()
-            .withServletRequest(request)
-            .withServletResponse(response)
-            .withSession(new SessionMap(request))
-            .bind();
+                .withContainer(container)
+                .withServletRequest(request)
+                .withServletResponse(response)
+                .withSession(new SessionMap(request))
+                .bind();
         mai.setInvocationContext(context);
         session = request.getSession();
     }

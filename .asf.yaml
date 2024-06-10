@@ -18,8 +18,9 @@ github:
       contexts:
         - build
       required_pull_request_reviews:
-        require_code_owner_reviews: true
-        required_approving_review_count: 1
+        # it does not work because our github teams are private/secret, see INFRA-25666
+        require_code_owner_reviews: false
+        required_approving_review_count: 0
   autolink_jira:
     - WW
   dependabot_alerts:  true

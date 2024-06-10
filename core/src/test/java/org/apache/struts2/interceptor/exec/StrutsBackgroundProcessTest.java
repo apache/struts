@@ -20,6 +20,7 @@ package org.apache.struts2.interceptor.exec;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.SecureRandom;
@@ -42,6 +43,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 
+import static org.awaitility.Awaitility.await;
+
 /**
  * Test case for BackgroundProcessTest.
  */
@@ -60,9 +63,9 @@ public class StrutsBackgroundProcessTest extends StrutsInternalTestCase {
         invocation.setInvocationContext(ActionContext.getContext());
 
         StrutsBackgroundProcess bp = (StrutsBackgroundProcess) new StrutsBackgroundProcess(
-            invocation,
-            "BackgroundProcessTest.testSerializeDeserialize",
-            Thread.MIN_PRIORITY
+                invocation,
+                "BackgroundProcessTest.testSerializeDeserialize",
+                Thread.MIN_PRIORITY
         ).prepare();
         executor.execute(bp);
 
@@ -121,6 +124,31 @@ public class StrutsBackgroundProcessTest extends StrutsInternalTestCase {
         assertEquals(100, mutableState.get());
     }
 
+    public void testErrorableProcesses1() {
+        MockActionInvocationWithActionInvoker invocation = new MockActionInvocationWithActionInvoker(() -> {
+            throw new IllegalStateException("boom");
+        });
+
+        BackgroundProcess bp = new ErrorableBackgroundProcess(invocation, null).prepare();
+        executor.execute(bp);
+
+        await().atLeast(100, TimeUnit.MILLISECONDS).until(bp::isDone);
+
+        assertTrue("afterInvocation not called in case of exception", ((ErrorableBackgroundProcess) bp).isDoneAfter());
+    }
+
+    public void testErrorableProcesses2() {
+        MockActionInvocationWithActionInvoker invocation = new MockActionInvocationWithActionInvoker(() -> "done");
+
+        IllegalStateException expected = new IllegalStateException("after!");
+        BackgroundProcess bp = new ErrorableBackgroundProcess(invocation, expected).prepare();
+        executor.execute(bp);
+
+        await().atLeast(100, TimeUnit.MILLISECONDS).until(bp::isDone);
+
+        assertEquals(expected, bp.getException());
+    }
+
     public void testUnpreparedProcess() throws ExecutionException, InterruptedException, TimeoutException {
         // given
         MockActionInvocationWithActionInvoker invocation = new MockActionInvocationWithActionInvoker(() -> "done");
@@ -148,7 +176,8 @@ public class StrutsBackgroundProcessTest extends StrutsInternalTestCase {
     }
 
     private static class NotSerializableException extends Exception {
-        private MockHttpServletRequest notSerializableField;
+        @SuppressWarnings("unused")
+        private final MockHttpServletRequest notSerializableField;
 
         NotSerializableException(MockHttpServletRequest notSerializableField) {
             this.notSerializableField = notSerializableField;
@@ -171,10 +200,29 @@ class LockBackgroundProcess extends StrutsBackgroundProcess {
             super.run();
         }
     }
+}
+
+class ErrorableBackgroundProcess extends StrutsBackgroundProcess {
+
+    private final Exception afterException;
+    private boolean doneAfter;
+
+    public ErrorableBackgroundProcess(ActionInvocation invocation, Exception afterException) {
+        super(invocation, "errorabale process", Thread.NORM_PRIORITY);
+        this.afterException = afterException;
+    }
 
     @Override
     protected void afterInvocation() throws Exception {
-        super.afterInvocation();
-        lock.notify();
+        if (afterException != null) {
+            throw afterException;
+        } else {
+            super.afterInvocation();
+            doneAfter = true;
+        }
+    }
+
+    public boolean isDoneAfter() {
+        return doneAfter;
     }
 }

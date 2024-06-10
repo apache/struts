@@ -125,7 +125,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
      * @param context context
      * @return a validator key which is the class name plus context.
      */
-    protected String buildValidatorKey(Class clazz, String context) {
+    protected String buildValidatorKey(Class<?> clazz, String context) {
         return clazz.getName() + "/" + context;
     }
 
@@ -137,7 +137,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     }
 
     @Override
-    public synchronized List<Validator> getValidators(Class clazz, String context, String method) {
+    public synchronized List<Validator> getValidators(Class<?> clazz, String context, String method) {
         String validatorKey = buildValidatorKey(clazz, context);
 
         if (!validatorCache.containsKey(validatorKey)) {
@@ -158,7 +158,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
     }
 
     @Override
-    public synchronized List<Validator> getValidators(Class clazz, String context) {
+    public synchronized List<Validator> getValidators(Class<?> clazz, String context) {
         return getValidators(clazz, context, null);
     }
 
@@ -277,7 +277,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
      * @param checked   the set of previously checked class-contexts, null if none have been checked
      * @return a list of validator configs for the given class and context.
      */
-    protected List<ValidatorConfig> buildValidatorConfigs(Class clazz, String context, boolean checkFile, Set<String> checked) {
+    protected List<ValidatorConfig> buildValidatorConfigs(Class<?> clazz, String context, boolean checkFile, Set<String> checked) {
         List<ValidatorConfig> validatorConfigs = new ArrayList<>();
 
         if (checked == null) {
@@ -287,7 +287,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         }
 
         if (clazz.isInterface()) {
-            for (Class anInterface : clazz.getInterfaces()) {
+            for (Class<?> anInterface : clazz.getInterfaces()) {
                 validatorConfigs.addAll(buildValidatorConfigs(anInterface, context, checkFile, checked));
             }
         } else {
@@ -297,7 +297,7 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         }
 
         // look for validators for implemented interfaces
-        for (Class anInterface1 : clazz.getInterfaces()) {
+        for (Class<?> anInterface1 : clazz.getInterfaces()) {
             if (checked.contains(anInterface1.getName())) {
                 continue;
             }
@@ -317,17 +317,17 @@ public class DefaultActionValidatorManager implements ActionValidatorManager {
         return validatorConfigs;
     }
 
-    protected List<ValidatorConfig> buildAliasValidatorConfigs(Class aClass, String context, boolean checkFile) {
+    protected List<ValidatorConfig> buildAliasValidatorConfigs(Class<?> aClass, String context, boolean checkFile) {
         String fileName = aClass.getName().replace('.', '/') + "-" + context + VALIDATION_CONFIG_SUFFIX;
         return loadFile(fileName, aClass, checkFile);
     }
 
-    protected List<ValidatorConfig> buildClassValidatorConfigs(Class aClass, boolean checkFile) {
+    protected List<ValidatorConfig> buildClassValidatorConfigs(Class<?> aClass, boolean checkFile) {
         String fileName = aClass.getName().replace('.', '/') + VALIDATION_CONFIG_SUFFIX;
         return loadFile(fileName, aClass, checkFile);
     }
 
-    protected List<ValidatorConfig> loadFile(String fileName, Class clazz, boolean checkFile) {
+    protected List<ValidatorConfig> loadFile(String fileName, Class<?> clazz, boolean checkFile) {
         List<ValidatorConfig> retList = Collections.emptyList();
 
         URL fileUrl = ClassLoaderUtil.getResource(fileName, clazz);

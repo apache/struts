@@ -43,7 +43,7 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
 
     private static final Logger LOG = LogManager.getLogger(StrutsWildcardServletApplicationContext.class);
 
-    private ResourceFinder finder;
+    private final ResourceFinder finder;
 
     public StrutsWildcardServletApplicationContext(ServletContext context) {
         super(context);
@@ -64,16 +64,15 @@ public class StrutsWildcardServletApplicationContext extends ServletApplicationC
         }
 
         try {
-            Enumeration<URL> resources = getClass().getClassLoader().getResources("/");
+            Enumeration<URL> resources = getClass().getClassLoader().getResources("");
             while (resources.hasMoreElements()) {
-                URL resource = resources.nextElement();
-                urls.add(resource);
+                urls.add(resources.nextElement());
             }
         } catch (IOException e) {
             throw new ConfigurationException(e);
         }
 
-        finder = new ResourceFinder(urls.toArray(new URL[urls.size()]));
+        finder = new ResourceFinder(urls.toArray(new URL[0]));
     }
 
     public Collection<ApplicationResource> getResources(String path) {

@@ -46,17 +46,23 @@ public class DefaultLocaleProvider implements LocaleProvider {
 
     @Override
     public boolean isValidLocaleString(String localeStr) {
+        Locale locale = this.toLocale(localeStr);
+        return isValidLocale(locale);
+    }
+
+    @Override
+    public boolean isValidLocale(Locale locale) {
+        return locale != null && LocaleUtils.isAvailableLocale(locale);
+    }
+
+    @Override
+    public Locale toLocale(String localeStr) {
         Locale locale = null;
         try {
             locale = LocaleUtils.toLocale(StringUtils.trimToNull(localeStr));
         } catch (IllegalArgumentException e) {
             LOG.warn(new ParameterizedMessage("Cannot convert [{}] to proper locale", localeStr), e);
         }
-        return isValidLocale(locale);
-    }
-
-    @Override
-    public boolean isValidLocale(Locale locale) {
-        return LocaleUtils.isAvailableLocale(locale);
+        return locale;
     }
 }

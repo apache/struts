@@ -29,6 +29,7 @@ import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.ognl.ThreadAllowlist;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
@@ -147,11 +148,11 @@ public class SecurityMemberAccess implements MemberAccess {
         if (target != null) {
             // Special case: Target is a Class object but not Class.class
             if (Class.class.equals(target.getClass()) && !Class.class.equals(target)) {
-                if (!isStatic(member)) {
-                    throw new IllegalArgumentException("Member expected to be static!");
+                if (!isStatic(member) && !Constructor.class.equals(member.getClass())) {
+                    throw new IllegalArgumentException("Member expected to be static or constructor!");
                 }
                 if (!member.getDeclaringClass().equals(target)) {
-                    throw new IllegalArgumentException("Target class does not match static member!");
+                    throw new IllegalArgumentException("Target class does not match member!");
                 }
                 target = null; // This information is not useful to us and conflicts with following logic which expects target to be null or an instance containing the member
             // Standard case: Member should exist on target

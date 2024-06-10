@@ -36,7 +36,7 @@ public interface ActionValidatorManager {
      * @param method the name of the method being invoked on the action - can be <tt>null</tt>.
      * @return a list of all validators for the given class and context.
      */
-    List<Validator> getValidators(Class clazz, String context, String method);
+    List<Validator> getValidators(Class<?> clazz, String context, String method);
 
     /**
      * Returns a list of validators for the given class and context. This is the primary
@@ -46,7 +46,7 @@ public interface ActionValidatorManager {
      * @param context the context of the action class - can be <tt>null</tt>.
      * @return a list of all validators for the given class and context.
      */
-    List<Validator> getValidators(Class clazz, String context);
+    List<Validator> getValidators(Class<?> clazz, String context);
 
     /**
      * Validates the given object using action and its context.

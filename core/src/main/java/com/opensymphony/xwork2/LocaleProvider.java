@@ -18,6 +18,9 @@
  */
 package com.opensymphony.xwork2;
 
+import org.apache.commons.lang3.LocaleUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Locale;
 
 
@@ -58,4 +61,17 @@ public interface LocaleProvider {
      */
     boolean isValidLocale(Locale locale);
 
+    /**
+     * Tries to convert provided locale string into {@link Locale} or returns null
+     * @param localeStr a String representing locale, e.g.: en_EN
+     * @return instance of {@link Locale} or null
+     * @since Struts 6.5.0
+     */
+    default Locale toLocale(String localeStr) {
+        try {
+            return LocaleUtils.toLocale(StringUtils.trimToNull(localeStr));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }

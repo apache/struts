@@ -372,8 +372,11 @@ public abstract class AbstractMultiPartRequest implements MultiPartRequest {
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameterValues(java.lang.String)
      */
     public String[] getParameterValues(String name) {
-        return parameters.getOrDefault(name, Collections.emptyList())
-                .toArray(String[]::new);
+        List<String> values = parameters.get(name);
+        if (values == null) {
+            return null;
+        }
+        return values.toArray(new String[0]);
     }
 
     /* (non-Javadoc)

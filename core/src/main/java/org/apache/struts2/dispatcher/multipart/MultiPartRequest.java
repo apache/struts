@@ -95,6 +95,7 @@ public interface MultiPartRequest {
     /**
      * Returns a list of all parameter values associated with a parameter name. If there is only
      * one parameter value per name the resulting array will be of length 1.
+     * If the parameter doesn't exist, null should be returned instead of empty array.
      *
      * @param name the name of the parameter.
      * @return an array of all values associated with the parameter name.

@@ -18,73 +18,51 @@
  */
 package com.opensymphony.xwork2.validator;
 
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.SimpleAction;
-import com.opensymphony.xwork2.StubValueStack;
 import com.opensymphony.xwork2.TestBean;
+import com.opensymphony.xwork2.ValidationOrderAction;
 import com.opensymphony.xwork2.XWorkTestCase;
-import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.test.DataAware2;
-import com.opensymphony.xwork2.test.SimpleAction2;
 import com.opensymphony.xwork2.test.SimpleAction3;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.fs.DefaultFileManager;
-import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
+import com.opensymphony.xwork2.test.User;
+import com.opensymphony.xwork2.validator.validators.DateRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.DoubleRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.ExpressionValidator;
+import com.opensymphony.xwork2.validator.validators.IntRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.LongRangeFieldValidator;
+import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
+import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.validators.ShortRangeFieldValidator;
 import org.apache.struts2.StrutsException;
+import org.xml.sax.SAXParseException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-/**
- * DefaultActionValidatorManagerTest
- *
- * @author Jason Carreira
- * @author tm_jee
- * @version $Date$ $Id$
- */
 public class DefaultActionValidatorManagerTest extends XWorkTestCase {
 
     protected final String alias = "validationAlias";
 
     DefaultActionValidatorManager actionValidatorManager;
-    Mock mockValidatorFileParser;
-    Mock mockValidatorFactory;
-    ValueStack stubValueStack;
 
     @Override
     protected void setUp() throws Exception {
-        actionValidatorManager = new DefaultActionValidatorManager();
         super.setUp();
-        mockValidatorFileParser = new Mock(ValidatorFileParser.class);
-        actionValidatorManager.setValidatorFileParser((ValidatorFileParser)mockValidatorFileParser.proxy());
-
-        mockValidatorFactory = new Mock(ValidatorFactory.class);
-        actionValidatorManager.setValidatorFactory((ValidatorFactory)mockValidatorFactory.proxy());
-
-        stubValueStack = new StubValueStack();
-        ActionContext.of()
-            .withValueStack(stubValueStack)
-            .bind();
-
-        DefaultFileManagerFactory factory = new DefaultFileManagerFactory();
-        factory.setContainer(container);
-        factory.setFileManager(new DefaultFileManager());
-        actionValidatorManager.setFileManagerFactory(factory);
+        actionValidatorManager = container.inject(DefaultActionValidatorManager.class);
     }
 
     @Override
     protected void tearDown() throws Exception {
-        actionValidatorManager = null;
         super.tearDown();
-        mockValidatorFactory = null;
-        mockValidatorFileParser = null;
+        actionValidatorManager = null;
     }
-
 
     public void testBuildValidatorKey() {
         String validatorKey = actionValidatorManager.buildValidatorKey(SimpleAction.class, alias);
@@ -92,87 +70,115 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
     }
 
     public void testBuildsValidatorsForAlias() {
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/SimpleAction-validation.xml")),
-                new ArrayList());
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/SimpleAction-validationAlias-validation.xml")),
-                new ArrayList());
-         actionValidatorManager.getValidators(SimpleAction.class, alias);
-        mockValidatorFileParser.verify();
+        List<Validator> validators = actionValidatorManager.getValidators(SimpleAction.class, alias);
+
+        assertThat(validators).hasSize(11).map(Validator::getClass).containsExactly(
+                ExpressionValidator.class,
+                RequiredFieldValidator.class,
+                IntRangeFieldValidator.class,
+                DoubleRangeFieldValidator.class,
+                DateRangeFieldValidator.class,
+                IntRangeFieldValidator.class,
+                IntRangeFieldValidator.class,
+                LongRangeFieldValidator.class,
+                ShortRangeFieldValidator.class,
+                RequiredFieldValidator.class,
+                IntRangeFieldValidator.class
+        );
+        assertThat(validators).hasSize(11).map(Validator::getDefaultMessage).containsExactly(
+                "Foo must be greater than Bar. Foo = ${foo}, Bar = ${bar}.",
+                "You must enter a value for bar.",
+                "bar must be between ${min} and ${max}, current value is ${bar}.",
+                "percentage must be between ${minExclusive} and ${maxExclusive}, current value is ${percentage}.",
+                "The date must be between 12-22-2002 and 12-25-2002.",
+                "Could not find foo.range!",
+                "Could not find baz.range!",
+                "Could not find foo.range!",
+                "Could not find foo.range!",
+                "You must enter a value for baz.",
+                "baz out of range."
+        );
     }
 
     public void testBuildsValidatorsForAliasError() {
-        boolean pass = false;
-        try {
-            mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/TestBean-validation.xml")),
-                new ArrayList());
-            mockValidatorFileParser.expectAndThrow("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/TestBean-badtest-validation.xml")),
-                new ConfigurationException());
-            List validatorList = actionValidatorManager.getValidators(TestBean.class, "badtest");
-        } catch (StrutsException ex) {
-            pass = true;
-        }
-        mockValidatorFileParser.verify();
-        assertTrue("Didn't throw exception on load failure", pass);
+        assertThatThrownBy(() -> actionValidatorManager.getValidators(TestBean.class, "badtest"))
+                .isInstanceOf(StrutsException.class)
+                .hasCause(new SAXParseException("Attribute \"foo\" must be declared for element type \"field-validator\".", null));
     }
 
 
     public void testGetValidatorsForInterface() {
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/test/DataAware-validation.xml")),
-                new ArrayList());
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/test/DataAware-validationAlias-validation.xml")),
-                new ArrayList());
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/test/DataAware2-validation.xml")),
-                new ArrayList());
-        actionValidatorManager.getValidators(DataAware2.class, alias);
-        mockValidatorFileParser.verify();
+        List<Validator> validators = actionValidatorManager.getValidators(DataAware2.class, alias);
+
+        assertThat(validators).hasSize(3).map(Validator::getClass).containsExactly(
+                RequiredFieldValidator.class,
+                RequiredStringValidator.class,
+                RequiredStringValidator.class
+        );
+        assertThat(validators).hasSize(3).map(Validator::getValidatorType).containsExactly(
+                "required",
+                "requiredstring",
+                "requiredstring"
+        );
+        assertThat(validators).hasSize(3).map(Validator::getDefaultMessage).containsExactly(
+                "You must enter a value for data.",
+                "You must enter a value for data.",
+                "You must enter a value for data."
+        );
     }
 
     public void testGetValidatorsFromInterface() {
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/SimpleAction-validation.xml")),
-                new ArrayList());
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/SimpleAction-validationAlias-validation.xml")),
-                new ArrayList());
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/test/DataAware-validation.xml")),
-                new ArrayList());
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/test/DataAware-validationAlias-validation.xml")),
-                new ArrayList());
-        actionValidatorManager.getValidators(SimpleAction3.class, alias);
-        mockValidatorFileParser.verify();
-    }
+        List<Validator> validators = actionValidatorManager.getValidators(SimpleAction3.class, alias);
 
-    public void testSameAliasWithDifferentClass() {
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/SimpleAction-validation.xml")),
-                new ArrayList());
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/SimpleAction-validationAlias-validation.xml")),
-                new ArrayList());
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/test/SimpleAction2-validation.xml")),
-                new ArrayList());
-        mockValidatorFileParser.expectAndReturn("parseActionValidatorConfigs",
-                C.args(C.IS_NOT_NULL, C.IS_NOT_NULL, C.eq("com/opensymphony/xwork2/test/SimpleAction2-validationAlias-validation.xml")),
-                new ArrayList());
-        actionValidatorManager.getValidators(SimpleAction.class, alias);
-        actionValidatorManager.getValidators(SimpleAction2.class, alias);
-        mockValidatorFileParser.verify();
+        assertThat(validators).hasSize(13).map(Validator::getClass).containsExactly(
+                ExpressionValidator.class,
+                RequiredFieldValidator.class,
+                IntRangeFieldValidator.class,
+                DoubleRangeFieldValidator.class,
+                DateRangeFieldValidator.class,
+                IntRangeFieldValidator.class,
+                IntRangeFieldValidator.class,
+                LongRangeFieldValidator.class,
+                ShortRangeFieldValidator.class,
+                RequiredFieldValidator.class,
+                IntRangeFieldValidator.class,
+                RequiredFieldValidator.class,
+                RequiredStringValidator.class
+        );
+        assertThat(validators).hasSize(13).map(Validator::getValidatorType).containsExactly(
+                "expression",
+                "required",
+                "int",
+                "double",
+                "date",
+                "int",
+                "int",
+                "long",
+                "short",
+                "required",
+                "int",
+                "required",
+                "requiredstring"
+        );
+        assertThat(validators).hasSize(13).map(Validator::getDefaultMessage).containsExactly(
+                "Foo must be greater than Bar. Foo = ${foo}, Bar = ${bar}.",
+                "You must enter a value for bar.",
+                "bar must be between ${min} and ${max}, current value is ${bar}.",
+                "percentage must be between ${minExclusive} and ${maxExclusive}, current value is ${percentage}.",
+                "The date must be between 12-22-2002 and 12-25-2002.",
+                "Could not find foo.range!",
+                "Could not find baz.range!",
+                "Could not find foo.range!",
+                "Could not find foo.range!",
+                "You must enter a value for baz.",
+                "baz out of range.",
+                "You must enter a value for data.",
+                "You must enter a value for data."
+        );
     }
 
     /**
      * Test to verify WW-3850.
-     *
-     * @since 2.3.5
      */
     public void testBuildsValidatorsForClassError() {
         // for this test we need to have a file manager with reloadingConfigs to true
@@ -188,12 +194,8 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         }
     }
 
-    /*
-    // TODO: this all need to be converted to real unit tests
-
     public void testSkipUserMarkerActionLevelShortCircuit() {
-        // get validators
-        List validatorList = actionValidatorManager.getValidators(User.class, null);
+        List<Validator> validatorList = actionValidatorManager.getValidators(User.class, null);
         assertEquals(10, validatorList.size());
 
         try {
@@ -202,16 +204,17 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
             user.setEmail("bad_email");
             user.setEmail2("bad_email");
 
-            ValidatorContext context = new GenericValidatorContext(user);
+            ValidationAware validationAware = new SimpleAction();
+            ValidatorContext context = new DelegatingValidatorContext(validationAware, actionValidatorManager.textProviderFactory);
             actionValidatorManager.validate(user, null, context);
             assertTrue(context.hasFieldErrors());
 
             // check field errors
-            List l = (List) context.getFieldErrors().get("email");
+            List<String> l = context.getFieldErrors().get("email");
             assertNotNull(l);
             assertEquals(1, l.size());
             assertEquals("Not a valid e-mail.", l.get(0));
-            l = (List) context.getFieldErrors().get("email2");
+            l = context.getFieldErrors().get("email2");
             assertNotNull(l);
             assertEquals(2, l.size());
             assertEquals("Not a valid e-mail2.", l.get(0));
@@ -219,19 +222,17 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
 
             // check action errors
             assertTrue(context.hasActionErrors());
-            l = (List) context.getActionErrors();
+            l = new ArrayList<>(context.getActionErrors());
             assertNotNull(l);
             assertEquals(2, l.size()); // both expression test failed see User-validation.xml
             assertEquals("Email does not start with mark", l.get(0));
         } catch (ValidationException ex) {
-            ex.printStackTrace();
             fail("Validation error: " + ex.getMessage());
         }
     }
 
     public void testSkipAllActionLevelShortCircuit2() {
-        // get validators
-        List validatorList = actionValidatorManager.getValidators(User.class, null);
+        List<Validator> validatorList = actionValidatorManager.getValidators(User.class, null);
         assertEquals(10, validatorList.size());
 
         try {
@@ -244,34 +245,30 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
             user.setEmail("mark_bad_email_for_field_val@foo.com");
             user.setEmail2("mark_bad_email_for_field_val@foo.com");
 
-            ValidatorContext context = new GenericValidatorContext(user);
+            ValidationAware validationAware = new SimpleAction();
+            ValidatorContext context = new DelegatingValidatorContext(validationAware, actionValidatorManager.textProviderFactory);
             actionValidatorManager.validate(user, null, context);
             assertTrue(context.hasFieldErrors());
 
             // check field errors
             // we have an error in this field level, email does not ends with mycompany.com
-            List l = (List) context.getFieldErrors().get("email");
+            List<String> l = context.getFieldErrors().get("email");
             assertNotNull(l);
             assertEquals(1, l.size()); // because email-field-val is short-circuit
             assertEquals("Email not from the right company.", l.get(0));
 
-
             // check action errors
-            l = (List) context.getActionErrors();
+            l = new ArrayList<>(context.getActionErrors());
             assertFalse(context.hasActionErrors());
             assertEquals(0, l.size());
-
-
         } catch (ValidationException ex) {
-            ex.printStackTrace();
             fail("Validation error: " + ex.getMessage());
         }
     }
 
 
     public void testActionLevelShortCircuit() throws Exception {
-
-    	List validatorList = actionValidatorManager.getValidators(User.class, null);
+        List<Validator> validatorList = actionValidatorManager.getValidators(User.class, null);
         assertEquals(10, validatorList.size());
 
         User user = new User();
@@ -280,18 +277,18 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         user.setEmail("tmjee(at)yahoo.co.uk");
         user.setEmail("tm_jee(at)yahoo.co.uk");
 
-        ValidatorContext context = new GenericValidatorContext(user);
+        ValidationAware validationAware = new SimpleAction();
+        ValidatorContext context = new DelegatingValidatorContext(validationAware, actionValidatorManager.textProviderFactory);
         actionValidatorManager.validate(user, null, context);
 
-    	// check field level errors
+        // check field level errors
         // shouldn't have any because action error prevents validation of anything else
-        List l = (List) context.getFieldErrors().get("email2");
+        List<String> l = context.getFieldErrors().get("email2");
         assertNull(l);
-
 
         // check action errors
         assertTrue(context.hasActionErrors());
-        l = (List) context.getActionErrors();
+        l = new ArrayList<>(context.getActionErrors());
         assertNotNull(l);
         // we only get one, because UserMarker-validation.xml action-level validator
         // already sc it   :-)
@@ -299,10 +296,8 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
         assertEquals("Email not the same as email2", l.get(0));
     }
 
-
     public void testShortCircuitNoErrors() {
-        // get validators
-        List validatorList = actionValidatorManager.getValidators(User.class, null);
+        List<Validator> validatorList = actionValidatorManager.getValidators(User.class, null);
         assertEquals(10, validatorList.size());
 
         try {
@@ -311,73 +306,72 @@ public class DefaultActionValidatorManagerTest extends XWorkTestCase {
             user.setEmail("mark@mycompany.com");
             user.setEmail2("mark@mycompany.com");
 
-            ValidatorContext context = new GenericValidatorContext(user);
+            ValidationAware validationAware = new SimpleAction();
+            ValidatorContext context = new DelegatingValidatorContext(validationAware, actionValidatorManager.textProviderFactory);
             actionValidatorManager.validate(user, null, context);
             assertFalse(context.hasErrors());
         } catch (ValidationException ex) {
-            ex.printStackTrace();
             fail("Validation error: " + ex.getMessage());
         }
     }
 
     public void testFieldErrorsOrder() throws Exception {
-    	ValidationOrderAction action = new ValidationOrderAction();
-    	actionValidatorManager.validate(action, "actionContext");
-    	Map fieldErrors = action.getFieldErrors();
-    	Iterator i = fieldErrors.entrySet().iterator();
+        ValidationOrderAction action = new ValidationOrderAction();
+        actionValidatorManager.validate(action, "actionContext");
+        Map<String, List<String>> fieldErrors = action.getFieldErrors();
+        Iterator<Map.Entry<String, List<String>>> i = fieldErrors.entrySet().iterator();
 
-    	assertNotNull(fieldErrors);
-    	assertEquals(fieldErrors.size(), 12);
+        assertNotNull(fieldErrors);
+        assertEquals(fieldErrors.size(), 12);
 
 
-    	Map.Entry e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "username");
-    	assertEquals(((List)e.getValue()).get(0), "username required");
+        Map.Entry<String, List<String>> e = i.next();
+        assertEquals(e.getKey(), "username");
+        assertEquals(e.getValue().get(0), "username required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "password");
-    	assertEquals(((List)e.getValue()).get(0), "password required");
+        e = i.next();
+        assertEquals(e.getKey(), "password");
+        assertEquals((e.getValue()).get(0), "password required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "confirmPassword");
-    	assertEquals(((List)e.getValue()).get(0), "confirm password required");
+        e = i.next();
+        assertEquals(e.getKey(), "confirmPassword");
+        assertEquals((e.getValue()).get(0), "confirm password required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "firstName");
-    	assertEquals(((List)e.getValue()).get(0), "first name required");
+        e = i.next();
+        assertEquals(e.getKey(), "firstName");
+        assertEquals((e.getValue()).get(0), "first name required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "lastName");
-    	assertEquals(((List)e.getValue()).get(0), "last name required");
+        e = i.next();
+        assertEquals(e.getKey(), "lastName");
+        assertEquals((e.getValue()).get(0), "last name required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "city");
-    	assertEquals(((List)e.getValue()).get(0), "city is required");
+        e = i.next();
+        assertEquals(e.getKey(), "city");
+        assertEquals((e.getValue()).get(0), "city is required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "province");
-    	assertEquals(((List)e.getValue()).get(0), "province is required");
+        e = i.next();
+        assertEquals(e.getKey(), "province");
+        assertEquals((e.getValue()).get(0), "province is required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "country");
-    	assertEquals(((List)e.getValue()).get(0), "country is required");
+        e = i.next();
+        assertEquals(e.getKey(), "country");
+        assertEquals((e.getValue()).get(0), "country is required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "postalCode");
-    	assertEquals(((List)e.getValue()).get(0), "postal code is required");
+        e = i.next();
+        assertEquals(e.getKey(), "postalCode");
+        assertEquals((e.getValue()).get(0), "postal code is required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "email");
-    	assertEquals(((List)e.getValue()).get(0), "email is required");
+        e = i.next();
+        assertEquals(e.getKey(), "email");
+        assertEquals((e.getValue()).get(0), "email is required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "website");
-    	assertEquals(((List)e.getValue()).get(0), "website is required");
+        e = i.next();
+        assertEquals(e.getKey(), "website");
+        assertEquals((e.getValue()).get(0), "website is required");
 
-    	e = (Map.Entry) i.next();
-    	assertEquals(e.getKey(), "passwordHint");
-    	assertEquals(((List)e.getValue()).get(0), "password hint is required");
-
+        e = i.next();
+        assertEquals(e.getKey(), "passwordHint");
+        assertEquals((e.getValue()).get(0), "password hint is required");
     }
-    */
+
 }

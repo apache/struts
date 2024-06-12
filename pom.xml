@@ -110,17 +110,17 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- dependency versions in alphanumeric order -->
-        <asm.version>9.6</asm.version>
+        <asm.version>9.7</asm.version>
         <byte-buddy.version>1.14.11</byte-buddy.version>
-        <freemarker.version>2.3.32</freemarker.version>
+        <freemarker.version>2.3.33</freemarker.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
-        <jackson.version>2.16.0</jackson.version>
+        <jackson.version>2.17.1</jackson.version>
         <log4j2.version>2.23.1</log4j2.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <mockito.version>5.8.0</mockito.version>
         <ognl.version>3.3.5</ognl.version>
         <sitemesh.version>2.5.0</sitemesh.version>
-        <slf4j.version>2.0.12</slf4j.version>
+        <slf4j.version>2.0.13</slf4j.version>
         <spring.platformVersion>6.0.13</spring.platformVersion>
         <tiles.version>3.0.8</tiles.version>
         <tiles-request.version>1.0.7</tiles-request.version>
@@ -206,7 +206,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.11</version>
+                        <version>0.8.12</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
@@ -240,7 +240,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -287,7 +287,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.rat</groupId>
@@ -332,7 +332,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>8.4.2</version>
+                    <version>9.2.0</version>
                     <configuration>
                         <suppressionFiles>
                             <suppressionFile>src/etc/project-suppression.xml</suppressionFile>
@@ -485,7 +485,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.16.1</version>
+                <version>2.16.2</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -731,6 +731,13 @@
             </dependency>
 
             <dependency>
+                <groupId>org.awaitility</groupId>
+                <artifactId>awaitility</artifactId>
+                <version>4.2.1</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
                 <version>6.0.0</version>
@@ -826,7 +833,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
-                <version>1.11.0</version>
+                <version>1.12.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-el</groupId>
@@ -914,7 +921,7 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.25.2</version>
+                <version>3.25.3</version>
                 <scope>test</scope>
             </dependency>
 
@@ -978,7 +985,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.26.0</version>
+                <version>1.26.2</version>
             </dependency>
 
             <dependency>

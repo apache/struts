@@ -22,6 +22,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.TestBean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -37,7 +38,7 @@ public class VisitorValidatorTestAction extends ActionSupport {
     private String context;
     private TestBean bean = new TestBean();
     private TestBean[] testBeanArray;
-
+    private Date birthday;
 
     public VisitorValidatorTestAction() {
         testBeanArray = new TestBean[5];
@@ -79,5 +80,13 @@ public class VisitorValidatorTestAction extends ActionSupport {
 
     public List<TestBean> getTestBeanList() {
         return testBeanList;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 }

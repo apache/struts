@@ -26,4 +26,12 @@
             <message>You must enter a context.</message>
         </field-validator>
     </field>
+    <field name="birthday">
+        <field-validator type="fieldexpression">
+            <param name="expression"><![CDATA[
+                (birthday == null || birthday.before(new java.util.Date()))
+            ]]></param>
+            <message key="errors_birthday" />
+        </field-validator>
+    </field>
 </validators>

@@ -25,14 +25,10 @@ import org.springframework.mock.web.MockJspWriter;
 
 import jakarta.servlet.jsp.JspException;
 
-
-/**
- */
 public class SetTagTest extends AbstractUITagTest {
 
-    Chewbacca chewie;
-    SetTag tag;
-
+    private Chewbacca chewie;
+    private SetTag tag;
 
     public void testApplicationScope() throws JspException {
         tag.setName("foo");
@@ -400,6 +396,50 @@ public class SetTagTest extends AbstractUITagTest {
                 strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testShortVarNameInPageScope() throws JspException {
+        tag.setName("f");
+        tag.setValue("name");
+        tag.setScope("page");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("chewie", pageContext.getAttribute("f"));
+    }
+
+    public void testShortVarNameInRequestScope() throws JspException {
+        tag.setName("f");
+        tag.setValue("name");
+        tag.setScope("request");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("chewie", request.getAttribute("f"));
+    }
+
+    public void testShortVarNameInSessionScope() throws JspException {
+        tag.setName("f");
+        tag.setValue("name");
+        tag.setScope("session");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("chewie", session.get("f"));
+    }
+
+    public void testShortVarNameInApplicationScope() throws JspException {
+        tag.setName("f");
+        tag.setValue("name");
+        tag.setScope("application");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("chewie", servletContext.getAttribute("f"));
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -411,9 +451,9 @@ public class SetTagTest extends AbstractUITagTest {
     }
 
 
-    public class Chewbacca {
-        String name;
-        boolean furry;
+    public static class Chewbacca {
+        private String name;
+        private boolean furry;
 
         public Chewbacca(String name, boolean furry) {
             this.name = name;

@@ -36,6 +36,7 @@ import org.junit.Test;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.jsp.JspFactory;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -64,12 +65,11 @@ public class StrutsTilesContainerFactoryTest {
                 Objects.requireNonNull(getClass().getResource("/org/apache/tiles/core/config/tiles-defs.xml"))
         );
         ApplicationResource classpathResource = new URLApplicationResource(
-                "/org/apache/tiles/core/config/defs1.xml",
-                Objects.requireNonNull(getClass().getResource("/org/apache/tiles/core/config/defs1.xml"))
+                "/org/apache/tiles/core/config/tiles_defs1.xml",
+                Objects.requireNonNull(getClass().getResource("/org/apache/tiles/core/config/tiles_defs1.xml"))
         );
         when(applicationContext.getInitParams()).thenReturn(Collections.emptyMap());
-        when(applicationContext.getResources("/WEB-INF/**/tiles*.xml")).thenReturn(Collections.singleton(pathResource));
-        when(applicationContext.getResources("classpath*:META-INF/**/tiles*.xml")).thenReturn(Collections.singleton(classpathResource));
+        when(applicationContext.getResources("*tiles*.xml")).thenReturn(Arrays.asList(pathResource, classpathResource));
 
         List<ApplicationResource> resources = factory.getSources(applicationContext);
         assertEquals("The urls list is not two-sized", 2, resources.size());

@@ -147,6 +147,26 @@ public class I18nInterceptorTest extends TestCase {
         assertEquals(Locale.getDefault(), session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
     }
 
+    public void testTrimableLocaleString1() throws Exception {
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "de\n");
+
+        interceptor.intercept(mai);
+
+        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(Locale.GERMAN, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
+    public void testTrimableLocaleString2() throws Exception {
+        prepare(I18nInterceptor.DEFAULT_PARAMETER, "de ");
+
+        interceptor.intercept(mai);
+
+        assertFalse(mai.getInvocationContext().getParameters().get(I18nInterceptor.DEFAULT_PARAMETER).isDefined()); // should have been removed
+        assertNotNull(session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should be stored here
+        assertEquals(Locale.GERMAN, session.get(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE)); // should create a locale object
+    }
+
     public void testWithVariant() throws Exception {
         prepare(I18nInterceptor.DEFAULT_PARAMETER, "ja_JP_JP");
         interceptor.intercept(mai);

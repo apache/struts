@@ -104,17 +104,17 @@ public class Set extends ContextBean {
         body="";
 
         if (DispatcherConstants.APPLICATION.equalsIgnoreCase(scope)) {
-            stack.setValue("#application['" + getVar() + "']", o);
+            stack.setValue(String.format("#application[\"%s\"]", getVar()), o);
         } else if (DispatcherConstants.SESSION.equalsIgnoreCase(scope)) {
-            stack.setValue("#session['" + getVar() + "']", o);
+            stack.setValue(String.format("#session[\"%s\"]", getVar()), o);
         } else if (DispatcherConstants.REQUEST.equalsIgnoreCase(scope)) {
-            stack.setValue("#request['" + getVar() + "']", o);
+            stack.setValue(String.format("#request[\"%s\"]", getVar()), o);
         } else if (DispatcherConstants.PAGE.equalsIgnoreCase(scope)) {
-            stack.setValue("#attr['" + getVar() + "']", o, false);
+            stack.setValue(String.format("#attr[\"%s\"]", getVar()), o, false);
         } else {
             // Default scope is action. Note: The action scope handling also adds the var to the page scope.
-            stack.getContext().put(getVar(), o);
-            stack.setValue("#attr['" + getVar() + "']", o, false);
+            putInContext(o);
+            stack.setValue(String.format("#attr[\"%s\"]", getVar()), o, false);
         }
 
         return super.end(writer, body);

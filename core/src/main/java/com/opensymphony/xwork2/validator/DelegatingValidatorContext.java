@@ -122,10 +122,15 @@ public class DelegatingValidatorContext implements ValidatorContext {
         return localeProvider.isValidLocale(locale);
     }
 
+    @Override
+    public Locale toLocale(String localeStr) {
+        return localeProvider.toLocale(localeStr);
+    }
+
     public boolean hasKey(String key) {
     	return textProvider.hasKey(key);
     }
-    
+
     public String getText(String aTextName) {
         return textProvider.getText(aTextName);
     }
@@ -279,6 +284,11 @@ public class DelegatingValidatorContext implements ValidatorContext {
         @Override
         public boolean isValidLocale(Locale locale) {
             return getLocaleProvider().isValidLocale(locale);
+        }
+
+        @Override
+        public Locale toLocale(String localeStr) {
+            return getLocaleProvider().toLocale(localeStr);
         }
     }
 

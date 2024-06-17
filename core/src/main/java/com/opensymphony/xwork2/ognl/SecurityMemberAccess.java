@@ -209,6 +209,18 @@ public class SecurityMemberAccess implements MemberAccess {
      * @return {@code true} if member access is allowed
      */
     protected boolean checkAllowlist(Object target, Member member) {
+        if (!disallowProxyObjectAccess && target != null && ProxyUtil.isProxy(target)) {
+            // If `disallowProxyObjectAccess` is not set, allow resolving Hibernate entities to their underlying
+            // classes/members. This allows the allowlist capability to continue working and offer some level of
+            // protection in applications where the developer has accepted the risk of allowing OGNL access to Hibernate
+            // entities. This is preferred to having to disable the allowlist capability entirely.
+            Object newTarget = ProxyUtil.getHibernateProxyTarget(target);
+            if (newTarget != target) {
+                target = newTarget;
+                member = ProxyUtil.resolveTargetMember(member, newTarget);
+            }
+        }
+
         Class<?> memberClass = member.getDeclaringClass();
         if (!enforceAllowlistEnabled) {
             return true;

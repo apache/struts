@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.ognl.OgnlCacheFactory;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.lang.reflect.Constructor;
@@ -32,6 +33,8 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+
+import static java.lang.reflect.Modifier.isPublic;
 
 /**
  * <code>ProxyUtil</code>
@@ -254,5 +257,35 @@ public class ProxyUtil {
         }
 
         return false;
+    }
+
+    /**
+     * @return the target instance of the given object if it is a Hibernate proxy object, otherwise the given object
+     */
+    public static Object getHibernateProxyTarget(Object object) {
+        try {
+            return Hibernate.unproxy(object);
+        } catch (NoClassDefFoundError ignored) {
+            return object;
+        }
+    }
+
+    /**
+     * @return matching member on target object if one exists, otherwise the same member
+     */
+    public static Member resolveTargetMember(Member proxyMember, Object target) {
+        int mod = proxyMember.getModifiers();
+        if (proxyMember instanceof Method) {
+            if (isPublic(mod)) {
+                return MethodUtils.getMatchingAccessibleMethod(target.getClass(), proxyMember.getName(), ((Method) proxyMember).getParameterTypes());
+            } else {
+                return MethodUtils.getMatchingMethod(target.getClass(), proxyMember.getName(), ((Method) proxyMember).getParameterTypes());
+            }
+        } else if (proxyMember instanceof Field) {
+            return FieldUtils.getField(target.getClass(), proxyMember.getName(), isPublic(mod));
+        } else if (proxyMember instanceof Constructor && isPublic(mod)) {
+            return ConstructorUtils.getMatchingAccessibleConstructor(target.getClass(), ((Constructor<?>) proxyMember).getParameterTypes());
+        }
+        return proxyMember;
     }
 }

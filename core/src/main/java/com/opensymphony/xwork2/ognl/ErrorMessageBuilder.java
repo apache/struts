@@ -33,7 +33,7 @@ public class ErrorMessageBuilder {
     }
 
     public ErrorMessageBuilder errorSettingExpressionWithValue(String expr, Object value) {
-        appenExpression(expr);
+        appendExpression(expr);
         if (value instanceof Object[]) {
             appendValueAsArray((Object[]) value, message);
         } else {
@@ -42,7 +42,7 @@ public class ErrorMessageBuilder {
         return this;
     }
 
-    private void appenExpression(String expr) {
+    private void appendExpression(String expr) {
         message.append("Error setting expression '");
         message.append(expr);
         message.append("' with value ");

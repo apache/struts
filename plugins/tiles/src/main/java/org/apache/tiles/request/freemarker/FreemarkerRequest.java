@@ -20,7 +20,7 @@
 package org.apache.tiles.request.freemarker;
 
 import freemarker.core.Environment;
-import freemarker.ext.servlet.HttpRequestHashModel;
+import freemarker.ext.jakarta.servlet.HttpRequestHashModel;
 import org.apache.tiles.request.AbstractViewRequest;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.DispatchRequest;

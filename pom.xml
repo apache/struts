@@ -506,19 +506,8 @@
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts-annotations</artifactId>
                 <version>1.0.8</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.freemarker</groupId>
-                        <artifactId>freemarker</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>org.apache.struts</groupId>
-                <artifactId>struts2-freemarker-jakarta</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.struts</groupId>
                 <artifactId>struts2-core</artifactId>

@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * @since 6.5.0
  */
-public class DebugUtils {
+public final class DebugUtils {
 
     public static void notifyDeveloperOfError(Logger log, Object action, String message) {
         if (action instanceof TextProvider) {

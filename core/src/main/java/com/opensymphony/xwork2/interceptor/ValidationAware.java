@@ -25,8 +25,6 @@ import java.util.Map;
 /**
  * ValidationAware classes can accept Action (class level) or field level error messages. Action level messages are kept
  * in a Collection. Field level error messages are kept in a Map from String field name to a List of field error msgs.
- *
- * @author plightbo
  */
 public interface ValidationAware {
 

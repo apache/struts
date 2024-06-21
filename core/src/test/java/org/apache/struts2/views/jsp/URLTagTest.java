@@ -2092,6 +2092,42 @@ public class URLTagTest extends AbstractUITagTest {
             strutsBodyTagsAreReflectionEqual(tag, freshTag));
     }
 
+    public void testQueryParamsAndFragment() throws Exception {
+        request.setRequestURI("/public/about");
+        tag.setAction("company");
+        tag.setValue("/books?hl=en&lr=Y&redir_esc=y#v=twopage&q&f=false");
+        tag.setEscapeAmp("false");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("/books?hl=en&lr=Y&redir_esc=y#v=twopage&q&f=false", writer.toString());
+    }
+
+    public void testDoubleEqualSigns() throws Exception {
+        request.setRequestURI("/public/about");
+        tag.setAction("company");
+        tag.setValue("/PublicationsDetail.aspx?ID=GjTu91suYQI=&t=1");
+        tag.setEscapeAmp("false");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("/PublicationsDetail.aspx?ID=GjTu91suYQI%3D&t=1", writer.toString());
+    }
+
+    public void testOnlyFragment() throws Exception {
+        request.setRequestURI("/public/about");
+        tag.setAction("company");
+        tag.setValue("/books#v=twopage&q&f=false");
+        tag.setEscapeAmp("false");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("/books#v=twopage&q&f=false", writer.toString());
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();

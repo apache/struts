@@ -168,11 +168,6 @@
                     <artifactItems>
                       <artifactItem>
                         <groupId>org.apache.struts</groupId>
-                        <artifactId>struts2-freemarker-jakarta</artifactId>
-                        <destFileName>struts2-freemarker-jakarta.jar</destFileName>
-                      </artifactItem>
-                      <artifactItem>
-                        <groupId>org.apache.struts</groupId>
                         <artifactId>struts2-sitemesh2-jakarta</artifactId>
                         <destFileName>struts2-sitemesh2-jakarta.jar</destFileName>
                       </artifactItem>
@@ -241,7 +236,6 @@
                     <webAppSourceDirectory>${basedir}/src/main/webapp/</webAppSourceDirectory>
                     <webApp>
                       <extraClasspath>
-                        ${project.build.directory}/extraclasspath/struts2-freemarker-jakarta.jar,
                         ${project.build.directory}/extraclasspath/struts2-sitemesh2-jakarta.jar,
                         ${project.build.directory}/extraclasspath/struts2-velocity-tools-view-jakarta.jar,
                         ${project.build.directory}/extraclasspath/struts2-velocity-tools-jsp-jakarta

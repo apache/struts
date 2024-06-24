@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.util;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 @Deprecated
 public interface ServletContextAware extends org.apache.struts2.action.ServletContextAware {

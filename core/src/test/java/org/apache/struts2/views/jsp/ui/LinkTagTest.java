@@ -20,7 +20,7 @@ package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import javax.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspException;
 
 public class LinkTagTest extends AbstractUITagTest {
 

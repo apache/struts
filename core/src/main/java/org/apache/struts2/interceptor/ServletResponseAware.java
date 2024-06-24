@@ -18,7 +18,7 @@
  */
 package org.apache.struts2.interceptor;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Deprecated
 public interface ServletResponseAware extends org.apache.struts2.action.ServletResponseAware {

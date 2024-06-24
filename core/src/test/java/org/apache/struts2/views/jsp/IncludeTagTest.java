@@ -18,16 +18,18 @@
  */
 package org.apache.struts2.views.jsp;
 
-import static org.easymock.EasyMock.*;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.Include;
 
-import com.mockobjects.servlet.MockRequestDispatcher;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 /**
  * Unit test of {@link IncludeTag}.
@@ -169,7 +171,7 @@ public class IncludeTagTest extends AbstractTagTest {
         
         replay(mockRequestDispatcher);
 
-        request.setupGetServletPath("app/manager");
+        request.setServletPath("app/manager");
         tag.setValue("../car/view.jsp");
         tag.doStartTag();
         tag.doEndTag();
@@ -196,7 +198,7 @@ public class IncludeTagTest extends AbstractTagTest {
 
         replay(mockRequestDispatcher);
 
-        request.setupGetServletPath("app/manager");
+        request.setServletPath("app/manager");
         tag.setPerformClearTagStateForTagPoolingServers(true);  // Explicitly request tag state clearing.
         tag.setValue("../car/view.jsp");
         tag.doStartTag();
@@ -363,12 +365,11 @@ public class IncludeTagTest extends AbstractTagTest {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        request.setupGetRequestDispatcher(new MockRequestDispatcher());
         tag = new IncludeTag();
 
         mockRequestDispatcher = (RequestDispatcher) createMock(RequestDispatcher.class);
 
-        request.setupGetRequestDispatcher(mockRequestDispatcher);
+        request.setRequestDispatcher(mockRequestDispatcher);
         tag.setPageContext(pageContext);
         tag.setPageContext(pageContext);
     }

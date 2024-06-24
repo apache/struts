@@ -27,7 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,7 +105,7 @@ public class HttpHeaderResult implements Result {
      * Sets the http servlet error code that should be set on the response
      *
      * @param error the Http error code
-     * @see javax.servlet.http.HttpServletResponse#sendError(int)
+     * @see jakarta.servlet.http.HttpServletResponse#sendError(int)
      */
     public void setError(String error) {
         this.error = error;
@@ -115,7 +115,7 @@ public class HttpHeaderResult implements Result {
      * Sets the error message that should be set on the reponse
      *
      * @param errorMessage error message send to the client
-     * @see javax.servlet.http.HttpServletResponse#sendError(int, String)
+     * @see jakarta.servlet.http.HttpServletResponse#sendError(int, String)
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -144,7 +144,7 @@ public class HttpHeaderResult implements Result {
      * Sets the http servlet response status code that should be set on a response.
      *
      * @param status the Http status code
-     * @see javax.servlet.http.HttpServletResponse#setStatus(int)
+     * @see jakarta.servlet.http.HttpServletResponse#setStatus(int)
      */
     public void setStatus(int status) {
         this.status = status;

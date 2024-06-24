@@ -72,10 +72,10 @@ import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.fs.JBossFileManager;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -153,7 +153,7 @@ public class Dispatcher {
     private String defaultLocale;
 
     /**
-     * Store state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
+     * Store state of {@link StrutsConstants#STRUTS_MULTIPART_SAVE_DIR} setting.
      */
     private String multipartSaveDir;
 
@@ -326,7 +326,7 @@ public class Dispatcher {
      *
      * @param val New setting
      */
-    @Inject(StrutsConstants.STRUTS_MULTIPART_SAVEDIR)
+    @Inject(StrutsConstants.STRUTS_MULTIPART_SAVE_DIR)
     public void setMultipartSaveDir(String val) {
         multipartSaveDir = val;
     }
@@ -334,7 +334,7 @@ public class Dispatcher {
     /**
      * @deprecated since 6.4.0, no replacement.
      */
-    @Deprecated
+    @Deprecated(since = "6.4.0", forRemoval = true)
     public void setMultipartHandler(String val) {
         // no-op
     }
@@ -911,11 +911,12 @@ public class Dispatcher {
      * @return the path to save uploaded files to
      */
     protected String getSaveDir() {
-        String saveDir = multipartSaveDir.trim();
+        String saveDir = Objects.toString(multipartSaveDir, "").trim();
 
-        if (saveDir.equals("")) {
-            File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
+        if (saveDir.isEmpty()) {
+            File tempdir = (File) servletContext.getAttribute(ServletContext.TEMPDIR);
+            LOG.info("Unable to find: {} property setting. Defaulting to: {}",
+                    StrutsConstants.STRUTS_MULTIPART_SAVE_DIR, ServletContext.TEMPDIR);
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
@@ -928,9 +929,9 @@ public class Dispatcher {
                 if (!multipartSaveDir.mkdirs()) {
                     String logMessage;
                     try {
-                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.getCanonicalPath() + "'.";
+                        logMessage = "Could not create multipart save directory '" + multipartSaveDir.getCanonicalPath() + "'.";
                     } catch (IOException e) {
-                        logMessage = "Could not find create multipart save directory '" + multipartSaveDir.toString() + "'.";
+                        logMessage = "Could not create multipart save directory '" + multipartSaveDir + "'.";
                     }
                     if (devMode) {
                         LOG.error(logMessage);
@@ -1105,7 +1106,7 @@ public class Dispatcher {
      *
      * @param request  the HttpServletRequest object.
      * @param response the HttpServletResponse object.
-     * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
+     * @param code     the HttpServletResponse error code (see {@link jakarta.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
      * @since 2.3.17
      */

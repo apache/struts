@@ -25,7 +25,7 @@ package org.apache.struts2;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 public class RequestUtilsTest extends TestCase {

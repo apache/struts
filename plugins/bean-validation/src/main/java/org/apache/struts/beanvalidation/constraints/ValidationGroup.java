@@ -18,7 +18,7 @@
  */
 package org.apache.struts.beanvalidation.constraints;
 
-import javax.validation.groups.Default;
+import jakarta.validation.groups.Default;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

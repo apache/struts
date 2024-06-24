@@ -72,7 +72,7 @@ import org.apache.struts2.convention.dontfind.DontFindMeAction;
 import org.apache.struts2.result.ServletDispatcherResult;
 import org.easymock.EasyMock;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.net.MalformedURLException;
 import java.util.*;
 

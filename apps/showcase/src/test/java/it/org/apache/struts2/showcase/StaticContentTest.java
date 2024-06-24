@@ -18,16 +18,15 @@
  */
 package it.org.apache.struts2.showcase;
 
+import org.htmlunit.FailingHttpStatusCodeException;
+import org.htmlunit.WebClient;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.WebClient;
 
 public class StaticContentTest {
 
     @Test
-    public void testInvalidRersources1() throws Exception {
+    public void testInvalidResources1() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             try {
                 webClient.getPage(ParameterUtils.getBaseUrl() + "/struts..");
@@ -40,7 +39,7 @@ public class StaticContentTest {
     }
 
     @Test
-    public void testInvalidRersources2() throws Exception {
+    public void testInvalidResources2() throws Exception {
         try (final WebClient webClient = new WebClient()) {
             try {
                 webClient.getPage(ParameterUtils.getBaseUrl() + "/static/..%252f");

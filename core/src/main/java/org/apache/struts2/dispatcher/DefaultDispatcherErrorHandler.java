@@ -29,9 +29,9 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -41,7 +41,7 @@ import java.util.List;
 
 /**
  * Default implementation of {@link org.apache.struts2.dispatcher.DispatcherErrorHandler}
- * which sends Error Report in devMode or {@link javax.servlet.http.HttpServletResponse#sendError} otherwise.
+ * which sends Error Report in devMode or {@link jakarta.servlet.http.HttpServletResponse#sendError} otherwise.
  */
 public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
 
@@ -87,10 +87,10 @@ public class DefaultDispatcherErrorHandler implements DispatcherErrorHandler {
                 LOG.error("Exception occurred during processing request: {}", e.getMessage(), e);
                 // send a http error response to use the servlet defined error handler
                 // make the exception available to the web.xml defined error page
-                request.setAttribute("javax.servlet.error.exception", e);
+                request.setAttribute("jakarta.servlet.error.exception", e);
 
                 // for compatibility
-                request.setAttribute("javax.servlet.jsp.jspException", e);
+                request.setAttribute("jakarta.servlet.jsp.jspException", e);
             }
 
             // send the error response

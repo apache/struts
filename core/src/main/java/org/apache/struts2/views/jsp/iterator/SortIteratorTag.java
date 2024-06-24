@@ -20,7 +20,7 @@ package org.apache.struts2.views.jsp.iterator;
 
 import java.util.Comparator;
 
-import javax.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspException;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;

@@ -20,7 +20,7 @@ package org.apache.struts2.interceptor;
 
 import org.apache.struts2.dispatcher.RequestMap;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Deprecated

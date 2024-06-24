@@ -23,7 +23,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
@@ -89,7 +89,7 @@ public class RequestUtils {
      */
     public static String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
-        String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
+        String uri = (String) request.getAttribute("jakarta.servlet.include.servlet_path");
         if (uri != null) {
             return uri;
         }

@@ -18,7 +18,7 @@
  */
 package org.apache.tiles.el;
 
-import javax.el.ExpressionFactory;
+import jakarta.el.ExpressionFactory;
 
 /**
  * Interface to define a factory of {@link ExpressionFactory}.

@@ -22,6 +22,7 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.xwork2.ActionContext;
 import freemarker.core.InvalidReferenceException;
+import freemarker.ext.jakarta.servlet.FreemarkerServlet;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
@@ -37,10 +38,10 @@ import org.apache.struts2.dispatcher.listener.StrutsListener;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.ScopesHashModel;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -54,10 +55,9 @@ import java.util.Locale;
  * Freemarker Manager in Struts instead of creating it's
  * own manager</p>
  */
-public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.FreemarkerServlet {
+public class FreemarkerDecoratorServlet extends FreemarkerServlet {
 
     private static final Logger LOG = LogManager.getLogger(FreemarkerDecoratorServlet.class);
-    public static final long serialVersionUID = -2440216393145762479L;
 
     protected FreemarkerManager freemarkerManager;
     protected String templatePath;
@@ -273,7 +273,7 @@ public class FreemarkerDecoratorServlet extends freemarker.ext.servlet.Freemarke
      * @param response the actual HTTP response
      * @param template the template that will get executed
      * @return true to process the template, false to suppress template processing.
-     * @see freemarker.ext.servlet.FreemarkerServlet#preTemplateProcess(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, freemarker.template.Template, freemarker.template.TemplateModel)
+     * @see FreemarkerServlet#preTemplateProcess(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, freemarker.template.Template, freemarker.template.TemplateModel)
      */
     protected boolean preTemplateProcess(HttpServletRequest request, HttpServletResponse response, Template template, TemplateModel templateModel) throws ServletException, IOException {
         boolean result = super.preTemplateProcess(request, response, template, templateModel);

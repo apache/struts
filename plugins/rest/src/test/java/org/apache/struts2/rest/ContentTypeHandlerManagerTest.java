@@ -42,8 +42,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static jakarta.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
+import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 
 public class ContentTypeHandlerManagerTest extends TestCase {
 

@@ -19,6 +19,7 @@
 package org.apache.struts2.junit;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class JUnitTestAction extends ActionSupport {
@@ -33,6 +34,7 @@ public class JUnitTestAction extends ActionSupport {
         return name;
     }
 
+    @StrutsParameter
     public void setName(String name) {
         this.name = name;
     }

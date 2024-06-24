@@ -28,6 +28,7 @@ public class StrutsUploadedFile implements UploadedFile {
 
     /**
      * Use builder instead of constructor
+     *
      * @param file an uploaded file
      * @deprecated since Struts 6.4.0
      */
@@ -87,9 +88,9 @@ public class StrutsUploadedFile implements UploadedFile {
     @Override
     public String toString() {
         return "StrutsUploadedFile{" +
-            "contentType='" + contentType + '\'' +
-            ", originalName='" + originalName + '\'' +
-            '}';
+                "contentType='" + contentType + '\'' +
+                ", originalName='" + originalName + '\'' +
+                '}';
     }
 
     public static class Builder {

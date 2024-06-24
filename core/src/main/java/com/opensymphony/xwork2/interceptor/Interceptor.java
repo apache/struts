@@ -27,7 +27,7 @@ import java.io.Serializable;
  *
  * <p>
  * An interceptor is a stateless class that follows the interceptor pattern, as
- * found in {@link  javax.servlet.Filter} and in AOP languages.
+ * found in {@link  jakarta.servlet.Filter} and in AOP languages.
  * </p>
  *
  * <p>

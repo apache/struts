@@ -22,8 +22,8 @@ import org.apache.tiles.core.startup.TilesInitializer;
 import org.apache.tiles.request.servlet.ServletApplicationContext;
 import org.junit.Test;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createMockBuilder;

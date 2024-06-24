@@ -27,7 +27,7 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.junit.StrutsTestCase;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.HashMap;

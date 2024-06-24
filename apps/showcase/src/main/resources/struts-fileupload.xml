@@ -24,6 +24,9 @@
 	"https://struts.apache.org/dtds/struts-6.0.dtd">
 
 <struts>
+
+	<constant name="struts.multipart.maxSize" value="10240" />
+
 	<package name="fileupload" extends="struts-default" namespace="/fileupload">
 
         <action name="upload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="input">

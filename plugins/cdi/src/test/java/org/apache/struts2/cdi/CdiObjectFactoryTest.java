@@ -25,7 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
-import javax.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTarget;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;

@@ -20,8 +20,8 @@ package org.apache.struts2.components;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.util.TokenHelper;

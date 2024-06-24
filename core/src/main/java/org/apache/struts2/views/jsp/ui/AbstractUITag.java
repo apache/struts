@@ -21,8 +21,8 @@ package org.apache.struts2.views.jsp.ui;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.views.jsp.ComponentTagSupport;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.DynamicAttributes;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.DynamicAttributes;
 import java.util.HashMap;
 import java.util.Map;
 

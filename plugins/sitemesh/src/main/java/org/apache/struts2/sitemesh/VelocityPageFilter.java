@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.struts2.views.velocity.VelocityManagerInterface;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.*;
 
 /**
  * Core Filter for integrating SiteMesh into a Java web application.

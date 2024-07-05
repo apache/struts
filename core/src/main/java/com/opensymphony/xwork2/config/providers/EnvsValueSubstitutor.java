@@ -46,7 +46,7 @@ public class EnvsValueSubstitutor implements ValueSubstitutor {
     public String substitute(String value) {
         LOG.debug("Substituting value {} with proper System variable or environment variable", value);
 
-        String substituted = sysStrSubstitutor.replace(value);
-        return envStrSubstitutor.replace(substituted);
+        String substituted = envStrSubstitutor.replace(value);
+        return sysStrSubstitutor.replace(substituted);
     }
 }

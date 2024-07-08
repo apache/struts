@@ -331,14 +331,6 @@ public class Dispatcher {
         multipartSaveDir = val;
     }
 
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated(since = "6.4.0", forRemoval = true)
-    public void setMultipartHandler(String val) {
-        // no-op
-    }
-
     @Inject(value = StrutsConstants.STRUTS_MULTIPART_ENABLED, required = false)
     public void setMultipartSupportEnabled(String multipartSupportEnabled) {
         this.multipartSupportEnabled = Boolean.parseBoolean(multipartSupportEnabled);

@@ -47,7 +47,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassesSet;
@@ -68,9 +67,6 @@ public class OgnlUtil {
 
     private static final Logger LOG = LogManager.getLogger(OgnlUtil.class);
 
-    // Flag used to reduce flooding logs with WARNs about using DevMode excluded packages
-    private final AtomicBoolean warnReported = new AtomicBoolean(false);
-
     private final OgnlCache<String, Object> expressionCache;
     private final OgnlCache<Class<?>, BeanInfo> beanInfoCache;
     private TypeConverter defaultConverter;
@@ -79,11 +75,6 @@ public class OgnlUtil {
     private boolean devMode;
     private boolean enableExpressionCache = true;
     private boolean enableEvalExpression;
-
-    private String devModeExcludedClasses = "";
-    private String devModeExcludedPackageNamePatterns = "";
-    private String devModeExcludedPackageNames = "";
-    private String devModeExcludedPackageExemptClasses = "";
 
     private Container container;
 
@@ -164,9 +155,12 @@ public class OgnlUtil {
         // Must be set directly on SecurityMemberAccess
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, required = false)
+    /**
+     * @deprecated since 6.5.0, no replacement.
+     */
+    @Deprecated
     protected void setDevModeExcludedClasses(String commaDelimitedClasses) {
-        this.devModeExcludedClasses = commaDelimitedClasses;
+        // Must be set directly on SecurityMemberAccess
     }
 
     /**
@@ -177,9 +171,12 @@ public class OgnlUtil {
         // Must be set directly on SecurityMemberAccess
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    /**
+     * @deprecated since 6.5.0, no replacement.
+     */
+    @Deprecated
     protected void setDevModeExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        this.devModeExcludedPackageNamePatterns = commaDelimitedPackagePatterns;
+        // Must be set directly on SecurityMemberAccess
     }
 
     /**
@@ -190,9 +187,12 @@ public class OgnlUtil {
         // Must be set directly on SecurityMemberAccess
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, required = false)
+    /**
+     * @deprecated since 6.5.0, no replacement.
+     */
+    @Deprecated
     protected void setDevModeExcludedPackageNames(String commaDelimitedPackageNames) {
-        this.devModeExcludedPackageNames = commaDelimitedPackageNames;
+        // Must be set directly on SecurityMemberAccess
     }
 
     /**
@@ -203,9 +203,12 @@ public class OgnlUtil {
         // Must be set directly on SecurityMemberAccess
     }
 
-    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
+    /**
+     * @deprecated since 6.5.0, no replacement.
+     */
+    @Deprecated
     public void setDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
-        this.devModeExcludedPackageExemptClasses = commaDelimitedClasses;
+        // Must be set directly on SecurityMemberAccess
     }
 
     /**
@@ -856,6 +859,11 @@ public class OgnlUtil {
         return createDefaultContext(root, null);
     }
 
+    /**
+     * Note that the allowlist capability is not enforced by the {@link OgnlContext} returned by this method. Currently,
+     * this context is only leveraged by some public methods on {@link OgnlUtil} which are called by
+     * {@link OgnlReflectionProvider}.
+     */
     protected Map<String, Object> createDefaultContext(Object root, ClassResolver resolver) {
         if (resolver == null) {
             resolver = container.getInstance(RootAccessor.class);
@@ -866,17 +874,6 @@ public class OgnlUtil {
 
         SecurityMemberAccess memberAccess = container.getInstance(SecurityMemberAccess.class);
         memberAccess.useEnforceAllowlistEnabled(Boolean.FALSE.toString());
-
-        if (devMode) {
-            if (!warnReported.get()) {
-                warnReported.set(true);
-                LOG.warn("Working in devMode, using devMode excluded classes and packages!");
-            }
-            memberAccess.useExcludedClasses(devModeExcludedClasses);
-            memberAccess.useExcludedPackageNamePatterns(devModeExcludedPackageNamePatterns);
-            memberAccess.useExcludedPackageNames(devModeExcludedPackageNames);
-            memberAccess.useExcludedPackageExemptClasses(devModeExcludedPackageExemptClasses);
-        }
 
         return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);
     }

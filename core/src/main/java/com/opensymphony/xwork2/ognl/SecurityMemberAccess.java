@@ -217,6 +217,7 @@ public class SecurityMemberAccess implements MemberAccess {
      */
     protected boolean checkAllowlist(Object target, Member member) {
         if (!enforceAllowlistEnabled) {
+            logAllowlistDisabled();
             return true;
         }
 
@@ -249,6 +250,21 @@ public class SecurityMemberAccess implements MemberAccess {
         return true;
     }
 
+    private void logAllowlistDisabled() {
+        if (!isDevMode && !LOG.isDebugEnabled()) {
+            return;
+        }
+        String msg = "OGNL allowlist is disabled!" +
+                " We strongly recommend keeping it enabled to protect against critical vulnerabilities." +
+                " Set the configuration `{0}=true` to enable it.";
+        Object[] args = {StrutsConstants.STRUTS_ALLOWLIST_ENABLE};
+        if (isDevMode) {
+            LOG.warn(msg, args);
+        } else {
+            LOG.debug(msg, args);
+        }
+    }
+
     private void logAllowlistHibernateEntity(Object original, Object resolved) {
         if (!isDevMode && !LOG.isDebugEnabled()) {
             return;
@@ -261,7 +277,6 @@ public class SecurityMemberAccess implements MemberAccess {
         } else {
             LOG.debug(msg, args);
         }
-
     }
 
     protected boolean isClassAllowlisted(Class<?> clazz) {

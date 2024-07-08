@@ -128,46 +128,6 @@ public class OgnlUtil {
         }
     }
 
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    protected void setExcludedClasses(String commaDelimitedClasses) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
-    /**
-     * @deprecated since 6.5.0, no replacement.
-     */
-    @Deprecated
-    protected void setDevModeExcludedClasses(String commaDelimitedClasses) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
-    /**
-     * @deprecated since 6.5.0, no replacement.
-     */
-    @Deprecated
-    protected void setDevModeExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
-    /**
-     * @deprecated since 6.5.0, no replacement.
-     */
-    @Deprecated
-    protected void setDevModeExcludedPackageNames(String commaDelimitedPackageNames) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
-    /**
-     * @deprecated since 6.5.0, no replacement.
-     */
-    @Deprecated
-    public void setDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
     @Inject
     protected void setContainer(Container container) {
         this.container = container;

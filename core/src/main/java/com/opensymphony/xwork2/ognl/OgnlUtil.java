@@ -45,13 +45,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
 
-import static com.opensymphony.xwork2.util.ConfigParseUtil.toClassesSet;
-import static com.opensymphony.xwork2.util.ConfigParseUtil.toNewPatternsSet;
-import static com.opensymphony.xwork2.util.ConfigParseUtil.toPackageNamesSet;
-import static java.util.Collections.emptySet;
 import static java.util.Objects.requireNonNull;
 import static org.apache.struts2.ognl.OgnlGuard.EXPR_BLOCKED;
 
@@ -151,26 +145,10 @@ public class OgnlUtil {
     }
 
     /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    protected void setExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
-    /**
      * @deprecated since 6.5.0, no replacement.
      */
     @Deprecated
     protected void setDevModeExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    protected void setExcludedPackageNames(String commaDelimitedPackageNames) {
         // Must be set directly on SecurityMemberAccess
     }
 
@@ -183,14 +161,6 @@ public class OgnlUtil {
     }
 
     /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    public void setExcludedPackageExemptClasses(String commaDelimitedClasses) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
-    /**
      * @deprecated since 6.5.0, no replacement.
      */
     @Deprecated
@@ -198,65 +168,9 @@ public class OgnlUtil {
         // Must be set directly on SecurityMemberAccess
     }
 
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    public Set<String> getExcludedClasses() {
-        return toClassesSet(container.getInstance(String.class, StrutsConstants.STRUTS_EXCLUDED_CLASSES));
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    public Set<Pattern> getExcludedPackageNamePatterns() {
-        return toNewPatternsSet(emptySet(), container.getInstance(String.class, StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAME_PATTERNS));
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    public Set<String> getExcludedPackageNames() {
-        return toPackageNamesSet(container.getInstance(String.class, StrutsConstants.STRUTS_EXCLUDED_PACKAGE_NAMES));
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    public Set<String> getExcludedPackageExemptClasses() {
-        return toClassesSet(container.getInstance(String.class, StrutsConstants.STRUTS_EXCLUDED_PACKAGE_EXEMPT_CLASSES));
-    }
-
     @Inject
     protected void setContainer(Container container) {
         this.container = container;
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    protected void setAllowStaticFieldAccess(String allowStaticFieldAccess) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    protected void setDisallowProxyMemberAccess(String disallowProxyMemberAccess) {
-        // Must be set directly on SecurityMemberAccess
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    protected void setDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
-        // Must be set directly on SecurityMemberAccess
     }
 
     /**
@@ -276,22 +190,6 @@ public class OgnlUtil {
             LOG.error("Unable to set OGNL Expression Max Length {}.", maxLength);  // Help configuration debugging.
             throw ex;
         }
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    public boolean isDisallowProxyMemberAccess() {
-        return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_DISALLOW_PROXY_MEMBER_ACCESS));
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    public boolean isDisallowDefaultPackageAccess() {
-        return BooleanUtils.toBoolean(container.getInstance(String.class, StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS));
     }
 
     /**

@@ -55,7 +55,7 @@ import java.util.Map;
  * <p>
  * The best way to add behavior to this interceptor is to utilize the {@link ParameterNameAware} interface in your
  * actions. However, if you wish to apply a global rule that isn't implemented in your action, then you could extend
- * this interceptor and override the {@link #acceptableName(String)} method.
+ * this interceptor and override the {@link #isAcceptableName(String)} method.
  * </p>
  *
  * <!-- END SNIPPET: extending -->

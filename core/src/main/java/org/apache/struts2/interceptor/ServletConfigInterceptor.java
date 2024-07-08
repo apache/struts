@@ -18,10 +18,12 @@
  */
 package org.apache.struts2.interceptor;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.action.ApplicationAware;
 import org.apache.struts2.action.ParametersAware;
@@ -32,15 +34,11 @@ import org.apache.struts2.action.ServletResponseAware;
 import org.apache.struts2.action.SessionAware;
 import org.apache.struts2.interceptor.servlet.ServletPrincipalProxy;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-
 /**
  * <!-- START SNIPPET: description -->
  * <p>
  * An interceptor which sets action properties based on the interfaces an action implements. For example, if the action
- * implements {@link ParameterAware} then the action context's parameter map will be set on it.
+ * implements {@link ParametersAware} then the action context's parameter map will be set on it.
  * </p>
  *
  * <p>This interceptor is designed to set all properties an action needs if it's aware of servlet parameters, the

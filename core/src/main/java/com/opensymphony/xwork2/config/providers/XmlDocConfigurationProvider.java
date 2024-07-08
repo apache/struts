@@ -465,7 +465,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         Location location = DomHelper.getLocationObject(actionElement);
 
         if (!className.isEmpty()) {
-            verifyAction(className, name, location);
+            verifyAction(className, location);
         }
 
         Map<String, ResultConfig> results;
@@ -496,7 +496,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         String methodName = trimToNull(actionElement.getAttribute("method"));
 
         List<InterceptorMapping> interceptorList = buildInterceptorList(actionElement, packageContext);
-        List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(actionElement, packageContext);
+        List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(actionElement);
         Set<String> allowedMethods = buildAllowedMethods(actionElement, packageContext);
 
         return new ActionConfig.Builder(packageContext.getName(), actionName, className)
@@ -509,15 +509,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
                 .addAllowedMethod(allowedMethods)
                 .location(location)
                 .build();
-    }
-
-    /**
-     * @deprecated since 6.2.0, use {@link #verifyAction(String, Location)}
-     */
-    @Deprecated
-    protected boolean verifyAction(String className, String name, Location loc) {
-        verifyAction(className, loc);
-        return true;
     }
 
     protected void verifyAction(String className, Location loc) {
@@ -786,14 +777,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     }
 
     /**
-     * @deprecated since 6.2.0, use {@link #buildExceptionMappings(Element)}
-     */
-    @Deprecated
-    protected List<ExceptionMappingConfig> buildExceptionMappings(Element element, PackageConfig.Builder packageContext) {
-        return buildExceptionMappings(element);
-    }
-
-    /**
      * Build a list of exception mapping objects from below a given XML element.
      *
      * @param element the given XML element
@@ -930,7 +913,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
 
         if (globalExceptionMappingList.getLength() > 0) {
             Element globalExceptionMappingElement = (Element) globalExceptionMappingList.item(0);
-            List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(globalExceptionMappingElement, packageContext);
+            List<ExceptionMappingConfig> exceptionMappings = buildExceptionMappings(globalExceptionMappingElement);
             packageContext.addGlobalExceptionMappingConfigs(exceptionMappings);
         }
     }

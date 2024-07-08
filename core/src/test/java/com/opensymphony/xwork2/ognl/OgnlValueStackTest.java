@@ -1061,7 +1061,7 @@ public class OgnlValueStackTest extends XWorkTestCase {
 
         OgnlValueStack stack2 = new OgnlValueStack(vs,
             container.getInstance(XWorkConverter.class),
-            (CompoundRootAccessor) container.getInstance(RootAccessor.class), true);
+            (CompoundRootAccessor) container.getInstance(RootAccessor.class), new SecurityMemberAccess(true));
         container.inject(stack2);
 
         assertEquals(vs.getRoot(), stack2.getRoot());

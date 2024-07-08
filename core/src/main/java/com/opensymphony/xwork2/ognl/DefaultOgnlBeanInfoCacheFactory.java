@@ -30,13 +30,6 @@ import org.apache.struts2.StrutsConstants;
 public class DefaultOgnlBeanInfoCacheFactory<Key, Value> extends DefaultOgnlCacheFactory<Key, Value>
     implements BeanInfoCacheFactory<Key, Value> {
 
-    /**
-     * @deprecated since 6.4.0, use {@link #DefaultOgnlBeanInfoCacheFactory(String, String)}
-     */
-    @Deprecated
-    public DefaultOgnlBeanInfoCacheFactory() {
-    }
-
     @Inject
     public DefaultOgnlBeanInfoCacheFactory(@Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE) String cacheMaxSize,
                                            @Inject(value = StrutsConstants.STRUTS_OGNL_BEANINFO_CACHE_TYPE) String defaultCacheType) {

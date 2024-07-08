@@ -25,10 +25,10 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import jakarta.servlet.ServletContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import jakarta.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -103,14 +103,6 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         if (file.getParent() != null) {
             this.baseDir = file.getParentFile();
         }
-    }
-
-    /**
-     * @deprecated since 6.2.0, use {@link #StrutsXmlConfigurationProvider(String, ServletContext)}
-     */
-    @Deprecated
-    public StrutsXmlConfigurationProvider(String filename, @Deprecated boolean errorIfMissing, ServletContext ctx) {
-        this(filename, ctx);
     }
 
     /* (non-Javadoc)

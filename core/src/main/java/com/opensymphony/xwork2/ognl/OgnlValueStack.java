@@ -23,7 +23,6 @@ import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
 import com.opensymphony.xwork2.util.ClearableValueStack;
 import com.opensymphony.xwork2.util.CompoundRoot;
@@ -109,34 +108,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         this(vs, xworkConverter, accessor, null, securityMemberAccess);
     }
 
-    /**
-     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, RootAccessor, TextProvider, SecurityMemberAccess)} instead.
-     */
-    @Deprecated
-    protected OgnlValueStack(ValueStack vs,
-                             XWorkConverter xworkConverter,
-                             CompoundRootAccessor accessor,
-                             TextProvider prov,
-                             boolean allowStaticFieldAccess) {
-        this(vs, xworkConverter, accessor, prov, new SecurityMemberAccess(allowStaticFieldAccess));
-    }
-
-    /**
-     * @deprecated since 6.4.0, use {@link #OgnlValueStack(XWorkConverter, RootAccessor, TextProvider, SecurityMemberAccess)} instead.
-     */
-    @Deprecated
-    protected OgnlValueStack(XWorkConverter xworkConverter, CompoundRootAccessor accessor, TextProvider prov, boolean allowStaticFieldAccess) {
-        this(xworkConverter, accessor, prov, new SecurityMemberAccess(allowStaticFieldAccess));
-    }
-
-    /**
-     * @deprecated since 6.4.0, use {@link #OgnlValueStack(ValueStack, XWorkConverter, RootAccessor, SecurityMemberAccess)} instead.
-     */
-    @Deprecated
-    protected OgnlValueStack(ValueStack vs, XWorkConverter xworkConverter, CompoundRootAccessor accessor, boolean allowStaticFieldAccess) {
-        this(vs, xworkConverter, accessor, new SecurityMemberAccess(allowStaticFieldAccess));
-    }
-
     @Inject
     protected void setOgnlUtil(OgnlUtil ognlUtil) {
         this.ognlUtil = ognlUtil;
@@ -153,14 +124,6 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
         context.put(VALUE_STACK, this);
         ((OgnlContext) context).setTraceEvaluations(false);
         ((OgnlContext) context).setKeepLastEvaluation(false);
-    }
-
-    /**
-     * @deprecated since 6.4.0, use {@link #setRoot(XWorkConverter, RootAccessor, CompoundRoot, SecurityMemberAccess)} instead.
-     */
-    @Deprecated
-    protected void setRoot(XWorkConverter xworkConverter, CompoundRootAccessor accessor, CompoundRoot compoundRoot, boolean allowStaticFieldAccess) {
-        setRoot(xworkConverter, accessor, compoundRoot, new SecurityMemberAccess(allowStaticFieldAccess));
     }
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
@@ -534,13 +497,5 @@ public class OgnlValueStack implements Serializable, ValueStack, ClearableValueS
 
     public void useExcludeProperties(Set<Pattern> excludeProperties) {
         securityMemberAccess.useExcludeProperties(excludeProperties);
-    }
-
-    /**
-     * @deprecated since 6.4.0, no replacement.
-     */
-    @Deprecated
-    protected void setXWorkConverter(final XWorkConverter converter) {
-        // no-op
     }
 }

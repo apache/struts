@@ -195,7 +195,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         Map<String, Object> contextMap = actionContext.getContextMap();
         batchApplyReflectionContextState(contextMap, true);
         try {
-            setParameters(action, actionContext.getValueStack(), parameters);
+            applyParameters(action, actionContext.getValueStack(), parameters);
         } finally {
             batchApplyReflectionContextState(contextMap, false);
         }
@@ -224,14 +224,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @param newParams The parameter map to apply
      */
     protected void addParametersToContext(ActionContext ac, Map<String, ?> newParams) {
-    }
-
-    /**
-     * @deprecated since 6.4.0, use {@link #applyParameters}
-     */
-    @Deprecated
-    protected void setParameters(final Object action, ValueStack stack, HttpParameters parameters) {
-        applyParameters(action, stack, parameters);
     }
 
     protected void applyParameters(final Object action, ValueStack stack, HttpParameters parameters) {
@@ -328,7 +320,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @return true if parameter is accepted
      */
     protected boolean isAcceptableParameter(String name, Object action) {
-        return acceptableName(name) && isAcceptableParameterNameAware(name, action) && isParameterAnnotatedAndAllowlist(name, action);
+        return isAcceptableName(name) && isAcceptableParameterNameAware(name, action) && isParameterAnnotatedAndAllowlist(name, action);
     }
 
     protected boolean isAcceptableParameterNameAware(String name, Object action) {
@@ -517,7 +509,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
      * @return true if parameter is accepted
      */
     protected boolean isAcceptableParameterValue(Parameter param, Object action) {
-        return isAcceptableParameterValueAware(param, action) && acceptableValue(param.getName(), param.getValue());
+        return isAcceptableParameterValueAware(param, action) && isAcceptableValue(param.getName(), param.getValue());
     }
 
     protected boolean isAcceptableParameterValueAware(Parameter param, Object action) {
@@ -542,13 +534,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         return parameters.entrySet().stream()
                 .map(entry -> format("%s => %s ", entry.getKey(), entry.getValue().getValue()))
                 .collect(joining());
-    }
-
-    /**
-     * @deprecated since 6.4.0, use {@link #isAcceptableName}
-     */
-    protected boolean acceptableName(String name) {
-        return isAcceptableName(name);
     }
 
     /**
@@ -577,13 +562,6 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
         return DMI_IGNORED_PATTERN.matcher(name).matches();
-    }
-
-    /**
-     * @deprecated since 6.4.0, use {@link #isAcceptableValue}
-     */
-    protected boolean acceptableValue(String name, String value) {
-        return isAcceptableValue(name, value);
     }
 
     /**

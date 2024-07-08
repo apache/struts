@@ -311,13 +311,6 @@ public final class StrutsConstants {
     public static final String STRUTS_OGNL_BEANINFO_CACHE_MAXSIZE = "struts.ognl.beanInfoCacheMaxSize";
 
     /**
-     * @since 6.0.0
-     * @deprecated since 6.4.0, use {@link StrutsConstants#STRUTS_OGNL_BEANINFO_CACHE_TYPE} instead.
-     */
-    @Deprecated
-    public static final String STRUTS_OGNL_BEANINFO_CACHE_LRU_MODE = "struts.ognl.beanInfoCacheLRUMode";
-
-    /**
      * Logs properties that are not found (very verbose)
      * @since 6.0.0
      */
@@ -371,13 +364,6 @@ public final class StrutsConstants {
      * @since 6.0.0
      */
     public static final String STRUTS_OGNL_EXPRESSION_CACHE_MAXSIZE = "struts.ognl.expressionCacheMaxSize";
-
-    /**
-     * @since 6.0.0
-     * @deprecated since 6.4.0, use {@link StrutsConstants#STRUTS_OGNL_EXPRESSION_CACHE_TYPE} instead.
-     */
-    @Deprecated
-    public static final String STRUTS_OGNL_EXPRESSION_CACHE_LRU_MODE = "struts.ognl.expressionCacheLRUMode";
 
     /**
      * Enables evaluation of OGNL expressions

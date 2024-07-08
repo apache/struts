@@ -82,14 +82,6 @@ public abstract class XmlConfigurationProvider extends XmlDocConfigurationProvid
         this.configFileName = filename;
     }
 
-    /**
-     * @deprecated since 6.2.0, use {@link #XmlConfigurationProvider(String)}
-     */
-    @Deprecated
-    public XmlConfigurationProvider(String filename, @Deprecated boolean notUsed) {
-        this(filename);
-    }
-
     @Override
     public void init(Configuration configuration) {
         super.init(configuration);

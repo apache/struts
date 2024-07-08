@@ -48,6 +48,10 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -72,10 +76,6 @@ import org.apache.struts2.ognl.ThreadAllowlist;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.fs.JBossFileManager;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -549,14 +549,6 @@ public class Dispatcher {
 
     protected XmlConfigurationProvider createStrutsXmlConfigurationProvider(String filename, ServletContext ctx) {
         return new StrutsXmlConfigurationProvider(filename, ctx);
-    }
-
-    /**
-     * @deprecated since 6.2.0, use {@link #createStrutsXmlConfigurationProvider(String, ServletContext)}
-     */
-    @Deprecated
-    protected XmlConfigurationProvider createStrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
-        return createStrutsXmlConfigurationProvider(filename, ctx);
     }
 
     private void init_JavaConfigurations() {

@@ -19,20 +19,19 @@
 package org.apache.struts2.views.velocity.template;
 
 import com.opensymphony.xwork2.inject.Inject;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.template.BaseTemplateEngine;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateRenderingContext;
-import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.struts2.views.velocity.VelocityManagerInterface;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
@@ -48,14 +47,6 @@ public class VelocityTemplateEngine extends BaseTemplateEngine {
     @Inject
     public void setVelocityManager(VelocityManagerInterface mgr) {
         this.velocityManager = mgr;
-    }
-
-    /**
-     * @deprecated since 6.4.0
-     */
-    @Deprecated
-    public void setVelocityManager(VelocityManager mgr) {
-        setVelocityManager((VelocityManagerInterface) mgr);
     }
 
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {

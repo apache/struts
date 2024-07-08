@@ -24,27 +24,17 @@ import com.opensymphony.sitemesh.DecoratorSelector;
 import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.struts2.views.velocity.VelocityManager;
+import jakarta.servlet.FilterConfig;
 import org.apache.struts2.views.velocity.VelocityManagerInterface;
-
-import jakarta.servlet.*;
 
 /**
  * Core Filter for integrating SiteMesh into a Java web application.
  */
 public class VelocityPageFilter extends SiteMeshFilter {
 
-    @Inject(required=false)
+    @Inject(required = false)
     public static void setVelocityManager(VelocityManagerInterface mgr) {
         OldDecorator2NewStrutsVelocityDecorator.setVelocityManager(mgr);
-    }
-
-    /**
-     * @deprecated since 6.4.0
-     */
-    @Deprecated
-    public static void setVelocityManager(VelocityManager mgr) {
-        setVelocityManager((VelocityManagerInterface) mgr);
     }
 
     private FilterConfig filterConfig;

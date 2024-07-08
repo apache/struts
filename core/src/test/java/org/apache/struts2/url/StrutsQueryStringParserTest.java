@@ -112,6 +112,14 @@ public class StrutsQueryStringParserTest {
         assertEquals("test", queryParameters.getQueryFragment());
     }
 
+    @Test
+    public void shouldHandleOnlyFragment() {
+        QueryStringParser.Result queryParameters = parser.parse("#test");
+
+        assertTrue(queryParameters.getQueryParams().isEmpty());
+        assertEquals("test", queryParameters.getQueryFragment());
+    }
+
     @Before
     public void setUp() throws Exception {
         this.parser = new StrutsQueryStringParser(new StrutsUrlDecoder());

@@ -20,10 +20,8 @@ package org.apache.struts2.interceptor.parameter;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
@@ -56,7 +54,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
@@ -67,6 +64,8 @@ import java.util.regex.Pattern;
 
 import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS;
 import static com.opensymphony.xwork2.security.DefaultAcceptedPatternsChecker.NESTING_CHARS_STR;
+import static com.opensymphony.xwork2.util.DebugUtils.notifyDeveloperOfError;
+import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.indexOfAny;
@@ -317,19 +316,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     }
 
     protected void notifyDeveloperParameterException(Object action, String property, String message) {
-        String logMsg = "Unexpected Exception caught setting '" + property + "' on '" + action.getClass() + ": " + message;
-        if (action instanceof TextProvider) {
-            TextProvider tp = (TextProvider) action;
-            logMsg = tp.getText("devmode.notification", "Developer Notification:\n{0}", new String[]{logMsg});
-        }
-        LOG.error(logMsg);
-
-        if (action instanceof ValidationAware) {
-            ValidationAware validationAware = (ValidationAware) action;
-            Collection<String> messages = validationAware.getActionMessages();
-            messages.add(message);
-            validationAware.setActionMessages(messages);
-        }
+        String logMsg = format("Unexpected Exception caught setting '%s' on '%s: %s", property, action.getClass(), message);
+        notifyDeveloperOfError(LOG, action, logMsg);
     }
 
     /**
@@ -388,23 +376,37 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return hasValidAnnotatedField(action, rootProperty, paramDepth);
         }
 
-        if (hasValidAnnotatedPropertyDescriptor(propDescOpt.get(), paramDepth)) {
+        if (hasValidAnnotatedPropertyDescriptor(action, propDescOpt.get(), paramDepth)) {
             return true;
         }
 
         return hasValidAnnotatedField(action, rootProperty, paramDepth);
     }
 
+    /**
+     * @deprecated since 6.5.0, use {@link #hasValidAnnotatedPropertyDescriptor(Object, PropertyDescriptor, long)}
+     * instead.
+     */
+    @Deprecated
     protected boolean hasValidAnnotatedPropertyDescriptor(PropertyDescriptor propDesc, long paramDepth) {
+        return hasValidAnnotatedPropertyDescriptor(null, propDesc, paramDepth);
+    }
+
+    protected boolean hasValidAnnotatedPropertyDescriptor(Object action, PropertyDescriptor propDesc, long paramDepth) {
         Method relevantMethod = paramDepth == 0 ? propDesc.getWriteMethod() : propDesc.getReadMethod();
         if (relevantMethod == null) {
             return false;
         }
         if (getPermittedInjectionDepth(relevantMethod) < paramDepth) {
-            LOG.debug(
-                    "Parameter injection for method [{}] on action [{}] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
+            String logMessage = format(
+                    "Parameter injection for method [%s] on action [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
                     relevantMethod.getName(),
                     relevantMethod.getDeclaringClass().getName());
+            if (devMode) {
+                notifyDeveloperOfError(LOG, action, logMessage);
+            } else {
+                LOG.debug(logMessage);
+            }
             return false;
         }
         if (paramDepth >= 1) {
@@ -455,10 +457,15 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return false;
         }
         if (getPermittedInjectionDepth(field) < paramDepth) {
-            LOG.debug(
-                    "Parameter injection for field [{}] on action [{}] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
+            String logMessage = format(
+                    "Parameter injection for field [%s] on action [%s] rejected. Ensure it is annotated with @StrutsParameter with an appropriate 'depth'.",
                     fieldName,
                     action.getClass().getName());
+            if (devMode) {
+                notifyDeveloperOfError(LOG, action, logMessage);
+            } else {
+                LOG.debug(logMessage);
+            }
             return false;
         }
         if (paramDepth >= 1) {
@@ -533,7 +540,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             return "NONE";
         }
         return parameters.entrySet().stream()
-                .map(entry -> String.format("%s => %s ", entry.getKey(), entry.getValue().getValue()))
+                .map(entry -> format("%s => %s ", entry.getKey(), entry.getValue().getValue()))
                 .collect(joining());
     }
 

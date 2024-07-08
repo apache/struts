@@ -18,11 +18,6 @@
  */
 package org.apache.struts2.dispatcher.filter;
 
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.InitOperations;
-import org.apache.struts2.dispatcher.PrepareOperations;
-
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -31,9 +26,12 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.InitOperations;
+import org.apache.struts2.dispatcher.PrepareOperations;
+
 import java.io.IOException;
-import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Prepares the request for execution by a later {@link org.apache.struts2.dispatcher.filter.StrutsExecuteFilter} filter instance.
@@ -44,13 +42,6 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
 
     protected PrepareOperations prepare;
 
-    /**
-     * @deprecated since 6.4.0, use {@link Dispatcher#getActionExcludedPatterns} or
-     * {@link PrepareOperations#isUrlExcluded(HttpServletRequest)} instead.
-     */
-    @Deprecated
-    protected List<Pattern> excludedPatterns;
-
     public void init(FilterConfig filterConfig) throws ServletException {
         InitOperations init = createInitOperations();
         Dispatcher dispatcher = null;
@@ -59,8 +50,6 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             dispatcher = init.initDispatcher(config);
 
             prepare = createPrepareOperations(dispatcher);
-
-            this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
 
             postInit(dispatcher, filterConfig);
         } finally {

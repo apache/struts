@@ -20,6 +20,9 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.RequestUtils;
@@ -27,13 +30,8 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Contains preparation operations for a request before execution
@@ -228,18 +226,6 @@ public class PrepareOperations {
     public boolean isUrlExcluded(HttpServletRequest request) {
         String uri = RequestUtils.getUri(request);
         return dispatcher.getActionExcludedPatterns().stream().anyMatch(pattern -> pattern.matcher(uri).matches());
-    }
-
-    /**
-     * @deprecated since 6.4.0, use {@link #isUrlExcluded(HttpServletRequest)} instead.
-     */
-    @Deprecated
-    public boolean isUrlExcluded(HttpServletRequest request, List<Pattern> excludedPatterns) {
-        if (excludedPatterns == null) {
-            return false;
-        }
-        String uri = RequestUtils.getUri(request);
-        return excludedPatterns.stream().anyMatch(pattern -> pattern.matcher(uri).matches());
     }
 
     /**

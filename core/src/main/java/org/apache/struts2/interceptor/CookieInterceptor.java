@@ -26,11 +26,12 @@ import com.opensymphony.xwork2.security.AcceptedPatternsChecker;
 import com.opensymphony.xwork2.security.ExcludedPatternsChecker;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import jakarta.servlet.http.Cookie;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.action.CookiesAware;
 
-import jakarta.servlet.http.Cookie;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -357,7 +358,7 @@ public class CookieInterceptor extends AbstractInterceptor {
     protected void injectIntoCookiesAwareAction(Object action, Map<String, String> cookiesMap) {
         if (action instanceof CookiesAware) {
             LOG.debug("Action [{}] implements CookiesAware, injecting cookies map [{}]", action, cookiesMap);
-            ((CookiesAware)action).setCookiesMap(cookiesMap);
+            ((CookiesAware)action).withCookies(cookiesMap);
         }
         if (action instanceof org.apache.struts2.action.CookiesAware) {
             LOG.debug("Action [{}] implements CookiesAware, injecting cookies map [{}]", action, cookiesMap);

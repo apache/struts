@@ -36,6 +36,7 @@ import com.opensymphony.xwork2.interceptor.ValidationAware;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
+import com.opensymphony.xwork2.ognl.SecurityMemberAccess;
 import com.opensymphony.xwork2.ognl.accessor.CompoundRootAccessor;
 import com.opensymphony.xwork2.ognl.accessor.RootAccessor;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -964,7 +965,7 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         ValueStack stack = new OgnlValueStack(
             container.getInstance(XWorkConverter.class),
             (CompoundRootAccessor) container.getInstance(RootAccessor.class),
-            container.getInstance(TextProvider.class, "system"), true) {
+            container.getInstance(TextProvider.class, "system"), new SecurityMemberAccess(true)) {
             @Override
             public void setValue(String expr, Object value) {
                 actual.put(expr, value);

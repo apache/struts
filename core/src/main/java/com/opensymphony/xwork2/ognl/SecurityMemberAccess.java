@@ -209,6 +209,10 @@ public class SecurityMemberAccess implements MemberAccess {
      * @return {@code true} if member access is allowed
      */
     protected boolean checkAllowlist(Object target, Member member) {
+        if (!enforceAllowlistEnabled) {
+            return true;
+        }
+
         if (!disallowProxyObjectAccess && target != null && ProxyUtil.isProxy(target)) {
             // If `disallowProxyObjectAccess` is not set, allow resolving Hibernate entities to their underlying
             // classes/members. This allows the allowlist capability to continue working and offer some level of
@@ -222,9 +226,6 @@ public class SecurityMemberAccess implements MemberAccess {
         }
 
         Class<?> memberClass = member.getDeclaringClass();
-        if (!enforceAllowlistEnabled) {
-            return true;
-        }
         if (!isClassAllowlisted(memberClass)) {
             LOG.warn(format("Declaring class [{0}] of member type [{1}] is not allowlisted!", memberClass, member));
             return false;

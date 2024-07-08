@@ -26,12 +26,16 @@ import ognl.MemberAccess;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.ognl.ThreadAllowlist;
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -853,9 +857,11 @@ public class SecurityMemberAccessTest {
         assertTrue("package java.lang. is accessible!", actual);
     }
 
+    /**
+     * Test that the allowlist is enforced correctly for classes.
+     */
     @Test
     public void classInclusion() throws Exception {
-
         sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
 
         TestBean2 bean = new TestBean2();
@@ -868,6 +874,9 @@ public class SecurityMemberAccessTest {
         assertTrue(sma.checkAllowlist(bean, method));
     }
 
+    /**
+     * Test that the allowlist is enforced correctly for packages.
+     */
     @Test
     public void packageInclusion() throws Exception {
         sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
@@ -882,6 +891,9 @@ public class SecurityMemberAccessTest {
         assertTrue(sma.checkAllowlist(bean, method));
     }
 
+    /**
+     * Test that the allowlist doesn't allow inherited methods unless the declaring class is also allowlisted.
+     */
     @Test
     public void classInclusion_subclass() throws Exception {
         sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
@@ -893,6 +905,9 @@ public class SecurityMemberAccessTest {
         assertFalse(sma.checkAllowlist(bean, method));
     }
 
+    /**
+     * Test that the allowlist allows inherited methods when both the target and declaring class are allowlisted.
+     */
     @Test
     public void classInclusion_subclass_both() throws Exception {
         sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
@@ -904,6 +919,10 @@ public class SecurityMemberAccessTest {
         assertTrue(sma.checkAllowlist(bean, method));
     }
 
+    /**
+     * Test that the allowlist doesn't allow inherited methods unless the package of the declaring class is also
+     * allowlisted.
+     */
     @Test
     public void packageInclusion_subclass() throws Exception {
         sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
@@ -913,6 +932,37 @@ public class SecurityMemberAccessTest {
         Method method = TestBean2.class.getMethod("getName");
 
         assertFalse(sma.checkAllowlist(bean, method));
+    }
+
+    /**
+     * When the allowlist is enabled and proxy object access is disallowed, Hibernate proxies should not be allowed.
+     */
+    @Test
+    public void classInclusion_hibernateProxy_disallowProxyObjectAccess() throws Exception {
+        FooBarInterface proxyObject = mockHibernateProxy(new FooBar(), FooBarInterface.class);
+        Method proxyMethod = proxyObject.getClass().getMethod("fooLogic");
+
+        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useDisallowProxyObjectAccess(Boolean.TRUE.toString());
+        sma.useAllowlistClasses(FooBar.class.getName());
+
+        assertFalse(sma.checkAllowlist(proxyObject, proxyMethod));
+    }
+
+    /**
+     * When the allowlist is enabled and proxy object access is allowed, Hibernate proxies should be allowlisted based
+     * on their underlying target object. Class allowlisting should work as expected.
+     */
+    @Test
+    public void classInclusion_hibernateProxy_allowProxyObjectAccess() throws Exception {
+        FooBarInterface proxyObject = mockHibernateProxy(new FooBar(), FooBarInterface.class);
+        Method proxyMethod = proxyObject.getClass().getMethod("fooLogic");
+
+        sma.useEnforceAllowlistEnabled(Boolean.TRUE.toString());
+        sma.useDisallowProxyObjectAccess(Boolean.FALSE.toString());
+        sma.useAllowlistClasses(FooBar.class.getName());
+
+        assertTrue(sma.checkAllowlist(proxyObject, proxyMethod));
     }
 
     @Test
@@ -930,6 +980,15 @@ public class SecurityMemberAccessTest {
 
     private static String formGetterName(String propertyName) {
         return "get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T mockHibernateProxy(T originalObject, Class<T> proxyInterface) {
+        return (T) Proxy.newProxyInstance(
+                proxyInterface.getClassLoader(),
+                new Class<?>[]{proxyInterface, HibernateProxy.class},
+                new DummyHibernateProxyHandler(originalObject)
+        );
     }
 }
 
@@ -1042,10 +1101,28 @@ class StaticTester {
     }
 
     protected static Field getFieldByName(String fieldName) throws NoSuchFieldException {
-        if (fieldName != null && fieldName.length() > 0) {
+        if (fieldName != null && !fieldName.isEmpty()) {
             return StaticTester.class.getDeclaredField(fieldName);
         } else {
             throw new NoSuchFieldException("field: " + fieldName + " does not exist");
         }
+    }
+}
+
+class DummyHibernateProxyHandler implements InvocationHandler {
+    private final Object instance;
+
+    public DummyHibernateProxyHandler(Object instance) {
+        this.instance = instance;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        if (HibernateProxy.class.getMethod("getHibernateLazyInitializer").equals(method)) {
+            LazyInitializer initializer = mock(LazyInitializer.class);
+            when(initializer.getImplementation()).thenReturn(instance);
+            return initializer;
+        }
+        return method.invoke(instance, args);
     }
 }

@@ -26,14 +26,10 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.mock.MockInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
-import com.opensymphony.xwork2.ognl.DefaultOgnlBeanInfoCacheFactory;
-import com.opensymphony.xwork2.ognl.DefaultOgnlExpressionCacheFactory;
-import com.opensymphony.xwork2.ognl.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.ognl.StrutsOgnlGuard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +37,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+
+import static com.opensymphony.xwork2.ognl.OgnlUtilTest.createOgnlUtil;
 
 
 /**
@@ -529,14 +527,6 @@ public class DefaultActionInvocationTest extends XWorkTestCase {
         XmlConfigurationProvider configurationProvider = new StrutsXmlConfigurationProvider("xwork-sample.xml");
         container.inject(configurationProvider);
         loadConfigurationProviders(configurationProvider);
-    }
-
-    private OgnlUtil createOgnlUtil() {
-        return new OgnlUtil(
-                new DefaultOgnlExpressionCacheFactory<>(),
-                new DefaultOgnlBeanInfoCacheFactory<>(),
-                new StrutsOgnlGuard()
-        );
     }
 
     private static class SimpleActionEventListener implements ActionEventListener {

@@ -36,7 +36,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.ognl.OgnlGuard;
-import org.apache.struts2.ognl.StrutsOgnlGuard;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -77,18 +76,6 @@ public class OgnlUtil {
     private boolean enableEvalExpression;
 
     private Container container;
-
-    /**
-     * Construct a new OgnlUtil instance for use with the framework
-     *
-     * @deprecated since 6.0.0. Use {@link #OgnlUtil(ExpressionCacheFactory, BeanInfoCacheFactory, OgnlGuard) instead.
-     */
-    @Deprecated
-    public OgnlUtil() {
-        this(new DefaultOgnlExpressionCacheFactory<>(),
-                new DefaultOgnlBeanInfoCacheFactory<>(),
-                new StrutsOgnlGuard());
-    }
 
     /**
      * Construct a new OgnlUtil instance for use with the framework, with optional cache factories for OGNL Expression

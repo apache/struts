@@ -116,15 +116,17 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(action, vs, HttpParameters.create(params).build());
 
         // then
-        assertEquals(3, action.getActionMessages().size());
+        assertEquals(3, action.getActionErrors().size());
 
-        String msg1 = action.getActionMessage(0);
-        String msg2 = action.getActionMessage(1);
-        String msg3 = action.getActionMessage(2);
+        List<String> actionErrors = new ArrayList<>(action.getActionErrors());
 
-        assertEquals("Error setting expression 'expression' with value '#f=#_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),#f.setAccessible(true),#f.set(#_memberAccess,true),#req=@org.apache.struts2.ServletActionContext@getRequest(),#resp=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#resp.println(#req.getRealPath('/')),#resp.close()'", msg1);
-        assertEquals("Error setting expression 'name' with value '(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), @java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)'", msg2);
-        assertEquals("Error setting expression 'top['name'](0)' with value 'true'", msg3);
+        String msg1 = actionErrors.get(0);
+        String msg2 = actionErrors.get(1);
+        String msg3 = actionErrors.get(2);
+
+        assertEquals("Unexpected Exception caught setting 'expression' on 'class org.apache.struts2.interceptor.parameter.ValidateAction: Error setting expression 'expression' with value '#f=#_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),#f.setAccessible(true),#f.set(#_memberAccess,true),#req=@org.apache.struts2.ServletActionContext@getRequest(),#resp=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),#resp.println(#req.getRealPath('/')),#resp.close()'", msg1);
+        assertEquals("Unexpected Exception caught setting 'name' on 'class org.apache.struts2.interceptor.parameter.ValidateAction: Error setting expression 'name' with value '(#context[\"xwork.MethodAccessor.denyMethodExecution\"]= new java.lang.Boolean(false), #_memberAccess[\"allowStaticMethodAccess\"]= new java.lang.Boolean(true), @java.lang.Runtime@getRuntime().exec('mkdir /tmp/PWNAGE'))(meh)'", msg2);
+        assertEquals("Unexpected Exception caught setting 'top['name'](0)' on 'class org.apache.struts2.interceptor.parameter.ValidateAction: Error setting expression 'top['name'](0)' with value 'true'", msg3);
         assertNull(action.getName());
     }
 
@@ -201,15 +203,16 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         pi.setParameters(action, vs, HttpParameters.create(params).build());
 
         // then
-        assertEquals(3, action.getActionMessages().size());
+        assertEquals(3, action.getActionErrors().size());
 
-        String msg1 = action.getActionMessage(0);
-        String msg2 = action.getActionMessage(1);
-        String msg3 = action.getActionMessage(2);
+        List<String> actionErrors = new ArrayList<>(action.getActionErrors());
+        String msg1 = actionErrors.get(0);
+        String msg2 = actionErrors.get(1);
+        String msg3 = actionErrors.get(2);
 
-        assertEquals("Error setting expression 'class.classLoader.defaultAssertionStatus' with value 'true'", msg1);
-        assertEquals("Error setting expression 'class.classLoader.jarPath' with value 'bad'", msg2);
-        assertEquals("Error setting expression 'model.class.classLoader.jarPath' with value 'very bad'", msg3);
+        assertEquals("Unexpected Exception caught setting 'class.classLoader.defaultAssertionStatus' on 'class org.apache.struts2.interceptor.parameter.ValidateAction: Error setting expression 'class.classLoader.defaultAssertionStatus' with value 'true'", msg1);
+        assertEquals("Unexpected Exception caught setting 'class.classLoader.jarPath' on 'class org.apache.struts2.interceptor.parameter.ValidateAction: Error setting expression 'class.classLoader.jarPath' with value 'bad'", msg2);
+        assertEquals("Unexpected Exception caught setting 'model.class.classLoader.jarPath' on 'class org.apache.struts2.interceptor.parameter.ValidateAction: Error setting expression 'model.class.classLoader.jarPath' with value 'very bad'", msg3);
 
         assertFalse(excluded.get(pollution1));
         assertFalse(excluded.get(pollution2));
@@ -582,8 +585,8 @@ public class ParametersInterceptorTest extends XWorkTestCase {
         container.inject(config.getInterceptors().get(0).getInterceptor());
         ActionProxy proxy = actionProxyFactory.createActionProxy("", MockConfigurationProvider.PARAM_INTERCEPTOR_ACTION_NAME, null, extraContext.getContextMap());
         proxy.execute();
-        final String actionMessage = "" + ((SimpleAction) proxy.getAction()).getActionMessages().toArray()[0];
-        assertTrue(actionMessage.contains("Error setting expression 'not_a_property' with value 'There is no action property named like this'"));
+        final String actionError = "" + ((SimpleAction) proxy.getAction()).getActionErrors().toArray()[0];
+        assertTrue(actionError.contains("Error setting expression 'not_a_property' with value 'There is no action property named like this'"));
     }
 
     public void testNonexistentParametersAreIgnoredInProductionMode() throws Exception {
@@ -1014,57 +1017,63 @@ public class ParametersInterceptorTest extends XWorkTestCase {
 class ValidateAction implements ValidationAware {
 
     private final List<String> messages = new LinkedList<>();
+    private final List<String> errors = new LinkedList<>();
     private String name;
 
+    @Override
     public void setActionErrors(Collection<String> errorMessages) {
     }
 
+    @Override
     public Collection<String> getActionErrors() {
-        return null;
+        return errors;
     }
 
+    @Override
     public void setActionMessages(Collection<String> messages) {
     }
 
+    @Override
     public Collection<String> getActionMessages() {
         return messages;
     }
 
+    @Override
     public void setFieldErrors(Map<String, List<String>> errorMap) {
     }
 
+    @Override
     public Map<String, List<String>> getFieldErrors() {
         return null;
     }
 
+    @Override
     public void addActionError(String anErrorMessage) {
+        errors.add(anErrorMessage);
     }
 
+    @Override
     public void addActionMessage(String aMessage) {
         messages.add(aMessage);
     }
 
+    @Override
     public void addFieldError(String fieldName, String errorMessage) {
     }
 
+    @Override
     public boolean hasActionErrors() {
-        return false;
+        return !errors.isEmpty();
     }
 
+    @Override
     public boolean hasActionMessages() {
         return !messages.isEmpty();
     }
 
-    public boolean hasErrors() {
-        return false;
-    }
-
+    @Override
     public boolean hasFieldErrors() {
         return false;
-    }
-
-    public String getActionMessage(int index) {
-        return messages.get(index);
     }
 
     public String getName() {

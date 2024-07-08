@@ -118,9 +118,6 @@ public class FreemarkerManager {
      public static final String INITPARAM_DEBUG = "Debug";
 
      public static final String KEY_REQUEST = "Request";
-     public static final String KEY_INCLUDE = "include_page";
-     public static final String KEY_REQUEST_PRIVATE = "__FreeMarkerServlet.Request__";
-     public static final String KEY_REQUEST_PARAMETERS = "RequestParameters";
      public static final String KEY_SESSION = "Session";
      public static final String KEY_APPLICATION = "Application";
      public static final String KEY_APPLICATION_PRIVATE = "__FreeMarkerServlet.Application__";
@@ -138,9 +135,28 @@ public class FreemarkerManager {
     // for Struts
     public static final String KEY_REQUEST_PARAMETERS_STRUTS = "Parameters";
 
-    public static final String KEY_HASHMODEL_PRIVATE = "__FreeMarkerManager.Request__";
-
     public static final String EXPIRATION_DATE;
+
+    /**
+     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
+     */
+    @Deprecated
+    public static final String KEY_INCLUDE = "include_page";
+    /**
+     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
+     */
+    @Deprecated
+    public static final String KEY_REQUEST_PRIVATE = "__FreeMarkerServlet.Request__";
+    /**
+     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
+     */
+    @Deprecated
+    public static final String KEY_REQUEST_PARAMETERS = "RequestParameters";
+    /**
+     * @deprecated since Struts 6.5.0, do not use as it will be removed in Struts 7.0.0
+     */
+    @Deprecated
+    public static final String KEY_HASHMODEL_PRIVATE = "__FreeMarkerManager.Request__";
 
     /**
      * Adds individual settings.

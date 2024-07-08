@@ -51,6 +51,8 @@ import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableSet;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 
 /**
  * Allows access decisions to be made on the basis of whether a member is static or not.
@@ -77,16 +79,28 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private final ProviderAllowlist providerAllowlist;
     private final ThreadAllowlist threadAllowlist;
+
     private boolean allowStaticFieldAccess = true;
+
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
+
     private Set<String> excludedClasses = unmodifiableSet(new HashSet<>(singletonList(Object.class.getName())));
     private Set<Pattern> excludedPackageNamePatterns = emptySet();
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
+
+    private volatile boolean isDevModeInit;
+    private boolean isDevMode;
+    private Set<String> devModeExcludedClasses = unmodifiableSet(new HashSet<>(singletonList(Object.class.getName())));
+    private Set<Pattern> devModeExcludedPackageNamePatterns = emptySet();
+    private Set<String> devModeExcludedPackageNames = emptySet();
+    private Set<String> devModeExcludedPackageExemptClasses = emptySet();
+
     private boolean enforceAllowlistEnabled = false;
     private Set<Class<?>> allowlistClasses = emptySet();
     private Set<String> allowlistPackageNames = emptySet();
+
     private boolean disallowProxyObjectAccess = false;
     private boolean disallowProxyMemberAccess = false;
     private boolean disallowDefaultPackageAccess = false;
@@ -209,12 +223,28 @@ public class SecurityMemberAccess implements MemberAccess {
      * @return {@code true} if member access is allowed
      */
     protected boolean checkAllowlist(Object target, Member member) {
-        Class<?> memberClass = member.getDeclaringClass();
         if (!enforceAllowlistEnabled) {
+            logAllowlistDisabled();
             return true;
         }
+
+        if (!disallowProxyObjectAccess && target != null && ProxyUtil.isProxy(target)) {
+            // If `disallowProxyObjectAccess` is not set, allow resolving Hibernate entities to their underlying
+            // classes/members. This allows the allowlist capability to continue working and offer some level of
+            // protection in applications where the developer has accepted the risk of allowing OGNL access to Hibernate
+            // entities. This is preferred to having to disable the allowlist capability entirely.
+            Object newTarget = ProxyUtil.getHibernateProxyTarget(target);
+            if (newTarget != target) {
+                logAllowlistHibernateEntity(target, newTarget);
+                target = newTarget;
+                member = ProxyUtil.resolveTargetMember(member, newTarget);
+            }
+        }
+
+        Class<?> memberClass = member.getDeclaringClass();
         if (!isClassAllowlisted(memberClass)) {
-            LOG.warn(format("Declaring class [{0}] of member type [{1}] is not allowlisted!", memberClass, member));
+            LOG.warn("Declaring class [{}] of member type [{}] is not allowlisted! Add to '{}' or '{}' configuration.",
+                    memberClass, member, STRUTS_ALLOWLIST_CLASSES, STRUTS_ALLOWLIST_PACKAGE_NAMES);
             return false;
         }
         if (target == null || target.getClass() == memberClass) {
@@ -222,10 +252,40 @@ public class SecurityMemberAccess implements MemberAccess {
         }
         Class<?> targetClass = target.getClass();
         if (!isClassAllowlisted(targetClass)) {
-            LOG.warn(format("Target class [{0}] of target [{1}] is not allowlisted!", targetClass, target));
+            LOG.warn("Target class [{}] of target [{}] is not allowlisted! Add to '{}' or '{}' configuration.",
+                    targetClass, target, STRUTS_ALLOWLIST_CLASSES, STRUTS_ALLOWLIST_PACKAGE_NAMES);
             return false;
         }
         return true;
+    }
+
+    private void logAllowlistDisabled() {
+        if (!isDevMode && !LOG.isDebugEnabled()) {
+            return;
+        }
+        String msg = "OGNL allowlist is disabled!" +
+                " We strongly recommend keeping it enabled to protect against critical vulnerabilities." +
+                " Set the configuration `{0}=true` to enable it.";
+        Object[] args = {StrutsConstants.STRUTS_ALLOWLIST_ENABLE};
+        if (isDevMode) {
+            LOG.warn(msg, args);
+        } else {
+            LOG.debug(msg, args);
+        }
+    }
+
+    private void logAllowlistHibernateEntity(Object original, Object resolved) {
+        if (!isDevMode && !LOG.isDebugEnabled()) {
+            return;
+        }
+        String msg = "Hibernate entity [{}] resolved to [{}] for purpose of OGNL allowlisting." +
+                " We don't recommend executing OGNL expressions against Hibernate entities, you may disallow this behaviour using the configuration `{}=true`.";
+        Object[] args = {original, resolved, StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS};
+        if (isDevMode) {
+            LOG.warn(msg, args);
+        } else {
+            LOG.debug(msg, args);
+        }
     }
 
     protected boolean isClassAllowlisted(Class<?> clazz) {
@@ -241,6 +301,7 @@ public class SecurityMemberAccess implements MemberAccess {
      * @return {@code true} if member access is allowed
      */
     protected boolean checkExclusionList(Object target, Member member) {
+        useDevModeConfiguration();
         Class<?> memberClass = member.getDeclaringClass();
         if (isClassExcluded(memberClass)) {
             LOG.warn("Declaring class of member type [{}] is excluded!", memberClass);
@@ -436,12 +497,12 @@ public class SecurityMemberAccess implements MemberAccess {
         this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_CLASSES, required = false)
+    @Inject(value = STRUTS_ALLOWLIST_CLASSES, required = false)
     public void useAllowlistClasses(String commaDelimitedClasses) {
         this.allowlistClasses = toClassObjectsSet(commaDelimitedClasses);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
+    @Inject(value = STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
     public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
         this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
     }
@@ -459,5 +520,42 @@ public class SecurityMemberAccess implements MemberAccess {
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, required = false)
     public void useDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
         this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
+    }
+
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    protected void useDevMode(String devMode) {
+        this.isDevMode = BooleanUtils.toBoolean(devMode);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_CLASSES, required = false)
+    public void useDevModeExcludedClasses(String commaDelimitedClasses) {
+        this.devModeExcludedClasses = toNewClassesSet(devModeExcludedClasses, commaDelimitedClasses);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAME_PATTERNS, required = false)
+    public void useDevModeExcludedPackageNamePatterns(String commaDelimitedPackagePatterns) {
+        this.devModeExcludedPackageNamePatterns = toNewPatternsSet(devModeExcludedPackageNamePatterns, commaDelimitedPackagePatterns);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_NAMES, required = false)
+    public void useDevModeExcludedPackageNames(String commaDelimitedPackageNames) {
+        this.devModeExcludedPackageNames = toNewPackageNamesSet(devModeExcludedPackageNames, commaDelimitedPackageNames);
+    }
+
+    @Inject(value = StrutsConstants.STRUTS_DEV_MODE_EXCLUDED_PACKAGE_EXEMPT_CLASSES, required = false)
+    public void useDevModeExcludedPackageExemptClasses(String commaDelimitedClasses) {
+        this.devModeExcludedPackageExemptClasses = toClassesSet(commaDelimitedClasses);
+    }
+
+    private void useDevModeConfiguration() {
+        if (!isDevMode || isDevModeInit) {
+            return;
+        }
+        isDevModeInit = true;
+        LOG.warn("Working in devMode, using devMode excluded classes and packages!");
+        excludedClasses = devModeExcludedClasses;
+        excludedPackageNamePatterns = devModeExcludedPackageNamePatterns;
+        excludedPackageNames = devModeExcludedPackageNames;
+        excludedPackageExemptClasses = devModeExcludedPackageExemptClasses;
     }
 }

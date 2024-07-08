@@ -51,6 +51,8 @@ import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableSet;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_CLASSES;
+import static org.apache.struts2.StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES;
 
 /**
  * Allows access decisions to be made on the basis of whether a member is static or not.
@@ -236,7 +238,8 @@ public class SecurityMemberAccess implements MemberAccess {
 
         Class<?> memberClass = member.getDeclaringClass();
         if (!isClassAllowlisted(memberClass)) {
-            LOG.warn(format("Declaring class [{0}] of member type [{1}] is not allowlisted!", memberClass, member));
+            LOG.warn("Declaring class [{}] of member type [{}] is not allowlisted! Add to '{}' or '{}' configuration.",
+                    memberClass, member, STRUTS_ALLOWLIST_CLASSES, STRUTS_ALLOWLIST_PACKAGE_NAMES);
             return false;
         }
         if (target == null || target.getClass() == memberClass) {
@@ -244,7 +247,8 @@ public class SecurityMemberAccess implements MemberAccess {
         }
         Class<?> targetClass = target.getClass();
         if (!isClassAllowlisted(targetClass)) {
-            LOG.warn(format("Target class [{0}] of target [{1}] is not allowlisted!", targetClass, target));
+            LOG.warn("Target class [{}] of target [{}] is not allowlisted! Add to '{}' or '{}' configuration.",
+                    targetClass, target, STRUTS_ALLOWLIST_CLASSES, STRUTS_ALLOWLIST_PACKAGE_NAMES);
             return false;
         }
         return true;
@@ -487,12 +491,12 @@ public class SecurityMemberAccess implements MemberAccess {
         this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_CLASSES, required = false)
+    @Inject(value = STRUTS_ALLOWLIST_CLASSES, required = false)
     public void useAllowlistClasses(String commaDelimitedClasses) {
         this.allowlistClasses = toClassObjectsSet(commaDelimitedClasses);
     }
 
-    @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
+    @Inject(value = STRUTS_ALLOWLIST_PACKAGE_NAMES, required = false)
     public void useAllowlistPackageNames(String commaDelimitedPackageNames) {
         this.allowlistPackageNames = toPackageNamesSet(commaDelimitedPackageNames);
     }

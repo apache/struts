@@ -77,16 +77,23 @@ public class SecurityMemberAccess implements MemberAccess {
 
     private final ProviderAllowlist providerAllowlist;
     private final ThreadAllowlist threadAllowlist;
+
     private boolean allowStaticFieldAccess = true;
+
     private Set<Pattern> excludeProperties = emptySet();
     private Set<Pattern> acceptProperties = emptySet();
+
     private Set<String> excludedClasses = unmodifiableSet(new HashSet<>(singletonList(Object.class.getName())));
     private Set<Pattern> excludedPackageNamePatterns = emptySet();
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
+
+    private boolean isDevMode;
+
     private boolean enforceAllowlistEnabled = false;
     private Set<Class<?>> allowlistClasses = emptySet();
     private Set<String> allowlistPackageNames = emptySet();
+
     private boolean disallowProxyObjectAccess = false;
     private boolean disallowProxyMemberAccess = false;
     private boolean disallowDefaultPackageAccess = false;
@@ -220,6 +227,7 @@ public class SecurityMemberAccess implements MemberAccess {
             // entities. This is preferred to having to disable the allowlist capability entirely.
             Object newTarget = ProxyUtil.getHibernateProxyTarget(target);
             if (newTarget != target) {
+                logAllowlistHibernateEntity(target, newTarget);
                 target = newTarget;
                 member = ProxyUtil.resolveTargetMember(member, newTarget);
             }
@@ -239,6 +247,21 @@ public class SecurityMemberAccess implements MemberAccess {
             return false;
         }
         return true;
+    }
+
+    private void logAllowlistHibernateEntity(Object original, Object resolved) {
+        if (!isDevMode && !LOG.isDebugEnabled()) {
+            return;
+        }
+        String msg = "Hibernate entity [{}] resolved to [{}] for purpose of OGNL allowlisting." +
+                " We don't recommend executing OGNL expressions against Hibernate entities, you may disallow this behaviour using the configuration `{}=true`.";
+        Object[] args = {original, resolved, StrutsConstants.STRUTS_DISALLOW_PROXY_OBJECT_ACCESS};
+        if (isDevMode) {
+            LOG.warn(msg, args);
+        } else {
+            LOG.debug(msg, args);
+        }
+
     }
 
     protected boolean isClassAllowlisted(Class<?> clazz) {
@@ -472,5 +495,10 @@ public class SecurityMemberAccess implements MemberAccess {
     @Inject(value = StrutsConstants.STRUTS_DISALLOW_DEFAULT_PACKAGE_ACCESS, required = false)
     public void useDisallowDefaultPackageAccess(String disallowDefaultPackageAccess) {
         this.disallowDefaultPackageAccess = BooleanUtils.toBoolean(disallowDefaultPackageAccess);
+    }
+
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    protected void useDevMode(String devMode) {
+        this.isDevMode = BooleanUtils.toBoolean(devMode);
     }
 }

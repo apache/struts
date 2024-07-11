@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-jakarta</artifactId>
-        <version>7.0.0-M8</version>
+        <version>7.0.0-M9-SNAPSHOT</version>
     </parent>
     <artifactId>struts2-sitemesh2-jakarta</artifactId>
     <packaging>jar</packaging>

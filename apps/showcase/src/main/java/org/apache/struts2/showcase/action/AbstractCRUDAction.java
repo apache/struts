@@ -34,62 +34,62 @@ import java.util.Collection;
 
 public abstract class AbstractCRUDAction extends ActionSupport {
 
-	private static final Logger log = LogManager.getLogger(AbstractCRUDAction.class);
+    private static final Logger log = LogManager.getLogger(AbstractCRUDAction.class);
 
-	private Collection availableItems;
-	private String[] toDelete;
+    private Collection availableItems;
+    private String[] toDelete;
 
-	protected abstract Dao getDao();
+    protected abstract Dao getDao();
 
-	public Collection getAvailableItems() {
-		return availableItems;
-	}
+    public Collection getAvailableItems() {
+        return availableItems;
+    }
 
-	public String[] getToDelete() {
-		return toDelete;
-	}
+    public String[] getToDelete() {
+        return toDelete;
+    }
 
-	@StrutsParameter
-	public void setToDelete(String[] toDelete) {
-		this.toDelete = toDelete;
-	}
+    @StrutsParameter
+    public void setToDelete(String[] toDelete) {
+        this.toDelete = toDelete;
+    }
 
-	public String list() throws Exception {
-		this.availableItems = getDao().findAll();
-		if (log.isDebugEnabled()) {
-			log.debug("AbstractCRUDAction - [list]: " + (availableItems != null ? "" + availableItems.size() : "no") + " items found");
-		}
-		return execute();
-	}
+    public String list() throws Exception {
+        this.availableItems = getDao().findAll();
+        if (log.isDebugEnabled()) {
+            log.debug("AbstractCRUDAction - [list]: " + (availableItems != null ? "" + availableItems.size() : "no") + " items found");
+        }
+        return execute();
+    }
 
-	public String delete() throws Exception {
-		if (toDelete != null) {
-			int count = 0;
+    public String delete() throws Exception {
+        if (toDelete != null) {
+            int count = 0;
             for (String s : toDelete) {
                 count = count + getDao().delete(s);
             }
-			if (log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("AbstractCRUDAction - [delete]: {} items deleted.", count);
-			}
-		}
-		return SUCCESS;
-	}
+            }
+        }
+        return SUCCESS;
+    }
 
-	/**
-	 * Utility method for fetching already persistent object from storage for usage in params-prepare-params cycle.
-	 *
-	 * @param tryId     The id to try to get persistent object for
-	 * @param tryObject The object, induced by first params invocation, possibly containing id to try to get persistent
-	 *                  object for
-	 * @return The persistent object, if found. <tt>null</tt> otherwise.
-	 */
-	protected IdEntity fetch(Serializable tryId, IdEntity tryObject) {
-		IdEntity result = null;
-		if (tryId != null) {
-			result = getDao().get(tryId);
-		} else if (tryObject != null) {
-			result = getDao().get(tryObject.getId());
-		}
-		return result;
-	}
+    /**
+     * Utility method for fetching already persistent object from storage for usage in params-prepare-params cycle.
+     *
+     * @param tryId     The id to try to get persistent object for
+     * @param tryObject The object, induced by first params invocation, possibly containing id to try to get persistent
+     *                  object for
+     * @return The persistent object, if found. <tt>null</tt> otherwise.
+     */
+    protected IdEntity fetch(Serializable tryId, IdEntity tryObject) {
+        IdEntity result = null;
+        if (tryId != null) {
+            result = getDao().get(tryId);
+        } else if (tryObject != null) {
+            result = getDao().get(tryObject.getId());
+        }
+        return result;
+    }
 }

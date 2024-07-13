@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.FileManagerFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationUtil;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
@@ -57,6 +58,7 @@ import org.apache.struts2.convention.annotation.ExceptionMappings;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Namespaces;
 import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.ognl.ProviderAllowlist;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -125,6 +127,9 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     private FileManager fileManager;
     private ClassFinderFactory classFinderFactory;
 
+    private final Set<Class<?>> allowlistClasses = new HashSet<>();
+    private ProviderAllowlist providerAllowlist;
+
     /**
      * Constructs actions based on a list of packages.
      *
@@ -165,6 +170,11 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = BooleanUtils.toBoolean(mode);
+    }
+
+    @Inject
+    public void setProviderAllowlist(ProviderAllowlist providerAllowlist) {
+        this.providerAllowlist = providerAllowlist;
     }
 
     /**
@@ -345,33 +355,38 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
      * annotation which is used to control the parent package for a specific action. Lastly, the
      * {@link ResultMapBuilder} is used to create ResultConfig instances of the action.
      */
+    @Override
     public void buildActionConfigs() {
+        allowlistClasses.clear();
+
         //setup reload class loader based on dev settings
         initReloadClassLoader();
 
-        if (!disableActionScanning) {
-            if (actionPackages == null && packageLocators == null) {
-                throw new ConfigurationException("At least a list of action packages or action package locators " +
-                        "must be given using one of the properties [struts.convention.action.packages] or " +
-                        "[struts.convention.package.locators]");
-            }
-
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Loading action configurations");
-                if (actionPackages != null) {
-                    LOG.trace("Actions being loaded from action packages: {}", (Object[]) actionPackages);
-                }
-                if (packageLocators != null) {
-                    LOG.trace("Actions being loaded using package locator's: {}", (Object[]) packageLocators);
-                }
-                if (excludePackages != null) {
-                    LOG.trace("Excluding actions from packages: {}", (Object[]) excludePackages);
-                }
-            }
-
-            Set<Class<?>> classes = findActions();
-            buildConfiguration(classes);
+        if (disableActionScanning) {
+            return;
         }
+
+        if (actionPackages == null && packageLocators == null) {
+            throw new ConfigurationException("At least a list of action packages or action package locators " +
+                    "must be given using one of the properties [struts.convention.action.packages] or " +
+                    "[struts.convention.package.locators]");
+        }
+
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Loading action configurations");
+            if (actionPackages != null) {
+                LOG.trace("Actions being loaded from action packages: {}", (Object[]) actionPackages);
+            }
+            if (packageLocators != null) {
+                LOG.trace("Actions being loaded using package locator's: {}", (Object[]) packageLocators);
+            }
+            if (excludePackages != null) {
+                LOG.trace("Excluding actions from packages: {}", (Object[]) excludePackages);
+            }
+        }
+
+        Set<Class<?>> classes = findActions();
+        buildConfiguration(classes);
     }
 
     protected ClassLoaderInterface getClassLoaderInterface() {
@@ -765,7 +780,10 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
                 } else if (actionAnnotation != null)
                     createActionConfig(defaultPackageConfig, actionClass, defaultActionName, methodName, actionAnnotation, allowedMethods);
             }
+
+            allowlistClasses.addAll(ConfigurationUtil.getAllClassTypes(actionClass));
         }
+        providerAllowlist.registerAllowlist(this, allowlistClasses);
 
         buildIndexActions(packageConfigs);
 
@@ -1153,10 +1171,13 @@ public class PackageBasedActionConfigBuilder implements ActionConfigBuilder {
         }
     }
 
+    @Override
     public void destroy() {
         loadedFileUrls.clear();
+        providerAllowlist.clearAllowlist(this);
     }
 
+    @Override
     public boolean needsReload() {
         if (devMode && reload) {
             for (String url : loadedFileUrls) {

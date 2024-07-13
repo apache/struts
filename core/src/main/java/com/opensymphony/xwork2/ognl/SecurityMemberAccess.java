@@ -90,6 +90,7 @@ public class SecurityMemberAccess implements MemberAccess {
     private Set<String> excludedPackageNames = emptySet();
     private Set<String> excludedPackageExemptClasses = emptySet();
 
+    private static volatile boolean isDevModeLogged = false;
     private volatile boolean isDevModeInit;
     private boolean isDevMode;
     private Set<String> devModeExcludedClasses = unmodifiableSet(new HashSet<>(singletonList(Object.class.getName())));
@@ -536,7 +537,10 @@ public class SecurityMemberAccess implements MemberAccess {
             return;
         }
         isDevModeInit = true;
-        LOG.warn("Working in devMode, using devMode excluded classes and packages!");
+        if (!isDevModeLogged) {
+            LOG.warn("Working in devMode, using devMode excluded classes and packages!");
+            isDevModeLogged = true;
+        }
         excludedClasses = devModeExcludedClasses;
         excludedPackageNamePatterns = devModeExcludedPackageNamePatterns;
         excludedPackageNames = devModeExcludedPackageNames;

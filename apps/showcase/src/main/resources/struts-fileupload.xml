@@ -40,7 +40,7 @@
 		</action>
 
 		<action name="doMultipleUploadUsingList" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingListAction" method="upload">
-                        <result name="input">/WEB-INF/fileupload/multipleUploadUsingList.jsp</result>
+			<result name="input">/WEB-INF/fileupload/multipleUploadUsingList.jsp</result>
 			<result>/WEB-INF/fileupload/multiple-success.jsp</result>
 		</action>
 
@@ -50,7 +50,7 @@
 		</action>
 
 		<action name="doMultipleUploadUsingArray" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingArrayAction" method="upload">
-                        <result name="input">/WEB-INF/fileupload/multipleUploadUsingArray.jsp</result>
+			<result name="input">/WEB-INF/fileupload/multipleUploadUsingArray.jsp</result>
 			<result>/WEB-INF/fileupload/multiple-success.jsp</result>
 		</action>
 

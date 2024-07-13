@@ -22,6 +22,7 @@ package org.apache.struts2.showcase.token;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.Date;
 
@@ -76,6 +77,7 @@ public class TokenAction extends ActionSupport {
 		return amount;
 	}
 
+	@StrutsParameter
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}

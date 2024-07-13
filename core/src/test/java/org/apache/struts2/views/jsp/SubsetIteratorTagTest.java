@@ -18,15 +18,14 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.util.SubsetIteratorFilter.Decider;
 import org.apache.struts2.views.jsp.iterator.SubsetIteratorTag;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -641,11 +640,11 @@ public class SubsetIteratorTagTest extends AbstractTagTest {
         return new ActionSupport() {
             public List getMyList() {
                 List l = new ArrayList();
-                l.add(new Integer(1));
-                l.add(new Integer(2));
-                l.add(new Integer(3));
-                l.add(new Integer(4));
-                l.add(new Integer(5));
+                l.add(1);
+                l.add(2);
+                l.add(3);
+                l.add(4);
+                l.add(5);
                 return l;
             }
 
@@ -660,11 +659,9 @@ public class SubsetIteratorTagTest extends AbstractTagTest {
             }
 
             public Decider getMyDecider() {
-                return new Decider() {
-                    public boolean decide(Object element) throws Exception {
-                        int integer = ((Integer)element).intValue();
-                        return (((integer % 2) == 0)?true:false);
-                    }
+                return element -> {
+                    int integer = (Integer) element;
+                    return integer % 2 == 0;
                 };
             }
         };

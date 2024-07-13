@@ -20,8 +20,12 @@ package com.opensymphony.xwork2;
 
 import com.opensymphony.xwork2.conversion.impl.ConversionData;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Unit test for {@link ActionSupport}.
@@ -334,6 +338,7 @@ public class ActionSupportTest extends XWorkTestCase {
             return val;
         }
 
+        @StrutsParameter
         public void setVal(Double val) {
             this.val = val;
         }

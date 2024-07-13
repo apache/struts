@@ -22,6 +22,7 @@ package org.apache.struts2.showcase.freemarker;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.text.DateFormatSymbols;
 
@@ -34,6 +35,7 @@ public class StandardTagsAction extends ActionSupport implements Preparable {
 	private String[] gender;
 	private String[] months;
 
+	@Override
 	public void prepare() {
 		months = new DateFormatSymbols().getMonths();
 		name = StandardTagsAction.class.getName().substring(StandardTagsAction.class.getName().lastIndexOf(".") + 1);
@@ -44,6 +46,7 @@ public class StandardTagsAction extends ActionSupport implements Preparable {
 		return name;
 	}
 
+	@StrutsParameter
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -52,15 +55,16 @@ public class StandardTagsAction extends ActionSupport implements Preparable {
 		return months;
 	}
 
+	@StrutsParameter
 	public void setMonths(String[] months) {
 		this.months = months;
 	}
-
 
 	public String[] getGender() {
 		return gender;
 	}
 
+	@StrutsParameter
 	public void setGender(String[] gender) {
 		this.gender = gender;
 	}

@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.showcase.validation;
 
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+
 /**
  */
 
@@ -37,6 +39,7 @@ public class NonFieldValidatorsExampleAction extends AbstractValidationActionSup
 		return someText;
 	}
 
+	@StrutsParameter
 	public void setSomeText(String someText) {
 		this.someText = someText;
 	}
@@ -45,6 +48,7 @@ public class NonFieldValidatorsExampleAction extends AbstractValidationActionSup
 		return someTextRetype;
 	}
 
+	@StrutsParameter
 	public void setSomeTextRetype(String someTextRetype) {
 		this.someTextRetype = someTextRetype;
 	}
@@ -53,6 +57,7 @@ public class NonFieldValidatorsExampleAction extends AbstractValidationActionSup
 		return someTextRetypeAgain;
 	}
 
+	@StrutsParameter
 	public void setSomeTextRetypeAgain(String someTextRetypeAgain) {
 		this.someTextRetypeAgain = someTextRetypeAgain;
 	}

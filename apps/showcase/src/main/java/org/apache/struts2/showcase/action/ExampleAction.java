@@ -20,7 +20,11 @@ package org.apache.struts2.showcase.action;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExampleAction extends ActionSupport {
 	public static final String CONSTANT = "Struts Rocks!";
@@ -46,7 +50,7 @@ public class ExampleAction extends ActionSupport {
 	}
 
 	public Map<String, Book> getBooks() {
-		Map<String, Book> books = new HashMap<String, Book>();
+		Map<String, Book> books = new HashMap<>();
 		books.put("Iliad", new Book("Iliad", "Homer"));
 		books.put("The Republic", new Book("The Replublic", "Plato"));
 		books.put("Thus Spake Zarathustra", new Book("Thus Spake Zarathustra",

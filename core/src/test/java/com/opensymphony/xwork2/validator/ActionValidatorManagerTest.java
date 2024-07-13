@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.validators.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.validators.VisitorFieldValidator;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -201,8 +202,10 @@ public class ActionValidatorManagerTest extends XWorkTestCase {
         public void setReferenceNumber(String referenceNumber) { this.referenceNumber = referenceNumber; }
 
         public Integer getOrder() { return order; }
+        @StrutsParameter
         public void setOrder(Integer order) { this.order = order; }
 
+        @StrutsParameter(depth = 2)
         public Customer getCustomer() { return customer; }
         public void setCustomer(Customer customer) { this.customer = customer; }
     }

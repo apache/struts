@@ -41,9 +41,10 @@ public class ExecutionCountTestAction extends ActionSupport {
         return executionCount;
     }
 
+    @Override
     public String execute() throws Exception {
         executionCount++;
-        LOG.info("executing ExecutionCountTestAction. Current count is " + executionCount);
+        LOG.info("executing ExecutionCountTestAction. Current count is {}", executionCount);
 
         return SUCCESS;
     }

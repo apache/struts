@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -74,6 +75,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _favouriteCartoonCharactersKeys;
 	}
 
+	@StrutsParameter
 	public void setFavouriteCartoonCharacters(List favouriteCartoonCharacters) {
 		_favouriteCartoonCharactersKeys = favouriteCartoonCharacters;
 	}
@@ -82,6 +84,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _notFavouriteCartoonCharactersKeys;
 	}
 
+	@StrutsParameter
 	public void setNotFavouriteCartoonCharacters(List notFavouriteCartoonCharacters) {
 		_notFavouriteCartoonCharactersKeys = notFavouriteCartoonCharacters;
 	}
@@ -108,6 +111,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _favouriteCarsKeys;
 	}
 
+	@StrutsParameter
 	public void setFavouriteCars(List favouriteCars) {
 		_favouriteCarsKeys = favouriteCars;
 	}
@@ -116,6 +120,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _notFavouriteCarsKeys;
 	}
 
+	@StrutsParameter
 	public void setNotFavouriteCars(List notFavouriteCars) {
 		_notFavouriteCarsKeys = notFavouriteCars;
 	}
@@ -142,6 +147,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _favouriteMotorcyclesKeys;
 	}
 
+	@StrutsParameter
 	public void setFavouriteMotorcycles(List favouriteMotorcycles) {
 		_favouriteMotorcyclesKeys = favouriteMotorcycles;
 	}
@@ -150,6 +156,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _notFavouriteMotorcyclesKeys;
 	}
 
+	@StrutsParameter
 	public void setNotFavouriteMotorcycles(List notFavouriteMotorcycles) {
 		_notFavouriteMotorcyclesKeys = notFavouriteMotorcycles;
 	}
@@ -176,6 +183,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _favouriteCountriesKeys;
 	}
 
+	@StrutsParameter
 	public void setFavouriteCountries(List favouriteCountries) {
 		_favouriteCountriesKeys = favouriteCountries;
 	}
@@ -184,6 +192,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _notFavouriteCountriesKeys;
 	}
 
+	@StrutsParameter
 	public void setNotFavouriteCountries(List notFavouriteCountries) {
 		_notFavouriteCountriesKeys = notFavouriteCountries;
 	}
@@ -205,6 +214,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _favouriteSportsKeys;
 	}
 
+	@StrutsParameter
 	public void setFavouriteSports(List favouriteSportsKeys) {
 		this._favouriteSportsKeys = favouriteSportsKeys;
 	}
@@ -213,6 +223,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _nonFavouriteSportsKeys;
 	}
 
+	@StrutsParameter
 	public void setNonFavouriteSports(List notFavouriteSportsKeys) {
 		this._nonFavouriteSportsKeys = notFavouriteSportsKeys;
 	}
@@ -222,6 +233,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _prioritisedFavouriteCartoonCharacters;
 	}
 
+	@StrutsParameter
 	public void setPrioritisedFavouriteCartoonCharacters(List prioritisedFavouriteCartoonCharacters) {
 		_prioritisedFavouriteCartoonCharacters = prioritisedFavouriteCartoonCharacters;
 	}
@@ -230,6 +242,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _prioritisedFavouriteCars;
 	}
 
+	@StrutsParameter
 	public void setPrioritisedFavouriteCars(List prioritisedFavouriteCars) {
 		_prioritisedFavouriteCars = prioritisedFavouriteCars;
 	}
@@ -239,6 +252,7 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _prioritisedFavouriteCountries;
 	}
 
+	@StrutsParameter
 	public void setPrioritisedFavouriteCountries(List prioritisedFavouriteCountries) {
 		_prioritisedFavouriteCountries = prioritisedFavouriteCountries;
 	}
@@ -264,12 +278,13 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 		return _favouriteCities;
 	}
 
+	@StrutsParameter
 	public void setFavouriteCities(List favouriteCities) {
 		this._favouriteCities = favouriteCities;
 	}
 
 	// actions
-
+	@Override
 	public String input() throws Exception {
 		return SUCCESS;
 	}

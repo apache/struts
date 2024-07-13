@@ -19,6 +19,7 @@
 package com.opensymphony.xwork2.interceptor.annotations;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  * @author martin.gilday
@@ -26,15 +27,17 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 @BlockByDefault
 public class BlockingByDefaultAction extends ActionSupport {
-	
+
 	@Allowed
 	private String name;
 	private String job;
-	
+
+	@StrutsParameter
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	@StrutsParameter
 	public void setJob(String job) {
 		this.job = job;
 	}

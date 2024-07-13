@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.ajax;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class Example5Action extends ActionSupport {
 
@@ -37,6 +38,7 @@ public class Example5Action extends ActionSupport {
 		return name;
 	}
 
+	@StrutsParameter
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -45,6 +47,7 @@ public class Example5Action extends ActionSupport {
 		return age;
 	}
 
+	@StrutsParameter
 	public void setAge(Integer age) {
 		this.age = age;
 	}

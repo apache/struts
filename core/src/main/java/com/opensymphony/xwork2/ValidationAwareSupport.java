@@ -21,7 +21,12 @@ package com.opensymphony.xwork2;
 import com.opensymphony.xwork2.interceptor.ValidationAware;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Provides a default implementation of ValidationAware. Returns new collections for
@@ -72,13 +77,7 @@ public class ValidationAwareSupport implements ValidationAware, Serializable {
 
     public synchronized void addFieldError(String fieldName, String errorMessage) {
         final Map<String, List<String>> errors = internalGetFieldErrors();
-        List<String> thisFieldErrors = errors.get(fieldName);
-
-        if (thisFieldErrors == null) {
-            thisFieldErrors = new ArrayList<>();
-            errors.put(fieldName, thisFieldErrors);
-        }
-
+        List<String> thisFieldErrors = errors.computeIfAbsent(fieldName, k -> new ArrayList<>());
         thisFieldErrors.add(errorMessage);
     }
 

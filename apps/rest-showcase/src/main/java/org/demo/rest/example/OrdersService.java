@@ -18,11 +18,14 @@
  */
 package org.demo.rest.example;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OrdersService {
 
-    private static Map<String,Order> orders = new HashMap<String,Order>();
+    private static final Map<String,Order> orders = new HashMap<>();
     private static int nextId = 6;
     static {
         orders.put("3", new Order("3", "Bob", 33));

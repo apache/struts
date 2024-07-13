@@ -23,12 +23,15 @@ package org.apache.struts2.showcase.validation;
 
 // START SNIPPET: visitorValidatorsExample
 
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+
 public class VisitorValidatorsExampleAction extends AbstractValidationActionSupport {
 
 	private static final long serialVersionUID = 4375454086939598216L;
 
 	private User user;
 
+	@StrutsParameter(depth = 1)
 	public User getUser() {
 		return user;
 	}

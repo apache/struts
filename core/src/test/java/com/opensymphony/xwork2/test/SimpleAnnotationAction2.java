@@ -21,6 +21,7 @@ package com.opensymphony.xwork2.test;
 import com.opensymphony.xwork2.SimpleAnnotationAction;
 import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  * SimpleAction2
@@ -35,6 +36,7 @@ public class SimpleAnnotationAction2 extends SimpleAnnotationAction {
 
     @RequiredFieldValidator(message = "You must enter a value for count.")
     @IntRangeFieldValidator(min = "0", max = "5", message = "count must be between ${min} and ${max}, current value is ${count}.")
+    @StrutsParameter
     public void setCount(int count) {
         this.count = count;
     }

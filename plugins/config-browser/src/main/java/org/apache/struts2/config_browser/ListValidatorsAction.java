@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import com.opensymphony.xwork2.validator.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,16 +44,17 @@ public class ListValidatorsAction extends ActionSupport {
     List<Validator> validators = Collections.emptyList();
     private ActionValidatorManager actionValidatorManager;
 
-    
+
     @Inject
     public void setActionValidatorManager(ActionValidatorManager mgr) {
         this.actionValidatorManager = mgr;
     }
-    
+
     public String getClazz() {
         return clazz;
     }
 
+    @StrutsParameter
     public void setClazz(String clazz) {
         this.clazz = clazz;
     }
@@ -69,6 +71,7 @@ public class ListValidatorsAction extends ActionSupport {
         return context;
     }
 
+    @StrutsParameter
     public void setContext(String context) {
         this.context = context;
     }
@@ -77,6 +80,7 @@ public class ListValidatorsAction extends ActionSupport {
         return validators;
     }
 
+    @Override
     public String execute() throws Exception {
         loadValidators();
         return super.execute();

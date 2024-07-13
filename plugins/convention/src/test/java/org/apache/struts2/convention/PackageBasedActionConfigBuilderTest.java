@@ -18,9 +18,21 @@
  */
 package org.apache.struts2.convention;
 
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.FileManager;
+import com.opensymphony.xwork2.FileManagerFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.InterceptorStackConfig;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.factory.DefaultInterceptorFactory;
 import com.opensymphony.xwork2.factory.DefaultResultFactory;
@@ -32,12 +44,20 @@ import com.opensymphony.xwork2.util.fs.DefaultFileManager;
 import com.opensymphony.xwork2.util.fs.DefaultFileManagerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import junit.framework.TestCase;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.actions.DefaultResultPathAction;
 import org.apache.struts2.convention.actions.NoAnnotationAction;
 import org.apache.struts2.convention.actions.Skip;
-import org.apache.struts2.convention.actions.action.*;
+import org.apache.struts2.convention.actions.action.ActionNameAction;
+import org.apache.struts2.convention.actions.action.ActionNamesAction;
+import org.apache.struts2.convention.actions.action.ClassLevelAnnotationAction;
+import org.apache.struts2.convention.actions.action.ClassLevelAnnotationDefaultMethodAction;
+import org.apache.struts2.convention.actions.action.ClassLevelAnnotationsAction;
+import org.apache.struts2.convention.actions.action.ClassLevelAnnotationsDefaultMethodAction;
+import org.apache.struts2.convention.actions.action.ClassNameAction;
+import org.apache.struts2.convention.actions.action.SingleActionNameAction;
+import org.apache.struts2.convention.actions.action.TestAction;
+import org.apache.struts2.convention.actions.action.TestExtends;
 import org.apache.struts2.convention.actions.allowedmethods.ClassLevelAllowedMethodsAction;
 import org.apache.struts2.convention.actions.allowedmethods.PackageLevelAllowedMethodsAction;
 import org.apache.struts2.convention.actions.allowedmethods.sub.PackageLevelAllowedMethodsChildAction;
@@ -61,7 +81,15 @@ import org.apache.struts2.convention.actions.parentpackage.ClassLevelParentPacka
 import org.apache.struts2.convention.actions.parentpackage.PackageLevelParentPackageAction;
 import org.apache.struts2.convention.actions.parentpackage.sub.ClassLevelParentPackageChildAction;
 import org.apache.struts2.convention.actions.parentpackage.sub.PackageLevelParentPackageChildAction;
-import org.apache.struts2.convention.actions.result.*;
+import org.apache.struts2.convention.actions.result.ActionLevelResultAction;
+import org.apache.struts2.convention.actions.result.ActionLevelResultsAction;
+import org.apache.struts2.convention.actions.result.ActionLevelResultsNamesAction;
+import org.apache.struts2.convention.actions.result.ClassLevelResultAction;
+import org.apache.struts2.convention.actions.result.ClassLevelResultsAction;
+import org.apache.struts2.convention.actions.result.GlobalResultAction;
+import org.apache.struts2.convention.actions.result.GlobalResultOverrideAction;
+import org.apache.struts2.convention.actions.result.InheritedResultExtends;
+import org.apache.struts2.convention.actions.result.OverrideResultAction;
 import org.apache.struts2.convention.actions.resultpath.ClassLevelResultPathAction;
 import org.apache.struts2.convention.actions.resultpath.PackageLevelResultPathAction;
 import org.apache.struts2.convention.actions.skip.Index;
@@ -69,15 +97,24 @@ import org.apache.struts2.convention.actions.transactions.TransNameAction;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.dontfind.DontFindMeAction;
+import org.apache.struts2.ognl.ProviderAllowlist;
 import org.apache.struts2.result.ServletDispatcherResult;
 import org.easymock.EasyMock;
 
 import jakarta.servlet.ServletContext;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.apache.struts2.convention.ReflectionTools.getAnnotation;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.checkOrder;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.verify;
 
 /**
  * <p>
@@ -388,6 +425,7 @@ public class PackageBasedActionConfigBuilderTest extends TestCase {
         fileManagerFactory.setFileManager(new DefaultFileManager());
         builder.setFileManagerFactory(fileManagerFactory);
         builder.setPackageLocatorsBase("org.apache.struts2.convention.actions");
+        builder.setProviderAllowlist(new ProviderAllowlist());
         builder.buildActionConfigs();
         verify(resultMapBuilder);
 

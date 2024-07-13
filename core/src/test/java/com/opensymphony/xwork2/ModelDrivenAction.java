@@ -19,6 +19,8 @@
 package com.opensymphony.xwork2;
 
 
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+
 /**
  * ModelDrivenAction
  *
@@ -28,9 +30,9 @@ package com.opensymphony.xwork2;
 public class ModelDrivenAction extends ActionSupport implements ModelDriven {
 
     private String foo;
-    private TestBean model = new TestBean();
+    private final TestBean model = new TestBean();
 
-
+    @StrutsParameter
     public void setFoo(String foo) {
         this.foo = foo;
     }
@@ -42,6 +44,8 @@ public class ModelDrivenAction extends ActionSupport implements ModelDriven {
     /**
      * @return the model to be pushed onto the ValueStack after the Action itself
      */
+    @StrutsParameter(depth = 2)
+    @Override
     public Object getModel() {
         return model;
     }

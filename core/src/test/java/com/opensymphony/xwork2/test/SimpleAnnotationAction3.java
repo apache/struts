@@ -20,6 +20,7 @@ package com.opensymphony.xwork2.test;
 
 import com.opensymphony.xwork2.SimpleAnnotationAction;
 import com.opensymphony.xwork2.util.Bar;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 
 /**
@@ -33,19 +34,24 @@ public class SimpleAnnotationAction3 extends SimpleAnnotationAction implements A
     private Bar bar;
     private String data;
 
-
+    @Override
     public void setBarObj(Bar b) {
         bar = b;
     }
 
+    @StrutsParameter(depth = 1)
+    @Override
     public Bar getBarObj() {
         return bar;
     }
 
+    @StrutsParameter
+    @Override
     public void setData(String data) {
         this.data = data;
     }
 
+    @Override
     public String getData() {
         return data;
     }

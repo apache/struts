@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.ajax;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,6 +52,7 @@ public class Example4ShowPanelAction extends ActionSupport {
 		return gender;
 	}
 
+	@StrutsParameter
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
@@ -59,6 +61,7 @@ public class Example4ShowPanelAction extends ActionSupport {
 		return name;
 	}
 
+	@StrutsParameter
 	public void setName(String name) {
 		this.name = name;
 	}

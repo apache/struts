@@ -190,22 +190,27 @@ public class ScopedModelDrivenInterceptorTest extends XWorkTestCase {
         private String key;
         private User model;
 
+        @Override
         public void setModel(Object model) {
             this.model = (User) model;
         }
 
+        @Override
         public void setScopeKey(String key) {
             this.key = key;
         }
 
+        @Override
         public String getScopeKey() {
             return key;
         }
 
+        @Override
         public User getModel() {
             return model;
         }
 
+        @Override
         public String execute() throws Exception {
             return SUCCESS;
         }
@@ -217,22 +222,27 @@ public class ScopedModelDrivenInterceptorTest extends XWorkTestCase {
         private String key;
         private Equidae model;
 
+        @Override
         public void setModel(Object model) {
             this.model = (Equidae) model;
         }
 
+        @Override
         public void setScopeKey(String key) {
             this.key = key;
         }
 
+        @Override
         public String getScopeKey() {
             return key;
         }
 
+        @Override
         public Equidae getModel() {
             return model;
         }
 
+        @Override
         public String execute() throws Exception {
             return SUCCESS;
         }

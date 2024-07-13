@@ -21,16 +21,18 @@
 package org.apache.struts2.showcase.ajax;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AutocompleterExampleAction extends ActionSupport {
 	private String select;
-	private List<String> options = new ArrayList<String>();
+	private final List<String> options = new ArrayList<>();
 
 	private static final long serialVersionUID = -8481638176160014396L;
 
+	@Override
 	public String execute() throws Exception {
 		if ("fruits".equals(select)) {
 			options.add("apple");
@@ -49,6 +51,7 @@ public class AutocompleterExampleAction extends ActionSupport {
 		return select;
 	}
 
+	@StrutsParameter
 	public void setSelect(String select) {
 		this.select = select;
 	}

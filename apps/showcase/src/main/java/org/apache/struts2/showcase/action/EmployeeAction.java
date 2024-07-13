@@ -21,6 +21,7 @@ package org.apache.struts2.showcase.action;
 import com.opensymphony.xwork2.Preparable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.showcase.application.TestDataProvider;
 import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.dao.EmployeeDao;
@@ -52,7 +53,7 @@ public class EmployeeAction extends AbstractCRUDAction implements Preparable {
 
 	public String execute() throws Exception {
 		if (getCurrentEmployee() != null && getCurrentEmployee().getOtherSkills() != null) {
-			setSelectedSkills(new ArrayList<String>());
+			setSelectedSkills(new ArrayList<>());
 			Iterator it = getCurrentEmployee().getOtherSkills().iterator();
 			while (it.hasNext()) {
 				getSelectedSkills().add(((Skill) it.next()).getName());
@@ -73,10 +74,12 @@ public class EmployeeAction extends AbstractCRUDAction implements Preparable {
 		return empId;
 	}
 
+	@StrutsParameter
 	public void setEmpId(Long empId) {
 		this.empId = empId;
 	}
 
+	@StrutsParameter(depth = 2)
 	public Employee getCurrentEmployee() {
 		return currentEmployee;
 	}

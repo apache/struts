@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.tag.nonui.iteratortag;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  */
@@ -37,34 +38,34 @@ public class IteratorGeneratorTagDemo extends ActionSupport {
 		return value;
 	}
 
+	@StrutsParameter
 	public void setValue(String value) {
 		this.value = value;
 	}
-
 
 	public Integer getCount() {
 		return count;
 	}
 
+	@StrutsParameter
 	public void setCount(Integer count) {
 		this.count = count;
 	}
-
 
 	public String getSeparator() {
 		return this.separator;
 	}
 
+	@StrutsParameter
 	public void setSeparator(String separator) {
 		this.separator = separator;
 	}
-
 
 	public String submit() throws Exception {
 		return SUCCESS;
 	}
 
-
+	@Override
 	public String input() throws Exception {
 		return SUCCESS;
 	}

@@ -36,6 +36,15 @@
 
     <constant name="struts.allowlist.enable" value="true" />
     <constant name="struts.parameters.requireAnnotations" value="true" />
+    <constant name="struts.allowlist.packageNames" value="
+            org.apache.struts2.showcase.model,
+            org.apache.struts2.showcase.modelDriven.model
+    "/>
+    <constant name="struts.allowlist.classes" value="
+            org.apache.struts2.showcase.hangman.Hangman,
+            org.apache.struts2.showcase.hangman.HangmanConstants,
+            org.apache.struts2.showcase.hangman.Vocab
+    "/>
 
     <constant name="struts.convention.package.locators.basePackage" value="org.apache.struts2.showcase" />
     <constant name="struts.convention.result.path" value="/WEB-INF" />

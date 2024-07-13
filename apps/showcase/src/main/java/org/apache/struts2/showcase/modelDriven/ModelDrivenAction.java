@@ -30,14 +30,17 @@ public class ModelDrivenAction extends ActionSupport implements ModelDriven {
 
 	private static final long serialVersionUID = 1271130427666936592L;
 
+	@Override
 	public String input() throws Exception {
 		return SUCCESS;
 	}
 
+	@Override
 	public String execute() throws Exception {
 		return SUCCESS;
 	}
 
+	@Override
 	public Object getModel() {
 		return new Gangster();
 	}

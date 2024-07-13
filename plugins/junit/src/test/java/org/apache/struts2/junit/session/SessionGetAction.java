@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.ActionSupport;
 public class SessionGetAction extends ActionSupport {
     private static final long serialVersionUID = 8366502863472148631L;
 
+    @Override
     public String execute() {
         return ActionSupport.SUCCESS;
     }

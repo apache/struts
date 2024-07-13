@@ -18,17 +18,15 @@
  */
 package org.apache.struts2.views.jsp;
 
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.views.jsp.iterator.SortIteratorTag;
+
+import javax.servlet.jsp.JspException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.servlet.jsp.JspException;
-
-import org.apache.struts2.views.jsp.iterator.SortIteratorTag;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * Test case to test SortIteratorTag.
@@ -338,13 +336,11 @@ public class SortIteratorTagTest extends AbstractTagTest {
     public Action getAction() {
         return new ActionSupport() {
             public Comparator getComparator() {
-                return new Comparator() {
-                    public int compare(Object o1, Object o2) {
-                        Integer i1 = (Integer) o1;
-                        Integer i2 = (Integer) o2;
+                return (o1, o2) -> {
+                    Integer i1 = (Integer) o1;
+                    Integer i2 = (Integer) o2;
 
-                        return (i1.intValue() - i2.intValue());
-                    }
+                    return (i1 - i2);
                 };
             }
 

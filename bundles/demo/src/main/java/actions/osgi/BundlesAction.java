@@ -33,6 +33,7 @@ import org.osgi.framework.BundleContext;
 public class BundlesAction extends ActionSupport implements BundleContextAware {
     private BundleContext bundleContext;
 
+    @Override
     public void withBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }

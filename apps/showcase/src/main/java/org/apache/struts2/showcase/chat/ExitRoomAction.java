@@ -21,10 +21,10 @@
 package org.apache.struts2.showcase.chat;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.action.SessionAware;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.Map;
-
-import org.apache.struts2.action.SessionAware;
 
 public class ExitRoomAction extends ActionSupport implements SessionAware {
 
@@ -38,6 +38,7 @@ public class ExitRoomAction extends ActionSupport implements SessionAware {
 		return roomName;
 	}
 
+	@StrutsParameter
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}

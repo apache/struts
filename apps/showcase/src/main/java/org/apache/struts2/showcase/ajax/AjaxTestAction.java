@@ -21,9 +21,9 @@
 package org.apache.struts2.showcase.ajax;
 
 import com.opensymphony.xwork2.Action;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.io.Serializable;
-
 
 public class AjaxTestAction implements Action, Serializable {
 
@@ -46,6 +46,7 @@ public class AjaxTestAction implements Action, Serializable {
 		return data;
 	}
 
+	@StrutsParameter
 	public void setData(String data) {
 		this.data = data;
 	}

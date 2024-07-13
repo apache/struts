@@ -21,25 +21,25 @@
 
 package org.apache.struts2.osgi.admin.actions;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 import org.apache.felix.shell.ShellService;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.osgi.DefaultBundleAccessor;
 import org.apache.struts2.osgi.interceptor.BundleContextAware;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 /**
  * This action executes commands on the Felix Shell.
- * 
+ *
  * The action is BundleContextAware so that if the OSGi interceptor is used the BundleContext
  * can be provided for configurations where the DefaultBundleAccessor is insufficient.
- * 
+ *
  */
 public class ShellAction extends ActionSupport implements BundleContextAware {
     private String command;
@@ -77,6 +77,7 @@ public class ShellAction extends ActionSupport implements BundleContextAware {
         return command;
     }
 
+    @StrutsParameter
     public void setCommand(String command) {
         this.command = command;
     }

@@ -21,6 +21,7 @@ package org.apache.struts2.showcase.action;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.model.IdEntity;
 
@@ -40,7 +41,6 @@ public abstract class AbstractCRUDAction extends ActionSupport {
 
 	protected abstract Dao getDao();
 
-
 	public Collection getAvailableItems() {
 		return availableItems;
 	}
@@ -49,6 +49,7 @@ public abstract class AbstractCRUDAction extends ActionSupport {
 		return toDelete;
 	}
 
+	@StrutsParameter
 	public void setToDelete(String[] toDelete) {
 		this.toDelete = toDelete;
 	}
@@ -64,11 +65,11 @@ public abstract class AbstractCRUDAction extends ActionSupport {
 	public String delete() throws Exception {
 		if (toDelete != null) {
 			int count = 0;
-			for (int i = 0, j = toDelete.length; i < j; i++) {
-				count = count + getDao().delete(toDelete[i]);
-			}
+            for (String s : toDelete) {
+                count = count + getDao().delete(s);
+            }
 			if (log.isDebugEnabled()) {
-				log.debug("AbstractCRUDAction - [delete]: " + count + " items deleted.");
+                log.debug("AbstractCRUDAction - [delete]: {} items deleted.", count);
 			}
 		}
 		return SUCCESS;

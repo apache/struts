@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.chat;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +31,14 @@ public class MessagesAvailableInRoomAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 
 	private String roomName;
-	private ChatService chatService;
-	private List<ChatMessage> messagesAvailableInRoom = new ArrayList<ChatMessage>();
+	private final ChatService chatService;
+	private List<ChatMessage> messagesAvailableInRoom = new ArrayList<>();
 
 	public String getRoomName() {
 		return this.roomName;
 	}
 
+	@StrutsParameter
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}

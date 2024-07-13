@@ -18,10 +18,11 @@
  */
 package org.apache.struts2.oval.interceptor;
 
+import com.opensymphony.xwork2.ActionSupport;
 import net.sf.oval.constraint.Length;
 import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class SimpleField extends ActionSupport{
     @NotNull()
@@ -35,10 +36,12 @@ public class SimpleField extends ActionSupport{
         return name;
     }
 
+    @StrutsParameter
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public void validate() {
         this.validateCalled = true;
     }

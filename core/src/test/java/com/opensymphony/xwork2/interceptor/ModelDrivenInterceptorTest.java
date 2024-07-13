@@ -20,7 +20,12 @@ package com.opensymphony.xwork2.interceptor;
 
 import com.mockobjects.dynamic.ConstraintMatcher;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
+import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.Date;
@@ -175,6 +180,7 @@ public class ModelDrivenInterceptorTest extends XWorkTestCase {
 
     public class ModelDrivenAction extends ActionSupport implements ModelDriven {
 
+        @Override
         public Object getModel() {
             return model;
         }

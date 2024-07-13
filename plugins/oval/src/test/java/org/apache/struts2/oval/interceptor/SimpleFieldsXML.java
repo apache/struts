@@ -19,8 +19,8 @@
 package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionSupport;
-import net.sf.oval.constraint.NotEmpty;
 import net.sf.oval.constraint.NotNull;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 public class SimpleFieldsXML extends ActionSupport {
     private String firstName;
@@ -32,6 +32,7 @@ public class SimpleFieldsXML extends ActionSupport {
         return firstName;
     }
 
+    @StrutsParameter
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -40,6 +41,7 @@ public class SimpleFieldsXML extends ActionSupport {
         return lastName;
     }
 
+    @StrutsParameter
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }

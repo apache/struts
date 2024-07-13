@@ -46,6 +46,7 @@ public class SkillAction extends AbstractCRUDAction implements Preparable {
 	 *
 	 * @throws Exception thrown if a system level exception occurs.
 	 */
+	@Override
 	public void prepare() throws Exception {
 		Skill preFetched = (Skill) fetch(getSkillName(), getCurrentSkill());
 		if (preFetched != null) {
@@ -64,6 +65,7 @@ public class SkillAction extends AbstractCRUDAction implements Preparable {
 		return skillName;
 	}
 
+	@StrutsParameter
 	public void setSkillName(String skillName) {
 		this.skillName = skillName;
 	}

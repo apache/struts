@@ -22,6 +22,7 @@ package org.apache.struts2.showcase.tag.nonui.iteratortag;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Validateable;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  *
@@ -34,7 +35,7 @@ public class SubsetIteratorTagDemo extends ActionSupport implements Validateable
 	private Integer count;
 	private Integer start;
 
-
+	@Override
 	public void validate() {
 		if (iteratorValue == null || iteratorValue.trim().length() <= 0) {
 			addFieldError("iteratorValue1", "iterator value 1 cannot be empty");
@@ -43,34 +44,34 @@ public class SubsetIteratorTagDemo extends ActionSupport implements Validateable
 		}
 	}
 
-
 	public String getIteratorValue() {
 		return this.iteratorValue;
 	}
 
+	@StrutsParameter
 	public void setIteratorValue(String iteratorValue) {
 		this.iteratorValue = iteratorValue;
 	}
-
 
 	public Integer getCount() {
 		return this.count;
 	}
 
+	@StrutsParameter
 	public void setCount(Integer count) {
 		this.count = count;
 	}
-
 
 	public Integer getStart() {
 		return this.start;
 	}
 
+	@StrutsParameter
 	public void setStart(Integer start) {
 		this.start = start;
 	}
 
-
+	@Override
 	public String input() throws Exception {
 		return SUCCESS;
 	}
@@ -78,6 +79,4 @@ public class SubsetIteratorTagDemo extends ActionSupport implements Validateable
 	public String submit() throws Exception {
 		return SUCCESS;
 	}
-
-
 }

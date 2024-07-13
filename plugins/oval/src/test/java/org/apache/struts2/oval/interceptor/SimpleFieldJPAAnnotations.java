@@ -19,6 +19,7 @@
 package org.apache.struts2.oval.interceptor;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import javax.persistence.Basic;
 
@@ -30,6 +31,7 @@ public class SimpleFieldJPAAnnotations extends ActionSupport {
         return firstName;
     }
 
+    @StrutsParameter
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

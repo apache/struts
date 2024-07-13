@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  *
@@ -36,6 +37,7 @@ public class LotsOfRichtexteditorAction extends ActionSupport {
 		return this.description1;
 	}
 
+	@StrutsParameter
 	public void setDescription1(String description1) {
 		this.description1 = description1;
 	}
@@ -45,6 +47,7 @@ public class LotsOfRichtexteditorAction extends ActionSupport {
 		return this.description2;
 	}
 
+	@StrutsParameter
 	public void setDescription2(String description2) {
 		this.description2 = description2;
 	}
@@ -54,6 +57,7 @@ public class LotsOfRichtexteditorAction extends ActionSupport {
 		return this.description3;
 	}
 
+	@StrutsParameter
 	public void setDescription3(String description3) {
 		this.description3 = description3;
 	}
@@ -63,11 +67,12 @@ public class LotsOfRichtexteditorAction extends ActionSupport {
 		return this.description4;
 	}
 
+	@StrutsParameter
 	public void setDescription4(String description4) {
 		this.description4 = description4;
 	}
 
-
+	@Override
 	public String input() throws Exception {
 		return SUCCESS;
 	}

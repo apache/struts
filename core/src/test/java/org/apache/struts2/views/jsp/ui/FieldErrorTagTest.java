@@ -18,18 +18,17 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.AbstractUITagTest;
+import org.apache.struts2.views.jsp.ParamTag;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.struts2.views.jsp.AbstractUITagTest;
-import org.apache.struts2.views.jsp.ParamTag;
-import org.apache.struts2.TestAction;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * FieldError Tag Test Case.

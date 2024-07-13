@@ -23,6 +23,7 @@ package org.apache.struts2.showcase.person;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -38,12 +39,14 @@ public class NewPersonAction extends ActionSupport {
 	private PersonManager personManager;
 	private Person person;
 
+	@Override
 	public String execute() {
 		personManager.createPerson(person);
 
 		return "list";
 	}
 
+	@StrutsParameter(depth = 1)
 	public Person getPerson() {
 		return person;
 	}

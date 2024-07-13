@@ -26,6 +26,7 @@ import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.ResultPath;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 @Namespace("/osgi")
 @ResultPath("/content/osgi")
@@ -41,6 +42,7 @@ public class HelloWorldAction extends ActionSupport {
         return SUCCESS;
     }
 
+    @StrutsParameter(depth = 1)
     public Message getMessage() {
         return message;
     }

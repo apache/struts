@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.apache.struts2.showcase.ajax.tree.Category;
 
 public class ShowAjaxDynamicTreeAction extends ActionSupport {
@@ -34,6 +35,7 @@ public class ShowAjaxDynamicTreeAction extends ActionSupport {
 		return nodeId;
 	}
 
+	@StrutsParameter
 	public void setNodeId(int nodeId) {
 		this.nodeId = nodeId;
 	}

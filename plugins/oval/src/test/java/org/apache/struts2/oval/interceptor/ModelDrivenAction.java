@@ -18,18 +18,19 @@
  */
 package org.apache.struts2.oval.interceptor;
 
-import net.sf.oval.constraint.AssertValid;
-
-import org.apache.struts2.oval.interceptor.domain.Person;
-
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
+import net.sf.oval.constraint.AssertValid;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import org.apache.struts2.oval.interceptor.domain.Person;
 
 public class ModelDrivenAction extends ActionSupport implements ModelDriven<Person> {
 
 	@AssertValid
-	private Person person = new Person();
+	private final Person person = new Person();
 
+	@StrutsParameter(depth = 2)
+	@Override
 	public Person getModel() {
 		return person;
 	}

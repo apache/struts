@@ -19,6 +19,7 @@
 package org.apache.struts2.views.jsp.ui;
 
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 /**
  *
@@ -30,6 +31,7 @@ public class IntValidationAction extends ActionSupport {
         return longint;
     }
 
+    @StrutsParameter
     public void setLongint(int longint) {
         this.longint = longint;
     }

@@ -20,6 +20,7 @@ package org.apache.struts.beanvalidation.actions;
 
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts.beanvalidation.constraints.FieldMatch;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -48,6 +49,7 @@ public class FieldMatchAction extends ActionSupport {
         return password;
     }
 
+    @StrutsParameter
     public void setPassword(String password) {
         this.password = password;
     }
@@ -56,6 +58,7 @@ public class FieldMatchAction extends ActionSupport {
         return confirmPassword;
     }
 
+    @StrutsParameter
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
@@ -64,6 +67,7 @@ public class FieldMatchAction extends ActionSupport {
         return email;
     }
 
+    @StrutsParameter
     public void setEmail(String email) {
         this.email = email;
     }
@@ -72,6 +76,7 @@ public class FieldMatchAction extends ActionSupport {
         return confirmEmail;
     }
 
+    @StrutsParameter
     public void setConfirmEmail(String confirmEmail) {
         this.confirmEmail = confirmEmail;
     }

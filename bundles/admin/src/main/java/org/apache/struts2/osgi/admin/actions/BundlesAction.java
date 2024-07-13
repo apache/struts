@@ -25,10 +25,11 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Inject;
-import org.apache.struts2.osgi.BundleAccessor;
-import org.apache.struts2.osgi.host.OsgiHost;
-import org.apache.struts2.osgi.StrutsOsgiListener;
 import org.apache.struts2.action.ServletContextAware;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
+import org.apache.struts2.osgi.BundleAccessor;
+import org.apache.struts2.osgi.StrutsOsgiListener;
+import org.apache.struts2.osgi.host.OsgiHost;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
@@ -36,9 +37,8 @@ import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
 
 public class BundlesAction extends ActionSupport implements ServletContextAware {
 
@@ -114,6 +114,7 @@ public class BundlesAction extends ActionSupport implements ServletContextAware 
         return id;
     }
 
+    @StrutsParameter
     public void setId(String id) {
         this.id = id;
     }

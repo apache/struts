@@ -479,6 +479,12 @@ public class SecurityMemberAccess implements MemberAccess {
     @Inject(value = StrutsConstants.STRUTS_ALLOWLIST_ENABLE, required = false)
     public void useEnforceAllowlistEnabled(String enforceAllowlistEnabled) {
         this.enforceAllowlistEnabled = BooleanUtils.toBoolean(enforceAllowlistEnabled);
+        if (!this.enforceAllowlistEnabled) {
+            String msg = "OGNL allowlist is disabled!" +
+                    " We strongly recommend keeping it enabled to protect against critical vulnerabilities." +
+                    " Set the configuration `{}=true` to enable it.";
+            LOG.warn(msg, StrutsConstants.STRUTS_ALLOWLIST_ENABLE);
+        }
     }
 
     @Inject(value = STRUTS_ALLOWLIST_CLASSES, required = false)

@@ -859,11 +859,6 @@ public class OgnlUtil {
         return createDefaultContext(root, null);
     }
 
-    /**
-     * Note that the allowlist capability is not enforced by the {@link OgnlContext} returned by this method. Currently,
-     * this context is only leveraged by some public methods on {@link OgnlUtil} which are called by
-     * {@link OgnlReflectionProvider}.
-     */
     protected Map<String, Object> createDefaultContext(Object root, ClassResolver resolver) {
         if (resolver == null) {
             resolver = container.getInstance(RootAccessor.class);
@@ -871,11 +866,7 @@ public class OgnlUtil {
                 throw new IllegalStateException("Cannot find ClassResolver");
             }
         }
-
-        SecurityMemberAccess memberAccess = container.getInstance(SecurityMemberAccess.class);
-        memberAccess.useEnforceAllowlistEnabled(Boolean.FALSE.toString());
-
-        return Ognl.createDefaultContext(root, memberAccess, resolver, defaultConverter);
+        return Ognl.createDefaultContext(root, container.getInstance(SecurityMemberAccess.class), resolver, defaultConverter);
     }
 
     @FunctionalInterface

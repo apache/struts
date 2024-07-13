@@ -23,13 +23,13 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.ParameterFilterInterceptor;
-import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.util.AnnotationUtils;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.parameter.ParametersInterceptor;
+import org.apache.struts2.interceptor.parameter.StrutsParameter;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -46,7 +46,10 @@ import java.util.List;
  * </p>
  *
  * @author martin.gilday
+ * @deprecated since 6.6.0, integrated into {@link ParametersInterceptor} with {@link StrutsParameter} using
+ * {@code struts.parameters.requireAnnotations=true}
  */
+@Deprecated
 public class AnnotationParameterFilterInterceptor extends AbstractInterceptor {
 
     /* (non-Javadoc)

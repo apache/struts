@@ -18,7 +18,6 @@
  * under the License.
  */
 -->
-
 <#--
  Code that will add javascript needed for tooltips
 --><#t/>

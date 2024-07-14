@@ -109,6 +109,11 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         this.valueSubstitutor = valueSubstitutor;
     }
 
+    @Inject
+    public void setProviderAllowlist(ProviderAllowlist providerAllowlist) {
+        this.providerAllowlist = providerAllowlist;
+    }
+
     public XmlDocConfigurationProvider(Document... documents) {
         this.documents = Arrays.asList(documents);
     }
@@ -135,11 +140,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         this.configuration = configuration;
     }
 
-    private void registerAllowlist() {
-        providerAllowlist = configuration.getContainer().getInstance(ProviderAllowlist.class);
-        providerAllowlist.registerAllowlist(this, allowlistClasses);
-    }
-
     @Override
     public void destroy() {
         if (providerAllowlist != null) {
@@ -152,6 +152,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         allowlistClasses.add(clazz);
         allowlistClasses.addAll(ClassUtils.getAllSuperclasses(clazz));
         allowlistClasses.addAll(ClassUtils.getAllInterfaces(clazz));
+        providerAllowlist.registerAllowlist(this, allowlistClasses);
         return clazz;
     }
 
@@ -333,7 +334,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         }
 
         declaredPackages.clear();
-        registerAllowlist();
         configuration = null;
     }
 

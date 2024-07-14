@@ -19,7 +19,7 @@
  */
 -->
 <#if (actionErrors?? && actionErrors?size > 0)>
-	<ul<#rt/>
+<ul<#rt/>
 <#if attributes.id??>
  id="${attributes.id}"<#rt/>
 </#if>
@@ -32,10 +32,10 @@
  style="${attributes.cssStyle}"<#rt/>
 </#if>
 >
-	<#list actionErrors as error>
-		<#if error??>
-            <li><span><#if attributes.escape>${error!}<#else>${error!?no_esc}</#if></span><#rt/></li><#rt/>
-        </#if>
-	</#list>
-	</ul>
+<#list actionErrors as error>
+<#if error??>
+  <li><span><#if attributes.escape>${error!}<#else>${error!?no_esc}</#if></span><#rt/></li><#rt/>
+</#if>
+</#list>
+</ul>
 </#if>

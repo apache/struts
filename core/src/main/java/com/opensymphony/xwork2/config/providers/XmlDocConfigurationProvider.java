@@ -108,6 +108,11 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         this.valueSubstitutor = valueSubstitutor;
     }
 
+    @Inject
+    public void setProviderAllowlist(ProviderAllowlist providerAllowlist) {
+        this.providerAllowlist = providerAllowlist;
+    }
+
     public XmlDocConfigurationProvider(Document... documents) {
         this.documents = Arrays.asList(documents);
     }
@@ -134,11 +139,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         this.configuration = configuration;
     }
 
-    private void registerAllowlist() {
-        providerAllowlist = configuration.getContainer().getInstance(ProviderAllowlist.class);
-        providerAllowlist.registerAllowlist(this, allowlistClasses);
-    }
-
     @Override
     public void destroy() {
         if (providerAllowlist != null) {
@@ -149,6 +149,7 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
     protected Class<?> allowAndLoadClass(String className) throws ClassNotFoundException {
         Class<?> clazz = loadClass(className);
         allowlistClasses.addAll(ConfigurationUtil.getAllClassTypes(clazz));
+        providerAllowlist.registerAllowlist(this, allowlistClasses);
         return clazz;
     }
 
@@ -330,7 +331,6 @@ public abstract class XmlDocConfigurationProvider implements ConfigurationProvid
         }
 
         declaredPackages.clear();
-        registerAllowlist();
         configuration = null;
     }
 
